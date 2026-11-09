@@ -1,0 +1,83 @@
+{
+  "schema": "orimapi.code-controller-skill/v1",
+  "skill_id": "deposit_coin",
+  "supported_tasks": [
+    "deposit_coin"
+  ],
+  "task_spec": {
+    "task": "deposit_coin",
+    "budget": 300,
+    "execution_goal": "full_deposit",
+    "milestone": "Preserve the fixed-target pickup,0.15 closure,15 mm probe and reviewed90 mm lift. Continue with automatic initial held measurement, continuous retained-pose tracking, current slot refinement, bounded insertion, reviewed release and empty withdrawal/home. Native300-action scoring is unchanged; pickup alone is not full success.",
+    "requirements": "Grasp the thin vertical coin from its holder, lift clear, measure and align its plane with the current bank slot, insert it into the bank and release. A lift alone is only partial progress. Return both arms home within the unchanged native300-action budget. Use only camera images and public robot state/calibration; no hidden scene poses, layout decoding or simulator changes.\nResearch guidance (not successful prior): The bank and original holder are fixed geometry assets, not movable targets. Prior unsupported tabletop handoffs left the thin coin ungraspable; do not repeat that macro unchanged. If one arm cannot reach both observed endpoints, test a supported bimanual handoff with explicit moves and grips: the giving hand keeps possession while the receiving hand approaches a distinct accessible part of the coin, closes and settles before the giving hand opens. Single-arm move/grip operations preserve the other arm's command; home opens BOTH grippers, so never use home while either should retain the coin. Lower-level move permits sideways orientations. Check jaw/body clearance and coin-plane rotation, not merely TCP coincidence. This is an unverified hypothesis, not a successful prior program."
+  },
+  "tool_limits": {
+    "max_calls": 24,
+    "max_tools_per_turn": 16,
+    "history_size": 12
+  },
+  "experience": "experience.json",
+  "sources": {
+    "relative_alignment": "relative_alignment.py",
+    "coin_edge": "coin_edge.py",
+    "held_patch": "held_patch.py",
+    "postlift_prompt": "postlift_prompt.md",
+    "slot_recovery": "slot_recovery.py",
+    "servo_patch": "servo_patch.py",
+    "servo_regions": "servo_regions.py",
+    "coin_insertion": "coin_insertion.py",
+    "servo_target": "servo_target.py",
+    "servo_visibility": "servo_visibility.py",
+    "coin_servo": "coin_servo.py",
+    "postcarry_prompt": "postcarry_prompt.md",
+    "delivery_recovery": "delivery_recovery.py",
+    "temporal_vision": "temporal_vision.py",
+    "point_tracking": "../../code_tools/tracking.py",
+    "coin_workflow": "coin_workflow.py",
+    "frozen_knowledge": "frozen_knowledge.json",
+    "task_vision": "task_vision.py",
+    "tool_documentation": "tool_documentation.md",
+    "program_worker": "program_worker.py",
+    "program_prompt": "program_prompt.md",
+    "arrival_motion": "arrival_motion.py",
+    "hand_clearance": "hand_clearance.py",
+    "hand_bounds": "hand_bounds.json",
+    "visual": "visual.py",
+    "validation": "validation.json",
+    "failure_experience": "failure_experience.json",
+    "vision_geometry": "vision_geometry.py",
+    "RESEARCH_SUMMARY": "RESEARCH_SUMMARY.md",
+    "controller": "controller.py",
+    "public_hand": "public_hand.py",
+    "vision_resources": "vision_resources.json",
+    "experience": "experience.json",
+    "generator": "generator.py",
+    "task_geometry": "task_geometry.py",
+    "successful_code_examples": "successful_code_examples.json",
+    "view_geometry": "view_geometry.py",
+    "program_session": "program_session.py",
+    "integrated_auto_contact_py": "auto_contact.py",
+    "integrated_coin_search_py": "coin_search.py"
+  },
+  "qualification": {
+    "task": "deposit_coin",
+    "mode": "user_authorized_research_fallback",
+    "summary": {
+      "recorded_seeds": [
+        0,
+        1,
+        2
+      ],
+      "successful_seeds": [],
+      "all_three_official_results": true,
+      "scores": [
+        0.2,
+        0.2,
+        0.2
+      ],
+      "mean_official_score": 0.20000000000000004,
+      "standard_qualified": false
+    },
+    "scope": "Unchanged highest-mean audited research implementation with explicit failure limits; not a successful task policy or full benchmark qualification."
+  }
+}

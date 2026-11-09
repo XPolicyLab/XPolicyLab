@@ -1,0 +1,44 @@
+{
+  "schema": "orimapi.code-tool-skill/v1",
+  "skill_id": "swap_T",
+  "supported_tasks": [
+    "swap_T"
+  ],
+  "task_spec": {
+    "task": "swap_T",
+    "budget": 400,
+    "requirements": "Pick up both T-shaped pieces and exchange their ORIGINAL positions and orientations. Final XY errors must be <=2 cm and headings <=3 degrees. Record corresponding stem centers, tail tips, and crossbar centers for directed T headings from CURRENT enlarged head RGB (inspect_region first) before moving either piece; compute each piece's unit directed heading u_i = unit(bar_i - tail_i) from tail_tip to crossbar_center (longest ~65mm baseline) and canonical perpendicular p_i = [-u_iy, u_ix, 0]; do not confuse 180-degree headings or reuse old coordinates. For left-arm transfers, choose a single sign s in {+1, -1} so s*(p_1 + p_2) has cy >= cx (keeping wrist joint q6 near 0 and away from +-3.14 rad limits), then use closing = s*p_1 for picking up T1, releasing/re-grasping T1 at the buffer, and placing T2 at T1's original pose, and closing = s*p_2 for picking up T2 and placing T1 at T2's original pose. Use plan_relative_pose with rotation_vector=[0,0,0] for horizontal transport to the buffer (~12cm away, e.g. x in [-0.14,-0.10], y in [-0.08,-0.04]). Return BOTH arms home to finish. Only native results establish success. Use cameras and public robot state/calibration only. Development lessons: previous plans wasted 400 actions on multiple short rotation stages, 24-step opening commands, and cross-center attempts with the other arm still crowding the target. Public robot collision spheres are NOW integrated, so centerline crossing is no longer automatically rejected when the other arm is safely parked. Prefer ONE ARM for all three transfers when reachable: first T to an observed empty buffer, second T to first's original pose, first T from buffer to second's original pose. Keep the unused arm home. When picking up the buffered first T for the third transfer, reuse the EXACT same jaw closing axis as when it was released at the buffer (unless it visibly rotated during release) so wrist re-grasping does not introduce a 3-5 degree heading re-estimation error. A plan_pose with two target axes can combine the FULL required heading change with translation in one stage; four 0.55-radian calls waste time. Short plan_pose and plan_relative_pose calls accept steps=4 or 6 while joint limits and observed convergence still apply. Gripper open steps=6, close steps=8..10 with measured settling can save budget. Always reserve at least 40 native actions for final release retreat and BOTH-arm home (home requires steps>=12 and ~25-35 actual steps). Use modest clearance 4..6cm, avoid unnecessary homing until the three transfers end. With a down gripper, fingertip clearance means a TCP near table+0.018 m is an initial safe-release hypothesis, not measured object thickness; inspect actual grasp and settling. Locate with calibrated views or explicit height hypotheses. The approach_close recipe and run_sequence are genuinely available. Preserve the original targets in reasoning/history after moves. Do not substitute tracked moving pieces for their original target locations. If a visual target disappears under the hand, reacquire wrist evidence; a clear short measured-TCP relative motion can avoid reusing a lost track. This guidance is unvalidated; inspect each grasp and release and request missing capabilities. No hidden states, no changing simulator or scoring."
+  },
+  "tool_limits": {
+    "max_calls": 100,
+    "max_tools_per_turn": 16,
+    "history_size": 24
+  },
+  "experience": "experience.json",
+  "sources": {
+    "controller": "controller.py"
+  },
+  "tool_recipes": {
+    "approach_close": "tool_recipes/approach_close.json"
+  },
+  "qualification": {
+    "successful_seed_sets": [
+      0,
+      1,
+      2
+    ],
+    "native_scores": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "scope": "Three seed-set episodes; not full benchmark performance",
+    "additional_formal_retest": {
+      "seed": 0,
+      "success": false,
+      "score": 0.0,
+      "run": "20261020T201440-suite-99b6b72eca3c",
+      "limitation": "A repeat completed the transfers but left 28 actions when home required 30. Small-sample qualification does not imply reliable repetition."
+    }
+  }
+}

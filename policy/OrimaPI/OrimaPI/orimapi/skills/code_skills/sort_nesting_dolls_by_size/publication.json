@@ -1,0 +1,33 @@
+{
+  "authorization": "用户明确要求：OK总结成正式的skill先合入",
+  "published_at": "2026-10-26T18:32:59.592969+00:00",
+  "qualification": {
+    "published": true,
+    "mode": "user_authorized_unqualified",
+    "standard_qualified": false,
+    "tested_seeds": [],
+    "successful_seeds": [],
+    "untested_seeds": [
+      0,
+      1,
+      2
+    ],
+    "scope": "User-authorized availability; no new native episodes or score. Historical baseline results are not this version results."
+  },
+  "source_candidates": {
+    "sort_nesting_dolls_by_size": "d13b28d6ac21cad3eac4f232382e7bd0e00d6d1311e79e8e2138ccb0ce00f054"
+  },
+  "previous_formal_archive": "orimapi/skills/code_skill_rsi/planned_local_v1/publication/previous-formal-20261026T183259Z/sort_nesting_dolls_by_size",
+  "shared_formal_library": "orimapi/skills/code_skills/common/planned_local_v1",
+  "changes_at_publication": [
+    "Controller import moved from research to formal shared package",
+    "Shared conveyor resource path relocated",
+    "Runtime-only manifest dependencies rebased; research build helpers and framework files omitted",
+    "Publication, validation, workflow and experience summary added"
+  ],
+  "algorithm_preserved_except_resource_relocation": true,
+  "model_prompts_byte_identical": true,
+  "profile_and_experience_byte_identical": true,
+  "sweep_random_alias_preserved": false,
+  "evidence_scope": "CPU/interface preflight only, no native simulations or new scores. Published availability is not benchmark qualification."
+}

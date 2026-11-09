@@ -1,0 +1,10 @@
+{
+  "candidate": "c006-route-aware-yield-20261030",
+  "controller": "runtime/c006/controller.py",
+  "manifest": "runtime/c006/skill.json",
+  "publication": "runtime/c006/publication.json",
+  "compatibility": "Root controller.py, skill.json and Open metadata remain the retained shared c009 runtime, not the configured language task entry.",
+  "mean_score_percent": 58.75,
+  "successes": 3,
+  "episodes": 8
+}

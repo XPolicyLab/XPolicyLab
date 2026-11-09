@@ -1,0 +1,23 @@
+[
+  {
+    "lesson": "Use actual public fingertip side-contact geometry, not the nominal grasp TCP, for a top-down wrist and controlled tile-toppling arc."
+  },
+  {
+    "lesson": "Use an unoccluded current image for each topple check. A shared arm and high lateral withdrawal avoid unnecessary wrist rotations between adjacent targets."
+  },
+  {
+    "lesson": "Monocular rectangle scale alone gave unstable stock height. Use current visible layer count and image-measured tile thickness, then verify the small lift visually."
+  },
+  {
+    "lesson": "A supported replacement can expose a plain green face, not only a white inset. Re-localize it after release instead of replaying the donor target."
+  },
+  {
+    "lesson": "Compute table release clearance from the complete padded public finger envelope, not only the physical tip."
+  },
+  {
+    "lesson": "For an upright diagonal regrasp, derive the turn from the observed long axis. Split the half turn and check every sampled joint increment to avoid a near2pi IK branch jump."
+  },
+  {
+    "lesson": "Visual checks and completed waypoints are not official success. Only original native results establish qualification; small-sample success does not establish full benchmark reliability."
+  }
+]

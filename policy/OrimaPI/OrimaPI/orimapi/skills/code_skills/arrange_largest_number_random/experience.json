@@ -1,0 +1,58 @@
+[
+  {
+    "type": "development_evidence",
+    "lesson": "c002 mean18.125 over8 trials, zero successes. API inspect failure must preserve its exact phase, closed-grip command and queued carry; never switch a held digit to source localization. Choose arm and order using whole-task motion and switch/home cost, reserve final release/home, and prefer a cheaper direct route over staging when the current RGB corridor and complete checked path permit. These c003 changes are not yet native-validated."
+  },
+  {
+    "type": "development_failure",
+    "scope": "Ongoing development evidence, not successful random-task validation",
+    "lesson": "After successful intermediate placement an arm can occlude the next digit. Null source marks mean unknown geometry and must trigger a checked empty-arm clear-view move; do not cast null coordinates or hallucinate a grasp. After one real view change, defer a still-blocked digit once to the end of the remaining jobs, keeping its original descending pad assignment. Later motion may expose it; no indefinite same-view API loop."
+  },
+  {
+    "type": "development_lesson",
+    "scope": "Eight normal layouts mean42.5 and2 successes; not validated on random clutter",
+    "lesson": "Fix descending numeric values to left-to-right observed pads, execute nearer same-side transfers first. Use a whole-glyph outside pinch along its narrow axis where span permits, and rotate the grasp-to-center offset with the digit to keep the target center aligned. After a staged release re-localize the actual current digit before the other arm acquires it."
+  },
+  {
+    "type": "observed_limitation",
+    "lesson": "Six of eight normal-task trials reached1050 actions. Intermediate home is now conditional on visibility; final home and staging home remain mandatory. Preflight still reserves a complete release/retraction/home route. This is a new unvalidated budget hypothesis."
+  },
+  {
+    "type": "reference_method",
+    "lesson": "An uncertain visual grasp verdict must be checked against current wrist evidence before opening. Rotated or off-center digits after release need current observation and correction; release or macro completion does not prove correct placement."
+  },
+  {
+    "type": "reference_method",
+    "lesson": "Avoid nearby clutter; a blocked route or occluded digit calls for a new view or different route. Keep held geometry clear and reserve final open-gripper home. The current native IK, FK, joint continuity, robot/finger/table guards remain authoritative."
+  },
+  {
+    "lesson": "Separate API termination from geometric and physical failures; the 400 and 503 need their actual failing requests before attribution.",
+    "source_study": "20261023-rsi3",
+    "scope": "Post-three-seed development reflection; not an observed future result"
+  },
+  {
+    "lesson": "Source-camera reprojection of a plane-derived point is a consistency check, not independent height evidence.",
+    "source_study": "20261023-rsi3",
+    "scope": "Post-three-seed development reflection; not an observed future result"
+  },
+  {
+    "lesson": "A public thickness prior and a mesh-derived finger anchor are hypotheses about contact, not measured contact.",
+    "source_study": "20261023-rsi3",
+    "scope": "Post-three-seed development reflection; not an observed future result"
+  },
+  {
+    "lesson": "Record acquisition, retention, release and readable pad placement separately; TCP verification cannot advance those object-state ledger entries.",
+    "source_study": "20261023-rsi3",
+    "scope": "Post-three-seed development reflection; not an observed future result"
+  },
+  {
+    "lesson": "Budget using expanded trajectories and tracking allowance, not requested steps. Seed 0 finished well before the action ceiling; action exhaustion is not supported as its cause.",
+    "source_study": "20261023-rsi3",
+    "scope": "Post-three-seed development reflection; not an observed future result"
+  },
+  {
+    "lesson": "Use terminal RGB only for its identified case. Empty pads in seed 2 do not establish the outcomes of individual attempts in seeds 0 or 1.",
+    "source_study": "20261023-rsi3",
+    "scope": "Post-three-seed development reflection; not an observed future result"
+  }
+]

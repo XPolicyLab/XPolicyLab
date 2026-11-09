@@ -1,0 +1,12 @@
+{
+  "task": "store_tools_in_toolbox",
+  "baseline_formal": "orimapi/skills/code_skills/store_tools_in_toolbox",
+  "baseline_manifest_sha256": "70b561a043a1d134e89b24a2d79bca9ab3edb0ed0b9e8ceee219d40ce921382c",
+  "runtime": "Own rewritten stage controller/geometry/composites over existing formal local providers",
+  "native_motion_provider": "fill_pen_holder c008 simulation adapter",
+  "geometry_provider": "formal classify_objects_by_language pinned RGB operations and fill_pen_holder mask refinement",
+  "conveyor_provider": "formal match_and_pick_from_conveyor local three-frame RGB tracker",
+  "not_implemented_from_external_interfaces": true,
+  "ordinary_random_algorithm_shared": true,
+  "frozen_experience_is_not_online_learning_across_seeds": true
+}

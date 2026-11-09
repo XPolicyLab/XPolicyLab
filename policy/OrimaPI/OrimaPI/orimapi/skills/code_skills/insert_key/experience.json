@@ -1,0 +1,66 @@
+[
+  {
+    "lesson": "Grip the source shaft while leaving the bow accessible to the receiving hand. Close and settle the receiver before opening the giver, then verify current retained-key pixels before insertion."
+  },
+  {
+    "lesson": "Reconstruct or refresh the current key-to-gripper relation after handoff. A commanded closed hand is not proof of possession. Keep fine insertion and turn movements referenced to the key tip and observed hole."
+  },
+  {
+    "lesson": "Reserve the native300-action budget for pickup, handoff, alignment, insertion and turn. A lifted key gives only partial progress and is not native success."
+  },
+  {
+    "lesson": "Separate grasp miss, slip and occlusion: require visible key motion relative to the table and consistency relative to the gripper before declaring retention.",
+    "source_study": "20261023-rsi2",
+    "scope": "Post-three-seed development reflection; not an observed future result"
+  },
+  {
+    "lesson": "Fresh point identity is an execution prerequisite. After a stale-point interruption, inspect the actual partially moved robot and reobserve before replanning.",
+    "source_study": "20261023-rsi2",
+    "scope": "Post-three-seed development reflection; not an observed future result"
+  },
+  {
+    "lesson": "Small reprojection or outline-fit residuals do not validate feature identity, support height or physical pad contact.",
+    "source_study": "20261023-rsi2",
+    "scope": "Post-three-seed development reflection; not an observed future result"
+  },
+  {
+    "lesson": "Endpoint IK is not a reachable, economical trajectory. Budget from reported kinematic expansion and measured action consumption, not requested steps.",
+    "source_study": "20261023-rsi2",
+    "scope": "Post-three-seed development reflection; not an observed future result"
+  },
+  {
+    "lesson": "Partial native credit does not identify a completed subgoal; maintain an evidence-based ledger for acquisition, transfer, insertion and turn.",
+    "source_study": "20261023-rsi2",
+    "scope": "Post-three-seed development reflection; not an observed future result"
+  },
+  {
+    "lesson": "The slow-lift/long-settle candidate still achieved no native success; further slowing alone is not a supported remedy.",
+    "source_study": "20261023-rsi4",
+    "scope": "Post-three-seed development reflection; not an observed future result"
+  },
+  {
+    "lesson": "Seed 2 demonstrates terminal non-possession, not the timing or mechanism of grasp failure. Do not relabel a possible miss as confirmed slip.",
+    "source_study": "20261023-rsi4",
+    "scope": "Post-three-seed development reflection; not an observed future result"
+  },
+  {
+    "lesson": "Hypothesis: nominal grasp-center targeting leaves the thin shaft outside an effective opposing-pad region, even when TCP tracking is accurate.",
+    "source_study": "20261023-rsi4",
+    "scope": "Post-three-seed development reflection; not an observed future result"
+  },
+  {
+    "lesson": "A reconstructed bow center can support pose estimation but may lie in empty space; it is not automatically a valid physical contact target.",
+    "source_study": "20261023-rsi4",
+    "scope": "Post-three-seed development reflection; not an observed future result"
+  },
+  {
+    "lesson": "Budget both native actions and remaining inspection submissions. Camera repositioning consumed 24 actions in seed 0 despite an eight-step request.",
+    "source_study": "20261023-rsi4",
+    "scope": "Post-three-seed development reflection; not an observed future result"
+  },
+  {
+    "lesson": "Partial scores do not identify completed subgoals, and finish only holds for evaluation.",
+    "source_study": "20261023-rsi4",
+    "scope": "Post-three-seed development reflection; not an observed future result"
+  }
+]

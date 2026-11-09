@@ -1,0 +1,46 @@
+[
+  {
+    "kind": "architecture",
+    "lesson": "GPT plans semantic phases, identities and recovery. Local measured composite tools execute fine operations. Never count commanded motion as native success."
+  },
+  {
+    "kind": "observed_local_baseline",
+    "outcomes": [
+      {
+        "seed": 0,
+        "score_native": 0.0,
+        "success": false,
+        "status": "completed"
+      },
+      {
+        "seed": 1,
+        "score_native": 0.0,
+        "success": false,
+        "status": "completed"
+      },
+      {
+        "seed": 2,
+        "score_native": 0.0,
+        "success": false,
+        "status": "completed"
+      }
+    ],
+    "lesson": "Old local trials did not place any tool. Public references report partial progress, not a locally reproduced four-tool success. Closure/center alignment alone misses asymmetric recesses.",
+    "scope": "Historical OLD tool-loop skill, not evidence about this new candidate."
+  },
+  {
+    "kind": "reference_informed_hypothesis",
+    "lesson": [
+      "Identify hammer, tape measure, wrench and pliers and corresponding recesses; choose order keeping narrow slots and remaining grasps accessible.",
+      "Pick each tool at an observed handle/body location, avoiding fragile head-only grasps.",
+      "With fresh post-pick RGB, dock held tool using three directed material features and corresponding recess frame; destination seat denotes the visible final support.",
+      "Open only at the intended support; inspect full-tool containment and endpoint orientation.",
+      "Recover a missed placement using changed grip/arm/recess frame; finish all four and home. Do not invent a lid-closing requirement."
+    ],
+    "scope": "No full native success established by the reviewed aggregate/reference contract."
+  },
+  {
+    "kind": "known_limitations",
+    "lesson": "No measured finger-stop/force sensor or automatic object retention/containment certificate. Attachment transforms assume no slip. Three-feature docking and support placement are implemented but unvalidated in native tasks. No new arbitrary tabletop spacing, residual-error, protected-step or retry-count gates."
+  }
+]

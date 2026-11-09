@@ -1,0 +1,405 @@
+{
+  "schema": "orimapi.tool-recipe/v1",
+  "name": "approach_close",
+  "interface": "Approach and close from an already clear, open-gripper staging pose; never use for transport or release. Emits one automatically executed motion followed by a final gripper close, returning needs_visual_review. Inspect fresh wrist RGB and verification before any lift; closure is not grasp proof. Modes: omit mode or use mode='tracked' for plan_pose with arm, target (currently localized visual ID), offset (world meters), approach (world direction for local TCP +X), closing (world direction for local TCP +Y), and reserve_actions. Supply consistent perpendicular axes with their intended signs; both axes are combined with translation in one motion. The target must remain observed throughout execution. Optional motion_steps=4 or 6 and close_steps=8..12 select economical nominal timing; omission retains legacy planner timing and 24-step closure. If an overhead track is lost, first inspect/reacquire fresh wrist evidence and current public TCP; do not retry the stale target. Only for a short, visibly clear final approach, use mode='measured_relative' with arm, translation (WORLD meters, norm<=0.15), rotation_vector (WORLD radians, norm<=0.6), and reserve_actions. These deltas must be freshly derived from current wrist evidence and measured TCP, never from an old intended endpoint or stale coordinates. Relative mode uses current measured TCP at execution, pivot_local=[0,0,0], no visual target binding, and defaults to motion_steps=6, close_steps=8. It ignores tracked-mode target/offset/axes if present; this is not automatic recovery or perception validation. Do not split a large heading change into repeated relative calls; stage separately with a currently observed target and two plan_pose axes, then reassess. Local zero is already the grasp center: never add the wrist-to-TCP offset again. Neither mode plans around scene obstacles or validates height hypotheses. Keep the unused arm safely home when reachable. reserve_actions is passed through unchanged: budget it for all remaining transfers, release/review, recovery, and BOTH-arm homing using public motion estimates and observed expansion, not nominal steps alone. Before moving either T, record both original stem centers and directed headings from current RGB separately from moving tracks; this recipe neither records nor updates them. Call only when the native remaining budget supports the approach plus that reserve. Relative-mode example deltas are illustrative and must be replaced with current measurements. Contract-tested only; no native task qualification.",
+  "arguments_example": {
+    "mode": "measured_relative",
+    "arm": "left",
+    "translation": [
+      0,
+      0,
+      -0.03
+    ],
+    "rotation_vector": [
+      0,
+      0,
+      0
+    ],
+    "motion_steps": 6,
+    "close_steps": 8,
+    "reserve_actions": 60
+  },
+  "source": "def build_plan(scene):\n    a = scene['arguments']\n    relative = False\n    if 'mode' in a:\n        relative = a['mode'] == 'measured_relative'\n    close_steps = 24\n    if relative:\n        motion = {'arm': a['arm'], 'translation': a['translation'], 'rotation_vector': a['rotation_vector'], 'pivot_local': [0, 0, 0], 'steps': 6}\n        tool = 'plan_relative_pose'\n        close_steps = 8\n    else:\n        motion = {'arm': a['arm'], 'constraints': [{'kind': 'point', 'local': [0, 0, 0], 'target': a['target'], 'offset': a['offset']}, {'kind': 'axis', 'local': [1, 0, 0], 'direction': a['approach']}, {'kind': 'axis', 'local': [0, 1, 0], 'direction': a['closing']}]}\n        tool = 'plan_pose'\n    if 'motion_steps' in a:\n        motion['steps'] = a['motion_steps']\n    if 'close_steps' in a:\n        close_steps = a['close_steps']\n    return {'stages': [{'tool': tool, 'arguments': motion}, {'tool': 'gripper', 'arguments': {'arm': a['arm'], 'value': 0, 'steps': close_steps}}], 'reserve_actions': a['reserve_actions']}\n",
+  "tests": [
+    {
+      "name": "side_approach_returns_before_lift",
+      "scene": {
+        "arguments": {
+          "arm": "left",
+          "target": "feature_a",
+          "offset": [
+            0,
+            0,
+            0
+          ],
+          "approach": [
+            0,
+            1,
+            0
+          ],
+          "closing": [
+            -1,
+            0,
+            0
+          ],
+          "reserve_actions": 40
+        },
+        "state": {}
+      },
+      "expected": {
+        "stages": [
+          {
+            "tool": "plan_pose",
+            "arguments": {
+              "arm": "left",
+              "constraints": [
+                {
+                  "kind": "point",
+                  "local": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "target": "feature_a",
+                  "offset": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "kind": "axis",
+                  "local": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "direction": [
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                {
+                  "kind": "axis",
+                  "local": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "direction": [
+                    -1,
+                    0,
+                    0
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "tool": "gripper",
+            "arguments": {
+              "arm": "left",
+              "value": 0,
+              "steps": 24
+            }
+          }
+        ],
+        "reserve_actions": 40
+      }
+    },
+    {
+      "name": "different_arm_and_observed_target",
+      "scene": {
+        "arguments": {
+          "arm": "right",
+          "target": "feature_b",
+          "offset": [
+            0,
+            0,
+            0.01
+          ],
+          "approach": [
+            0,
+            0,
+            -1
+          ],
+          "closing": [
+            0,
+            1,
+            0
+          ],
+          "reserve_actions": 25
+        },
+        "state": {}
+      },
+      "expected": {
+        "stages": [
+          {
+            "tool": "plan_pose",
+            "arguments": {
+              "arm": "right",
+              "constraints": [
+                {
+                  "kind": "point",
+                  "local": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "target": "feature_b",
+                  "offset": [
+                    0,
+                    0,
+                    0.01
+                  ]
+                },
+                {
+                  "kind": "axis",
+                  "local": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "direction": [
+                    0,
+                    0,
+                    -1
+                  ]
+                },
+                {
+                  "kind": "axis",
+                  "local": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "direction": [
+                    0,
+                    1,
+                    0
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "tool": "gripper",
+            "arguments": {
+              "arm": "right",
+              "value": 0,
+              "steps": 24
+            }
+          }
+        ],
+        "reserve_actions": 25
+      }
+    },
+    {
+      "name": "explicit_relative_recovery_does_not_bind_lost_target",
+      "scene": {
+        "arguments": {
+          "mode": "measured_relative",
+          "arm": "right",
+          "target": "lost_overhead_feature",
+          "translation": [
+            0.003,
+            -0.002,
+            -0.035
+          ],
+          "rotation_vector": [
+            0,
+            0,
+            -0.04
+          ],
+          "reserve_actions": 75
+        },
+        "state": {}
+      },
+      "expected": {
+        "stages": [
+          {
+            "tool": "plan_relative_pose",
+            "arguments": {
+              "arm": "right",
+              "translation": [
+                0.003,
+                -0.002,
+                -0.035
+              ],
+              "rotation_vector": [
+                0,
+                0,
+                -0.04
+              ],
+              "pivot_local": [
+                0,
+                0,
+                0
+              ],
+              "steps": 6
+            }
+          },
+          {
+            "tool": "gripper",
+            "arguments": {
+              "arm": "right",
+              "value": 0,
+              "steps": 8
+            }
+          }
+        ],
+        "reserve_actions": 75
+      }
+    },
+    {
+      "name": "short_tracked_approach_preserves_target_offset_and_signed_axes",
+      "scene": {
+        "arguments": {
+          "mode": "tracked",
+          "arm": "left",
+          "target": "fresh_wrist_stem",
+          "offset": [
+            0,
+            0,
+            0.006
+          ],
+          "approach": [
+            0,
+            0,
+            -1
+          ],
+          "closing": [
+            0,
+            -1,
+            0
+          ],
+          "motion_steps": 4,
+          "close_steps": 10,
+          "reserve_actions": 90
+        },
+        "state": {}
+      },
+      "expected": {
+        "stages": [
+          {
+            "tool": "plan_pose",
+            "arguments": {
+              "arm": "left",
+              "constraints": [
+                {
+                  "kind": "point",
+                  "local": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "target": "fresh_wrist_stem",
+                  "offset": [
+                    0,
+                    0,
+                    0.006
+                  ]
+                },
+                {
+                  "kind": "axis",
+                  "local": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "direction": [
+                    0,
+                    0,
+                    -1
+                  ]
+                },
+                {
+                  "kind": "axis",
+                  "local": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "direction": [
+                    0,
+                    -1,
+                    0
+                  ]
+                }
+              ],
+              "steps": 4
+            }
+          },
+          {
+            "tool": "gripper",
+            "arguments": {
+              "arm": "left",
+              "value": 0,
+              "steps": 10
+            }
+          }
+        ],
+        "reserve_actions": 90
+      }
+    },
+    {
+      "name": "relative_mode_requires_no_target_and_honors_explicit_timing",
+      "scene": {
+        "arguments": {
+          "mode": "measured_relative",
+          "arm": "left",
+          "translation": [
+            -0.004,
+            0.001,
+            -0.02
+          ],
+          "rotation_vector": [
+            0,
+            0,
+            0.02
+          ],
+          "motion_steps": 4,
+          "close_steps": 12,
+          "reserve_actions": 80
+        },
+        "state": {}
+      },
+      "expected": {
+        "stages": [
+          {
+            "tool": "plan_relative_pose",
+            "arguments": {
+              "arm": "left",
+              "translation": [
+                -0.004,
+                0.001,
+                -0.02
+              ],
+                "rotation_vector": [
+                0,
+                0,
+                0.02
+              ],
+              "pivot_local": [
+                0,
+                0,
+                0
+              ],
+              "steps": 4
+            }
+          },
+          {
+            "tool": "gripper",
+            "arguments": {
+              "arm": "left",
+              "value": 0,
+              "steps": 12
+            }
+          }
+        ],
+        "reserve_actions": 80
+      }
+    }
+  ]
+}

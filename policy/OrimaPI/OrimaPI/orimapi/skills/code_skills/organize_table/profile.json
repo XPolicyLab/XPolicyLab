@@ -1,0 +1,36 @@
+{
+  "title": "桌面整理：三次完整搬运＋键盘边缘接触推进",
+  "target_count": 4,
+  "operations": [
+    "transfer",
+    "pick",
+    "place",
+    "push",
+    "inspect",
+    "measure_feature",
+    "view",
+    "home",
+    "wait"
+  ],
+  "phases": [
+    "Identify alarm clock/drawer support, figurine/stand, mouse/mouse pad, keyboard/frame.",
+    "Use complete local transfer to put alarm clock on drawer, figurine upright on stand, and mouse on pad. Choose current order preserving keyboard push corridor.",
+    "For keyboard push select current start at contact edge and end at frame alignment; local calibrated features define the trajectory, not a guessed directional nudge.",
+    "Inspect figurine tipping, actual keyboard displacement and all supports; recover only the unresolved object, then home. Do not invent a drawer-opening subtask."
+  ],
+  "failure_lesson": "Figurines tipped after completed transfers, and completed pushes left keyboard misaligned. Repeated unavailable patch/stereo methods did not recover geometry.",
+  "required_features": {
+    "push": [
+      "source.start (keyboard contact)",
+      "destination.end (frame-aligned contact)"
+    ]
+  },
+  "reference_success_scope": "External aggregate has limited native successes; the new full local operations need validation.",
+  "task": "organize_table",
+  "family": "organize_table",
+  "budget": 1000,
+  "random": false,
+  "pickup_lift_m": 0.06,
+  "travel_lift_m": 0.06,
+  "final_home": true
+}

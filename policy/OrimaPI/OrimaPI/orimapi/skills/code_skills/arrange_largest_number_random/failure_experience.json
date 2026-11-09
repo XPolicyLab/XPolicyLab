@@ -1,0 +1,237 @@
+[
+  {
+    "official_result_available": true,
+    "score": 0.05,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.15,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.05,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "arrange_largest_number_random",
+        "seed": 2,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 186,
+        "time": "2026-10-23T06:50:30.844800+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "arrange_largest_number_random",
+        "episode_id": "0cf35557572149e488ede33a0c4442e6",
+        "step": 40,
+        "kind": "supervisor",
+        "error": "SupervisorEpisodeError: Code program API failed: Supervisor API returned HTTP 400"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.05,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "arrange_largest_number_random",
+        "seed": 1,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 1372,
+        "time": "2026-10-23T06:46:18.851534+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "arrange_largest_number_random",
+        "episode_id": "1db2cc7c805843c09f4a7da7ea9a402c",
+        "step": 372,
+        "kind": "supervisor",
+        "error": "SupervisorEpisodeError: Code program API failed: Supervisor API returned HTTP 503"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.05,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.05,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "arrange_largest_number_random",
+        "seed": 2,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 1638,
+        "time": "2026-10-23T04:58:08.019176+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "arrange_largest_number_random",
+        "episode_id": "48fb4c850be34e8eafd28dff68404d73",
+        "step": 399,
+        "kind": "policy",
+        "error": "RuntimeError: Code-submission budget exhausted"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.05,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "arrange_largest_number_random",
+        "seed": 1,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 1829,
+        "time": "2026-10-23T04:47:35.600320+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "arrange_largest_number_random",
+        "episode_id": "bf073f1618b64e70ab0a62b13506e514",
+        "step": 476,
+        "kind": "policy",
+        "error": "RuntimeError: Code-submission budget exhausted"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.05,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "arrange_largest_number_random",
+        "seed": 0,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 927,
+        "time": "2026-10-23T04:37:39.705855+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "arrange_largest_number_random",
+        "episode_id": "013028ac46734797948c5b2a3ce9fe90",
+        "step": 210,
+        "kind": "policy",
+        "error": "RuntimeError: Code-submission budget exhausted"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "arrange_largest_number_random",
+        "seed": 2,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 179,
+        "time": "2026-10-23T04:28:26.549324+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "arrange_largest_number_random",
+        "episode_id": "dbbda1109c0040a6922fb541397c1702",
+        "step": 36,
+        "kind": "policy",
+        "error": "NameError: name 'math' is not defined"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "arrange_largest_number_random",
+        "seed": 1,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 246,
+        "time": "2026-10-23T04:23:24.189769+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "arrange_largest_number_random",
+        "episode_id": "e988505048a5451ebc7031ba8491ecde",
+        "step": 67,
+        "kind": "policy",
+        "error": "NameError: name 'math' is not defined"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "arrange_largest_number_random",
+        "seed": 0,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 174,
+        "time": "2026-10-23T04:18:38.474190+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "arrange_largest_number_random",
+        "episode_id": "be887a53b31c47a19d1a89d4069a143b",
+        "step": 33,
+        "kind": "policy",
+        "error": "NameError: name 'math' is not defined"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.15,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.15,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.3,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "type": "curated_failure_lesson",
+    "lesson": "RSI5 seed1 head RGB at step431 shows 9 and 8 on the first two pads, the 7 rotated below the third pad, and the 1 still outside the pad row. At step793 the 7 is on the third pad but remains visibly rotated; the fourth pad is empty. Release and later recovery did not establish a complete readable arrangement. Do not infer per-digit completion counts from the partial native score.",
+    "scope": "observed_failure",
+    "curated_source_sha256": "32520d2511426834b083976f6760d21a9ccfcce13031521a3df0d10f13a6fd7f"
+  },
+  {
+    "type": "curated_failure_lesson",
+    "lesson": "RSI5 seed0 program records show a right-arm acquisition followed by rejected routes to the leftmost pad and an unsuccessful intermediate landing. These are failures of those attempted routes, not global unreachability. Select a source arm and jaw heading only after considering the observed destination and necessary readable glyph yaw.",
+    "scope": "observed_failure",
+    "curated_source_sha256": "32520d2511426834b083976f6760d21a9ccfcce13031521a3df0d10f13a6fd7f"
+  },
+  {
+    "type": "curated_failure_lesson",
+    "lesson": "A grasp on a stem or ring can be offset from the digit's placement reference. Future candidates should test explicit object-relative anchor propagation through yaw changes and current landing checks. This is an unverified geometric explanation, not proof of the observed release drift or a successful recovery. The selected RSI5 code is unchanged.",
+    "scope": "hypothesis_unverified",
+    "curated_source_sha256": "32520d2511426834b083976f6760d21a9ccfcce13031521a3df0d10f13a6fd7f"
+  }
+]

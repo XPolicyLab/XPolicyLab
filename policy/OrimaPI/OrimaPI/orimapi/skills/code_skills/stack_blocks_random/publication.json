@@ -1,0 +1,30 @@
+{
+  "published_at": "2026-10-30T11:30:38.919016+00:00",
+  "authorization": "User explicitly requested merging stack_blocks_random into code_skills",
+  "candidate": "orimapi/skills/code_skill_rsi/stack_blocks_random/c004-targeted-feedback-20261030",
+  "tested_bundle_sha256": "973282604b89b18f0a1ae3e101a55c719876be92f83df3bc71eb8e0f8636cc16",
+  "native_evidence": "runs/stack-blocks-random-random8-20261030-candidate",
+  "previous_formal_archive": "runs/publications/stack-blocks-random-c004-20261030T113038Z",
+  "qualification": {
+    "published": true,
+    "standard_qualified": false,
+    "mode": "user_authorized_random8_promotion",
+    "tested_seeds": [
+      0,
+      1,
+      2
+    ],
+    "successful_seeds": [
+      0,
+      1,
+      2
+    ],
+    "scored_episodes": 8,
+    "successful_episodes": 7,
+    "mean_score_percent": 87.5,
+    "scope": "Eight preselected development layouts, not the full official quota."
+  },
+  "behavior_sources_byte_identical": true,
+  "native_retest_after_publication": false,
+  "notes": "Controller, tools, prompts and experience preserve frozen tested bytes. Historical wording inside the frozen program prompt is not current qualification metadata."
+}

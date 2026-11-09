@@ -1,0 +1,14 @@
+[
+  {
+    "lesson": "The earlier49-stage fold reached action500 before lowering, releasing or homing. Keep the entire final lower-release-home sequence within the unchanged500-action limit and reserve substantial tracking overhead."
+  },
+  {
+    "lesson": "Garment landmarks move after folding a sleeve. Reobserve the current cloth before choosing the next cuff or both hem corners. Use visible cloth edges, not memorized layout/node coordinates."
+  },
+  {
+    "lesson": "Pinch a small solid strip near the cuff or hem, use a low draping arc, and retain both hem corners through the fold. A close command does not establish attachment. Do not home while either hand must retain cloth."
+  },
+  {
+    "lesson": "Fold both sleeves inward, then bring both hem corners toward corresponding shoulders. Release only after lowering; final open-gripper and return-home conditions are required by the native evaluator."
+  }
+]

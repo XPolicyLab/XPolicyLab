@@ -1,0 +1,14 @@
+[
+  {
+    "scope": "observed_failure",
+    "lesson": "Old fill_pen_holder v3 scores0/0/0 with151/220/214 GPT requests. Repeated low-level measurement/planning queries did not yield an insertion. Use GPT for phase plan/coarse RGB identity; local composite stages own measurements and motion."
+  },
+  {
+    "scope": "task_public_description",
+    "lesson": "One hand holds the holder, other inserts all four pens tip-up. No need to uncap or see a nib. Directed-end choice is a visible cap/clip/taper hypothesis, not checker-point knowledge. Do not confuse unavailable perception with tool success."
+  },
+  {
+    "scope": "unvalidated_strategy",
+    "lesson": "Measure current holder and each pen using local RGB segment/locate. Keep holder upright near original support, select a shaft grasp toward the upper end, leave enough free shaft below fingers, rotate in clear space, insert in measured opening and release one by one. Local bounds/IK/contact assumptions are not official success; retain failures and native score."
+  }
+]

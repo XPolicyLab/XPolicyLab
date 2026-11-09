@@ -1,0 +1,76 @@
+{
+  "schema": "orimapi.code-skill-publication/v1",
+  "status": "published",
+  "published_at": "2026-10-27T20:11:30.684674+00:00",
+  "authorization": "User explicitly requested: 将这一版合入正式skill",
+  "candidate": "orimapi/skills/code_skill_rsi/arrange_largest_number_random/c003-20261028",
+  "previous_formal_backup": "orimapi/skills/code_skill_rsi/arrange_largest_number_random/c003-20261028/publication/backup-20261027T201130Z",
+  "qualification": {
+    "published": true,
+    "mode": "user_authorized_partial_score_acceptance",
+    "standard_qualified": false,
+    "tested_seeds": [
+      0,
+      1,
+      2
+    ],
+    "successful_seeds": [],
+    "llm_model": "gpt-6-astra",
+    "validation_batch": "arrange-largest-number-clutter8-20261028-c003-r1",
+    "scored_episodes": 8,
+    "successful_episodes": 0,
+    "mean_score_percent": 25.625,
+    "equal_seed_mean_score_percent": 26.11111111111111,
+    "seed_results": [
+      {
+        "seed": 0,
+        "episodes": 3,
+        "planned": 3,
+        "successes": 0,
+        "mean_score_percent": 23.333333333333332
+      },
+      {
+        "seed": 1,
+        "episodes": 3,
+        "planned": 3,
+        "successes": 0,
+        "mean_score_percent": 25.0
+      },
+      {
+        "seed": 2,
+        "episodes": 2,
+        "planned": 2,
+        "successes": 0,
+        "mean_score_percent": 30.0
+      }
+    ],
+    "previous_mean_score_percent": 18.125,
+    "mean_improvement_points": 7.5,
+    "scope": "User-authorized publication of unchanged c003 runtime. Eight same-layout development replays, seeds0/1/2 allocation3/3/2;0 complete successes. Random variant only; not full25+25 quota, independent generalization or standard task qualification."
+  },
+  "tested_candidate_bundle_sha256": "3345b5e2a688b818442d14544a20814308abf5b0af161ee6cf7027293946d103",
+  "runtime_hashes": {
+    "experience": "f409a2dd0d1c4911739229aa162bb92b102c5d2e5d57d9ac96314bfccd7d4220",
+    "source_controller": "33f5c5e7c5ac26c5de2691396e9c7f841f58ab2f2ec6f7548f2054332b3bbac1",
+    "source_vision": "1dfdfd550812c2cb9f08e75b990f73c494d000bd30e11836d6a4dd3351e6b21f",
+    "source_shared_make_kong_baseline_motion": "79abd687e22cb81a94ebb5fcc6b5419934c459125645227d664046f3950097cb",
+    "source_shared_make_kong_hand_clearance": "088592a790fde9051c007a635fcc6edec1c51a29c21f367163303e87c32784e9",
+    "source_shared_make_kong_hand_bounds": "6ecea3347942113699f1993b189fa4ad555912aa69906d43dd3a29beaed426ca",
+    "source_planning": "bb43b64d53be1e1f4b59a4c48a86c718d18b90ecdab9b7cb48de78363438916c",
+    "source_shared_native_adapter": "ee10e45379ad2c8020e9dc5c2ec8f8739bd96f79bcea3b69a8bd729b02fe5dc7",
+    "source_shared_native_worker": "92a27a877166ed808aeae0e6fff202fa9725c0bfc7dc333d6cffb2608574beba",
+    "source_shared_public_geometry": "9e204a79b46e863b93e7278e6200f44b432ba69f3bb62892ff17ef6510473d52",
+    "source_shared_checked_motion": "3ef712be1b81180ea6d7db9034d53bd6d38999f51ab38f8eee431a071e4de9e8",
+    "source_shared_robot_collision": "c34b0c51b0a3da35329b876812643bd1eae51fb498b3ffd7f3ce982c59fe625f",
+    "source_shared_motion_base": "7680d16d16496f4eeebc9fff9190c7b0422582c7f5251d198d38169a0295e8fc",
+    "source_scheduler": "7eb5b9c73a9eaadfcfc62ef89d521ab224a17874013885d84697e36961134c58"
+  },
+  "tested_runtime_inputs_unchanged": true,
+  "runtime_request_timeout_s": 120,
+  "configuration_changes": [
+    "arrange_largest_number_random description and native_ik.device=cuda:0",
+    "runtime.supervisor_timeout_s30->120 (shared runtime request timeout; matches tested configuration and standard smoke entry)"
+  ],
+  "scope": "Controller, vision, planning, scheduler, experience and declared shared runtime inputs match all8 tested snapshots byte-for-byte. Manifest relative paths/qualification and publication/validation metadata changed bundle identity. No new simulation.",
+  "review": "runs/arrange-largest-number-clutter8-20261028-c003-r1/analysis/review.md"
+}

@@ -1,0 +1,376 @@
+[
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "fasten_screws",
+        "seed": 2,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 405,
+        "time": "2026-10-23T09:33:44.341962+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "fasten_screws",
+        "episode_id": "67aff14e10564b7a92ec0dd416949d96",
+        "step": 68,
+        "kind": "policy",
+        "error": "RuntimeError: Too many non-motion program iterations"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "fasten_screws",
+        "seed": 1,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 404,
+        "time": "2026-10-23T09:24:01.431822+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "fasten_screws",
+        "episode_id": "a6ebcc70b9494423a11261d1b4654741",
+        "step": 75,
+        "kind": "policy",
+        "error": "RuntimeError: Too many non-motion program iterations"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.2,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "fasten_screws",
+        "seed": 2,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 826,
+        "time": "2026-10-23T05:38:01.864467+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "fasten_screws",
+        "episode_id": "6e40437c0e82472aa6fca4132095f5e7",
+        "step": 187,
+        "kind": "policy",
+        "error": "RuntimeError: Code-submission budget exhausted"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.2,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "fasten_screws",
+        "seed": 1,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 1644,
+        "time": "2026-10-23T05:28:01.613539+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "fasten_screws",
+        "episode_id": "c6c0ddb5b5274d30847e69219a2373d8",
+        "step": 415,
+        "kind": "policy",
+        "error": "RuntimeError: Code-submission budget exhausted"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "fasten_screws",
+        "seed": 2,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 322,
+        "time": "2026-10-22T19:09:38.358689+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "fasten_screws",
+        "episode_id": "14f4da4eb35e4f6d8a2a3e4cac5e1ced",
+        "step": 95,
+        "kind": "policy",
+        "error": "ValueError: No complete checked assembly path: ['No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution']"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "fasten_screws",
+        "seed": 0,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 441,
+        "time": "2026-10-22T18:58:14.812884+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "fasten_screws",
+        "episode_id": "985bea12309347d7bdfda722d2ccba62",
+        "step": 133,
+        "kind": "policy",
+        "error": "ValueError: No supported two-view circular axis for red_bolt; candidates={'cam_high': 6, 'cam_left_wrist': 10, 'previous_cam_left_wrist_view_1': 10, 'previous_cam_left_wrist_view_2': 10}; rejected={'Outline does not cover enough of the circle': 273, 'Two outlines disagree in RGB reprojection': 22, 'Current RGB no longer supports the fitted circle boundary': 85}"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": false,
+    "score": null,
+    "runtime_error": "RuntimeError: RoboDojo evaluation timed out after 1200.0 seconds",
+    "controller_failures": [
+      {
+        "task": "fasten_screws",
+        "seed": 1,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 2971,
+        "time": "2026-10-22T19:00:48.149977+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "fasten_screws",
+        "episode_id": "1bb4175bb9314ad4a17d3c5f825b7506",
+        "step": 936,
+        "kind": "policy",
+        "error": "ValueError: No current upright nut retention"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "fasten_screws",
+        "seed": 2,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 238,
+        "time": "2026-10-22T18:47:25.926134+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "fasten_screws",
+        "episode_id": "6485eaa542f44ee79329ecc49cbf4e68",
+        "step": 68,
+        "kind": "policy",
+        "error": "ValueError: Hex-nut measurement requires two views and current evidence"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "fasten_screws",
+        "seed": 1,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 1576,
+        "time": "2026-10-22T18:32:40.179331+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "fasten_screws",
+        "episode_id": "0a839ddc27eb4fd591dfed8068c528f7",
+        "step": 491,
+        "kind": "policy",
+        "error": "ValueError: No complete checked assembly path: ['Full-width distal fingertips must remain at least 2 mm above table', 'Full-width distal fingertips must remain at least 2 mm above table', 'Full-width distal fingertips must remain at least 2 mm above table', 'Full-width distal fingertips must remain at least 2 mm above table', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'Public collision model: self clearance -0.0013 m', 'Public collision model: self clearance -0.0010 m', 'Public swept finger envelope enters table clearance', 'Public collision model: self clearance -0.0016 m', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'Public collision model: self clearance -0.0016 m', 'Public collision model: self clearance -0.0001 m', 'Public swept finger envelope enters table clearance', 'Public collision model: self clearance -0.0013 m', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'Public collision model: self clearance -0.0017 m', 'Public swept finger envelope enters table clearance', 'Public swept finger envelope enters table clearance', 'Public collision model: self clearance -0.0023 m', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'Public collision model: self clearance -0.0023 m', 'Arm-link origin below table clearance', 'Public swept finger envelope enters table clearance', 'Public collision model: self clearance -0.0017 m', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution']"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "fasten_screws",
+        "seed": 0,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 444,
+        "time": "2026-10-22T18:26:24.683736+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "fasten_screws",
+        "episode_id": "2db5734700a2478b9600f365de4cf1ef",
+        "step": 134,
+        "kind": "policy",
+        "error": "ValueError: No supported two-view circular axis for red_bolt; candidates={'cam_high': 7, 'cam_left_wrist': 10, 'previous_cam_left_wrist_view_1': 10, 'previous_cam_left_wrist_view_2': 10}; rejected={'Outline does not cover enough of the circle': 348, 'Two outlines disagree in RGB reprojection': 20, 'Current RGB no longer supports the fitted circle boundary': 42}"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "fasten_screws",
+        "seed": 0,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 814,
+        "time": "2026-10-22T18:01:13.071001+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "fasten_screws",
+        "episode_id": "31f13f0800f04982a5d52f365a39e933",
+        "step": 247,
+        "kind": "policy",
+        "error": "ValueError: No complete checked assembly path: ['No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution', 'No accurate IK solution']"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "fasten_screws",
+        "seed": 1,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 611,
+        "time": "2026-10-22T17:59:27.423228+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "fasten_screws",
+        "episode_id": "2a7e8d1f37cc459fa07eda3083868261",
+        "step": 181,
+        "kind": "policy",
+        "error": "ValueError: No supported two-view circular axis for yellow_bolt; candidates={'cam_high': 0, 'cam_left_wrist': 0, 'previous_cam_left_wrist_view_1': 0, 'previous_cam_left_wrist_view_2': 3}; rejected={}"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "fasten_screws",
+        "seed": 0,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 240,
+        "time": "2026-10-22T17:47:28.415186+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "fasten_screws",
+        "episode_id": "f606a1c7593a45738535eb853b221840",
+        "step": 68,
+        "kind": "policy",
+        "error": "ValueError: No supported two-view circular axis for red_bolt; candidates={'cam_high': 6, 'cam_left_wrist': 10, 'previous_cam_left_wrist': 10}; rejected={'Outline does not cover enough of the circle': 134, 'Two outlines disagree in RGB reprojection': 27, 'Circle measurement uncertainty is too large': 7, 'Current RGB no longer supports the fitted circle boundary': 52}"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "fasten_screws",
+        "seed": 0,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 446,
+        "time": "2026-10-22T17:34:58.949143+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "fasten_screws",
+        "episode_id": "85f7e093aa814eb6bae70c52fe9b6d6b",
+        "step": 133,
+        "kind": "policy",
+        "error": "ValueError: No supported two-view circular axis for blue_nut; candidates={'cam_high': 10, 'cam_left_wrist': 10, 'previous_cam_left_wrist': 10}; rejected={'Outline does not cover enough of the circle': 263, 'Two outlines disagree in RGB reprojection': 37}"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "fasten_screws",
+        "seed": 0,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 190,
+        "time": "2026-10-22T13:19:28.788812+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "fasten_screws",
+        "episode_id": "e5f1f8bb5a4f443d900fcc16f3ab4a12",
+        "step": 53,
+        "kind": "policy",
+        "error": "ValueError: No supported two-view circular axis for red_nut"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "type": "curated_failure_lesson",
+    "lesson": "RSI2 seed1 earned native0.2, the one-pair grading tier, while the task still failed. Head RGB at step198 shows the red pair visually close with blue/yellow separate; step316 shows red/blue visually close and yellow separate. Those views do not resolve the native1mm alignment/depth criteria or identify the credited color. Do not equate two visually close pairs with native0.5 or full assembly.",
+    "scope": "observed_failure",
+    "curated_source_sha256": "68a77ae933194459850d0a847965db3824e3f12eb057783115bb13ff6700bd72"
+  },
+  {
+    "type": "curated_failure_lesson",
+    "lesson": "The selected RSI2 program spent many inspections on incremental first/second-pair approaches. At its final submission the yellow nut's bolt target remained only a height-prior estimate, so it returned the nut and homed rather than performing unreviewed insertion. All three color pairs and final cleanup are required for complete success; cleanup alone does not satisfy the task.",
+    "scope": "observed_failure",
+    "curated_source_sha256": "68a77ae933194459850d0a847965db3824e3f12eb057783115bb13ff6700bd72"
+  },
+  {
+    "type": "curated_failure_lesson",
+    "lesson": "A later RSI6 route-preview pass did not guarantee actual grasp execution or held-bore alignment. Its first episode encountered orientation-tracking trouble and then repeated occluded or rejected bore observations, finishing without assembly credit. Treat endpoint/path checks as robot-motion evidence, not a measured nut-to-gripper transform.",
+    "scope": "observed_failure",
+    "curated_source_sha256": "68a77ae933194459850d0a847965db3824e3f12eb057783115bb13ff6700bd72"
+  },
+  {
+    "type": "curated_failure_lesson",
+    "lesson": "Future candidates should test current held-bore localization and an object-relative insertion pivot before tightening, preserving all current geometry and motion gates. This is an unverified recovery hypothesis; the exceptionally selected RSI2 runtime is unchanged and its newer route tools are not silently added.",
+    "scope": "hypothesis_unverified",
+    "curated_source_sha256": "68a77ae933194459850d0a847965db3824e3f12eb057783115bb13ff6700bd72"
+  }
+]

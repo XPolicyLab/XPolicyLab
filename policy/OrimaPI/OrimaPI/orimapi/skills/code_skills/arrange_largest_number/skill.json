@@ -1,0 +1,74 @@
+{
+  "schema": "orimapi.code-controller-skill/v1",
+  "skill_id": "arrange_largest_number",
+  "supported_tasks": [
+    "arrange_largest_number"
+  ],
+  "task_spec": {
+    "task": "arrange_largest_number",
+    "budget": 1050,
+    "requirements": "Arrange the four or five observed physical digits descending on their observed pads from left to right, upright/readable, then both arms home. Current RGB/public robot input only; original native1050-action limit."
+  },
+  "tool_limits": {
+    "max_calls": 32,
+    "max_tools_per_turn": 8,
+    "history_size": 8
+  },
+  "experience": "experience.json",
+  "sources": {
+    "controller": "controller.py",
+    "vision": "vision.py",
+    "shared_make_kong_baseline_motion": "../make_kong/baseline_motion.py",
+    "shared_make_kong_hand_clearance": "../make_kong/hand_clearance.py",
+    "shared_make_kong_hand_bounds": "../make_kong/hand_bounds.json",
+    "planning": "planning.py",
+    "shared_native_adapter": "../stack_blocks/adapter.py",
+    "shared_native_worker": "../stack_blocks/ik_worker.py",
+    "shared_public_geometry": "../common/geometry.py",
+    "shared_checked_motion": "../../code_tools/motion.py",
+    "shared_robot_collision": "../../code_tools/collision.py",
+    "shared_motion_base": "../play_tic_tac_toe/motion.py",
+    "published_validation": "validation.json",
+    "published_publication": "publication.json"
+  },
+  "qualification": {
+    "published": true,
+    "mode": "user_authorized_eight_trial_acceptance",
+    "standard_qualified": false,
+    "tested_seeds": [
+      0,
+      1,
+      2
+    ],
+    "successful_seeds": [
+      0
+    ],
+    "llm_model": "gpt-6-astra",
+    "validation_batch": "arrange-largest-number-random8-20261028-c001-r1",
+    "scored_episodes": 8,
+    "successful_episodes": 2,
+    "mean_score_percent": 42.5,
+    "equal_seed_mean_score_percent": 30.666666666666668,
+    "seed_results": [
+      {
+        "seed": 0,
+        "episodes": 5,
+        "mean_score_percent": 57.0,
+        "successes": 2
+      },
+      {
+        "seed": 1,
+        "episodes": 1,
+        "mean_score_percent": 15.0,
+        "successes": 0
+      },
+      {
+        "seed": 2,
+        "episodes": 2,
+        "mean_score_percent": 20.0,
+        "successes": 0
+      }
+    ],
+    "scope": "Eight distinct layouts sampled from 90 original normal-task layouts. User-authorized small-sample publication; not the official 25 normal plus 25 random episodes per seed. arrange_largest_number_random is untested and unsupported."
+  }
+}

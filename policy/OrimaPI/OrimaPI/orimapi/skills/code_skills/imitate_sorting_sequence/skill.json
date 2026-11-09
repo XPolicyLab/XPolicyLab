@@ -1,0 +1,51 @@
+{
+  "schema": "orimapi.code-controller-skill/v1",
+  "skill_id": "imitate_sorting_sequence",
+  "supported_tasks": [
+    "imitate_sorting_sequence"
+  ],
+  "task_spec": {
+    "task": "imitate_sorting_sequence",
+    "budget": 1600,
+    "requirements": "Observe the complete five-object demonstration with stationary arms and grippers. Derive the order from this episode's RGB, place the corresponding current objects into the policy basket in that order, protect the demonstrated objects, release and return both arms home. No hidden scene state, sensor depth, reset or altered budgets. Only native success completes validation."
+  },
+  "tool_limits": {
+    "max_calls": 300,
+    "max_tools_per_turn": 16,
+    "history_size": 24
+  },
+  "experience": "experience.json",
+  "sources": {
+    "runtime_001": "NOTICE.md",
+    "runtime_002": "RESEARCH_SUMMARY.md",
+    "runtime_003": "__init__.py",
+    "runtime_004": "artifact_images.py",
+    "runtime_005": "controller.py",
+    "runtime_006": "episode_api.py",
+    "runtime_007": "primitives/__init__.py",
+    "runtime_008": "primitives/collision.py",
+    "runtime_009": "primitives/core.py",
+    "runtime_010": "primitives/geometry.py",
+    "runtime_011": "primitives/motion.py",
+    "runtime_012": "program_prompt.md",
+    "runtime_013": "recovery.py",
+    "runtime_014": "run.py",
+    "runtime_015": "task_notes.md",
+    "runtime_016": "task_recipe.md",
+    "runtime_017": "tool_documentation.md",
+    "runtime_018": "toolkit.py",
+    "runtime_019": "tools/__init__.py",
+    "runtime_020": "tools/rgb_transfer/tool.py",
+    "runtime_021": "tools/rgb_watch/tool.py",
+    "runtime_022": "tools/table_plane/tool.py",
+    "runtime_023": "tools/vision_checks/tool.py",
+    "runtime_024": "tool_sources.json",
+    "runtime_025": "../common/geometry.py"
+  },
+  "qualification": {
+    "standard_qualified": false,
+    "mode": "user_requested_single_native_revalidation",
+    "required_new_successes": 1,
+    "scope": "Activation requires a new successful native episode of this frozen bundle, by explicit user request. This is not two-seed standard qualification. The activation decision and result are recorded outside these immutable runtime inputs."
+  }
+}

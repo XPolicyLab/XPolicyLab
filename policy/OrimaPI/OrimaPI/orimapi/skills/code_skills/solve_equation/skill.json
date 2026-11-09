@@ -1,0 +1,108 @@
+{
+  "schema": "orimapi.code-controller-skill/v1",
+  "skill_id": "solve_equation",
+  "supported_tasks": [
+    "solve_equation"
+  ],
+  "task_spec": {
+    "task": "solve_equation",
+    "budget": 300,
+    "requirements": "Read the visible equation, select its missing digit or operator, place that physical glyph upright on the empty pad, and home both arms. Native300 actions; camera/public robot input only."
+  },
+  "tool_limits": {
+    "max_calls": 24,
+    "max_tools_per_turn": 8,
+    "history_size": 8
+  },
+  "experience": "experience.json",
+  "sources": {
+    "controller": "controller.py",
+    "vision": "vision.py",
+    "shared_make_kong_baseline_motion": "../make_kong/baseline_motion.py",
+    "shared_make_kong_hand_clearance": "../make_kong/hand_clearance.py",
+    "shared_make_kong_hand_bounds": "../make_kong/hand_bounds.json",
+    "planning": "planning.py",
+    "shared_native_adapter": "../stack_blocks/adapter.py",
+    "shared_native_worker": "../stack_blocks/ik_worker.py",
+    "shared_public_geometry": "../common/geometry.py",
+    "shared_checked_motion": "../../code_tools/motion.py",
+    "shared_robot_collision": "../../code_tools/collision.py",
+    "shared_motion_base": "../play_tic_tac_toe/motion.py",
+    "published_validation": "validation.json",
+    "published_publication": "publication.json"
+  },
+  "qualification": {
+    "published": true,
+    "mode": "user_authorized_eight_trial_acceptance",
+    "standard_qualified": false,
+    "tested_seeds": [
+      0,
+      1,
+      2
+    ],
+    "successful_seeds": [
+      0,
+      1,
+      2
+    ],
+    "historical_qualification": {
+      "successful_seed_sets": [
+        0,
+        1
+      ],
+      "tested_seed_sets": [
+        0,
+        1
+      ],
+      "scope": "One first native layout per seed set; engineering admission, not full benchmark reliability",
+      "results": [
+        {
+          "seed": 0,
+          "success": true,
+          "score": 1.0,
+          "layout_sha256": "df2d8ee1b5e6b3d984174bd03555a2f512addb671a4bf830e9eecbd9e7f7d48b",
+          "run_id": "20261021T190136-tool-episode-c177f4cc51f4"
+        },
+        {
+          "seed": 1,
+          "success": true,
+          "score": 1.0,
+          "layout_sha256": "cd73dc2812af15ea032e8f107da362859a76cd71d29dbbefcd0b688347cb0388",
+          "run_id": "20261021T185858-tool-episode-fecdf659261b"
+        }
+      ],
+      "llm_model": "gpt-6-astra",
+      "reasoning_effort": null
+    },
+    "scope": "User-authorized formal publication of the unchanged c003 controller. Eight independent first-layout episodes on seeds0/1/2 repeated3/3/2; six successes and two failures. Each seed has at least one success; seeds0/2 also failed. Small-sample acceptance, not official50-episode or unseen-layout qualification.",
+    "llm_model": "gpt-6-astra",
+    "seed_results": [
+      {
+        "seed": 0,
+        "scored": 3,
+        "planned": 3,
+        "successes": 2,
+        "score_percent": 66.66666666666667
+      },
+      {
+        "seed": 1,
+        "scored": 3,
+        "planned": 3,
+        "successes": 3,
+        "score_percent": 100.0
+      },
+      {
+        "seed": 2,
+        "scored": 2,
+        "planned": 2,
+        "successes": 1,
+        "score_percent": 50.0
+      }
+    ],
+    "validation_batch": "solve-equation-recovery-8gpu-20261028-c003",
+    "scored_episodes": 8,
+    "successful_episodes": 6,
+    "mean_score_percent": 75.0,
+    "equal_seed_mean_score_percent": 72.22222222222223
+  }
+}

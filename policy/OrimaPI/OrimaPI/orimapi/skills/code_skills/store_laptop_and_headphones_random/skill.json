@@ -1,0 +1,41 @@
+{
+  "schema": "orimapi.code-tool-skill/v1",
+  "skill_id": "store_laptop_and_headphones_random",
+  "supported_tasks": [
+    "store_laptop_and_headphones_random"
+  ],
+  "task_spec": {
+    "task": "store_laptop_and_headphones_random",
+    "budget": 800,
+    "requirements": "Among distractors, hang the headphones by the headband on the stand, close the laptop, place it upright in the vertical rack and home both arms. Use only current RGB, public robot state/calibration and actually advertised tools. Reobserve after contact and verify retention before transport. Keep clearance, collision, IK and joint-continuity checks enabled. Reserve native actions for release, withdrawal and required homing; a low wrist may need a checked upward withdrawal before home. Never reuse old pixels as current measurements. Never reset or change native physics, scoring or action limits. Only complete native success qualifies."
+  },
+  "tool_limits": {
+    "max_calls": 160,
+    "max_tools_per_turn": 16,
+    "history_size": 24
+  },
+  "experience": "experience.json",
+  "sources": {
+    "controller": "controller.py",
+    "resources": "resources.json",
+    "failures": "failure_experience.json",
+    "publication": "publication.json"
+  },
+  "tool_recipes": {
+    "approach_close": "tool_recipes/recipe.json"
+  },
+  "qualification": {
+    "successful_seeds": [],
+    "standard_qualified": false,
+    "three_seed_mean": null,
+    "unattempted_seeds": [
+      1,
+      2
+    ],
+    "published": true,
+    "candidate_sha256": "3227614c254656f4c8a22ff408d398bf6b50258bfe490889d1fb69fee50cdbec",
+    "scope": "Published by explicit user request regardless of success. Formal availability is not native task qualification or benchmark reliability.",
+    "mode": "user_authorized_unqualified",
+    "exception_qualified": false
+  }
+}

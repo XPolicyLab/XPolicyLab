@@ -1,0 +1,1007 @@
+# Unified official evaluation configuration for pi05 and code-policy.
+# Select a backend and override mode/action horizon through CLI arguments.
+# Without a fixed backend, GPT selects one; only the chosen policy is loaded.
+runtime:
+  mode: closed_loop
+  exec_horizon: 5
+  replan_interval_steps: 20 # Legacy name: completed action chunks in blocking mode.
+  supervisor_schedule: blocking # Pause for GPT after N chunks (20 * 5 = 100 actions).
+  supervisor_retry_backoff_s: 1.0
+  max_observation_age_steps: 50
+  max_unreviewed_steps: 150
+  supervisor_timeout_s: 120.0
+  max_consecutive_failures: 3
+  max_supervisor_calls: 100
+  feedback_history_size: 8
+  supervisor_workers: 1
+  record_frames: true # Use --no-record-frames to retain text logs only.
+
+policies:
+  pi05:
+    name: pi05
+    description: >-
+      Language-conditioned bimanual manipulation for the RoboDojo ARX X5
+      simulator using current RGB images and 14 joint/gripper state values.
+      Uses the simulation-trained step-59999 checkpoint and produces absolute
+      joint/gripper targets. Task success is not guaranteed.
+    checkpoint: ../checkpoint/RoboDojo-sim-arx_x5-joint-0/59999
+    train_config_name: pi05_base_aloha_full_sim_arx-x5_seed_0
+    normalization_id: arx_x5_sim
+    tokenizer_path: ../checkpoint/.openpi/big_vision/paligemma_tokenizer.model
+    # ARX X5 joint layout. Other candidates use the same defaults unless overridden.
+    state_fields: [left_arm_joint_state, left_ee_joint_state, right_arm_joint_state, right_ee_joint_state]
+    state_dims: [6, 1, 6, 1]
+    action_fields: null
+    action_dims: null
+    camera_map:
+      cam_high: cam_high
+      cam_left_wrist: cam_left_wrist
+      cam_right_wrist: cam_right_wrist
+  code-policy:
+    name: code-policy
+    description: >-
+      Code-policy backend with task-specific sub-skills. GPT selects an
+      internal sub-skill using the current scene and chooses whether to use
+      shared visual/geometry tools or the existing generated controller,
+      guided by the sub-skill's frozen experience and successful source.
+    # Whole-task programs are excluded from once/closed_loop selection. Set true
+    # only for programs that actually declare SUPPORTS_SUBGOALS = True.
+    supports_subgoals: false
+    code_selection_prompt: ../prompts/robodojo_code_selection.md
+    code_skills:
+      arrange_largest_number_random:
+        description: >-
+          Arrange four or five observed physical digits descending on their
+          assigned left-to-right pads amid clutter, upright/readable, then home.
+          Uses current RGB, public robot geometry, per-digit feedback, bounded
+          held-state API recovery and whole-task arm/order cost estimates.
+          Supports arrange_largest_number_random only. User-accepted c003 sample:
+          mean native score 25.625/100, zero complete successes in eight layouts.
+          Same-layout development evidence; standard qualification remains false.
+          Evaluated with strict gpt-6-astra and 120-second request timeout.
+        code_path: ../orimapi/skills/code_skills/arrange_largest_number_random/controller.py
+        code_bundle: ../orimapi/skills/code_skills/arrange_largest_number_random/skill.json
+        code_parameters:
+          vision_resources_path: ../orimapi/skills/code_skills/arrange_largest_number_random/vision_resources.json
+          vision_model_root: ../checkpoint
+          vision_device: cuda:0
+          native_ik:
+            device: cuda:0
+      classify_objects_by_language:
+        description: >-
+          ALWAYS select this skill when the task instruction explicitly specifies
+          which object categories go into the left, middle, and right baskets
+          (e.g. 'Put X objects into the left basket, Y objects into the middle
+          basket, and Z objects into the right basket, then reset the robot arm.').
+          Language-directed centre sorting with route-based empty-arm clearance,
+          repeated checks on each next object, and single-arm recovery.
+        code_path: ../orimapi/skills/code_skills/classify_objects_by_language/runtime/c006/controller.py
+        code_bundle: ../orimapi/skills/code_skills/classify_objects_by_language/runtime/c006/skill.json
+        code_parameters:
+          geometry:
+            robot_collision_config: ../third_party/RoboDojo/Assets/Robots/x5/curobo.yml
+            robot_urdf: ../third_party/RoboDojo/Assets/Robots/x5/X5A.urdf
+            robot_config: ../third_party/RoboDojo/Assets/Robots/x5/robot_config.yml
+            arm_config: ../third_party/RoboDojo/env_cfg/robot/dual_x5.yml
+            camera_config: ../third_party/RoboDojo/env_cfg/camera/camera_config.yml
+            camera_template: ../third_party/RoboDojo/env_cfg/camera/template.py
+            table_config: ../third_party/RoboDojo/env_cfg/scene/default.yml
+          native_ik:
+            device: cuda:0
+          max_moving_commands: 500
+      deposit_coin:
+        description: >-
+          Measured held-coin workflow for deposit_coin only. Use current RGB
+          and public robot geometry to preview a guarded route, acquire the coin,
+          remeasure its grasp-relative pose, align with the slot and conditionally
+          insert/release before homing. User-requested improvement, not standard
+          qualification. Historical RSI4 scores 0.2/0.2/0.2 do not validate this
+          changed runtime. Use the bundled task controller and model settings.
+        code_path: ../orimapi/skills/code_skills/deposit_coin/controller.py
+        code_bundle: ../orimapi/skills/code_skills/deposit_coin/skill.json
+        code_parameters:
+          vision_resources_path: ../orimapi/skills/code_skills/deposit_coin/vision_resources.json
+          vision_model_root: ../checkpoint
+          vision_device: cuda:0
+      fasten_screws:
+        description: >-
+          Partial-score fallback for fasten_screws only. Attempt to seat each
+          colored nut on its matching bolt using current RGB, public robot
+          geometry and local perception. Approved low-reference-success
+          exception, not two-of-three qualification: 0/3 complete native
+          successes; seed scores 0, 0.2, 0, mean 0.066667. The partial score
+          reaches the one-pair geometric grading tier, not complete assembly
+          or independently verified tightening torque. Grasp retention and
+          precise insertion remain unreliable. Evaluated with gpt-6-astra;
+          retain the qualified model settings to reproduce.
+        code_path: ../orimapi/skills/code_skills/fasten_screws/controller.py
+        code_bundle: ../orimapi/skills/code_skills/fasten_screws/skill.json
+        code_parameters:
+          vision_resources_path: ../orimapi/skills/code_skills/fasten_screws/vision_resources.json
+          vision_model_root: ../checkpoint
+          vision_device: cuda:0
+      fill_egg_holder:
+        description: >-
+          Research fallback for fill_egg_holder only. Attempt four separate
+          settled egg placements, hinged-lid closure and return home using
+          current RGB, public robot geometry and local perception.
+          User-authorized exception, not standard or automatic low-reference
+          qualification: 0/3 complete native successes; seed scores 0.25, 0.1,
+          0.1, mean 0.15. Grasp-height estimation and descent verification can
+          fail; four intact placements and lid closure remain unverified.
+          Unchanged RSI6 runtime; evaluated with gpt-6-astra and the bundled
+          model settings.
+        code_path: ../orimapi/skills/code_skills/fill_egg_holder/controller.py
+        code_bundle: ../orimapi/skills/code_skills/fill_egg_holder/skill.json
+        code_parameters:
+          vision_resources_path: ../orimapi/skills/code_skills/fill_egg_holder/vision_resources.json
+          vision_model_root: ../checkpoint
+          vision_device: cuda:0
+      insert_key:
+        description: >-
+          Partial-score fallback for insert_key only. Use current RGB,
+          public robot geometry and local perception to attempt pickup,
+          handoff, keyhole alignment, insertion and turning within 300 actions.
+          User-authorized early exception before exhausting the research
+          allocation, not two-of-three qualification: 0/3 complete native
+          successes; seed scores 0.15, 0.15, 0.15, mean 0.15. Handoff,
+          insertion and turning remain unproven; repeated inspection can
+          exhaust non-motion iterations. Published RSI6 code is unchanged.
+          Evaluated with gpt-6-astra; retain the qualified model settings
+          to reproduce. Subsequent research does not alter this version.
+        code_path: ../orimapi/skills/code_skills/insert_key/controller.py
+        code_bundle: ../orimapi/skills/code_skills/insert_key/skill.json
+        code_parameters:
+          vision_resources_path: ../orimapi/skills/code_skills/insert_key/vision_resources.json
+          vision_model_root: ../checkpoint
+          vision_device: cuda:0
+      match_and_pick_from_conveyor:
+        description: >-
+          Remember the first conveyor object, identify a later match and
+          perform a retained lift using current RGB geometry, measured
+          velocity, public finger-pad contact mapping and a complete timed
+          interception. Native seed0/one episode succeeded with score100;
+          user-authorized single-episode publication, not three-seed qualification.
+        code_path: ../orimapi/skills/code_skills/match_and_pick_from_conveyor/controller.py
+        code_bundle: ../orimapi/skills/code_skills/match_and_pick_from_conveyor/skill.json
+        code_parameters:
+          native_ik:
+            device: cuda:0
+      pour_liquid_into_cup:
+        description: >-
+          Zero-score research fallback for pour_liquid_into_cup only. Attempt
+          retained bottle tilt, observed discharge into the cup and actual
+          upright restoration using current RGB and public robot geometry.
+          User-authorized exception: 0/3 complete native successes; seed
+          scores 0, 0, 0, mean 0. Stream alignment and spill remain unresolved;
+          no successful liquid transfer is established. Not standard or
+          automatic low-reference qualification. Earliest equal-score RSI3
+          runtime; later rim/stream proposals are excluded. Evaluated with
+          gpt-6-astra and the bundled model settings.
+        code_path: ../orimapi/skills/code_skills/pour_liquid_into_cup/controller.py
+        code_bundle: ../orimapi/skills/code_skills/pour_liquid_into_cup/skill.json
+        code_parameters:
+          vision_resources_path: ../orimapi/skills/code_skills/pour_liquid_into_cup/vision_resources.json
+          vision_model_root: ../checkpoint
+          vision_device: cuda:0
+      sweep_blocks:
+        description: 'sweep_blocks: Pick up the broom, hand it to the right hand, and use the dustpan to sweep all
+          blocks into it. Leave the dustpan level on the table to the left of the broom, and home both arms. GPT
+          handles task decomposition, coarse semantic identification and planning; local RGB geometry and complete
+          operations handle manipulation. User-authorized experimental publication; native seeds0/1/2 untested,
+          no new native score or qualification. sweep_blocks_random uses this same sweep_blocks skill and has not
+          been independently validated in native evaluation; identify target blocks among distractors.'
+        code_path: ../orimapi/skills/code_skills/sweep_blocks/controller.py
+        code_bundle: ../orimapi/skills/code_skills/sweep_blocks/skill.json
+        code_parameters:
+          depth_estimation:
+            model_path: ../checkpoint/depth-anything-v2-metric-indoor-small
+            device: cpu
+          geometry:
+            robot_collision_config: ../third_party/RoboDojo/Assets/Robots/x5/curobo.yml
+            robot_urdf: ../third_party/RoboDojo/Assets/Robots/x5/X5A.urdf
+            robot_config: ../third_party/RoboDojo/Assets/Robots/x5/robot_config.yml
+            arm_config: ../third_party/RoboDojo/env_cfg/robot/dual_x5.yml
+            camera_config: ../third_party/RoboDojo/env_cfg/camera/camera_config.yml
+            camera_template: ../third_party/RoboDojo/env_cfg/camera/template.py
+            table_config: ../third_party/RoboDojo/env_cfg/scene/default.yml
+          native_ik:
+            device: cuda:0
+          max_moving_commands: 500
+      swap_blocks:
+        description: Swap two blocks using the empty mat through three complete transfers and a press-release
+          after each. Preserve initial mat identities from current RGB; retract after the first two taps and
+          home after the third. Bundled operation tools and native cuRobo with local safety checks.
+          Packaged version passed one seed-0 native episode; not complete three-seed qualification.
+        code_path: ../orimapi/skills/code_skills/swap_blocks/controller.py
+        code_bundle: ../orimapi/skills/code_skills/swap_blocks/skill.json
+        code_parameters:
+          native_ik:
+            device: cuda:0
+          geometry:
+            robot_collision_config: ../third_party/RoboDojo/Assets/Robots/x5/curobo.yml
+            robot_urdf: ../third_party/RoboDojo/Assets/Robots/x5/X5A.urdf
+            robot_config: ../third_party/RoboDojo/Assets/Robots/x5/robot_config.yml
+            arm_config: ../third_party/RoboDojo/env_cfg/robot/dual_x5.yml
+            camera_config: ../third_party/RoboDojo/env_cfg/camera/camera_config.yml
+            camera_template: ../third_party/RoboDojo/env_cfg/camera/template.py
+            table_config: ../third_party/RoboDojo/env_cfg/scene/default.yml
+      pour_balls_into_vase:
+        description: 'pour_balls_into_vase: independent OpenCV/SciPy cup/vase localization, local cuRobo grasp/transport
+          and cup-lip-pivot pour, upright replacement and home. GPT plans and reviews key outcomes/recovery; local
+          tools execute. Development seed0/1 scores0/100 (one episode each), seed2 untested; seed0 cross-arm corridor
+          recovery remains unresolved. Native600 actions, no added stage timeout or retry termination.'
+        code_path: ../orimapi/skills/code_skills/pour_balls_into_vase/controller.py
+        code_bundle: ../orimapi/skills/code_skills/pour_balls_into_vase/skill.json
+        code_parameters:
+          geometry:
+            robot_collision_config: ../third_party/RoboDojo/Assets/Robots/x5/curobo.yml
+            robot_urdf: ../third_party/RoboDojo/Assets/Robots/x5/X5A.urdf
+            robot_config: ../third_party/RoboDojo/Assets/Robots/x5/robot_config.yml
+            arm_config: ../third_party/RoboDojo/env_cfg/robot/dual_x5.yml
+            camera_config: ../third_party/RoboDojo/env_cfg/camera/camera_config.yml
+            camera_template: ../third_party/RoboDojo/env_cfg/camera/template.py
+            table_config: ../third_party/RoboDojo/env_cfg/scene/default.yml
+          native_ik:
+            device: cuda:0
+      plug_in_charger:
+        description: 'plug_in_charger: Plug the charger fully into the power strip in the correct insertion orientation,
+          release and return both arms home. Identify insertion end and socket from RGB; gripper closure is not
+          proof of seating. GPT handles task decomposition, coarse semantic identification and planning; local RGB
+          geometry and complete operations handle manipulation. User-authorized experimental publication; native
+          seeds0/1/2 untested, no new native score or qualification.'
+        code_path: ../orimapi/skills/code_skills/plug_in_charger/controller.py
+        code_bundle: ../orimapi/skills/code_skills/plug_in_charger/skill.json
+        code_parameters:
+          depth_estimation:
+            model_path: ../checkpoint/depth-anything-v2-metric-indoor-small
+            device: cpu
+          geometry:
+            robot_collision_config: ../third_party/RoboDojo/Assets/Robots/x5/curobo.yml
+            robot_urdf: ../third_party/RoboDojo/Assets/Robots/x5/X5A.urdf
+            robot_config: ../third_party/RoboDojo/Assets/Robots/x5/robot_config.yml
+            arm_config: ../third_party/RoboDojo/env_cfg/robot/dual_x5.yml
+            camera_config: ../third_party/RoboDojo/env_cfg/camera/camera_config.yml
+            camera_template: ../third_party/RoboDojo/env_cfg/camera/template.py
+            table_config: ../third_party/RoboDojo/env_cfg/scene/default.yml
+          native_ik:
+            device: cuda:0
+          max_moving_commands: 500
+      sort_nesting_dolls_by_size:
+        description: 'sort_nesting_dolls_by_size: Arrange five nesting dolls upright in one row, smallest to largest
+          from left to right, then home both arms. GPT handles task decomposition, coarse semantic identification
+          and planning; local RGB geometry and complete operations handle manipulation. User-authorized experimental
+          publication; native seeds0/1/2 untested, no new native score or qualification.'
+        code_path: ../orimapi/skills/code_skills/sort_nesting_dolls_by_size/controller.py
+        code_bundle: ../orimapi/skills/code_skills/sort_nesting_dolls_by_size/skill.json
+        code_parameters:
+          depth_estimation:
+            model_path: ../checkpoint/depth-anything-v2-metric-indoor-small
+            device: cpu
+          geometry:
+            robot_collision_config: ../third_party/RoboDojo/Assets/Robots/x5/curobo.yml
+            robot_urdf: ../third_party/RoboDojo/Assets/Robots/x5/X5A.urdf
+            robot_config: ../third_party/RoboDojo/Assets/Robots/x5/robot_config.yml
+            arm_config: ../third_party/RoboDojo/env_cfg/robot/dual_x5.yml
+            camera_config: ../third_party/RoboDojo/env_cfg/camera/camera_config.yml
+            camera_template: ../third_party/RoboDojo/env_cfg/camera/template.py
+            table_config: ../third_party/RoboDojo/env_cfg/scene/default.yml
+          native_ik:
+            device: cuda:0
+          max_moving_commands: 500
+      pour_liquid_into_cup_random:
+        description: Pour the liquid from the bottle into the cup among distractors. Transfer essentially all
+          liquid and restore the bottle upright to trigger the native transfer check. Published by explicit
+          user request regardless of success. Formal availability is not native task qualification or benchmark
+          reliability.
+        code_path: ../orimapi/skills/code_skills/pour_liquid_into_cup_random/controller.py
+        code_bundle: ../orimapi/skills/code_skills/pour_liquid_into_cup_random/skill.json
+        code_parameters:
+          depth_estimation:
+            model_path: ../checkpoint/depth-anything-v2-metric-indoor-small
+            device: cpu
+          geometry:
+            robot_collision_config: ../third_party/RoboDojo/Assets/Robots/x5/curobo.yml
+            robot_urdf: ../third_party/RoboDojo/Assets/Robots/x5/X5A.urdf
+            robot_config: ../third_party/RoboDojo/Assets/Robots/x5/robot_config.yml
+            arm_config: ../third_party/RoboDojo/env_cfg/robot/dual_x5.yml
+            camera_config: ../third_party/RoboDojo/env_cfg/camera/camera_config.yml
+            camera_template: ../third_party/RoboDojo/env_cfg/camera/template.py
+            table_config: ../third_party/RoboDojo/env_cfg/scene/default.yml
+      stack_blocks:
+        description: >-
+          Stack three textured blocks using current RGB prism/stereo/plane
+          geometry, complete pickup/placement, explicit retention and support
+          review, release and both-arm homing. Native ordinary-scene seeds0/1,
+          one episode each, succeeded with score100. User-authorized two-seed
+          publication; seed2 and random variant are untested.
+        code_path: ../orimapi/skills/code_skills/stack_blocks/controller.py
+        code_bundle: ../orimapi/skills/code_skills/stack_blocks/skill.json
+        code_parameters:
+          native_ik:
+            device: cuda:0
+          geometry:
+            robot_collision_config: ../third_party/RoboDojo/Assets/Robots/x5/curobo.yml
+            robot_urdf: ../third_party/RoboDojo/Assets/Robots/x5/X5A.urdf
+            robot_config: ../third_party/RoboDojo/Assets/Robots/x5/robot_config.yml
+            arm_config: ../third_party/RoboDojo/env_cfg/robot/dual_x5.yml
+            camera_config: ../third_party/RoboDojo/env_cfg/camera/camera_config.yml
+            camera_template: ../third_party/RoboDojo/env_cfg/camera/template.py
+            table_config: ../third_party/RoboDojo/env_cfg/scene/default.yml
+      pack_objects_into_box:
+        description: 'pack_objects_into_box: Place all four objects into the box in their intended positions, with
+          front sides facing left, then home both arms. Determine orientation from current RGB. GPT handles task
+          decomposition, coarse semantic identification and planning; local RGB geometry and complete operations
+          handle manipulation. User-authorized experimental publication; native seeds0/1/2 untested, no new native
+          score or qualification.'
+        code_path: ../orimapi/skills/code_skills/pack_objects_into_box/controller.py
+        code_bundle: ../orimapi/skills/code_skills/pack_objects_into_box/skill.json
+        code_parameters:
+          depth_estimation:
+            model_path: ../checkpoint/depth-anything-v2-metric-indoor-small
+            device: cpu
+          geometry:
+            robot_collision_config: ../third_party/RoboDojo/Assets/Robots/x5/curobo.yml
+            robot_urdf: ../third_party/RoboDojo/Assets/Robots/x5/X5A.urdf
+            robot_config: ../third_party/RoboDojo/Assets/Robots/x5/robot_config.yml
+            arm_config: ../third_party/RoboDojo/env_cfg/robot/dual_x5.yml
+            camera_config: ../third_party/RoboDojo/env_cfg/camera/camera_config.yml
+            camera_template: ../third_party/RoboDojo/env_cfg/camera/template.py
+            table_config: ../third_party/RoboDojo/env_cfg/scene/default.yml
+          native_ik:
+            device: cuda:0
+          max_moving_commands: 500
+      organize_table:
+        description: 'organize_table: Place the alarm clock on the drawer, the figurine on the stand, the mouse
+          on the mouse pad, and push the keyboard into its frame. Home both arms. GPT handles task decomposition,
+          coarse semantic identification and planning; local RGB geometry and complete operations handle manipulation.
+          User-authorized experimental publication; native seeds0/1/2 untested, no new native score or qualification.'
+        code_path: ../orimapi/skills/code_skills/organize_table/controller.py
+        code_bundle: ../orimapi/skills/code_skills/organize_table/skill.json
+        code_parameters:
+          depth_estimation:
+            model_path: ../checkpoint/depth-anything-v2-metric-indoor-small
+            device: cpu
+          geometry:
+            robot_collision_config: ../third_party/RoboDojo/Assets/Robots/x5/curobo.yml
+            robot_urdf: ../third_party/RoboDojo/Assets/Robots/x5/X5A.urdf
+            robot_config: ../third_party/RoboDojo/Assets/Robots/x5/robot_config.yml
+            arm_config: ../third_party/RoboDojo/env_cfg/robot/dual_x5.yml
+            camera_config: ../third_party/RoboDojo/env_cfg/camera/camera_config.yml
+            camera_template: ../third_party/RoboDojo/env_cfg/camera/template.py
+            table_config: ../third_party/RoboDojo/env_cfg/scene/default.yml
+          native_ik:
+            device: cuda:0
+          max_moving_commands: 500
+      fill_pen_holder:
+        description: Hold the pen holder with one hand and insert four pens with the other, then return
+          the holder upright, release and home. GPT plans phases and identifies objects; local RGB geometry
+          and native cuRobo execute side grasp, relocation and sequential pen operations. Published c008
+          by explicit user request, unqualified experimental version; seed0/1 both scored zero.
+          No added table-distance or arrival-residual veto; native evaluation unchanged.
+        code_path: ../orimapi/skills/code_skills/fill_pen_holder/controller.py
+        code_bundle: ../orimapi/skills/code_skills/fill_pen_holder/skill.json
+        code_parameters:
+          depth_estimation:
+            model_path: ../checkpoint/depth-anything-v2-metric-indoor-small
+            device: cpu
+          geometry:
+            robot_collision_config: ../third_party/RoboDojo/Assets/Robots/x5/curobo.yml
+            robot_urdf: ../third_party/RoboDojo/Assets/Robots/x5/X5A.urdf
+            robot_config: ../third_party/RoboDojo/Assets/Robots/x5/robot_config.yml
+            arm_config: ../third_party/RoboDojo/env_cfg/robot/dual_x5.yml
+            camera_config: ../third_party/RoboDojo/env_cfg/camera/camera_config.yml
+            camera_template: ../third_party/RoboDojo/env_cfg/camera/template.py
+            table_config: ../third_party/RoboDojo/env_cfg/scene/default.yml
+          native_ik:
+            device: cuda:0
+          max_moving_commands: 500
+      store_laptop_and_headphones:
+        description: Hang the headphones with the headband supported by the stand, close the laptop, put it
+          upright into the vertical laptop rack, and home both arms. Published by explicit user request regardless
+          of success. Formal availability is not native task qualification or benchmark reliability.
+        code_path: ../orimapi/skills/code_skills/store_laptop_and_headphones/controller.py
+        code_bundle: ../orimapi/skills/code_skills/store_laptop_and_headphones/skill.json
+        code_parameters:
+          depth_estimation:
+            model_path: ../checkpoint/depth-anything-v2-metric-indoor-small
+            device: cpu
+          geometry:
+            robot_collision_config: ../third_party/RoboDojo/Assets/Robots/x5/curobo.yml
+            robot_urdf: ../third_party/RoboDojo/Assets/Robots/x5/X5A.urdf
+            robot_config: ../third_party/RoboDojo/Assets/Robots/x5/robot_config.yml
+            arm_config: ../third_party/RoboDojo/env_cfg/robot/dual_x5.yml
+            camera_config: ../third_party/RoboDojo/env_cfg/camera/camera_config.yml
+            camera_template: ../third_party/RoboDojo/env_cfg/camera/template.py
+            table_config: ../third_party/RoboDojo/env_cfg/scene/default.yml
+      store_laptop_and_headphones_random:
+        description: Among distractors, hang the headphones by the headband on the stand, close the laptop,
+          place it upright in the vertical rack and home both arms. Published by explicit user request regardless
+          of success. Formal availability is not native task qualification or benchmark reliability.
+        code_path: ../orimapi/skills/code_skills/store_laptop_and_headphones_random/controller.py
+        code_bundle: ../orimapi/skills/code_skills/store_laptop_and_headphones_random/skill.json
+        code_parameters:
+          depth_estimation:
+            model_path: ../checkpoint/depth-anything-v2-metric-indoor-small
+            device: cpu
+          geometry:
+            robot_collision_config: ../third_party/RoboDojo/Assets/Robots/x5/curobo.yml
+            robot_urdf: ../third_party/RoboDojo/Assets/Robots/x5/X5A.urdf
+            robot_config: ../third_party/RoboDojo/Assets/Robots/x5/robot_config.yml
+            arm_config: ../third_party/RoboDojo/env_cfg/robot/dual_x5.yml
+            camera_config: ../third_party/RoboDojo/env_cfg/camera/camera_config.yml
+            camera_template: ../third_party/RoboDojo/env_cfg/camera/template.py
+            table_config: ../third_party/RoboDojo/env_cfg/scene/default.yml
+      play_Xylophone:
+        description: 'Pick up the mallet and strike eight keys left-to-right with intervening lifts.
+          GPT plans/coarsely identifies and reviews pickup; local RGB geometry and complete cuRobo
+          operations control the strokes. Uncertainty-aware sphere tracking preserves stable grip
+          geometry. Native c008 development scores seed0/1/2=100/100/0, one episode each;
+          user-authorized publication, not full benchmark qualification.'
+        code_path: ../orimapi/skills/code_skills/play_Xylophone/controller.py
+        code_bundle: ../orimapi/skills/code_skills/play_Xylophone/skill.json
+        code_parameters:
+          native_ik:
+            device: cuda:0
+          depth_estimation:
+            model_path: ../checkpoint/depth-anything-v2-metric-indoor-small
+            device: cpu
+          geometry:
+            robot_collision_config: ../third_party/RoboDojo/Assets/Robots/x5/curobo.yml
+            robot_urdf: ../third_party/RoboDojo/Assets/Robots/x5/X5A.urdf
+            robot_config: ../third_party/RoboDojo/Assets/Robots/x5/robot_config.yml
+            arm_config: ../third_party/RoboDojo/env_cfg/robot/dual_x5.yml
+            camera_config: ../third_party/RoboDojo/env_cfg/camera/camera_config.yml
+            camera_template: ../third_party/RoboDojo/env_cfg/camera/template.py
+            table_config: ../third_party/RoboDojo/env_cfg/scene/default.yml
+      hang_mugs:
+        description: 'hang_mugs: Hang all three mugs by their handles on the mug rack, leave them supported clear
+          of the table, release and home both arms. GPT handles task decomposition, coarse semantic identification
+          and planning; local RGB geometry and complete operations handle manipulation. User-authorized experimental
+          publication; native seeds0/1/2 untested, no new native score or qualification.'
+        code_path: ../orimapi/skills/code_skills/hang_mugs/controller.py
+        code_bundle: ../orimapi/skills/code_skills/hang_mugs/skill.json
+        code_parameters:
+          depth_estimation:
+            model_path: ../checkpoint/depth-anything-v2-metric-indoor-small
+            device: cpu
+          geometry:
+            robot_collision_config: ../third_party/RoboDojo/Assets/Robots/x5/curobo.yml
+            robot_urdf: ../third_party/RoboDojo/Assets/Robots/x5/X5A.urdf
+            robot_config: ../third_party/RoboDojo/Assets/Robots/x5/robot_config.yml
+            arm_config: ../third_party/RoboDojo/env_cfg/robot/dual_x5.yml
+            camera_config: ../third_party/RoboDojo/env_cfg/camera/camera_config.yml
+            camera_template: ../third_party/RoboDojo/env_cfg/camera/template.py
+            table_config: ../third_party/RoboDojo/env_cfg/scene/default.yml
+          native_ik:
+            device: cuda:0
+          max_moving_commands: 500
+      hang_mugs_random:
+        description: 'hang_mugs_random: Among distractors, hang all three mugs by their handles on the mug rack,
+          leave them supported clear of the table, release and home both arms. GPT handles task decomposition, coarse
+          semantic identification and planning; local RGB geometry and complete operations handle manipulation.
+          User-authorized experimental publication; native seeds0/1/2 untested, no new native score or qualification.'
+        code_path: ../orimapi/skills/code_skills/hang_mugs_random/controller.py
+        code_bundle: ../orimapi/skills/code_skills/hang_mugs_random/skill.json
+        code_parameters:
+          depth_estimation:
+            model_path: ../checkpoint/depth-anything-v2-metric-indoor-small
+            device: cpu
+          geometry:
+            robot_collision_config: ../third_party/RoboDojo/Assets/Robots/x5/curobo.yml
+            robot_urdf: ../third_party/RoboDojo/Assets/Robots/x5/X5A.urdf
+            robot_config: ../third_party/RoboDojo/Assets/Robots/x5/robot_config.yml
+            arm_config: ../third_party/RoboDojo/env_cfg/robot/dual_x5.yml
+            camera_config: ../third_party/RoboDojo/env_cfg/camera/camera_config.yml
+            camera_template: ../third_party/RoboDojo/env_cfg/camera/template.py
+            table_config: ../third_party/RoboDojo/env_cfg/scene/default.yml
+          native_ik:
+            device: cuda:0
+          max_moving_commands: 500
+      imitate_sorting_sequence:
+        # Consolidated from the seed 1 successful bundle; see TASK_HANDOFF.md.
+        # Whole-task controller: use direct mode with exec_horizon=1.
+        description: >-
+          OrimaPI visual sequence sorting: record the demonstration, remember order,
+          measure current RGB, preview complete transfers, recover with checked
+          staging and home. Use the bundled task controller.
+        code_path: ../orimapi/skills/code_skills/imitate_sorting_sequence/controller.py
+        code_bundle: ../orimapi/skills/code_skills/imitate_sorting_sequence/skill.json
+        code_entrypoint: create_policy
+        code_parameters:
+          depth_estimation: null # Override the shared optional depth configuration.
+          geometry:
+            robot_collision_config: ../third_party/RoboDojo/Assets/Robots/x5/curobo.yml
+            robot_urdf: ../third_party/RoboDojo/Assets/Robots/x5/X5A.urdf
+            robot_config: ../third_party/RoboDojo/Assets/Robots/x5/robot_config.yml
+            arm_config: ../third_party/RoboDojo/env_cfg/robot/dual_x5.yml
+            camera_config: ../third_party/RoboDojo/env_cfg/camera/camera_config.yml
+            camera_template: ../third_party/RoboDojo/env_cfg/camera/template.py
+            table_config: ../third_party/RoboDojo/env_cfg/scene/default.yml
+      make_toast:
+        description: Place two bread slices upright into the two toaster slots, leave the other two on the bread
+          shelf, press the lever down and home both arms. Published by explicit user request regardless of success.
+          Formal availability is not native task qualification or benchmark reliability.
+        code_path: ../orimapi/skills/code_skills/make_toast/controller.py
+        code_bundle: ../orimapi/skills/code_skills/make_toast/skill.json
+        code_parameters:
+          depth_estimation:
+            model_path: ../checkpoint/depth-anything-v2-metric-indoor-small
+            device: cpu
+          geometry:
+            robot_collision_config: ../third_party/RoboDojo/Assets/Robots/x5/curobo.yml
+            robot_urdf: ../third_party/RoboDojo/Assets/Robots/x5/X5A.urdf
+            robot_config: ../third_party/RoboDojo/Assets/Robots/x5/robot_config.yml
+            arm_config: ../third_party/RoboDojo/env_cfg/robot/dual_x5.yml
+            camera_config: ../third_party/RoboDojo/env_cfg/camera/camera_config.yml
+            camera_template: ../third_party/RoboDojo/env_cfg/camera/template.py
+            table_config: ../third_party/RoboDojo/env_cfg/scene/default.yml
+      make_toast_random:
+        description: 'make_toast_random among distractors: GPT selects two of four bread slices and slot/arm jobs.
+          Local RGB geometry and complete pickup/upright insertion/lever/home operations; sparse carry and placement
+          reviews, not a per-tool GPT loop. Normal path four semantic requests by design, repairs counted separately;
+          see validation.json for actual native scores. User-authorized experimental publication, not standard-qualified.'
+        code_path: ../orimapi/skills/code_skills/make_toast_random/controller.py
+        code_bundle: ../orimapi/skills/code_skills/make_toast_random/skill.json
+        code_parameters:
+          depth_estimation:
+            model_path: ../checkpoint/depth-anything-v2-metric-indoor-small
+            device: cpu
+          geometry:
+            robot_collision_config: ../third_party/RoboDojo/Assets/Robots/x5/curobo.yml
+            robot_urdf: ../third_party/RoboDojo/Assets/Robots/x5/X5A.urdf
+            robot_config: ../third_party/RoboDojo/Assets/Robots/x5/robot_config.yml
+            arm_config: ../third_party/RoboDojo/env_cfg/robot/dual_x5.yml
+            camera_config: ../third_party/RoboDojo/env_cfg/camera/camera_config.yml
+            camera_template: ../third_party/RoboDojo/env_cfg/camera/template.py
+            table_config: ../third_party/RoboDojo/env_cfg/scene/default.yml
+          native_ik:
+            device: cuda:0
+          max_moving_commands: 500
+      pack_objects_into_box_random:
+        description: 'pack_objects_into_box_random: Among distractors, place all four target objects into their
+          intended box positions with front sides facing left, then home both arms. GPT handles task decomposition,
+          coarse semantic identification and planning; local RGB geometry and complete operations handle manipulation.
+          User-authorized experimental publication; native seeds0/1/2 untested, no new native score or qualification.'
+        code_path: ../orimapi/skills/code_skills/pack_objects_into_box_random/controller.py
+        code_bundle: ../orimapi/skills/code_skills/pack_objects_into_box_random/skill.json
+        code_parameters:
+          depth_estimation:
+            model_path: ../checkpoint/depth-anything-v2-metric-indoor-small
+            device: cpu
+          geometry:
+            robot_collision_config: ../third_party/RoboDojo/Assets/Robots/x5/curobo.yml
+            robot_urdf: ../third_party/RoboDojo/Assets/Robots/x5/X5A.urdf
+            robot_config: ../third_party/RoboDojo/Assets/Robots/x5/robot_config.yml
+            arm_config: ../third_party/RoboDojo/env_cfg/robot/dual_x5.yml
+            camera_config: ../third_party/RoboDojo/env_cfg/camera/camera_config.yml
+            camera_template: ../third_party/RoboDojo/env_cfg/camera/template.py
+            table_config: ../third_party/RoboDojo/env_cfg/scene/default.yml
+          native_ik:
+            device: cuda:0
+          max_moving_commands: 500
+      pick_from_conveyor_by_image:
+        description: 'pick_from_conveyor_by_image: Lift the basket more than 8 cm, identify the conveyor target
+          by the displayed reference image, pick it up and put it in the raised basket. Keep target identification
+          grounded in fresh RGB as it moves. GPT handles task decomposition, coarse semantic identification and
+          planning; local RGB geometry and complete operations handle manipulation. User-authorized experimental
+          publication; native seeds0/1/2 untested, no new native score or qualification.'
+        code_path: ../orimapi/skills/code_skills/pick_from_conveyor_by_image/controller.py
+        code_bundle: ../orimapi/skills/code_skills/pick_from_conveyor_by_image/skill.json
+        code_parameters:
+          depth_estimation:
+            model_path: ../checkpoint/depth-anything-v2-metric-indoor-small
+            device: cpu
+          geometry:
+            robot_collision_config: ../third_party/RoboDojo/Assets/Robots/x5/curobo.yml
+            robot_urdf: ../third_party/RoboDojo/Assets/Robots/x5/X5A.urdf
+            robot_config: ../third_party/RoboDojo/Assets/Robots/x5/robot_config.yml
+            arm_config: ../third_party/RoboDojo/env_cfg/robot/dual_x5.yml
+            camera_config: ../third_party/RoboDojo/env_cfg/camera/camera_config.yml
+            camera_template: ../third_party/RoboDojo/env_cfg/camera/template.py
+            table_config: ../third_party/RoboDojo/env_cfg/scene/default.yml
+          native_ik:
+            device: cuda:0
+          max_moving_commands: 500
+      play_stacking_toy:
+        description: 'play_stacking_toy: Place all ten stacking toy pieces onto their matching pegs: four groups
+          containing 4, 3, 2, and 1 pieces. Complete every group in the correct orientation, release and home both
+          arms. Identify each live piece and matching peg from current RGB; four groups do not mean four pieces.
+          GPT handles task decomposition, coarse semantic identification and planning; local RGB geometry and complete
+          operations handle manipulation. User-authorized experimental publication; native seeds0/1/2 untested,
+          no new native score or qualification.'
+        code_path: ../orimapi/skills/code_skills/play_stacking_toy/controller.py
+        code_bundle: ../orimapi/skills/code_skills/play_stacking_toy/skill.json
+        code_parameters:
+          depth_estimation:
+            model_path: ../checkpoint/depth-anything-v2-metric-indoor-small
+            device: cpu
+          geometry:
+            robot_collision_config: ../third_party/RoboDojo/Assets/Robots/x5/curobo.yml
+            robot_urdf: ../third_party/RoboDojo/Assets/Robots/x5/X5A.urdf
+            robot_config: ../third_party/RoboDojo/Assets/Robots/x5/robot_config.yml
+            arm_config: ../third_party/RoboDojo/env_cfg/robot/dual_x5.yml
+            camera_config: ../third_party/RoboDojo/env_cfg/camera/camera_config.yml
+            camera_template: ../third_party/RoboDojo/env_cfg/camera/template.py
+            table_config: ../third_party/RoboDojo/env_cfg/scene/default.yml
+          native_ik:
+            device: cuda:0
+          max_moving_commands: 500
+      pour_by_language:
+        description: Follow the live language instruction's ordered bottle-to-bowl color mappings for all three
+          pours. Pour essentially all liquid from each bottle into its specified bowl, restore each bottle upright
+          and home the arms. Do not infer the color order from task name or previous seeds. Published by explicit
+          user request regardless of success. Formal availability is not native task qualification or benchmark
+          reliability.
+        code_path: ../orimapi/skills/code_skills/pour_by_language/controller.py
+        code_bundle: ../orimapi/skills/code_skills/pour_by_language/skill.json
+        code_parameters:
+          depth_estimation:
+            model_path: ../checkpoint/depth-anything-v2-metric-indoor-small
+            device: cpu
+          geometry:
+            robot_collision_config: ../third_party/RoboDojo/Assets/Robots/x5/curobo.yml
+            robot_urdf: ../third_party/RoboDojo/Assets/Robots/x5/X5A.urdf
+            robot_config: ../third_party/RoboDojo/Assets/Robots/x5/robot_config.yml
+            arm_config: ../third_party/RoboDojo/env_cfg/robot/dual_x5.yml
+            camera_config: ../third_party/RoboDojo/env_cfg/camera/camera_config.yml
+            camera_template: ../third_party/RoboDojo/env_cfg/camera/template.py
+            table_config: ../third_party/RoboDojo/env_cfg/scene/default.yml
+      sort_nesting_dolls_by_size_random:
+        description: 'sort_nesting_dolls_by_size_random: Among distractors, arrange the five nesting dolls upright
+          in one row, smallest to largest from left to right, then home both arms. GPT handles task decomposition,
+          coarse semantic identification and planning; local RGB geometry and complete operations handle manipulation.
+          User-authorized experimental publication; native seeds0/1/2 untested, no new native score or qualification.'
+        code_path: ../orimapi/skills/code_skills/sort_nesting_dolls_by_size_random/controller.py
+        code_bundle: ../orimapi/skills/code_skills/sort_nesting_dolls_by_size_random/skill.json
+        code_parameters:
+          depth_estimation:
+            model_path: ../checkpoint/depth-anything-v2-metric-indoor-small
+            device: cpu
+          geometry:
+            robot_collision_config: ../third_party/RoboDojo/Assets/Robots/x5/curobo.yml
+            robot_urdf: ../third_party/RoboDojo/Assets/Robots/x5/X5A.urdf
+            robot_config: ../third_party/RoboDojo/Assets/Robots/x5/robot_config.yml
+            arm_config: ../third_party/RoboDojo/env_cfg/robot/dual_x5.yml
+            camera_config: ../third_party/RoboDojo/env_cfg/camera/camera_config.yml
+            camera_template: ../third_party/RoboDojo/env_cfg/camera/template.py
+            table_config: ../third_party/RoboDojo/env_cfg/scene/default.yml
+          native_ik:
+            device: cuda:0
+          max_moving_commands: 500
+      stack_blocks_random:
+        description: >-
+          stack_blocks_random: current-RGB geometry and complete checked block transfers;
+          released table staging is separate from confirmed stacking, and an empty peer
+          may home while the other arm retains a block. Published c004 scored87.50/100,
+          success7/8 on eight development layouts across seeds0/1/2, versus66.25 and5/8
+          for the paired baseline. Native550 actions; not full official qualification.
+        code_path: ../orimapi/skills/code_skills/stack_blocks_random/controller.py
+        code_bundle: ../orimapi/skills/code_skills/stack_blocks_random/skill.json
+        code_parameters:
+          native_ik:
+            device: cuda:0
+          geometry:
+            robot_collision_config: ../third_party/RoboDojo/Assets/Robots/x5/curobo.yml
+            robot_urdf: ../third_party/RoboDojo/Assets/Robots/x5/X5A.urdf
+            robot_config: ../third_party/RoboDojo/Assets/Robots/x5/robot_config.yml
+            arm_config: ../third_party/RoboDojo/env_cfg/robot/dual_x5.yml
+            camera_config: ../third_party/RoboDojo/env_cfg/camera/camera_config.yml
+            camera_template: ../third_party/RoboDojo/env_cfg/camera/template.py
+            table_config: ../third_party/RoboDojo/env_cfg/scene/default.yml
+      stack_bowls_random:
+        description: >-
+          Stack three task bowls among distractors using formal c008. Keep the
+          bowl opening upward with free heading and relaxed intermediate poses;
+          try Cartesian motion first, then cuRobo graph/trajectory planning.
+          Change local actions after motion failures and retain prior positions
+          when remeasurement is unavailable. Native800; strict Astra. Tested
+          on eight paired scenes: mean76.875/100, six successes; full benchmark unqualified.
+        code_path: ../orimapi/skills/code_skills/stack_bowls_random/controller.py
+        code_bundle: ../orimapi/skills/code_skills/stack_bowls_random/skill.json
+        code_parameters:
+          native_ik:
+            device: cuda:0
+          depth_estimation:
+            model_path: ../checkpoint/depth-anything-v2-metric-indoor-small
+            device: cpu
+          geometry:
+            robot_collision_config: ../third_party/RoboDojo/Assets/Robots/x5/curobo.yml
+            robot_urdf: ../third_party/RoboDojo/Assets/Robots/x5/X5A.urdf
+            robot_config: ../third_party/RoboDojo/Assets/Robots/x5/robot_config.yml
+            arm_config: ../third_party/RoboDojo/env_cfg/robot/dual_x5.yml
+            camera_config: ../third_party/RoboDojo/env_cfg/camera/camera_config.yml
+            camera_template: ../third_party/RoboDojo/env_cfg/camera/template.py
+            table_config: ../third_party/RoboDojo/env_cfg/scene/default.yml
+      store_tools_in_toolbox:
+        description: 'store_tools_in_toolbox: Place the hammer, tape measure, wrench and pliers in their matching
+          toolbox recesses, aligned and contained, then home both arms. GPT handles task decomposition, coarse semantic
+          identification and planning; local RGB geometry and complete operations handle manipulation. User-authorized
+          experimental publication; native seeds0/1/2 untested, no new native score or qualification.'
+        code_path: ../orimapi/skills/code_skills/store_tools_in_toolbox/controller.py
+        code_bundle: ../orimapi/skills/code_skills/store_tools_in_toolbox/skill.json
+        code_parameters:
+          depth_estimation:
+            model_path: ../checkpoint/depth-anything-v2-metric-indoor-small
+            device: cpu
+          geometry:
+            robot_collision_config: ../third_party/RoboDojo/Assets/Robots/x5/curobo.yml
+            robot_urdf: ../third_party/RoboDojo/Assets/Robots/x5/X5A.urdf
+            robot_config: ../third_party/RoboDojo/Assets/Robots/x5/robot_config.yml
+            arm_config: ../third_party/RoboDojo/env_cfg/robot/dual_x5.yml
+            camera_config: ../third_party/RoboDojo/env_cfg/camera/camera_config.yml
+            camera_template: ../third_party/RoboDojo/env_cfg/camera/template.py
+            table_config: ../third_party/RoboDojo/env_cfg/scene/default.yml
+          native_ik:
+            device: cuda:0
+          max_moving_commands: 500
+      fold_clothes:
+        description: >-
+          Fold the visible garment's sleeves inward, bring both hem corners
+          toward the shoulders, release both hands and return home. Current RGB
+          landmarks and cloth edges ground checked draping paths; open fingers
+          lift clear before withdrawal, and both hem corners release together.
+          Qualified on two distinct native seed sets with identical frozen
+          source and configuration within 500 actions. Small-sample admission,
+          not full benchmark reliability; does not cover fold_clothes_random.
+        code_path: ../orimapi/skills/code_skills/fold_clothes/controller.py
+        code_bundle: ../orimapi/skills/code_skills/fold_clothes/skill.json
+      fold_clothes_random:
+        description: >-
+          Fold the visible garment among tabletop distractors, release both
+          hem corners and return both arms home. Current RGB foreground and
+          background segmentation selects the chest-connected garment, and
+          uncertain folded cuffs are rechecked before a bounded retry.
+          Qualified on two distinct native seed sets with identical frozen
+          source and configuration within 500 actions. Small-sample admission,
+          not full benchmark reliability; tested failures remain recorded.
+        code_path: ../orimapi/skills/code_skills/fold_clothes_random/controller.py
+        code_bundle: ../orimapi/skills/code_skills/fold_clothes_random/skill.json
+      push_T_random:
+        description: >-
+          Slide and rotate the current colored T onto its target among
+          distractors, without lifted transport, then return both arms home.
+          Current image feature colors determine the block and target masks.
+          Qualified on two distinct native seed sets with identical frozen
+          source and configuration within 600 actions; failed cases retained.
+          Small-sample admission, not full benchmark reliability.
+        code_path: ../orimapi/skills/code_skills/push_T_random/controller.py
+        code_bundle: ../orimapi/skills/code_skills/push_T_random/skill.json
+      stack_blocks_by_language:
+        description: >-
+          Stack the three currently observed cubes in the instruction's
+          bottom-to-top color order, release and return both arms home.
+          Current foreground silhouettes determine geometry; one empty-arm
+          reveal can recover an occluded next cube. Qualified on two distinct
+          native seed sets with identical frozen source/configuration within
+          400 actions. Small-sample admission, not full benchmark reliability.
+        code_path: ../orimapi/skills/code_skills/stack_blocks_by_language/controller.py
+        code_bundle: ../orimapi/skills/code_skills/stack_blocks_by_language/skill.json
+      general_pickup:
+        description: >-
+          Identify the instructed object among distractors and lift it at least
+          10 cm while retaining it. Current RGB selects a solid grasp section;
+          calibrated stereo or pinned RGB depth with visible-table scale anchors
+          supplies geometry. Unreachable sections can be reselected before a
+          checked grasp and vertical lift. Qualified on two native seed sets
+          with the same frozen source and configuration within 200 actions;
+          small-sample admission, not full benchmark reliability.
+        code_path: ../orimapi/skills/code_skills/general_pickup/controller.py
+        code_bundle: ../orimapi/skills/code_skills/general_pickup/skill.json
+      solve_equation:
+        description: >-
+          Complete a visible equation with its missing physical digit or
+          operator, place it upright on the empty pad, and home both arms.
+          Current RGB arithmetic, checked native IK, shallow-grasp candidates,
+          segmented carry with retention checks, placement verification and
+          recovery within 300 actions. User-authorized formal publication after
+          eight native episodes on seeds0/1/2 (3/3/2 repeats): six successes,
+          two failures, mean score 75/100. First-layout small-sample acceptance;
+          not full benchmark or unseen-layout qualification.
+        code_path: ../orimapi/skills/code_skills/solve_equation/controller.py
+        code_bundle: ../orimapi/skills/code_skills/solve_equation/skill.json
+        code_parameters:
+          native_ik:
+            device: cuda:0
+      push_T:
+        description: >-
+          Push and rotate a magenta T to its gray target while keeping it on
+          the table, then home both arms. GPT binds current directed T features;
+          checked planar stem grips support direct motion or a tabletop relay.
+          Qualified on two native seed sets within 600 actions; small-sample
+          admission only. Does not cover push_T_random.
+        code_path: ../orimapi/skills/code_skills/push_T/controller.py
+        code_bundle: ../orimapi/skills/code_skills/push_T/skill.json
+      insert_tubes:
+        description: >-
+          Insert three loose tubes into the rack, release them and return both
+          arms home. GPT identifies current tubes, holes and cap faces;
+          calibrated RGB geometry and checked grasp/transfer stages fill far
+          slots before near slots to avoid crossing earlier placements.
+          Optional empty-wrist views resolve occlusion. Qualified on two
+          distinct native seed sets within 500 actions; small-sample admission,
+          not full benchmark reliability.
+        code_path: ../orimapi/skills/code_skills/insert_tubes/controller.py
+        code_bundle: ../orimapi/skills/code_skills/insert_tubes/skill.json
+      stack_bowls:
+        description: >-
+          Stack three bowls using formal c018. Keep a nested upper bowl despite
+          mild lean; repair only explicit placement failure. Preserve prior poses
+          when optional fitting fails. Yield the empty arm after release; carry
+          50mm higher, allow free heading, and try a line before obstacle planning.
+          Finish release, withdrawal and home. Native800; strict Astra. Tested
+          on eight layouts: mean78.75/100, six successes; full benchmark unqualified.
+          Supports stack_bowls only.
+        code_path: ../orimapi/skills/code_skills/stack_bowls/controller.py
+        code_bundle: ../orimapi/skills/code_skills/stack_bowls/skill.json
+        code_parameters:
+          native_ik:
+            device: cuda:0
+      make_kong:
+        description: >-
+          Observe an opponent's Mahjong discard, topple exactly three matching
+          tiles, draw the stock top and stand the replacement at the row end.
+          GPT binds current visual identities and stock corners; checked fixed
+          stages perform side-contact toppling, supported handoff and a
+          continuous wrist turn. Qualified on two distinct native seed sets;
+          small-sample admission, not full benchmark reliability.
+        code_path: ../orimapi/skills/code_skills/make_kong/controller.py
+        code_bundle: ../orimapi/skills/code_skills/make_kong/skill.json
+      put_bottles_into_dustbin:
+        description: >-
+          Collect four upright or lying bottles into the dustbin and home both
+          arms. GPT adapts short Python segments using frozen manipulation
+          functions and lessons, current RGB, public geometry and optional
+          local detection/segmentation. Qualified on two of three native
+          seed-set episodes; not full benchmark reliability.
+        code_path: ../orimapi/skills/code_skills/put_bottles_into_dustbin/program_controller.py
+        code_bundle: ../orimapi/skills/code_skills/put_bottles_into_dustbin/skill.json
+        code_parameters:
+          vision_resources_path: ../orimapi/skills/code_skills/put_bottles_into_dustbin/vision_resources.json
+          vision_model_root: ../checkpoint
+          vision_device: cuda:0
+      swap_T:
+        description: >-
+          Swap the two T-shaped blocks into each other's initial positions and
+          directed orientations, then home both arms. Uses current RGB, a
+          visually selected buffer, public robot clearance and checked tool
+          compositions. Qualified on all three native seed-set episodes;
+          this is a small-sample result, not full benchmark validation.
+        code_path: ../orimapi/skills/code_skills/swap_T/controller.py
+        code_bundle: ../orimapi/skills/code_skills/swap_T/skill.json
+      press_by_number:
+        description: >-
+          Read both current number cards and execute a counted A*na, blue,
+          B*nb, blue, both-arms-home sequence using measured RGB surfaces,
+          public fingertip geometry and guarded contact/release. Reuses
+          preparation poses only after robot-route preflight, with recorded
+          phase images and no replay after possible actuation. Native seeds0/1,
+          one episode each, succeeded with score100; seed2 is untested.
+          User-authorized two-seed publication, not full benchmark qualification.
+        code_path: ../orimapi/skills/code_skills/press_by_number/controller.py
+        code_bundle: ../orimapi/skills/code_skills/press_by_number/skill.json
+        code_parameters:
+          native_ik:
+            device: cuda:0
+      align_blocks:
+        description: >-
+          Align three magenta blocks with a visible white straightedge using
+          both ARX X5 arms for table-supported ruler pushing. Uses current RGB
+          feedback, measured motion, changed-contact recovery and return home
+          within the native 200-action budget. User-accepted eight-layout sample:
+          eight successes, mean native score 100/100; full benchmark unqualified.
+        code_path: ../orimapi/skills/code_skills/align_blocks/controller.py
+        code_bundle: ../orimapi/skills/code_skills/align_blocks/skill.json
+      arrange_largest_number:
+        description: >-
+          Identify four or five visible numeral pieces and arrange them in
+          descending order on the pads from left to right, upright/readable.
+          Supports arrange_largest_number only. Uses calibrated current RGB,
+          public robot state, fixed descending pad assignments and per-digit
+          feedback, with nearer transfers first and checked cross-arm staging.
+          Original native 1050-action budget. User-accepted eight-layout sample:
+          mean native score 42.5/100, two successes; full benchmark unqualified.
+        code_path: ../orimapi/skills/code_skills/arrange_largest_number/controller.py
+        code_bundle: ../orimapi/skills/code_skills/arrange_largest_number/skill.json
+        code_parameters:
+          native_ik:
+            device: cuda:0
+      cover_blocks:
+        description: >-
+          Cover the red, green and blue blocks from left to right using the
+          three inverted cups, then uncover red, green and blue in that order.
+          Uses calibrated RGB and public robot state; whole-task controller
+          validated on native RoboDojo episodes. Not a general sorting skill.
+        code_path: ../orimapi/skills/code_skills/cover_blocks/controller.py
+        code_bundle: ../orimapi/skills/code_skills/cover_blocks/skill.json
+      build_tower:
+        description: >-
+          Build the complete eight-piece wooden tower with paired pillars,
+          lower and upper boards, aligned cap and upright green roof, then home
+          both arms. Uses calibrated current RGB, public robot state and a
+          bounded roof-silhouette fit, with an empty-arm visibility prelude.
+          Qualified on two of three small-sample native seed-set tests;
+          placement remains scene-dependent and success is not guaranteed.
+        code_path: ../orimapi/skills/code_skills/build_tower/controller.py
+        code_bundle: ../orimapi/skills/code_skills/build_tower/skill.json
+      classify_objects:
+        description: >-
+          ONLY select this skill when the task instruction is the generic
+          'Sort the objects by category into the three baskets.' without
+          assigning specific categories to the left, middle, or right baskets.
+          NEVER select this skill when the instruction names specific categories
+          for the left, middle, and right baskets (use classify_objects_by_language
+          instead). Sort visible objects by category into three baskets using
+          current RGB and public robot state, placing near basket centres and
+          returning both arms home.
+        code_path: ../orimapi/skills/code_skills/classify_objects/controller.py
+        code_bundle: ../orimapi/skills/code_skills/classify_objects/skill.json
+      play_tic_tac_toe:
+        description: >-
+          Fill all nine board cells with five player rings and four autonomous
+          opponent crosses, not necessarily win a line. Uses current calibrated
+          RGB and public robot state, placing one ring per turn, homing both
+          arms and observing again after the opponent moves. Reuses a bounded
+          turn program on newly observed geometry. Qualified on two of three
+          native opponent seeds on one fixed board; observation timing remains
+          scene-dependent and this is not full benchmark validation.
+        code_path: ../orimapi/skills/code_skills/play_tic_tac_toe/controller.py
+        code_bundle: ../orimapi/skills/code_skills/play_tic_tac_toe/skill.json
+    code_parameters:
+      # Advertised to GPT automatically; loaded only if it calls estimate_depth.
+      # Missing optional weights disable only depth, not the other code skills.
+      depth_estimation:
+        model_path: ../checkpoint/depth-anything-v2-metric-indoor-small
+        device: cpu
+      geometry:
+        robot_collision_config: ../third_party/RoboDojo/Assets/Robots/x5/curobo.yml
+        robot_urdf: ../third_party/RoboDojo/Assets/Robots/x5/X5A.urdf
+        robot_config: ../third_party/RoboDojo/Assets/Robots/x5/robot_config.yml
+        arm_config: ../third_party/RoboDojo/env_cfg/robot/dual_x5.yml
+        camera_config: ../third_party/RoboDojo/env_cfg/camera/camera_config.yml
+        camera_template: ../third_party/RoboDojo/env_cfg/camera/template.py
+        table_config: ../third_party/RoboDojo/env_cfg/scene/default.yml
+
+# Optional fixed-policy ablation. Null enables GPT selection in every mode.
+fixed_policy: null
+
+supervisor:
+  wire_api: responses
+  require_model_match: true # Reject missing/mismatched response model metadata.
+  reasoning_effort: null     # Omit the API field; use the provider's default.
+  stream: false             # Optional SSE, Responses only.
+  headers: {}               # Non-secret integration metadata only.
+  auth:
+    type: copilot           # Exchange the separate GitHub token; refresh in memory.
+    token_file: ./copilot.credentials.json # Private JSON with a github_token field.
+  # ORIMAPI_LLM_ENDPOINT and ORIMAPI_LLM_MODEL override these fields.
+  endpoint: https://api.githubcopilot.com/responses
+  model: gpt-6-astra
+  api_key_env: OPENAI_API_KEY
+  prompt_path: ../prompts/robodojo_supervisor.md
+  initial_prompt_path: ../prompts/robodojo_initial.md
+  review_prompt_path: ../prompts/robodojo_review.md
+  selection_prompt_path: ../prompts/robodojo_policy_selection.md
+
+evaluation:
+  task: stack_bowls
+  episodes: 1               # Repeat this task sequentially in one environment.
+  output_root: ../runs
+
+# Run `python -m orimapi eval` in the policy environment. RoboDojo runs in its
+# separate Python interpreter. Paths are relative to this YAML file.
+xpolicylab:
+  root: ../third_party/RoboDojo/XPolicyLab
+  simulator_root: ../third_party/RoboDojo
+  simulator_python: ../.venv-robodojo/bin/python
+  env_cfg_type: arx_x5
+  action_type: joint
+  seed: 0
+  host: 127.0.0.1
+  port: 0                    # Let the policy server select a free port.
+  request_timeout_s: 1800.0  # Covers selection, model loading and inference.
+  evaluation_timeout_s: 3600.0
+  shutdown_timeout_s: 10.0
+  headless: true
+  simulator_gpu: 0
+  camera_map: null           # Default ARX camera aliases; override if needed.

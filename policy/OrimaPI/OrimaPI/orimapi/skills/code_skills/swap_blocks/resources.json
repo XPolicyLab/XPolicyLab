@@ -1,0 +1,17 @@
+{
+  "schema": "orimapi.swap-blocks-resources/v1",
+  "native_ik": {
+    "device": "cuda:0",
+    "runtime": "installed RoboDojo cuRobo planner in simulator Python environment",
+    "configuration": "Optional code_parameters.native_ik python/simulator_root/device overrides; default locations derived from configured public robot calibration paths."
+  },
+  "requirements": [
+    "numpy",
+    "opencv-python-headless",
+    "scipy",
+    "ikpy",
+    "transforms3d==0.4.2",
+    "RoboDojo simulator environment with cuRobo"
+  ],
+  "no_runtime_download": true
+}

@@ -1,0 +1,35 @@
+{
+  "authorization": "用户明确要求：OK总结成正式的skill先合入",
+  "published_at": "2026-10-26T18:32:59.541118+00:00",
+  "qualification": {
+    "published": true,
+    "mode": "user_authorized_unqualified",
+    "standard_qualified": false,
+    "tested_seeds": [],
+    "successful_seeds": [],
+    "untested_seeds": [
+      0,
+      1,
+      2
+    ],
+    "scope": "User-authorized availability; no new native episodes or score. Historical baseline results are not this version results."
+  },
+  "source_candidates": {
+    "sweep_blocks": "a86cc98d9dab37b3942a4328a0fff422e6ca15c47b88e353c5456cc187e8e1d5",
+    "sweep_blocks_random": "f688f21df679e5c8f537525b4b54da4526844f07f3de7638e20ad86140f8d47d"
+  },
+  "previous_formal_archive": "orimapi/skills/code_skill_rsi/planned_local_v1/publication/previous-formal-20261026T183259Z/sweep_blocks",
+  "shared_formal_library": "orimapi/skills/code_skills/common/planned_local_v1",
+  "changes_at_publication": [
+    "Controller import moved from research to formal shared package",
+    "Shared conveyor resource path relocated",
+    "Runtime-only manifest dependencies rebased; research build helpers and framework files omitted",
+    "Publication, validation, workflow and experience summary added",
+    "Preserve user-requested sweep random alias; combine the random distractor-planning phase and its frozen experiences into sweep_blocks"
+  ],
+  "algorithm_preserved_except_resource_relocation": true,
+  "model_prompts_byte_identical": true,
+  "profile_and_experience_byte_identical": false,
+  "sweep_random_alias_preserved": true,
+  "evidence_scope": "CPU/interface preflight only, no native simulations or new scores. Published availability is not benchmark qualification."
+}

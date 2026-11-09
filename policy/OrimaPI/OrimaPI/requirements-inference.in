@@ -1,0 +1,32 @@
+# OpenPI inference dependencies for Linux x86_64 / Python 3.11.
+# Common subset of third_party/openpi/uv.lock; install the full submodule separately.
+numpy==1.26.4
+pillow==11.2.1
+jax[cuda12]==0.5.3
+flax==0.10.2
+orbax-checkpoint==0.11.13
+torch==2.7.1
+torchvision==0.22.1
+transformers==4.53.2
+sentencepiece==0.2.0
+ml-dtypes==0.4.1
+tensorstore==0.1.74
+chex==0.1.90
+optax==0.2.4
+augmax==0.4.1
+dm-tree==0.1.9
+einops==0.8.1
+equinox==0.12.2
+flatbuffers==25.2.10
+fsspec[gcs]==2025.3.0
+imageio==2.37.0
+jaxtyping==0.2.36
+ml-collections==1.0.0
+numpydantic==1.6.9
+pydantic==2.11.5
+tqdm-loggable==0.2
+tyro==0.9.22
+beartype==0.19.0
+treescope==0.1.9
+polars==1.30.0
+websockets==15.0.1

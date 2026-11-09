@@ -1,0 +1,37 @@
+{
+  "segmentation_model": {
+    "model_path": "checkpoint/vision-tools/sam/70c1a07f894ebb5b307fd9eaaee97b9dfc16068f",
+    "device": "cuda:1",
+    "files": {
+      "config.json": "5ebd0d8643b486f3a716bf17c2a15531eb818b2b96ff0c6c5dcc88fa015161af",
+      "model.safetensors": "892c410e496344e527255ccdcb2cb7244a609acb5389c7c4fdba1288f861c579",
+      "preprocessor_config.json": "225545a743c654e3c495ec6f545a0eaba57c8ba3fbbd8483b3cb1c0fc58db517"
+    },
+    "software_versions": {
+      "torch": "2.7.1",
+      "transformers": "4.53.2",
+      "safetensors": "0.8.0",
+      "numpy": "1.26.4",
+      "opencv-python-headless": "4.11.0.86",
+      "pillow": "11.2.1"
+    },
+    "kind": "prompted_rgb_segmentation_proposals",
+    "sensor_ground_truth": false
+  },
+  "code_parameters": {
+    "depth_estimation": {
+      "model_path": "/root/code/OrimaPI/checkpoint/depth-anything-v2-metric-indoor-small",
+      "device": "cpu"
+    },
+    "geometry": {
+      "robot_collision_config": "/root/code/OrimaPI/third_party/RoboDojo/Assets/Robots/x5/curobo.yml",
+      "robot_urdf": "/root/code/OrimaPI/third_party/RoboDojo/Assets/Robots/x5/X5A.urdf",
+      "robot_config": "/root/code/OrimaPI/third_party/RoboDojo/Assets/Robots/x5/robot_config.yml",
+      "arm_config": "/root/code/OrimaPI/third_party/RoboDojo/env_cfg/robot/dual_x5.yml",
+      "camera_config": "/root/code/OrimaPI/third_party/RoboDojo/env_cfg/camera/camera_config.yml",
+      "camera_template": "/root/code/OrimaPI/third_party/RoboDojo/env_cfg/camera/template.py",
+      "table_config": "/root/code/OrimaPI/third_party/RoboDojo/env_cfg/scene/default.yml"
+    }
+  },
+  "runtime_fingerprint": "671556a16e692d5ab80ae0e486ff88de72c1946e6b3835f50cb4a963be084a20"
+}

@@ -1,0 +1,6 @@
+[
+  {
+    "method": "Use the bundled complete transfer and tap/press_surface tools with their original interface and task recipe. Take current measured geometry and inspect command feedback, not past scene coordinates.",
+    "local_failure": "Previous hybrid/parameter-guided runs scored 0/3. Their extra recovery restrictions and guessed action-cost budgets are not transferred into this baseline."
+  }
+]
