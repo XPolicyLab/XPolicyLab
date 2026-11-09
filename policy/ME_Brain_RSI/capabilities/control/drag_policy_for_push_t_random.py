@@ -33,24 +33,24 @@ class TabletopDragPolicy(Policy):
         wrist = float(q[-1])
         if abs(wrist) < 2.79: return
         current = np.asarray(obs['state'][side+'_ee_pose'], float).copy()
-        self.plan = [Waypoint(side, current, 1., 'ptr3_wrist_release', 15)]
+        self.plan = [Waypoint(side, current, 1., 'wrist_release', 15)]
         self.index = self.age = self.dwell = 0
         self.reobserve_after_plan = False
         if self.wrist_recoveries < 2:
             raised = current.copy(); raised[2] += .08
-            self.plan.append(Waypoint(side, raised, 1., 'ptr3_wrist_lift_empty', 3))
+            self.plan.append(Waypoint(side, raised, 1., 'wrist_lift_empty', 3))
             rotation = quat_matrix(current[3:])
             for fraction in (.5, 1.):
                 pose = raised.copy()
                 pose[3:] = matrix_quat(quat_matrix(yaw_quat(np.sign(wrist)*np.pi*fraction)) @ rotation)
-                self.plan.append(Waypoint(side, pose, 1., 'ptr3_wrist_unwind_empty', 3))
+                self.plan.append(Waypoint(side, pose, 1., 'wrist_unwind_empty', 3))
             self.wrist_recoveries += 1
             self.reobserve_after_plan = True
             self.view_cleared = False
         else:
             # The base class must not auto-replan after the release-only stop.
             self.attempts = max(self.attempts, 12)
-        self.reason = 'ptr3_measured_wrist_release_not_success'
+        self.reason = 'measured_wrist_release_not_success'
         self.program_notes.update(wrist_recoveries=self.wrist_recoveries,
                                   wrist_guard_observed_q6=wrist)
 
@@ -94,8 +94,10 @@ class TabletopDragPolicy(Policy):
             stage_yaw=source.angle
         self.program_notes.update(stage_xy=stage_xy.tolist(),stage_yaw=float(stage_yaw),
                                   active_side=side,relay_reobserve=True)
-        # Public footprint stem spans local x=-20..40 mm, width 20 mm.
-        stem=source.xy+.010*np.array([np.cos(source.angle),np.sin(source.angle)])
+        # Pinch the measured stem at its mid-length.
+        pinch_x=(source.stem_x[0]+source.stem_x[1])/2
+        stem=source.xy+pinch_x*np.array([np.cos(source.angle),np.sin(source.angle)])
+        half_height=float(np.clip(source.height,.006,.04))/2
         # Parallel jaws admit a pi-equivalent heading. Choose the direction
         # facing out from the public robot base to avoid a wrist half-turn.
         # This is a geometric heuristic, not an IK/collision certificate.
@@ -113,16 +115,16 @@ class TabletopDragPolicy(Policy):
                 current.T@quat_matrix(self.pose(side,stem,.13,yaw)[3:])))
         self.program_notes['grasp_yaw']=float(grasp_yaw)
         self.drag_used_sides.add(side)
-        # Keep distal finger tips at the 15 mm block's mid-height. The TCP
-        # is above the tips by the public tool-vs-contact offset difference.
-        height=.0075+float(self.calibration['contact_tip_offset_in_ee'][0]
-                          -self.calibration['tool_offset_in_ee'][0])
+        # Keep distal finger tips at the measured block's mid-height. The TCP
+        # is above the tips by the tool-vs-contact offset difference.
+        height=half_height+float(self.calibration['contact_tip_offset_in_ee'][0]
+                                -self.calibration['tool_offset_in_ee'][0])
         if side in self.drag_robot_joints:
             candidates = []
             for yaw in (grasp_yaw, grasp_yaw+np.pi):
                 contact = self.pose(side, stem, height, yaw)
                 candidate = tabletop_drag(source.xy, source.angle, stage_xy, stage_yaw,
-                    self.calibration['table_z']+.0075, contact, angle_step=.15, distance_step=.02)
+                    self.calibration['table_z']+half_height, contact, angle_step=.15, distance_step=.02)
                 lift = candidate[-1][1].copy(); lift[2] += .08
                 poses = [self.pose(side, stem, .13, yaw), contact] + [p for _,p in candidate] + [lift]
                 candidates.append(screen_drag(side, self.drag_robot_joints[side], poses))
@@ -134,13 +136,12 @@ class TabletopDragPolicy(Policy):
                     self.program_notes['grasp_yaw'] = float(grasp_yaw)
                     self.program_notes['pregrasp_heading_changed'] = True
                 else:
-                    # Nominal branch search is not the evaluator's IK. PTR2
-                    # replay shows it can reject previously successful paths.
+                    # The nominal branch search can reject paths that succeed with the evaluator's IK.
                     # Use it to select a certified alternative, not veto the
                     # baseline; measured q6 protection remains authoritative.
                     self.program_notes['pregrasp_screen_inconclusive'] = True
         grasp=self.pose(side,stem,height,grasp_yaw)
-        z=self.calibration['table_z']+.0075
+        z=self.calibration['table_z']+half_height
         anchor=quat_matrix(grasp[3:]).T@(np.r_[source.xy,z]-grasp[:3])
         self.add(side,stem,.13,1.,'drag_approach',3,angle=grasp_yaw)
         self.plan.append(Waypoint(side,grasp,1.,'drag_contact',3))
@@ -156,6 +157,9 @@ class TabletopDragPolicy(Policy):
         # test and release dwell; no task/scoring tolerance is changed.
         raised=last.copy();raised[2]+=.08
         self.plan.append(Waypoint(side,raised,1.,'drag_lift',3))
+        # step aside towards the arm's own side so the lifted gripper no longer covers the block in the head camera
+        aside=raised.copy();aside[0]=float(np.clip(aside[0]+(-.14 if side=='left' else .14),-.45,.45))
+        self.plan.append(Waypoint(side,aside,1.,'drag_aside',2))
         self.reobserve_after_plan=True
         self.view_cleared=False
         self.reason='executing_tabletop_drag_not_success_claim'

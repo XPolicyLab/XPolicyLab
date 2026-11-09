@@ -1,21 +1,29 @@
 """Central deployment dispatch; task-specific control loops keep their timing."""
+from .core.observation import restrict_public_observation
 from .routing import configure
 
 
 class DecodedEnvironment:
-    def __init__(self, env):
+    def __init__(self, env, *, public_only=False):
         self.env = env
+        self.public_only = public_only
 
     def __getattr__(self, name):
         return getattr(self.env, name)
 
     def get_obs(self, *args, **kwargs):
         from XPolicyLab.utils.process_data import decode_obs_images
-        return decode_obs_images(self.env.get_obs(*args, **kwargs))
+        observation = self.env.get_obs(*args, **kwargs)
+        if self.public_only:
+            observation = restrict_public_observation(observation)
+        return decode_obs_images(observation)
 
     def get_obs_batch(self, *args, **kwargs):
         from XPolicyLab.utils.process_data import decode_obs_images
-        return decode_obs_images(self.env.get_obs_batch(*args, **kwargs))
+        observations = self.env.get_obs_batch(*args, **kwargs)
+        if self.public_only:
+            observations = [restrict_public_observation(observation) for observation in observations]
+        return decode_obs_images(observations)
 
 
 def _run(env, client, batch):
@@ -33,7 +41,8 @@ def _run(env, client, batch):
     if route['deploy']:
         from .core.modules import TaskModules
         module = TaskModules(route['canonical_task']).import_module(route['deploy'])
-        return (module.eval_one_episode_batch if batch else module.eval_one_episode)(DecodedEnvironment(env), client)
+        environment = DecodedEnvironment(env, public_only=route['driver'] == 'generator')
+        return (module.eval_one_episode_batch if batch else module.eval_one_episode)(environment, client)
     if route['driver'] == 'equation':
         return _batch_loop(env, client)
     client.call(func_name='reset')

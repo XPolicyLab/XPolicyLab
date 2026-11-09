@@ -1,7 +1,6 @@
 {
   "rgb_calibration": {
     "source": "rgb_fingertip_fk",
-    "source_run_id": "20261009_104612_mydyi3m9_swap_T_rgb_calibration_v1b_edea1162",
     "projection": [
       [
         288.154683959748,

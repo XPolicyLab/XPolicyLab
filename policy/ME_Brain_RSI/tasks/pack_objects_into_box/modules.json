@@ -3,13 +3,7 @@
     "file": "capabilities/control/pack_random.py",
     "resource": "resources/pack_objects_into_box/coap/tasks/pack_random.py",
     "package": false,
-    "sha256": "e2570536c84693901b813519b7509bd84260c7e18c5af5117a8fc1287eee90e5"
-  },
-  "coap.tasks.pack_probe": {
-    "file": "capabilities/control/pack_probe.py",
-    "resource": "resources/pack_objects_into_box/coap/tasks/pack_probe.py",
-    "package": false,
-    "sha256": "833e086fa9c11ca7589663e359c88d19a6580ccfc98a8838efc20139fe4e845b"
+    "sha256": "711870eb6489b410fb13dcf0a9d631b568e3faed32f3dbced3688652c62fd578"
   },
   "coap.tasks": {
     "file": "capabilities/control/insert_key.py",
@@ -69,7 +63,7 @@
     "file": "capabilities/control/model_for_pack_objects_into_box.py",
     "resource": "resources/pack_objects_into_box/model.py",
     "package": false,
-    "sha256": "ef958ef8aa129c523786084e4fad963deb5c87282d3da46aca42bbea7fe7b066"
+    "sha256": "5c5c0c00888a2ff7da64d78e0f1eb9e612d62efeed97fa5c0bb4e2f630b9c13a"
   },
   "coap.evidence": {
     "file": "capabilities/observation/evidence.py",

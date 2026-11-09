@@ -2,19 +2,16 @@
 
 This is an initial heuristic, NOT a demonstrated robust detector. It returns
 uncertainty rather than substituting simulator positions when objects are lost.
+
+push_T_random: the block (red or blue under coloured light) and the tinted pad on a textured table are found as stable
+regions / chromatic blobs and recognised by their shape class only (t_detect / t_measure); outlines, the block's height and
+every pinch or push point are measured in the episode. No object dimensions are known in advance.
 """
 from dataclasses import dataclass
 import cv2
 import numpy as np
-from scipy.optimize import least_squares
-from .geometry import Camera
-
-# XY silhouettes in millimetres from public object.usdz meshes, not scene poses.
-# Assets/Object/RoboDojo/{Rigid/t,Geometry/t_cushion}/00000, +X stem direction.
-T_FOOTPRINTS={
-    "t_source":np.array([[-40,-30],[-40,30],[-20,30],[-20,10],[40,10],[40,-10],[-20,-10],[-20,-30]],np.float32).reshape(-1,1,2),
-    "t_target":np.array([[-42,-34],[-42,34],[-22,34],[-22,10],[42,10],[42,-10],[-22,-10],[-22,-34]],np.float32).reshape(-1,1,2),
-}
+from .geometry import Camera, quat_matrix
+from .t_detect import TDetector, chromatic_mask
 
 
 @dataclass
@@ -27,18 +24,12 @@ class Detection:
     contour: np.ndarray
     confidence: float
     semantic: str = "generic"
-
-
-def deduplicate_t(found):
-    """Merge agreeing proposals, never distinct positions or directed headings."""
-    unique=[]
-    for d in sorted(found,key=lambda x:-x.confidence):
-        if any(d.semantic==old.semantic and np.linalg.norm(d.xy-old.xy)<.005
-               and abs(np.arctan2(np.sin(d.angle-old.angle),np.cos(d.angle-old.angle)))<.12
-               for old in unique):
-            continue
-        unique.append(d)
-    return unique
+    local: np.ndarray = None      # measured outline in the object's own frame (m; +x along the stem), T objects only
+    height: float = 0.            # measured height above the table (blocks)
+    bar_x: tuple = None           # crossbar x range in the own frame
+    bar_half: float = 0.          # crossbar half length
+    stem_x: tuple = None          # stem x range in the own frame
+    occluded: bool = False
 
 
 def directed_t_angle(contour):
@@ -69,6 +60,7 @@ class Perception:
         self.z = calibration["table_z"]
         self.bounds = calibration["workspace"]
         self.scale = 600  # pixels/metre in the rectified image
+        self.t_detector = None
 
     def rectified(self, rgb, plane_z=None):
         w, h = self.camera.resolution
@@ -85,32 +77,22 @@ class Perception:
         self.valid=cv2.erode(np.uint8(valid==255)*255,np.ones((5,5),np.uint8))
         return cv2.warpPerspective(rgb,transform,(width,height),borderMode=cv2.BORDER_REPLICATE)
 
-    def detect(self, rgb, task=None):
-        if task == "pour_balls_into_vase":
-            return self.detect_ball_vessels(rgb),rgb.copy()
-        if task == "pour_liquid_into_cup":
-            return self.detect_liquid_rims(rgb),rgb.copy()
+    def detect(self, rgb, task=None, state=None):
         if task == "push_T":
             self.bounds=[*self.bounds[:2],min(self.bounds[2],-.45),self.bounds[3]]
-            # The visible rigid T face is 15 mm above the table; the printed
-            # target pad is 0.1 mm high. Use their public static thicknesses,
-            # not a layout pose or measured simulator depth.
-            source_image=self.rectified(rgb,self.z+.015)
-            sources=self.detect_t(source_image,labels={"t_source"})
-            # A flat top-plane template mistakes visible red side faces for
-            # an expanded top. Refine against the public 15 mm extruded mesh
-            # projected into the original RGB; no fitted world-space offset.
-            from .t_projection import refine_source
-            for detection in sources:
-                fit=refine_source(rgb,self.camera,T_FOOTPRINTS['t_source'],
-                                  detection.xy,detection.angle,self.z)
-                if fit['iou']>=.75 and fit['iou']>fit['initial_iou']+.03:
-                    detection.xy=fit['xy']
-                    detection.angle=fit['angle']
-                    detection.confidence=fit['iou']
-            target_image=self.rectified(rgb,self.z+.0001)
-            targets=self.detect_t(target_image,labels={"t_target"})
-            return deduplicate_t(sources+targets),target_image
+            if self.t_detector is None:
+                self.t_detector=TDetector(self.camera,self.z,self.bounds,quat_matrix,source_mask=chromatic_mask,target_mode='mser')
+            found=self.t_detector.detect(rgb,state)
+            detections=[]
+            for name,label in (("source","t_source"),("target","t_target")):
+                d=found.get(name)
+                if d is None: continue
+                detections.append(Detection(np.asarray(d["xy"],float),float(d["angle"]),np.asarray(d["size"],float),
+                                            np.array([200.,60.,60.]) if name=="source" else np.array([130.,120.,120.]),
+                                            float(d["area"]),d["contour"],float(d["confidence"]),label,
+                                            local=np.asarray(d["local"],float),height=float(d["height"]),bar_x=tuple(d["bar_x"]),
+                                            bar_half=float(d["bar_half"]),stem_x=tuple(d["stem_x"]),occluded=bool(d["occluded"])))
+            return detections,rgb.copy()
         # Detect the visible cap on its known static resting-height plane,
         # not on the table below it. This removes oblique-camera parallax;
         # no per-scene button pose or joint measurement is used.
@@ -129,172 +111,6 @@ class Perception:
         mask &= self.valid
         mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, np.ones((3,3),np.uint8))
         return self.components(image,mask),image
-
-    def fit_upright_envelope(self, box, height, radius=None):
-        """Fit an RGB silhouette envelope using known upright static geometry.
-
-        The variable is object xy (and optionally radius), never a simulator
-        pose. Height is an asset prior, so non-upright/occluded objects may fail.
-        """
-        x,y,w,h=box
-        wanted=np.array([x,y,x+w,y+h],float)
-        angles=np.linspace(0,2*np.pi,96,endpoint=False)
-        circle=np.c_[np.cos(angles),np.sin(angles)]
-        initial=self.camera.pixel_to_plane([x+w/2,y+h/2],self.z+height/2)[:2]
-        def envelope(params):
-            r=radius if radius is not None else params[2]
-            ring=params[:2]+r*circle
-            points=np.concatenate([np.c_[ring,np.full(96,self.z+z)] for z in (0,height)])
-            pixels=self.camera.project(points)
-            return np.r_[pixels.min(0),pixels.max(0)]
-        initial=np.clip(initial,[-.65,-.43],[.65,.28])
-        if radius is None:
-            initial=np.r_[initial,.055]
-            bounds=([-.67,-.45,.03],[.67,.30,.10])
-        else: bounds=([-.67,-.45],[.67,.30])
-        fit=least_squares(lambda p:envelope(p)-wanted,initial,bounds=bounds,max_nfev=40)
-        error=float(np.sqrt(np.mean(fit.fun**2)))
-        return fit.x[:2],float(radius if radius is not None else fit.x[2]),error
-
-    def detect_ball_vessels(self,rgb):
-        # Cup uses its public cylinder dimensions; vase positions are fit
-        # from RGB to all public silhouettes (never an instance asset ID).
-        if rgb.shape[:2] != (self.camera.resolution[1],self.camera.resolution[0]):
-            raise ValueError("Unexpected RGB resolution")
-        r,g,b=rgb.astype(float).transpose(2,0,1)
-        yellow=(r>115)&(g>110)&(b<.65*np.minimum(r,g))&(np.abs(r-g)<80)
-        found=[]
-        for mask,label,height,radius in ((yellow,"ball_cup",.072,.036),):
-            mask=cv2.morphologyEx(np.uint8(mask)*255,cv2.MORPH_CLOSE,np.ones((3,3),np.uint8))
-            mask=cv2.morphologyEx(mask,cv2.MORPH_OPEN,np.ones((3,3),np.uint8))
-            contours,_=cv2.findContours(mask,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
-            for contour in contours:
-                x,y,w,h=cv2.boundingRect(contour)
-                if not (250<cv2.contourArea(contour)<15000 and .55<h/w<3.0 and 18<w<150 and 20<h<180): continue
-                xy,estimated_radius,error=self.fit_upright_envelope((x,y,w,h),height,radius)
-                if error>6 or not (-.48<xy[0]<.48 and -.32<xy[1]<.18): continue
-                selected=np.zeros(mask.shape,np.uint8)
-                cv2.drawContours(selected,[contour],-1,255,-1)
-                color=np.median(rgb[selected>0],axis=0)
-                found.append(Detection(xy,0.,np.array([2*estimated_radius,height]),color,
-                                       np.pi*estimated_radius**2,contour,max(.31,1-error/10),label))
-        from .vase_geometry import fit_vases
-        for fit in fit_vases(self.camera,self.z,rgb):
-            found.append(Detection(fit['xy'],fit['yaw'],np.array([fit['diameter'],fit['height']]),
-                         np.zeros(3),np.pi*(fit['diameter']/2)**2,fit['contour'],
-                         max(.31,1-fit['rms']/2),'ball_vase'))
-        return found
-
-    def detect_liquid_rims(self,rgb):
-        """Neutral circular openings on static height planes, not body centroids.
-
-        This initial detector supports the visible pale bottle mouth and mug
-        interior. Transparent/occluded cup variants may abstain; they must not
-        be removed from evaluation. No hidden asset instance ID is selected.
-        """
-        values=rgb.astype(float)
-        mask=np.uint8((values.min(2)>105)&(np.ptp(values,axis=2)<40))*255
-        contours,_=cv2.findContours(mask,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
-        found=[]
-        # Public wuliangye/00000 height .2181 m; mug/15,16 height .0762 m.
-        for height,low,high,label in ((.2181,.017,.033,"liquid_bottle"),
-                                      (.0762,.047,.070,"liquid_cup")):
-            for contour in contours:
-                if not 45<cv2.contourArea(contour)<1800 or len(contour)<5: continue
-                world=np.array([self.camera.pixel_to_plane(uv,self.z+height)[:2]
-                                for uv in contour[:,0,:]],np.float32)
-                # Apply circularity only after removing perspective distortion.
-                metric=(world*1000).reshape(-1,1,2)
-                hull=cv2.convexHull(metric)
-                perimeter=cv2.arcLength(hull,True)
-                hull_area=cv2.contourArea(hull)
-                circularity=4*np.pi*hull_area/max(perimeter**2,1e-9)
-                solidity=cv2.contourArea(metric)/max(hull_area,1e-9)
-                centre,radius=cv2.minEnclosingCircle(hull)
-                xy=np.array(centre)/1000
-                diameter=2*radius/1000
-                if not (low<diameter<high and circularity>.88 and solidity>.85
-                        and -.48<xy[0]<.48 and -.32<xy[1]<.18): continue
-                found.append(Detection(xy,0.,np.array([diameter,height]),np.array([180.,180.,180.]),
-                                       np.pi*(diameter/2)**2,contour,float(circularity*solidity),label))
-        if not any(d.semantic=="liquid_cup" for d in found):
-            found.extend(self.detect_goblet_rims(rgb))
-        if not any(d.semantic=="liquid_cup" for d in found):
-            found.extend(self.detect_mug_silhouettes(rgb))
-        return found
-
-    def detect_mug_silhouettes(self,rgb):
-        """Fallback for a bright rim merged with the cup body and handle.
-
-        Fit all public mug geometry candidates to visible outer contours.
-        Reject disagreement rather than selecting a hidden instance identity.
-        """
-        from .mug_geometry import fit_mug_contour,load_mug_models
-        values=rgb.astype(float)
-        mask=np.uint8((values.min(2)>105)&(np.ptp(values,axis=2)<40))*255
-        contours,_=cv2.findContours(mask,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
-        found=[]
-        for contour in contours:
-            x,y,w,h=cv2.boundingRect(contour)
-            if not (400<cv2.contourArea(contour)<2200 and 22<w<90 and 20<h<80): continue
-            fits=fit_mug_contour(self.camera,self.z,contour,load_mug_models())
-            if not fits: continue
-            best=fits[0]
-            if best['rms']>.65 or best['max_error']>1.8: continue
-            credible=[f for f in fits if f['rms']<best['rms']+.20]
-            if any(np.linalg.norm(f['xy']-best['xy'])>.004 for f in credible): continue
-            xy=best['xy']
-            if not (-.48<xy[0]<.48 and -.32<xy[1]<.18): continue
-            found.append(Detection(xy,0.,np.array([.065,.0762]),np.full(3,180.),
-                                   np.pi*.0325**2,contour,.95-.2*best['rms'],'liquid_cup'))
-        return found
-
-    def detect_goblet_rims(self,rgb):
-        """Concentric bright outer/inner rim evidence, not a hidden asset ID.
-
-        Public goblet/00006 mesh: height 100.3 mm, upper rim diameter
-        70.51 mm. Require both nested round contours; a bright disk or
-        bottle reflection alone is not evidence for this cup type.
-        """
-        values=rgb.astype(float)
-        found=[]
-        def shape(contour):
-            if len(contour)<5 or not 100<cv2.contourArea(contour)<1800:
-                return None
-            points=np.array([self.camera.pixel_to_plane(uv,self.z+.1003)[:2]
-                             for uv in contour[:,0,:]],np.float32).reshape(-1,1,2)*1000
-            hull=cv2.convexHull(points)
-            area=cv2.contourArea(hull)
-            perimeter=cv2.arcLength(hull,True)
-            circularity=4*np.pi*area/max(perimeter**2,1e-9)
-            solidity=cv2.contourArea(points)/max(area,1e-9)
-            centre,radius=cv2.minEnclosingCircle(hull)
-            return np.array(centre)/1000,radius/500,circularity,solidity
-        for threshold in (180,205):
-            mask=np.uint8((values.min(2)>threshold)&(np.ptp(values,axis=2)<40))*255
-            contours,hierarchy=cv2.findContours(mask,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
-            if hierarchy is None: continue
-            for index,inner in enumerate(contours):
-                parent=hierarchy[0,index,3]
-                if parent<0: continue
-                inside,outside=shape(inner),shape(contours[parent])
-                if inside is None or outside is None: continue
-                xy,diameter,circularity,solidity=outside
-                centre,opening,inner_round,inner_solid=inside
-                if not (.067<diameter<.077 and .062<opening<diameter
-                        and .0004<diameter-opening<.008
-                        and min(circularity,inner_round)>.94
-                        and min(solidity,inner_solid)>.90
-                        and np.linalg.norm(xy-centre)<.003
-                        and -.48<xy[0]<.48 and -.32<xy[1]<.18): continue
-                confidence=float(min(circularity,inner_round)*min(solidity,inner_solid))
-                candidate=Detection((xy+centre)/2,0.,np.array([opening,.1003]),
-                                    np.array([210.,210.,210.]),np.pi*(opening/2)**2,
-                                    inner,confidence,"liquid_cup")
-                nearby=next((i for i,d in enumerate(found) if np.linalg.norm(d.xy-candidate.xy)<.005),None)
-                if nearby is None: found.append(candidate)
-                elif confidence>found[nearby].confidence: found[nearby]=candidate
-        return found
 
     def components(self,image,mask,semantic="generic"):
         contours, _ = cv2.findContours(mask,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
@@ -315,60 +131,76 @@ class Perception:
                          color, area/self.scale**2, c, min(1.,area/200),semantic))
         return found
 
-    def detect_t(self,image,labels=None):
-        """Red/blue source and illumination-tolerant target shape proposals.
-
-        Both require directed public T-template evidence; ambiguity abstains.
-        """
+    def detect_buttons(self,image):
         values=image.astype(float)
         red,green,blue=values.transpose(2,0,1)
-        from .random_t_rgb import source_mask, target_region_masks
-        source=source_mask(image)
-        target=(values.min(axis=2)>95)&(values.max(axis=2)<195)&(np.ptp(values,axis=2)<20)
+        masks=((red>170)&(red>1.65*green)&(red>1.7*blue),
+               (blue>100)&(blue>1.5*red)&(blue>1.35*green))
         found=[]
-        masks=[(source,"t_source"),(target,"t_target")]
-        regions = target_region_masks(image,self.valid)
-        if labels is None or "t_source" in labels:
-            masks.extend((mask>0,"t_source") for mask in regions
-                         if np.mean(source[mask>0])>.8)
-        if labels is None or "t_target" in labels:
-            masks.extend((mask>0,"t_target") for mask in regions)
-        for mask,label in masks:
-            if labels is not None and label not in labels: continue
-            mask=np.uint8(mask)*self.valid
-            mask=cv2.morphologyEx(mask,cv2.MORPH_OPEN,np.ones((3,3),np.uint8))
+        for mask,label in zip(masks,("red_button","blue_button")):
+            mask=cv2.morphologyEx(np.uint8(mask)*self.valid,cv2.MORPH_OPEN,np.ones((3,3),np.uint8))
             for d in self.components(image,mask,label):
-                if label=="t_target":
-                    component=np.zeros(image.shape[:2],np.uint8)
-                    cv2.drawContours(component,[d.contour],-1,1,-1)
-                    # The same chromatic evidence must exclude a target.
-                    # A second, stricter S>180 test previously let the blue
-                    # source simultaneously become a gray-target proposal.
-                    if np.count_nonzero((component>0)&source)>0.2*np.count_nonzero(component):
-                        continue
-                # Public static extents: rigid T .08 x .06 m, target .084 x
-                # .068 m. Tolerate projection/partial occlusion, reject tiny
-                # neutral gripper fragments and large arm/table components.
-                if not (.0012<d.area<.012 and .04<min(d.size)<.13 and .065<max(d.size)<.16): continue
-                hull=cv2.contourArea(cv2.convexHull(d.contour))
-                solidity=cv2.contourArea(d.contour)/max(hull,1)
-                if not .35<solidity<.94: continue
-                shape_error=cv2.matchShapes(d.contour,T_FOOTPRINTS[label],cv2.CONTOURS_MATCH_I1,0)
-                if shape_error>1.5: continue
-                # Fit the whole directed footprint instead of choosing a
-                # moment axis, which can drift under partial occlusion.
-                # The fitted root is the public mesh origin, not the centre
-                # of a rotated bounding rectangle. No simulator pose is used.
-                from .t_shape import fit_t_contour
-                fit=fit_t_contour(d.contour,T_FOOTPRINTS[label],self.scale)
-                if fit is None or fit['iou']<.68 or fit['direction_margin']<.15: continue
-                d.angle=fit['angle']
-                d.xy=np.array([self.bounds[0],self.bounds[2]])+fit['pixel_xy']/self.scale
-                d.confidence=fit['iou']
-                found.append(d)
-        # Repeated masks may describe the same physical region. Cluster only
-        # when position AND directed orientation agree; retain true ambiguity.
-        return deduplicate_t(found)
+                # Specular streaks create long jagged notches in a color mask;
+                # assess outer roundness and retained area separately.
+                hull=cv2.convexHull(d.contour)
+                perimeter=cv2.arcLength(hull,True)
+                hull_area=cv2.contourArea(hull)
+                circularity=4*np.pi*hull_area/max(perimeter**2,1)
+                solidity=cv2.contourArea(d.contour)/max(hull_area,1)
+                if (.0005<d.area<.006 and .025<min(d.size) and max(d.size)<.095
+                        and circularity>.88 and solidity>.75):
+                    # A specular missing arc rotates/shifts minAreaRect even
+                    # when most of the round cap is visible. Use its enclosing
+                    # circle after the roundness gates, not the rectangle centre.
+                    centre,radius=cv2.minEnclosingCircle(hull)
+                    if not .012<radius/self.scale<.048: continue
+                    d.xy=np.array([self.bounds[0],self.bounds[2]])+np.array(centre)/self.scale
+                    d.confidence=float(circularity*solidity)
+                    found.append(d)
+        return found
+
+    @staticmethod
+    def color_rank(detection, color):
+        c = detection.color / 255
+        channel = {"red":0,"green":1,"blue":2}[color]
+        return c[channel] - np.mean(np.delete(c,channel))
+
+    def select(self, task, detections):
+        """Semantic hypotheses from visible shape/color, never seeded locations."""
+        d = [x for x in detections if x.confidence > .3]
+        if task == "press_by_number":
+            return self.detect_buttons(image),image
+        lab = cv2.cvtColor(image, cv2.COLOR_RGB2LAB).astype(float)
+        # Robust dominant tabletop cluster. No simulator mask or depth.
+        valid_pixels=lab[self.valid>0]
+        quantized = (valid_pixels // 16).astype(int)
+        codes = quantized[:,0]*256 + quantized[:,1]*16 + quantized[:,2]
+        dominant = np.bincount(codes).argmax()
+        background = np.median(valid_pixels[codes == dominant], axis=0)
+        distance = np.linalg.norm((lab-background)*[0.5,1.,1.], axis=2)
+        mask = np.uint8(distance > 24)*255
+        mask &= self.valid
+        mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, np.ones((3,3),np.uint8))
+        return self.components(image,mask),image
+
+    def components(self,image,mask,semantic="generic"):
+        contours, _ = cv2.findContours(mask,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+        found = []
+        x0, _, y0, _ = self.bounds
+        for c in contours:
+            area = cv2.contourArea(c)
+            if not 30 < area < image.shape[0]*image.shape[1]*0.25:
+                continue
+            (u,v),(width,height),angle = cv2.minAreaRect(c)
+            if min(width,height) < 3:
+                continue
+            component = np.zeros(mask.shape,np.uint8)
+            cv2.drawContours(component,[c],-1,255,-1)
+            color = np.median(image[component>0],axis=0)
+            found.append(Detection(np.array([x0+u/self.scale,y0+v/self.scale]),
+                         np.deg2rad(angle), np.array([width,height])/self.scale,
+                         color, area/self.scale**2, c, min(1.,area/200),semantic))
+        return found
 
     def detect_buttons(self,image):
         values=image.astype(float)

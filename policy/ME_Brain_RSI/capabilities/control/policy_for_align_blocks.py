@@ -1,7 +1,8 @@
-"""AB4: synchronized two-point non-grasp pushing with RGB yaw correction.
+"""align_blocks: synchronized two-point non-grasp pushing with RGB yaw correction, planned from measured geometry only.
 
-The fingers close in free space, then remain behind the ruler as pushers. No
-grasp/attachment assumption, hidden scene state, contact/force or reward input.
+The fingers close in free space, then remain behind the ruler as pushers. The ruler's rear face line, its length and
+the blocks' size and height are measured from the head camera in each episode (perception.py); nothing about the
+objects is assumed. No grasp/attachment assumption, hidden scene state, contact/force or reward input.
 """
 import numpy as np
 from scipy.spatial.transform import Rotation
@@ -13,15 +14,19 @@ from .perception import Perception, line_angle
 ARMS=('left','right')
 
 
+PUSH_SPAN_FRACTION=.71      # the two push points sit at this fraction of the measured half length: inside the ends, far enough apart to hold the yaw
+SPAN_LIMITS=(.12,.24)       # half span the two arms can hold (workspace / arm separation)
+
+
 class Policy:
-    PUSH_HEIGHT=.020
-    HALF_SPAN=.195
-    REAR_OFFSET=.013
-    PUSH_INCREMENT=.003
+    PUSH_HEIGHT=.020        # TCP height above the table while pushing: the closed fingertips skim the table
+    REAR_TCP_BEHIND=.004    # TCP this far behind the measured rear edge: the closed fingers' pad face is at the ruler
+    APPROACH_BEHIND=.035    # TCP this far behind the rear edge when the fingers come down
+    PUSH_INCREMENT=.003     # advance per push step
     FEEDBACK_PERIOD=4
 
     def __init__(self, task, calibration):
-        if task!='align_blocks':raise ValueError('AB4 is align_blocks-only')
+        if task!='align_blocks':raise ValueError('Expected task_name=align_blocks')
         self.calibration=calibration
         self.perception=Perception(calibration)
         self.step=0;self.home=None;self.stage='hold';self.elapsed=0;self.dwell=0
@@ -29,7 +34,7 @@ class Policy:
         self.targets={};self.progress=0.;self.yaw_bias=0.;self.aligned_count=0
         self.last_rgb_step=-999;self.feedback_updates=0;self.stalled=0
         self.last_state={};self.last_action={};self.error={}
-        self.ruler=None;self.exit_xy=None
+        self.ruler=None;self.exit_xy=None;self.half_span=None;self.cube_side=None
 
     def pose(self, side, xy, height):
         # Mirrored wrist headings, identical downward fingertip direction.
@@ -45,8 +50,8 @@ class Policy:
         yaw=self.plan['yaw']+yaw_bias
         along=np.array([np.cos(yaw),np.sin(yaw)])
         normal=np.array(self.plan['normal'])
-        center=np.asarray(self.plan['ruler_center'])+normal*progress
-        return {s:center+sign*self.HALF_SPAN*along-rear_offset*normal
+        rear=np.asarray(self.plan['ruler_rear'])+normal*progress
+        return {s:rear+sign*self.half_span*along-rear_offset*normal
                 for s,sign in [('left',-1),('right',1)]}
 
     def set_stage(self, stage, targets):
@@ -55,25 +60,28 @@ class Policy:
 
     def initialize(self, obs):
         self.home={s:np.array(obs['state'][f'{s}_ee_pose'],float) for s in ARMS}
-        self.vision=self.perception.detect(obs['vision']['cam_head']['color'])
+        self.vision=self.perception.detect(obs['vision']['cam_head']['color'],obs['state'])
         if not self.vision['valid']:
             self.reason=self.vision['reason'];return
-        self.ruler=dict(self.vision['rulers'][0]);center=np.asarray(self.ruler['xy'])
+        self.ruler=dict(self.vision['ruler']);rear=np.asarray(self.ruler['rear'])
         yaw=self.ruler['yaw'];along=np.array([np.cos(yaw),np.sin(yaw)])
-        normal=np.array([-along[1],along[0]])
+        normal=np.asarray(self.ruler['normal'],float)
+        self.half_span=float(np.clip(PUSH_SPAN_FRACTION*self.ruler['length']/2,*SPAN_LIMITS))
+        self.cube_side=float(np.median([c['side'] for c in self.vision['cubes']]))
         cubes=np.array([c['xy'] for c in self.vision['cubes']])
-        span=(cubes-center)@along;gaps=(cubes-center)@normal
-        if np.min(gaps)<.015 or np.max(np.abs(span))>.245:
+        span=(cubes-rear)@along;gaps=(cubes-rear)@normal
+        if np.min(gaps)<.005 or np.max(np.abs(span))>self.ruler['length']/2-.03:
             self.reason='blocks_outside_forward_ruler_sweep';return
-        distance=float(np.max(gaps)+.055)
+        # push budget: the rear edge travels to the farthest block plus about one block; the RGB alignment check ends it earlier
+        distance=float(np.max(gaps)+1.3*self.cube_side)
         if not .04<distance<.23:
             self.reason='unsafe_rgb_push_distance';return
-        self.plan=dict(ruler_center=center.tolist(),yaw=float(yaw),normal=normal.tolist(),
-                       half_span=self.HALF_SPAN,push_distance=distance,
-                       initial_farthest_gap=float(np.max(gaps)),non_grasp=True,
-                       feedback='central_white_ruler_yaw_and_pink_top_faces')
-        points=self.push_points(0.,.045)
-        final=self.push_points(distance,self.REAR_OFFSET)
+        self.plan=dict(ruler_rear=rear.tolist(),yaw=float(yaw),normal=normal.tolist(),ruler_length=self.ruler['length'],
+                       half_span=self.half_span,cube_side=self.cube_side,cube_height=self.vision['cube_height'],
+                       push_distance=distance,initial_farthest_gap=float(np.max(gaps)),non_grasp=True,
+                       feedback='central_white_ruler_rear_edge_and_pink_top_faces')
+        points=self.push_points(0.,self.APPROACH_BEHIND)
+        final=self.push_points(distance,self.REAR_TCP_BEHIND)
         if any(not (-.44<p[0]<.44 and -.35<p[1]<.15) for p in [*points.values(),*final.values()]):
             self.plan=None;self.reason='dual_push_outside_workspace';return
         if points['left'][0]>=points['right'][0]-.28:
@@ -84,7 +92,7 @@ class Policy:
         if not self.plan or self.stage not in ('contact','push','settle'):
             return
         if self.step%self.FEEDBACK_PERIOD!=0:return
-        detection=self.perception.track(obs['vision']['cam_head']['color'],self.ruler)
+        detection=self.perception.track(obs['vision']['cam_head']['color'],self.ruler,obs['state'])
         self.feedback=dict(step=self.step,**detection)
         if not detection['valid']:
             self.aligned_count=0;return
@@ -98,7 +106,7 @@ class Policy:
         self.yaw_bias+=float(np.clip(desired-self.yaw_bias,-.006,.006))
         alignment=self.perception.alignment(detection['cubes'],ruler)
         self.feedback.update(yaw_error=error,yaw_bias=self.yaw_bias,alignment=alignment)
-        enough=self.progress>self.plan['initial_farthest_gap']-.020
+        enough=self.progress>self.plan['initial_farthest_gap']-.85*self.cube_side
         self.aligned_count=self.aligned_count+1 if alignment['aligned'] and enough else 0
 
     def exit_push(self, obs, reason=None):
@@ -120,10 +128,10 @@ class Policy:
 
     def advance(self, obs):
         if self.stage=='approach':
-            pts=self.push_points(0.,.045)
+            pts=self.push_points(0.,self.APPROACH_BEHIND)
             self.set_stage('descend',{s:self.pose(s,pts[s],self.PUSH_HEIGHT) for s in ARMS})
         elif self.stage=='descend':
-            pts=self.push_points(0.,self.REAR_OFFSET)
+            pts=self.push_points(0.,self.REAR_TCP_BEHIND)
             self.set_stage('contact',{s:self.pose(s,pts[s],self.PUSH_HEIGHT) for s in ARMS})
         elif self.stage=='contact':
             if self.step-self.last_rgb_step>8:
@@ -162,7 +170,7 @@ class Policy:
                 self.set_stage('settle',self.targets)
             elif ready and self.step-self.last_rgb_step<=8:
                 self.progress=min(self.plan['push_distance'],self.progress+self.PUSH_INCREMENT)
-                pts=self.push_points(self.progress,self.REAR_OFFSET,self.yaw_bias)
+                pts=self.push_points(self.progress,self.REAR_TCP_BEHIND,self.yaw_bias)
                 self.targets={s:self.pose(s,pts[s],self.PUSH_HEIGHT) for s in ARMS}
                 self.stalled=0
                 if self.progress>=self.plan['push_distance']:
@@ -198,7 +206,7 @@ class Policy:
         self.last_action=action;validate_action(action);return action
 
     def diagnostics(self):
-        return dict(candidate='AB4',step=self.step,stage=self.stage,stage_step=self.elapsed,
+        return dict(candidate='align_blocks',step=self.step,stage=self.stage,stage_step=self.elapsed,
                     reason=self.reason,vision=self.vision,plan=self.plan,error=self.error,
                     feedback=self.feedback,feedback_updates=self.feedback_updates,
                     progress=self.progress,yaw_bias=self.yaw_bias,aligned_frames=self.aligned_count,

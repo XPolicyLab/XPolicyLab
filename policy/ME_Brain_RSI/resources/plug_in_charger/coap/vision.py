@@ -1,33 +1,14 @@
-"""RGB-only perception for plug_in_charger: head-camera box fits, wrist-camera prong and socket-slot localisation.
-
-Everything is public geometry (object extents from the released asset metadata, camera models from the released
-robot/camera configs). No layout, depth or object pose is read.
-"""
-import numpy as np
+"""Image measurements in the robot base frame for charger pickup and insertion."""
 import cv2
-from .geometry import Camera,quat_matrix
+import numpy as np
+from .geometry import Camera, quat_matrix
 from . import wristcam
 
-TABLE_Z=0.765
-STRIP_SIZE=np.array([0.1572,0.0363,0.0216])          # socket (power strip) aligned bbox extents; sits on the table
-STRIP_ROOT_Z=0.7642                                   # released layout root height; bbox z .0008..0.0216 above it
-STRIP_TOP=STRIP_ROOT_Z+0.0216                         # 0.7858
-CHARGER_BODY=np.array([0.0466,0.0531,0.030])          # body box (X width, Y length without prongs, Z thickness)
-CHARGER_PRONG=0.0169                                  # prongs protrude this far beyond the body at local -Y
-CHARGER_CENTER_Z=0.7786                               # released layout rest height of the charger origin (prong root, lying flat)
-CHARGER_BOTTOM_Z=CHARGER_CENTER_Z-CHARGER_BODY[2]/2
-# slot template in the strip frame (x along the strip, y across): 3 sockets, upper row of 3 vertical slots at y=+.006
-# (the two outer ones take the flat 2-pin charger, 12.8 mm apart), lower row of 2 slanted slots at y=-.008
-# Empirical (simulator truth joined with wrist detections, 2026-10-27): socket centres x = -29.5/6.6/42.7 mm; upper row of
-# three vertical slots at y=+7.6 mm with the outer pair +-5.85 mm (the flat 2-pin charger goes there); lower row of two
-# slanted slots at y=-5.7 mm, +-6.5 mm.
-SOCKET_X=(-0.0305,0.0056,0.0417)   # -1.0 mm from the slot-centroid value: along-strip estimate errors averaged +0.6 mm (truth, 15 episodes)
-PIN_HALF_SPACING=0.00585
-LOWER_HALF_SPACING=0.0065
-UPPER_Y,LOWER_Y=0.0076,-0.0057
-TARGET_Y=0.0066                   # truth: pins enter only with the pin line at y 6.6-7.4 mm (slot centroid 7.6 is parallax-biased); estimates run +0.45 mm
-WORKSPACE=dict(x=(-0.52,0.52),y=(-0.34,0.03))
-
+# Nominal external dimensions of the known hardware, used for silhouette fitting.
+# Object placement, socket positions and plug orientation are measured each episode.
+STRIP_SIZE = np.array([.1572, .0363, .0216])
+CHARGER_BODY = np.array([.0466, .0531, .030])
+CHARGER_PRONG = .0169
 
 def components(mask,min_area=1):
     n,labels,stats,centers=cv2.connectedComponentsWithStats(mask.astype(np.uint8),connectivity=8)
@@ -102,18 +83,28 @@ class BoxFitter:
 
 class HeadVision:
     """Strip and charger from the fixed head camera (table objects only)."""
-    def __init__(self,calibration):
+    def __init__(self, calibration, table_z, bases):
         self.cam=Camera(calibration['head'])
-        h,w=self.cam.resolution[1],self.cam.resolution[0]
-        uu,vv=np.meshgrid(np.arange(w),np.arange(h))
-        pts=np.c_[uu.ravel(),vv.ravel()]
-        world=np.full((len(pts),3),np.nan)
-        for i,(u,v) in enumerate(pts):
-            try:world[i]=self.cam.pixel_to_plane((u,v),TABLE_Z+0.02)
-            except ValueError:pass
-        ok=(np.isfinite(world[:,0])&(world[:,0]>WORKSPACE['x'][0])&(world[:,0]<WORKSPACE['x'][1])
-            &(world[:,1]>WORKSPACE['y'][0])&(world[:,1]<WORKSPACE['y'][1]))
-        self.region=ok.reshape(h,w)
+        self.table_z = float(table_z)
+        self.strip_top = self.table_z + STRIP_SIZE[2]
+        self.body_top = self.table_z + CHARGER_BODY[2]
+        height, width = self.cam.resolution[::-1]
+        x, y = np.meshgrid(np.arange(width), np.arange(height))
+        self.region = np.zeros((height, width), bool)
+        pixels = np.c_[x.ravel(), y.ravel(), np.ones(width * height)]
+        rays = pixels @ np.linalg.inv(self.cam.k).T @ self.cam.cv_to_gl @ self.cam.c2w[:3, :3].T
+        origin = self.cam.c2w[:3, 3]
+        forward = np.mean([pose[:2, 0] for pose in bases.values()], axis=0)
+        forward /= np.linalg.norm(forward)
+        origin_xy = np.mean([pose[:2, 3] for pose in bases.values()], axis=0)
+        span = np.linalg.norm(bases['left'][:2, 3] - bases['right'][:2, 3])
+        with np.errstate(divide='ignore', invalid='ignore'):
+            distance = (self.table_z - origin[2]) / rays[:, 2]
+            points = (origin[:2] + distance[:, None] * rays[:, :2]) - origin_xy
+        depth = points @ forward
+        cross = points @ np.array([-forward[1], forward[0]])
+        self.region = ((distance > 0) & (depth > 0.18 * span) & (depth < 0.9 * span)
+                       & (abs(cross) < 0.9 * span)).reshape(height, width)
         self.log={}
 
     def project(self,points):return self.cam.project(points)
@@ -159,16 +150,16 @@ class HeadVision:
         result_robot=int(robot.sum())
         result=dict(components=info,robot_mask_px=result_robot)
         if strip is not None:
-            top=self.plane_points(strip['points'],STRIP_TOP)
+            top=self.plane_points(strip['points'],self.strip_top)
             angle,ext,ctr=pca_axis(top[:,:2])
-            fit=BoxFitter(self.project,STRIP_SIZE,STRIP_ROOT_Z).fit(np.asarray(_blob_mask(strip,rgb.shape[:2])),strip['box'],ctr,angle)
-            result['strip']=dict(xy=fit['xy'].tolist(),yaw=fit['yaw'],iou=fit['iou'],pca_xy=ctr.tolist(),pca_yaw=angle,area=strip['area'],length=float(ext[0]))
+            fit=BoxFitter(self.project,STRIP_SIZE,self.table_z).fit(np.asarray(_blob_mask(strip,rgb.shape[:2])),strip['box'],ctr,angle)
+            result['strip']=dict(z=self.strip_top,xy=fit['xy'].tolist(),yaw=fit['yaw'],iou=fit['iou'],pca_xy=ctr.tolist(),pca_yaw=angle,area=strip['area'],length=float(ext[0]))
         if charger is not None:
-            top=self.plane_points(charger['points'],CHARGER_BOTTOM_Z+CHARGER_BODY[2])
+            top=self.plane_points(charger['points'],self.body_top)
             angle,ext,ctr=pca_axis(top[:,:2])
-            fit=BoxFitter(self.project,CHARGER_BODY,CHARGER_BOTTOM_Z).fit(np.asarray(_blob_mask(charger,rgb.shape[:2])),charger['box'],ctr,angle+np.pi/2)
+            fit=BoxFitter(self.project,CHARGER_BODY,self.table_z).fit(np.asarray(_blob_mask(charger,rgb.shape[:2])),charger['box'],ctr,angle+np.pi/2)
             # box yaw is the body's local Y (long) axis direction, mod pi
-            result['charger']=dict(xy=fit['xy'].tolist(),yaw=fit['yaw'],iou=fit['iou'],pca_xy=ctr.tolist(),area=charger['area'])
+            result['charger']=dict(z=self.table_z + CHARGER_BODY[2]/2,xy=fit['xy'].tolist(),yaw=fit['yaw'],iou=fit['iou'],pca_xy=ctr.tolist(),area=charger['area'])
         self.log=result
         return result
 
@@ -177,174 +168,202 @@ def _blob_mask(comp,shape):
     m=np.zeros(shape,np.uint8);p=comp['points'].astype(int);m[p[:,1],p[:,0]]=1;return m
 
 
+
+def _top_gray(rgb):
+    return cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
+
+
+def _normalized(vector):
+    return vector / max(np.linalg.norm(vector), np.finfo(float).eps)
+
+
+def _socket_measurements(rgb, mask, project, expected_axis):
+    """Find the outside pair of each row of three parallel apertures."""
+    gray = _top_gray(rgb)
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+    interior = cv2.erode(mask.astype(np.uint8), kernel).astype(bool)
+    contrast = cv2.morphologyEx(gray, cv2.MORPH_BLACKHAT, np.ones((15, 15), np.uint8))
+    reference = float(np.percentile(gray[interior], 70))
+    dark = interior & (gray < reference - 30) & (contrast > 15)
+    detections, _ = components(dark, min_area=4)
+    line = _normalized(np.asarray(expected_axis, float))
+    cross = np.array([-line[1], line[0]])
+    apertures = []
+    for det in detections:
+        xy, valid = project(det['points'])
+        if not valid.all():
+            continue
+        local = xy[:, :2]
+        _, extent, center = pca_axis(local)
+        along = np.ptp((local - center) @ line)
+        across = np.ptp((local - center) @ cross)
+        if .001 < across < .011 and along < .0045 and across > 1.15 * along:
+            # Use the midrange along the thin axis to limit weighting by dark sidewalls.
+            center = center + ((local - center) @ line).min() * .5 * line + ((local - center) @ line).max() * .5 * line
+            apertures.append((float(center @ line), float(center @ cross), center, max(along, extent[1])))
+    apertures.sort(key=lambda item: item[0])
+    matches = []
+    for index, middle in enumerate(apertures):
+        for first in apertures[:index]:
+            left_gap = middle[0] - first[0]
+            for last in apertures[index + 1:]:
+                right_gap = last[0] - middle[0]
+                spacing = (left_gap + right_gap) / 2
+                if not .0025 < spacing < .011 or abs(left_gap-right_gap) > .35*spacing:
+                    continue
+                across_range = np.ptp([first[1], middle[1], last[1]])
+                if across_range > .28 * spacing:
+                    continue
+                axis = _normalized(last[2] - first[2])
+                center = (first[2] + last[2]) / 2
+                width = float(np.median([first[3], middle[3], last[3]]))
+                error = float((abs(left_gap-right_gap) + across_range) / spacing)
+                matches.append((error, center, axis, width, 2 * spacing))
+    selected = []
+    for error, center, axis, width, span in sorted(matches, key=lambda item: item[0]):
+        if any(np.linalg.norm(center - slot['xy']) < 1.4 * span for slot in selected):
+            continue
+        selected.append(dict(xy=center.tolist(), pin_axis=axis.tolist(), width=width, span=span, support=3, fit_error=error))
+    selected.sort(key=lambda slot: np.asarray(slot['xy']) @ line)
+    for index, slot in enumerate(selected):
+        slot['index'] = index
+    return selected, len(apertures)
+
+
+def _pin_features(rgb, component, c2w, plane_z):
+    """Collect narrow bright metallic features outside the cyan body contour."""
+    _, saturation, value = cv2.split(cv2.cvtColor(rgb, cv2.COLOR_RGB2HSV))
+    body = hull_mask(component['points'], rgb.shape[:2])
+    width = min(component['box'][2:])
+    expanded = cv2.dilate(body, np.ones((3, 3), np.uint8)).astype(bool)
+    extent = cv2.dilate(body, np.ones((max(5, int(.55 * width)) | 1,) * 2, np.uint8)).astype(bool)
+    gray = _top_gray(rgb)
+    ridge = cv2.morphologyEx(gray, cv2.MORPH_TOPHAT, np.ones((7, 7), np.uint8))
+    mask = extent & ~expanded & (saturation < 65) & (value > 136) & (ridge > 18)
+    comps, _ = components(mask, min_area=3)
+    features = []
+    for pin in comps:
+        points, good = wristcam.pixel_to_plane(c2w, pin['points'], plane_z)
+        if not good.all():
+            continue
+        angle, ext, center = pca_axis(points[:, :2])
+        if .0015 < ext[0] < .026 and ext[1] < max(.0022, ext[0] * .6):
+            features.append((center, np.array([np.cos(angle), np.sin(angle)]), ext[0], pin['area']))
+    return features
+
+
+def _best_pin_pair(features, direction, center, width, length):
+    across = np.array([-direction[1], direction[0]])
+    pairs = []
+    for index, (a, axis_a, extent_a, pixels_a) in enumerate(features):
+        for b, axis_b, extent_b, pixels_b in features[index + 1:]:
+            mid = (a + b) / 2
+            delta = b - a
+            sep = abs(delta @ across)
+            end = (mid - center) @ direction
+            side = abs((mid - center) @ across)
+            parallel = (abs(axis_a @ direction) + abs(axis_b @ direction)) / 2
+            if (not .1 * width < sep < .5 * width or end < .27 * length or end > length
+                    or side > .26 * width or abs(delta @ direction) > .55 * sep or parallel < .72):
+                continue
+            score = parallel + min(extent_a, extent_b) / max(extent_a, extent_b) - side / width - abs(delta @ direction) / sep
+            pairs.append((score, mid, sep, (extent_a + extent_b) / 2, _normalized(delta)))
+    return max(pairs, key=lambda pair: pair[0], default=None)
+
+
 class WristVision:
-    """Charger body + prongs and strip slots seen from a wrist camera at a known EE pose."""
-    def __init__(self):self.log={}
+    """Estimate a tabletop plug and the strip's actual aperture centroids."""
 
-    def charger(self,rgb,ee_pose,expected_xy,expected_yaw=None):
-        c2w=wristcam.camera_to_world(ee_pose)
-        proj=lambda pts:wristcam.project(c2w,pts)[0]
-        hsv=cv2.cvtColor(rgb,cv2.COLOR_RGB2HSV);h,s,v=cv2.split(hsv)
-        # pale cyan body (H~92): lit faces S 15 V 235, shaded faces S 25-50 V 100-160; wood is H 4-16 with S>70
-        body=(h>=78)&(h<=108)&(s>=6)&(s<=75)&(v>=85)
-        body=cv2.morphologyEx(body.astype(np.uint8),cv2.MORPH_OPEN,np.ones((3,3),np.uint8))
-        body=cv2.morphologyEx(body,cv2.MORPH_CLOSE,np.ones((5,5),np.uint8))
-        comps,labels=components(body,min_area=150)
-        if not comps:return None
-        best=None
-        for c in comps:
-            pts,ok=wristcam.pixel_to_plane(c2w,c['points'],CHARGER_BOTTOM_Z+CHARGER_BODY[2])
-            if ok.mean()<.9:continue
-            ctr=pts[ok,:2].mean(0);dist=float(np.linalg.norm(ctr-np.asarray(expected_xy)))
-            angle,ext,_=pca_axis(pts[ok,:2])
-            if dist>0.12 or ext[0]>0.16 or ext[0]<0.03:continue
-            if best is None or dist<best[0]:best=(dist,c,ctr,angle,ext)
-        if best is None:return None
-        _,c,ctr,angle,ext=best
-        fitter=BoxFitter(proj,CHARGER_BODY,CHARGER_BOTTOM_Z);blob=_blob_mask(c,rgb.shape[:2])
-        base=angle+np.pi/2 if expected_yaw is None else expected_yaw
-        fits=[fitter.fit(blob,c['box'],ctr,base+k*np.pi/2) for k in (0,1)]   # the body is nearly square: try both axis assignments
-        # prongs: two thin low-saturation pins (S<=45, V 100-215) 12.8 mm apart beyond one end of the long axis.
-        # Score all four ends (both axis assignments x both signs); big white objects (strip, fingers) saturate and are rejected.
-        pin_mask=(s<=45)&(v>=100)&(v<=215)
-        hyps=[]
+    def __init__(self):
+        self.log = {}
+
+    def charger(self, rgb, ee_pose, expected_xy, expected_yaw, table_z):
+        c2w = wristcam.camera_to_world(ee_pose)
+        project = lambda points: wristcam.project(c2w, points)[0]
+        hsv = cv2.cvtColor(rgb, cv2.COLOR_RGB2HSV)
+        hue, saturation, value = cv2.split(hsv)
+        body = (hue >= 78) & (hue <= 108) & (saturation >= 6) & (saturation <= 75) & (value >= 85)
+        body = cv2.morphologyEx(body.astype(np.uint8), cv2.MORPH_OPEN, np.ones((3, 3), np.uint8))
+        body = cv2.morphologyEx(body, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))
+        comps, _ = components(body, min_area=150)
+        top_z = table_z + CHARGER_BODY[2]
+        choices = []
+        for comp in comps:
+            points, valid = wristcam.pixel_to_plane(c2w, comp['points'], top_z)
+            if not valid.all():
+                continue
+            angle, extent, center = pca_axis(points[:, :2])
+            distance = float(np.linalg.norm(center - expected_xy))
+            if distance < 2.5 * CHARGER_BODY[1] and .45 * CHARGER_BODY[1] < extent[0] < 3.0 * CHARGER_BODY[1]:
+                choices.append((distance, comp, center, angle))
+        if not choices:
+            return None
+        _, comp, center, angle = min(choices, key=lambda item: item[0])
+        fitter = BoxFitter(project, CHARGER_BODY, table_z)
+        blob = _blob_mask(comp, rgb.shape[:2])
+        yaw = angle + np.pi/2 if expected_yaw is None else expected_yaw
+        fits = [fitter.fit(blob, comp['box'], center, yaw + i * np.pi/2) for i in (0, 1)]
+        z = table_z + CHARGER_BODY[2] / 2
+        features = _pin_features(rgb, comp, c2w, z)
+        candidates = []
         for fit in fits:
-            xy=fit['xy'];yaw=fit['yaw']
-            hull=hull_mask(proj(box_corners(xy,yaw,CHARGER_BODY*np.array([1.10,1.06,1.0]),CHARGER_BOTTOM_Z)),rgb.shape[:2]).astype(bool)
-            direction=np.array([-np.sin(yaw),np.cos(yaw)])
-            for sign in (1,-1):
-                end=xy+sign*direction*(CHARGER_BODY[1]/2)
-                pc=end+sign*direction*(CHARGER_PRONG/2+0.002)
-                probe=hull_mask(proj(box_corners(pc,yaw,(CHARGER_BODY[0]*0.9,CHARGER_PRONG+0.008,0.012),CHARGER_CENTER_Z-0.006)),rgb.shape[:2]).astype(bool)&~hull
-                area=max(int(np.count_nonzero(probe)),1);cnt=int(np.count_nonzero(pin_mask&probe))
-                frac=cnt/area
-                score=cnt if frac<=0.35 else 0   # saturated probe = another white object, not pins
-                hyps.append(dict(score=score,count=cnt,frac=round(frac,3),sign=sign,yaw=float(yaw),xy=xy,iou=fit['iou']))
-        # Layout prior (released Eval_Layout generator: charger yaw within +-30 deg of its default): the prongs always point
-        # toward the robot (-Y). Keep only hypotheses with d_y<0, prefer the long axis within 45 deg of world Y, then pins.
-        allowed=[hh for hh in hyps if (hh['sign']*np.cos(hh['yaw']))<0]
-        for hh in allowed:
-            axis=np.array([-np.sin(hh['yaw']),np.cos(hh['yaw'])]);hh['axis_dev']=float(np.degrees(np.arccos(min(1.,abs(axis[1])))))
-        allowed.sort(key=lambda hh:(hh['axis_dev']>45,-hh['score'],hh['axis_dev']))
-        hyps_sorted=sorted(hyps,key=lambda hh:(-hh['score'],-hh['iou']))
-        top=allowed[0] if allowed else hyps_sorted[0];second=hyps_sorted[1]
-        xy=top['xy'];yaw=top['yaw'];fit=dict(iou=top['iou'])
-        d=top['sign']*np.array([-np.sin(yaw),np.cos(yaw)])
-        confidence=float(top['score']-max(hh['score'] for hh in hyps if hh is not top))
-        scores=[hh['score'] for hh in hyps]
-        evidence_agrees=bool(hyps_sorted[0] is top)
-        out=dict(xy=xy.tolist(),yaw=float(yaw),iou=fit['iou'],iou_alt=min(f['iou'] for f in fits),prong_dir=d.tolist(),prong_scores=scores,
-                 prong_fracs=[hh['frac'] for hh in hyps],prong_confidence=confidence,prior_used=not evidence_agrees,axis_dev=top.get('axis_dev'),area=c['area'],center_pixel=c['center'].round(1).tolist())
-        self.log['charger']=out
+            axis = np.array([-np.sin(fit['yaw']), np.cos(fit['yaw'])])
+            for direction in (axis, -axis):
+                pair = _best_pin_pair(features, direction, fit['xy'], *CHARGER_BODY[:2])
+                if pair is not None:
+                    score, midpoint, spacing, visible_length, axis = pair
+                    measured = np.array([-axis[1], axis[0]])
+                    if measured @ direction < 0:
+                        measured = -measured
+                    tip = midpoint + measured * visible_length / 2
+                    root = tip - measured * CHARGER_PRONG
+                    body_center = root - measured * CHARGER_BODY[1] / 2
+                    candidates.append((score + fit['iou'], fit, measured, body_center, root, spacing, visible_length))
+        if not candidates:
+            self.log['charger'] = dict(pin_features=len(features), source='unresolved')
+            return None
+        _, fit, direction, body_center, root, spacing, visible_length = max(candidates, key=lambda item: item[0])
+        out = dict(xy=body_center.tolist(), yaw=fit['yaw'], iou=fit['iou'], prong_dir=direction.tolist(),
+                   root=root.tolist(), z=z, span=float(spacing), visible_pin_length=float(visible_length),
+                   pin_features=len(features), source='rgb_pins')
+        self.log['charger'] = out
         return out
 
-    def strip(self,rgb,ee_pose,expected_xy,expected_yaw):
-        c2w=wristcam.camera_to_world(ee_pose)
-        proj=lambda pts:wristcam.project(c2w,pts)[0]
-        hsv=cv2.cvtColor(rgb,cv2.COLOR_RGB2HSV);h,s,v=cv2.split(hsv)
-        white=(v>=150)&(s<=60)
-        white=cv2.morphologyEx(white.astype(np.uint8),cv2.MORPH_CLOSE,np.ones((5,5),np.uint8))
-        comps,labels=components(white,min_area=3000)
-        best=None
-        for c in comps:
-            pts,ok=wristcam.pixel_to_plane(c2w,c['points'],STRIP_TOP)
-            if ok.mean()<.9:continue
-            ctr=pts[ok,:2].mean(0);angle,ext,_=pca_axis(pts[ok,:2])
-            dist=float(np.linalg.norm(ctr-np.asarray(expected_xy)))
-            # oblique views smear the side faces onto the top plane: allow up to 0.45 m footprint; wood highlights are small
-            if dist>0.15 or ext[0]<0.09 or ext[0]>0.45:continue
-            if best is None or c['area']>best[1]['area']:best=(dist,c,ctr,angle)
-        if best is None:return None
-        _,c,ctr,angle=best
-        fitter=BoxFitter(proj,STRIP_SIZE,STRIP_ROOT_Z);blob=_blob_mask(c,rgb.shape[:2])
-        inits=[(ctr,angle),(ctr,angle+np.pi/2)]
-        if expected_yaw is not None:inits.append((np.asarray(expected_xy,float),expected_yaw))
-        coarse=((0.008,np.deg2rad(8)),(0.004,np.deg2rad(4)),(0.002,np.deg2rad(2)),(0.001,np.deg2rad(1)),(0.0005,np.deg2rad(.5)))
-        fit=max((fitter.fit(blob,c['box'],xy0,yaw0,steps=coarse) for xy0,yaw0 in inits),key=lambda f:f['iou'])
-        xy=fit['xy'];yaw=fit['yaw']
-        # slots: dark pixels inside the fitted top face
-        top=box_corners(xy,yaw,(STRIP_SIZE[0]-0.006,STRIP_SIZE[1]-0.004,0.0),STRIP_TOP)
-        face=hull_mask(proj(top),rgb.shape[:2]).astype(bool)
-        level=float(np.median(v[face])) if np.count_nonzero(face) else 200.
-        dark=(v<=level-40)&face
-        slot_comps,_=components(dark,min_area=3)
-        rot=np.array([[np.cos(yaw),np.sin(yaw)],[-np.sin(yaw),np.cos(yaw)]])  # world->strip
-        slots=[]
-        for sc in slot_comps:
-            pts,ok=wristcam.pixel_to_plane(c2w,sc['points'],STRIP_TOP)
-            if not ok.all():continue
-            w=pts[:,:2].mean(0);local=rot@(w-xy)
-            if abs(local[0])>0.075 or abs(local[1])>0.016:continue
-            slots.append(dict(local=local,world=w,area=sc['area'],pixel=sc['center']))
-        # resolve the 180-degree ambiguity and the along/across offset with the full 15-slot template: an explicit search
-        # over shifts (the 3-slot upper rows repeat at 6.4 mm, so greedy nearest matching could lock one slot off)
-        template=np.array([(sx+dx,UPPER_Y) for sx in SOCKET_X for dx in (-PIN_HALF_SPACING,0.,PIN_HALF_SPACING)]+[(sx+dx,LOWER_Y) for sx in SOCKET_X for dx in (-LOWER_HALF_SPACING,LOWER_HALF_SPACING)])
-        best_fit=None
-        for flip in (0,1):
-            yaw_h=yaw+np.pi*flip
-            rot_w2s=np.array([[np.cos(yaw_h),np.sin(yaw_h)],[-np.sin(yaw_h),np.cos(yaw_h)]])
-            locs=np.array([rot_w2s@(sl['world']-xy) for sl in slots]) if slots else np.zeros((0,2))
-            for da in np.arange(-0.010,0.0101,0.0005):
-                for dc in np.arange(-0.004,0.0041,0.0005):
-                    if len(locs)==0:cnt=0;res=0.
-                    else:
-                        d=np.linalg.norm(locs[None,:,:]-(template+[da,dc])[:,None,:],axis=2);m=d.min(axis=1)
-                        cnt=int(np.sum(m<0.0015));res=float(np.sum(np.minimum(m,0.0015)))
-                    key=(cnt,-res)
-                    if best_fit is None or key>best_fit[0]:best_fit=(key,yaw_h,da,dc,locs)
-        (matched,_),yaw_h,da,dc,locs=best_fit
-        shift_local=np.array([da,dc])
-        if matched>=4:
-            d=np.linalg.norm(locs[None,:,:]-(template+shift_local)[:,None,:],axis=2);j=d.argmin(axis=1);ok=d.min(axis=1)<0.0015
-            shift_local=np.mean(locs[j[ok]]-template[ok],axis=0)   # mean(loc - template) IS the full offset
-        rot_h=np.array([[np.cos(yaw_h),-np.sin(yaw_h)],[np.sin(yaw_h),np.cos(yaw_h)]])   # strip->world
-        origin=xy+rot_h@shift_local
-        cost=0.;matches=[('u',k,0,0.) for k in range(3)]
-        # per-socket targets: midpoint of the two outer upper slots, pin line along the strip x axis
-        sockets=[]
-        for k,sx in enumerate(SOCKET_X):
-            mid_local=np.array([sx,TARGET_Y]);mid=origin+rot_h@mid_local
-            support=0
-            if len(locs):
-                for dx in (-PIN_HALF_SPACING,0.,PIN_HALF_SPACING):
-                    tpt=np.array([sx+dx,UPPER_Y])+shift_local
-                    if np.min(np.linalg.norm(locs-tpt,axis=1))<0.0015:support+=1
-            sockets.append(dict(index=k,xy=mid.tolist(),pin_axis=[float(np.cos(yaw_h)),float(np.sin(yaw_h))],support=support))
-        out=dict(xy=origin.tolist(),yaw=float(yaw_h),box_yaw=float(yaw),iou=fit['iou'],slots=len(slots),level=level,matched=int(matched),
-                 cost=float(cost),shift_mm=(shift_local*1000).round(1).tolist(),sockets=sockets,area=c['area'])
-        self.log['strip']=out
+    def strip(self, rgb, ee_pose, expected_xy, expected_yaw, table_z, allow_partial=False):
+        c2w = wristcam.camera_to_world(ee_pose)
+        strip_top = table_z + STRIP_SIZE[2]
+        project = lambda pixels: wristcam.pixel_to_plane(c2w, pixels, strip_top)
+        hsv = cv2.cvtColor(rgb, cv2.COLOR_RGB2HSV)
+        _, saturation, value = cv2.split(hsv)
+        white = (value >= 150) & (saturation <= 58)
+        white = cv2.morphologyEx(white.astype(np.uint8), cv2.MORPH_CLOSE, np.ones((7, 7), np.uint8))
+        comps, _ = components(white, min_area=300 if allow_partial else 1800)
+        axis = np.array([np.cos(expected_yaw), np.sin(expected_yaw)])
+        matches = []
+        for comp in sorted(comps, key=lambda item: -item['area'])[:4]:
+            world, valid = project(comp['points'])
+            if not valid.all():
+                continue
+            _, extent, center = pca_axis(world[:, :2])
+            if np.linalg.norm(center - expected_xy) > STRIP_SIZE[0] or extent[0] > 2.8 * STRIP_SIZE[0]:
+                continue
+            region = hull_mask(comp['points'], rgb.shape[:2])
+            if not allow_partial:
+                # The sidewall is projected outside the slot rows; preserve the observed rim.
+                region = cv2.erode(region, np.ones((5, 5), np.uint8))
+            slots, detected = _socket_measurements(rgb, region, project, axis)
+            if slots:
+                matches.append((len(slots), sum(s['fit_error'] for s in slots), slots, detected, center))
+        if not matches:
+            self.log['strip'] = dict(source='unresolved')
+            return None
+        _, _, sockets, detected, center = max(matches, key=lambda item: (item[0], -item[1]))
+        vectors = np.array([slot['pin_axis'] for slot in sockets])
+        mean = _normalized(vectors.mean(axis=0))
+        out = dict(xy=center.tolist(), yaw=float(np.arctan2(mean[1], mean[0])), z=strip_top,
+                   sockets=sockets, slots=detected, matched=sum(slot['support'] for slot in sockets), source='rgb_apertures')
+        self.log['strip'] = out
         return out
-
-
-def held_prong_check(rgb,ee_pose,T_ec,proj=None):
-    """With the charger lifted in the gripper, test whether the prongs are at the nominal end (T_ec) or the opposite one.
-
-    Returns (flip, scores): flip=True means the real prongs are at the opposite end of the body's long axis.
-    """
-    c2w=wristcam.camera_to_world(ee_pose)
-    proj=lambda pts:wristcam.project(c2w,pts)[0]
-    T=np.eye(4);T[:3,:3]=_qm(ee_pose[3:]);T[:3,3]=ee_pose[:3]
-    Tc=T@T_ec   # nominal charger frame: origin at the prong root, Y toward the body top, prongs along -Y
-    hsv=cv2.cvtColor(rgb,cv2.COLOR_RGB2HSV);h,s,v=cv2.split(hsv)
-    pin_mask=(s<=45)&(v>=100)&(v<=215)
-    def world(local):return (Tc@np.r_[local,1.])[:3]
-    body=np.array([world([x,y,z]) for x in (-0.0255,0.0255) for y in (-0.001,CHARGER_BODY[1]+0.001) for z in (-0.016,0.016)])
-    hull=hull_mask(proj(body),rgb.shape[:2]).astype(bool)
-    scores=[]
-    for flip in (False,True):
-        pts=[]
-        for x in (-0.0255,0.0255):
-            for z in (-0.007,0.007):
-                if not flip:ys=(-CHARGER_PRONG-0.004,-0.001)
-                else:ys=(CHARGER_BODY[1]+0.001,CHARGER_BODY[1]+CHARGER_PRONG+0.004)
-                for y in ys:pts.append(world([x,y,z]))
-        probe=hull_mask(proj(np.array(pts)),rgb.shape[:2]).astype(bool)&~hull
-        area=max(int(np.count_nonzero(probe)),1);cnt=int(np.count_nonzero(pin_mask&probe))
-        scores.append(dict(count=cnt,frac=round(cnt/area,3),area=area))
-    s0,s1=scores[0]['count'],scores[1]['count']
-    valid=max(s0,s1)>=12 and scores[0]['frac']<0.4 and scores[1]['frac']<0.4
-    return (s1>s0*1.5) if valid else None,scores
-
 
 def _qm(q):
     from .geometry import quat_matrix

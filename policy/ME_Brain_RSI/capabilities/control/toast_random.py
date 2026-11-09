@@ -4,18 +4,15 @@ Left arm (donor) pinches the top edge of the end slice on the rack, lifts it,
 turns it flat and offers it towards the right. The right arm (receiver) takes
 the opposite edge with its pads above/below the slice, the donor lets go, the
 receiver turns the slice vertical, inserts it into a toaster slot and releases.
-After two slices the receiver presses the lever. Scene geometry comes from the
-offline oracle bridge (``ctx.oracle_objects``) or RGB perception.
+After two slices the receiver presses the lever. Scene geometry comes from RGB perception.
 """
 import math
-import os
 
 import numpy as np
 
 from ..dual import (CartesianPathError, cartesian_path, down_rotation, grip_steps, rz, wrap, matrix_to_quat,
                     smooth_joint_path)
 from ..executor import ZoneExecutor, _log, SAFE_TRAVEL_CLEARANCE
-from ..motion import quat_matrix
 
 BREAD_HALF = 0.0585        # public bread slice half width/height
 BREAD_THICK = 0.0118
@@ -75,38 +72,12 @@ def unit(v):
 # ---------------------------------------------------------------------------
 # Scene
 # ---------------------------------------------------------------------------
-def scene_from_oracle(ctx):
-    breads = []
-    toaster = None
-    for instance, obj in ctx.oracle_objects.items():
-        label = str(obj.get("label"))
-        if "position" not in obj:
-            continue
-        position = np.asarray(obj["position"], float)
-        rotation = quat_matrix(obj["quaternion_wxyz"])
-        if label.startswith("bread_"):
-            # Thin axis is the public model Z; the in-plane axis closest to vertical points up.
-            normal = rotation[:, 2]
-            candidates = [rotation[:, 0], -rotation[:, 0], rotation[:, 1], -rotation[:, 1]]
-            up = max(candidates, key=lambda a: a[2])
-            breads.append(dict(name=instance, label=label, centre=position, normal=normal, up=up))
-        elif label == "toaster":
-            variant = int(instance.split("_")[1])
-            yaw = math.atan2(rotation[1, 0], rotation[0, 0])
-            joints = obj.get("joint_positions") or []
-            toaster = dict(root=position, rotation=rotation, yaw=yaw, variant=variant, joints=joints)
-    return dict(breads=breads, toaster=toaster)
-
-
 def perceive(ctx):
     cache = getattr(ctx, "_toast_scene_cache", None)
     if cache is not None and cache[0] == ctx.steps:
         return cache[1]
-    if getattr(ctx, "oracle_objects", None) and os.environ.get("COAP_ORACLE_MODE", "").startswith("absolute"):
-        scene = scene_from_oracle(ctx)
-    else:
-        from .toast_vision import scene_from_rgb
-        scene = scene_from_rgb(ctx)
+    from .toast_vision import scene_from_rgb
+    scene = scene_from_rgb(ctx)
     ctx._toast_scene_cache = (ctx.steps, scene)
     return scene
 
@@ -816,9 +787,8 @@ class ToastExecutor(ZoneExecutor):
 
 
 def make_toast_random(ctx):
-    if not (getattr(ctx, "oracle_objects", None) and os.environ.get("COAP_ORACLE_MODE", "").startswith("absolute")):
-        for _ in range(3):   # the first rendered frames are not reliable
-            yield ctx.hold_action()
+    for _ in range(3):   # the first rendered frames are not reliable
+        yield ctx.hold_action()
     scene = perceive(ctx)
     if scene["toaster"] is None or len(scene["breads"]) < 2:
         raise RuntimeError("Toast scene measurement missing")

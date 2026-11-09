@@ -3,29 +3,130 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 import cv2,numpy as np
 cv2.setNumThreads(1)
-from .core import EpisodeCore,rot
-from .grasp_rgb import envelope,head_project
+from scipy.spatial.transform import Rotation
+from .core import EpisodeCore,rot,quat
+from .grasp_rgb import envelope,head_project,configure_support,table_z,t_top_z,finger_reach,vertices,T_RADIUS,T_HEIGHT,CARRY_CLEARANCES,POLY,PREOPEN_FINGER
 from .skill_choice_targets import queue
 from .skill_choices import IK
 from .collision_gate import ContinuousGate
 
+TABLE_FREE_FRACTION=.95
+FIT_TOLERANCE=.006   # RMS acceptance of an RGB T template fit (core.detect); two fits per clearance test
+IK_CANDIDATES=30     # loop budget: left-arm IK reach checks per tier at step 1
+
+def t_outline(pose):
+    # Public T CAD outline (asset frame) at a perceived / planned T pose, world xy.
+    return rot(pose[3:]).apply(np.column_stack([POLY,np.zeros(len(POLY))]))[:,:2]+np.asarray(pose[:2],float)
+
+def contact_xy(pose):
+    # Crossbar contact point of a T pose (the grasp point used by core.contact_pose).
+    m=EpisodeCore({});m.arm='left';return np.asarray(m.contact_pose(list(pose),t_top_z())[:2],float)
+
+def carry_radius(pose):
+    # Horizontal swept radius of a carried T about its grasp point: CAD T outline and pre-opened finger
+    # hulls (gripper CAD) around the crossbar contact point.
+    m=EpisodeCore({});m.arm='left';ee=m.contact_pose(list(pose),t_top_z());centre=np.asarray(ee[:2],float)
+    fingers=np.concatenate([v for name,v in vertices(PREOPEN_FINGER).items() if name in ('link7','link8')])
+    reach=float(np.linalg.norm(rot(ee[3:]).apply(fingers)[:,:2],axis=1).max())
+    return max(reach,float(np.linalg.norm(t_outline(pose)-centre,axis=1).max()))
+
+def _boundary(poly,spacing):
+    out=[]
+    for a,b in zip(poly,np.roll(poly,-1,axis=0)):
+        n=max(1,int(np.ceil(np.linalg.norm(b-a)/spacing)));out.append(a+(b-a)*np.arange(n)[:,None]/n)
+    return np.concatenate(out)
+
+def _segment_clearance(points,a,b):
+    # Distance from obstacle outline points to the straight carry path a->b of the grasp point.
+    d=b-a;t=np.clip(((points-a)@d)/max(float(d@d),1e-12),0,1)
+    return float(np.linalg.norm(points-(a+t[:,None]*d),axis=1).min())
+
 class QualifiedEpisode(EpisodeCore):
     def __init__(self,cfg):
         super().__init__(cfg);self.ik=IK(cfg["robot_static"]);self.plan={};self.fixed_hold=None;self.observation_holds=0;self.settling_holds=0;self.skill_choice_extra_actions=0
+        configure_support(cfg["robot_static"])
+        # Straight-arm reach upper bound per arm: URDF joint offsets + farthest gripper CAD point at full opening.
+        tip=float(max(np.linalg.norm(v,axis=1).max() for v in vertices(.044).values()))
+        self.reach_bases=[(chain.base[:2,3].tolist(),float(sum(np.linalg.norm(o[:3,3]) for o in chain.origins))+tip) for chain in self.ik.chains.values()]
+    def carry_heights(self):
+        return [table_z()+c for c in CARRY_CLEARANCES]
+    def staging_reachable(self,xy):
+        # Kinematic reach of the move0 (left) arm at the staged grasp: carry pose and placed pose.
+        probe=EpisodeCore({});probe.arm='left';dest=[*xy,t_top_z(),*self.initial[0]['pose'][3:]]
+        q=self.obs['state']['left_arm_joint_state']
+        for flip in (False,True):
+            carry=probe.contact_pose(dest,self.carry_heights()[0])
+            if flip:carry[3:]=quat(Rotation.from_euler('z',np.pi)*rot(carry[3:]))
+            first=self.ik.solve('left',carry,q)
+            if not first['passed']:continue
+            placed=list(carry);placed[2]=envelope(placed)['tangent_z']+T_HEIGHT/2
+            if self.ik.solve('left',placed,first['q'])['passed']:return True
+        return False
+    def stage_direction(self,middle):
+        # robot-ward axis = minus the mean forward (x) axis of the two X5 base frames (robot static
+        # config, as used by the IK chains), i.e. straight back toward the robot's mounting edge,
+        # independent of where the pair lies laterally.
+        toward=-np.mean([chain.base[:2,0] for chain in self.ik.chains.values()],axis=0)
+        return toward/max(float(np.linalg.norm(toward)),1e-9)
     def choose_buffer(self):
-        poses=[x['pose'] for x in self.initial]
-        xy=[float(np.mean([p[0] for p in poses])),min(p[1] for p in poses)-.12]
-        corners=np.array([[xy[0]+x,xy[1]+y,.78] for x,y in [(-.05,-.05),(.05,-.05),(.05,.05),(-.05,.05)]])
-        uv=head_project(corners)
+        # Staging zone of the left T, robot-ward of the perceived pair: anchor = pair midpoint + (depth
+        # of the T nearest the robot + spacing) along the robot-ward unit vector, so the staged T sits in
+        # front of the nearest T at the CAD spacing (neighbour T bounding radius + open-finger reach).
+        # Only if that zone is not observed free (table-coloured >= 95 %, clear of both T footprints) or
+        # not reachable by the left arm (IK at carry and placed pose), candidates step outward / sideways
+        # by the finger clearance beyond the T outline, taken in order of displacement from the anchor.
+        poses=[np.asarray(x['pose'][:2],float) for x in self.initial]
+        L,R=[list(x['pose']) for x in self.initial]
+        middle=(poses[0]+poses[1])/2;toward=self.stage_direction(middle);side=np.array([-toward[1],toward[0]])
+        spacing=T_RADIUS+finger_reach();step=finger_reach()-T_RADIUS
+        half=T_RADIUS+float(self.initial[0].get('error',0.))
+        front=max(float((p-middle)@toward) for p in poses)
+        anchor=middle+(front+spacing)*toward
         rgb=self.obs['vision']['cam_head']['color'];height,width=rgb.shape[:2]
-        if not ((uv[:,0]>=0)&(uv[:,0]<width)&(uv[:,1]>=0)&(uv[:,1]<height)).all():return None
-        mask=np.zeros((height,width),np.uint8);cv2.fillConvexPoly(mask,np.round(uv).astype(int),1)
         hsv=cv2.cvtColor(rgb,cv2.COLOR_RGB2HSV)
         table=(hsv[:,:,0]>=3)&(hsv[:,:,0]<=35)&(hsv[:,:,1]>40)&(hsv[:,:,2]>40)
-        coverage=float(table[mask>0].mean())
-        clearance=min(float(np.linalg.norm(np.asarray(p[:2])-xy))-.10 for p in poses)
-        self.log('buffer_rgb_evidence',xy=xy,table_fraction=coverage,T_footprint_clearance_m=clearance)
-        return xy if coverage>=.95 and clearance>=.02-1e-9 else None
+        names=list(self.ik.chains);left_base,left_reach=self.reach_bases[names.index('left')]
+        left_base=np.asarray(left_base,float)
+        plane=t_top_z();need=carry_radius(L)+2*FIT_TOLERANCE
+        cross_L=contact_xy(L);cross_R=contact_xy(R)
+        outline_L=_boundary(t_outline(L),step/4);outline_R=_boundary(t_outline(R),step/4)
+        # Displacements (outward k >= 0, sideways j) within the left arm's straight-arm reach.
+        limit=int(np.ceil((left_reach+float(np.linalg.norm(anchor-left_base)))/step))
+        offsets=[(k,j) for k in range(0,limit+1) for j in range(-limit,limit+1)]
+        offsets.sort(key=lambda o:(o[0]**2+o[1]**2,abs(o[1]),float(np.linalg.norm(anchor+o[0]*step*toward+o[1]*step*side-left_base))))
+        free=[];evaluated=0;chosen=None;tier=None;ik_checks=0
+        for k,j in offsets[:64*64]:
+            xy=anchor+k*step*toward+j*step*side
+            if float(np.linalg.norm(xy-left_base))>left_reach:continue
+            corners=np.array([[*(xy+a*half*toward+b*half*side),plane] for a,b in [(-1,-1),(1,-1),(1,1),(-1,1)]])
+            uv=np.asarray(head_project(corners))
+            if not ((uv[:,0]>=0)&(uv[:,0]<width)&(uv[:,1]>=0)&(uv[:,1]<height)).all():continue
+            evaluated+=1
+            # Same pixel set as filling the projected square on the full image (clipped to the frame).
+            pts=np.round(uv).astype(np.int32);lo=pts.min(0);hi=np.minimum(pts.max(0),[width-1,height-1])
+            sub=np.zeros((hi[1]-lo[1]+1,hi[0]-lo[0]+1),np.uint8);cv2.fillConvexPoly(sub,pts-lo,1)
+            coverage=float(table[lo[1]:hi[1]+1,lo[0]:hi[0]+1][sub>0].mean())
+            clearance=min(float(np.linalg.norm(p-xy)) for p in poses)-2*T_RADIUS
+            if not (coverage>=TABLE_FREE_FRACTION and clearance>=step-1e-9):continue
+            row=dict(k=k,j=j,xy=xy.tolist(),table_fraction=coverage,T_footprint_clearance_m=clearance,corners=corners[:,:2].tolist())
+            free.append(row)
+            if ik_checks>=IK_CANDIDATES:break
+            ik_checks+=1;row['reachable']=self.staging_reachable(row['xy'])
+            if row['reachable']:chosen=row;tier='robot_ward_free_reachable';break
+        if chosen is None and free:chosen=free[0];tier='free_unreachable'
+        if chosen is not None:
+            # Diagnostic only (not a selection rule): straight carry-path clearance of the grasp point to
+            # the other T outline for move0 (L -> zone, past R), move2 (zone -> R, past the T now at L)
+            # and move1 (R -> L, past the staged T), against the carried T + finger swept radius.
+            zone=[*chosen['xy'],plane,*L[3:]];cross_S=contact_xy(zone)
+            chosen.update(move0_corridor_m=_segment_clearance(outline_R,cross_L,cross_S),move2_corridor_m=_segment_clearance(outline_L,cross_S,cross_R),
+                          move1_corridor_m=_segment_clearance(_boundary(t_outline(zone),step/4),cross_R,cross_L))
+        summary=dict(anchor=anchor.tolist(),toward=toward.tolist(),front_m=front,spacing_m=spacing,half_size_m=half,step_m=step,swept_radius_m=need-2*FIT_TOLERANCE,evaluated=evaluated,free=len(free),ik_checks=ik_checks,first_free={k:v for k,v in free[0].items() if k!='corners'} if free else None)
+        if chosen is None:
+            self.log('buffer_rgb_evidence',xy=None,reachable_found=False,**summary);return None
+        self.buffer_zone=np.asarray(chosen['corners'])
+        self.log('buffer_rgb_evidence',xy=chosen['xy'],tier=tier,chosen=chosen,**summary)
+        return chosen['xy']
     def qualify(self,actions):
         qualification_start=time.perf_counter()
         state=self.obs['state'];gate=ContinuousGate(state,self.arm,self.cfg["robot_static"])
@@ -54,7 +155,7 @@ class QualifiedEpisode(EpisodeCore):
             if self.plan is None:self.fail('approach_path_not_qualified');return
         elif self.stage==1:
             self.plan=None
-            for joint_return,carry_height,flip in [(j,h,f) for j in (False,True) for h in (.985,.965,.945) for f in (False,True)]:
+            for joint_return,carry_height,flip in [(j,h,f) for j in (False,True) for h in self.carry_heights() for f in (False,True)]:
                 actions=queue(self.source,self.dest,self.arm,self.obs['state'],self.origin,self.thickness,flip,first=1,carry_height=carry_height,joint_return=joint_return)
                 result=self.qualify(actions)
                 if result is not None:
@@ -63,7 +164,7 @@ class QualifiedEpisode(EpisodeCore):
                 for winding in [(-1,0),(1,0),(0,-1),(0,1),(-1,-1),(-1,1),(1,-1),(1,1)]:
                     extra=2 if winding[0]!=0 and winding[1]==0 else 0
                     if self.observation_holds+self.skill_choice_extra_actions+extra>10:continue
-                    for carry_height,flip in [(h,f) for h in (.985,.965,.945) for f in (False,True)]:
+                    for carry_height,flip in [(h,f) for h in self.carry_heights() for f in (False,True)]:
                         actions=queue(self.source,self.dest,self.arm,self.obs['state'],self.origin,self.thickness,flip,first=1,carry_height=carry_height,joint_return=True,winding=winding)
                         result=self.qualify(actions)
                         if result is not None:

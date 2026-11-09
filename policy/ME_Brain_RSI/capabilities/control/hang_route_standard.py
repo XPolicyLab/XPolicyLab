@@ -16,7 +16,7 @@ from coap.tasks.hang_candidate_ag_prefix import approach
 MODE = 'tangent'
 STANDARD_DEPTH = 0.02
 RANDOM_DEPTH = 0.035
-CANDIDATE = 'r01-hang-c'
+CANDIDATE = 'hang_mugs'
 
 
 def plan_transfer(ctx, source, holder, available, arm=None):
@@ -63,7 +63,7 @@ def execute(ctx, randomized):
     if ctx.numeric_ik:
         ctx.__class__ = HangCurveContext
     ctx.hang_candidate_name = CANDIDATE
-    ctx.stage = 'hang_r01_measure'
+    ctx.stage = 'hang_measure'
     holder = holder_geometry(ctx)
     if holder is None:
         yield from ctx.hold(4)
@@ -84,7 +84,7 @@ def execute(ctx, randomized):
         source = dict(source, grasp=np.asarray(source['grasp'], float).copy())
         source['grasp'][2] = ctx.table_z+float(source['height'])-depth
         sources.append(source)
-    ctx.memory['hang_r01'] = dict(candidate=CANDIDATE, randomized=bool(randomized),
+    ctx.memory['hang_route'] = dict(candidate=CANDIDATE, randomized=bool(randomized),
         pinch_depth_m=depth, approach_mode=MODE, source_geometry=sources,
         finite_hover_branch_selection=True, safety_checks_enabled=False,
         fixed_frame_budget=3*(sum(DURATIONS.values())+3)+41)
@@ -92,32 +92,32 @@ def execute(ctx, randomized):
     for index, source in enumerate(sources):
         plan = plan_transfer(ctx, source, holder, available)
         arm = plan['arm']
-        ctx.stage = 'hang_r01_approach_'+str(index)
+        ctx.stage = 'hang_approach_'+str(index)
         yield from approach(ctx, source, plan)
         source = refresh(ctx, source, arm)
         plan = _route_plan_transfer(ctx, source, holder, available, arm=arm)
         available.remove(plan['peg'])
-        ctx.memory.setdefault('hang_r01_plans', []).append(plan)
-        ctx.memory.setdefault('hang_r01_refreshed_sources', []).append(source)
+        ctx.memory.setdefault('hang_route_plans', []).append(plan)
+        ctx.memory.setdefault('hang_refreshed_sources', []).append(source)
         arm, grasp = plan['arm'], source['grasp']
         pick, final = quaternion(plan['pick']), quaternion(plan['final'])
-        stage = np.array([-.28 if arm == 'left' else .28, -.24, 1.025])
+        stage = np.asarray(plan['stage'], float)
         prehang = plan['center']+plan['axis']*.090-plan['final'] @ plan['hole_tool']
         thread = plan['center']+plan['axis']*.020-plan['final'] @ plan['hole_tool']
         transfer = prehang+plan['axis']*.040
         yield from ctx.move(arm, grasp, pick, 1., DURATIONS['descend'])
-        ctx.stage = 'hang_r01_close_'+str(index)
+        ctx.stage = 'hang_close_'+str(index)
         yield from ctx.grip(arm, 0., duration=DURATIONS['close'])
         yield from ctx.move(arm, grasp+[0., 0., .120], pick, 0., DURATIONS['lift'])
-        ctx.stage = 'hang_r01_carry_'+str(index)
+        ctx.stage = 'hang_carry_'+str(index)
         yield from ctx.move(arm, stage, pick, 0., DURATIONS['stage'])
         yield from ctx.move(arm, stage, final, 0., DURATIONS['rotate'])
         yield from ctx.move(arm, transfer, final, 0., DURATIONS['transfer'])
         yield from ctx.move(arm, prehang, final, 0., DURATIONS['prehang'])
-        ctx.stage = 'hang_r01_insert_'+str(index)
+        ctx.stage = 'hang_insert_'+str(index)
         yield from ctx.move(arm, thread, final, 0., DURATIONS['thread'])
         yield from ctx.move(arm, plan['target'], final, 0., DURATIONS['seat'])
-        ctx.stage = 'hang_r01_release_'+str(index)
+        ctx.stage = 'hang_release_'+str(index)
         yield from ctx.grip(arm, 1., duration=DURATIONS['release'])
         retreat = plan['target']-plan['final'][:, 0]*.070
         yield from ctx.move(arm, retreat, final, 1., DURATIONS['retreat'])
@@ -139,6 +139,7 @@ def run_random(ctx):
 
 # Keep the pre-approach plan and every inherited action-producing statement intact.
 from coap.tasks.hang_route_r02_standard_score import rank_endpoint_plans as _route_rank_endpoint_plans
+from coap.tasks.hang_route_r02_standard_score import staging_point as _route_staging_point
 
 
 
@@ -173,7 +174,7 @@ def _endpoint_plans(ctx, source, holder, available, arm=None):
                 side = -1.0 if arm == 'left' else 1.0
                 side_preference = 0.15 * max(0.0, -side * axis[0])
                 front_preference = 0.06 * max(0.0, -final[1, 0])
-                plans.append(dict(cost=pickup_cost + final_cost + side_preference + front_preference, arm=arm, peg=peg, pick=pick, final=final, center=center, axis=axis, hole_tool=hole_tool, target=target))
+                plans.append(dict(cost=pickup_cost + final_cost + side_preference + front_preference, arm=arm, peg=peg, pick=pick, final=final, center=center, axis=axis, hole_tool=hole_tool, target=target, stage=_route_staging_point(ctx, holder, center, arm)))
     return plans
 
 

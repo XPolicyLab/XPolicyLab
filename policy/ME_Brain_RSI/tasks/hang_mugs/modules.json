@@ -7,10 +7,10 @@
     "resource_identity": true
   },
   "coap.context": {
-    "file": "capabilities/control/context_for_imitate_sorting_sequence.py",
+    "file": "capabilities/control/hang_mugs_context.py",
     "resource": "resources/hang_mugs/coap/context.py",
     "package": false,
-    "sha256": "e43c0bd2981f05158877ce9d222c7bebaef9732c57ab5cf7bacd61ad2a95c6f2",
+    "sha256": "797bf047dfe56cf5ef6be61e838bf46ef26719abd97d54698155669901cb776b",
     "resource_identity": true
   },
   "coap.debug_thresholds": {
@@ -42,17 +42,17 @@
     "resource_identity": true
   },
   "coap.motion": {
-    "file": "capabilities/motion/motion.py",
+    "file": "capabilities/motion/hang_mugs_motion.py",
     "resource": "resources/hang_mugs/coap/motion.py",
     "package": false,
-    "sha256": "446e21c59ea4dcea011b3010c8fd9006bf103207f1b3a0673bf1bb3ae0a5f290",
+    "sha256": "936b161c1e5a1f371ce2552c25c305043c28c1611c6255893ad6092318749cff",
     "resource_identity": true
   },
   "coap.perception": {
-    "file": "capabilities/perception/perception.py",
+    "file": "capabilities/perception/hang_mugs_perception.py",
     "resource": "resources/hang_mugs/coap/perception.py",
     "package": false,
-    "sha256": "eb51934df88e4c926ebd88af3b89e2f001b721b69168b8c54143aabd2b5e370c",
+    "sha256": "16340fa62714948ef9550d433e852db36e81a0b1d4ef01194d10d31e18cfbeb7",
     "resource_identity": true
   },
   "coap.public_mesh": {
@@ -210,17 +210,17 @@
     "resource_identity": true
   },
   "coap.tasks.hang_candidate_g_cad": {
-    "file": "capabilities/geometry/hang_mugs_coap_tasks_hang_candidate_g_cad.py",
+    "file": "capabilities/geometry/hang_mugs_peg_geometry.py",
     "resource": "resources/hang_mugs/coap/tasks/hang_candidate_g_cad.py",
     "package": false,
-    "sha256": "52c852ad79b39202ef9204369712ddfb54de23e15bb64af03fcd1b16f9f4ca82",
+    "sha256": "8f17c1ca43bbb731514f858841f1e634bd46cd74cd4844eacb86729e70658c52",
     "resource_identity": true
   },
   "coap.tasks.hang_candidate_g_sources": {
-    "file": "capabilities/control/hang_candidate_g_sources.py",
+    "file": "capabilities/control/hang_mugs_geometric_sources.py",
     "resource": "resources/hang_mugs/coap/tasks/hang_candidate_g_sources.py",
     "package": false,
-    "sha256": "002d13d80dd3bae4b3198ca78a8b1a68c766dcba7373079873a9d1884265517e",
+    "sha256": "1003886c624bb18499809ba036c56d80a123d351e6ff2335608c0b1397f4d9e9",
     "resource_identity": true
   },
   "coap.tasks.hang_candidate_h": {
@@ -231,17 +231,17 @@
     "resource_identity": true
   },
   "coap.tasks.hang_candidate_h_cad": {
-    "file": "capabilities/geometry/hang_mugs_coap_tasks_hang_candidate_h_cad.py",
+    "file": "capabilities/geometry/hang_mugs_contact_geometry.py",
     "resource": "resources/hang_mugs/coap/tasks/hang_candidate_h_cad.py",
     "package": false,
-    "sha256": "00c8aa28be1b9da2e84db06404df71986006ffdded800e7e2b51006ea1a23bf9",
+    "sha256": "e717d3c0599a7705453193e9699a5e8978ae4f1fefd6a27a5abcdedcbc9a9da9",
     "resource_identity": true
   },
   "coap.tasks.hang_candidate_h_sources": {
-    "file": "capabilities/control/hang_candidate_h_sources.py",
+    "file": "capabilities/control/hang_mugs_ranked_geometry_sources.py",
     "resource": "resources/hang_mugs/coap/tasks/hang_candidate_h_sources.py",
     "package": false,
-    "sha256": "bc46c93238e5f15d08589af2c565ad2820fe0df953762f0df546eee45062ac48",
+    "sha256": "751b4479f5439eb06c56443bd7445418b38307e4e661ab7df15d1d0dad781c69",
     "resource_identity": true
   },
   "coap.tasks.hang_candidate_motion": {
@@ -259,10 +259,10 @@
     "resource_identity": true
   },
   "coap.tasks.hang_candidate_s_sources": {
-    "file": "capabilities/control/hang_candidate_s_sources.py",
+    "file": "capabilities/control/hang_mugs_semantic_sources.py",
     "resource": "resources/hang_mugs/coap/tasks/hang_candidate_s_sources.py",
     "package": false,
-    "sha256": "8c28dc81819ea213307d085804c220f0b40a8969dbfc6a3ec284f89e910a74dd",
+    "sha256": "db5c2fdc63b4d6d062a17260cb93f1cfe1f2214c6b8dcf9e0dc36a992442f078",
     "resource_identity": true
   },
   "coap.tasks.hang_candidate_v": {
@@ -280,24 +280,24 @@
     "resource_identity": true
   },
   "coap.tasks.hang_empty_rack_projection": {
-    "file": "capabilities/control/hang_empty_rack_projection.py",
+    "file": "capabilities/control/hang_mugs_empty_rack_projection.py",
     "resource": "resources/hang_mugs/coap/tasks/hang_empty_rack_projection.py",
     "package": false,
-    "sha256": "aa52eed2af62fd41d567397435c4ab401c41fba73be84c47e1dded98d3eeba9b",
+    "sha256": "bb6fda97dbf651c3e8fad98e459bb53627655f8b9d2c361bed8efc68b7236f28",
     "resource_identity": true
   },
   "coap.tasks.hang_route_r02_standard": {
     "file": "capabilities/control/hang_route_standard.py",
     "resource": "resources/hang_mugs/coap/tasks/hang_route_r02_standard.py",
     "package": false,
-    "sha256": "929e06a98395f03e66800cc4652b00bef43d5142d51a5ca73047bd5d0a575787",
-    "resource_identity": true
+    "sha256": "9dac76e96a76c8fb11487c76bebc81e0ca37a2f37c02dd5c4076ee5e8af8efd8",
+    "resource_identity": false
   },
   "coap.tasks.hang_route_r02_standard_score": {
     "file": "capabilities/control/hang_route_standard_score.py",
     "resource": "resources/hang_mugs/coap/tasks/hang_route_r02_standard_score.py",
     "package": false,
-    "sha256": "4d5a5c4e1c7005e08fec7fc5ca2f13c9f5972f948b12583c394b9bc3f31ea1b9",
+    "sha256": "68d514df6ecd5ddcb24e34a3f6bb39d13ceddfd8e57f0de32bfc318c405b0e97",
     "resource_identity": true
   },
   "coap.tasks.hang_std_sem_r44_rank": {
@@ -339,7 +339,7 @@
     "file": "capabilities/perception/hang_mugs_coap_tasks_hang_std_sem_r44_rank_sources.py",
     "resource": "resources/hang_mugs/coap/tasks/hang_std_sem_r44_rank_sources.py",
     "package": false,
-    "sha256": "a9210baf7ecd07d144ef040cfa6b0d84aa57727e3ab758fda98c526cc3446e98",
+    "sha256": "db9308c310ccee94f1d683a90f60c6c7146fcd9c2bcdd06e0d00cdf997ba6aaa",
     "resource_identity": true
   },
   "coap.tasks.key_aperture": {

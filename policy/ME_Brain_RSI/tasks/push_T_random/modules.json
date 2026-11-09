@@ -39,13 +39,13 @@
     "file": "capabilities/control/drag_policy_for_push_t_random.py",
     "resource": "resources/push_T_random/coap/drag_policy.py",
     "package": false,
-    "sha256": "242f12edbbeccf3f1a7f14216ae574872f0fe5a847815b2ad61f02db85c704c4"
+    "sha256": "f581c2b654646e43ffa5d33e32048d9861f89b581cf01219702b3d40cfc3c1a8"
   },
   "coap.drag_screen": {
     "file": "capabilities/control/drag_screen_for_push_t_random.py",
     "resource": "resources/push_T_random/coap/drag_screen.py",
     "package": false,
-    "sha256": "5dc747a7671832d7d310f1dacc6a0ac3ccd03d6d9227bad3af755bbb5aac1019"
+    "sha256": "839c4aeda0a9b0e2ed292d75170331091ab4e5262eeabf3ade068b4549268f7f"
   },
   "coap.kinematics": {
     "file": "capabilities/motion/kinematics_for_push_t_random.py",
@@ -69,31 +69,19 @@
     "file": "capabilities/control/policy_for_push_t.py",
     "resource": "resources/push_T_random/coap/policy.py",
     "package": false,
-    "sha256": "8a49df1d66d76b1d62edb0d9d392927c2a4b217324c84ef3f800d03c026af259"
+    "sha256": "d7e7f97db914953d5a42c3fa8d716230f5ac5a89d46b4e76b27987dd3de9b647"
   },
   "coap.perception": {
     "file": "capabilities/perception/perception_for_push_t_random.py",
     "resource": "resources/push_T_random/coap/perception.py",
     "package": false,
-    "sha256": "fc93f55213a62a7eba02cd0c2d04ae89ffee658b29e4b92796d33f74eba752a9"
+    "sha256": "b9fe5c805b4cd88494d1cb1994ba9dc42d1d73b255fffe3b3b2c26e21a6206e5"
   },
   "coap.t_shape": {
     "file": "capabilities/control/t_shape.py",
     "resource": "resources/push_T_random/coap/t_shape.py",
     "package": false,
     "sha256": "c6dbf0ea5d2c1f06f32f7dbd49b3b0fa0dbd95f863eaced468b908af9b71d073"
-  },
-  "coap.t_projection": {
-    "file": "capabilities/control/t_projection_for_push_t_random.py",
-    "resource": "resources/push_T_random/coap/t_projection.py",
-    "package": false,
-    "sha256": "a069c7fa6131cd1e8e4fa2f077fb3798f080f8a0c39750301f8d2c8d69489c1d"
-  },
-  "coap.random_t_rgb": {
-    "file": "capabilities/perception/random_t_rgb.py",
-    "resource": "resources/push_T_random/coap/random_t_rgb.py",
-    "package": false,
-    "sha256": "fd16a040cf9efa6545d5ee45b50b52f0418f1aa7545d52f380dbde736d5ac24f"
   },
   "coap.mug_geometry": {
     "file": "capabilities/geometry/mug_geometry.py",
@@ -109,5 +97,23 @@
   },
   "adapters": {
     "namespace": true
+  },
+  "coap.measure": {
+    "file": "capabilities/perception/measure_for_push_t.py",
+    "resource": "resources/push_T_random/coap/measure.py",
+    "package": false,
+    "sha256": "e065fe247a0f719e16abee06e2733a5ea70f6144172e754813597bf5d2d7b6f1"
+  },
+  "coap.t_measure": {
+    "file": "capabilities/perception/t_measure_for_push_t.py",
+    "resource": "resources/push_T_random/coap/t_measure.py",
+    "package": false,
+    "sha256": "cf5469d55c1ac9f30652d2bb1da0bf990caf0ab93c5b18655f06c0cf894362cc"
+  },
+  "coap.t_detect": {
+    "file": "capabilities/perception/t_detect_for_push_t.py",
+    "resource": "resources/push_T_random/coap/t_detect.py",
+    "package": false,
+    "sha256": "8fff13a157dfbb893abe041819b0c40c798ddf3538ddd72fb93d111a091bac96"
   }
 }

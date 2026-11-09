@@ -27,13 +27,13 @@
     "file": "capabilities/control/build_tower_policy.py",
     "resource": "resources/build_tower/coap/policy.py",
     "package": false,
-    "sha256": "06b8570711edc0f7e5f53ef900c5172145affe6cb4bb3f46a5aa1ec575525810"
+    "sha256": "5205447d6053703df295dda2fcdd3325719ffebb4a1607d8fb86507e317cff92"
   },
   "coap.vision": {
     "file": "capabilities/perception/build_tower_vision.py",
     "resource": "resources/build_tower/coap/vision.py",
     "package": false,
-    "sha256": "94312610449c7364a53a45a4cf16d213f9fe6bb086f6fca907c34d754a2c8f66"
+    "sha256": "1ac607824e430253ecca0c6763df7b1c3043ce758d0ef935c99c3fc25f9142df"
   },
   "coap.wristcam": {
     "file": "capabilities/observation/build_tower_wristcam.py",

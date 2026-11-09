@@ -6,6 +6,8 @@ import time
 import numpy as np
 from XPolicyLab.model_template import ModelTemplate
 from XPolicyLab.utils.process_data import get_robot_action_dim_info
+
+from ...core.observation import restrict_public_observation
 from .coap.context import Context
 from .coap.evidence import plain, snapshot
 from .coap.policy import task_program
@@ -36,8 +38,6 @@ class Model(ModelTemplate):
             # timed inference requests. Inference deadlines remain unchanged.
             from .coap.tasks.containers_vision import _learned_pack_service
             _learned_pack_service()
-        # Offline oracle bridge (separate runtime only) may attach object truth here.
-        self.oracle_objects = None
 
     def reset(self):
         if self.trace is not None:
@@ -51,13 +51,11 @@ class Model(ModelTemplate):
         self.episode = Path(root) / f"episode_{time.time_ns()}" if root else None
 
     def update_obs(self, obs):
-        # The server owns decoding; deliberately forward only the legal inputs.
-        observation = {key: obs[key] for key in ("state", "vision", "instruction", "instructions") if key in obs}
+        observation = restrict_public_observation(obs)
         self.last_obs = observation
         if self.ctx is None:
             self.ctx = Context(observation, self.task, numerical_ik=self.numeric_ik)
             self.ctx.stage = "initial"
-            self.ctx.oracle_objects = self.oracle_objects
             if not self.probe:
                 self.program = task_program(self.task)(self.ctx)
             if self.episode:
@@ -71,7 +69,6 @@ class Model(ModelTemplate):
                 self.ctx.record_stage=record_stage
         else:
             self.ctx.update_obs(observation)
-            self.ctx.oracle_objects = self.oracle_objects
         interval = int(os.environ.get("COAP_SNAPSHOT_INTERVAL", "25"))
         if self.episode and self.index > 0 and self.index % max(1, interval) == 0:
             snapshot(observation, self.episode / f"step_{self.index:04d}")
@@ -131,12 +128,6 @@ class Model(ModelTemplate):
             self.trace.flush()
         self.index += 1
         return [action]
-
-    def update_offline_oracle(self, objects):
-        """OFFLINE ONLY: absolute object truth from the isolated diagnostic bridge."""
-        self.oracle_objects = objects
-        if self.ctx is not None:
-            self.ctx.oracle_objects = objects
 
     def finish_episode(self):
         if self.episode and self.last_obs:

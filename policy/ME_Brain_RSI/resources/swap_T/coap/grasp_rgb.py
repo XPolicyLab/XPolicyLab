@@ -7,9 +7,34 @@ from scipy.spatial.transform import Rotation as R
 from scipy.optimize import least_squares
 from scipy.ndimage import map_coordinates
 
-TABLE=.765
 HULLS={k:np.asarray(v) for k,v in json.loads(Path(__file__).with_name('gripper_geometry.json').read_text()).items()}
+# Public T CAD (Assets/Object/RoboDojo/Rigid/t/*/metadata.json): 80x60x15 mm, outline in the asset frame.
 POLY=np.array([[-.04,-.03],[-.02,-.03],[-.02,-.012],[.04,-.012],[.04,.012],[-.02,.012],[-.02,.03],[-.04,.03]])
+T_HEIGHT=.015                                         # CAD aligned_bbox extent z
+T_RADIUS=float(np.max(np.linalg.norm(POLY,axis=1)))   # CAD outline bounding radius about the asset origin
+T_SPAN=float(np.ptp(POLY[:,1]))                       # CAD crossbar span closed by the fingers
+# Gripper: finger joint = command*.054-.010 (robot-intrinsic map used by the IK path gate).
+PREOPEN_FINGER=(T_SPAN+.008-.00080716)/2
+PREOPEN=float(np.clip((PREOPEN_FINGER+.01)/.054,0,1))
+# Robot-motion clearances above the support plane (tool heights; robot-intrinsic motion parameters).
+APPROACH_CLEARANCE=.200
+LIFT_CLEARANCE=.220
+CARRY_CLEARANCES=(.220,.200,.180)
+# Support plane: the X5 arms are mounted on the table top, so the table plane is the arm base height
+# from the robot-only static JSON (ME_BRAIN_ROBOT_STATIC); set by configure_support() at policy start.
+TABLE=None
+
+def configure_support(robot_static):
+    global TABLE
+    TABLE=float(np.mean([float(robot_static[a+'_arm']['base_pose'][2]) for a in ('left','right')]))
+    return TABLE
+
+def table_z():return TABLE
+def t_top_z():return TABLE+T_HEIGHT
+
+def finger_reach():
+    # Outer face of a pre-opened finger, measured from the grasp centre along the closing axis.
+    return float(HULLS['link7'][:,1].max()+PREOPEN_FINGER)
 
 def rotation(q):return R.from_quat(np.asarray(q)[[1,2,3,0]])
 
@@ -63,7 +88,7 @@ def thickness(image,ee,source,hue,head,head_gripper_ee=None):
         edge=cv2.morphologyEx(top.astype('uint8'),cv2.MORPH_GRADIENT,np.ones((3,3),'uint8'))
         distance=cv2.distanceTransform((1-edge).astype('uint8'),cv2.DIST_L2,5)
         views.append((name,projection,distance,int((mask&~top).sum()),float(lo),float(hi)))
-    angle=2*np.arctan2(source[6],source[3]);initial=np.array([source[0],source[1],angle,.015,0.,0.])
+    angle=2*np.arctan2(source[6],source[3]);initial=np.array([source[0],source[1],angle,T_HEIGHT,0.,0.])
     def corners(p):
         return R.from_euler('xyz',[p[4],p[5],p[2]]).apply(np.column_stack([POLY,np.zeros(8)]))+[p[0],p[1],TABLE+p[3]]
     def residual_view(p,view):

@@ -1,12 +1,8 @@
 """Pack four random objects into the open box: fast dual-arm pick, carry and drop.
 
-Scene geometry comes either from RGB perception (production) or, in the
-explicitly separate offline oracle runtime, from simulator object truth that
-the oracle bridge stores on ``ctx.oracle_objects``. The manipulation program is
-identical in both modes.
+Scene geometry comes from RGB perception and public asset geometry.
 """
 import math
-import os
 from functools import lru_cache
 
 import numpy as np
@@ -15,7 +11,6 @@ from scipy.spatial.transform import Rotation
 from ..dual import (ArmModel, CartesianPathError, cartesian_path, down_rotation, grip_steps, GAP_PER_UNIT,
                     TIP_BELOW_TCP, rz, wrap)
 from ..executor import ZoneExecutor, _log, SAFE_TRAVEL_CLEARANCE, MIN_TCP_TABLE
-from ..motion import quat_matrix
 from . import containers_vision as vision
 
 FAMILIES = ("car", "shoe", "hammer", "electric_toothbrush")
@@ -50,7 +45,6 @@ PROFILE_DZ = 0.002
 # pinch must sit above the centre of mass and as close to it horizontally as possible.
 HANG_CAP = {"shoe": math.radians(35.0), "car": math.radians(20.0), "hammer": math.radians(25.0),
             "electric_toothbrush": math.radians(15.0)}
-GRASP_VARIANT = None   # (long_shift, tcp_shift) applied by the offline grasp probe only
 
 
 def volume_centroid(points, dz=PROFILE_DZ):
@@ -139,7 +133,7 @@ def evaluate_pinch(zs, widths, centres, tcp_height, grasp_long, long_axis, com, 
 
 
 @lru_cache(maxsize=64)
-def _grasp_spec(model_key, variant):
+def grasp_spec(model_key):
     info, data = vision.models()
     model = info[model_key]
     points = np.asarray(data[model_key + "_points"], float)
@@ -187,11 +181,6 @@ def _grasp_spec(model_key, variant):
     if not ranked:
         raise RuntimeError(f"No pinch found for {model_key}")
     cost, grasp_long, tcp_height, pinch = ranked[0]
-    if variant is not None:
-        grasp_long += variant[0]
-        tcp_height = float(np.clip(tcp_height + variant[1], MIN_TCP_TABLE, extent[2]))
-        zs, widths, centres = width_profile(points, long_axis, grasp_long)
-        pinch = evaluate_pinch(zs, widths, centres, tcp_height, grasp_long, long_axis, com, family) or pinch
     grasp_xy = np.zeros(2)
     grasp_xy[long_axis] = grasp_long
     grasp_xy[short_axis] = pinch["short_centre"]
@@ -204,10 +193,6 @@ def _grasp_spec(model_key, variant):
                 pinch_z=float(pinch["pinch_z"]), taper_deg=math.degrees(pinch["taper"]),
                 patch_height=float(pinch["patch"]), hang=float(pinch["hang"]), hang_deg=math.degrees(pinch["hang"]),
                 clamped=bool(pinch["clamped"]), score=float(cost), ranked=summary)
-
-
-def grasp_spec(model_key):
-    return _grasp_spec(model_key, GRASP_VARIANT)
 
 
 def grip_command(width, heavy=False):
@@ -228,28 +213,6 @@ def holding(ctx, arm, command):
 # ---------------------------------------------------------------------------
 # Scene abstraction
 # ---------------------------------------------------------------------------
-def scene_from_oracle(ctx):
-    info, _ = vision.models()
-    objects = []
-    box = None
-    for instance, obj in ctx.oracle_objects.items():
-        family = obj.get("label")
-        if family not in FAMILIES and family != "box":
-            continue
-        parts = instance.rsplit("_", 2)
-        key = f"{parts[0]}_{int(parts[1]):05d}"
-        model = info[key]
-        rotation = quat_matrix(obj["quaternion_wxyz"]) @ quat_matrix(model.get("placement_quat", [1, 0, 0, 0])).T
-        yaw = float(math.atan2(rotation[1, 0], rotation[0, 0]))
-        bottom = np.asarray(obj["position"], float) + rotation @ np.array([0., 0., float(model.get("floor", 0.))])
-        entry = dict(kind=family, model_key=key, bottom=bottom, yaw=yaw, source="oracle")
-        if family == "box":
-            box = entry
-        else:
-            objects.append(entry)
-    return dict(box=box, objects=objects)
-
-
 def scene_from_rgb(ctx):
     box = vision.detect_box(ctx)
     result = dict(box=None, objects=[])
@@ -434,13 +397,9 @@ def shoe_heel_check(ctx, item, bottom, yaw):
 def perceive(ctx, force=False):
     """Scene measurement; RGB perception is expensive, so it is only repeated on request."""
     cache = getattr(ctx, "_pack_scene_cache", None)
-    oracle = bool(getattr(ctx, "oracle_objects", None)) and os.environ.get("COAP_ORACLE_MODE", "").startswith("absolute_pack")
-    if cache is not None and (cache[0] == ctx.steps or not (force or oracle)):
+    if cache is not None and (cache[0] == ctx.steps or not force):
         return cache[1]
-    if oracle:
-        scene = scene_from_oracle(ctx)
-    else:
-        scene = scene_from_rgb(ctx)
+    scene = scene_from_rgb(ctx)
     ctx._pack_scene_cache = (ctx.steps, scene)
     _log(ctx, "scene", box=None if scene["box"] is None else dict(bottom=scene["box"]["bottom"].tolist(), yaw=scene["box"]["yaw"]),
          objects=[dict(kind=o["kind"], model_key=o["model_key"], bottom=o["bottom"].tolist(), yaw=o["yaw"]) for o in scene["objects"]])
@@ -594,9 +553,6 @@ def scan_pose(ctx, back=False):
 def initial_scene(ctx):
     """RGB: clear the arms out of the view, skip the first rendered frames and accept the
     scene once two looks agree and are plausible."""
-    oracle = bool(getattr(ctx, "oracle_objects", None)) and os.environ.get("COAP_ORACLE_MODE", "").startswith("absolute_pack")
-    if oracle:
-        return perceive(ctx)
     yield from scan_pose(ctx)
     for _ in range(3):
         yield ctx.hold_action()
@@ -615,10 +571,6 @@ def initial_scene(ctx):
 
 def pack_objects_into_box_random(ctx):
     """Entry point generator."""
-    if "probe" in os.environ.get("COAP_ORACLE_MODE", ""):
-        from .pack_probe import grasp_probe
-        yield from grasp_probe(ctx)
-        return
     scene = yield from initial_scene(ctx)
     if scene["box"] is None:
         raise RuntimeError("Box measurement missing")
@@ -674,8 +626,7 @@ class PackExecutor(ZoneExecutor):
         if abs(ctx.gripper_targets[arm] - aperture) > 0.02:
             yield from grip_steps(ctx, arm, aperture, 2)
         # The planner already chose the pinch yaw whose branch allows the carry; no flipping.
-        oracle = bool(getattr(ctx, "oracle_objects", None)) and os.environ.get("COAP_ORACLE_MODE", "").startswith("absolute_pack")
-        if spec["family"] == "car" and not oracle and not obj.get("inspected"):
+        if spec["family"] == "car" and not obj.get("inspected"):
             # Diagnostic look at the whole car from 20 cm (wrist camera) before the pinch; the
             # evidence snapshots (every 10 steps) catch it for offline front/back studies.
             base_xy = np.array([-0.3 if arm == "left" else 0.3, -0.45])
@@ -1542,21 +1493,15 @@ class PackExecutor(ZoneExecutor):
         ctx = self.ctx
         planner = self.planner
         try:
-            oracle = bool(getattr(ctx, "oracle_objects", None)) and os.environ.get("COAP_ORACLE_MODE", "").startswith("absolute_pack")
-            if oracle:
-                box = scene_from_oracle(ctx)["box"]
-            else:
-                fit = vision.detect_box(ctx)
-                if fit is None:
-                    _log(ctx, "box_refresh_none")
-                    return
-                bottom = np.asarray(fit["position"], float).copy()
-                bottom[2] = ctx.table_z
-                box = dict(kind="box", model_key=fit["model_key"], bottom=bottom, yaw=float(fit["yaw"]))
+            fit = vision.detect_box(ctx)
+            if fit is None:
+                _log(ctx, "box_refresh_none")
+                return
+            bottom = np.asarray(fit["position"], float).copy()
+            bottom[2] = ctx.table_z
+            box = dict(kind="box", model_key=fit["model_key"], bottom=bottom, yaw=float(fit["yaw"]))
         except Exception as error:
             _log(ctx, "box_refresh_failed", error=str(error)[:100])
-            return
-        if box is None:
             return
         shift = float(np.linalg.norm(box["bottom"][:2] - planner.box_centre[:2]))
         turn = abs(wrap(box["yaw"] - planner.scene["box"]["yaw"]))
@@ -1718,15 +1663,14 @@ class PackExecutor(ZoneExecutor):
         return tuple(arm for arm in order if arm not in blocked)
 
     def refresh(self, obj, force=False):
-        """Re-perceive one object (RGB mode) or read truth (oracle); None if missing.
+        """Re-perceive one object from RGB; None if missing.
 
         RGB measurements taken after objects were moved are only trusted for the object
         that was just set down in the buffer, and only when they agree with its planned
         resting pose (detectors confuse small objects once the scene has changed).
         """
-        oracle = bool(getattr(self.ctx, "oracle_objects", None)) and os.environ.get("COAP_ORACLE_MODE", "").startswith("absolute_pack")
         lost = force and self.lost == obj["kind"]
-        if not oracle and not (force and obj.get("source") == "planned") and not lost:
+        if not (force and obj.get("source") == "planned") and not lost:
             return None
         if lost:
             self.lost = None
@@ -1738,24 +1682,23 @@ class PackExecutor(ZoneExecutor):
         for candidate in scene["objects"]:
             if candidate["kind"] != obj["kind"]:
                 continue
-            if not oracle:
-                shift = float(np.linalg.norm(candidate["bottom"][:2] - obj["bottom"][:2]))
-                turn = abs(wrap(candidate["yaw"] - obj["yaw"]))
-                # A pick that closed on nothing means the object moved: accept any nearby detection.
-                # A shoe or car set down from a hanging pinch tumbles: official runs found them
-                # 7-27 cm and up to 120 degrees from the planned buffer pose, and every pick at
-                # the stale pose missed. Big objects are detected reliably: wide gate, no yaw gate.
-                big = obj["kind"] in ("shoe", "car")
-                if lost:
-                    limit = 0.35 if self.nudged.get(obj["kind"]) else 0.20
-                else:
-                    limit = 0.30 if big else 0.06
-                turned = turn > math.radians(25.0) and abs(turn - math.pi) > math.radians(25.0)
-                if shift > limit or (not lost and not big and turned):
-                    _log(self.ctx, "refresh_rejected", kind=obj["kind"], shift=round(shift, 3), turn=round(turn, 2))
-                    return None
-                _log(self.ctx, "refresh_accepted", kind=obj["kind"], shift=round(shift, 3), turn=round(turn, 2), lost=lost)
-                candidate = dict(candidate, source="seen")
+            shift = float(np.linalg.norm(candidate["bottom"][:2] - obj["bottom"][:2]))
+            turn = abs(wrap(candidate["yaw"] - obj["yaw"]))
+            # A pick that closed on nothing means the object moved: accept any nearby detection.
+            # A shoe or car set down from a hanging pinch tumbles: official runs found them
+            # 7-27 cm and up to 120 degrees from the planned buffer pose, and every pick at
+            # the stale pose missed. Big objects are detected reliably: wide gate, no yaw gate.
+            big = obj["kind"] in ("shoe", "car")
+            if lost:
+                limit = 0.35 if self.nudged.get(obj["kind"]) else 0.20
+            else:
+                limit = 0.30 if big else 0.06
+            turned = turn > math.radians(25.0) and abs(turn - math.pi) > math.radians(25.0)
+            if shift > limit or (not lost and not big and turned):
+                _log(self.ctx, "refresh_rejected", kind=obj["kind"], shift=round(shift, 3), turn=round(turn, 2))
+                return None
+            _log(self.ctx, "refresh_accepted", kind=obj["kind"], shift=round(shift, 3), turn=round(turn, 2), lost=lost)
+            candidate = dict(candidate, source="seen")
             return candidate
         _log(self.ctx, "refresh_missing", kind=obj["kind"], lost=lost)
         return None

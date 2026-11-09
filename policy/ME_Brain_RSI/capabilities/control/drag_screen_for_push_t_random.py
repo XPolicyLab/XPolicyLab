@@ -1,4 +1,4 @@
-"""PTR3 nominal wrist/continuity screening from RGB estimates and own joints.
+"""Nominal wrist and continuity screening for push_T_random using RGB estimates and own joints.
 
 No simulator objects, layout IDs or outcome signals. This cannot certify
 grasp rigidity, collision freedom or the simulator's actual IK branch.

@@ -3,13 +3,13 @@
     "file": "capabilities/control/adapter_for_swap_t.py",
     "resource": "resources/swap_T/coap/adapter.py",
     "package": false,
-    "sha256": "be9ca7beaae01c3f957d0df1b5e34911961bb52cf92456d59afcad3d8bdd1b35"
+    "sha256": "f6914bd28b419f35ed2c094a64ae5d344223c7f2933f6602e86b0ac6478c53b8"
   },
   "policy.lxm6wuec_swap_t.grasp_rgb": {
     "file": "capabilities/perception/grasp_rgb.py",
     "resource": "resources/swap_T/coap/grasp_rgb.py",
     "package": false,
-    "sha256": "dca7c8fc46c9f9e2971ce3eb8acaa21ac2e8966a9534ef7e86888a9835895591"
+    "sha256": "5804327822dd46dc0b5ed5f02fa23c957bc94d1d092c512d6f62011374890162"
   },
   "policy.lxm6wuec_swap_t.calibration": {
     "file": "capabilities/control/calibration_for_swap_t.py",
@@ -33,13 +33,13 @@
     "file": "capabilities/control/model_for_swap_t.py",
     "resource": "resources/swap_T/coap/model.py",
     "package": false,
-    "sha256": "04ffd3e6312be3369cd27f13d71ff8c0b00fb2a2f45d10e7935e9e8caff5e31a"
+    "sha256": "059eb32f6e2453661299dc66bbf567169f4d871c6ee1d1b697fa470ccb40da61"
   },
   "policy.lxm6wuec_swap_t.collision_gate": {
     "file": "capabilities/motion/collision_gate_for_swap_t.py",
     "resource": "resources/swap_T/coap/collision_gate.py",
     "package": false,
-    "sha256": "be9db89d509cd09b64f14b01e12808378be65e8aab4c943f2773c9c3c0781848"
+    "sha256": "90f3623b9c3250a5c15cf92a024d535926d48043e5876271936672cb33e834ed"
   },
   "policy.lxm6wuec_swap_t.skill_choices": {
     "file": "capabilities/planning/skill_choices_for_swap_t.py",
@@ -57,13 +57,13 @@
     "file": "capabilities/planning/skill_choice_targets.py",
     "resource": "resources/swap_T/coap/skill_choice_targets.py",
     "package": false,
-    "sha256": "81e32beaef1b4344089a6490a2359dcfd14b9a8be3e0dbb8a312602f949c1a93"
+    "sha256": "bdbb719825e7258f8019b8a9e39fdcec6e6f70bdf394c8da93dba897d18dddf0"
   },
   "policy.lxm6wuec_swap_t.core": {
     "file": "capabilities/control/core_for_swap_t.py",
     "resource": "resources/swap_T/coap/core.py",
     "package": false,
-    "sha256": "c904e6b8c9af4d925bd18ebe6ef022154890338abed1becf233710b8107d890e"
+    "sha256": "e69caf814bdfa169211113849e73d7510246b3b2a3aacfe5d123f5e6ae7014ae"
   },
   "policy.lxm6wuec_swap_t.geometry": {
     "file": "capabilities/geometry/geometry_for_swap_t.py",

@@ -10,9 +10,9 @@ from coap.observation_audit import save_replan_observation
 class Model(ModelTemplate):
     def __init__(self, model_cfg):
         if model_cfg['env_cfg_type']!='arx_x5' or model_cfg['action_type']!='ee':
-            raise ValueError('AB1 supports arx_x5/ee only')
+            raise ValueError('align_blocks requires arx_x5 with ee actions')
         if model_cfg['task_name']!='align_blocks':
-            raise ValueError('AB1 supports align_blocks only')
+            raise ValueError('Expected task_name=align_blocks')
         self.config=model_cfg
         self.calibration=json.loads(Path(model_cfg['calibration_path']).read_text())
         self.trace_path=Path(model_cfg['trace_path'])

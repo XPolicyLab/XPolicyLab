@@ -25,9 +25,10 @@
   },
   "adapters.COAP_ZYR.model": {
     "file": "capabilities/control/model_for_play_xylophone.py",
-    "resource": "resources/play_Xylophone/coap/adapter/model.py",
+    "resource": "capabilities/control/model_for_play_xylophone.py",
     "package": false,
-    "sha256": "1aab69cc9388ba69c36619d618477f3a1341089b74631a46e4242642d3ab605d"
+    "resource_identity": false,
+    "sha256": "f0a968cad705b33c84861f5b9f9f479d9d3515a2549b18823d0822a1dce51f8c"
   },
   "coap.physicalrsi_adapter": {
     "file": "capabilities/control/native_adapter.py",
@@ -451,5 +452,19 @@
   },
   "coap.vendor.hexashell": {
     "namespace": true
+  },
+  "coap.continuous_xylophone": {
+    "file": "capabilities/control/continuous_xylophone.py",
+    "resource": "capabilities/control/continuous_xylophone.py",
+    "package": false,
+    "resource_identity": false,
+    "sha256": "147e2f44bdc875806c1aefc13b7c8e708772e35b266afc42517809ecaff7df86"
+  },
+  "coap.observed_xylophone_vision": {
+    "file": "capabilities/perception/observed_xylophone_vision.py",
+    "resource": "capabilities/perception/observed_xylophone_vision.py",
+    "package": false,
+    "resource_identity": false,
+    "sha256": "de9d2b708a682a8b3782e6c19685d63f24c497559a2a1459e809df6ba54990f8"
   }
 }

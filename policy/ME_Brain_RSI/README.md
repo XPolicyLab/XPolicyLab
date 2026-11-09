@@ -16,7 +16,9 @@ bash install.sh code
 bash install.sh inference
 ```
 
-扫方块、倒球入花瓶、搭塔、充电器、标准套娃和随机套娃只需脚本基础环境，无需 CuRobo、SAM3 或外部模型权重，分别见 [扫方块任务说明](tasks/sweep_blocks/README.md)、[倒球任务说明](tasks/pour_balls_into_vase/README.md)、[搭塔任务说明](tasks/build_tower/README.md)、[充电器任务说明](tasks/plug_in_charger/README.md)、[标准套娃任务说明](tasks/sort_nesting_dolls_by_size/README.md) 与 [随机套娃任务说明](tasks/sort_nesting_dolls_by_size_random/README.md)。
+扫方块、倒球入花瓶和充电器使用脚本基础环境，分别见 [扫方块任务说明](tasks/sweep_blocks/README.md)、[倒球任务说明](tasks/pour_balls_into_vase/README.md) 与 [充电器任务说明](tasks/plug_in_charger/README.md)。
+
+搭塔、标准套娃、随机套娃和标准倒液体共用 SAM3 文件服务，分别进行 RGB 几何测量和规划。见 [搭塔与 SAM3 服务说明](tasks/build_tower/README.md)、[标准套娃](tasks/sort_nesting_dolls_by_size/README.md)、[随机套娃](tasks/sort_nesting_dolls_by_size_random/README.md) 与 [倒液体](tasks/pour_liquid_into_cup/README.md)。
 
 随机扫方块使用独立的 SAM3、Grounding DINO 感知与关节空间脚本控制，需要 GPU 和外部感知权重，见 [随机扫方块任务说明](tasks/sweep_blocks_random/README.md)。
 

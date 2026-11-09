@@ -6,6 +6,11 @@ from .geometry import quat_matrix
 from .contracts import restrict_observation,validate_observation
 
 
+ASSOCIATION_GATE=.25      # the RGB re-association radius for the T after a drag leg (perception gate)
+ASSOCIATION_MARGIN=.02
+DRAG_LEG_MAX=ASSOCIATION_GATE-ASSOCIATION_MARGIN   # one drag leg stays inside the gate so the next RGB look re-finds the T
+
+
 class TabletopDragPolicy(Policy):
     def reset(self):
         super().reset()
@@ -42,15 +47,16 @@ class TabletopDragPolicy(Policy):
             stage_xy=np.array([0.,float(target.xy[1])])
             stage_yaw=source.angle
         travel=stage_xy-source.xy
-        # Stay inside the 25 cm RGB association gate with a 2 cm margin,
-        # while avoiding an extra grasp cycle for a roughly 43 cm transfer.
-        if np.linalg.norm(travel)>.23:
-            stage_xy=source.xy+travel*.23/np.linalg.norm(travel)
+        # One leg at most DRAG_LEG_MAX: the next RGB look must re-associate the T.
+        if np.linalg.norm(travel)>DRAG_LEG_MAX:
+            stage_xy=source.xy+travel*DRAG_LEG_MAX/np.linalg.norm(travel)
             stage_yaw=source.angle
         self.program_notes.update(stage_xy=stage_xy.tolist(),stage_yaw=float(stage_yaw),
                                   active_side=side,relay_reobserve=True)
-        # Public footprint stem spans local x=-20..40 mm, width 20 mm.
-        stem=source.xy+.010*np.array([np.cos(source.angle),np.sin(source.angle)])
+        # Pinch the measured stem at its mid-length.
+        pinch_x=(source.stem_x[0]+source.stem_x[1])/2
+        stem=source.xy+pinch_x*np.array([np.cos(source.angle),np.sin(source.angle)])
+        half_height=float(np.clip(source.height,.006,.04))/2
         # Parallel jaws admit a pi-equivalent heading. Choose the direction
         # facing out from the public robot base to avoid a wrist half-turn.
         # This is a geometric heuristic, not an IK/collision certificate.
@@ -68,12 +74,12 @@ class TabletopDragPolicy(Policy):
                 current.T@quat_matrix(self.pose(side,stem,.13,yaw)[3:])))
         self.program_notes['grasp_yaw']=float(grasp_yaw)
         self.drag_used_sides.add(side)
-        # Keep distal finger tips at the 15 mm block's mid-height. The TCP
-        # is above the tips by the public tool-vs-contact offset difference.
-        height=.0075+float(self.calibration['contact_tip_offset_in_ee'][0]
-                          -self.calibration['tool_offset_in_ee'][0])
+        # Keep distal finger tips at the measured block's mid-height. The TCP
+        # is above the tips by the tool-vs-contact offset difference.
+        height=half_height+float(self.calibration['contact_tip_offset_in_ee'][0]
+                                -self.calibration['tool_offset_in_ee'][0])
         grasp=self.pose(side,stem,height,grasp_yaw)
-        z=self.calibration['table_z']+.0075
+        z=self.calibration['table_z']+half_height
         anchor=quat_matrix(grasp[3:]).T@(np.r_[source.xy,z]-grasp[:3])
         self.add(side,stem,.13,1.,'drag_approach',3,angle=grasp_yaw)
         self.plan.append(Waypoint(side,grasp,1.,'drag_contact',3))
@@ -86,6 +92,9 @@ class TabletopDragPolicy(Policy):
         self.plan.append(Waypoint(side,last.copy(),1.,'drag_release',15))
         raised=last.copy();raised[2]+=.12
         self.plan.append(Waypoint(side,raised,1.,'drag_lift',3))
+        # step aside towards the arm's own side so the lifted gripper no longer covers the block in the head camera
+        aside=raised.copy();aside[0]=float(np.clip(aside[0]+(-.14 if side=='left' else .14),-.45,.45))
+        self.plan.append(Waypoint(side,aside,1.,'drag_aside',2))
         self.reobserve_after_plan=True
         self.view_cleared=False
         self.reason='executing_tabletop_drag_not_success_claim'

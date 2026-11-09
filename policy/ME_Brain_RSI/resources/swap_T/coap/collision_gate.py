@@ -145,6 +145,8 @@ class ContinuousGate:
     def __init__(self,initial_state,arm,robot_static):
         self.arm=arm;self.other='left' if arm=='right' else 'right'
         self.geometries={a:_robot_geometry(str(Path(robot_static[a+'_arm']['urdf_path']).resolve())) for a in (arm,self.other)}
+        # Table plane = arm mounting height from the robot-only static config (arms sit on the table top).
+        self.table=float(np.mean([float(robot_static[a+'_arm']['base_pose'][2]) for a in ('left','right')]))
         self.bases={}
         for a in (arm,self.other):
             local=link_transforms(self.geometries[a][0],initial_state[a+'_arm_joint_state'],0)['link6']
@@ -174,7 +176,7 @@ class ContinuousGate:
         objects=self.objects(joints,self.arm,finger)
         a,b=[next(o for o in objects if o[0]==name) for name in ('link3_0','link5_0')]
         self_gap=self.distance(a,b)
-        table_gap=min(float(o[3][:,2].min())-.765 for o in objects if o[1]>=2)
+        table_gap=min(float(o[3][:,2].min())-self.table for o in objects if o[1]>=2)
         lo=np.asarray([o[4] for o in objects]);hi=np.asarray([o[5] for o in objects])
         slo=np.asarray([o[4] for o in self.static]);shi=np.asarray([o[5] for o in self.static])
         sep=np.maximum(np.maximum(lo[:,None,:]-shi[None,:,:],slo[None,:,:]-hi[:,None,:]),0)

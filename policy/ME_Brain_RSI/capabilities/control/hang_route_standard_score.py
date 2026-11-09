@@ -9,6 +9,32 @@ from coap.motion import ARMS, interpolate_pose, link_to_tcp, quat_matrix
 from coap.tasks.hang_candidate_motion import cartesian_joint_path, fixed_duration_samples
 
 
+# Mid-route carry point, derived from the planned hook of the perceived rack: the point a fixed
+# fraction of the way from the carrying arm's (robot-intrinsic) base to that hook, pushed outward
+# (away from the robot midline) perpendicular to the base-to-hook line, at the mean public-CAD hook
+# height of the fitted rack.  Fraction and offset reproduce the former carry point for the racks
+# perceived in the development episodes (rms 4.7 cm over 87 planned hooks).
+STAGE_FRACTION = .35
+STAGE_OUTWARD = .08
+
+
+def staging_point(ctx, holder, hook, arm):
+    """Return the carry point for one planned hook of the current RGB rack registration."""
+    from coap.motion import arm_base_frames
+    base = arm_base_frames(ctx.initial_state)[arm][:3, 3]
+    hook = np.asarray(hook, float)
+    reach = hook[:2]-base[:2]
+    bearing = reach/max(float(np.linalg.norm(reach)), 1e-9)
+    side = -1. if arm == 'left' else 1.
+    outward = np.array([-bearing[1], bearing[0]])
+    if outward[0]*side < 0.:
+        outward = -outward
+    scale = float(holder.get('geometry_scale', 1.))
+    height = float(np.asarray(holder['position'], float)[2])+scale*float(
+        np.mean([float(frame[2]) for frame in holder['support_frames']]))
+    return np.r_[base[:2]+STAGE_FRACTION*reach+STAGE_OUTWARD*outward, height]
+
+
 def _quaternion(rotation):
     """Preserve the existing matrix-to-wxyz convention without changing a plan."""
     return np.roll(Rotation.from_matrix(np.asarray(rotation, float)).as_quat(), 1)
@@ -24,7 +50,7 @@ def fixed_carry_route(source, plan, durations, include_approach=False):
     center = np.asarray(plan['center'], float)
     axis = np.asarray(plan['axis'], float)
     hole_tool = np.asarray(plan['hole_tool'], float)
-    stage = np.array([-.28 if arm == 'left' else .28, -.24, 1.025])
+    stage = np.asarray(plan['stage'], float)
     prehang = center+axis*.090-final_matrix @ hole_tool
     thread = center+axis*.020-final_matrix @ hole_tool
     transfer = prehang+axis*.040

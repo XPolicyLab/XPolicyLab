@@ -27,13 +27,13 @@
     "file": "capabilities/control/sort_nesting_dolls_by_size_random_policy.py",
     "resource": "resources/sort_nesting_dolls_by_size_random/coap/policy.py",
     "package": false,
-    "sha256": "a017922609aca3d0989ba2771b1e2691d7bbdd124c20bdd1284fb5df9b03f571"
+    "sha256": "696540f2af865e10a2126745fea75babc643bd28b4915594ebda5c1a1f4b431f"
   },
   "coap.vision": {
     "file": "capabilities/perception/sort_nesting_dolls_by_size_random_vision.py",
     "resource": "resources/sort_nesting_dolls_by_size_random/coap/vision.py",
     "package": false,
-    "sha256": "fe50a5dc85df428e1bb4fec0227e826a3ca030f1d57299959edd95514e56448f"
+    "sha256": "0099796077c238929311b6f14c505e5c16d5ef02548961a8b4fd4e16d364d8a4"
   },
   "coap.wristcam": {
     "file": "capabilities/observation/sort_nesting_dolls_by_size_random_wristcam.py",

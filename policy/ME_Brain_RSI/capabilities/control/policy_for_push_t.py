@@ -80,44 +80,6 @@ class Policy:
             return dict(angle=float(np.arctan2(radial[1],radial[0])),pitch=np.pi/12)
         return dict(angle=0.,pitch=np.pi/2)
 
-    def pour_ball_cup(self, side, source, target):
-        """Reach forward with a pre-tilted cup, using only RGB and static geometry.
-
-        The 72 mm cup rim is 32 mm above its 40 mm grasp. Rotate towards
-        the robot (-Y) so the wrist remains behind the mouth, not above it.
-        Cup-to-gripper rigidity is a planning assumption, not sensed success.
-        """
-        grasp_parameters=self.ball_grasp_parameters(side,source.xy)
-        if grasp_parameters['pitch']==np.pi/2:
-            # Near/received cylindrical cups admit a different grasp azimuth.
-            # A quarter-turn keeps the link6 side housings lateral during the
-            # world-X pour instead of swinging one housing down into the vase.
-            # Do not apply this to the far radial grasp or change drop height.
-            grasp_parameters['angle']=np.pi/2
-        self.grasp(side,source,.04,**grasp_parameters)
-        upright=quat_matrix(self.plan[-1].pose[3:])
-        offset=np.asarray(self.calibration["tool_offset_in_ee"])
-        def mouth_pose(xy,height,degrees):
-            rotation=Rotation.from_euler("x",degrees,degrees=True).as_matrix()
-            mouth=np.r_[xy,self.calibration["table_z"]+height]
-            return tcp_to_ee(mouth-rotation@np.array([0.,0.,.032]),rotation@upright,offset)
-        # At 45 degrees the lowest cup envelope is .24-.072*cos(45)
-        # -.036*sin(45) = .164 m, above the public maximum vase height.
-        for angle in (30.,45.):
-            self.plan.append(Waypoint(side,mouth_pose(source.xy,.24,angle),0.,"cup_pretilt",4))
-        self.plan.append(Waypoint(side,mouth_pose(target.xy,.24,45.),0.,"pour_align",4))
-        # Retain the lower-drop candidate: a uniformly higher 260 mm pour
-        # regressed ordinary development trials despite static wrist clearance.
-        # Remaining wrist/vase interactions require a different tilt path.
-        for angle,height in ((60.,.23),(80.,.23),(100.,.22)):
-            self.plan.append(Waypoint(side,mouth_pose(target.xy,height,angle),0.,"tilt",60 if angle==100 else 4))
-        self.plan.append(Waypoint(side,mouth_pose(target.xy,.24,45.),0.,"untilt",4))
-        self.plan.append(Waypoint(side,mouth_pose(source.xy,.24,45.),0.,"cup_retreat_tilted",4))
-        self.add(side,source.xy,.18,0.,"return_vessel",**grasp_parameters)
-        self.add(side,source.xy,.04,0.,"lower_vessel",**grasp_parameters)
-        self.add(side,source.xy,.04,1.,"release_vessel",10,**grasp_parameters)
-        self.add(side,source.xy,.18,1.,"retract",**grasp_parameters)
-
     def clear_view(self, active_side=None):
         # Use the observed home wrist orientation for an outward observation
         # pose. Keeping the wrist pointed down beside its own base can stall
@@ -129,8 +91,8 @@ class Policy:
             self.plan.append(Waypoint(side,pose,1.,"clear_view",4))
         self.view_cleared=True
 
-    def make_plan(self, rgb):
-        detections, rectified = self.perception.detect(rgb,task=self.task)
+    def make_plan(self, rgb, state=None):
+        detections, rectified = self.perception.detect(rgb,task=self.task,state=state)
         objects = self.perception.select(self.task,detections)
         if self.task=="push_T":
             # A 150 mm commanded push cannot justify silently switching to a
@@ -248,7 +210,8 @@ class Policy:
                     # this is not assumed to rotate by a specified angle.
                     stem=np.array([np.cos(source.angle),np.sin(source.angle)])
                     bar=np.array([-stem[1],stem[0]])
-                    lever=.032*bar-.018*stem
+                    # just outside the front-outer corner of the measured crossbar
+                    lever=(source.bar_half+.002)*bar+(source.bar_x[1]+.002)*stem
                     direction=np.sign(angle_error)*np.array([-lever[1],lever[0]])/np.linalg.norm(lever)
                     contact=source.xy+lever
                     # Descend outside the crossbar before approaching its end;
@@ -263,11 +226,9 @@ class Policy:
                 else:
                     direction=delta/max(distance,1e-9)
                     from .t_shape import translation_contact
-                    from .perception import T_FOOTPRINTS
-                    # The template origin is not the uniform T centroid.
-                    # Push through the public shape centroid to reduce the
-                    # initial moment arm; reobserve actual motion as before.
-                    contact=translation_contact(T_FOOTPRINTS['t_source'],source.xy,source.angle,direction)
+                    # Push through the centroid of the measured outline to reduce
+                    # the initial moment arm; reobserve actual motion as before.
+                    contact=translation_contact(source.local*1000.,source.xy,source.angle,direction)
                     # End at the back support plane plus desired translation,
                     # not at object centre plus translation (which overpushes).
                     start=contact-direction*.02
@@ -295,119 +256,6 @@ class Policy:
                 self.add(side,target.xy,.035,0.,"insert",15,angle=target.angle-source.angle)
                 self.add(side,target.xy,.035,1.,"release",10)
                 self.add(side,target.xy,.18,1.,"retract")
-            elif self.task == "pour_liquid_into_cup":
-                # Grasp the narrow neck, not the 82 mm body. The only bottle
-                # type in the released task is 218.1 mm high; xy comes from RGB.
-                root=np.array([-.3 if side=="left" else .3,-.45])
-                radial=source.xy-root
-                yaw=float(np.arctan2(radial[1],radial[0]))
-                # A near-horizontal neck grasp leaves room for link4/link6
-                # during the later 90..110 degree bottle rotation.
-                pitch=np.pi/12
-                # Upper-neck 200 mm candidate worsened isolated fluid retention
-                # and did not improve ordinary success; preserve 180 mm grasp.
-                grasp_height=.18
-                mouth_offset=.2181-grasp_height
-                for height,grip,name,dwell in ((.26,1.,"approach",3),
-                                                (grasp_height,1.,"descend",3),
-                                                (grasp_height,0.,"close",12),
-                                                (.22,0.,"lift",3)):
-                    self.add(side,source.xy,height,grip,name,dwell,angle=yaw,pitch=pitch)
-                direction=target.xy-source.xy
-                distance=np.linalg.norm(direction)
-                if distance<.08:
-                    self.plan=[]
-                    self.reason="bottle_cup_too_close_for_tilt"
-                    return False
-                direction=direction/distance
-                upright=quat_matrix(self.pose(side,source.xy,grasp_height,yaw,pitch)[3:])
-                # Nominal bottle-mouth point in grasp EE coordinates. Keep this
-                # point on the planned path during each bounded action, rather
-                # than independently interpolating the EE origin and rotation.
-                mouth_in_ee=(np.asarray(self.calibration["tool_offset_in_ee"])
-                             +upright.T@np.array([0.,0.,mouth_offset]))
-                # Tilt across the finger pads, not about their closing axis:
-                # a cylindrical neck can pivot freely around the line joining
-                # two opposing contacts. The horizontal approach direction is
-                # perpendicular to that line for this public gripper geometry.
-                axis=np.r_[upright[:2,0],0.]
-                axis/=np.linalg.norm(axis)
-                # Select the sign from visible bottle->cup direction. The
-                # bottle body must remain on the source side of its mouth;
-                # a fixed sign sweeps it across the cup for opposite-side grasps.
-                if np.dot(np.cross(axis,[0.,0.,1.])[:2],direction)<0:
-                    axis=-axis
-                discharge=np.cross(axis,[0.,0.,1.])[:2]
-                discharge/=np.linalg.norm(discharge)
-                # RGB opening diameter, not measured fluid or scene truth.
-                # Start conservatively at one quarter of the opening radius;
-                # this leaves room downstream for the outgoing stream. No
-                # third-party fitted coefficients or diagnostic offsets used.
-                upstream=.125*float(target.size[0])
-                # Keep the upright bottle beside the cup, then rotate and
-                # translate its mouth over the opening. Do not lower an upright
-                # bottle into the cup. Reverse this path before setting it down.
-                tilt_path=[]
-                # Cup type/height is inferred from visible rim evidence using
-                # public static geometry. Preserve the original mug clearance.
-                cup_height_delta=max(0.,float(target.size[1])-.0762)
-                # During the approach, the whole upright bottle must clear
-                # the cup, not only its mouth. Static bottle height .2181 m
-                # and body radius .042 m give >10 mm nominal clearance for
-                # the interpolated 0..90 degree path above the mug rim.
-                for angle,back,mouth_height in ((0.,.10,.330),
-                                                 (30.,0.,.330),(60.,0.,.245),
-                                                 (90.,0.,.130),(110.,0.,.115),
-                                                 (120.,0.,.110)):
-                    mouth_height+=cup_height_delta
-                    rotation=Rotation.from_rotvec(axis*np.deg2rad(angle)).as_matrix()
-                    mouth=np.r_[target.xy-direction*back,self.calibration["table_z"]+mouth_height]
-                    mouth[:2]-=discharge*upstream*np.clip((angle-60.)/30.,0.,1.)
-                    tcp=mouth-rotation@np.array([0.,0.,mouth_offset])
-                    pose=tcp_to_ee(tcp,rotation@upright,self.calibration["tool_offset_in_ee"])
-                    tilt_path.append(pose)
-                    self.plan.append(Waypoint(side,pose,0.,"liquid_tilt",80 if angle==120 else 4,
-                                              anchor_offset=mouth_in_ee.copy()))
-                for pose in reversed(tilt_path[:-1]):
-                    self.plan.append(Waypoint(side,pose.copy(),0.,"liquid_untilt",4,
-                                              anchor_offset=mouth_in_ee.copy()))
-                self.add(side,source.xy,.22,0.,"return_vessel",angle=yaw,pitch=pitch)
-                self.add(side,source.xy,grasp_height,0.,"lower_vessel",12,angle=yaw,pitch=pitch)
-                self.add(side,source.xy,grasp_height,1.,"release_vessel",20,angle=yaw,pitch=pitch)
-                self.add(side,source.xy,.26,1.,"retract",angle=yaw,pitch=pitch)
-            elif self.task.startswith("pour_"):
-                if self.task=="pour_balls_into_vase":
-                    meeting=np.array([0.,-.24])  # static dual-arm shared table workspace
-                    if self.cup_relocation_attempted:
-                        if np.linalg.norm(source.xy-meeting)>.08:
-                            self.reason="cup_relocation_not_confirmed_by_rgb"
-                            return False
-                        # The receiving arm is selected by the vase, not by
-                        # the small sign of the re-observed cup x near zero.
-                        side="left" if target.xy[0]<0 else "right"
-                    elif source.xy[0]*target.xy[0]<0 and (
-                            np.linalg.norm(target.xy-source.xy)>.30 or
-                            self.ball_grasp_parameters(side,source.xy)['pitch']<np.pi/2):
-                        if np.linalg.norm(target.xy-meeting)<.16:
-                            self.reason="shared_transfer_zone_occupied"
-                            return False
-                        # Transfer the already-tested small cup instead of
-                        # trying to pass open fingers over the vase's wide rim.
-                        # Place it upright, retreat and locate it again in RGB
-                        # before the other arm picks it up to pour.
-                        grasp_parameters=self.ball_grasp_parameters(side,source.xy)
-                        self.grasp(side,source,.04,**grasp_parameters)
-                        self.add(side,meeting,.18,0.,"cup_transfer_carry",**grasp_parameters)
-                        self.add(side,meeting,.04,0.,"cup_transfer_place",6,**grasp_parameters)
-                        self.add(side,meeting,.04,1.,"cup_transfer_release",8,**grasp_parameters)
-                        self.add(side,meeting,.17,1.,"cup_transfer_retract",**grasp_parameters)
-                        self.return_home()
-                        self.cup_relocation_attempted=True
-                        self.reobserve_after_plan=True
-                        self.program_notes={"cup_relocation":"planned; RGB confirmation required"}
-                        self.reason="executing"
-                        return True
-                self.pour_ball_cup(side,source,target)
             elif self.task == "play_Xylophone":
                 self.grasp(side,source,.035)
                 for key in range(8):
@@ -440,7 +288,7 @@ class Policy:
             action[f"{side}_ee_joint_state"]=np.array(state.get(f"{side}_ee_joint_state",[1.]),float)
         if not self.plan and not self.finished and self.step % 10 == 1:
             self.attempts+=1
-            self.make_plan(obs["vision"]["cam_head"]["color"])
+            self.make_plan(obs["vision"]["cam_head"]["color"],obs["state"])
             if self.attempts>=8 and not self.plan:
                 self.finished=True
                 self.reason="perception_abstained"
@@ -496,7 +344,7 @@ class Policy:
             if joint_key in state:
                 self.motion["current_arm_joints"]=np.asarray(state[joint_key]).tolist()
             reached=position_error<.009 and orientation_error<.15
-            if waypoint.name.startswith('drag_'):
+            if waypoint.name.startswith('drag_') and waypoint.name!='drag_aside':
                 reached=position_error<.003 and orientation_error<.05
             if self.task=='push_T' and waypoint.name in {'push','push_rotate'}:
                 # Fine strokes may be only a few millimetres long. A 9 mm

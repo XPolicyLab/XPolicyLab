@@ -1,13 +1,15 @@
-"""SWP2: pure-code sweep_blocks. RGB (head camera) and proprioception only; EE pose actions; 1000-step episodes.
+"""RGB script policy for sweep_blocks. RGB (head camera) and proprioception only; EE pose actions; 1000 steps.
 
-Official success: every small cube inside the dustpan's support circle (asset point (0,-0.053), r 8.1 cm), the dustpan
-upright and resting on the table, the brush at least 10 cm to the right (+x) of the dustpan, both arms home.
+Task: put the small cubes into the dustpan with the brush and the dustpan left on the table. Every target below is computed
+from this episode's head-camera perception (dustpan / brush / cube poses fitted with the public CAD silhouettes), the public
+CAD part boxes, and the robot's own kinematics / reach model; no scorer geometry and no fixed world spots.
 Flow: clear the head view -> head camera fits the dustpan (position + yaw), the brush (position + head direction) and the
-cubes (known-size silhouettes) -> the left arm pinches the brush across its head (level carry, nothing hangs down), parks
-it at the front right pointing -x so its origin ends ~20 cm right of the staged dustpan -> the left arm pinches a dustpan
-side wall across at the pan's centre of mass (it hangs level), lifts it, turns it and sets it down with its support circle
-at a cube-free staging spot -> the right arm picks every cube top-down and lets it drop into the pan from 3 cm, re-detecting
-the remaining cubes from the head camera after every drop -> both arms home.
+cubes -> the dustpan target pose: left where it is when the right arm can release over its floor and its mouth faces the
+cube side served by the brush hand (the right arm), else the reachable pose nearest to the perceived cube cluster with the
+mouth facing the cubes -> the brush (the left arm pinches it) is laid down where a sweep into that mouth ends: in front of
+the mouth on the cube side, clear of the pan, the cubes and the table edge -> the right arm picks every cube top-down and
+releases it over the pan's walled floor (points derived from the pan CAD, the cube size and the open finger footprint),
+re-detecting the remaining cubes from the head camera after every drop -> both arms home.
 Every leg (approach, in-place turn, carry) is checked against the wrist-roll model joint6 = base yaw - closing heading
 (validated on the released arm's IK, 1 deg median error): headings are stepped along the direction that keeps joint6 inside
 its +-180 deg limit, because the IK jumps to a wild branch when the required roll crosses it. No model, no API or network call.
@@ -28,7 +30,7 @@ CLEAR_TCP={'left':np.array([-0.50,-0.40,TABLE_Z+0.22]),'right':np.array([0.50,-0
 REST_TCP={'left':np.array([-0.50,-0.22,TABLE_Z+0.20]),'right':np.array([0.55,-0.25,TABLE_Z+0.22])}   # idle / viewing poses: straight paths to them stay >0.17 m from the own shoulder axis (the base would otherwise swing)
 REST_ALPHA={'left':np.pi/2,'right':-np.pi/2}        # closing along y with the wrist near its roll centre on both sides
 SHOULDER={'left':np.array([-0.30,-0.43]),'right':np.array([0.30,-0.43])}
-# reach of top-down poses measured on the released arm's IK (configs/reach.json from reports/ik_probe3-20261103T055224Z):
+# reach of top-down poses measured on the released arm's IK (configs/reach.json):
 # farthest solvable TCP distance from the shoulder per height, lean angle and lean direction relative to the shoulder
 REACH=json.loads((Path(__file__).resolve().parents[1]/'configs/reach.json').read_text())
 REACH_Z=[float(z) for z in REACH['meta']['z']];REACH_P=[float(p) for p in REACH['meta']['pitch_deg']];REACH_B=[float(b) for b in REACH['meta']['lean_bins_deg']]
@@ -49,23 +51,18 @@ PAN_PINCH=(0.075,-0.05)                # asset-frame pinch point on a side wall 
 PAN_PINCH_YS=(-0.05,-0.03,-0.075,-0.095)   # alternative pinch points along the wall (the nearest to the shoulder keeps the arm bent; -0.095 = the wall's mouth end)
 PAN_GRASP_Z=TABLE_Z+0.028              # pads 1.5-7.5 cm above the table around the 4.2 cm wall
 PAN_LIFT=0.11
-PAN_SPOTS=((-0.02,-0.20),(-0.06,-0.20),(0.02,-0.20),(-0.02,-0.16),(-0.06,-0.16),(0.02,-0.24),(-0.02,-0.24),(-0.10,-0.20),(0.06,-0.20),(0.10,-0.20),(0.14,-0.20))   # support-circle centre candidates
-PAN_YAWS=(0.,np.pi,np.pi/2,-np.pi/2)
 BROOM_HEAD_Z=TABLE_Z+0.024             # pads 1.1-9.7 cm up around the 3.7 cm tall head
 BROOM_HANDLE_Z=TABLE_Z+0.020
 BROOM_LIFT=0.12
-BROOM_PARK=np.array([0.12,-0.33])      # TCP of the head-pinched parked brush (the carry height adapts to the elbow model there)
-HANDLE_PARK=np.array([0.06,-0.33])     # TCP of a handle-carried brush: carried high (its head hangs), so parked nearer to the shoulder
 HANDLE_TIP=np.deg2rad(35.)             # a handle-pinched brush tips this much about the pinch axis (cylinder in PhysX)
-# parked head directions per grasp: the head pinch parks the brush pointing -x (origin ~0.18), the handle pinches pointing +x (origin ~0.21)
-BROOM_GRASPS=(('head',(BROOM['head_z'][1]/2,(BROOM['head_y'][0]+BROOM['head_y'][1])/2),BROOM_HEAD_Z,(180.,165.,195.,150.,210.),1.0),
-              ('handle',(-0.04,BROOM['handle_y']),BROOM_HANDLE_Z,(0.,-15.,15.,-30.,30.),0.7),
-              ('handle',(-0.08,BROOM['handle_y']),BROOM_HANDLE_Z,(0.,-15.,15.,-30.,30.),0.7))
+# brush pinch points (brush frame): across the head at its middle, or across the handle at two points; destinations are
+# brush poses in front of the dustpan target's mouth (broom_dests), not fixed world spots
+BROOM_GRASPS=(('head',(BROOM['head_z'][1]/2,(BROOM['head_y'][0]+BROOM['head_y'][1])/2),BROOM_HEAD_Z,None,1.0),
+              ('handle',(-0.04,BROOM['handle_y']),BROOM_HANDLE_Z,None,0.7),
+              ('handle',(-0.08,BROOM['handle_y']),BROOM_HANDLE_Z,None,0.7))
 DRAG_RADII=(0.33,0.25)                 # a brush that is out of reach or in the way is first dragged by its handle to a point this far from the shoulder
 DRAG_ANGLES=(90.,80.,100.,70.,110.,60.,120.,50.,130.,40.,140.,30.,150.)   # directions (deg, from the shoulder, 90 = straight ahead) of the drag destinations
-DRAG_VIEW=(0.40,-0.28)                 # |x| / min y of the dragged brush centre: the head camera must still see it (blobs beyond |x| 0.45 are dropped)
 PUSH_CLEARANCE=0.01                    # pad face to brush edge before a push
-STAGING_REGION=(np.array([0.,-0.195]),0.,0.17,0.145)      # rect (centre, yaw, half extents) that any dustpan staging spot may occupy
 HANDLE_CARRY=0.17                      # a handle-pinched brush tips ~35 deg about the pinch: carry high so the head clears the dustpan
 GRIP_MIN={'pan':0.0008,'head':0.45,'handle':0.07,'cube':0.05}
 LIFT_YELLOW_RATIO=0.55                 # wrist-image yellow fraction after the lift relative to the closed frame: a held object keeps its apparent size
@@ -78,13 +75,16 @@ CUBE_GRASP_Z=TABLE_Z+0.017
 CUBE_LIFT=0.08
 CUBE_PRE_OPEN=0.75                     # 5.9 cm gap: +-2 cm of pinch tolerance on the 1.9 cm cube, a short finger footprint
 CUBE_RELEASE_OPEN=0.65
-DROPS=((0.,-0.075),(-0.025,-0.075),(0.025,-0.075),(-0.02,-0.05),(0.02,-0.05),(0.,-0.09),(-0.04,-0.085),(0.04,-0.085))   # pan-local; cubes roll 1-4 cm towards the mouth (-y) after landing (the circle ends at -0.134)
 DROP_TCP_DZ=0.045
 HOVER_DZ=0.12
 ACCEL=0.003
 TURN_RATE=np.deg2rad(10.)
 FINGER_PAD=0.037                       # finger thickness along the closing axis
 FINGER_WIDTH=0.06                      # pad width across (along the free axis)
+PAN_YAW_STEPS=np.deg2rad((0.,15.,-15.))  # dustpan target headings around the mouth-towards-the-cubes direction
+MOUTH_CONE=np.deg2rad(30.)             # the mouth faces the brush hand's (right arm's) side: within this of the shoulder-to-shoulder axis
+BRUSH_GAP=0.03                         # brush footprint to dustpan footprint at the sweep-end pose (the pan is set down within ~3 cm of its plan)
+CUBE_GAP=0.03                          # brush footprint to cube footprints (the head-camera cube filter drops blobs within 2 cm of the brush)
 
 
 def pose_from(R,p):return np.r_[np.asarray(p,float),matrix_quat(R)]
@@ -247,6 +247,28 @@ def clear_of(rect,alpha,others):
     return not any(rects_overlap(rect,alpha,r,yaw) for r,yaw in others)
 
 
+def pan_drop_points(n=8,step=0.005):
+    """Pan-local release points over the walled floor, from the released dustpan CAD part boxes: between the side walls and
+    from their front ends to the back block, inset by half a cube diagonal, keeping the open fingers (release gap, closing
+    along the pan's y axis, pads at the release height) clear of the parts taller than the pads. The first point is the one
+    nearest the back of that region, then outwards."""
+    gap=gap_of(CUBE_RELEASE_OPEN);pad_z=DROP_TCP_DZ-PAD_BELOW_TCP;inset=CUBE*np.sqrt(2.)/2.;a=np.pi/2
+    tall=object_rects('dustpan',(0.,0.),0.,0.,min_height=pad_z)
+    hx=np.arange(0.,PAN['wall_in']-inset+1e-9,step);xs=np.r_[-hx[:0:-1],hx];ys=np.arange(PAN['wall_y0']+inset,PAN['back_y']-inset+1e-9,step)
+    pts=np.array([(x,y) for x in xs for y in ys if clear_of(finger_rect((x,y),a,gap=gap,margin=0.),a,tall)])
+    if len(pts)==0:pts=np.array([[0.,(PAN['wall_y0']+PAN['back_y'])/2]])
+    # released cubes roll towards the open mouth (-y): points nearest the back-centre of the region first, spaced by 3/4 of a cube
+    ref=np.array([0.,pts[:,1].max()]);order=pts[np.lexsort((np.abs(pts[:,0]),np.linalg.norm(pts-ref,axis=1)))];out=[]
+    for q in order:
+        if len(out)>=n:break
+        if all(np.linalg.norm(q-o)>=0.75*CUBE for o in out):out.append(q)
+    return tuple(tuple(float(round(v,4)) for v in q) for q in out)
+
+
+DROPS=pan_drop_points()
+DROP_CENTRE=np.mean(np.asarray(DROPS),axis=0)    # pan-local centre of the release region (the pan target is placed by it)
+
+
 class Policy:
     def __init__(self,task,calibration,vision=None):
         if task!='sweep_blocks':raise ValueError('Sweep-blocks candidate only')
@@ -256,6 +278,7 @@ class Policy:
         self.det=None;self.tries=0;self.plan=None;self.tasks=[];self.ti=0;self.tphase=None;self.tage=0;self.tdwell=0;self.motion={}
         self.speed={};self.pan=None;self.broom=None;self.heading=dict(REST_ALPHA);self.n_cubes=0;self.placed=0;self.cycles=0
         self.broom_plan=None;self.pan_plan=None;self.cube_obstacles=[];self.rest_target=dict(REST_ALPHA);self.park_stage={};self.unflip={};self.avoid_local=None
+        self.targets=[];self.target=None;self.release_rects=[]
 
     # ---------------- helpers ----------------
     def stop(self,reason):self.finished=True;self.reason=reason
@@ -431,8 +454,8 @@ class Policy:
                 for pi,ang in enumerate(DRAG_ANGLES):
                     g_f=SHOULDER['left']+rad*np.array([np.cos(np.deg2rad(ang)),np.sin(np.deg2rad(ang))])
                     if float(np.linalg.norm(g_f-g))<0.06:continue
-                    origin_f=g_f-off;cen=origin_f+0.04*np.array([np.cos(byaw),np.sin(byaw)])
-                    if abs(cen[0])>DRAG_VIEW[0] or cen[1]<DRAG_VIEW[1]:continue
+                    origin_f=g_f-off
+                    if not self.head.on_table(np.vstack([r for r,_ in object_rects('broom',origin_f,byaw,0.)])):continue   # the head camera must still see it on the table
                     if any(rects_overlap(r,ry,q,qy) for r,ry in object_rects('broom',origin_f,byaw,0.015) for q,qy in final):continue
                     if not reachable(g_f,gz,'left',a_mod,0.):continue
                     head_f=broom_point(origin_f,byaw,BROOM_GRASPS[0][1])   # the head pinch after the drag must be clear of the dustpan
@@ -478,57 +501,140 @@ class Policy:
                                         turn_at_dest=True,carry_z=float(gz)))
         return min(options,key=lambda q:q['cost']) if options else None
 
-    def plan_broom(self,pan_rects,j6_start,allow_handle_carry=False,start=None,relaxed=False,pan_x=None):
-        """Brush pick and parking: the head pinch when it is reachable and clear of the dustpan (a handle pinch carried high only
-        when allowed). The parked brush origin must end >11 cm right of a staged dustpan at `pan_x`. None if nothing is feasible."""
+    def broom_dests(self,pan_xy,pan_yaw,extra=(),extra_tall=(),n_max=30):
+        """Brush set-down poses (origin, head heading, cost) where a sweep into the dustpan at (pan_xy, pan_yaw) ends: in front of
+        its mouth (perceived / target pose, CAD mouth edge), lying along the mouth axis or across it, its footprint clear of the
+        pan footprint by BRUSH_GAP, of the perceived cubes by CUBE_GAP and of `extra`, and on the table seen by the head camera.
+        Also sets the release-time finger obstacles (tall pan parts)."""
+        pan_xy=np.asarray(pan_xy,float);R=rot2(pan_yaw);m=R@np.array([0.,-1.]);l=R@np.array([1.,0.]);mouth=pan_xy+R@np.array([0.,PAN['mouth_y']])
+        self.release_rects=self.tall_pan_rects(pan_xy,pan_yaw)+list(extra_tall)
+        blockers=object_rects('dustpan',pan_xy,pan_yaw,BRUSH_GAP)+[r for c in (self.det.get('cubes') or []) for r in object_rects('cube',c['xy'],c['yaw'],CUBE_GAP)]+list(extra)
+        am=float(np.arctan2(m[1],m[0]));out=[]
+        for yaw_f,oc in ((am+np.pi,0.),(am+np.pi/2,0.1),(am-np.pi/2,0.1),(am,0.3)):      # head into the mouth, across (either way), handle into the mouth
+            for s in (0.04,0.06,0.08,0.11,0.145,0.18):
+                for t in (0.,0.04,-0.04,0.08,-0.08,0.12,-0.12,0.16,-0.16):     # laterally within the mouth width + half a brush
+                    o=mouth+s*m+t*l;rects=object_rects('broom',o,yaw_f,0.)
+                    if any(rects_overlap(r,ry,q,qy) for r,ry in rects for q,qy in blockers):continue
+                    # the left arm must be able to set it down there (flat pinch across the head or the handle, reach model)
+                    # (flat, at the grasp height and at the lowest carry height over the pan parts: the carry ends above it)
+                    if not any(reachable(o+broom_point(np.zeros(2),yaw_f,loc),gz,'left',yaw_f+np.pi/2+k*np.pi,0.) and reachable(o+broom_point(np.zeros(2),yaw_f,loc),BROOM_CARRY_FLOOR,'left',yaw_f+np.pi/2+k*np.pi,0.)
+                               for _,loc,gz,_,_ in BROOM_GRASPS for k in (0,1)):continue
+                    if not self.head.on_table(np.vstack([r for r,_ in rects])):continue
+                    out.append((o,float(yaw_f),float(oc+1.0*s+0.5*abs(t))))
+        out.sort(key=lambda q:q[2]);return out[:n_max]
+
+    def brush_dests_current(self):
+        """Brush destinations for the dustpan where it is going to stay: the staged pan, else the chosen target (then the pan
+        still standing at its perceived pose is an obstacle as well)."""
+        if self.pan is not None:return self.broom_dests(self.pan['origin'],self.pan['yaw'])
+        tg=self.target if self.target is not None else dict(origin=np.asarray(self.det['dustpan']['xy']),yaw=float(self.det['dustpan']['yaw']),stay=True)
+        d=self.det['dustpan']
+        if tg.get('stay'):return self.broom_dests(tg['origin'],tg['yaw'])
+        return self.broom_dests(tg['origin'],tg['yaw'],extra=object_rects('dustpan',d['xy'],d['yaw'],0.015),extra_tall=self.tall_pan_rects(d['xy'],d['yaw']))
+
+    def plan_broom(self,pan_rects,j6_start,allow_handle_carry=False,start=None,relaxed=False,dests=None):
+        """Brush pick and set-down: the head pinch when it is reachable and clear of the dustpan (a handle pinch carried high only
+        when allowed), set down at one of the sweep-end poses `dests` (broom_dests). None if nothing is feasible."""
         b=self.det.get('broom')
         if b is None:return None
+        if dests is None:dests=self.brush_dests_current()
+        if not dests:return None
         bxy=np.asarray(b['xy'],float);byaw=float(b['yaw']);options=[];clear_xy,start_a=start if start is not None else (CLEAR_TCP['left'][:2],REST_ALPHA['left'])
-        for gi,(gname,local,gz,yaws,pre_open) in enumerate(BROOM_GRASPS):
+        release=getattr(self,'release_rects',[])
+        for gi,(gname,local,gz,_,pre_open) in enumerate(BROOM_GRASPS):
             if gname=='handle' and not allow_handle_carry:continue
             g=broom_point(bxy,byaw,local);far=float(np.linalg.norm(g-SHOULDER['left']));off=broom_point(np.zeros(2),byaw,local)
-            if gname=='head':park=BROOM_PARK;nominal,floor=TABLE_Z+BROOM_LIFT,BROOM_CARRY_FLOOR
+            hang=None
+            if gname=='head':nominal,floor0=TABLE_Z+BROOM_LIFT,BROOM_CARRY_FLOOR
             else:
                 # the brush tips about the handle pinch and its head hangs below: carry it clear of the table, higher over anything swept
-                park=HANDLE_PARK;hang=(BROOM['head_z'][1]-local[0])*np.sin(HANDLE_TIP)+BROOM['head_x']
+                hang=(BROOM['head_z'][1]-local[0])*np.sin(HANDLE_TIP)+BROOM['head_x'];nominal=TABLE_Z+HANDLE_CARRY
                 swept=self.obstacles(cubes=True,margin=0.02)+pan_rects
-                clear=not any(rects_overlap(r,ry,o,oy) for s_ in (0.25,0.5,0.75,1.0) for r,ry in object_rects('broom',g+(park-g)*s_-off,byaw,0.015) for o,oy in swept)
-                nominal=TABLE_Z+HANDLE_CARRY;floor=TABLE_Z+hang+(0.012 if clear else 0.042)
             if relaxed and gname=='handle':pre_open=0.6
             for a_mod in (byaw+np.pi/2,byaw-np.pi/2):
                 if not clear_of(finger_rect(g,a_mod,gap=gap_of(pre_open),margin=0. if relaxed else 0.004),a_mod,pan_rects):continue
                 if gname=='handle' and list(local)==self.avoid_local:continue
                 pitch=pick_pitch(g,gz,'left',a_mod,gz+(0.03 if gname=='handle' else 0.04),max_pitch=np.deg2rad(12.) if (gname=='head' and not relaxed) else np.deg2rad(24.))   # a 36 deg lean never held the handle
                 if pitch is None:continue
-                for yi,yd in enumerate(yaws):
-                    yaw_f=np.deg2rad(yd);turn=wrap(yaw_f-byaw);a_f_mod=a_mod+turn
-                    if not reachable(park,gz,'left',a_f_mod,0.):continue
-                    origin_f=park-broom_point(np.zeros(2),yaw_f,local)
-                    if origin_f[0]-0.125*np.cos(yaw_f)>0.48 or origin_f[1]-0.125*np.sin(yaw_f)<-0.46:continue
-                    if pan_x is not None and origin_f[0]<=pan_x+0.11:continue
+                for di,(origin_f,yaw_f,dcost) in enumerate(dests):
+                    origin_f=np.asarray(origin_f,float);tcp_f=origin_f+broom_point(np.zeros(2),yaw_f,local)
+                    turn=wrap(yaw_f-byaw);a_f_mod=a_mod+turn
+                    if not reachable(tcp_f,gz,'left',a_f_mod,0.):continue
+                    if not clear_of(finger_rect(tcp_f,a_f_mod,margin=0.),a_f_mod,release):continue      # opening at the set-down must not hit the pan walls
+                    if hang is not None:
+                        clear=not any(rects_overlap(r,ry,o,oy) for s_ in (0.25,0.5,0.75,1.0) for r,ry in object_rects('broom',g+(tcp_f-g)*s_-off,byaw,0.015) for o,oy in swept)
+                        floor=TABLE_Z+hang+(0.012 if clear else 0.042)
+                    else:floor=floor0
                     for tad in ((True,) if pitch>0 else (True,False)):
-                        ok,a_pick,a_f,j6s,worst=self.carry_legs(j6_start,clear_xy,start_a,g,a_mod,a_f_mod,park,'left',tad)
+                        ok,a_pick,a_f,j6s,worst=self.carry_legs(j6_start,clear_xy,start_a,g,a_mod,a_f_mod,tcp_f,'left',tad)
                         if not ok:continue
-                        carry_z=carry_height(park,'left',a_pick if tad else a_f,a_f,pitch,nominal,floor)
+                        carry_z=carry_height(tcp_f,'left',a_pick if tad else a_f,a_f,pitch,nominal,floor)
                         if carry_z is None:continue
-                        cost=abs(a_f-a_pick)+2.*pitch+2.0*(gname!='head')+0.3*gi+0.15*yi+margin_cost(worst)+(0. if (tad==(far>0.40 or pitch>0)) else 0.3)
+                        cost=abs(a_f-a_pick)+2.*pitch+2.0*(gname!='head')+0.3*gi+2.*dcost+margin_cost(worst)+(0. if (tad==(far>0.40 or pitch>0)) else 0.3)
                         options.append(dict(kind='broom',side='left',grasp_kind=gname,drag=False,local=list(local),xy=bxy.tolist(),yaw=byaw,grasp=g.tolist(),alpha=a_pick,pitch=float(pitch),pre_open=float(pre_open),
-                                            grasp_z=float(gz),yaw_f=float(yaw_f),turn=float(a_f-a_pick),alpha_f=a_f,tcp_f=park.tolist(),origin_f=origin_f.tolist(),j6=j6s,cost=float(cost),
-                                            turn_at_dest=bool(tad),carry_z=float(carry_z)))
+                                            grasp_z=float(gz),yaw_f=float(yaw_f),turn=float(a_f-a_pick),alpha_f=a_f,tcp_f=tcp_f.tolist(),origin_f=origin_f.tolist(),j6=j6s,cost=float(cost),
+                                            turn_at_dest=bool(tad),carry_z=float(carry_z),dest=di))
         return min(options,key=lambda q:q['cost']) if options else None
 
-    def plan_pan(self,blockers,j6_start,start=None,brush_x=None):
-        """Dustpan pick (side wall at the centre of mass) and staging pose; None if nothing is reachable with a feasible wrist path.
-        The pan origin must end >11 cm left of the parked brush origin (`brush_x` when planned, else the head-pinch park)."""
+    def drops_reachable(self,origin,yaw):
+        """The right arm can release over enough of the pan's floor points (with ~3 cm placement error pushing them outwards)."""
+        drops=[np.asarray(origin,float)+rot2(yaw)@np.array(dp) for dp in DROPS]
+        return sum(any(drop_pitch(dp,yaw+da,0.03) is not None for da in (np.pi/2,-np.pi/2)) for dp in drops)>=int(np.ceil(0.6*len(drops)))
+
+    def pan_targets(self,blockers,n_max=10):
+        """Dustpan target poses dict(origin, yaw, cost, stay): first the perceived pose when the right arm can release over its
+        floor and its mouth faces the brush hand's (right arm's) side; then poses whose floor centre lies on a grid inside both
+        arms' reach (the left arm carries it, the right arm drops), nearest to the perceived cube cluster, mouth turned towards
+        the cluster (within MOUTH_CONE of the right arm's side), footprint clear of `blockers`, on the seen table, the drop
+        points reachable and a brush set-down pose free in front of the mouth."""
+        d=self.det['dustpan'];dxy=np.asarray(d['xy'],float);dyaw=float(d['yaw']);cubes=self.det.get('cubes') or []
+        F_now=dxy+rot2(dyaw)@DROP_CENTRE;C=np.mean([c['xy'] for c in cubes],axis=0) if cubes else F_now
+        side=unit(SHOULDER['right']-SHOULDER['left']);a_side=float(np.arctan2(side[1],side[0]));out=[];brush=self.det.get('broom') is not None
+        def facing(yaw):m=rot2(yaw)@np.array([0.,-1.]);return abs(wrap(float(np.arctan2(m[1],m[0]))-a_side))<=MOUTH_CONE+1e-6
+        if facing(dyaw) and self.drops_reachable(dxy,dyaw) and (not brush or self.broom_dests(dxy,dyaw)):
+            out.append(dict(origin=dxy,yaw=dyaw,cost=-1.,stay=True))
+        r_drop=reach_limit(TABLE_Z+CUBE_CARRY_MIN,'right',0.,0.)+0.03;r_pin=reach_limit(PAN_GRASP_Z,'left',0.,0.)+0.10
+        c0=SHOULDER['right'];cand=[]
+        for x in np.arange(c0[0]-r_drop,c0[0]+r_drop+1e-9,0.03):
+            for y in np.arange(c0[1]-r_drop,c0[1]+r_drop+1e-9,0.03):
+                F=np.array([x,y])
+                if np.linalg.norm(F-c0)>r_drop or np.linalg.norm(F-SHOULDER['left'])>r_pin:continue
+                v=C-F;phi=float(np.arctan2(v[1],v[0])) if np.linalg.norm(v)>0.02 else a_side
+                phi=a_side+float(np.clip(wrap(phi-a_side),-MOUTH_CONE,MOUTH_CONE))
+                for k,dy in enumerate(PAN_YAW_STEPS):
+                    ph=phi+dy
+                    if abs(wrap(ph-a_side))>MOUTH_CONE+1e-6:continue
+                    yaw=wrap(ph+np.pi/2);cand.append((float(np.linalg.norm(F-C))+0.5*float(np.linalg.norm(F-F_now))+0.05*k,F,yaw))
+        cand.sort(key=lambda q:q[0]);picked=[]
+        for cost,F,yaw in cand:
+            if len(picked)>=n_max:break
+            if any(np.linalg.norm(F-q)<0.05 for q in picked):continue
+            o=F-rot2(yaw)@DROP_CENTRE;rects=object_rects('dustpan',o,yaw,0.015)
+            if any(rects_overlap(r,ry,q,qy) for r,ry in rects for q,qy in blockers):continue
+            if not self.head.on_table(np.vstack([r for r,_ in object_rects('dustpan',o,yaw,0.)])):continue
+            if not self.drops_reachable(o,yaw):continue
+            if brush and len(self.broom_dests(o,yaw))<3:continue
+            picked.append(F);out.append(dict(origin=o,yaw=float(yaw),cost=float(cost),stay=False))
+        return out
+
+    def target_variants(self):
+        """The chosen dustpan target and the same floor centre turned by the target heading steps (a re-plan keeps the brush
+        set down in front of the mouth), then the other targets."""
+        tg=self.target;out=[]
+        if tg is not None and not tg.get('stay'):
+            F=np.asarray(tg['origin'],float)+rot2(tg['yaw'])@DROP_CENTRE
+            for dy in (0.,)+tuple(PAN_YAW_STEPS[1:]):
+                yaw=float(tg['yaw']+dy);out.append(dict(origin=F-rot2(yaw)@DROP_CENTRE,yaw=yaw,cost=float(tg['cost'])+0.05*(dy!=0.),stay=False))
+        return out+[q for q in self.targets if q is not tg]
+
+    def plan_pan(self,blockers,j6_start,start=None,targets=None):
+        """Dustpan pick (side wall at the centre of mass) and carry to one of the target poses (pan_targets); None if nothing is
+        reachable with a feasible wrist path."""
         d=self.det['dustpan'];dxy=np.asarray(d['xy'],float);dyaw=float(d['yaw']);options=[];clear_xy,start_a=start if start is not None else (CLEAR_TCP['left'][:2],REST_ALPHA['left'])
-        x_max=brush_x-0.11 if brush_x is not None else (BROOM_PARK[0]+0.06-0.13 if self.det.get('broom') is not None else None)
-        for si,spot in enumerate(PAN_SPOTS):
-            for yi,yaw_f in enumerate(PAN_YAWS):
-                origin_f=np.asarray(spot,float)-rot2(yaw_f)@np.array(PAN['support'])
-                if x_max is not None and origin_f[0]>x_max:continue
+        if targets is None:targets=self.targets
+        for si,tg in enumerate([q for q in targets if not q.get('stay')]):
+                origin_f=np.asarray(tg['origin'],float);yaw_f=float(tg['yaw']);yi=0
                 if any(rects_overlap(r,ry,o,oy) for r,ry in object_rects('dustpan',origin_f,yaw_f,0.015) for o,oy in blockers):continue
-                drops=[origin_f+rot2(yaw_f)@np.array(dp) for dp in DROPS]
-                if sum(any(drop_pitch(dp,yaw_f+da,0.03) is not None for da in (np.pi/2,-np.pi/2)) for dp in drops)<5:continue   # the pan lands within ~3 cm of the plan
                 for sx in (1.,-1.):
                   for pyi,py in enumerate(PAN_PINCH_YS):
                     pin=dustpan_point(dxy,dyaw,(sx*PAN_PINCH[0],py));pin_f=dustpan_point(origin_f,yaw_f,(sx*PAN_PINCH[0],py))
@@ -550,57 +656,93 @@ class Policy:
                             if not ok:continue
                             carry_z=carry_height(pin_f,'left',a_pick if tad else a_f,a_f,pitch,TABLE_Z+PAN_LIFT,PAN_CARRY_FLOOR)
                             if carry_z is None:continue
-                            cost=abs(a_f-a_pick)+2.*pitch+0.4*si+0.25*min(yi,1)+0.5*(yi>=2)+0.2*pyi+margin_cost(worst)+(0. if (tad==(far>0.40 or pitch>0)) else 0.3)+0.5*(slide is not None)
+                            cost=abs(a_f-a_pick)+2.*pitch+0.3*si+1.0*max(float(tg['cost']),0.)+0.2*pyi+margin_cost(worst)+(0. if (tad==(far>0.40 or pitch>0)) else 0.3)+0.5*(slide is not None)
                             options.append(dict(kind='pan',side='left',sx=sx,py=float(py),pin=pin.tolist(),alpha=a_pick,pitch=float(pitch),yaw_f=float(yaw_f),turn=float(a_f-a_pick),alpha_f=a_f,
                                                 origin_f=origin_f.tolist(),pin_f=pin_f.tolist(),spot=si,j6=j6s,cost=float(cost),turn_at_dest=bool(tad),carry_z=carry_z,slide=slide))
         return min(options,key=lambda q:q['cost']) if options else None
 
+    def drag_then_place_ok(self,bp,pan_rects,start,j6,dests):
+        """A drag / push only moves the brush within reach: it is useful when a set-down plan exists from where it ends up."""
+        if not bp.get('drag'):return True
+        saved=self.det['broom'];self.det['broom']=dict(saved,xy=list(bp['origin_f']),yaw=float(bp['yaw_f']))
+        try:ok=any(self.plan_broom(pan_rects,j6,start=start,dests=dests,**kw) is not None for kw in (dict(),dict(allow_handle_carry=True)))
+        finally:self.det['broom']=saved
+        return ok
+
     def plan_broom_after(self,pp,rest,j6_rest):
         """Brush plan from the rest pose once the dustpan is staged at `pp`: head pinch, else drag, push or a high handle carry."""
-        staged=self.tall_pan_rects(pp['origin_f'],pp['yaw_f']);full=object_rects('dustpan',pp['origin_f'],pp['yaw_f'],0.015);b=self.det['broom'];px=pp['origin_f'][0]
-        return self.plan_broom(staged,j6_rest,start=rest,pan_x=px) or self.plan_drag(b,staged,j6_rest,pan_full=full,start=rest) or self.plan_broom(staged,j6_rest,allow_handle_carry=True,start=rest,pan_x=px) or self.plan_push(b,staged,j6_rest,start=rest,pan_full=full) or self.plan_broom(staged,j6_rest,allow_handle_carry=True,start=rest,relaxed=True,pan_x=px)
+        staged=self.tall_pan_rects(pp['origin_f'],pp['yaw_f']);full=object_rects('dustpan',pp['origin_f'],pp['yaw_f'],0.015);b=self.det['broom']
+        # a drag ends beside the dustpan as it will land (~3 cm / ~10 deg off its plan): keep that much more room around it
+        wide=object_rects('dustpan',pp['origin_f'],pp['yaw_f'],0.035,min_height=0.02);wide_full=object_rects('dustpan',pp['origin_f'],pp['yaw_f'],0.035)
+        dests=self.broom_dests(pp['origin_f'],pp['yaw_f'])
+        if not dests:return None
+        return self.plan_broom(staged,j6_rest,start=rest,dests=dests) or self.plan_drag(b,wide,j6_rest,pan_full=wide_full,start=rest) or self.plan_broom(staged,j6_rest,allow_handle_carry=True,start=rest,dests=dests) or self.plan_push(b,staged,j6_rest,start=rest,pan_full=full) or self.plan_broom(staged,j6_rest,allow_handle_carry=True,start=rest,relaxed=True,dests=dests)
 
     def make_plan(self,obs):
         d=self.det['dustpan'];b=self.det['broom'];cubes=self.det['cubes'];self.n_cubes=len(cubes)
         self.broom_plan=None;self.pan_plan=None;j6_start=self.j6_now(obs,'left')
-        pan_now=object_rects('dustpan',d['xy'],d['yaw'],0.005);pan_tall=self.tall_pan_rects(d['xy'],d['yaw']);cubes_r=self.obstacles(cubes=True,margin=0.012)
-        park_rects=object_rects('broom',BROOM_PARK+np.array([0.06,0.014]),np.pi,0.01) if b is not None else []   # footprint of a head-pinched parked brush
+        pan_now=object_rects('dustpan',d['xy'],d['yaw'],0.015);pan_tall=self.tall_pan_rects(d['xy'],d['yaw']);cubes_r=self.obstacles(cubes=True,margin=0.012)
         broom_now=object_rects('broom',b['xy'],b['yaw'],0.01) if b is not None else []
-        rest=(REST_TCP['left'][:2],REST_ALPHA['left']);j6_rest=j6_of(rest[0],rest[1],'left');tasks=None
-        if b is not None:
-            # 1. brush first (head pinch), then the dustpan into a spot clear of the parked brush
-            bp=self.plan_broom(pan_tall,j6_start) or self.plan_broom(pan_tall,j6_start,relaxed=True)
-            pp=None if bp is None else self.plan_pan(cubes_r+object_rects('broom',bp['origin_f'],bp['yaw_f'],0.01),j6_rest,start=rest,brush_x=bp['origin_f'][0])
-            if pp is not None:tasks=[bp,pp]
-        if tasks is None:
-            # 2. dustpan first; the brush (if any) afterwards from wherever it is, with the staged dustpan as the obstacle
-            pp=self.plan_pan(cubes_r+park_rects+broom_now,j6_start)
+        rest=(REST_TCP['left'][:2],REST_ALPHA['left']);j6_rest=j6_of(rest[0],rest[1],'left');tasks=None;fallback=None;pp=None
+        self.targets=self.pan_targets(cubes_r)
+        self.log['targets']=[dict(origin=np.round(q['origin'],3).tolist(),yaw=round(float(np.degrees(q['yaw'])),1),cost=round(q['cost'],3),stay=q['stay']) for q in self.targets]
+        state=dict(fallback=None)
+        def head_only(pan_rects,j6,dests,start=None):
+            return self.plan_broom(pan_rects,j6,start=start,dests=dests) or self.plan_broom(pan_rects,j6,start=start,relaxed=True,dests=dests)
+        def try_target(tg,strict):
+            """strict: head pinches only (the reliable grasp); else drags, pushes and high handle carries as well."""
+            self.target=tg
+            if tg['stay']:
+                # the dustpan stays where it was perceived: only the brush is set down in front of its mouth
+                if b is None:return []
+                dests=self.broom_dests(tg['origin'],tg['yaw'])
+                bp=head_only(pan_tall,j6_start,dests)
+                if bp is None and not strict:
+                    bp=self.plan_drag(b,pan_tall,j6_start,keep_clear=pan_now)
+                    if bp is not None and not self.drag_then_place_ok(bp,pan_tall,rest,j6_rest,dests):
+                        if state['fallback'] is None:state['fallback']=(tg,[bp])
+                        bp=None
+                    if bp is not None:self.events['broom_dragged_first']=1
+                    if bp is None:bp=self.plan_broom(pan_tall,j6_start,allow_handle_carry=True,dests=dests)
+                return None if bp is None else [bp]
+            if b is None:
+                pp=self.plan_pan(cubes_r,j6_start,targets=[tg])
+                return None if pp is None else [pp]
+            # 1. brush first (set down in front of the target's mouth, clear of the dustpan still standing where it was), then the dustpan
+            dests=self.broom_dests(tg['origin'],tg['yaw'],extra=pan_now,extra_tall=pan_tall)
+            bp=head_only(pan_tall,j6_start,dests) if dests else None
+            pp=None if bp is None else self.plan_pan(cubes_r+object_rects('broom',bp['origin_f'],bp['yaw_f'],0.01),j6_rest,start=rest,targets=[tg])
+            if pp is not None:return [bp,pp]
+            # 2. dustpan first (clear of the brush where it lies); the brush afterwards, with the staged dustpan as the obstacle
+            pp=self.plan_pan(cubes_r+broom_now,j6_start,targets=[tg])
             if pp is not None:
-                tasks=[pp];self.events['broom_after_pan']=1
-                if b is not None:
-                    bp2=self.plan_broom_after(pp,rest,j6_rest)
-                    if bp2 is not None:tasks.append(bp2)
-                    else:self.events['broom_unreachable']=1
-        if tasks is None and b is not None:
-            # 3. the brush lies in the staging area and cannot be head-pinched: drag it aside first, clear of the staging region
-            keep=[(rect_corners(STAGING_REGION[0],STAGING_REGION[1],STAGING_REGION[2],STAGING_REGION[3]),STAGING_REGION[1])]
-            dg=self.plan_drag(b,pan_tall,j6_start,keep_clear=keep+pan_now)
-            pp=None if dg is None else self.plan_pan(cubes_r+park_rects+object_rects('broom',dg['origin_f'],dg['yaw_f'],0.01),j6_rest,start=rest)
-            if pp is not None:tasks=[dg,pp];self.events['broom_dragged_first']=1
-        if tasks is None and b is not None:
-            # 4. else carry it by the handle (high) to the park first
-            bh=self.plan_broom(pan_tall,j6_start,allow_handle_carry=True)
-            pp=None if bh is None else self.plan_pan(cubes_r+object_rects('broom',bh['origin_f'],bh['yaw_f'],0.01),j6_rest,start=rest,brush_x=bh['origin_f'][0])
-            if pp is not None:tasks=[bh,pp];self.events['broom_carried_first']=1
-        if tasks is None and b is not None:
-            # 5. dustpan first into whatever spot fits without the parking footprint: the brush is parked later, wherever fits
-            pp=self.plan_pan(cubes_r+broom_now,j6_start)
-            if pp is not None:
-                tasks=[pp];self.events['broom_after_pan']=1
-                bp2=self.plan_broom_after(pp,rest,j6_rest)
-                if bp2 is not None:tasks.append(bp2)
-                else:self.events['broom_unreachable']=1
+                dests2=self.broom_dests(pp['origin_f'],pp['yaw_f']);staged=self.tall_pan_rects(pp['origin_f'],pp['yaw_f'])
+                bp2=head_only(staged,j6_rest,dests2,start=rest) if strict else self.plan_broom_after(pp,rest,j6_rest)
+                if bp2 is not None and self.drag_then_place_ok(bp2,staged,rest,j6_rest,self.broom_dests(pp['origin_f'],pp['yaw_f'])):
+                    self.events['broom_after_pan']=1;return [pp,bp2]
+                if state['fallback'] is None or len(state['fallback'][1])<2:state['fallback']=(tg,[pp]+([bp2] if bp2 is not None else []))
+            if strict:return None
+            # 3. the brush carried high by its handle first, then the dustpan
+            dests=self.broom_dests(tg['origin'],tg['yaw'],extra=pan_now,extra_tall=pan_tall)
+            bh=self.plan_broom(pan_tall,j6_start,allow_handle_carry=True,dests=dests) if dests else None
+            pp=None if bh is None else self.plan_pan(cubes_r+object_rects('broom',bh['origin_f'],bh['yaw_f'],0.01),j6_rest,start=rest,targets=[tg])
+            if pp is not None:self.events['broom_carried_first']=1;return [bh,pp]
+            return None
+        for strict,limit in ((True,6),(False,len(self.targets))):
+            for tg in self.targets[:limit]:
+                tasks=try_target(tg,strict)
+                if tasks is not None:break
+            if tasks is not None:break
+        fallback=state['fallback']
+        if tasks is None and fallback is not None:
+            self.target,tasks=fallback;self.events['broom_unreachable']=1
         if tasks is None:self.stop('dustpan_unreachable');return False
+        tg=self.target
+        pp=next((t for t in tasks if t['kind']=='pan'),None)
+        if pp is None:
+            # staying dustpan: its perceived pose is the staged pose
+            pp=dict(kind='pan',stay=True,origin_f=np.asarray(tg['origin']).tolist(),yaw_f=float(tg['yaw']));self.pan=dict(origin=np.asarray(tg['origin'],float),yaw=float(tg['yaw']))
+            self.events['pan_stays']=1
         if b is None:self.events['broom_undetected']=1
         tasks.append(dict(kind='cubes',side='right'))
         self.tasks=tasks;self.ti=0;self.tphase=None
@@ -609,8 +751,9 @@ class Policy:
                        broom=None if b is None else dict(xy=np.round(b['xy'],3).tolist(),yaw=round(float(np.degrees(b['yaw'])),1),iou=round(b['iou'],3)),
                        cubes=[dict(xy=np.round(c['xy'],3).tolist(),yaw=round(float(np.degrees(c['yaw'])),1),iou=round(c['iou'],3)) for c in cubes],
                        order=[t['kind'] for t in tasks],j6_start=round(float(np.degrees(j6_start)),1),
-                       pan=dict(sx=pp['sx'],pitch=round(float(np.degrees(pp['pitch'])),1),yaw_f=round(float(np.degrees(pp['yaw_f'])),1),turn=round(float(np.degrees(pp['turn'])),1),spot=pp['spot'],j6=pp['j6']),
-                       brush=None if bpl is None else dict(grasp=bpl['grasp_kind'],drag=bool(bpl.get('drag')),pitch=round(float(np.degrees(bpl['pitch'])),1),yaw_f=round(float(np.degrees(bpl['yaw_f'])),1),turn=round(float(np.degrees(bpl['turn'])),1),j6=bpl['j6']),
+                       target=dict(origin=np.round(tg['origin'],3).tolist(),yaw=round(float(np.degrees(tg['yaw'])),1),stay=bool(tg['stay']),cost=round(float(tg['cost']),3)),
+                       pan=None if pp.get('stay') else dict(sx=pp['sx'],pitch=round(float(np.degrees(pp['pitch'])),1),yaw_f=round(float(np.degrees(pp['yaw_f'])),1),turn=round(float(np.degrees(pp['turn'])),1),spot=pp['spot'],j6=pp['j6']),
+                       brush=None if bpl is None else dict(grasp=bpl['grasp_kind'],drag=bool(bpl.get('drag')),pitch=round(float(np.degrees(bpl['pitch'])),1),yaw_f=round(float(np.degrees(bpl['yaw_f'])),1),turn=round(float(np.degrees(bpl['turn'])),1),j6=bpl['j6'],origin_f=np.round(bpl['origin_f'],3).tolist()),
                        tasks=[self.jsonable(t) for t in tasks])
         return True
 
@@ -753,7 +896,7 @@ class Policy:
                         if f is not None:self.det['dustpan']=dict(f)
                         if b2 is not None:self.det['broom']=b2
                         j6s=self.j6_now(obs,side);start=(self.cur_tcp(obs,side)[:2],self.heading[side])
-                        new=self.plan_pan(self.obstacles(cubes=True,margin=0.012)+brects,j6s,start=start)
+                        new=self.plan_pan(self.obstacles(cubes=True,margin=0.012)+brects,j6s,start=start,targets=self.target_variants())
                         if new is not None:
                             new['retries']=t.get('retries',0);t.clear();t.update(new);self.pan_plan=t;self.events['pan_replanned']=self.step
                             self.log.setdefault('tasks',[]).append(dict(ti=self.ti,step=self.step,replanned=True,**self.jsonable({k:v for k,v in t.items()})))
@@ -768,8 +911,9 @@ class Policy:
             new=None
             if det2.get('broom') is not None:
                 self.det['broom']=det2['broom'];pan_rects=self.tall_pan_rects(self.pan['origin'],self.pan['yaw']) if self.pan is not None else self.tall_pan_rects(self.det['dustpan']['xy'],self.det['dustpan']['yaw'])
-                full=object_rects('dustpan',self.pan['origin'],self.pan['yaw'],0.015) if self.pan is not None else None;px=None if self.pan is None else float(self.pan['origin'][0])
-                new=self.plan_broom(pan_rects,j6s,start=start,pan_x=px) or self.plan_drag(self.det['broom'],pan_rects,j6s,start=start,pan_full=full) or self.plan_broom(pan_rects,j6s,allow_handle_carry=True,start=start,pan_x=px) or self.plan_push(self.det['broom'],pan_rects,j6s,start=start,pan_full=full) or self.plan_broom(pan_rects,j6s,allow_handle_carry=True,start=start,relaxed=True,pan_x=px)
+                full=object_rects('dustpan',self.pan['origin'],self.pan['yaw'],0.015) if self.pan is not None else None
+                dests=self.brush_dests_current()
+                new=None if not dests else (self.plan_broom(pan_rects,j6s,start=start,dests=dests) or self.plan_drag(self.det['broom'],pan_rects,j6s,start=start,pan_full=full) or self.plan_broom(pan_rects,j6s,allow_handle_carry=True,start=start,dests=dests) or self.plan_push(self.det['broom'],pan_rects,j6s,start=start,pan_full=full) or self.plan_broom(pan_rects,j6s,allow_handle_carry=True,start=start,relaxed=True,dests=dests))
             if new is None:self.events.setdefault('deferred_unplanned',[]).append(self.ti);self.finish_task();return
             new['deferred']=True;new['retries']=0;t.clear();t.update(new);self.broom_plan=t
             self.cube_obstacles=[]
@@ -798,12 +942,12 @@ class Policy:
         if t['kind']=='pan' and det2.get('dustpan') is not None:
             self.det['dustpan']=det2['dustpan'];self.det['cubes']=det2['cubes'] or self.det['cubes']
             blockers=self.obstacles(cubes=True,margin=0.012)+(object_rects('broom',self.broom['origin'],self.broom['yaw'],0.01) if self.broom is not None else (object_rects('broom',self.det['broom']['xy'],self.det['broom']['yaw'],0.01) if self.det.get('broom') else []))
-            new=self.plan_pan(blockers,j6s,start=start)
+            new=self.plan_pan(blockers,j6s,start=start,targets=self.target_variants())
         elif t['kind']=='broom' and det2.get('broom') is not None:
             self.det['broom']=det2['broom']
             pan_rects=self.tall_pan_rects(self.pan['origin'],self.pan['yaw']) if self.pan is not None else self.tall_pan_rects(self.det['dustpan']['xy'],self.det['dustpan']['yaw'])
-            px=None if self.pan is None else float(self.pan['origin'][0])
-            new=self.plan_broom(pan_rects,j6s,start=start,pan_x=px) or (None if t.get('dragged') else self.plan_drag(self.det['broom'],pan_rects,j6s,start=start)) or self.plan_broom(pan_rects,j6s,allow_handle_carry=True,start=start,pan_x=px) or (None if t.get('pushed') else self.plan_push(self.det['broom'],pan_rects,j6s,start=start)) or (self.plan_broom(pan_rects,j6s,allow_handle_carry=True,start=start,relaxed=True,pan_x=px) if not any(x['kind']=='pan' for x in self.tasks[self.ti+1:]) else None)
+            dests=self.brush_dests_current()
+            new=None if not dests else (self.plan_broom(pan_rects,j6s,start=start,dests=dests) or (None if t.get('dragged') else self.plan_drag(self.det['broom'],pan_rects,j6s,start=start)) or self.plan_broom(pan_rects,j6s,allow_handle_carry=True,start=start,dests=dests) or (None if t.get('pushed') else self.plan_push(self.det['broom'],pan_rects,j6s,start=start)) or (self.plan_broom(pan_rects,j6s,allow_handle_carry=True,start=start,relaxed=True,dests=dests) if not any(x['kind']=='pan' for x in self.tasks[self.ti+1:]) else None))
             if new is not None:new['pushed']=bool(t.get('pushed') or new.get('push'))
         else:new=None
         if new is None:
@@ -1046,7 +1190,7 @@ class Policy:
 
     def diagnostics(self):
         t=self.tasks[self.ti] if self.ti<len(self.tasks) else None
-        return dict(step=self.step,phase=self.phase,age=self.age,reason=self.reason,finished=self.finished,candidate='SWP13',
+        return dict(step=self.step,phase=self.phase,age=self.age,reason=self.reason,finished=self.finished,candidate='sweep_blocks',
                     task=None if t is None else dict(ti=self.ti,kind=t['kind'],side=t['side'],tphase=self.tphase,tage=self.tage),
                     motion=self.motion,plan=self.plan,events=self.events,log=self.log,grips=self.grips,pan=self.log.get('pan'),placed=self.placed,cycles=self.cycles,
                     heading={s:round(float(np.degrees(v)),1) for s,v in self.heading.items()})

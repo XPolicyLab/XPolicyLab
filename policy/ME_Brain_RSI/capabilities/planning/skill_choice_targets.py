@@ -1,27 +1,30 @@
 import numpy as np
 from scipy.spatial.transform import Rotation,Slerp
 from .core import EpisodeCore,rot,quat
-from .grasp_rgb import envelope
+from .grasp_rgb import envelope,table_z,APPROACH_CLEARANCE,LIFT_CLEARANCE,PREOPEN
 DURATIONS=[16,12,12,16,12,16,12,8,10,16]
 
-def targets(source,destination,arm,origin,thickness,flip=False,carry_height=.985):
+def targets(source,destination,arm,origin,thickness,flip=False,carry_height=None):
+    # Tool heights are clearances above the table plane derived from the robot base pose.
+    table=table_z();approach_height=table+APPROACH_CLEARANCE;lift_height=table+LIFT_CLEARANCE
+    if carry_height is None:carry_height=lift_height
     m=EpisodeCore({});m.arm=arm
     def contact(p,z):
         v=m.contact_pose(p,z)
         if flip:v[3:]=quat(Rotation.from_euler('z',np.pi)*rot(v[3:]))
         return v
-    approach=m.grasp_pose(source,arm,.965)
+    approach=m.grasp_pose(source,arm,approach_height)
     if thickness is None:
         if flip:approach[3:]=quat(Rotation.from_euler('z',np.pi)*rot(approach[3:]))
         return [approach]
-    pre=contact(source,.965);down=contact(source,.965);down[2]=envelope(down)['tangent_z']+thickness/2
-    lifted=down.copy();lifted[2]=.985
+    pre=contact(source,approach_height);down=contact(source,approach_height);down[2]=envelope(down)['tangent_z']+thickness/2
+    lifted=down.copy();lifted[2]=lift_height
     transfer=contact(destination,carry_height);placed=transfer.copy();placed[2]=envelope(placed)['tangent_z']+thickness/2
     return [approach,pre,down,down.copy(),lifted,transfer,placed,placed.copy(),transfer.copy(),origin[arm+'_ee_pose']]
 
-def queue(source,destination,arm,state,origin,thickness,flip=False,first=0,carry_height=.985,joint_return=False,winding=(0,0)):
+def queue(source,destination,arm,state,origin,thickness,flip=False,first=0,carry_height=None,joint_return=False,winding=(0,0)):
     poses=targets(source,destination,arm,origin,thickness,flip,carry_height);out=[];start=state[arm+'_ee_pose']
-    preopen=float(np.clip(((.060+.008-.00080716)/2+.01)/.054,0,1))
+    preopen=PREOPEN
     for stage in range(first,len(poses)):
         target=poses[stage];duration=DURATIONS[stage];settle=4
         slow_winding=winding[0]!=0 and winding[1]==0

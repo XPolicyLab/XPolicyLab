@@ -75,6 +75,26 @@
         "TRANSFORMERS_OFFLINE": "1",
         "TOKENIZERS_PARALLELISM": "false"
       }
+    },
+    "build_tower": {
+      "environment": {
+        "SND_SAM_ROOT": "../../../runs/ME_Brain_RSI/sam3_requests"
+      }
+    },
+    "sort_nesting_dolls_by_size": {
+      "environment": {
+        "SND_SAM_ROOT": "../../../runs/ME_Brain_RSI/sam3_requests"
+      }
+    },
+    "sort_nesting_dolls_by_size_random": {
+      "environment": {
+        "SND_SAM_ROOT": "../../../runs/ME_Brain_RSI/sam3_requests"
+      }
+    },
+    "pour_liquid_into_cup": {
+      "environment": {
+        "SND_SAM_ROOT": "../../../runs/ME_Brain_RSI/sam3_requests"
+      }
     }
   }
 }

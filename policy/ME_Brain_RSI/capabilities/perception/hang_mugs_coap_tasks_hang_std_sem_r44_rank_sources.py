@@ -70,25 +70,35 @@ def _foreground(ctx, view):
 def _rgb_seeds(ctx, holder, views, original):
     """Propose current image circles and detector entities without a rack-distance exclusion."""
     image=views['cam_head']['image']
-    bounds=np.array([[-.65,-.40],[.65,-.40],[.65,.48],[-.65,.48]])
+    x0,y0,x1,y1=ctx.perception.workspace_rectangle(image.shape)
+    width,height=int(round((x1-x0)*600.)),int(round((y1-y0)*600.))
+    bounds=np.array([[x0,y0],[x1,y0],[x1,y1],[x0,y1]])
     projection=_project(ctx,np.c_[bounds,np.full(4,ctx.table_z+.075)]).astype(np.float32)
-    destination=np.array([[0.,0.],[780.,0.],[780.,528.],[0.,528.]],np.float32)
+    destination=np.array([[0.,0.],[width,0.],[width,height],[0.,height]],np.float32)
     transform=cv2.getPerspectiveTransform(projection,destination)
-    warped=cv2.warpPerspective(image,transform,(780,528))
+    warped=cv2.warpPerspective(image,transform,(width,height))
     gray=cv2.cvtColor(warped,cv2.COLOR_RGB2GRAY)
     circles=cv2.HoughCircles(gray,cv2.HOUGH_GRADIENT,1.,22,param1=80,param2=14,minRadius=13,maxRadius=32)
-    seeds=[]
+    seeds=[];rejected=[]
     for item in original:
         pixel=np.asarray(item.get('pixel',ctx.perception.world_to_pixel(
             np.asarray(item['position']),'cam_head',ctx.state)))
         seeds.append(dict(pixel=pixel,radius=.035,origin='current_G_RGB_entity'))
     if circles is not None:
         for x,y,radius in circles[0]:
-            center=np.array([x,y])/600.+[-.65,-.40]
+            center=np.array([x,y])/600.+[x0,y0]
+            if not ctx.perception.in_workspace(center,image.shape):
+                continue
             pixel=_project(ctx,np.r_[center,ctx.table_z+.075][None])[0]
             if any(np.linalg.norm(pixel-seed['pixel'])<7. for seed in seeds):
                 continue
+            # A circle imaged on the measured robot body (public collision geometry at the
+            # measured joints, incl. wrist-camera housings) is not a cup.
+            if ctx.perception.robot_occludes(pixel,ctx.table_z+.075,ctx.state,image.shape):
+                rejected.append(center.tolist())
+                continue
             seeds.append(dict(pixel=pixel,radius=float(radius/600.),origin='current_RGB_circle'))
+    ctx.memory['hang_robot_body_rejected_circles']=rejected
     return seeds
 
 

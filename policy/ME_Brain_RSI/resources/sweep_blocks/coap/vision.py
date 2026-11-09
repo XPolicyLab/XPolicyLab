@@ -1,9 +1,10 @@
-"""RGB-only perception for sweep_blocks from the fixed head camera.
+"""RGB-only perception for sweep_blocks from the robot-mounted head camera.
 
 Public geometry only: the released dustpan (Rigid/broom_shovel/00000), brush (Rigid/broom/00000) and small_cube meshes
-(extents measured from the assets) and the released head-camera calibration. The scene is the fixed wood table of the
-standard tasks, so the wood-colour background model of the pour-balls policy is reused. No layout, depth or object pose
-is read.
+(extents measured from the assets) and the released head-camera calibration. The table plane is the mounting plane of the
+arm bases (robot static config); the table region is estimated per frame from the image (largest wood-coloured component,
+filled hull) intersected with the camera frustum. No layout window, no spawn-range prior, no heading prior, no depth and
+no object pose is read: dustpan / brush / cubes are told apart by size and CAD-silhouette fit scores only.
 """
 import numpy as np
 import cv2
@@ -11,13 +12,13 @@ from .geometry import Camera,quat_matrix
 from .kinematics import SerialArm
 from . import wristcam
 
-TABLE_Z=0.765
-WORKSPACE=dict(x=(-0.55,0.55),y=(-0.36,0.12))
-IMAGE_REGION=dict(x=(-0.58,0.58),y=(-0.38,0.30))
+TABLE_Z=float(SerialArm.public_x5('left').base[2,3])   # the arms are mounted on the table top: table plane = arm base height
+CUBE_FIT_MIN=0.6           # CAD-silhouette IoU a blob must reach to count as a cube (wood seams / shadows fit at ~0.4)
 CUBE=0.0192                # small_cube edge as released (the layout's physics size 0.035 is not applied; the cube rests 0.96 cm up)
-PAN=dict(half_x=0.092,mouth_y=-0.14,back_y=0.0,wall_in=0.06,wall_h=0.042,floor_h=0.003,back_h=0.048,back_half_x=0.06,back_len=0.04,
-         handle_half_x=0.015,handle_y=(0.04,0.14),handle_z=(0.036,0.048),rest_z=0.0243,support=(0.0,-0.053),support_r=0.081)
+PAN=dict(half_x=0.092,mouth_y=-0.14,back_y=0.0,wall_in=0.06,wall_h=0.042,wall_y0=-0.10,floor_h=0.003,back_h=0.048,back_half_x=0.06,back_len=0.04,
+         handle_half_x=0.015,handle_y=(0.04,0.14),handle_z=(0.036,0.048),rest_z=0.0243)
 BROOM=dict(handle_r=0.011,handle_z=(-0.125,0.0),handle_y=0.027,head_x=0.0187,head_y=(-0.041,0.013),head_z=(0.0,0.125),rest_z=0.0142)
+ROBOT_BASES=[np.asarray(SerialArm.public_x5(s).base[:2,3],float) for s in ('left','right')]
 
 
 def wrap(a):return (a+np.pi)%(2*np.pi)-np.pi
@@ -35,8 +36,8 @@ def dustpan_parts(xy,yaw):
     """World-frame corner sets of the dustpan parts (pan, back block, handle) for the asset origin at table point xy."""
     R=rot2(yaw);base=np.r_[np.asarray(xy,float),TABLE_Z]
     parts=[box(-PAN['half_x'],PAN['half_x'],PAN['mouth_y'],PAN['back_y'],0.,0.012),
-           box(-PAN['half_x'],-PAN['wall_in'],-0.10,PAN['back_y'],0.,PAN['wall_h']),
-           box(PAN['wall_in'],PAN['half_x'],-0.10,PAN['back_y'],0.,PAN['wall_h']),
+           box(-PAN['half_x'],-PAN['wall_in'],PAN['wall_y0'],PAN['back_y'],0.,PAN['wall_h']),
+           box(PAN['wall_in'],PAN['half_x'],PAN['wall_y0'],PAN['back_y'],0.,PAN['wall_h']),
            box(-PAN['back_half_x'],PAN['back_half_x'],PAN['back_y'],PAN['back_y']+PAN['back_len'],0.,PAN['back_h']),
            box(-PAN['handle_half_x'],PAN['handle_half_x'],PAN['handle_y'][0],PAN['handle_y'][1],PAN['handle_z'][0],PAN['handle_z'][1])]
     return [base+np.c_[p[:,:2]@R.T,p[:,2]] for p in parts]
@@ -74,8 +75,8 @@ def cube_parts(xy,yaw):
     return [np.r_[np.asarray(xy,float),TABLE_Z]+np.c_[p[:,:2]@R.T,p[:,2]]]
 
 
-PARTS=dict(dustpan=dustpan_parts,broom=broom_parts,cube=cube_parts)
-YAW_PERIOD=dict(dustpan=2*np.pi,broom=2*np.pi,cube=np.pi/2)
+PARTS=dict(dustpan=dustpan_parts,broom=broom_parts,cube=cube_parts,broom_head=lambda xy,yaw:broom_parts(xy,yaw)[1:])
+YAW_PERIOD=dict(dustpan=2*np.pi,broom=2*np.pi,cube=np.pi/2,broom_head=2*np.pi)
 
 
 def rect_corners(xy,yaw,hx,hy):
@@ -100,8 +101,8 @@ def object_rects(kind,xy,yaw,margin=0.,min_height=0.):
     def rect(cx,cy,hx,hy):return (rect_corners(xy+R@np.array([cx,cy]),yaw,hx+margin,hy+margin),yaw)
     if kind=='dustpan':
         parts=[(0.008,rect(0.,(PAN['mouth_y']+PAN['back_y'])/2,PAN['half_x'],(PAN['back_y']-PAN['mouth_y'])/2)),
-               (PAN['wall_h'],rect(-(PAN['wall_in']+PAN['half_x'])/2,-0.05,(PAN['half_x']-PAN['wall_in'])/2,0.05)),
-               (PAN['wall_h'],rect((PAN['wall_in']+PAN['half_x'])/2,-0.05,(PAN['half_x']-PAN['wall_in'])/2,0.05)),
+               (PAN['wall_h'],rect(-(PAN['wall_in']+PAN['half_x'])/2,(PAN['wall_y0']+PAN['back_y'])/2,(PAN['half_x']-PAN['wall_in'])/2,(PAN['back_y']-PAN['wall_y0'])/2)),
+               (PAN['wall_h'],rect((PAN['wall_in']+PAN['half_x'])/2,(PAN['wall_y0']+PAN['back_y'])/2,(PAN['half_x']-PAN['wall_in'])/2,(PAN['back_y']-PAN['wall_y0'])/2)),
                (PAN['back_h'],rect(0.,PAN['back_y']+PAN['back_len']/2,PAN['back_half_x'],PAN['back_len']/2)),
                (PAN['handle_z'][1],rect(0.,(PAN['handle_y'][0]+PAN['handle_y'][1])/2,PAN['handle_half_x'],(PAN['handle_y'][1]-PAN['handle_y'][0])/2))]
         return [r for h,r in parts if h>=min_height]
@@ -211,8 +212,8 @@ class HeadVision:
             distance=(TABLE_Z-origin[2])/rays[:,2]
         world=origin+distance[:,None]*rays
         ok=np.isfinite(distance)&(distance>0)
-        self.table=(ok&(world[:,0]>WORKSPACE['x'][0])&(world[:,0]<WORKSPACE['x'][1])&(world[:,1]>WORKSPACE['y'][0])&(world[:,1]<WORKSPACE['y'][1])).reshape(h,w)
-        self.region=(ok&(world[:,0]>IMAGE_REGION['x'][0])&(world[:,0]<IMAGE_REGION['x'][1])&(world[:,1]>IMAGE_REGION['y'][0])&(world[:,1]<IMAGE_REGION['y'][1])).reshape(h,w)
+        # frustum x table plane; the table itself (its extent) is estimated from each frame (table_region)
+        self.frustum=ok.reshape(h,w);self.table=self.frustum.copy();self.region=self.frustum.copy();self.table_hull=None;self.region_band=None
         self.world=world.reshape(h,w,3);self.ok=ok.reshape(h,w);self.shape=(h,w)
         self.renderer=Renderer(self.cam.project,(h,w));self.log={};self.arms={s:SerialArm.public_x5(s) for s in ('left','right')}
 
@@ -245,14 +246,50 @@ class HeadVision:
                 cv2.line(m,tuple(pix[i]),tuple(pix[i+1]),1,int(2*max(radius[i],radius[i+1])));cv2.circle(m,tuple(pix[i]),radius[i],1,-1)
         return cv2.dilate(m,np.ones((9,9),np.uint8))
 
+    def table_region(self,hsv,robot):
+        """Table top seen by the head camera: the wood hue is the median hue of the saturated frustum pixels (the table fills
+        most of the view; floor and walls are grey), the table is the largest wood-coloured component, filled by its convex
+        hull (objects on the table lie inside it) and eroded by a few pixels at its border."""
+        H=hsv[...,0].astype(int);S=hsv[...,1].astype(int)
+        sample=self.frustum&~robot&(S>=60)
+        if np.count_nonzero(sample)<500:sample=self.frustum&~robot
+        hm=float(np.median(H[sample]))
+        wood=(wood_mask(hsv,hm)&self.frustum).astype(np.uint8)
+        wood=cv2.morphologyEx(wood,cv2.MORPH_OPEN,np.ones((3,3),np.uint8))
+        n,lab,stats,_=cv2.connectedComponentsWithStats(wood,connectivity=8)
+        hull=np.zeros(self.shape,np.uint8)
+        if n>=2:
+            i=1+int(np.argmax(stats[1:,cv2.CC_STAT_AREA]));vv,uu=np.nonzero(lab==i)
+            pts=np.c_[uu,vv].astype(np.int32).reshape(-1,1,2);cv2.fillConvexPoly(hull,cv2.convexHull(pts),1)
+            hull=cv2.erode(hull,np.ones((7,7),np.uint8))
+        else:hull[:]=1
+        hull=hull.astype(bool)&self.frustum
+        # the table does not change: an arm crossing the view can cut the wood region, so a markedly smaller hull keeps the last one
+        if self.table_hull is not None and np.count_nonzero(hull)<0.95*np.count_nonzero(self.table_hull):hull=self.table_hull
+        self.table_hull=hull
+        return hm,self.table_hull
+
+    def on_table(self,points_xy):
+        """True when every table-plane point lies on the table region seen in the last head frame (inside the image)."""
+        if self.table_hull is None:return True
+        p=np.asarray(points_xy,float).reshape(-1,2);pix=self.project(np.c_[p,np.full(len(p),TABLE_Z)])
+        if pix is None or not np.all(np.isfinite(pix)):return False
+        u=np.round(pix[:,0]).astype(int);v=np.round(pix[:,1]).astype(int);h,w=self.shape
+        if np.any((u<0)|(u>=w)|(v<0)|(v>=h)):return False
+        return bool(np.all(self.table_hull[v,u]))
+
     def object_mask(self,rgb,ee_poses,joints=None):
         hsv=cv2.cvtColor(np.ascontiguousarray(rgb[...,:3]),cv2.COLOR_RGB2HSV)
         H=hsv[...,0].astype(int);S=hsv[...,1].astype(int);V=hsv[...,2].astype(int)
         robot=self.robot_mask(ee_poses,rgb.shape[:2],joints).astype(bool)
-        sample=self.table&~robot
-        hm=float(np.median(H[sample]));sm=float(np.median(S[sample]));vm=float(np.median(V[sample]))
+        hm,region=self.table_region(hsv,robot)
+        self.table=region;self.region=region
+        self.region_band=region&~cv2.erode(region.astype(np.uint8),np.ones((7,7),np.uint8)).astype(bool)
+        sample=region&~robot
+        if np.count_nonzero(sample)<100:sample=self.frustum&~robot
+        sm=float(np.median(S[sample]));vm=float(np.median(V[sample]))
         wood=wood_mask(hsv,hm)
-        obj=~wood&self.region&~robot
+        obj=~wood&region&~robot
         obj=cv2.morphologyEx(obj.astype(np.uint8),cv2.MORPH_OPEN,np.ones((3,3),np.uint8))
         obj=cv2.morphologyEx(obj,cv2.MORPH_CLOSE,np.ones((5,5),np.uint8)).astype(bool)
         self.log['wood']=dict(h=hm,s=sm,v=vm);self.hsv=hsv;self.robot=robot
@@ -281,6 +318,26 @@ class HeadVision:
     def fit(self,mask,kind,init_xy,init_yaw=None,**kw):
         return fit_pose(mask,self.renderer,kind,np.asarray(init_xy,float),init_yaw,**kw)
 
+    def candidate_blobs(self,labels,blobs):
+        """Blobs that can be task objects: on the table region, not cut by the bottom image edge (camera stand, arm bases
+        entering the view) and not on the arm base footprints (robot static config)."""
+        out=[]
+        for b in blobs:
+            t=b.get('table_xy')
+            if t is None or b['box'][1]+b['box'][3]>=self.shape[0]-3:continue
+            if any(np.linalg.norm(np.asarray(t)-rb)<0.10 for rb in ROBOT_BASES):continue
+            x,y,w,h=b['box']
+            if self.region_band is not None and np.any(self.region_band[y:y+h,x:x+w][labels[y:y+h,x:x+w]==b['label']]):continue   # cut by the table border
+            out.append(b)
+        return out
+
+    def head_fill(self,mask,xy,yaw):
+        """Fraction of the brush-head silhouette (the wide box) covered by the mask: tells the head end from the handle end."""
+        r=self.renderer.render('broom_head',xy,yaw,0)
+        if r is None:return 0.
+        sil,(x0,y0,x1,y1)=r;n=int(sil.sum())
+        return float(np.count_nonzero(sil.astype(bool)&mask[y0:y1,x0:x1]))/max(n,1)
+
     def detect(self,rgb,ee_poses,joints=None):
         """dict(dustpan=dict(xy,yaw,iou)|None, broom=dict(xy,yaw,iou)|None, cubes=[dict(xy,yaw,iou)], blobs=[...])."""
         mask=self.object_mask(rgb,ee_poses,joints);out=dict(dustpan=None,broom=None,cubes=[],blobs=[])
@@ -288,35 +345,38 @@ class HeadVision:
         for b in blobs:
             t=self.blob_table_xy(labels,b);b['table_xy']=None if t is None else np.round(t,3).tolist()
             out['blobs'].append(dict(area=b['area'],box=b['box'],table_xy=b['table_xy']))
-        # the robot bases and the camera stand enter the frame at the bottom edge: never object candidates
-        blobs=[b for b in blobs if b['table_xy'] is not None and b['table_xy'][1]>-0.33 and abs(b['table_xy'][0])<0.45 and b['box'][1]+b['box'][3]<self.shape[0]-3]
+        blobs=self.candidate_blobs(labels,blobs)
         residual=mask.copy()
         keep=np.zeros(self.shape,bool)
         for b in blobs:keep|=labels==b['label']
         residual&=keep
-        # dustpan: the largest blob whose footprint lies in the left half of the table. The scoop silhouette is nearly symmetric:
+        # dustpan: the largest object blob (the scoop is the largest released asset). The scoop silhouette is nearly symmetric:
         # the yaw sweep can stop in a local optimum ~90-120 deg off, so refit from the three rotated starts and keep the best
         pan_mask=residual.copy();f=None
-        left=[b for b in blobs if b['table_xy'] is not None and b['table_xy'][0]<0.16 and b['area']>=400]
-        if left:
-            b=max(left,key=lambda q:q['area']);f=self.fit(residual,'dustpan',b['table_xy'])
+        big=[b for b in blobs if b['area']>=400]
+        if big:
+            b=max(big,key=lambda q:q['area']);f=self.fit(residual,'dustpan',b['table_xy'])
             for dy in (-np.pi/2,np.pi/2,np.pi):
                 g=self.fit(residual,'dustpan',f['xy'],init_yaw=f['yaw']+dy,xy_steps=(0.01,0.005,0.0025,0.001))
                 if g['iou']>f['iou']+0.005:f=dict(g,rotated=True)
             if f['iou']>=0.45:
                 out['dustpan']=f;sil=self.renderer.full('dustpan',f['xy'],f['yaw']);residual&=~cv2.dilate(sil,np.ones((7,7),np.uint8)).astype(bool)
             else:f=None
-        # broom: the largest remaining left-half blob
+        # brush: of the two largest remaining blobs, the one the brush silhouette fits best (cube clusters fit it poorly)
         blobs2,labels2=components(residual,min_area=40)
         for b in blobs2:b['table_xy']=self.blob_table_xy(labels2,b)
-        left=[b for b in blobs2 if b['table_xy'] is not None and b['table_xy'][0]<0.16 and b['area']>=120]
-        if left:
-            b=max(left,key=lambda q:q['area']);g=self.fit(residual,'broom',b['table_xy'])
-            # the layouts point the brush head between -x/+y quadrants (head direction 0..120 deg); a nearly symmetric silhouette
-            # fit can land 180 deg off, so an out-of-range heading is re-fitted flipped and kept only if it scores clearly better
-            if g['iou']>=0.4 and not (-np.pi/6<=((g['yaw']+np.pi)%(2*np.pi)-np.pi)<=np.deg2rad(150)):
-                h2=self.fit(residual,'broom',g['xy'],init_yaw=g['yaw']+np.pi,xy_steps=(0.01,0.005,0.0025,0.001))
-                if h2['iou']>=g['iou']-0.08:g=dict(h2,flipped=True)
+        cand=sorted([b for b in self.candidate_blobs(labels2,blobs2) if b['area']>=120],key=lambda q:-q['area'])[:2];g=None
+        for b in cand:
+            gb=self.fit(residual,'broom',b['table_xy'])
+            if g is None or gb['iou']>g['iou']:g=gb
+        if g is not None:
+            # the silhouette is nearly symmetric end to end: the flipped fit competes, and of two comparable fits the one whose
+            # wide head box is filled by the mask wins (the thin handle fills only ~40 % of a head box laid over it)
+            h2=self.fit(residual,'broom',g['xy'],init_yaw=g['yaw']+np.pi,xy_steps=(0.01,0.005,0.0025,0.001))
+            if h2['iou']>=g['iou']-0.08:
+                fg=self.head_fill(residual,g['xy'],g['yaw']);fh=self.head_fill(residual,h2['xy'],h2['yaw'])
+                g=dict(g,head_fill=round(fg,3),flip_fill=round(fh,3))
+                if fh>fg+0.05 or (abs(fh-fg)<=0.05 and h2['iou']>g['iou']):g=dict(h2,flipped=True,head_fill=round(fh,3),flip_fill=round(fg,3))
             if g['iou']>=0.4:
                 out['broom']=g;sil=self.renderer.full('broom',g['xy'],g['yaw']);residual&=~cv2.dilate(sil,np.ones((5,5),np.uint8)).astype(bool);pan_mask&=~cv2.dilate(sil,np.ones((9,9),np.uint8)).astype(bool)
         # with the brush out of the mask, the dustpan yaw branch is settled: best of the four rotated refits, then the handle
@@ -334,20 +394,20 @@ class HeadVision:
                 out['dustpan']=f;residual=pan_mask.copy()
                 if out['broom'] is not None:residual&=~cv2.dilate(self.renderer.full('broom',out['broom']['xy'],out['broom']['yaw']),np.ones((5,5),np.uint8)).astype(bool)
                 residual&=~cv2.dilate(self.renderer.full('dustpan',f['xy'],f['yaw']),np.ones((7,7),np.uint8)).astype(bool)
-        # cubes: remaining blobs on the right half; a merged blob is split greedily by its expected single-cube area;
-        # fit residuals of the brush and dustpan silhouettes are not cubes
+        # cubes: remaining blobs; a merged blob is split greedily by its expected single-cube area; fit residuals of the brush
+        # and dustpan silhouettes (inside their footprints grown by 2 cm) are not cubes
         near=[]
         for kind,f in (('broom',out['broom']),('dustpan',out['dustpan'])):
             if f is not None:near+=object_rects(kind,f['xy'],f['yaw'],0.02)
-        out['cubes']=[c for c in self.extract_cubes(residual,x_min=-0.05) if not any(rects_overlap(rect_corners(c['xy'],0.,0.001,0.001),0.,r,ry) for r,ry in near)]
+        out['cubes']=[c for c in self.extract_cubes(residual) if not any(rects_overlap(rect_corners(c['xy'],0.,0.001,0.001),0.,r,ry) for r,ry in near)]
         self.residual=residual;self.mask=mask
         return out
 
-    def extract_cubes(self,residual,x_min=-0.05,max_cubes=6):
+    def extract_cubes(self,residual,max_cubes=6):
         cubes=[];blobs3,labels3=components(residual,min_area=40)
         for b in sorted(blobs3,key=lambda q:-q['area']):
             t=self.blob_table_xy(labels3,b)
-            if t is None or t[0]<x_min or len(cubes)>=max_cubes:continue
+            if t is None or len(cubes)>=max_cubes:continue
             one=self.renderer.render('cube',t,0.,0)
             if one is None:continue
             expected=int(one[0].sum())
@@ -359,7 +419,9 @@ class HeadVision:
                 if len(pts)==0:break
                 init=self.world[sub&self.ok][:,:2].mean(0) if np.count_nonzero(sub)>20 else t
                 f=self.fit(sub,'cube',init,coarse_yaw_step=np.deg2rad(15),xy_steps=(0.01,0.005,0.0025,0.001),band_px=4)
-                if f['iou']<0.35:break
+                # shape-fit score tells a cube from wood-grain seams and shadows: the first cube of a blob must fit well
+                if f['iou']<(CUBE_FIT_MIN if not any(c.get('blob')==b['label'] for c in cubes) else 0.35):break
+                f['blob']=b['label']
                 cubes.append(dict(f,area=b['area'],k=k));sil=self.renderer.full('cube',f['xy'],f['yaw']);sub&=~cv2.dilate(sil,np.ones((3,3),np.uint8)).astype(bool)
                 if np.count_nonzero(sub)<0.35*expected:break
         return cubes
@@ -368,22 +430,23 @@ class HeadVision:
         """Cubes outside the known objects (dustpan, brush at their measured poses) from a fresh head frame."""
         mask=self.object_mask(rgb,ee_poses,joints)
         blobs,labels=components(mask,min_area=40)
+        for b in blobs:b['table_xy']=self.blob_table_xy(labels,b)
         keep=np.zeros(self.shape,bool)
-        for b in blobs:
-            t=self.blob_table_xy(labels,b)
-            if t is not None and t[1]>-0.33 and abs(t[0])<0.45 and b['box'][1]+b['box'][3]<self.shape[0]-3:keep|=labels==b['label']
+        for b in self.candidate_blobs(labels,blobs):keep|=labels==b['label']
         residual=mask&keep
         for kind,xy,yaw in known:
             sil=self.renderer.full(kind,xy,yaw);residual&=~cv2.dilate(sil,np.ones((11,11),np.uint8)).astype(bool)
-        # cubes never start on the front strip (y < -0.27) or left of the mid-line: blobs there are the parked / dragged brush
-        # (or its fit residual) and must not use up the cube quota
+        # fit residuals of the known objects (a brush or dustpan that settled a little off its measured pose) are not cubes:
+        # blobs whose table point lies inside the known brush footprint grown by 2 cm are dropped before they use up the cube quota
+        # (the dustpan is removed by its dilated silhouette only: a cube that missed the pan right beside it must stay visible)
+        near=[r for kind,xy,yaw in known if kind=='broom' for r in object_rects(kind,xy,yaw,0.02)]
         blobs2,labels2=components(residual,min_area=40);keep=np.zeros(self.shape,bool)
         for b in blobs2:
             t=self.blob_table_xy(labels2,b)
-            if t is not None and t[0]>-0.08 and t[1]>-0.27:keep|=labels2==b['label']
+            if t is not None and not any(rects_overlap(rect_corners(t,0.,0.001,0.001),0.,r,ry) for r,ry in near):keep|=labels2==b['label']
         residual&=keep
         self.residual=residual;self.mask=mask
-        return self.extract_cubes(residual,x_min=-0.08,max_cubes=8)
+        return self.extract_cubes(residual,max_cubes=8)
 
     def refit(self,rgb,ee_poses,kind,xy,yaw,max_shift=0.03,yaw_window=np.deg2rad(12),joints=None):
         """Local re-fit of one known object from a fresh head frame; returns the fit (callers check shift and iou)."""

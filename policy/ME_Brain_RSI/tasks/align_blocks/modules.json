@@ -21,7 +21,7 @@
     "file": "capabilities/control/model_for_align_blocks.py",
     "resource": "resources/align_blocks/coap/adapter/model.py",
     "package": false,
-    "sha256": "0a521480e953f0ee706c850f95446d0ec7cf12428791fdd77a8bff0f0e0a76c3"
+    "sha256": "f8ab2d3489599c52a5845c87a1ddb48a314aead9c586115be58141dbb8307e5f"
   },
   "coap.observation_audit": {
     "file": "capabilities/observation/observation_audit_for_play_xylophone.py",
@@ -33,13 +33,13 @@
     "file": "capabilities/control/policy_for_align_blocks.py",
     "resource": "resources/align_blocks/coap/policy.py",
     "package": false,
-    "sha256": "948ac8c238e4cc337c09e25ab9da04fe9b5a234a4269d1fc9dd16c405576670e"
+    "sha256": "943fab645d0fef0c9c0f64ea77c7dd2fc2d662de7e7fc20c0b36e4c0f1057399"
   },
   "coap.perception": {
     "file": "capabilities/perception/perception_for_align_blocks.py",
     "resource": "resources/align_blocks/coap/perception.py",
     "package": false,
-    "sha256": "0dffd064ee945337ab577c230372c207b7b438941c4fc355fbda2294b33d659a"
+    "sha256": "f88966e568cdbb9f82891cf03b2209cea6e92279d1c1b80ac4b103456d0a18bb"
   },
   "coap.geometry": {
     "file": "capabilities/geometry/geometry_for_push_t.py",
@@ -52,5 +52,11 @@
   },
   "adapters.COAP_ZYR": {
     "namespace": true
+  },
+  "coap.measure": {
+    "file": "capabilities/perception/measure_for_align_blocks.py",
+    "resource": "resources/align_blocks/coap/measure.py",
+    "package": false,
+    "sha256": "0256c1047c0179d307b9414c822f930b0b07fca2fc95eae372d7f11e0c00e50e"
   }
 }

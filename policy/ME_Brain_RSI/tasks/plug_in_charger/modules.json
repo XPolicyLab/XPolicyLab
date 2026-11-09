@@ -27,13 +27,8 @@
     "file": "capabilities/control/plug_in_charger_policy.py",
     "resource": "resources/plug_in_charger/coap/policy.py",
     "package": false,
-    "sha256": "7165c782b06030a864c7bb0991e8e9f5b345ef6ff9d25d15783b7801229e2149"
-  },
-  "coap.vision": {
-    "file": "capabilities/perception/plug_in_charger_vision.py",
-    "resource": "resources/plug_in_charger/coap/vision.py",
-    "package": false,
-    "sha256": "cee4c5470499555596f85310407a9ded46bd1104c756fc3faa348584ce6f6ce9"
+    "resource_identity": false,
+    "sha256": "c3ea9c0d50a0b0b7ee1a991dd43a1708b3148f6ae9aec16f1d1667fb8c5c3f36"
   },
   "coap.wristcam": {
     "file": "capabilities/observation/plug_in_charger_wristcam.py",
@@ -58,5 +53,19 @@
     "resource": "resources/plug_in_charger/coap/adapter/deploy.py",
     "package": false,
     "sha256": "2c62301410de73fed4212197402ccddcaf2f3d17e5a3f7c74ad668645f4f0eb2"
+  },
+  "coap.observed_vision": {
+    "file": "capabilities/perception/plug_in_charger_vision.py",
+    "resource": "resources/plug_in_charger/coap/vision.py",
+    "package": false,
+    "resource_identity": false,
+    "sha256": "e1f2fd52b26709b94e37286139ad258090235317525618e35509b030d729b52f"
+  },
+  "coap.observed_contact": {
+    "file": "capabilities/control/plug_in_charger_contact.py",
+    "resource": "resources/plug_in_charger/coap/policy.py",
+    "package": false,
+    "resource_identity": false,
+    "sha256": "a581b4156b1971dd85bd56bf752e511db263f71d9f55095d2941883621c64f14"
   }
 }

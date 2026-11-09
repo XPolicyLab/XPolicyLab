@@ -39,7 +39,7 @@
     "file": "capabilities/control/drag_policy.py",
     "resource": "resources/push_T/coap/drag_policy.py",
     "package": false,
-    "sha256": "3991102ab2a1f672b90125109e4240526c63025f79261d93f196886d0b051ae5"
+    "sha256": "19a033b7843be88f1215578cfe500d700cd5bf475713c454a6ccfea4e5bcf5c4"
   },
   "b88r42wq.geometry": {
     "file": "capabilities/geometry/geometry_for_push_t.py",
@@ -57,25 +57,19 @@
     "file": "capabilities/control/policy_for_push_t.py",
     "resource": "resources/push_T/coap/policy.py",
     "package": false,
-    "sha256": "8a49df1d66d76b1d62edb0d9d392927c2a4b217324c84ef3f800d03c026af259"
+    "sha256": "d7e7f97db914953d5a42c3fa8d716230f5ac5a89d46b4e76b27987dd3de9b647"
   },
   "b88r42wq.perception": {
     "file": "capabilities/perception/perception_for_push_t.py",
     "resource": "resources/push_T/coap/perception.py",
     "package": false,
-    "sha256": "12e75449ab1992d742a06b096f45ffc325d08ff59383903ab3915eb1f6937e64"
+    "sha256": "92c91f68e34fda3630390a77377eb3a2af6bfec99315be683aebe8ccde93a6fa"
   },
   "b88r42wq.t_shape": {
     "file": "capabilities/control/t_shape.py",
     "resource": "resources/push_T/coap/t_shape.py",
     "package": false,
     "sha256": "c6dbf0ea5d2c1f06f32f7dbd49b3b0fa0dbd95f863eaced468b908af9b71d073"
-  },
-  "b88r42wq.t_projection": {
-    "file": "capabilities/control/t_projection.py",
-    "resource": "resources/push_T/coap/t_projection.py",
-    "package": false,
-    "sha256": "6e5a0b6bedda52385c5281a562e414bea4edc329f1bfbd99f671ea49a39ea0e1"
   },
   "b88r42wq.mug_geometry": {
     "file": "capabilities/geometry/mug_geometry.py",
@@ -91,5 +85,23 @@
   },
   "adapters": {
     "namespace": true
+  },
+  "b88r42wq.measure": {
+    "file": "capabilities/perception/measure_for_push_t.py",
+    "resource": "resources/push_T/coap/measure.py",
+    "package": false,
+    "sha256": "e065fe247a0f719e16abee06e2733a5ea70f6144172e754813597bf5d2d7b6f1"
+  },
+  "b88r42wq.t_measure": {
+    "file": "capabilities/perception/t_measure_for_push_t.py",
+    "resource": "resources/push_T/coap/t_measure.py",
+    "package": false,
+    "sha256": "cf5469d55c1ac9f30652d2bb1da0bf990caf0ab93c5b18655f06c0cf894362cc"
+  },
+  "b88r42wq.t_detect": {
+    "file": "capabilities/perception/t_detect_for_push_t.py",
+    "resource": "resources/push_T/coap/t_detect.py",
+    "package": false,
+    "sha256": "8fff13a157dfbb893abe041819b0c40c798ddf3538ddd72fb93d111a091bac96"
   }
 }

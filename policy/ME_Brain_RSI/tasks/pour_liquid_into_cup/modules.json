@@ -39,31 +39,13 @@
     "file": "capabilities/control/policy_for_pour_liquid_into_cup.py",
     "resource": "resources/pour_liquid_into_cup/coap/policy.py",
     "package": false,
-    "sha256": "4c0a31fe0417684685c129e4e57412c1a3cbdb3d3943d872bc491122ac031bc3"
+    "sha256": "742dae0fb9900885a412a1dbe89c9e7b8f545cab27d9cade96f151916b6f02d4"
   },
   "coap.perception": {
     "file": "capabilities/perception/perception_for_pour_liquid_into_cup.py",
     "resource": "resources/pour_liquid_into_cup/coap/perception.py",
     "package": false,
-    "sha256": "e98a41cb09570e49cc6cfd8c37ff11c1e8f092343dd6c17acb1e006c7c90dc9d"
-  },
-  "coap.t_shape": {
-    "file": "capabilities/control/t_shape.py",
-    "resource": "resources/pour_liquid_into_cup/coap/t_shape.py",
-    "package": false,
-    "sha256": "c6dbf0ea5d2c1f06f32f7dbd49b3b0fa0dbd95f863eaced468b908af9b71d073"
-  },
-  "coap.mug_geometry": {
-    "file": "capabilities/geometry/mug_geometry.py",
-    "resource": "resources/pour_liquid_into_cup/coap/mug_geometry.py",
-    "package": false,
-    "sha256": "cfb40bc21cd91e11fbba9349a89c54da38aceaf504238bcce6b93452237e0e2d"
-  },
-  "coap.vase_geometry": {
-    "file": "capabilities/geometry/vase_geometry.py",
-    "resource": "resources/pour_liquid_into_cup/coap/vase_geometry.py",
-    "package": false,
-    "sha256": "98e606b8018a7905da00efc81d372ba67966d0f73e64b4a18677be2faf8c547c"
+    "sha256": "d3a285b886a0dc418c60a2bcc2fc4ef6b4b1c06968b9d4465a347e71a021c27f"
   },
   "coap.geometry": {
     "file": "capabilities/geometry/geometry_for_push_t.py",
@@ -73,5 +55,11 @@
   },
   "adapters": {
     "namespace": true
+  },
+  "coap.wristcam": {
+    "file": "capabilities/observation/build_tower_wristcam.py",
+    "resource": "resources/pour_liquid_into_cup/coap/wristcam.py",
+    "package": false,
+    "sha256": "5ed8b1dee23c2887bc735312a8e316b9fc62e9bee505ed372a7163898bbd3f5c"
   }
 }

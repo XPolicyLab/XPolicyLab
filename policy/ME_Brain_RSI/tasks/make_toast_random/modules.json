@@ -3,7 +3,7 @@
     "file": "capabilities/control/toast_random_for_make_toast_random.py",
     "resource": "resources/make_toast_random/coap/tasks/toast_random.py",
     "package": false,
-    "sha256": "20216c123fe5892fd59925f42057dc69f1ffde8d19ee9729fec6000ad8f7f67e"
+    "sha256": "c1766a70ba7e3f103ae6193bbb11f7cf220e32a93a2f93ef41c676bf5c908ac5"
   },
   "coap.tasks.toast_vision": {
     "file": "capabilities/perception/toast_vision_for_make_toast_random.py",
@@ -75,7 +75,7 @@
     "file": "capabilities/control/model_for_pack_objects_into_box_random.py",
     "resource": "resources/make_toast_random/model.py",
     "package": false,
-    "sha256": "ab8fc5f712ed387f34cef0160ef536b958ae32896a738d3f69c390263d86428d"
+    "sha256": "83762876b027378a86900d0ede5ab3e3b444d566824c5e1f92b1aae7d2c306ea"
   },
   "coap.evidence": {
     "file": "capabilities/observation/evidence.py",
