@@ -8,6 +8,16 @@ from XPolicyLab.model_template import ModelTemplate
 from XPolicyLab.utils.process_data import pack_robot_state, unpack_robot_state, get_robot_action_dim_info
 import os
 
+# One policy-server instance owns one ACT rollout state, so the batch API is
+# unsupported. See README, Evaluation.
+_BATCH_UNSUPPORTED = (
+    "ACT is stateful: temporal aggregation keeps per-instance rollout state "
+    "(all_time_actions and the step counter, both cleared by reset()), so one "
+    "policy-server instance can serve only one active environment. Keep "
+    "eval_batch: false and run one policy server per concurrently active rollout."
+)
+
+
 class Model(ModelTemplate):
 
     def __init__(self, model_cfg):
@@ -31,16 +41,18 @@ class Model(ModelTemplate):
         encoded_obs = self.encode_obs(obs, self.action_type, self.robot_action_dim_info)
         self.model.update_obs(encoded_obs)
     
-    # def update_obs_batch(self, obs_list): # TODO
-    #     pass
+    def update_obs_batch(self, obs_list):
+        del obs_list
+        raise NotImplementedError(_BATCH_UNSUPPORTED)
     
     def get_action(self):
         actions = self.model.get_action()
         action_list = unpack_robot_state(actions, self.action_type, self.robot_action_dim_info, source_type='obs')
         return action_list
 
-    # def get_action_batch(self, env_idx_list): # TODO
-    #     pass
+    def get_action_batch(self, env_idx_list=None):
+        del env_idx_list
+        raise NotImplementedError(_BATCH_UNSUPPORTED)
 
     def reset(self):
         # Reset temporal aggregation state if enabled
