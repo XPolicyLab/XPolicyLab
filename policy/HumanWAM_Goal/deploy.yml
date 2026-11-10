@@ -1,0 +1,24 @@
+policy_name: HumanWAM_Goal
+protocol: ws
+host: localhost
+port: null
+bench_name: RoboTwin
+task_name: null
+ckpt_name: null
+env_cfg_type: aloha_agilex
+seed: 0
+action_type: joint
+gpu_id: null
+eval_batch: false
+ws_ping_interval_s: 20.0
+ws_ping_timeout_s: 120.0
+
+# HumanWAM-Goal release assets. Relative paths resolve against this policy directory;
+# download_checkpoint.py places them here. Environment variables of the same
+# purpose (see README) override them for one run.
+checkpoint_path: null            # null: release.json checkpoints.<ckpt_name>.path
+official_goal_cache: assets/goal_cache
+official_goal_cache_sha256: null # pinned in release.json; read when null
+robotwin_profile: null           # null: <HWGOAL_REPO>/humanwam_goal/configs/robotwin.yaml
+cublaslt_library: null           # null: release.json runtime.cublaslt.path (install.sh)
+output: null                     # null: eval_result/<task>/<task_config>/<time>

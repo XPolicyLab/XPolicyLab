@@ -1,0 +1,37 @@
+{
+  "schema": "humanwam_goal.xpolicylab_release.v1",
+  "release_type": "eval_only",
+  "code": {
+    "repository": "https://github.com/DAGroup-PKU/HumanNet.git",
+    "branch": "Open-HumanWAM",
+    "revision": "fa319584c8087ec83f4ce3464566d51d0ee660ac",
+    "subdirectory": "humanwam_goal"
+  },
+  "huggingface": {
+    "repo_id": "DAGroup-PKU/HumanWAM-Goal-RoboTwin",
+    "repo_type": "model",
+    "revision": "287594ac122d601ff4f326cb7f5a96758280fb93"
+  },
+  "checkpoints": {
+    "HumanWAM-Goal-RoboTwin": {
+      "path": "checkpoints/HumanWAM-Goal-RoboTwin",
+      "hf_path": ".",
+      "export_sha256": "3591a4264a7665a73e0960ed7d0d2134bfd94c828705b889c039f1bd2e28e246"
+    }
+  },
+  "goal_cache": {
+    "path": "goal_cache",
+    "hf_file": "goal_cache.tar",
+    "manifest_sha256": "a80be2cec8fa6f42879ec9d27a113b6b3475e69ae0e9af25cd75f70dfe5cf6ad"
+  },
+  "runtime": {
+    "cublaslt": {
+      "version": "12.8.3.14",
+      "wheel": "nvidia-cublas-cu12==12.8.3.14",
+      "wheel_sha256": "3f0e05e7293598cf61933258b73e66a160c27d59c4422670bf0b79348c04be44",
+      "wheel_library": "nvidia/cublas/lib/libcublasLt.so.12",
+      "path": "env/runtime/cublaslt-12.8.3.14/libcublasLt.so.12",
+      "sha256": "4ef47ce60325811dfce57acbc2ced3000dbb6c50ce65f4ec34340b1897d6911a"
+    }
+  }
+}
