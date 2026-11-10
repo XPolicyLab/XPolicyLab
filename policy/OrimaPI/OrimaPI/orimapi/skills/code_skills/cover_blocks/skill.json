@@ -1,0 +1,35 @@
+{
+  "schema": "orimapi.code-skill/v1",
+  "skill_id": "cover_blocks",
+  "supported_tasks": [
+    "cover_blocks"
+  ],
+  "task_spec": {
+    "task": "cover_blocks",
+    "budget": 800,
+    "requirements": "Remember the initial red/green/blue block positions. Move the three already inverted cups to cover blocks strictly left-to-right, one at a time, without moving blocks. Once all are covered, uncover red, then green, then blue. Cups must remain inverted throughout; leave a short settle interval after each cover/uncover. Return both arms home. Public cup diameter/height prior is about 72 mm.",
+    "roles": [
+      "block",
+      "cup"
+    ]
+  },
+  "program": "program.py",
+  "experience": "experience.json",
+  "prompts": {
+    "plan": "prompts/plan.md",
+    "generate": "prompts/generate.md"
+  },
+  "sources": {
+    "controller": "controller.py",
+    "engine": "engine.py",
+    "motion": "motion.py",
+    "perception": "perception.py",
+    "sandbox": "sandbox.py",
+    "handoff": "handoff.py",
+    "inspection_prompt": "prompts/inspect.md",
+    "common_geometry": "../common/geometry.py",
+    "generator": "../align_blocks/generator.py",
+    "pure_admission": "../align_blocks/sandbox.py",
+    "pure_worker": "../align_blocks/sandbox_worker.py"
+  }
+}

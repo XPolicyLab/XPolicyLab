@@ -1,0 +1,180 @@
+{
+  "qualification": {
+    "published": true,
+    "mode": "user_authorized_unqualified",
+    "standard_qualified": false,
+    "tested_seeds": [],
+    "successful_seeds": [],
+    "untested_seeds": [
+      0,
+      1,
+      2
+    ],
+    "scope": "User-authorized availability; no new native episodes or score. Historical baseline results are not this version results."
+  },
+  "native_results": [],
+  "outcomes": [],
+  "historical_baseline": [
+    {
+      "seed": 0,
+      "score_native": 0.0,
+      "success": false,
+      "status": "completed"
+    },
+    {
+      "seed": 1,
+      "score_native": 0.0,
+      "success": false,
+      "status": "completed"
+    },
+    {
+      "seed": 2,
+      "score_native": 0.0,
+      "success": false,
+      "status": "completed"
+    }
+  ],
+  "baseline_scope": "OLD v3 skill, not this formal version; no new zero/success values fabricated",
+  "research_preflight": {
+    "cpu_regressions_passed": 138,
+    "copilot_replay": {
+      "status": "plan_and_first_stage_contract_passed",
+      "model_requests": 2,
+      "first_operation": "pick",
+      "native_episode": false
+    },
+    "read_only_native_gpu_slots": [
+      0,
+      1
+    ]
+  },
+  "runtime_hashes": {
+    "controller.py": "0edeabf9a521dc490061e809bba55dc25ab761c26e28d97c628a2c610ca0c222",
+    "profile.json": "e2fb7b413d546d78475001ced765951d4cdd68215abac4142d56323e67bd3d86",
+    "experience.json": "943e4a24e8d7e51740ae5823af17cac6cef010f189fbcf6cfff925c1c0875ac3",
+    "source_provenance.json": "29929fafdf08ed4475a44b9e13b2f6cd595c01f3a8fb409b2a84cdc9d375b739"
+  },
+  "shared_runtime_hashes": {
+    "__init__.py": "9c0f93911a740c217f62752e17c2659bdd9d61b8d016823661f46db5c09316d8",
+    "adapter.py": "da34d29cd5e04840fc74e2c37d940e31f4d45fbe7412f2dc92031c25c145b2f7",
+    "controller.py": "1c1882f152d5f52bf8c7a93b02a2ceaf42b685b1e6870c72a8c7f1da7a340938",
+    "geometry.py": "bd466c453f6ade398b7e46abe42b1a75e0c3d81a3cc4b3c005faff033f845df3",
+    "operations.py": "47104ddec0984bae797c1965bed77349578ff7555eba77d2a29c6454f1427538",
+    "prompts.json": "5a64c185d15e6d0f645782d51869ef62c74d82ccb6a5c976e9de4904bbda13c5",
+    "NOTICE.md": "5ac32b00eab0c3873dc4b69911b589c4310d02e6872cc6d0e80da537a1f721bf"
+  },
+  "dependency_hashes": {
+    "source_shared_009": "1e71ab6802ab18e3a9a453ede5e3d177a42323414eb9ee174c4b6e3295891535",
+    "source_shared_010": "5ac32b00eab0c3873dc4b69911b589c4310d02e6872cc6d0e80da537a1f721bf",
+    "source_shared_011": "cca09d4968b4b3d4a1900129ac7514cdd816fe9f1edac6d38f184534e4950780",
+    "source_shared_012": "825dafbf5297ab224726f5be22681a869604b5b63b22b44d829b47a51935abc2",
+    "source_shared_013": "aa170f6fa7c2eff40baa389c1f9475e6f0894fc733bb32d208eb3b67e8816fa2",
+    "source_shared_014": "5b95b273c629e9161f7dd7c5fa1c142efeeeb488b9223315839d48206014306d",
+    "source_shared_015": "e1942769541bbba3b19e1118f69c765117941f0f6ba13b30b50e6df50df53592",
+    "source_shared_016": "6ecea3347942113699f1993b189fa4ad555912aa69906d43dd3a29beaed426ca",
+    "source_shared_017": "088592a790fde9051c007a635fcc6edec1c51a29c21f367163303e87c32784e9",
+    "source_shared_018": "92a27a877166ed808aeae0e6fff202fa9725c0bfc7dc333d6cffb2608574beba",
+    "source_shared_019": "a093c0d64b3f252c660a21e4bcc4b1b5152994938820432324dc29739235023e",
+    "source_shared_020": "db8b6ad8993b08460b09ad520304b36ec62b6b5481a6c5f731a5717f4336a715",
+    "source_shared_021": "7525f7de87e4e8b7ba53aaa46c20240501cb849c05b71d9c8a5005bf0709a05e",
+    "source_shared_022": "b5a6f67d06b2bb3e5a9ac33d7e7eebbd42448d074f33613f68ad124d500a4fd7",
+    "source_shared_023": "83a272ad04f8d5caf2a400f667e8ab6b5ac0cb09f59e2a7b99507bcbc8dbf4bf",
+    "source_shared_024": "98031835ac2e94ca7da7b726c65c0d13e35eb2092ee27de5531d436bfc0b9c66",
+    "source_shared_026": "325eaa11ae2bda1e35e0a87c5642eba8aa7b757f1abe70084150904d858f44e4",
+    "source_shared_027": "ca1345ef1344acaf8e5742c2d82686ce1a6a8e3331923abf024f40e1cf5eb06a",
+    "source_shared_028": "0342c859a2eaa59b29d44d642ebed22730273e114f8b5d03c219bd5e4649e5f9",
+    "source_shared_029": "4dc75130689d8c6b57d17f4515247e14a6d6b4d8de29b26e30ff8a7609080482",
+    "source_shared_030": "e519bccfdcc42417004155907b84441f726e9589e98507d2b0e34f3ca7ee73da",
+    "source_shared_031": "100a0ff3c32141b92fa6ab5662fdc949d5e54cf1e0c47a4cae510b80baa5b82d",
+    "source_shared_032": "b34b4cc98fdafd127426fe8fd6873e0e6c8fca0e76fe4482219f1508a14a9428",
+    "source_shared_033": "fe168a2660dc7c806075cf3d5fc6b2d7fb28db11b25bd230be4ef94c0f881d3a",
+    "source_shared_034": "a5ad1039944d310ec5f87fa202aed63345b79be7cb58ed78c10f6c072afda2e3",
+    "source_shared_035": "dd4e254e14745d9c74cfdd6f92d7b9ffb635f934d4a2cc0bb185b7ba151872b1",
+    "source_shared_036": "d7fc3df58b210ab691a2820ad246a6499bfd700d4405f9eaa0aa73b3c801242b",
+    "source_shared_037": "d15d4ea5be59ce75ab76b4ea1129f0f1ab3c72692bfddd0efd52074b6fa55e61",
+    "source_shared_038": "7f16883ee7c0d9271d3ea65f68cb93b2147003a84a42b0e57834fcad242fbb1a",
+    "source_shared_039": "9e6cf9428adcd567dbb4d9f0371d2ed3ca32e5e7a7a39f50a5f65a44e14bcc6b",
+    "source_shared_040": "a6778a5c515dd46f722be5a03a848434aa913532cee4e11210b8d8ae61e09ea1",
+    "source_shared_041": "e64251b7e7cb0d95fb454054dd3fcf41f45382585e54a6da06d517de3a2e2b51",
+    "source_shared_042": "35a32b0d58c034410c483f71fca82b86e2f0f941cf11987bd53a8086a4870d6f",
+    "source_shared_043": "4e378d17f1e9b38fec4180f6f1ef6baa88dcc87bed37530ff98ad9bc41ec5e11",
+    "source_shared_044": "129a862f04adeaa06d025f56fc7549a7af216dfc9c7a3d635f41344ce15fa141",
+    "source_shared_045": "439fe49cd5e89adcbec303c77f9bc5814d85f1a48519d02507df4f91c82ba362",
+    "source_shared_046": "8f7fcf3a643d3be824c79045d85f24dfdbda7deb2b3878638074a34f5ffe8f81",
+    "source_shared_047": "f13ad0ff6b6b9c58f7fa14c0d71bab11a82ae25358daea84ae3c068fe03f8cb5",
+    "source_shared_048": "13b6e6ad7129c49f3c261a75703bf2b7ef122a48ea53275ccc4b391a8f1b1421",
+    "source_shared_049": "a18754e7b772acbaaa96fa9e54d829823099f9ae604b3b3fe17d22fef9352bf1",
+    "source_shared_050": "6c156238e4ab38054e13be4655c0a0f5f6c072d28163c5bf8b730f80239e81ff",
+    "source_shared_051": "3381078be4c0e163d10ad5415188f1d8d8df6373197cfeb5025c4dfaf794aedf",
+    "source_shared_052": "c6d13b560463a06fd3d8ad01abc08cfbbd0c17e56b2788cbe498e1ba2a7b6429",
+    "source_shared_053": "b498fdf2fe7291986e7326418fbfef63c2cee26ccc33e1b7384619d103dac08d",
+    "source_shared_054": "3530200227ed6e177bc17d5f6c91da02f49f587953e22b890d3fe53c7a43b11e",
+    "source_shared_055": "6194d602b3ad7f09f1b11ef261fb552f86e67d6f5f2c696fab1c8bae06b68cf3",
+    "source_shared_056": "279f4c5f25170a7e22b1344e4f9db197f8fbb11273e17ba7ee3da36daa1f6b0a",
+    "source_shared_057": "d9f84ae7b62a063f44b9ec59381d40234efad59cb305253ff98c07b1acb4f944",
+    "source_shared_058": "3a584a994f44405513eab756b40707febad72f97aee962ed4afc20a55287a484",
+    "source_shared_059": "d7d9ca4b481d4272c8d1205b3274f3d1b911a95c9ce3a70e1b2ad023275bcba5",
+    "source_shared_060": "cd257aec7f4ba01e239f88892f4243f6ab182dc1857354fc152fb930583fcb12",
+    "source_shared_061": "a7987cee6e4f1ca5dab3812e074dd6c27af9664b443f501c5011401c6c58af57",
+    "source_shared_062": "9e204a79b46e863b93e7278e6200f44b432ba69f3bb62892ff17ef6510473d52",
+    "source_shared_063": "ae1b22fad82eefad4cbca7ef46f27d17d6ac705184def8560d9396b4ed364ea5",
+    "source_shared_064": "77075ed02fe6ee676c816befe8b8f6f43cbbb951e95f3a0115be5788d1ee5bff",
+    "source_shared_065": "ccced3f91c36122dc519a902501c3bb430fb0ed039db743ffb330ec45a9beb9b",
+    "source_shared_066": "88aeaeb1ad8a08584a90766a246299bb555e761d0f133f4782a7b97555e90694",
+    "source_shared_067": "a414e8b6a2e80afb45058b244adc72604595e4aeef16b38ad47552eade933a73",
+    "source_shared_068": "306f65cd470772ccffcd3533631cee40d7728f238ee1d3ea3360250b27d6f962",
+    "source_shared_069": "a76f00e354193600bbb6cd9022cace01b5ac60c8dd2b1f84545e4a17f5e8e85f",
+    "source_shared_070": "76ee81e7768f5ee4d5c9ae04b0d52ed2a8ea3ad093da1c574fd052b97ecbdcfe",
+    "source_shared_071": "1c872e448520a26c0483b5eb1125f0e129bd920cf7b07ad8de70904bea671b22",
+    "source_shared_072": "d5a0a1dbf36407d579888e61a1198836d6873bd6942a5f736ea092487c0f1a24",
+    "source_shared_073": "58b938bec3a92192e53dd53956be8ea396b7bda9dd1263353f0bedd186f47c40",
+    "source_shared_074": "85068c1c2886e69ed5b19e1755c038b0527dd0c63575c9f125c5d647dce850fb",
+    "source_shared_075": "13821e583e1b63fe0a0d70edcf40757dba916de3e76bf3535c324ee6a7d57181",
+    "source_planned_local___init___py": "9c0f93911a740c217f62752e17c2659bdd9d61b8d016823661f46db5c09316d8",
+    "source_planned_local_adapter_py": "da34d29cd5e04840fc74e2c37d940e31f4d45fbe7412f2dc92031c25c145b2f7",
+    "source_planned_local_controller_py": "1c1882f152d5f52bf8c7a93b02a2ceaf42b685b1e6870c72a8c7f1da7a340938",
+    "source_planned_local_geometry_py": "bd466c453f6ade398b7e46abe42b1a75e0c3d81a3cc4b3c005faff033f845df3",
+    "source_planned_local_operations_py": "47104ddec0984bae797c1965bed77349578ff7555eba77d2a29c6454f1427538",
+    "source_planned_local_prompts_json": "5a64c185d15e6d0f645782d51869ef62c74d82ccb6a5c976e9de4904bbda13c5",
+    "source_planned_local_NOTICE_md": "5ac32b00eab0c3873dc4b69911b589c4310d02e6872cc6d0e80da537a1f721bf"
+  },
+  "original_entrypoint_sha256": "e705105f12cf1f5612ddfdc02b5077654bbbdb04e5449411968e77a86bd12a55",
+  "candidate_profile_sha256": "6116572b642b6510ded0997f10f80e306e5bc4fe2f68d26c7e273ad09aba2343",
+  "candidate_experience_sha256": "2dee0b02f68d1397fb21474706f53df8e210baeececbdc655be5534673c418ba",
+  "shared_source_hashes_before_relocation": {
+    "__init__.py": "9c0f93911a740c217f62752e17c2659bdd9d61b8d016823661f46db5c09316d8",
+    "adapter.py": "da34d29cd5e04840fc74e2c37d940e31f4d45fbe7412f2dc92031c25c145b2f7",
+    "controller.py": "1c1882f152d5f52bf8c7a93b02a2ceaf42b685b1e6870c72a8c7f1da7a340938",
+    "geometry.py": "bd466c453f6ade398b7e46abe42b1a75e0c3d81a3cc4b3c005faff033f845df3",
+    "operations.py": "2593ac598ccb409e1a035aea80222c69233515097ab44def9402fd26b8e26510",
+    "prompts.json": "5a64c185d15e6d0f645782d51869ef62c74d82ccb6a5c976e9de4904bbda13c5"
+  },
+  "known_limits": [
+    "No independent retention/contact certificate",
+    "Rigid attachment and material-feature correspondence may be wrong",
+    "Native planner is not a complete scene-object collision oracle",
+    "All three native seeds untested"
+  ],
+  "new_native_simulation_at_publication": false,
+  "publication_checks": {
+    "passed": 220,
+    "deselected": 1,
+    "reason": "Historical research test requiring the formal tree to remain unchanged is intentionally superseded by this authorized publication. Old tests/baseline preserved; archived originals verified instead.",
+    "formal_policy_loads": 13,
+    "covered_tasks": 14,
+    "sweep_random_alias_retained": true,
+    "packaging_and_dual_gpu_snapshot_checks": "passed",
+    "new_native_simulation": false
+  },
+  "deployment_compatibility": {
+    "scope": "Physical GPU placement and relocated/symlinked runtime discovery only; task policy, planning and collision logic are unchanged. Current dependency fingerprints are refreshed; original candidate evidence remains historical.",
+    "previous_fingerprints": {
+      "dependency_hashes": {
+        "source_shared_012": "1c6e689e3801ed408d4d9b549504a825b7b5089e3a79ca9a87505851ed90a33e",
+        "source_shared_066": "8d65342b782d0d77dd45173a0b8ea6ed42403b082d8be091ac2cc4ea0bdd73f4"
+      }
+    },
+    "native_task_retested_after_change": false,
+    "historical_candidate_hashes_and_outcomes_preserved": true
+  }
+}

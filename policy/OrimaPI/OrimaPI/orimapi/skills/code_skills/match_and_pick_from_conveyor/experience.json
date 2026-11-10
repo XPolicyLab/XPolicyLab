@@ -1,0 +1,20 @@
+[
+  {
+    "kind": "external_method_not_local_success",
+    "lesson": "One composite tool should prepare above the belt, predict future position from measured velocity, time closure midpoint, and lift. Keep identity decisions separate from geometry."
+  },
+  {
+    "kind": "public_feedback_method",
+    "lesson": "Observe, execute reusable code, inspect physical feedback and revise the next action within this scene. Freeze transferred lessons; no reset or cross-test state."
+  },
+  {
+    "kind": "local_failure",
+    "lesson": "Earlier local conveyor seeds0/1/2 scored zero. Tracking loss after preposition, late departure confirmation and unverified TCP lifts did not establish target capture. A newly measured position must not be used after unrelated motion."
+  },
+  {
+    "kind": "observed_local_failure",
+    "candidate": "candidate-001",
+    "score": 0,
+    "lesson": "Reference/departure/match and .099m/s tracking worked. Several low nominal-TCP descents failed finger/table preflight; a later off-center interception and recovery lift did not retain the object. Prefer a current body-center surface anchor and map desired pad contact through public finger geometry; do not relax guards."
+  }
+]

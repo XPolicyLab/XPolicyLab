@@ -1,0 +1,44 @@
+{
+  "schema": "orimapi.code-controller-skill/v1",
+  "skill_id": "classify_objects_by_language",
+  "supported_tasks": [
+    "classify_objects_by_language"
+  ],
+  "experience": "experience.json",
+  "task_spec": {
+    "task": "classify_objects_by_language",
+    "budget": 1100,
+    "roles": [
+      "item",
+      "basket"
+    ],
+    "min_grasp_height": 0.016,
+    "requirements": "Follow the live language category-to-left/middle/right basket mapping exactly. Place near each specified basket centre, with natural overlap, tilt and partial overhang allowed. Do not require entire silhouettes inside. No mixed or wrong categories. Distinguish floor and rim height. Continue to next pickup after withdrawal without routine home. Finally return both arms home. Public basket size0.252x0.168x0.077m. RGB and public calibration only; no hidden object state."
+  },
+  "tool_limits": {
+    "history_size": 24
+  },
+  "sources": {
+    "controller": "controller.py",
+    "motion": "motion.py",
+    "planning": "planning.py",
+    "initial_prompt": "initial_prompt.md",
+    "review_prompt": "review_prompt.md",
+    "common_geometry": "../../../common/geometry.py",
+    "generator": "../../../align_blocks/generator.py",
+    "base_perception": "../../../classify_objects/perception.py",
+    "base_sandbox": "../../../classify_objects/sandbox.py",
+    "pure_admission": "../../../align_blocks/sandbox.py",
+    "pure_worker": "../../../align_blocks/sandbox_worker.py",
+    "language": "language.py",
+    "base_controller": "base_controller.py",
+    "cost_controller": "cost_controller.py",
+    "c005_controller": "c005_controller.py"
+  },
+  "qualification": {
+    "mode": "research_only",
+    "published": false,
+    "native_result": "not_run",
+    "candidate": "c008-fast8-20261108"
+  }
+}

@@ -1,0 +1,47 @@
+[
+  {
+    "lesson": "Bound pale-cap segmentation around its current semantic mark. Broad orange thresholds merged the cap with the wooden table and corrupted length; neutral-body masks need separate treatment."
+  },
+  {
+    "lesson": "A finger-occluded tube end produced a truncated length estimate. Move an empty hand aside and remeasure from current RGB when the bottom is not visible or visible lengths disagree strongly. Never replace missing measurements with a fixed object dimension."
+  },
+  {
+    "lesson": "A rack contains small auxiliary holes as well as larger tube openings. Jointly fit three current matched hole circles to one plane and radius, reject small holes and choose spaced targets. Semantic center marks alone biased rack height by about8mm and caused insertion errors."
+  },
+  {
+    "lesson": "An upright tube bottom can be fully occluded by the hand. Fit the same visible circular cap face in two calibrated RGB views to measure its center and normal. Infer the bottom only with the current source-observed tube length and record that assumption."
+  },
+  {
+    "lesson": "Specular highlights on ribbed cap sides contaminated the top-face ROI. Moderate-saturation bright-face segmentation and morphological opening remove thin ribs before RGB edge fitting."
+  },
+  {
+    "lesson": "Generic edge proposals missed small head-view caps and grazing wrist-view caps. A shape-checked color-face fallback is used only when established proposals cannot produce consistent two-view geometry; a single colored blob is not a pose measurement."
+  },
+  {
+    "lesson": "Do not trust two model-selected pixels as precision geometry. Validate cap-outline reprojection, positive camera visibility and bounded tilt before using the measured attachment for insertion."
+  },
+  {
+    "lesson": "Compare both axial pickup tilts and both jaw directions, using the observed tube geometry. Prefer a central body grip when a complete checked path and useful cap view exist; retain more proximal alternatives when they do not. Nominal camera visibility alone does not guarantee retention or prevent contact during transport."
+  },
+  {
+    "lesson": "Preview the entire transfer, keep a clear predicted tip pivot during the upright turn, and correct measured cap tilt before entering the hole. These checks cover robot geometry, not every observed object in the scene."
+  },
+  {
+    "lesson": "Grasp rolling can hide the cap top from the grasping wrist. Select the other current wrist view when it exposes the same cap face, using its own observed camera pose. Camera choice must not switch the active grasping arm."
+  },
+  {
+    "lesson": "A near-slot-first transfer repeatedly failed on the later center insertion. The held cap changed orientation while crossing a seated outer tube. Fill far slots before near slots within each arm so later inbound deliveries do not cross earlier placements. The successful revision changed this ordering without adding actions; changing segmentation and grasp point alone had not solved the failing case."
+  },
+  {
+    "lesson": "A low circular-boundary reprojection error does not establish a unique correct axis. A visible-body centerline can independently reject inconsistent cap geometry. For an empty-wrist temporal pair, keep the holding arm and gripper fixed, check current head-cap silhouette stability, preview the observer move and reserve insertion/release/home steps. Retain images only in live memory, not in transferable experience."
+  },
+  {
+    "lesson": "Insert through the upper plate and release with both jaws clear so gravity can finish seating. Image checks, completed motions and partial scores are not official success."
+  },
+  {
+    "lesson": "The native500-action allowance is tight. Group jobs by hand, combine clear-space turning with transport, park an empty donor beside the rack after checking clearance, and reserve final homing. Do not extend the native budget."
+  },
+  {
+    "lesson": "Qualification covers one original first-layout episode in each recorded seed set, not full-benchmark or held-out reliability. Preserve failed research candidates separately."
+  }
+]

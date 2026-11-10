@@ -1,0 +1,12 @@
+{
+  "task": "sweep_blocks",
+  "baseline_formal": "orimapi/skills/code_skills/sweep_blocks",
+  "baseline_manifest_sha256": "9d18cd3451b0cb073ab84c9ff1b54e81c6fda9b10c62e0c9e1303eefa18d13dd",
+  "runtime": "Own rewritten stage controller/geometry/composites over existing formal local providers",
+  "native_motion_provider": "fill_pen_holder c008 simulation adapter",
+  "geometry_provider": "formal classify_objects_by_language pinned RGB operations and fill_pen_holder mask refinement",
+  "conveyor_provider": "formal match_and_pick_from_conveyor local three-frame RGB tracker",
+  "not_implemented_from_external_interfaces": true,
+  "ordinary_random_algorithm_shared": true,
+  "frozen_experience_is_not_online_learning_across_seeds": true
+}

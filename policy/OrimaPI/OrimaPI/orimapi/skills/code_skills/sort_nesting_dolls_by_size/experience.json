@@ -1,0 +1,46 @@
+[
+  {
+    "kind": "architecture",
+    "lesson": "GPT plans semantic phases, identities and recovery. Local measured composite tools execute fine operations. Never count commanded motion as native success."
+  },
+  {
+    "kind": "observed_local_baseline",
+    "outcomes": [
+      {
+        "seed": 0,
+        "score_native": 0.0,
+        "success": false,
+        "status": "completed"
+      },
+      {
+        "seed": 1,
+        "score_native": 0.0,
+        "success": false,
+        "status": "completed"
+      },
+      {
+        "seed": 2,
+        "score_native": 0.0,
+        "success": false,
+        "status": "completed"
+      }
+    ],
+    "lesson": "Successful reference runs also used explicit pixel geometry when silhouettes failed. Tipped dolls distinguished many failures despite completed transfer routes.",
+    "scope": "Historical OLD tool-loop skill, not evidence about this new candidate."
+  },
+  {
+    "kind": "reference_informed_hypothesis",
+    "lesson": [
+      "Identify all five dolls (not distractors); choose a visibly empty reachable row with table-plane row_start/row_end in world left-to-right direction.",
+      "Call sort_row with all five current coarse boxes. Local RGB tools measure heights and footprints, rank size, and allocate measured nonoverlapping row slots.",
+      "Move one doll per complete local operation; use a stable body grasp and upright placement. Refresh all relevant identities after motion, preserving stable semantic names.",
+      "Inspect tipping and spacing; if a doll fell, pick/reseat instead of counting commanded transfers.",
+      "Confirm the five dolls form an upright small-to-large row and home."
+    ],
+    "scope": "External reports and cached notes include complete successes; new local pipeline not yet tested natively."
+  },
+  {
+    "kind": "known_limitations",
+    "lesson": "No measured finger-stop/force sensor or automatic object retention/containment certificate. Attachment transforms assume no slip. Three-feature docking and support placement are implemented but unvalidated in native tasks. No new arbitrary tabletop spacing, residual-error, protected-step or retry-count gates."
+  }
+]

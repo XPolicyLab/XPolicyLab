@@ -1,0 +1,20 @@
+{
+  "schema": "orimapi.conveyor-resources/v1",
+  "native_ik": {
+    "device": "cuda:0",
+    "runtime": "installed RoboDojo cuRobo planner in simulator Python",
+    "configuration": "Optional native_ik.python/simulator_root/device; defaults derived from configured public robot paths."
+  },
+  "requirements": [
+    "numpy",
+    "opencv-python-headless",
+    "scipy",
+    "ikpy",
+    "trimesh==5.1.1",
+    "transforms3d==0.4.2",
+    "RoboDojo simulator Python with cuRobo"
+  ],
+  "no_runtime_download": true,
+  "image_max_bytes": 300000,
+  "request_max_bytes": 2000000
+}

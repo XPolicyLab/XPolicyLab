@@ -1,0 +1,1110 @@
+{
+  "qualification": {
+    "published": true,
+    "mode": "user_authorized_unqualified",
+    "tested_seeds": [
+      0,
+      1,
+      2
+    ],
+    "successful_seeds": [
+      0,
+      1
+    ],
+    "untested_seeds": [],
+    "episodes_per_seed": 1,
+    "three_seed_mean": 66.66666666666667,
+    "standard_qualified": false,
+    "scope": "Same frozen c008 native development evidence:100/100/0, one episode per seed. Publication is formal availability, not full benchmark or reliability qualification. Published experience summary changed; no new native retest."
+  },
+  "candidate_bundle_sha256": "8c70d398b32c6858e4cdc4041ffb731ec954f90d782d7fcb177ded74ffa89792",
+  "outcomes": [
+    {
+      "seed": 0,
+      "status": "completed",
+      "score": 100.0,
+      "native_score": 1.0,
+      "success": true,
+      "skill_llm_requests": 2,
+      "router_requests": 1,
+      "command_counts": {},
+      "native_actions": 258,
+      "geometry_measurements": 1,
+      "local_head_feedbacks": 16,
+      "head_feedback_timeline": [
+        {
+          "step": 66,
+          "key": 0,
+          "checkpoint": "pickup_attachment",
+          "raw_correction_m": 0.005931128386110815,
+          "applied_correction_m": 0.005810056390634329,
+          "temporal_promotion_weight": 0.0,
+          "raw_weights": {
+            "cam_high": 0.6479924137681562
+          },
+          "fusion_weights": {
+            "cam_high": 0.6479924137681562
+          }
+        },
+        {
+          "step": 108,
+          "key": 0,
+          "checkpoint": "before_strike",
+          "raw_correction_m": 0.0036536752027731623,
+          "applied_correction_m": 0.0035393114134410343,
+          "temporal_promotion_weight": 0.9655232752315176,
+          "raw_weights": {
+            "cam_high": 0.6137847462888508
+          },
+          "fusion_weights": {
+            "cam_high": 0.6137847462888508
+          }
+        },
+        {
+          "step": 120,
+          "key": 0,
+          "checkpoint": "after_lift",
+          "raw_correction_m": 0.004160386478581698,
+          "applied_correction_m": 0.004045101723942578,
+          "temporal_promotion_weight": 0.740714459649415,
+          "raw_weights": {
+            "cam_high": 0.674048214730627
+          },
+          "fusion_weights": {
+            "cam_high": 0.674048214730627
+          }
+        },
+        {
+          "step": 124,
+          "key": 1,
+          "checkpoint": "before_strike",
+          "raw_correction_m": 0.009544057890203784,
+          "applied_correction_m": 0.009209916742443825,
+          "temporal_promotion_weight": 0.28553392122799903,
+          "raw_weights": {
+            "cam_high": 0.5351956302042926
+          },
+          "fusion_weights": {
+            "cam_high": 0.5351956302042926
+          }
+        },
+        {
+          "step": 136,
+          "key": 1,
+          "checkpoint": "after_lift",
+          "raw_correction_m": 0.00935357378340178,
+          "applied_correction_m": 0.00880125125676877,
+          "temporal_promotion_weight": 0.9178787223503031,
+          "raw_weights": {
+            "cam_high": 0.3646608149312708
+          },
+          "fusion_weights": {
+            "cam_high": 0.3646608149312708
+          }
+        },
+        {
+          "step": 140,
+          "key": 2,
+          "checkpoint": "before_strike",
+          "raw_correction_m": 0.007479900320970723,
+          "applied_correction_m": 0.00721850438388444,
+          "temporal_promotion_weight": 0.6818902309156447,
+          "raw_weights": {
+            "cam_high": 0.5081789365335602
+          },
+          "fusion_weights": {
+            "cam_high": 0.5081789365335602
+          }
+        },
+        {
+          "step": 152,
+          "key": 2,
+          "checkpoint": "after_lift",
+          "raw_correction_m": 0.0015796230829947706,
+          "applied_correction_m": 0.0014828465076851041,
+          "temporal_promotion_weight": 0.9579004137953895,
+          "raw_weights": {
+            "cam_high": 0.6803083805203214
+          },
+          "fusion_weights": {
+            "cam_high": 0.6803083805203214
+          }
+        },
+        {
+          "step": 156,
+          "key": 3,
+          "checkpoint": "before_strike",
+          "raw_correction_m": 0.00102765005629881,
+          "applied_correction_m": 0.0009442322186171841,
+          "temporal_promotion_weight": 0.9835176190775706,
+          "raw_weights": {
+            "cam_high": 0.6983849478444435
+          },
+          "fusion_weights": {
+            "cam_high": 0.6983849478444435
+          }
+        },
+        {
+          "step": 168,
+          "key": 3,
+          "checkpoint": "after_lift",
+          "raw_correction_m": 0.004518803266002825,
+          "applied_correction_m": 0.004395075428193856,
+          "temporal_promotion_weight": 0.6583807500735978,
+          "raw_weights": {
+            "cam_high": 0.6443431017495254
+          },
+          "fusion_weights": {
+            "cam_high": 0.6443431017495254
+          }
+        },
+        {
+          "step": 172,
+          "key": 4,
+          "checkpoint": "before_strike",
+          "raw_correction_m": 0.0045560194728347814,
+          "applied_correction_m": 0.004423255648196341,
+          "temporal_promotion_weight": 0.9020753762009325,
+          "raw_weights": {
+            "cam_high": 0.6327219293690856
+          },
+          "fusion_weights": {
+            "cam_high": 0.6327219293690856
+          }
+        },
+        {
+          "step": 184,
+          "key": 4,
+          "checkpoint": "after_lift",
+          "raw_correction_m": 0.004655149364350664,
+          "applied_correction_m": 0.00444959229646969,
+          "temporal_promotion_weight": 0.7436287876735831,
+          "raw_weights": {
+            "cam_high": 0.491571673350884
+          },
+          "fusion_weights": {
+            "cam_high": 0.491571673350884
+          }
+        },
+        {
+          "step": 188,
+          "key": 5,
+          "checkpoint": "before_strike",
+          "raw_correction_m": 0.0038035136726177264,
+          "applied_correction_m": 0.0036921663363321607,
+          "temporal_promotion_weight": 0.9117180494307172,
+          "raw_weights": {
+            "cam_high": 0.6137605180269197
+          },
+          "fusion_weights": {
+            "cam_high": 0.6137605180269197
+          }
+        },
+        {
+          "step": 199,
+          "key": 5,
+          "checkpoint": "after_lift",
+          "raw_correction_m": 0.005324613164032637,
+          "applied_correction_m": 0.005169428830857211,
+          "temporal_promotion_weight": 0.5757193477525178,
+          "raw_weights": {
+            "cam_high": 0.613256646080083
+          },
+          "fusion_weights": {
+            "cam_high": 0.613256646080083
+          }
+        },
+        {
+          "step": 221,
+          "key": 6,
+          "checkpoint": "before_strike",
+          "raw_correction_m": 0.00666224663045054,
+          "applied_correction_m": 0.006443853327858595,
+          "temporal_promotion_weight": 0.5507514922924455,
+          "raw_weights": {
+            "cam_high": 0.5382424227872927
+          },
+          "fusion_weights": {
+            "cam_high": 0.5382424227872927
+          }
+        },
+        {
+          "step": 232,
+          "key": 6,
+          "checkpoint": "after_lift",
+          "raw_correction_m": 0.0022875288025496735,
+          "applied_correction_m": 0.0021148221626325924,
+          "temporal_promotion_weight": 0.9491871321587902,
+          "raw_weights": {
+            "cam_high": 0.6428032071352808
+          },
+          "fusion_weights": {
+            "cam_high": 0.6428032071352808
+          }
+        },
+        {
+          "step": 254,
+          "key": 7,
+          "checkpoint": "before_strike",
+          "raw_correction_m": 0.0012709669242718592,
+          "applied_correction_m": 0.0012350538369559113,
+          "temporal_promotion_weight": 0.9742450288545073,
+          "raw_weights": {
+            "cam_high": 0.6423877138949855,
+            "cam_right_wrist": 0.0029718948760382594
+          },
+          "fusion_weights": {
+            "cam_high": 0.6423877138949855,
+            "cam_right_wrist": 1.2365821863850125e-08
+          }
+        }
+      ],
+      "keyboard_feedbacks": 8,
+      "measured_key_planes": [
+        [
+          0.0,
+          0.0,
+          0.7780081429357937
+        ]
+      ],
+      "contact_attempt_timeline": [
+        {
+          "step": 116,
+          "key": 0
+        },
+        {
+          "step": 132,
+          "key": 1
+        },
+        {
+          "step": 148,
+          "key": 2
+        },
+        {
+          "step": 164,
+          "key": 3
+        },
+        {
+          "step": 180,
+          "key": 4
+        },
+        {
+          "step": 195,
+          "key": 5
+        },
+        {
+          "step": 228,
+          "key": 6
+        }
+      ],
+      "before_strike_feedbacks": 8,
+      "observed_head_lifts": [
+        0.07952205290964842,
+        0.07830667313456086,
+        0.07822073958408493,
+        0.08031970937922106,
+        0.06527934929667822,
+        0.08101271225782614,
+        0.07916665486610741
+      ],
+      "wrist_reuse_count": 5,
+      "wrist_reorientation_count": 3,
+      "contact_attempts": 7,
+      "local_strokes": 7,
+      "completed_contact_motions": 7,
+      "completed_lift_motions": 7,
+      "distinct_contact_motion_keys": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "counts_scope": "Contact/stroke events are controller bookkeeping, not native hits. At native cancellation a trailing event can be emitted without completed movement; completed_*_motions instead require a local_motion completion record. Neither establishes native success.",
+      "recent_recoveries": [],
+      "recovery_count": 0,
+      "last_phase": "retention",
+      "terminal_failure": null,
+      "elapsed_s": 139.13036020402797,
+      "error": null,
+      "evidence_trace": "runs/play-xylophone-attachment-fusion-c008-20261027/jobs/000_play_Xylophone_s0/attempt-001/runs/20261027T115505-30895acb7dbc/events.jsonl",
+      "artifacts": [
+        {
+          "path": "_result.json",
+          "sha256": "117b7aac5c033705b64fc53e97b00912e1fec4f50cff9869aee75b750b3529a6"
+        },
+        {
+          "path": "episode_0000000_cam_head_success.mp4",
+          "sha256": "42a0615be1a39b2526156a6769da4321ada00278812321cf1aa694725921e030",
+          "frames": 259
+        },
+        {
+          "path": "episode_0000000_cam_left_wrist_success.mp4",
+          "sha256": "b8876877c0aab8d34df434255fbef5a398d6fd00001eec0cc7c9a7feba129f16",
+          "frames": 259
+        },
+        {
+          "path": "episode_0000000_cam_right_wrist_success.mp4",
+          "sha256": "0192e0855ca320952b1bcde70c59974dc50c95a6342bf134d1463ca6734d3ca9",
+          "frames": 259
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "status": "completed",
+      "score": 100.0,
+      "native_score": 1.0,
+      "success": true,
+      "skill_llm_requests": 2,
+      "router_requests": 1,
+      "command_counts": {},
+      "native_actions": 258,
+      "geometry_measurements": 1,
+      "local_head_feedbacks": 16,
+      "head_feedback_timeline": [
+        {
+          "step": 72,
+          "key": 0,
+          "checkpoint": "pickup_attachment",
+          "raw_correction_m": 0.0008351479193710083,
+          "applied_correction_m": 0.0008105324838881841,
+          "temporal_promotion_weight": 0.0,
+          "raw_weights": {
+            "cam_high": 0.9255133251707869
+          },
+          "fusion_weights": {
+            "cam_high": 0.9255133251707869
+          }
+        },
+        {
+          "step": 114,
+          "key": 0,
+          "checkpoint": "before_strike",
+          "raw_correction_m": 0.0006602666463617383,
+          "applied_correction_m": 0.0005284202283091185,
+          "temporal_promotion_weight": 0.9906351028966197,
+          "raw_weights": {
+            "cam_high": 0.6742798309673146
+          },
+          "fusion_weights": {
+            "cam_high": 0.6742798309673146
+          }
+        },
+        {
+          "step": 127,
+          "key": 0,
+          "checkpoint": "after_lift",
+          "raw_correction_m": 0.006880737619335533,
+          "applied_correction_m": 0.006608584221407264,
+          "temporal_promotion_weight": 0.49105019049982473,
+          "raw_weights": {
+            "cam_high": 0.5334347869392799
+          },
+          "fusion_weights": {
+            "cam_high": 0.5334347869392799
+          }
+        },
+        {
+          "step": 131,
+          "key": 1,
+          "checkpoint": "before_strike",
+          "raw_correction_m": 0.00863940583500938,
+          "applied_correction_m": 0.00818035943177774,
+          "temporal_promotion_weight": 0.7274858278839462,
+          "raw_weights": {
+            "cam_high": 0.3994944709700218
+          },
+          "fusion_weights": {
+            "cam_high": 0.3994944709700218
+          }
+        },
+        {
+          "step": 143,
+          "key": 1,
+          "checkpoint": "after_lift",
+          "raw_correction_m": 0.010718039650670322,
+          "applied_correction_m": 0.01024366612238775,
+          "temporal_promotion_weight": 0.4235739858883149,
+          "raw_weights": {
+            "cam_high": 0.47421950815544056
+          },
+          "fusion_weights": {
+            "cam_high": 0.47421950815544056
+          }
+        },
+        {
+          "step": 147,
+          "key": 2,
+          "checkpoint": "before_strike",
+          "raw_correction_m": 0.0035757729008163096,
+          "applied_correction_m": 0.0034763774209201964,
+          "temporal_promotion_weight": 0.9137304454411959,
+          "raw_weights": {
+            "cam_high": 0.7466907727283414
+          },
+          "fusion_weights": {
+            "cam_high": 0.7466907727283414
+          }
+        },
+        {
+          "step": 158,
+          "key": 2,
+          "checkpoint": "after_lift",
+          "raw_correction_m": 0.006556031402106137,
+          "applied_correction_m": 0.006278337777112302,
+          "temporal_promotion_weight": 0.5608605603194542,
+          "raw_weights": {
+            "cam_high": 0.5019366005489461
+          },
+          "fusion_weights": {
+            "cam_high": 0.5019366005489461
+          }
+        },
+        {
+          "step": 162,
+          "key": 3,
+          "checkpoint": "before_strike",
+          "raw_correction_m": 0.003144148525391912,
+          "applied_correction_m": 0.003038862034057755,
+          "temporal_promotion_weight": 0.9877938367865912,
+          "raw_weights": {
+            "cam_high": 0.6370200916566965
+          },
+          "fusion_weights": {
+            "cam_high": 0.6370200916566965
+          }
+        },
+        {
+          "step": 173,
+          "key": 3,
+          "checkpoint": "after_lift",
+          "raw_correction_m": 0.009498632084094192,
+          "applied_correction_m": 0.009050731523577766,
+          "temporal_promotion_weight": 0.3631056493996741,
+          "raw_weights": {
+            "cam_high": 0.4383122630509529
+          },
+          "fusion_weights": {
+            "cam_high": 0.4383122630509529
+          }
+        },
+        {
+          "step": 177,
+          "key": 4,
+          "checkpoint": "before_strike",
+          "raw_correction_m": 0.004242994540804455,
+          "applied_correction_m": 0.004091971258999883,
+          "temporal_promotion_weight": 0.9038476232726111,
+          "raw_weights": {
+            "cam_high": 0.5847731961424059
+          },
+          "fusion_weights": {
+            "cam_high": 0.5847731961424059
+          }
+        },
+        {
+          "step": 190,
+          "key": 4,
+          "checkpoint": "after_lift",
+          "raw_correction_m": 0.0035508678681547253,
+          "applied_correction_m": 0.003320708710795807,
+          "temporal_promotion_weight": 0.8214826342042351,
+          "raw_weights": {
+            "cam_high": 0.43816376571673127
+          },
+          "fusion_weights": {
+            "cam_high": 0.43816376571673127
+          }
+        },
+        {
+          "step": 195,
+          "key": 5,
+          "checkpoint": "before_strike",
+          "raw_correction_m": 0.005102112199683077,
+          "applied_correction_m": 0.004958463848792425,
+          "temporal_promotion_weight": 0.6735778849356806,
+          "raw_weights": {
+            "cam_high": 0.4738083369718452,
+            "cam_right_wrist": 0.2910883689250114
+          },
+          "fusion_weights": {
+            "cam_high": 0.4738083369718452,
+            "cam_right_wrist": 0.10966033183533357
+          }
+        },
+        {
+          "step": 210,
+          "key": 5,
+          "checkpoint": "after_lift",
+          "raw_correction_m": 0.003352609490375945,
+          "applied_correction_m": 0.0032774507509872155,
+          "temporal_promotion_weight": 0.7967655136402125,
+          "raw_weights": {
+            "cam_high": 0.5771149174815847,
+            "cam_right_wrist": 0.3261522445028509
+          },
+          "fusion_weights": {
+            "cam_high": 0.5771149174815847,
+            "cam_right_wrist": 0.1040940164775045
+          }
+        },
+        {
+          "step": 215,
+          "key": 6,
+          "checkpoint": "before_strike",
+          "raw_correction_m": 0.0027504759588870002,
+          "applied_correction_m": 0.0027139920077776437,
+          "temporal_promotion_weight": 0.7792102872733649,
+          "raw_weights": {
+            "cam_high": 0.5737224453758951,
+            "cam_right_wrist": 0.3705753079791975
+          },
+          "fusion_weights": {
+            "cam_high": 0.5737224453758951,
+            "cam_right_wrist": 0.1546050878986841
+          }
+        },
+        {
+          "step": 232,
+          "key": 6,
+          "checkpoint": "after_lift",
+          "raw_correction_m": 0.0033826041344615985,
+          "applied_correction_m": 0.003319760815346733,
+          "temporal_promotion_weight": 0.506146916067709,
+          "raw_weights": {
+            "cam_high": 0.5736060418747498,
+            "cam_right_wrist": 0.36221753097688386
+          },
+          "fusion_weights": {
+            "cam_high": 0.5736060418747498,
+            "cam_right_wrist": 0.1442857845301495
+          }
+        },
+        {
+          "step": 254,
+          "key": 7,
+          "checkpoint": "before_strike",
+          "raw_correction_m": 0.005070098843828251,
+          "applied_correction_m": 0.004709734956623201,
+          "temporal_promotion_weight": 0.5596531604345761,
+          "raw_weights": {
+            "cam_high": 0.587104546115067,
+            "cam_right_wrist": 0.6380500842519874
+          },
+          "fusion_weights": {
+            "cam_high": 0.4799724987810454,
+            "cam_right_wrist": 0.6380500842519874
+          }
+        }
+      ],
+      "keyboard_feedbacks": 8,
+      "measured_key_planes": [
+        [
+          0.0,
+          0.0,
+          0.777995064274916
+        ]
+      ],
+      "contact_attempt_timeline": [
+        {
+          "step": 122,
+          "key": 0
+        },
+        {
+          "step": 139,
+          "key": 1
+        },
+        {
+          "step": 154,
+          "key": 2
+        },
+        {
+          "step": 169,
+          "key": 3
+        },
+        {
+          "step": 185,
+          "key": 4
+        },
+        {
+          "step": 204,
+          "key": 5
+        },
+        {
+          "step": 225,
+          "key": 6
+        }
+      ],
+      "before_strike_feedbacks": 8,
+      "observed_head_lifts": [
+        0.08044787754373639,
+        0.07927129611522066,
+        0.07842281170505494,
+        0.06770364133513007,
+        0.07571978442530547,
+        0.07426313883193048,
+        0.07907620278465788
+      ],
+      "wrist_reuse_count": 6,
+      "wrist_reorientation_count": 2,
+      "contact_attempts": 7,
+      "local_strokes": 7,
+      "completed_contact_motions": 7,
+      "completed_lift_motions": 7,
+      "distinct_contact_motion_keys": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "counts_scope": "Contact/stroke events are controller bookkeeping, not native hits. At native cancellation a trailing event can be emitted without completed movement; completed_*_motions instead require a local_motion completion record. Neither establishes native success.",
+      "recent_recoveries": [],
+      "recovery_count": 0,
+      "last_phase": "retention",
+      "terminal_failure": null,
+      "elapsed_s": 143.40167346398812,
+      "error": null,
+      "evidence_trace": "runs/play-xylophone-attachment-fusion-c008-seed12-20261027/jobs/000_play_Xylophone_s1/attempt-001/runs/20261027T115938-5a4c78f3711f/events.jsonl",
+      "artifacts": [
+        {
+          "path": "_result.json",
+          "sha256": "117b7aac5c033705b64fc53e97b00912e1fec4f50cff9869aee75b750b3529a6"
+        },
+        {
+          "path": "episode_0000000_cam_head_success.mp4",
+          "sha256": "910cc8c2dfb11b4a054dbb4c4d73b58c45444b4be2feafd1641ba485d8369306",
+          "frames": 259
+        },
+        {
+          "path": "episode_0000000_cam_left_wrist_success.mp4",
+          "sha256": "11a62ad443953790d2e183fdcc52609a15362338ad125c978929ab90453a2f48",
+          "frames": 259
+        },
+        {
+          "path": "episode_0000000_cam_right_wrist_success.mp4",
+          "sha256": "8818623946937bb14ff7a1b949aed0aee3952a663aae8c426fbcb510cd5bd94f",
+          "frames": 259
+        }
+      ]
+    },
+    {
+      "seed": 2,
+      "status": "completed",
+      "score": 0.0,
+      "native_score": 0.0,
+      "success": false,
+      "skill_llm_requests": 3,
+      "router_requests": 1,
+      "command_counts": {},
+      "native_actions": 500,
+      "geometry_measurements": 1,
+      "local_head_feedbacks": 15,
+      "head_feedback_timeline": [
+        {
+          "step": 66,
+          "key": 0,
+          "checkpoint": "pickup_attachment",
+          "raw_correction_m": 0.007896308881052057,
+          "applied_correction_m": 0.007378533014440074,
+          "temporal_promotion_weight": 0.0,
+          "raw_weights": {
+            "cam_high": 0.2997822421458539
+          },
+          "fusion_weights": {
+            "cam_high": 0.2997822421458539
+          }
+        },
+        {
+          "step": 79,
+          "key": 0,
+          "checkpoint": "before_strike",
+          "raw_correction_m": 0.011241196906769972,
+          "applied_correction_m": 0.008933092069512512,
+          "temporal_promotion_weight": 0.7831454815861248,
+          "raw_weights": {
+            "cam_high": 0.07243205224511286
+          },
+          "fusion_weights": {
+            "cam_high": 0.07243205224511286
+          }
+        },
+        {
+          "step": 91,
+          "key": 0,
+          "checkpoint": "after_lift",
+          "raw_correction_m": 0.010247179523028388,
+          "applied_correction_m": 0.009409810469453711,
+          "temporal_promotion_weight": 0.7016803046530276,
+          "raw_weights": {
+            "cam_high": 0.2126796786725356
+          },
+          "fusion_weights": {
+            "cam_high": 0.2126796786725356
+          }
+        },
+        {
+          "step": 235,
+          "key": 7,
+          "checkpoint": "before_strike",
+          "raw_correction_m": 0.03219325373125986,
+          "applied_correction_m": 0.0308454375316758,
+          "temporal_promotion_weight": 0.0011606794527484912,
+          "raw_weights": {
+            "cam_high": 0.2860165317350152,
+            "cam_right_wrist": 0.27562377123464443
+          },
+          "fusion_weights": {
+            "cam_high": 0.2860165317350152,
+            "cam_right_wrist": 0.2518530246141032
+          }
+        },
+        {
+          "step": 247,
+          "key": 7,
+          "checkpoint": "after_lift",
+          "raw_correction_m": 0.05361094889453892,
+          "applied_correction_m": 0.049970800819281076,
+          "temporal_promotion_weight": 9.232481698530199e-06,
+          "raw_weights": {
+            "cam_high": 0.18696952835131203,
+            "cam_right_wrist": 0.16242334951771786
+          },
+          "fusion_weights": {
+            "cam_high": 0.18696952835131203,
+            "cam_right_wrist": 0.12240631522400737
+          }
+        },
+        {
+          "step": 249,
+          "key": 8,
+          "checkpoint": "sequence_review",
+          "raw_correction_m": 0.04934603003897544,
+          "applied_correction_m": 0.04497034856181152,
+          "temporal_promotion_weight": 0.8866689998259121,
+          "raw_weights": {
+            "cam_high": 0.16131697027543734,
+            "cam_right_wrist": 0.1006593798643573
+          },
+          "fusion_weights": {
+            "cam_high": 0.16131697027543734,
+            "cam_right_wrist": 0.03748283510728892
+          }
+        },
+        {
+          "step": 269,
+          "key": 0,
+          "checkpoint": "before_strike",
+          "raw_correction_m": 0.011561085059814319,
+          "applied_correction_m": 0.01114029183893894,
+          "temporal_promotion_weight": 0.5775304305176417,
+          "raw_weights": {
+            "cam_high": 0.4829296831965341
+          },
+          "fusion_weights": {
+            "cam_high": 0.4829296831965341
+          }
+        },
+        {
+          "step": 287,
+          "key": 0,
+          "checkpoint": "after_lift",
+          "raw_correction_m": 0.011392379159888893,
+          "applied_correction_m": 0.01099296759692,
+          "temporal_promotion_weight": 0.13080779155462585,
+          "raw_weights": {
+            "cam_high": 0.49915729730047814
+          },
+          "fusion_weights": {
+            "cam_high": 0.49915729730047814
+          }
+        },
+        {
+          "step": 291,
+          "key": 1,
+          "checkpoint": "before_strike",
+          "raw_correction_m": 0.012724464312409237,
+          "applied_correction_m": 0.01211209684280672,
+          "temporal_promotion_weight": 0.9295640043658707,
+          "raw_weights": {
+            "cam_high": 0.39606678198861517
+          },
+          "fusion_weights": {
+            "cam_high": 0.39606678198861517
+          }
+        },
+        {
+          "step": 306,
+          "key": 1,
+          "checkpoint": "after_lift",
+          "raw_correction_m": 0.04354494375274955,
+          "applied_correction_m": 0.037123621241662116,
+          "temporal_promotion_weight": 0.025692828713005118,
+          "raw_weights": {
+            "cam_high": 0.16521162701195197
+          },
+          "fusion_weights": {
+            "cam_high": 0.16521162701195197
+          }
+        },
+        {
+          "step": 311,
+          "key": 2,
+          "checkpoint": "before_strike",
+          "raw_correction_m": 0.03644645601229289,
+          "applied_correction_m": 0.03290204525160347,
+          "temporal_promotion_weight": 0.9814611681037512,
+          "raw_weights": {
+            "cam_high": 0.1802509531770733
+          },
+          "fusion_weights": {
+            "cam_high": 0.1802509531770733
+          }
+        },
+        {
+          "step": 326,
+          "key": 2,
+          "checkpoint": "after_lift",
+          "raw_correction_m": 0.0031306460672185037,
+          "applied_correction_m": 0.003022161155957597,
+          "temporal_promotion_weight": 0.8191579837530868,
+          "raw_weights": {
+            "cam_high": 0.5714426651835186
+          },
+          "fusion_weights": {
+            "cam_high": 0.5714426651835186
+          }
+        },
+        {
+          "step": 331,
+          "key": 3,
+          "checkpoint": "before_strike",
+          "raw_correction_m": 0.002609058109792563,
+          "applied_correction_m": 0.0025344830610353896,
+          "temporal_promotion_weight": 0.9735723736487945,
+          "raw_weights": {
+            "cam_high": 0.6677761672467417
+          },
+          "fusion_weights": {
+            "cam_high": 0.6677761672467417
+          }
+        },
+        {
+          "step": 352,
+          "key": 3,
+          "checkpoint": "after_lift",
+          "raw_correction_m": 0.004569781319661351,
+          "applied_correction_m": 0.004442653245304981,
+          "temporal_promotion_weight": 0.9475743709516287,
+          "raw_weights": {
+            "cam_high": 0.6584461331815498
+          },
+          "fusion_weights": {
+            "cam_high": 0.6584461331815498
+          }
+        },
+        {
+          "step": 357,
+          "key": 4,
+          "checkpoint": "before_strike",
+          "raw_correction_m": 0.004137718681703021,
+          "applied_correction_m": 0.004001313306993944,
+          "temporal_promotion_weight": 0.9577033182322608,
+          "raw_weights": {
+            "cam_high": 0.6038262607813059
+          },
+          "fusion_weights": {
+            "cam_high": 0.6038262607813059
+          }
+        }
+      ],
+      "keyboard_feedbacks": 13,
+      "measured_key_planes": [
+        [
+          0.0,
+          0.0,
+          0.773651843026712
+        ]
+      ],
+      "contact_attempt_timeline": [
+        {
+          "step": 87,
+          "key": 0
+        },
+        {
+          "step": 103,
+          "key": 1
+        },
+        {
+          "step": 118,
+          "key": 2
+        },
+        {
+          "step": 133,
+          "key": 3
+        },
+        {
+          "step": 151,
+          "key": 4
+        },
+        {
+          "step": 170,
+          "key": 5
+        },
+        {
+          "step": 188,
+          "key": 6
+        },
+        {
+          "step": 243,
+          "key": 7
+        },
+        {
+          "step": 280,
+          "key": 0
+        },
+        {
+          "step": 299,
+          "key": 1
+        },
+        {
+          "step": 322,
+          "key": 2
+        },
+        {
+          "step": 348,
+          "key": 3
+        }
+      ],
+      "before_strike_feedbacks": 7,
+      "observed_head_lifts": [
+        0.07739945690333405,
+        0.031206081299260058,
+        0.08781690465424585,
+        0.10082662342326154,
+        0.04100292426879548,
+        0.024157215372130114
+      ],
+      "wrist_reuse_count": 12,
+      "wrist_reorientation_count": 1,
+      "contact_attempts": 12,
+      "local_strokes": 12,
+      "completed_contact_motions": 12,
+      "completed_lift_motions": 12,
+      "distinct_contact_motion_keys": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "counts_scope": "Contact/stroke events are controller bookkeeping, not native hits. At native cancellation a trailing event can be emitted without completed movement; completed_*_motions instead require a local_motion completion record. Neither establishes native success.",
+      "recent_recoveries": [],
+      "recovery_count": 0,
+      "last_phase": "review",
+      "terminal_failure": null,
+      "elapsed_s": 180.57587600400439,
+      "error": null,
+      "evidence_trace": "runs/play-xylophone-attachment-fusion-c008-seed12-20261027/jobs/001_play_Xylophone_s2/attempt-001/runs/20261027T115938-680ff44d7304/events.jsonl",
+      "artifacts": [
+        {
+          "path": "_result.json",
+          "sha256": "99b780f4e1842dfa81b413ccd2e5302e5827cc349fea4edf978e1bd847986ed3"
+        },
+        {
+          "path": "episode_0000000_cam_head_fail.mp4",
+          "sha256": "583e8177a3cf188d88ce6341299fb7002cc758205c79ab31970557ece02ab665",
+          "frames": 501
+        },
+        {
+          "path": "episode_0000000_cam_left_wrist_fail.mp4",
+          "sha256": "ea30e2aaec9f1b79ffda86c34a308f8fa6bcafb7ae7d9ff0c29ebc9311b440f2",
+          "frames": 501
+        },
+        {
+          "path": "episode_0000000_cam_right_wrist_fail.mp4",
+          "sha256": "2efefea0f3082c807d93118cf9a69c2725dc179b71eb24c4e70b4f21195885f7",
+          "frames": 501
+        }
+      ]
+    }
+  ],
+  "native_action_budget": 500,
+  "native_actions": [
+    258,
+    258,
+    500
+  ],
+  "runtime_hashes": {
+    "controller.py": "d595636ce7937cace75ad21cd5c747f4134451522db534241f93f64a5e27fc47",
+    "vision.py": "241fe51c770d59ec694cdd07ba04e2ed362d4acbca80616a336cd3474667c079",
+    "operations.py": "27c18224ed3d1ba6705b39c9144784e648bdb76a76d626b77ab78fe856034f5d",
+    "motion.py": "f294adb767c2f51235f6443c2ecfb205b4e2d788fb73ddaca600de54157234af",
+    "native_worker.py": "a3ed88dea8597a254b84fcd5ac3bc606be4d3afc46e9500a285224727ba422f4",
+    "prompts.json": "234c622df59f3581c2feae436fdc733383b0ccf7fdc2eeaeb248549d01b5677d"
+  },
+  "shared_runtime_hashes": {
+    "../common/geometry.py": "9e204a79b46e863b93e7278e6200f44b432ba69f3bb62892ff17ef6510473d52",
+    "../../code_tools/collision.py": "c34b0c51b0a3da35329b876812643bd1eae51fb498b3ffd7f3ce982c59fe625f",
+    "../align_blocks/generator.py": "1e71ab6802ab18e3a9a453ede5e3d177a42323414eb9ee174c4b6e3295891535"
+  },
+  "native_retest_after_publication": false,
+  "llm_experience_byte_identical": false,
+  "published_experience_sha256": "5028266619ea316ebe06fd2c33476df9cbccc3fa3c379d853d36bba238f9809c",
+  "formal_static_checks": {
+    "checked_at": "2026-10-27T12:12:42.838671+00:00",
+    "targeted_publication": {
+      "command": ".venv/bin/python -m pytest -q tests/robodojo/test_xylophone_publication.py",
+      "passed": 30,
+      "failed": 0
+    },
+    "related_clean_subset": {
+      "command": ".venv/bin/python -m pytest -q tests/robodojo/test_xylophone_publication.py tests/robodojo/test_controller_skill_bundle.py tests/robodojo/test_initial_skill_experience.py tests/robodojo/test_code_skill_packaging.py --deselect=tests/robodojo/test_initial_skill_experience.py::test_existing_controller_first_request_receives_experience[sweep_blocks]",
+      "passed": 101,
+      "failed": 0,
+      "deselected": 1
+    },
+    "unfiltered_related": {
+      "passed": 101,
+      "failed": 1,
+      "failure": "test_initial_skill_experience.py::test_existing_controller_first_request_receives_experience[sweep_blocks]: existing controller has no geometry attribute."
+    },
+    "extra_legacy_suite": {
+      "command": ".venv/bin/python -m pytest -q tests/robodojo/test_code_skill_suite.py",
+      "passed": 17,
+      "failed": 6,
+      "failures": [
+        "test_code_plan_never_checks_action_model_weights: existing SAM-dependent skills request torch software identity, incompatible with legacy no-model-package monkeypatch",
+        "test_classification_and_language_fallback_keep_separate_task_coverage: same cached segmentation identity monkeypatch",
+        "test_board_suite_keeps_three_consecutive_native_episodes: same cached segmentation identity monkeypatch",
+        "test_number_suite_requires_the_separate_random_fallback[arrange_largest_number]: same cached segmentation identity monkeypatch",
+        "test_number_suite_requires_the_separate_random_fallback[arrange_largest_number_random]: same cached segmentation identity monkeypatch",
+        "test_default_catalog_contains_only_two_backends_and_valid_nested_bundles: old controller source-key assumption; existing formal bundles use controller.py key"
+      ]
+    },
+    "collection_limitation": {
+      "file": "tests/robodojo/test_code_smoke.py",
+      "error": "ModuleNotFoundError: orimapi.skills.code_skill_rsi.gripper_smoke"
+    },
+    "scope": "No full-suite pass claim. Other formal skill bytes verified unchanged. No native simulation rerun after summarizing LLM experience."
+  },
+  "evidence_scope": "Three development seeds, one episode each; not official full quota. Same frozen candidate; no online state transferred between episodes.",
+  "deployment_compatibility": {
+    "scope": "Physical GPU placement and relocated/symlinked runtime discovery only; task policy, planning and collision logic are unchanged. Current dependency fingerprints are refreshed; original candidate evidence remains historical.",
+    "previous_fingerprints": {
+      "runtime_hashes": {
+        "motion.py": "23f426ebe5aadf7967a7980aad5ce2897fea900abbe674d46e72f17bab7d02a3"
+      }
+    },
+    "native_task_retested_after_change": false,
+    "historical_candidate_hashes_and_outcomes_preserved": true
+  }
+}

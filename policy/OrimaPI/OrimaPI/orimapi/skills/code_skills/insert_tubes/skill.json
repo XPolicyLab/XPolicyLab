@@ -1,0 +1,58 @@
+{
+  "schema": "orimapi.code-controller-skill/v1",
+  "skill_id": "insert_tubes",
+  "supported_tasks": [
+    "insert_tubes"
+  ],
+  "task_spec": {
+    "task": "insert_tubes",
+    "budget": 500,
+    "requirements": "Insert all three tubes into rack, meet native depth/upright conditions, release and home both arms. Camera/public robot only; unchanged native500 actions."
+  },
+  "tool_limits": {
+    "max_calls": 16,
+    "max_tools_per_turn": 8,
+    "history_size": 8
+  },
+  "experience": "experience.json",
+  "sources": {
+    "controller": "controller.py",
+    "vision": "vision.py",
+    "shared_make_kong_baseline_motion": "../make_kong/baseline_motion.py",
+    "shared_make_kong_hand_clearance": "../make_kong/hand_clearance.py",
+    "shared_make_kong_hand_bounds": "../make_kong/hand_bounds.json",
+    "shared_stack_bowls_vision": "../stack_bowls/vision.py",
+    "baseline_controller": "baseline_controller.py",
+    "home_route": "home_route.py"
+  },
+  "qualification": {
+    "successful_seed_sets": [
+      0,
+      1
+    ],
+    "tested_seed_sets": [
+      0,
+      1
+    ],
+    "admission": "Two distinct native successful seeds; no compulsory third seed",
+    "scope": "One original native layout per seed set; not full benchmark reliability",
+    "results": [
+      {
+        "seed": 0,
+        "success": true,
+        "score": 1.0,
+        "layout_sha256": "7a385171c850978ea45616e562eb0c6efd025e592be0542ac5f0298ee0f12557",
+        "run_id": "20261021T140415-tool-episode-e1342afe4436"
+      },
+      {
+        "seed": 1,
+        "success": true,
+        "score": 1.0,
+        "layout_sha256": "815818e71fc7becdee94fb8dfeae8036fa138617720881574b064956317ec015",
+        "run_id": "20261021T135848-tool-episode-515fe56ac00e"
+      }
+    ],
+    "llm_model": "gpt-6-astra",
+    "reasoning_effort": null
+  }
+}

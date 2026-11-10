@@ -1,0 +1,48 @@
+[
+  {
+    "official_success": false,
+    "lesson": "Previous development missed the bottle axis using surface-label points, toppled pink, and exhausted actions on repeated table handoffs. A completed TCP move is not a successful pickup. Preserve four identities, inspect retention, and reserve final home."
+  },
+  {
+    "official_success": false,
+    "development_reflection": {
+      "lessons": [
+        "Gripper closure, TCP tracking and image overlap do not establish object retention; independent motion with fresh RGB is required.",
+        "A receiving grasp must enclose a body cross-section, not merely contact an end face or the visible label surface.",
+        "Successful handover does not establish bin delivery; release and settled landing require separate verification.",
+        "Budget actual elapsed actions and a clearance-checked return route, not nominal motion steps or a fixed home reserve."
+      ],
+      "confirmed_failures": [
+        "Native evaluation returned success=false and 25/100. Three deliveries are not established.",
+        "The last horizontal-bottle handover failed after donor release: frame 625 shows the bottle on the table and the receiver empty.",
+        "Frame 607 does not support the claimed receiver enclosure: the wrist view shows fingertips meeting the near label-side/base-edge region rather than clearly surrounding opposing body surfaces.",
+        "Home terminated at step 632 with 'Grasp point must remain at least 4 mm above table'. It neither completed successfully nor proves earlier bottles landed."
+      ],
+      "uncertain_causes": [
+        "Yellow is the visibly problematic bin release: wrist frame 263 places it apparently beyond the far rim over the floor-side region. This supports a suspected miss, not a verified final resting location. Pink and white landings remain unconfirmed by these release frames.",
+        "Insufficient receiver insertion or an end-biased target likely caused the horizontal-bottle failure. Frame 607 suggests near-face contact, but exact contact forces, slip timing and any donor disturbance cannot be determined.",
+        "Lost body tracks and manually selected base targets lacked a demonstrated current object-frame reconstruction. Public TCP accuracy cannot validate bottle geometry.",
+        "Motion expansion reduced recovery capacity: public telemetry shows a nominal five-step move consuming 16 actions. The precise home-path defect and its contribution to the native score remain unknown."
+      ],
+      "next_candidate_changes": [
+        {
+          "change": "Construct a geometric receiving target and gate donor release.",
+          "details": "At an RGB-verified donor grasp, estimate body-axis endpoints and cross-section dimensions from calibrated views. Capture endpoint coordinates in the donor TCP frame: p_local=inverse(T_grasp)*p_world; predict p_now=T_current*p_local only while fresh RGB supports rigid retention. Select an exposed axis point between the base and shoulder, sufficiently inward from the end and clear of the donor. The body center is an interior axis point; the end face terminates the axis; the label is an exterior surface. Target the cross-section center, orient jaws across its narrow dimension, and advance until opposing fingers visibly extend around the body, not just touch its near face. Keep donor closed if uncertain; after release and clearance, require an independent receiver lift before transport."
+        },
+        {
+          "change": "Verify object-relative bin placement instead of reusing a TCP release point.",
+          "details": "Re-localize the opening and rim from current calibrated RGB. Account for the retained bottle's offset and orientation so its projected fall footprint lies within the opening with margin. Release from a stationary, clearance-checked pose; withdraw to expose the landing and retain an unknown status unless settled inside is visible."
+        },
+        {
+          "change": "Plan the complete route and return budget before acquisition.",
+          "details": "Reuse the earlier staged-approach and short-test-lift procedures, not their coordinates or unverified delivery claims. Prefer orientation-preserving translations where feasible. Budget measured action costs for transfer, verification, release, withdrawal and home; preflight the full return path against public table and hand-clearance guards. On partial motion or guard failure, inspect current RGB and TCP before replanning."
+        }
+      ],
+      "needed_tools": [
+        "Synchronized overhead and wrist RGB inspection with calibrated point selection, multi-view reconstruction and endpoint/finger overlays.",
+        "Current public TCP, finger geometry and collision-envelope access; rigid-transform calculations with RGB retention checks.",
+        "Public full-path clearance preflight and elapsed-action accounting; native final-result reader."
+      ]
+    }
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "lesson": "For concave numeral pieces, center-based grasping can create release problems. Distinguish successful motion execution from verified object release, and diagnose the first logged failure before attributing later incomplete placements to missed grasps."
+  },
+  {
+    "lesson": "Use observed pad order and object-relative grasp offsets rather than memorized coordinates. For staged cross-arm transfers, relocalize the released piece before the receiving pickup, and distinguish intentional intermediate placement from a drop."
+  },
+  {
+    "lesson": "Correct sorting and completed motion stages do not guarantee a correct arrangement. Gripper closure is not pickup proof; secure contact and the object's actual orientation must remain valid for grasp-offset placement to work."
+  },
+  {
+    "lesson": "Correct sorting and completed robot motions are not sufficient: verify retained pickup independently of gripper closure, and distinguish a failed acquisition from an off-center release before changing the controller."
+  },
+  {
+    "lesson": "Use object-relative grasp offsets and orientation corrections rather than memorized coordinates, and relocalize a piece after a staged handoff. Judge completion using the native result and visible arrangement, not gripper commands alone."
+  },
+  {
+    "lesson": "Sort observed digits descending and bind each to observed left-to-right pad once. Execution order may prioritize reachable same-side transfers; pad assignment never changes to make a plan easier."
+  },
+  {
+    "lesson": "Use current RGB whole-digit narrow-axis outside pinches and public distal pad anchors to avoid trapping fingertips inside concave digits. Propagate actual grasp-to-center offset under rotation."
+  },
+  {
+    "lesson": "Use a short feedback controller per digit rather than generate an entire task program. Verify retention after test lift and before release, then visually verify the current arrangement after clearing both arms."
+  },
+  {
+    "lesson": "For a cross-workspace transfer use an observed-empty central table staging area and re-localize the released digit before receiving pickup. Preserve the final pad assignment and upright reading."
+  },
+  {
+    "lesson": "A low lift can appear table-supported in a single view. A negative held judgment is ambiguous when the object stays fixed relative to fingertips and contact aperture remains nonzero. Inspect current head and wrist evidence together."
+  },
+  {
+    "lesson": "Do not repeat failed plans indefinitely or exhaust all calls on one digit. After two failed re-localized attempts prioritize remaining assigned digits while retaining the original1050-action limit and final release/home."
+  }
+]

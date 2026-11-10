@@ -1,0 +1,10 @@
+{
+  "local_implementation": [
+    "current-episode reference/departure/match ledger",
+    "timestamped measurement dispatch and stale rejection",
+    "calibrated measurement overlay",
+    "public finger-pad contact mapping",
+    "native IK bridge and guarded chain time estimate",
+    "GPT feedback and stage-specific recovery"
+  ]
+}

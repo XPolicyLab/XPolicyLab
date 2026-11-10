@@ -1,0 +1,136 @@
+{
+  "candidate_bundle_sha256": "f3effaa0d51ff5597f5b8bd817f3efe77e9ebc2c0e6bd3657237007a691073e2",
+  "run": "runs/fill-pen-holder-staged-c008-20261027",
+  "episodes_per_seed": 1,
+  "native_action_budget": 1100,
+  "qualification": {
+    "published": true,
+    "mode": "user_authorized_unqualified",
+    "tested_seeds": [
+      0,
+      1
+    ],
+    "successful_seeds": [],
+    "untested_seeds": [
+      2
+    ],
+    "standard_qualified": false
+  },
+  "outcomes": [
+    {
+      "seed": 0,
+      "score": 0.0,
+      "native_score": 0.0,
+      "success": false,
+      "skill_llm_requests": 3,
+      "router_requests": 1,
+      "failure": "Holder side grasp missed; pen lift and return planning failed; no insertion."
+    },
+    {
+      "seed": 1,
+      "score": 0.0,
+      "native_score": 0.0,
+      "success": false,
+      "skill_llm_requests": 2,
+      "router_requests": 1,
+      "failure": "Holder side-grasp approach planning failed; no closure or insertion."
+    }
+  ],
+  "runtime_hashes": {
+    "stages.py": "d5a0a1dbf36407d579888e61a1198836d6873bd6942a5f736ea092487c0f1a24",
+    "motion_worker.py": "a414e8b6a2e80afb45058b244adc72604595e4aeef16b38ad47552eade933a73",
+    "prompts.json": "a76f00e354193600bbb6cd9022cace01b5ac60c8dd2b1f84545e4a17f5e8e85f",
+    "pen_geometry.py": "306f65cd470772ccffcd3533631cee40d7728f238ee1d3ea3360250b27d6f962",
+    "motion_adapter.py": "88aeaeb1ad8a08584a90766a246299bb555e761d0f133f4782a7b97555e90694",
+    "controller.py": "77075ed02fe6ee676c816befe8b8f6f43cbbb951e95f3a0115be5788d1ee5bff",
+    "source_provenance.json": "1c872e448520a26c0483b5eb1125f0e129bd920cf7b07ad8de70904bea671b22",
+    "experience.json": "ccced3f91c36122dc519a902501c3bb430fb0ed039db743ffb330ec45a9beb9b"
+  },
+  "shared_hashes": {
+    "source_shared_open_experience": "e1942769541bbba3b19e1118f69c765117941f0f6ba13b30b50e6df50df53592",
+    "source_shared_open_source_file_000": "5ac32b00eab0c3873dc4b69911b589c4310d02e6872cc6d0e80da537a1f721bf",
+    "source_shared_open_source_file_001": "825dafbf5297ab224726f5be22681a869604b5b63b22b44d829b47a51935abc2",
+    "source_shared_open_source_controller": "aa170f6fa7c2eff40baa389c1f9475e6f0894fc733bb32d208eb3b67e8816fa2",
+    "source_shared_open_source_file_003": "5b95b273c629e9161f7dd7c5fa1c142efeeeb488b9223315839d48206014306d",
+    "source_shared_open_source_file_004": "e1942769541bbba3b19e1118f69c765117941f0f6ba13b30b50e6df50df53592",
+    "source_shared_open_source_file_005": "6ecea3347942113699f1993b189fa4ad555912aa69906d43dd3a29beaed426ca",
+    "source_shared_open_source_file_006": "088592a790fde9051c007a635fcc6edec1c51a29c21f367163303e87c32784e9",
+    "source_shared_open_source_file_007": "92a27a877166ed808aeae0e6fff202fa9725c0bfc7dc333d6cffb2608574beba",
+    "source_shared_open_source_file_008": "a093c0d64b3f252c660a21e4bcc4b1b5152994938820432324dc29739235023e",
+    "source_shared_open_source_file_009": "db8b6ad8993b08460b09ad520304b36ec62b6b5481a6c5f731a5717f4336a715",
+    "source_shared_open_source_file_010": "7525f7de87e4e8b7ba53aaa46c20240501cb849c05b71d9c8a5005bf0709a05e",
+    "source_shared_open_source_file_011": "83a272ad04f8d5caf2a400f667e8ab6b5ac0cb09f59e2a7b99507bcbc8dbf4bf",
+    "source_shared_open_source_file_012": "98031835ac2e94ca7da7b726c65c0d13e35eb2092ee27de5531d436bfc0b9c66",
+    "source_shared_open_source_file_014": "325eaa11ae2bda1e35e0a87c5642eba8aa7b757f1abe70084150904d858f44e4",
+    "source_shared_open_source_file_015": "ca1345ef1344acaf8e5742c2d82686ce1a6a8e3331923abf024f40e1cf5eb06a",
+    "source_shared_open_source_file_016": "0342c859a2eaa59b29d44d642ebed22730273e114f8b5d03c219bd5e4649e5f9",
+    "source_shared_open_source_file_017": "4dc75130689d8c6b57d17f4515247e14a6d6b4d8de29b26e30ff8a7609080482",
+    "source_shared_open_source_file_018": "e519bccfdcc42417004155907b84441f726e9589e98507d2b0e34f3ca7ee73da",
+    "source_shared_open_source_file_019": "100a0ff3c32141b92fa6ab5662fdc949d5e54cf1e0c47a4cae510b80baa5b82d",
+    "source_shared_open_source_file_020": "b34b4cc98fdafd127426fe8fd6873e0e6c8fca0e76fe4482219f1508a14a9428",
+    "source_shared_open_source_file_021": "fe168a2660dc7c806075cf3d5fc6b2d7fb28db11b25bd230be4ef94c0f881d3a",
+    "source_shared_open_source_file_022": "a5ad1039944d310ec5f87fa202aed63345b79be7cb58ed78c10f6c072afda2e3",
+    "source_shared_open_source_file_023": "dd4e254e14745d9c74cfdd6f92d7b9ffb635f934d4a2cc0bb185b7ba151872b1",
+    "source_shared_open_source_file_024": "d7fc3df58b210ab691a2820ad246a6499bfd700d4405f9eaa0aa73b3c801242b",
+    "source_shared_open_source_file_025": "d15d4ea5be59ce75ab76b4ea1129f0f1ab3c72692bfddd0efd52074b6fa55e61",
+    "source_shared_open_source_file_026": "7f16883ee7c0d9271d3ea65f68cb93b2147003a84a42b0e57834fcad242fbb1a",
+    "source_shared_open_source_file_027": "9e6cf9428adcd567dbb4d9f0371d2ed3ca32e5e7a7a39f50a5f65a44e14bcc6b",
+    "source_shared_open_source_file_028": "a6778a5c515dd46f722be5a03a848434aa913532cee4e11210b8d8ae61e09ea1",
+    "source_shared_open_source_file_029": "e64251b7e7cb0d95fb454054dd3fcf41f45382585e54a6da06d517de3a2e2b51",
+    "source_shared_open_source_file_030": "35a32b0d58c034410c483f71fca82b86e2f0f941cf11987bd53a8086a4870d6f",
+    "source_shared_open_source_file_031": "4e378d17f1e9b38fec4180f6f1ef6baa88dcc87bed37530ff98ad9bc41ec5e11",
+    "source_shared_open_source_file_032": "129a862f04adeaa06d025f56fc7549a7af216dfc9c7a3d635f41344ce15fa141",
+    "source_shared_open_source_file_033": "439fe49cd5e89adcbec303c77f9bc5814d85f1a48519d02507df4f91c82ba362",
+    "source_shared_open_source_file_034": "8f7fcf3a643d3be824c79045d85f24dfdbda7deb2b3878638074a34f5ffe8f81",
+    "source_shared_open_source_file_035": "f13ad0ff6b6b9c58f7fa14c0d71bab11a82ae25358daea84ae3c068fe03f8cb5",
+    "source_shared_open_source_file_036": "13b6e6ad7129c49f3c261a75703bf2b7ef122a48ea53275ccc4b391a8f1b1421",
+    "source_shared_open_source_file_037": "a18754e7b772acbaaa96fa9e54d829823099f9ae604b3b3fe17d22fef9352bf1",
+    "source_shared_open_source_file_038": "6c156238e4ab38054e13be4655c0a0f5f6c072d28163c5bf8b730f80239e81ff",
+    "source_shared_open_source_file_039": "3381078be4c0e163d10ad5415188f1d8d8df6373197cfeb5025c4dfaf794aedf",
+    "source_shared_open_source_file_040": "c6d13b560463a06fd3d8ad01abc08cfbbd0c17e56b2788cbe498e1ba2a7b6429",
+    "source_shared_open_source_file_041": "b498fdf2fe7291986e7326418fbfef63c2cee26ccc33e1b7384619d103dac08d",
+    "source_shared_open_source_file_042": "4422e408ac79ef4fb806a4eaa688a078cc296a925a228ca783b505fed96dd470",
+    "source_shared_open_source_file_043": "f6942446182fa76e7026369d8bd5f985c90fed6c13841fff3d7ea6a8202a07d1",
+    "source_shared_open_source_file_044": "3530200227ed6e177bc17d5f6c91da02f49f587953e22b890d3fe53c7a43b11e",
+    "source_shared_open_source_file_045": "6194d602b3ad7f09f1b11ef261fb552f86e67d6f5f2c696fab1c8bae06b68cf3",
+    "source_shared_open_source_file_046": "279f4c5f25170a7e22b1344e4f9db197f8fbb11273e17ba7ee3da36daa1f6b0a",
+    "source_shared_open_source_file_047": "d9f84ae7b62a063f44b9ec59381d40234efad59cb305253ff98c07b1acb4f944",
+    "source_shared_open_source_file_048": "3a584a994f44405513eab756b40707febad72f97aee962ed4afc20a55287a484",
+    "source_shared_open_source_file_049": "d7d9ca4b481d4272c8d1205b3274f3d1b911a95c9ce3a70e1b2ad023275bcba5",
+    "source_shared_open_source_file_050": "cd257aec7f4ba01e239f88892f4243f6ab182dc1857354fc152fb930583fcb12",
+    "source_shared_open_source_package": "cca09d4968b4b3d4a1900129ac7514cdd816fe9f1edac6d38f184534e4950780",
+    "source_shared_open_source_publication": "b884edecf80acbfd3d9413495bbc90ef2ff9ade7adc1f828160daafedaad6740",
+    "source_shared_open_source_validation": "b5b24915daff4a52455741e22d35024d36d78fba4bc538ed04ff1548dcb4b828",
+    "source_shared_open_source_summary": "510050654729539c68ba797de6cc8b41520ed23807ef5b4446198249454e3fcc",
+    "source_shared_generator": "1e71ab6802ab18e3a9a453ede5e3d177a42323414eb9ee174c4b6e3295891535"
+  },
+  "limitations": [
+    "No successful seeds; seed2 untested",
+    "Independent upright and shallow insertion routines not exercised in native c008",
+    "Commanded grip/transport does not prove object retention"
+  ],
+  "research_cpu_tests_passed": 122,
+  "publication_checks": {
+    "passed": 121,
+    "deselected": 4,
+    "deselection_reason": "Historical c001-c004 assertions require the pre-publication formal directory to remain unchanged. Original tests/baseline preserved; new publication test verifies that baseline against archived old formal files.",
+    "formal_config_controller_load": "passed",
+    "frozen_candidate_hash_unchanged": true,
+    "new_native_simulation": false
+  },
+  "deployment_compatibility": {
+    "scope": "Physical GPU placement and relocated/symlinked runtime discovery only; task policy, planning and collision logic are unchanged. Current dependency fingerprints are refreshed; original candidate evidence remains historical.",
+    "previous_fingerprints": {
+      "runtime_hashes": {
+        "motion_adapter.py": "8d65342b782d0d77dd45173a0b8ea6ed42403b082d8be091ac2cc4ea0bdd73f4"
+      },
+      "shared_hashes": {
+        "source_shared_open_source_file_001": "1c6e689e3801ed408d4d9b549504a825b7b5089e3a79ca9a87505851ed90a33e",
+        "source_shared_open_source_publication": "f769c79647786a7ba2bc7d0a2096e31f39b28acb6235ed8162f884ca408b2a02",
+        "source_shared_open_source_validation": "b38b4cfb33cf51330d5b1c62c1f5ac5d0884be4db773d58b9657503f9ab8343e"
+      }
+    },
+    "native_task_retested_after_change": false,
+    "historical_candidate_hashes_and_outcomes_preserved": true
+  }
+}

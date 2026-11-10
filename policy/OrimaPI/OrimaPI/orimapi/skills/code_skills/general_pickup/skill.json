@@ -1,0 +1,54 @@
+{
+  "schema": "orimapi.code-controller-skill/v1",
+  "skill_id": "general_pickup",
+  "supported_tasks": [
+    "general_pickup"
+  ],
+  "task_spec": {
+    "task": "general_pickup",
+    "budget": 200,
+    "requirements": "Identify the target from the current language instruction and RGB among distractors. Grasp a visible accessible solid part, raise the target at least 10 cm and retain it. The unchanged native evaluator decides success within 200 actions. No return-home action is required, and opening a retaining gripper would undo the goal. Only current RGB, public robot state, calibration and robot geometry are inputs."
+  },
+  "tool_limits": {
+    "max_calls": 24,
+    "max_tools_per_turn": 8,
+    "history_size": 8
+  },
+  "experience": "experience.json",
+  "sources": {
+    "controller": "controller.py",
+    "vision": "vision.py",
+    "shared_make_kong_baseline_motion": "../make_kong/baseline_motion.py",
+    "shared_make_kong_hand_clearance": "../make_kong/hand_clearance.py",
+    "shared_make_kong_hand_bounds": "../make_kong/hand_bounds.json"
+  },
+  "qualification": {
+    "successful_seed_sets": [
+      0,
+      1
+    ],
+    "tested_seed_sets": [
+      0,
+      1
+    ],
+    "scope": "One first native layout per seed set; engineering admission, not full benchmark reliability",
+    "results": [
+      {
+        "seed": 0,
+        "success": true,
+        "score": 1.0,
+        "layout_sha256": "7a3ecf189e248f99a75ef8f6fdbe7fca85795846d67e9fd7f2d74954c8e78dda",
+        "run_id": "20261022T044520-tool-episode-c34f71f9932e"
+      },
+      {
+        "seed": 1,
+        "success": true,
+        "score": 1.0,
+        "layout_sha256": "4ac42f93cf5065ef01483a56bcbf80339ce11410da46c40b016858297a35fef9",
+        "run_id": "20261022T044056-tool-episode-f3f792ab3077"
+      }
+    ],
+    "llm_model": "gpt-6-astra",
+    "reasoning_effort": null
+  }
+}

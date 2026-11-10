@@ -1,0 +1,149 @@
+{
+  "native_runner_sha256": "3d110e5c8e377054339a2758beeab6fc794ce4b44fe8532d10ce9eee8d00d4aa",
+  "outcomes": [
+    {
+      "requested_seed": 0,
+      "run": "/root/code/OrimaPI/runs/20261023T065335-tool-episode-fe5015ba5155",
+      "success": false,
+      "error": null,
+      "controller_failures": [],
+      "official_result": {
+        "episodes": [
+          {
+            "layout_id": 0,
+            "success": false,
+            "score": 0.2,
+            "artifact": "native/RoboDojo/deposit_coin/orimapi_a7d7ba81cb9944559d9da9daf59e15c0/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_a7d7ba81cb9944559d9da9daf59e15c0/_result.json"
+          }
+        ],
+        "episode_count": 1,
+        "success_rate": 0.0,
+        "mean_score": 0.2,
+        "artifacts": [
+          {
+            "path": "native/RoboDojo/deposit_coin/orimapi_a7d7ba81cb9944559d9da9daf59e15c0/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_a7d7ba81cb9944559d9da9daf59e15c0/_result.json",
+            "sha256": "ecbb55778c109da79d622963470c9f197543dc4b44ace23019875677ef8c0706"
+          }
+        ]
+      }
+    },
+    {
+      "requested_seed": 1,
+      "run": "/root/code/OrimaPI/runs/20261023T065949-tool-episode-ac51f4f3421d",
+      "success": false,
+      "error": null,
+      "controller_failures": [],
+      "official_result": {
+        "episodes": [
+          {
+            "layout_id": 0,
+            "success": false,
+            "score": 0.2,
+            "artifact": "native/RoboDojo/deposit_coin/orimapi_6a52237b543247beb37cb6e9853a407e/arx_x5/1_ckpt_name=policy-library,action_type=joint/orimapi_6a52237b543247beb37cb6e9853a407e/_result.json"
+          }
+        ],
+        "episode_count": 1,
+        "success_rate": 0.0,
+        "mean_score": 0.2,
+        "artifacts": [
+          {
+            "path": "native/RoboDojo/deposit_coin/orimapi_6a52237b543247beb37cb6e9853a407e/arx_x5/1_ckpt_name=policy-library,action_type=joint/orimapi_6a52237b543247beb37cb6e9853a407e/_result.json",
+            "sha256": "ecbb55778c109da79d622963470c9f197543dc4b44ace23019875677ef8c0706"
+          }
+        ]
+      }
+    },
+    {
+      "requested_seed": 2,
+      "run": "/root/code/OrimaPI/runs/20261023T070636-tool-episode-fdc25e42fa9e",
+      "success": false,
+      "error": null,
+      "controller_failures": [],
+      "official_result": {
+        "episodes": [
+          {
+            "layout_id": 0,
+            "success": false,
+            "score": 0.2,
+            "artifact": "native/RoboDojo/deposit_coin/orimapi_041aad035b1948c9a69f090f4b83f53b/arx_x5/2_ckpt_name=policy-library,action_type=joint/orimapi_041aad035b1948c9a69f090f4b83f53b/_result.json"
+          }
+        ],
+        "episode_count": 1,
+        "success_rate": 0.0,
+        "mean_score": 0.2,
+        "artifacts": [
+          {
+            "path": "native/RoboDojo/deposit_coin/orimapi_041aad035b1948c9a69f090f4b83f53b/arx_x5/2_ckpt_name=policy-library,action_type=joint/orimapi_041aad035b1948c9a69f090f4b83f53b/_result.json",
+            "sha256": "ecbb55778c109da79d622963470c9f197543dc4b44ace23019875677ef8c0706"
+          }
+        ]
+      }
+    }
+  ],
+  "scope": "Recorded native outcomes and source identity, not future scene inputs",
+  "historical_runtime_hashes": {
+    "frozen_knowledge.json": "48b283130658cfbbfe6119cfccd0bfe2172da64f90bbac7582b97a15194fc3fe",
+    "task_vision.py": "83eee46e8e6a913c19f5e0903c3ff063695e771b6f9fc04342f4bd35756ff068",
+    "tool_documentation.md": "e32836abe5f71341363e6944e57e5347136e8ba6c660751ca5f5c9d5308c5767",
+    "program_worker.py": "b2bc7f51ef96a54d31bc9415662819184abb4c98bc8857a8560a993afec55e59",
+    "program_prompt.md": "c74da29d1061d4899b8151972457c97de8e94b0de1598ee8d29b7f8e7fd2afc4",
+    "arrival_motion.py": "00d106935b8249f2e26d7a09febf95f35ebced69cdc150c4431a20d720ad95ce",
+    "hand_clearance.py": "088592a790fde9051c007a635fcc6edec1c51a29c21f367163303e87c32784e9",
+    "hand_bounds.json": "6ecea3347942113699f1993b189fa4ad555912aa69906d43dd3a29beaed426ca",
+    "visual.py": "201b8248287125873f4e0dc0423d8718179f1132d35a80401059a827c3d5ea18",
+    "vision_geometry.py": "af94786f477d2dcfc821cf560812d5d9697035ffa020da8328ba9aeaa5789856",
+    "controller.py": "9209fcaa43a57485d64b00052a770f70e10c3bea3347228d9fd832ff86433137",
+    "public_hand.py": "db8b6ad8993b08460b09ad520304b36ec62b6b5481a6c5f731a5717f4336a715",
+    "vision_resources.json": "6e04971e8bc09afc337e0613669ae352cbb25923e9f221760496e416dc39e2e8",
+    "experience.json": "c3bd900c134071aa18b3d36e03939d64791f5b523de8f82563c5619d4272cded",
+    "generator.py": "1e71ab6802ab18e3a9a453ede5e3d177a42323414eb9ee174c4b6e3295891535",
+    "task_geometry.py": "de812a5584082b6f8b8b25abc817d67707e5f8dd1bc1e0ceca30430f4a814a88",
+    "view_geometry.py": "6e50b9a223068b8eea27da3f8667135aa55909b75bf10d62667cea6eedad9cf4",
+    "program_session.py": "29e167885abbdeab1ee46171890578f88f5efe49b5d968aa05aed7460e494944"
+  },
+  "runtime_hashes": {
+    "RESEARCH_SUMMARY.md": "6c2830e00929fc89c7b3a95e684373cd9cbef21dd32c511b7fad19ef15217a3b",
+    "arrival_motion.py": "00d106935b8249f2e26d7a09febf95f35ebced69cdc150c4431a20d720ad95ce",
+    "auto_contact.py": "8faa483a3f3a444269eea61086c3a4da9ececba6aacb5a677b6d025355eb2449",
+    "coin_edge.py": "0293d4452abec67c76acbd857bf524f6432e6b8914ffeed66ac26b941a97a585",
+    "coin_insertion.py": "ec65e01e204550addbcfd0790696c0ddfc16a90b55573eeea89bd5ee26b33b0b",
+    "coin_search.py": "44ab8c354a4cae50f5369f7bccf0af6d3dbe8d2f8d9960720d03e15dcaf0c143",
+    "coin_servo.py": "14ec3ad02d73975d24a387d304f57cd4930a81eb9380bb50f67027693ae2c748",
+    "coin_workflow.py": "5583419d334271fcbdf7338fdefe7813641484e021430559230a39e834a949e4",
+    "controller.py": "a6b91784260b8586f2b4d6ec5d96fbd337ad004497ca0d6a3eea148710b111a0",
+    "delivery_recovery.py": "6563710f3754875e403d12f27a614449d8c3cd766cda5e72da0f7b627955c64c",
+    "experience.json": "c3bd900c134071aa18b3d36e03939d64791f5b523de8f82563c5619d4272cded",
+    "failure_experience.json": "3fc45045239824b42c9fe4be604f5ec6da236857a181555868d34bf770e7c80a",
+    "frozen_knowledge.json": "c802f0a700655673a980452e2b6f1094a0dd469e4d3964293292889c435e8102",
+    "generator.py": "1e71ab6802ab18e3a9a453ede5e3d177a42323414eb9ee174c4b6e3295891535",
+    "hand_bounds.json": "6ecea3347942113699f1993b189fa4ad555912aa69906d43dd3a29beaed426ca",
+    "hand_clearance.py": "088592a790fde9051c007a635fcc6edec1c51a29c21f367163303e87c32784e9",
+    "held_patch.py": "392fe9383586689648c074411c9e128b5fe3fbc004bf224f2401b30901d908b9",
+    "postcarry_prompt.md": "33d81ec52c254e07134cda9cef48089b0a4d8051905ac382d04793c47e4e9005",
+    "postlift_prompt.md": "bec088dc483bf60c145de75ae476380fac6abe2466efb9e8eee9fae3666894a4",
+    "program_prompt.md": "b845ff3da50ecf536e837a6072920ab44fd9838cb1b8cea473a000929e59ef3b",
+    "program_session.py": "29e167885abbdeab1ee46171890578f88f5efe49b5d968aa05aed7460e494944",
+    "program_worker.py": "b2bc7f51ef96a54d31bc9415662819184abb4c98bc8857a8560a993afec55e59",
+    "public_hand.py": "db8b6ad8993b08460b09ad520304b36ec62b6b5481a6c5f731a5717f4336a715",
+    "relative_alignment.py": "050a8d2c6ce242af3662db7b6e02d329b650315b1c844350cfd081c16cb0b42b",
+    "servo_patch.py": "ad9a472c005e91e2084f3d6e02e99b70ec9ed5a8a7a51d79064a707b4cecab15",
+    "servo_regions.py": "96b2610798e83aa8be99cb08acf40bf4868690467994ff01a216b10ca6779ff2",
+    "servo_target.py": "1952ca6a15afe8b58e61406d6a93902cdd3052f62ae5ae52d73c193882444a1f",
+    "servo_visibility.py": "0f54b9c4dea981337d39568205d518665e5aa30ef5f5372175647ff4106e0fe5",
+    "slot_recovery.py": "288b7f2d7b669e3db2c75afb8f31abb80efd9df3d1afaefe477d49637680b886",
+    "successful_code_examples.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "task_geometry.py": "13bc43a9121fa17a583c06d6b6885480f721142864008632b26fc3da59daaf61",
+    "task_vision.py": "62a6eb6b8fb4fe06c6fc6a148745dfbcee0091a80febb4afd760a3d1280e7498",
+    "temporal_vision.py": "a48aeb8487c61130bf1ea12ee789e4829e10da044cea2e14cd6df16798afda13",
+    "tool_documentation.md": "5c5431900a961d734935cf501e39e09d49f43736603c7361e5742877e43706df",
+    "view_geometry.py": "215e6bd318f1285fde71f7b803fa117317f3896974020ade04e15c7f2d9b4385",
+    "vision_geometry.py": "af94786f477d2dcfc821cf560812d5d9697035ffa020da8328ba9aeaa5789856",
+    "vision_resources.json": "6e04971e8bc09afc337e0613669ae352cbb25923e9f221760496e416dc39e2e8",
+    "visual.py": "b2b329580d2a4406199edcfc113b0767dfde76712714e4f0d666225226f3bf75"
+  },
+  "current_revision_validation": {
+    "native_task_retested": false,
+    "historical_scores_apply_to_current_revision": false,
+    "scope": "Manifest now pins all execution dependencies of the existing held-coin controller. Historical RSI4 source hashes and outcomes are retained separately; they do not qualify the changed controller."
+  }
+}

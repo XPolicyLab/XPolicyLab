@@ -1,0 +1,387 @@
+{
+  "schema": "orimapi.arrange-largest-number-validation/v1",
+  "tested_candidate_bundle_sha256": "b5a1b3de218c67bb72442b91a5bf93c3826c6da39feb896a3de33f28f8858da8",
+  "tested_candidate_file_hashes": {
+    "manifest": "b2a67450e695ce7e5acb0f792de84d9bc8a5b71016a1899be32c2390983b7101",
+    "experience": "a44038df13bfe2d2ec1a1e1a90031ed2dc879753b0d981a522ae5b625c94d4ab",
+    "source_controller": "9f24423dc99e230db3f462460a2ca926e3cf0bafdca88bbf37e4c703c0d2cd86",
+    "source_vision": "832fcd7b65917b45e757266ea340a9ed89fe5cb5bffc5fbc599bc96b1722563e",
+    "source_shared_make_kong_baseline_motion": "79abd687e22cb81a94ebb5fcc6b5419934c459125645227d664046f3950097cb",
+    "source_shared_make_kong_hand_clearance": "088592a790fde9051c007a635fcc6edec1c51a29c21f367163303e87c32784e9",
+    "source_shared_make_kong_hand_bounds": "6ecea3347942113699f1993b189fa4ad555912aa69906d43dd3a29beaed426ca",
+    "source_planning": "de00c8e92845a19b23dff5b9e10fe84084a1e0e23d1140df04e80634e18f0d80",
+    "source_shared_native_adapter": "ee10e45379ad2c8020e9dc5c2ec8f8739bd96f79bcea3b69a8bd729b02fe5dc7",
+    "source_shared_native_worker": "92a27a877166ed808aeae0e6fff202fa9725c0bfc7dc333d6cffb2608574beba",
+    "source_shared_public_geometry": "9e204a79b46e863b93e7278e6200f44b432ba69f3bb62892ff17ef6510473d52",
+    "source_shared_checked_motion": "3ef712be1b81180ea6d7db9034d53bd6d38999f51ab38f8eee431a071e4de9e8",
+    "source_shared_robot_collision": "c34b0c51b0a3da35329b876812643bd1eae51fb498b3ffd7f3ce982c59fe625f",
+    "source_shared_motion_base": "7680d16d16496f4eeebc9fff9190c7b0422582c7f5251d198d38169a0295e8fc"
+  },
+  "runtime_hashes": {
+    "experience": "a44038df13bfe2d2ec1a1e1a90031ed2dc879753b0d981a522ae5b625c94d4ab",
+    "source_controller": "9f24423dc99e230db3f462460a2ca926e3cf0bafdca88bbf37e4c703c0d2cd86",
+    "source_vision": "91a19ef9199a4a4c4111389ba2ac774d9c059d403a65f67d9920c728e9aa47da",
+    "source_shared_make_kong_baseline_motion": "79abd687e22cb81a94ebb5fcc6b5419934c459125645227d664046f3950097cb",
+    "source_shared_make_kong_hand_clearance": "088592a790fde9051c007a635fcc6edec1c51a29c21f367163303e87c32784e9",
+    "source_shared_make_kong_hand_bounds": "6ecea3347942113699f1993b189fa4ad555912aa69906d43dd3a29beaed426ca",
+    "source_planning": "de00c8e92845a19b23dff5b9e10fe84084a1e0e23d1140df04e80634e18f0d80",
+    "source_shared_native_adapter": "ee10e45379ad2c8020e9dc5c2ec8f8739bd96f79bcea3b69a8bd729b02fe5dc7",
+    "source_shared_native_worker": "92a27a877166ed808aeae0e6fff202fa9725c0bfc7dc333d6cffb2608574beba",
+    "source_shared_public_geometry": "9e204a79b46e863b93e7278e6200f44b432ba69f3bb62892ff17ef6510473d52",
+    "source_shared_checked_motion": "3ef712be1b81180ea6d7db9034d53bd6d38999f51ab38f8eee431a071e4de9e8",
+    "source_shared_robot_collision": "c34b0c51b0a3da35329b876812643bd1eae51fb498b3ffd7f3ce982c59fe625f",
+    "source_shared_motion_base": "7680d16d16496f4eeebc9fff9190c7b0422582c7f5251d198d38169a0295e8fc"
+  },
+  "code_parameters": {
+    "native_ik": {
+      "device": "cuda:0"
+    }
+  },
+  "qualification": {
+    "published": true,
+    "mode": "user_authorized_eight_trial_acceptance",
+    "standard_qualified": false,
+    "tested_seeds": [
+      0,
+      1,
+      2
+    ],
+    "successful_seeds": [
+      0
+    ],
+    "llm_model": "gpt-6-astra",
+    "validation_batch": "arrange-largest-number-random8-20261028-c001-r1",
+    "scored_episodes": 8,
+    "successful_episodes": 2,
+    "mean_score_percent": 42.5,
+    "equal_seed_mean_score_percent": 30.666666666666668,
+    "seed_results": [
+      {
+        "seed": 0,
+        "episodes": 5,
+        "mean_score_percent": 57.0,
+        "successes": 2
+      },
+      {
+        "seed": 1,
+        "episodes": 1,
+        "mean_score_percent": 15.0,
+        "successes": 0
+      },
+      {
+        "seed": 2,
+        "episodes": 2,
+        "mean_score_percent": 20.0,
+        "successes": 0
+      }
+    ],
+    "scope": "Eight distinct layouts sampled from 90 original normal-task layouts. User-authorized small-sample publication; not the official 25 normal plus 25 random episodes per seed. arrange_largest_number_random is untested and unsupported."
+  },
+  "model": "gpt-6-astra",
+  "require_model_match": true,
+  "outcomes": [
+    {
+      "gpu": 0,
+      "seed": 1,
+      "layout": 2,
+      "status": "completed",
+      "score_percent": 15.0,
+      "success": false,
+      "actions": 1050,
+      "program_model_calls": 23,
+      "digits": 4,
+      "visually_verified_pad_legs": 3,
+      "source": "runs/arrange-largest-number-random8-20261028-c001-r1/jobs/gpu-0-seed-1/attempt-001/runs/20261027T183847-ccf7260cc40d/evaluator/native/RoboDojo/arrange_largest_number/orimapi_800011aab2dd4d2c992d1877bbc0962b/arx_x5/1_ckpt_name=policy-library,action_type=joint/orimapi_800011aab2dd4d2c992d1877bbc0962b/_result.json",
+      "error": null,
+      "artifact_root": "runs/20261027T183847-ccf7260cc40d/evaluator/native/RoboDojo/arrange_largest_number/orimapi_800011aab2dd4d2c992d1877bbc0962b/arx_x5/1_ckpt_name=policy-library,action_type=joint/orimapi_800011aab2dd4d2c992d1877bbc0962b",
+      "artifacts": [
+        {
+          "path": "_result.json",
+          "sha256": "5173cd585649428e7dd13bac6435ecb72aae639286055b7c3000eb5ff1544e34"
+        },
+        {
+          "path": "episode_0000000_cam_head_fail.mp4",
+          "sha256": "e61e721f1bbf8123e10860ffc58ac017641eb952945af82f2ecc26a8c1da848b",
+          "frames": 1051
+        },
+        {
+          "path": "episode_0000000_cam_left_wrist_fail.mp4",
+          "sha256": "95ab0d453bd30640196ab8f9fd58d2fbce400512a05842c719ad8e5f505027a6",
+          "frames": 1051
+        },
+        {
+          "path": "episode_0000000_cam_right_wrist_fail.mp4",
+          "sha256": "2c476d76963fc12b05a087674a34ca33d47c78ffa82cb10101356d9b543756fd",
+          "frames": 1051
+        }
+      ]
+    },
+    {
+      "gpu": 1,
+      "seed": 0,
+      "layout": 1,
+      "status": "completed",
+      "score_percent": 100.0,
+      "success": true,
+      "actions": 905,
+      "program_model_calls": 21,
+      "digits": 4,
+      "visually_verified_pad_legs": 3,
+      "source": "runs/arrange-largest-number-random8-20261028-c001-r1/jobs/gpu-1-seed-0/attempt-002/runs/20261027T183847-dfe5d248e2e6/evaluator/native/RoboDojo/arrange_largest_number/orimapi_0ed1ff5b30634ad08d31b55542647016/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_0ed1ff5b30634ad08d31b55542647016/_result.json",
+      "error": null,
+      "artifact_root": "runs/20261027T183847-dfe5d248e2e6/evaluator/native/RoboDojo/arrange_largest_number/orimapi_0ed1ff5b30634ad08d31b55542647016/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_0ed1ff5b30634ad08d31b55542647016",
+      "artifacts": [
+        {
+          "path": "_result.json",
+          "sha256": "8ae6a937232fc1b8c6d1e3b297a60df76889c266a3fa45274dc4e42ae609b509"
+        },
+        {
+          "path": "episode_0000000_cam_head_success.mp4",
+          "sha256": "98fa1656cbb2fa259a5f35589173c26b5ace648ac55ad85a273aa9d812f9f1c7",
+          "frames": 906
+        },
+        {
+          "path": "episode_0000000_cam_left_wrist_success.mp4",
+          "sha256": "415882e33dee7ca93dddfe84182934a2d2d41e1fcfb40c8193f2545edb22ae27",
+          "frames": 906
+        },
+        {
+          "path": "episode_0000000_cam_right_wrist_success.mp4",
+          "sha256": "95dbbb76958a19a7d46dd9c0e3398b5e25ac749708214ccf8533c79e8aa0062a",
+          "frames": 906
+        }
+      ]
+    },
+    {
+      "gpu": 2,
+      "seed": 0,
+      "layout": 17,
+      "status": "completed",
+      "score_percent": 30.0,
+      "success": false,
+      "actions": 1050,
+      "program_model_calls": 25,
+      "digits": 4,
+      "visually_verified_pad_legs": 3,
+      "source": "runs/arrange-largest-number-random8-20261028-c001-r1/jobs/gpu-2-seed-0/attempt-003/runs/20261027T183847-a2f5f1db9458/evaluator/native/RoboDojo/arrange_largest_number/orimapi_0efcb8d26fa54d08b4a24788ea6383ab/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_0efcb8d26fa54d08b4a24788ea6383ab/_result.json",
+      "error": null,
+      "artifact_root": "runs/20261027T183847-a2f5f1db9458/evaluator/native/RoboDojo/arrange_largest_number/orimapi_0efcb8d26fa54d08b4a24788ea6383ab/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_0efcb8d26fa54d08b4a24788ea6383ab",
+      "artifacts": [
+        {
+          "path": "_result.json",
+          "sha256": "72d8a9626f5c31e37629fd57a66ec91c5fe92b5299e42335854a59e3eb33e794"
+        },
+        {
+          "path": "episode_0000000_cam_head_fail.mp4",
+          "sha256": "17947a53b313d7097e32a65a08312a47ff711700c600b31109ea7e36f65cd615",
+          "frames": 1051
+        },
+        {
+          "path": "episode_0000000_cam_left_wrist_fail.mp4",
+          "sha256": "f8747979510834649f79c0315c5f67f29b1a057f9180b5ea2371d9c32425ba9a",
+          "frames": 1051
+        },
+        {
+          "path": "episode_0000000_cam_right_wrist_fail.mp4",
+          "sha256": "7a5eca0c0a29ab8ea0bb8cb931dbf787ca546bd635a5aaab2b7b697784e57410",
+          "frames": 1051
+        }
+      ]
+    },
+    {
+      "gpu": 3,
+      "seed": 2,
+      "layout": 13,
+      "status": "completed",
+      "score_percent": 15.0,
+      "success": false,
+      "actions": 1050,
+      "program_model_calls": 24,
+      "digits": 4,
+      "visually_verified_pad_legs": 2,
+      "source": "runs/arrange-largest-number-random8-20261028-c001-r1/jobs/gpu-3-seed-2/attempt-004/runs/20261027T183847-6d71936d7937/evaluator/native/RoboDojo/arrange_largest_number/orimapi_9d1d724e8d1f4d099125680a6649f65b/arx_x5/2_ckpt_name=policy-library,action_type=joint/orimapi_9d1d724e8d1f4d099125680a6649f65b/_result.json",
+      "error": null,
+      "artifact_root": "runs/20261027T183847-6d71936d7937/evaluator/native/RoboDojo/arrange_largest_number/orimapi_9d1d724e8d1f4d099125680a6649f65b/arx_x5/2_ckpt_name=policy-library,action_type=joint/orimapi_9d1d724e8d1f4d099125680a6649f65b",
+      "artifacts": [
+        {
+          "path": "_result.json",
+          "sha256": "4dc2f0780f9f6f7fce39bb3879003ae07dfe2f9dedb7546550785eb6ee3cef2c"
+        },
+        {
+          "path": "episode_0000000_cam_head_fail.mp4",
+          "sha256": "6fd6ec60ef2476fe60f322523c32acb72de913a02c4587ab83bb17047201fec4",
+          "frames": 1051
+        },
+        {
+          "path": "episode_0000000_cam_left_wrist_fail.mp4",
+          "sha256": "4755bc3449a5f7bb1b1d74fe1b24bf0957ce790aa761d56305bed6e991735f08",
+          "frames": 1051
+        },
+        {
+          "path": "episode_0000000_cam_right_wrist_fail.mp4",
+          "sha256": "930a19988db98af52dab66f70452473f99f279b659ff948b742e5816ea8ae266",
+          "frames": 1051
+        }
+      ]
+    },
+    {
+      "gpu": 4,
+      "seed": 0,
+      "layout": 16,
+      "status": "completed",
+      "score_percent": 100.0,
+      "success": true,
+      "actions": 915,
+      "program_model_calls": 21,
+      "digits": 4,
+      "visually_verified_pad_legs": 3,
+      "source": "runs/arrange-largest-number-random8-20261028-c001-r1/jobs/gpu-4-seed-0/attempt-005/runs/20261027T183847-70d9d4c838d6/evaluator/native/RoboDojo/arrange_largest_number/orimapi_80979c07b3e94afd80ebb34fde3a9b7c/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_80979c07b3e94afd80ebb34fde3a9b7c/_result.json",
+      "error": null,
+      "artifact_root": "runs/20261027T183847-70d9d4c838d6/evaluator/native/RoboDojo/arrange_largest_number/orimapi_80979c07b3e94afd80ebb34fde3a9b7c/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_80979c07b3e94afd80ebb34fde3a9b7c",
+      "artifacts": [
+        {
+          "path": "_result.json",
+          "sha256": "2ed2c1d65535064cc242e519fd876d834920106809190ee89a7305170edb84ae"
+        },
+        {
+          "path": "episode_0000000_cam_head_success.mp4",
+          "sha256": "55b9eb283e803fa4ddd096efc9078ac0a877a909ee46f2e6bfb8c5e0b93b6051",
+          "frames": 916
+        },
+        {
+          "path": "episode_0000000_cam_left_wrist_success.mp4",
+          "sha256": "5f8cf5abea67d4066648c741f0b4421cab92704c4905b1363e3ac60e179d3a68",
+          "frames": 916
+        },
+        {
+          "path": "episode_0000000_cam_right_wrist_success.mp4",
+          "sha256": "4089c9bb5c6fc7ef507783aed1a6226c7137a6c7a66001c0c028f4827c172b75",
+          "frames": 916
+        }
+      ]
+    },
+    {
+      "gpu": 5,
+      "seed": 0,
+      "layout": 2,
+      "status": "completed",
+      "score_percent": 25.0,
+      "success": false,
+      "actions": 1050,
+      "program_model_calls": 26,
+      "digits": 5,
+      "visually_verified_pad_legs": 3,
+      "source": "runs/arrange-largest-number-random8-20261028-c001-r1/jobs/gpu-5-seed-0/attempt-006/runs/20261027T183847-e34ae9e5bbc6/evaluator/native/RoboDojo/arrange_largest_number/orimapi_63c5d2cd77954b62bce5533c65c8474c/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_63c5d2cd77954b62bce5533c65c8474c/_result.json",
+      "error": null,
+      "artifact_root": "runs/20261027T183847-e34ae9e5bbc6/evaluator/native/RoboDojo/arrange_largest_number/orimapi_63c5d2cd77954b62bce5533c65c8474c/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_63c5d2cd77954b62bce5533c65c8474c",
+      "artifacts": [
+        {
+          "path": "_result.json",
+          "sha256": "a4e78a9b344debb79a3f56d737706928bda63457c27c315346ecb3e0aea6a47a"
+        },
+        {
+          "path": "episode_0000000_cam_head_fail.mp4",
+          "sha256": "14b8f72db7a1c92c4a802bea49d0fabaaec0701eba948563f3402a5969ac1799",
+          "frames": 1051
+        },
+        {
+          "path": "episode_0000000_cam_left_wrist_fail.mp4",
+          "sha256": "85fa606195742021318ee58ac0ba3ec1f297551d5722880d170f0cd51dc20c75",
+          "frames": 1051
+        },
+        {
+          "path": "episode_0000000_cam_right_wrist_fail.mp4",
+          "sha256": "ea845e42f4080bb05c4c191c8fb7c0b43640aac3ae832d03ac404926d1fe9d82",
+          "frames": 1051
+        }
+      ]
+    },
+    {
+      "gpu": 6,
+      "seed": 2,
+      "layout": 24,
+      "status": "completed",
+      "score_percent": 25.0,
+      "success": false,
+      "actions": 1050,
+      "program_model_calls": 22,
+      "digits": 5,
+      "visually_verified_pad_legs": 3,
+      "source": "runs/arrange-largest-number-random8-20261028-c001-r1/jobs/gpu-6-seed-2/attempt-007/runs/20261027T183847-43da5617e25b/evaluator/native/RoboDojo/arrange_largest_number/orimapi_f62fed6c49a64efbbb5929ab2a85dd29/arx_x5/2_ckpt_name=policy-library,action_type=joint/orimapi_f62fed6c49a64efbbb5929ab2a85dd29/_result.json",
+      "error": null,
+      "artifact_root": "runs/20261027T183847-43da5617e25b/evaluator/native/RoboDojo/arrange_largest_number/orimapi_f62fed6c49a64efbbb5929ab2a85dd29/arx_x5/2_ckpt_name=policy-library,action_type=joint/orimapi_f62fed6c49a64efbbb5929ab2a85dd29",
+      "artifacts": [
+        {
+          "path": "_result.json",
+          "sha256": "b4ae06b85862fbe0ee59bdea4f239621bbb631e1a28da5ea9ebb4eb7caab22aa"
+        },
+        {
+          "path": "episode_0000000_cam_head_fail.mp4",
+          "sha256": "56cbd7580d4c36aa48349f6232fbc12bdb322dffbcc4115b348e58e73637c742",
+          "frames": 1051
+        },
+        {
+          "path": "episode_0000000_cam_left_wrist_fail.mp4",
+          "sha256": "cae2766409d96d315ac7d89de0e483028f21adeec0d118e1bf9d0850befadd84",
+          "frames": 1051
+        },
+        {
+          "path": "episode_0000000_cam_right_wrist_fail.mp4",
+          "sha256": "87ecfe92456796c05b31c0ba1609a37054df8e82f6d99a1f939c2a82ec2e4ec7",
+          "frames": 1051
+        }
+      ]
+    },
+    {
+      "gpu": 7,
+      "seed": 0,
+      "layout": 21,
+      "status": "completed",
+      "score_percent": 30.0,
+      "success": false,
+      "actions": 1050,
+      "program_model_calls": 25,
+      "digits": 4,
+      "visually_verified_pad_legs": 3,
+      "source": "runs/arrange-largest-number-random8-20261028-c001-r1/jobs/gpu-7-seed-0/attempt-008/runs/20261027T183847-84d257698102/evaluator/native/RoboDojo/arrange_largest_number/orimapi_f04c9a17b6a94a78ad095d8014867c8a/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_f04c9a17b6a94a78ad095d8014867c8a/_result.json",
+      "error": null,
+      "artifact_root": "runs/20261027T183847-84d257698102/evaluator/native/RoboDojo/arrange_largest_number/orimapi_f04c9a17b6a94a78ad095d8014867c8a/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_f04c9a17b6a94a78ad095d8014867c8a",
+      "artifacts": [
+        {
+          "path": "_result.json",
+          "sha256": "dfceb0c49643a06c7b46161fc1b403be4ce380605e7dfa46fa230a1f4b8f0ea6"
+        },
+        {
+          "path": "episode_0000000_cam_head_fail.mp4",
+          "sha256": "e9b025a5b3ce09015f570ceb44d7d86463439fd2326eb0a489ffec1809ef5c2f",
+          "frames": 1051
+        },
+        {
+          "path": "episode_0000000_cam_left_wrist_fail.mp4",
+          "sha256": "7c7a5bd47c3cae517ccc4738e324377c48b883e5a36c418e59b2658f363439d4",
+          "frames": 1051
+        },
+        {
+          "path": "episode_0000000_cam_right_wrist_fail.mp4",
+          "sha256": "10643266dd2511ce669c0199f49b77529b5b83068c12f5aa678daed51332a775",
+          "frames": 1051
+        }
+      ]
+    }
+  ],
+  "raw_and_archived_artifacts_verified": true,
+  "evidence": "runs/arrange-largest-number-random8-20261028-c001-r1/analysis/results.json",
+  "scope": "Eight distinct random original normal-task layouts; not the paired normal/random official quota. Initial interrupted sampling batch excluded, missing outcomes not zero.",
+  "excluded_batch": {
+    "path": "runs/arrange-largest-number-random8-20261028-c001",
+    "reason": "Interrupted before any native result; missing results are not zeros."
+  },
+  "known_limitations": [
+    "Six failures reached the original 1050-action limit; repeated homing and cross-arm staging consume the remaining budget.",
+    "GPU2 motion tracking failure and GPU7 discontinuous IK branch were guarded and recovered; both scored30.",
+    "GPU6 had one recovered inspect API timeout; its native25 score is included.",
+    "Visual pad verification can disagree with native score; native verdicts are authoritative.",
+    "Only seed0 had native successes. Sample allocation across seeds is5/1/2; equal-seed mean is30.6667, distinct from episode mean42.5.",
+    "Historical baseline11.6667 used different layouts and is not a paired comparison."
+  ]
+}

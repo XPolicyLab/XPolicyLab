@@ -1,0 +1,87 @@
+{
+  "schema": "orimapi.published-research-validation/v1",
+  "tested_bundle_sha256": "973282604b89b18f0a1ae3e101a55c719876be92f83df3bc71eb8e0f8636cc16",
+  "task": "stack_blocks_random",
+  "scored_episodes": 8,
+  "successful_episodes": 7,
+  "mean_score_percent": 87.5,
+  "baseline_mean_score_percent": 66.25,
+  "paired_delta": 21.25,
+  "rows": [
+    {
+      "gpu": 0,
+      "seed": 1,
+      "selected_layout_id": 17,
+      "score": 1.0,
+      "success_rate": 1.0,
+      "actions": 278,
+      "native_artifact_dir": "/data/OrimaPI/runs/stack-blocks-random-random8-20261030-candidate/RoboDojo/stack_blocks_random/orimapi_random8_1595889798a84a31832c2b49b0ae0033/arx_x5/1_ckpt_name=policy-library,action_type=joint/attempt-001"
+    },
+    {
+      "gpu": 1,
+      "seed": 1,
+      "selected_layout_id": 14,
+      "score": 1.0,
+      "success_rate": 1.0,
+      "actions": 469,
+      "native_artifact_dir": "/data/OrimaPI/runs/stack-blocks-random-random8-20261030-candidate/RoboDojo/stack_blocks_random/orimapi_random8_1595889798a84a31832c2b49b0ae0033/arx_x5/1_ckpt_name=policy-library,action_type=joint/attempt-002"
+    },
+    {
+      "gpu": 2,
+      "seed": 1,
+      "selected_layout_id": 12,
+      "score": 1.0,
+      "success_rate": 1.0,
+      "actions": 444,
+      "native_artifact_dir": "/data/OrimaPI/runs/stack-blocks-random-random8-20261030-candidate/RoboDojo/stack_blocks_random/orimapi_random8_1595889798a84a31832c2b49b0ae0033/arx_x5/1_ckpt_name=policy-library,action_type=joint/attempt-003"
+    },
+    {
+      "gpu": 3,
+      "seed": 0,
+      "selected_layout_id": 27,
+      "score": 1.0,
+      "success_rate": 1.0,
+      "actions": 390,
+      "native_artifact_dir": "/data/OrimaPI/runs/stack-blocks-random-random8-20261030-candidate/RoboDojo/stack_blocks_random/orimapi_random8_1595889798a84a31832c2b49b0ae0033/arx_x5/0_ckpt_name=policy-library,action_type=joint/attempt-004"
+    },
+    {
+      "gpu": 4,
+      "seed": 0,
+      "selected_layout_id": 6,
+      "score": 1.0,
+      "success_rate": 1.0,
+      "actions": 218,
+      "native_artifact_dir": "/data/OrimaPI/runs/stack-blocks-random-random8-20261030-candidate/RoboDojo/stack_blocks_random/orimapi_random8_1595889798a84a31832c2b49b0ae0033/arx_x5/0_ckpt_name=policy-library,action_type=joint/attempt-005"
+    },
+    {
+      "gpu": 5,
+      "seed": 2,
+      "selected_layout_id": 20,
+      "score": 0.0,
+      "success_rate": 0.0,
+      "actions": 550,
+      "native_artifact_dir": "/data/OrimaPI/runs/stack-blocks-random-random8-20261030-candidate/RoboDojo/stack_blocks_random/orimapi_random8_1595889798a84a31832c2b49b0ae0033/arx_x5/2_ckpt_name=policy-library,action_type=joint/attempt-006"
+    },
+    {
+      "gpu": 6,
+      "seed": 2,
+      "selected_layout_id": 14,
+      "score": 1.0,
+      "success_rate": 1.0,
+      "actions": 435,
+      "native_artifact_dir": "/data/OrimaPI/runs/stack-blocks-random-random8-20261030-candidate/RoboDojo/stack_blocks_random/orimapi_random8_1595889798a84a31832c2b49b0ae0033/arx_x5/2_ckpt_name=policy-library,action_type=joint/attempt-007"
+    },
+    {
+      "gpu": 7,
+      "seed": 0,
+      "selected_layout_id": 26,
+      "score": 1.0,
+      "success_rate": 1.0,
+      "actions": 341,
+      "native_artifact_dir": "/data/OrimaPI/runs/stack-blocks-random-random8-20261030-candidate/RoboDojo/stack_blocks_random/orimapi_random8_1595889798a84a31832c2b49b0ae0033/arx_x5/0_ckpt_name=policy-library,action_type=joint/attempt-008"
+    }
+  ],
+  "native_artifacts_verified": 32,
+  "source_audit": "runs/stack-blocks-random-random8-20261030-candidate/analysis/result-audit.json",
+  "scope": "User-authorized development-sample publication; no new experiment, no full benchmark qualification."
+}

@@ -1,0 +1,11 @@
+# tools of the generic profile (the generic setup of the Open tasks), the same for every task: tools/<name> or library/<name>
+table_plane
+scene
+rgb_point
+rgb_quad
+boundary_candidates
+rim_geometry
+guarded_grasp
+guarded_press
+bounded_rotate
+timed_pick

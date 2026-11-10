@@ -1,0 +1,61 @@
+{
+  "schema": "orimapi.code-tool-skill/v1",
+  "skill_id": "pour_by_language",
+  "supported_tasks": [
+    "pour_by_language"
+  ],
+  "task_spec": {
+    "task": "pour_by_language",
+    "budget": 800,
+    "requirements": "Follow the live language instruction's ordered bottle-to-bowl color mappings for all three pours. Pour essentially all liquid from each bottle into its specified bowl, restore each bottle upright and home the arms. Do not infer the color order from task name or previous seeds. Use only current RGB, public robot state/calibration and actually advertised tools. Reobserve after contact and verify retention before transport. Keep clearance, collision, IK and joint-continuity checks enabled. Reserve native actions for release, withdrawal and required homing; a low wrist may need a checked upward withdrawal before home. Never reuse old pixels as current measurements. Never reset or change native physics, scoring or action limits. Only complete native success qualifies."
+  },
+  "tool_limits": {
+    "max_calls": 160,
+    "max_tools_per_turn": 16,
+    "history_size": 24,
+    "sam_proposals": {
+      "model_path": "checkpoint/vision-tools/sam/70c1a07f894ebb5b307fd9eaaee97b9dfc16068f",
+      "device": "cuda:1",
+      "files": {
+        "config.json": "5ebd0d8643b486f3a716bf17c2a15531eb818b2b96ff0c6c5dcc88fa015161af",
+        "model.safetensors": "892c410e496344e527255ccdcb2cb7244a609acb5389c7c4fdba1288f861c579",
+        "preprocessor_config.json": "225545a743c654e3c495ec6f545a0eaba57c8ba3fbbd8483b3cb1c0fc58db517"
+      },
+      "software_versions": {
+        "torch": "2.7.1",
+        "transformers": "4.53.2",
+        "safetensors": "0.8.0",
+        "numpy": "1.26.4",
+        "opencv-python-headless": "4.11.0.86",
+        "pillow": "11.2.1"
+      }
+    },
+    "require_cartesian_completion": true,
+    "report_observation_budget": true,
+    "camera_pointing": true
+  },
+  "experience": "experience.json",
+  "sources": {
+    "controller": "controller.py",
+    "resources": "resources.json",
+    "failures": "failure_experience.json",
+    "publication": "publication.json"
+  },
+  "tool_recipes": {
+    "approach_close": "tool_recipes/recipe.json"
+  },
+  "qualification": {
+    "successful_seeds": [],
+    "standard_qualified": false,
+    "three_seed_mean": null,
+    "unattempted_seeds": [
+      1,
+      2
+    ],
+    "published": true,
+    "candidate_sha256": "560e6dd62b7cf43ee9834864e1495463b8b59ff83c8b19c1b1fe3e3ef6ddc672",
+    "scope": "Published by explicit user request regardless of success. Formal availability is not native task qualification or benchmark reliability.",
+    "mode": "user_authorized_unqualified",
+    "exception_qualified": false
+  }
+}

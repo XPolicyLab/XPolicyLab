@@ -1,0 +1,103 @@
+{
+  "runtime_hashes": {
+    "frozen_knowledge.json": "bc97097ef71a5d9263e7b18b9183458cbdf9622387356619fe8a1282bc0c8071",
+    "tool_documentation.md": "e32836abe5f71341363e6944e57e5347136e8ba6c660751ca5f5c9d5308c5767",
+    "program_worker.py": "b2bc7f51ef96a54d31bc9415662819184abb4c98bc8857a8560a993afec55e59",
+    "program_prompt.md": "9c364e4db2ec82014783361e416b9414a3c396cd8e15641ad3f30a4716c63eb9",
+    "arrival_motion.py": "00d106935b8249f2e26d7a09febf95f35ebced69cdc150c4431a20d720ad95ce",
+    "hand_clearance.py": "088592a790fde9051c007a635fcc6edec1c51a29c21f367163303e87c32784e9",
+    "hand_bounds.json": "6ecea3347942113699f1993b189fa4ad555912aa69906d43dd3a29beaed426ca",
+    "visual.py": "b2b329580d2a4406199edcfc113b0767dfde76712714e4f0d666225226f3bf75",
+    "vision_geometry.py": "af94786f477d2dcfc821cf560812d5d9697035ffa020da8328ba9aeaa5789856",
+    "controller.py": "9209fcaa43a57485d64b00052a770f70e10c3bea3347228d9fd832ff86433137",
+    "public_hand.py": "db8b6ad8993b08460b09ad520304b36ec62b6b5481a6c5f731a5717f4336a715",
+    "vision_resources.json": "6e04971e8bc09afc337e0613669ae352cbb25923e9f221760496e416dc39e2e8",
+    "experience.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "generator.py": "1e71ab6802ab18e3a9a453ede5e3d177a42323414eb9ee174c4b6e3295891535",
+    "task_geometry.py": "de812a5584082b6f8b8b25abc817d67707e5f8dd1bc1e0ceca30430f4a814a88",
+    "view_geometry.py": "6e50b9a223068b8eea27da3f8667135aa55909b75bf10d62667cea6eedad9cf4",
+    "program_session.py": "29e167885abbdeab1ee46171890578f88f5efe49b5d968aa05aed7460e494944"
+  },
+  "native_runner_sha256": "3d110e5c8e377054339a2758beeab6fc794ce4b44fe8532d10ce9eee8d00d4aa",
+  "outcomes": [
+    {
+      "requested_seed": 0,
+      "run": "/root/code/OrimaPI/runs/20261023T060404-tool-episode-a166dcb6adeb",
+      "success": false,
+      "error": null,
+      "controller_failures": [],
+      "official_result": {
+        "episodes": [
+          {
+            "layout_id": 0,
+            "success": false,
+            "score": 0.0,
+            "artifact": "native/RoboDojo/pour_liquid_into_cup/orimapi_2bc1ecf123004927b9d6beff2f6e0572/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_2bc1ecf123004927b9d6beff2f6e0572/_result.json"
+          }
+        ],
+        "episode_count": 1,
+        "success_rate": 0.0,
+        "mean_score": 0.0,
+        "artifacts": [
+          {
+            "path": "native/RoboDojo/pour_liquid_into_cup/orimapi_2bc1ecf123004927b9d6beff2f6e0572/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_2bc1ecf123004927b9d6beff2f6e0572/_result.json",
+            "sha256": "99b780f4e1842dfa81b413ccd2e5302e5827cc349fea4edf978e1bd847986ed3"
+          }
+        ]
+      }
+    },
+    {
+      "requested_seed": 1,
+      "run": "/root/code/OrimaPI/runs/20261023T061215-tool-episode-8fa9b68a3d2a",
+      "success": false,
+      "error": null,
+      "controller_failures": [],
+      "official_result": {
+        "episodes": [
+          {
+            "layout_id": 0,
+            "success": false,
+            "score": 0.0,
+            "artifact": "native/RoboDojo/pour_liquid_into_cup/orimapi_35a178ac230b487e9b1592feae988374/arx_x5/1_ckpt_name=policy-library,action_type=joint/orimapi_35a178ac230b487e9b1592feae988374/_result.json"
+          }
+        ],
+        "episode_count": 1,
+        "success_rate": 0.0,
+        "mean_score": 0.0,
+        "artifacts": [
+          {
+            "path": "native/RoboDojo/pour_liquid_into_cup/orimapi_35a178ac230b487e9b1592feae988374/arx_x5/1_ckpt_name=policy-library,action_type=joint/orimapi_35a178ac230b487e9b1592feae988374/_result.json",
+            "sha256": "99b780f4e1842dfa81b413ccd2e5302e5827cc349fea4edf978e1bd847986ed3"
+          }
+        ]
+      }
+    },
+    {
+      "requested_seed": 2,
+      "run": "/root/code/OrimaPI/runs/20261023T062014-tool-episode-17306d8e36f3",
+      "success": false,
+      "error": null,
+      "controller_failures": [],
+      "official_result": {
+        "episodes": [
+          {
+            "layout_id": 0,
+            "success": false,
+            "score": 0.0,
+            "artifact": "native/RoboDojo/pour_liquid_into_cup/orimapi_3b2960813fc74399a9f2ffaaa4483e23/arx_x5/2_ckpt_name=policy-library,action_type=joint/orimapi_3b2960813fc74399a9f2ffaaa4483e23/_result.json"
+          }
+        ],
+        "episode_count": 1,
+        "success_rate": 0.0,
+        "mean_score": 0.0,
+        "artifacts": [
+          {
+            "path": "native/RoboDojo/pour_liquid_into_cup/orimapi_3b2960813fc74399a9f2ffaaa4483e23/arx_x5/2_ckpt_name=policy-library,action_type=joint/orimapi_3b2960813fc74399a9f2ffaaa4483e23/_result.json",
+            "sha256": "99b780f4e1842dfa81b413ccd2e5302e5827cc349fea4edf978e1bd847986ed3"
+          }
+        ]
+      }
+    }
+  ],
+  "scope": "Recorded native outcomes and source identity, not future scene inputs"
+}

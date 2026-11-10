@@ -1,0 +1,20 @@
+{
+  "scope": "Minimal factual failure record; no prescribed early termination policy",
+  "previous_candidate_scores": {
+    "candidate-004": [
+      0,
+      0,
+      0
+    ],
+    "candidate-005": [
+      0,
+      0,
+      0
+    ]
+  },
+  "facts": [
+    "No local whole-task success established.",
+    "A failed command may have already moved; inspect its feedback and fresh RGB before continuing.",
+    "One packaged validation executed three transfers/taps/home but native score remained 0. Tool completion is not button activation evidence. A 12 mm single stroke, already used by a successful predecessor, is the current default hypothesis; no blind repeat presses."
+  ]
+}

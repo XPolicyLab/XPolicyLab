@@ -1,0 +1,162 @@
+[
+  {
+    "strategy": "UNVALIDATED hypothesis: execute a sequential, visibility-first two-slice cycle using current RGB triangulation and guarded native pose plans. Before contact, measure accessible bread faces, slot boundaries and lever geometry sufficiently to judge a plausible complete route, including payload rotation, withdrawal and home. This is a visual feasibility assessment, not a claim of full-cycle collision certification. Select the arm and slice that preserve material-feature visibility and leave the other two slices undisturbed; keep the unused arm clear.\n\nUse independently identified material points in simultaneous calibrated views. Stereo proposals and segmentation, if needed, are suggestions only. Infer bread normal, upright direction, thickness bounds and slot clearance from supported measurements, not silhouettes mistaken for shared material points or imported geometry. Compensate the measured held-feature-to-TCP transform during alignment. The public TCP is the grasp center; never add its wrist offset twice.\n\nPrefer a visible edge/shoulder pinch with jaws across slice thickness, leaving the lower bread and insertion path clear. Inspect after closing, capture several distinguishable attachment features, perform a short checked lift, then verify observed retention before transporting. Rotate in clear space so the slice is upright with its broad face aligned to its slot. Reobserve and remeasure before small insertion increments. Release only when the slice is visibly supported, withdraw, and verify independent seating. Repeat for the second slice, then press the lever incrementally, confirm its down state, withdraw and home both arms.\n\nThe recorded native failure specifically motivates choosing a different visibility-preserving approach rather than repeating the lost shoulder target. After lost tracking, stop contact progress; one newly observed alternative view/feature/approach is allowed. Never replace a rejected visual-target approach with blind relative contact motion. Relative motion is appropriate for a checked retreat into visibly clear space. Reject repeated unchanged IK, clearance or correspondence attempts.\n\nKeep all clearance, collision, IK, tracking and joint-continuity guards enabled. Plan each segment from current state; execute_plan scheduling is not motion completion. Re-mark points after motion and never use previous pixels as current measurements. Use supplied wrist views economically and move a camera-bearing arm only when the checked view change resolves a specific ambiguity. Allow at most 16 non-motion calls per observation, preferably fewer than 10; do not manufacture observations to extend an unproductive search.\n\nUse the entire 1400-action native allowance, tracking actual actions rather than nominal step minima. Initially protect 240 actions for supported release, withdrawal and both-arm homing; increase that reserve if current route diagnostics require it. Admit another manipulation segment only if its estimated execution and bounded tracking allowance leave the recovery reserve intact. Bounded recovery may continue to full completion when safe; it is not a pickup-only trial. No reset, physics change, scoring change or external execution is permitted.",
+    "stages": [
+      {
+        "name": "Establish current geometry and complete-goal feasibility",
+        "tools": [
+          "public_camera_calibration",
+          "inspect_region",
+          "mark_points",
+          "locate_points",
+          "stereo_guides"
+        ],
+        "observation_gate": "Use automatically delivered current RGB/frame IDs and public state. Identify four distinct shelf slices, both slots, lever, obstacles and free withdrawal space. Triangulate explicitly matched material features and slot boundaries. Establish supported bread/slot orientation and clearance bounds, with uncertainty smaller than the required margin. Assess a plausible route through both placements, lever operation and home before first contact.",
+        "stop_or_recover": "Reject ambiguous correspondence or inadequate slot clearance. Permit one purposeful checked view change in the next stage; do not infer hidden centers, thickness or insertion depth. Stay within 16 non-motion calls at this observation."
+      },
+      {
+        "name": "Choose visible grasp and clear staging",
+        "tools": [
+          "plan_pose",
+          "plan_relative_pose",
+          "preview_grasp_pose",
+          "execute_plan",
+          "public_motion_failure_diagnostics"
+        ],
+        "observation_gate": "Choose the most accessible slice and arm from live evidence, not the prior trial's coordinates. Orient jaws across measured thickness and preserve visibility of distinct material features through approach. Check finger envelope, shelf clearance, other-arm separation and a clear lifting corridor. Preview is only a public finger-limit check. Inspect fresh RGB after reaching staging.",
+        "stop_or_recover": "On IK or clearance failure, inspect diagnostics and allow one materially changed orientation, arm or staging route. On feature loss, stop and retreat if required; no blind relative advance toward contact. Abandon an unresolved route with recovery reserve intact."
+      },
+      {
+        "name": "Close and verify first-slice retention",
+        "tools": [
+          "run_recipe",
+          "mark_points",
+          "locate_points",
+          "capture_attachment",
+          "plan_relative_pose",
+          "execute_plan",
+          "verify_attachment",
+          "gripper"
+        ],
+        "observation_gate": "From a clear staging pose, call only the advertised approach_close recipe with freshly localized target, measured axes/offset and recovery reserve. Inspect current RGB after closure before lifting. Capture multiple identifiable bread features, execute a small checked lift sufficient for visible separation, and verify their consistent motion relative to the hand together with visual finger engagement and shelf separation.",
+        "stop_or_recover": "Closure, preview and TCP movement are not retention. If the slice slips or evidence is ambiguous, avoid transport; lower to visible support and release if safe. Allow at most one regrasp based on changed current evidence, not repeated closure on the same failed geometry."
+      },
+      {
+        "name": "Transport and orient over the first slot",
+        "tools": [
+          "mark_points",
+          "locate_points",
+          "verify_attachment",
+          "plan_pose",
+          "plan_relative_pose",
+          "execute_plan"
+        ],
+        "observation_gate": "Require retained bread and a clear payload corridor. Use current attachment geometry to compensate feature-to-TCP offset, orient the bread upright and align its face with the slot. Rotate above observed obstacles, not adjacent to the toaster wall. Execute short checked segments and inspect fresh attachment and slot alignment before descent.",
+        "stop_or_recover": "Stop on slip, occlusion preventing verification, tracking error or insufficient clearance. Reobserve once from a safe configuration and replan only if the cause is resolved. Do not interpret endpoint IK as complete-route feasibility."
+      },
+      {
+        "name": "Seat, release and verify first slice",
+        "tools": [
+          "mark_points",
+          "locate_points",
+          "plan_pose",
+          "plan_relative_pose",
+          "execute_plan",
+          "gripper",
+          "verify",
+          "wait"
+        ],
+        "observation_gate": "Fresh measurements must show bread thickness/orientation fitting the slot with uncertainty margin. Descend in small checked increments, reobserving after contact. Require visible entry and support without rim bridging or tilt before release. Open, withdraw along an observed clear route, and inspect stability, upright orientation and occupancy after release; use only a short settling wait if needed.",
+        "stop_or_recover": "Do not force a jam or descend to an invented hidden bottom. While grip remains secure, allow one checked lift and realignment if current evidence resolves the issue. If support cannot be established, return to a safe supported location rather than release in midair."
+      },
+      {
+        "name": "Complete second-slice placement",
+        "tools": [
+          "mark_points",
+          "locate_points",
+          "plan_pose",
+          "execute_plan",
+          "run_recipe",
+          "capture_attachment",
+          "verify_attachment",
+          "plan_relative_pose",
+          "gripper",
+          "verify"
+        ],
+        "observation_gate": "Repeat the gated staging, closure, retention lift, transport, upright alignment, insertion and release sequence on a freshly selected second slice and the other slot. Recompute all measurements and include the first inserted slice as an obstacle. Confirm two independently seated upright slices and exactly two undisturbed shelf slices.",
+        "stop_or_recover": "Apply the same one changed-evidence recovery limit per failed manipulation phase. Do not remove or displace the remaining shelf slices to simplify access. Proceed to the lever when both placements pass; otherwise recover safely without claiming partial success."
+      },
+      {
+        "name": "Press and verify lever",
+        "tools": [
+          "inspect_region",
+          "mark_points",
+          "locate_points",
+          "plan_pose",
+          "plan_relative_pose",
+          "execute_plan"
+        ],
+        "observation_gate": "Measure the current lever contact surface and visible travel direction. Approach with an empty hand in a configuration clearing toaster and bread. Advance through a small checked contact motion, reobserve, and press in bounded increments only while visible lever motion follows the intended direction. Verify the down state after withdrawing contact, not merely a completed TCP stroke.",
+        "stop_or_recover": "Stop on absent lever motion, obstruction, bread disturbance or tracking failure. Allow one different measured contact configuration if the failure is diagnosed and budget permits. Never repeat forceful strokes or assume activation from robot displacement."
+      },
+      {
+        "name": "Withdraw, home and determine native outcome",
+        "tools": [
+          "plan_relative_pose",
+          "execute_plan",
+          "gripper",
+          "home",
+          "finish"
+        ],
+        "observation_gate": "Require hands empty or safely released onto support. If a wrist is low, execute a checked upward/backward withdrawal into visible clear space before home. Home both arms with all guards enabled. Inspect final RGB and public joint state for two upright occupied slots, two shelf slices, lever down and both arms home; use native official success as the deciding result.",
+        "stop_or_recover": "Spend the protected reserve on release, withdrawal and homing rather than another speculative retry. If a safe recovery route is unavailable, stop further unsafe motion. Finish honestly even if incomplete; visual plausibility, partial score or successful homing does not qualify as task success."
+      }
+    ],
+    "capability_gaps": [
+      "No full grasp-transfer-insertion-release-cycle planner or full scene/payload collision certificate is exposed; local motion plans cover only the requested segment.",
+      "No force/tactile feedback, measured jaw-contact sensor or direct insertion-seating sensor is exposed.",
+      "No demonstrated occlusion-robust bread material-feature tracker is available. The prior request for this capability requires integration; current stereo/segmentation proposals do not supply it.",
+      "No locally advertised integrated bread insertion or guarded lever-press controller exists; these motions must be composed from native checked primitives."
+    ],
+    "first_experiment": "Run one complete native make_toast attempt under the unchanged 1400-action limit, with no reset and no artificial short wall-clock cutoff. Initial observations arrive automatically. First test whether choosing a visibility-preserving slice/arm/approach from current views avoids the recorded shoulder-track loss without relaxing correspondence or motion checks. Use at most 16 non-motion calls per observation, one materially changed recovery per failed phase, and initially reserve 240 native actions for supported release, withdrawal and both-arm home, increasing that reserve when public route diagnostics warrant it.\n\nThe initial manipulation is a short close-and-lift retention test. If fresh RGB, attachment consistency and clearance gates pass, explicitly continue immediately through first upright insertion, release and seating verification, the complete second-slice cycle, lever depression, withdrawal and both-arm homing. The experiment does not deliberately end after pickup. Track actual action consumption because nominal motion steps may expand.\n\nRecord current-frame measurement validity, target visibility at approach, actual retained motion, independent post-release seating, shelf count, lever state, guarded motion failures and the final native outcome. This tests whether visibility-aware planning plus measured attachment and staged placement can complete the entire task within budget. Early stopping is allowed only on unresolved live ambiguity, unsafe/unreachable geometry or insufficient remaining actions for safe continuation and recovery. Any partial placement or safe retreat remains a failed task attempt unless native complete success is reported.",
+    "scope": "Reference-informed, not yet native-qualified. Use only local advertised tools."
+  },
+  {
+    "scope": "Task-local reviewed public evidence and explicitly unverified hypotheses. Not scene coordinates, runtime capabilities, native success, or authority to override task, geometry, motion, budget, or reference requirements. Source paths are provenance only; do not read files during control.",
+    "findings": [
+      {
+        "id": "seat-two-slices-and-observe-lever-activation",
+        "kind": "observation",
+        "finding": "The native1400-action goal is two bread slices inserted, lever pressed down and final home, with exactly two other slices still on the shelf and required bread orientations. Reference notes describe one complete research cycle after changed side-grasp/press postures, but also slips and false seating claims; the separate baseline std summary is0%/progress3.0. A completed press stroke without bread placement did not complete the task. baseline has no exact task contract here; baseline shares the public recipe. No local native success is established.",
+        "limitations": "No source or target poses, slot regions, private object assets or layouts were read. An observed face point is not a measured thickness/grasp center, and sparse geometry is not a clearance/contact certificate. External edge-grasp, frame-placement, tracking and press macros are not local capabilities. Research anecdotes are not comparable official outcomes or random-variant qualification; no three-way exception evidence is established.",
+        "next_experiment": "Attempt the full two-slice/lever/home cycle. From current RGB select two accessible slices and preserve the other two. Measure material geometry and slot orientation, compare destination poses before grasp, and use a reachable side/edge grasp only with current engagement evidence. Verify retained orientation, supported slot seating and release for each slice. Then distinguish TCP from the actual hand contact feature, approach the measured lever and make checked short press increments with observed lever response. Do not equate wrist travel with activation or repeat stalled pushes. Reserve1400 native actions for all stages and cleanup; preserve every safety and image constraint and record genuine missing capabilities rather than inventing macros."
+      },
+      {
+        "id": "sam-search-regions-not-a-material-tracker",
+        "kind": "hypothesis",
+        "finding": "The new SAM-enabled candidate advertised the proposal tools but did not call them before a stopped approach and failed changed-view material correspondence recovery. It requested an unavailable persistent tracking capability and reported finishing with no bread placement. SAM does not supply that missing tracker, but its reviewed current masks can provide semantic inspection/search bounds before the existing material-feature correspondence tools.",
+        "limitations": "Evidence is policy-side tool feedback and controller RGB narration, not independent image/contact validation or official scoring. Mask centers/silhouette extrema are not automatically common material points, and segmentation cannot create missing texture or views. Shelf-supported/held bread must not be passed off as supported by the public table in the body-envelope tool. No missing tracker is claimed integrated.",
+        "next_experiment": "For a NEW full-cycle candidate, test bounded SAM proposals on the selected slice in two relevant current views, explicitly inspect the masks and use their visible bounds to narrow existing feature search/inspection. Select real same-material features and retain unchanged triangulation/tracking gates; do not infer contact targets from mask centers. Prefer accessible material and, when actual coverage/reach permits, fixed head plus non-grasping wrist to reduce acting-finger occlusion; calibration does not predict future visibility. Keep proposals/inspection/localization/planning within16 calls per observation and stop rather than force a false match. When grasp/retention gates pass, continue both insertions, actual lever activation and home within1400 actions, preserving two shelf slices and terminal reserve."
+      },
+      {
+        "id": "reorient-empty-hand-before-fresh-target-approach",
+        "kind": "hypothesis",
+        "finding": "The public motion guard checks a plan target ID in its own primary camera; a triangulation other_point is not an automatic alternate tracker. In candidate001 the head target was lost at70, while the corresponding wrist tracks had already last been observed at15 and68. Merely switching to wrist-primary would not fix that record. Candidate002 also stopped a combined inclined staging move after head-point loss. The large TCP residual at a guard stop is not proof of false arrival or a reason to relax tolerances. A read-only public-robot replay reproduced the rejected downward and accepted inclined controls. The inclined attitude at the recorded current empty-hand TCP also passed the same preflight; reversing the closing direction alone did not rescue the high downward pose. This is not scene-clearance or native recovery evidence.",
+        "limitations": "This is public code and recorded tracking-state evidence, not independently inspected images or a precise occlusion/dynamics diagnosis. Both primary and alternate evidence can fail. No new tracker, future-view planner, automatic camera handover or validated recovery is provided. Reorientation itself needs actual hand/arm swept clearance and all original guards.",
+        "next_experiment": "In a NEW full-cycle candidate, where current RGB supports clear empty-hand space, perform the needed gross reorientation there before final target localization. Use an existing checked robot-relative orientation plan only for this genuinely clear preparation, never to continue blind contact after a lost target. Reobserve and re-localize real material features at the new attitude, optionally using reviewed SAM bounds for semantic search. Choose a primary camera/feature that is actually visible, not automatically head or acting wrist; an alternative view needs its own current correspondence. Test a short target-bound approach with that attitude held and all tracking/geometry/IK/collision gates intact. On loss, stop and reobserve rather than swap IDs or reuse a stale position. Continue both bread placements, lever and home when supported within1400 actions and the terminal reserve."
+      }
+    ]
+  },
+  {
+    "diagnosis": "Keep approach_close and all regressions unchanged: the evidence identifies controller flow and recovery-call errors, not a recipe defect. Preserve the reviewed visibility-first full-cycle experiment, adding explicit call-budget admission and a stronger preclosure engagement gate.\n\nRecognition: slice counts and occlusion descriptions are policy narration, not independent image validation. Geometry: accepted bread/divider points remain conditional on physical correspondence; rejected opening corners leave slot clearance unresolved. One surface point is not thickness or grasp-center evidence. Tracking: empty stereo proposals and failed post-lift correspondence persist despite successful viewing motions; neither SAM nor other_point supplies persistent tracking. Retention: one trial reached a test lift, but retained bread was not established. This cannot distinguish missed engagement, slip and tracking ambiguity. Planning: changed-view motions and home completed; endpoint IK and TCP checks do not certify payload clearance or holding.\n\nFlow/action budgeting: one trial terminated after exceeding non-motion calls, immediately after creating an unexecuted viewing plan. Merely repeating the 16-call instruction is insufficient: reserve calls for execution before starting diagnostics. Other trials stopped well below 1400 actions with unresolved evidence, not native action exhaustion. API: a six-step partial opening was rejected; use integer gripper steps of at least eight. requires_integration remains unavailable. Three official zero-score failures are outcomes, not scene observations.\n\nNext test combines bounded inspected SAM search, clear-space reorientation before fresh localization, and measured finger straddling before closure. The riskiest assumption is that accessible slice geometry supports both engagement and persistent material correspondence. Robust tracking, tactile seating and full payload-path certification remain absent. Reviewed replay supports only robot preflight hypotheses, not native recovery, scene clearance or calibration changes.",
+    "lesson": "For make_toast correspondence loops or unverified pickup, use this unvalidated bounded recovery, retaining the reviewed full-goal attempt.\n\nRead observation_tool_budget from current state before each call; it includes the current query. Count rejected and inspection calls too. Cap diagnostic work at 10 calls per observation, earlier when effective_remaining requires it. Preserve at least four calls for checked continuation/recovery; a plan requires a separate execution call. Do not start another search when its review/localization and safe disposition cannot fit. Never use waits or purposeless moves to renew allowance.\n\nFrom current RGB assess four slice identities, both slots, lever and a plausible complete route. Test one segment_candidates proposal per selected slice view in two useful views and explicitly inspect one mask each. Masks only bound semantic search. Batch genuine material correspondences; never infer grasp centers from silhouettes or apply table-supported envelopes to shelf bread. Keep triangulation gates unchanged.\n\nIf needed, reorient the empty hand in observed clear space BEFORE final localization, checking swept clearance. Prefer views actually showing shared material, not automatically head plus acting wrist. Reobserve, then use a short fixed-attitude target-bound approach. Before approach_close require measured thickness/normal, a supported target-to-grasp offset and evidence that fingers can straddle one slice without its neighbors. Preview limits are not contact proof; TCP already denotes grasp center.\n\nInspect closure; capture 3–8 localized non-collinear bread features, perform a short checked lift and verify attachment consistency plus visible separation/engagement before transport. Check retention during a small clear-space rotation. If ambiguous, return to observed support if safe, release with valid gripper steps (at least eight), and withdraw. Allow one materially changed view/grasp recovery per failed phase across frames, never repeated closure or blind relative contact after target loss.\n\nPassing gates must lead immediately to both upright insertions: compensate measured attachment geometry, rotate in clear space, align and descend incrementally, reobserve after contact, release only with visible support, withdraw and verify independent seating. Preserve exactly two shelf slices. Press the measured lever using the actual hand contact feature and short checked increments; verify down state after withdrawal, not TCP travel.\n\nWithin 1400 native actions initially protect 240 for supported release, withdrawal and both-arm home; increase from route diagnostics and count expanded execution. Keep all fingertip, collision, IK, tracking and continuity guards. A low wrist may need checked upward withdrawal before home. No stale pixels, calibration change, reset or artificial short cutoff. Unresolved evidence after bounded recovery warrants safe termination, not forced progress. Finish through native evaluation; only complete success qualifies.",
+    "verified_recovery": false,
+    "scope": "Hypothesis from public evidence; validate with native trials."
+  },
+  {
+    "diagnosis": "Keep approach_close and all regressions unchanged: no recipe defect is established. Retain the reviewed sequential full-goal experiment, but change its viewing admission rule: a better acting-wrist image is insufficient; require usable shared material in two current views before spending correspondence calls or approaching.\n\nRecognition: reported slice identities and hand occlusion are policy narration, not independently validated images. Geometry: the latest stereo pass returned no unambiguous matches; thickness and finger straddling remained unresolved. Tracking: successful camera motion did not establish persistent correspondence. SAM bounds cannot repair occlusion, and other_point is not camera handover. Retention: no pickup was established; this is not evidence of slipping. Planning: viewing, withdrawal and home completed, but TCP verification certifies neither grasp geometry nor scene/payload clearance. Flow: manipulation ended at 88 actions, far below 1400; unresolved evidence, not action exhaustion, blocked progress. A nominal six-step viewing move took 18 actions. API: requires_integration means the requested capability remains unavailable, not that a callable tracker failed. Official failure and zero score are outcomes, not scene observations.\n\nThe next first experiment tests complementary-view selection with the acting hand kept outside the observed shared-material sightlines, followed by clear-space reorientation, fresh localization and a short fixed-attitude approach. This specifically avoids repeating a viewing move that improves one view while sacrificing another. Its riskiest assumption is that any accessible slice offers sufficient shared material and measured edge geometry through contact. Offline robot preflight supports no scene-clearance or calibration change. Robust tracking, tactile seating and full-cycle payload certification remain absent.",
+    "lesson": "When a checked viewing move yields empty stereo proposals and reported hand occlusion, do not repeat the same viewing route or treat improved wrist coverage as recovery. This unvalidated strategy tests two-view visibility jointly.\n\nStart the reviewed full-cycle attempt from current RGB: identify four slices, both slots and lever, compare accessible edge grasps with destination orientation and withdrawal, preserving two shelf slices. Keep the acting hand clear of observed shared-material sightlines. Prefer head plus non-grasping wrist only when current coverage and reach support it. If needed, make one purposeful checked empty-hand view change or gross reorientation in visibly clear space, inspecting swept hand/arm clearance. Reobserve before final localization; calibration cannot predict visibility.\n\nTest bounded SAM proposals in two useful current views and explicitly inspect one mask each. Use masks only as search bounds. Require visible common material before one stereo proposal/review pass; batch genuine correspondences through unchanged triangulation gates. Do not use silhouette centers, guessed thickness, table-supported envelopes for shelf bread, or stale points. Before approach_close require measured thickness/normal, grasp offset, finger straddling and a clear short fixed-attitude approach. TCP already denotes grasp center.\n\nInspect closure, capture 3–8 non-collinear object features, perform a short checked lift and verify attachment consistency plus visible engagement/separation. Check retained orientation with a small clear-space rotation. Passing gates must lead to BOTH upright insertions: compensate measured attachment geometry, align freshly, descend incrementally, reobserve after contact, release only onto established support, withdraw and verify independent seating. Treat the first slice as an obstacle. Confirm two shelf slices remain. Press the freshly measured lever with the actual hand contact feature in checked increments; verify down state after withdrawal, not TCP travel. Withdraw safely and home both empty arms.\n\nUse current observation_tool_budget before every call: cap diagnostic work at 10 calls, preserve at least four for continuation/recovery, and respect the 16-call and whole-episode limits. Planning needs separate execution. Never manufacture observations to renew allowance. Within 1400 actions initially protect 240 for supported release, withdrawal and both-arm home; raise from route diagnostics and count actual expanded actions.\n\nAllow one materially changed recovery per failed phase across frames. On tracking loss stop contact progress; no blind relative advance or automatic ID swap. On ambiguous retention return to observed support if safe, using valid gripper steps, then withdraw. Keep all fingertip, collision, IK and continuity guards. Low wrists may need checked upward withdrawal before home. No reset, calibration change or artificial short cutoff. Unresolved evidence warrants safe termination; only complete native success qualifies.",
+    "verified_recovery": false,
+    "scope": "Hypothesis from public evidence; validate with native trials."
+  }
+]

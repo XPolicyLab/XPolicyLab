@@ -1,0 +1,44 @@
+{
+  "title": "叠叠乐：十片分四组—测孔/柱—局部对齐套入—逐组计数",
+  "target_count": 10,
+  "group_counts": [
+    4,
+    3,
+    2,
+    1
+  ],
+  "operations": [
+    "pick",
+    "dock",
+    "place",
+    "transfer",
+    "inspect",
+    "measure_feature",
+    "view",
+    "home",
+    "wait"
+  ],
+  "phases": [
+    "Identify all ten pieces and map them to matching peg groups of counts 4,3,2,1; plan group order based on access and target orientation.",
+    "Pick one piece with an edge/body grasp leaving the matching hole(s) available.",
+    "On fresh RGB measure three non-collinear directed piece/peg frame features; dock aligns and seats onto the CURRENT group stack support, not the original board height.",
+    "Inspect actual seated support and increment only a visually supported group member; star or multi-hole parts need correct phase/polarity, not just center alignment.",
+    "Complete all ten pieces, release and home both empty arms."
+  ],
+  "failure_lesson": "Four groups do not mean four pieces. Many completed releases remained off pegs; star orientation/seating and current stack height are specific failures in reference notes.",
+  "required_features": {
+    "dock": [
+      "source.mate_a/b/c (piece hole frame)",
+      "destination.mate_a/b/c",
+      "destination.seat (current stack support)"
+    ]
+  },
+  "reference_success_scope": "External native aggregate has successes; no all-ten success can be inferred from returned release flags.",
+  "task": "play_stacking_toy",
+  "family": "play_stacking_toy",
+  "budget": 1200,
+  "random": false,
+  "pickup_lift_m": 0.06,
+  "travel_lift_m": 0.06,
+  "final_home": true
+}

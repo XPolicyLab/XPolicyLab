@@ -1,0 +1,100 @@
+[
+  {
+    "kind": "architecture",
+    "lesson": "GPT plans semantic phases, identities and recovery. Local measured composite tools execute fine operations. Never count commanded motion as native success."
+  },
+  {
+    "kind": "observed_local_baseline",
+    "outcomes": [
+      {
+        "seed": 0,
+        "score_native": 0.0,
+        "success": false,
+        "status": "completed"
+      },
+      {
+        "seed": 1,
+        "score_native": 0.0,
+        "success": false,
+        "status": "completed"
+      },
+      {
+        "seed": 2,
+        "score_native": 0.0,
+        "success": false,
+        "status": "completed"
+      }
+    ],
+    "lesson": "Broom handoffs slipped and apparent sweeps did not imply containment. A supported table-mediated regrasp recovered one external transfer, not the full task.",
+    "scope": "Historical OLD tool-loop skill, not evidence about this new candidate."
+  },
+  {
+    "kind": "reference_informed_hypothesis",
+    "lesson": [
+      "Identify broom, dustpan and all blocks; choose handle grasps from current RGB.",
+      "Pick broom with left arm; handover to right using current receiver_grasp feature. If direct handover is infeasible, explicitly place broom on support, withdraw/home empty left, then reidentify and pick with right (reference observed table-mediated recovery).",
+      "Pick dustpan with left; hold its entry at block/table level, not above the blocks.",
+      "For each live block group choose stroke: source=broom with actual brush contact feature; destination=path with start behind the group and end inside the dustpan. Local tools triangulate these coarse semantic features and execute the stroke.",
+      "Inspect remaining blocks and dustpan contents. Replan a different stroke for residual blocks.",
+      "Place dustpan level on table left of broom, release tool(s), withdraw and home empty arms."
+    ],
+    "scope": "External aggregate has rare successes; cached detailed notes do not show a complete reliable sweep."
+  },
+  {
+    "kind": "known_limitations",
+    "lesson": "No measured finger-stop/force sensor or automatic object retention/containment certificate. Attachment transforms assume no slip. Three-feature docking and support placement are implemented but unvalidated in native tasks. No new arbitrary tabletop spacing, residual-error, protected-step or retry-count gates."
+  },
+  {
+    "kind": "ordinary_random_alias_publication",
+    "lesson": "sweep_blocks_random explicitly reuses this same skill; identify task blocks among distractors without changing native requirements.",
+    "native_validation": "Neither new variant has a native episode result.",
+    "random_candidate_experience": [
+      {
+        "kind": "architecture",
+        "lesson": "GPT plans semantic phases, identities and recovery. Local measured composite tools execute fine operations. Never count commanded motion as native success."
+      },
+      {
+        "kind": "observed_local_baseline",
+        "outcomes": [
+          {
+            "seed": 0,
+            "score_native": 0.0,
+            "success": false,
+            "status": "completed"
+          },
+          {
+            "seed": 1,
+            "score_native": 0.0,
+            "success": false,
+            "status": "completed"
+          },
+          {
+            "seed": 2,
+            "score_native": 0.0,
+            "success": false,
+            "status": "completed"
+          }
+        ],
+        "lesson": "Broom handoffs slipped and apparent sweeps did not imply containment. A supported table-mediated regrasp recovered one external transfer, not the full task.",
+        "scope": "Historical OLD tool-loop skill, not evidence about this new candidate."
+      },
+      {
+        "kind": "reference_informed_hypothesis",
+        "lesson": [
+          "Random layout: identify task targets by semantic shape/texture, exclude distractors, and use the SAME local operation baseline as the ordinary task. Never infer ordinary/random from visual absence of distractors.",
+          "Identify broom, dustpan and all blocks; choose handle grasps from current RGB.",
+          "Pick broom with left arm; handover to right using current receiver_grasp feature. If direct handover is infeasible, explicitly place broom on support, withdraw/home empty left, then reidentify and pick with right (reference observed table-mediated recovery).",
+          "Pick dustpan with left; hold its entry at block/table level, not above the blocks.",
+          "For each live block group choose stroke: source=broom with actual brush contact feature; destination=path with start behind the group and end inside the dustpan. Local tools triangulate these coarse semantic features and execute the stroke.",
+          "Inspect remaining blocks and dustpan contents. Replan a different stroke for residual blocks.",
+          "Place dustpan level on table left of broom, release tool(s), withdraw and home empty arms."
+        ],
+        "scope": "External aggregate has rare successes; cached detailed notes do not show a complete reliable sweep."
+      },
+      {
+        "kind": "known_limitations",
+        "lesson": "No measured finger-stop/force sensor or automatic object retention/containment certificate. Attachment transforms assume no slip. Three-feature docking and support placement are implemented but unvalidated in native tasks. No new arbitrary tabletop spacing, residual-error, protected-step or retry-count gates."
+      }
+    ]
+  }
+]

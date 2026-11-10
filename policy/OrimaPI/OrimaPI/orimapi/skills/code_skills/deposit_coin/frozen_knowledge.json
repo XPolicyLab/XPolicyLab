@@ -1,0 +1,19 @@
+{
+  "skills": {
+    "coin_approach": "def coin_approach(evidence):\n    state = tool('coin_status', {})['result']\n    if state['next_stage'] != 'approach' or state['pending_stage'] is not None:\n        raise RuntimeError('Expected a fresh prepared open-hand approach')\n    obs = get_observation()\n    tool('coin_step', {'step': obs['step']})\n    obs = get_observation()\n    return tool('coin_servo', {'step': obs['step'], 'evidence': evidence})\n",
+    "coin_acquire": "def coin_acquire(evidence):\n    obs = get_observation()\n    tool('coin_servo_accept', {'step': obs['step'], 'evidence': evidence})\n    for phase in range(2):\n        obs = get_observation()\n        tool('coin_step', {'step': obs['step']})\n    return get_observation()\n",
+    "coin_confirm_and_lift": "def coin_confirm_and_lift(evidence):\n    obs = get_observation()\n    tool('coin_review_probe', {'step': obs['step'], 'assessment': 'held', 'evidence': evidence})\n    tool('coin_step', {'step': obs['step']})\n    return get_observation()\n",
+    "coin_retry_approach": "def coin_retry_approach(evidence):\n    obs = get_observation()\n    tool('coin_review_probe', {'step': obs['step'], 'assessment': 'empty', 'evidence': evidence})\n    tool('coin_retry', {'step': obs['step'], 'source_supported': True, 'evidence': evidence})\n    obs = get_observation()\n    tool('coin_step', {'step': obs['step']})\n    obs = get_observation()\n    return tool('coin_servo', {'step': obs['step'], 'evidence': evidence})\n",
+    "coin_finish_pickup": "def coin_finish_pickup(assessment, evidence):\n    obs = get_observation()\n    tool('coin_review_pickup', {'step': obs['step'], 'assessment': assessment, 'evidence': evidence})\n    return tool('finish', {})\n",
+    "coin_advance": "def coin_advance(marks, evidence):\n    obs = get_observation()\n    fit = tool('coin_observe_held', {'step': obs['step'], 'marks': marks, 'evidence': evidence})\n    result = tool('coin_step', {'step': obs['step']})\n    return result\n",
+    "coin_finish_empty": "def coin_finish_empty():\n    state = tool('coin_status', {})['result']\n    if state['next_stage'] != 'withdraw' or state['pending_stage'] is not None:\n        raise RuntimeError('Release must have completed before withdrawal/home')\n    for phase in range(2):\n        obs = get_observation()\n        tool('coin_step', {'step': obs['step']})\n    return get_observation()\n"
+  },
+  "lessons": [
+    "Maintain separate submission and native-action budgets. Remaining physical actions cannot rescue an exhausted code-submission allowance.",
+    "Treat stale-point failure as an evidence-guard stop after possible partial motion: acquire fresh RGB and public state before replanning.",
+    "Low reprojection residual and high segmentation confidence do not prove correct object identity, contact geometry or possession.",
+    "Use observed coin motion relative to the measured TCP across a small test lift to distinguish acquisition from mere gripper closure; occlusion is unknown, not automatic loss.",
+    "Check reachable orientations, physical pad placement and jaw/body clearance for the complete route before committing to transport. A point-only endpoint fit is insufficient.",
+    "Do not release onto an unverified tabletop buffer or call home while either arm must retain the coin. Official partial credit is not insertion success."
+  ]
+}

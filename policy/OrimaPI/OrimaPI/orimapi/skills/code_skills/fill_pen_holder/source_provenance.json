@@ -1,0 +1,13 @@
+{
+  "local_tool_provider": "orimapi/skills/code_skills/classify_objects_by_language",
+  "tool_provider_bundle_sha256": "c2d0fd922e3fcaf629cd4f6a9551f15be910e8ef26cb5875ad8253385b600ccb",
+  "scope": "Reuse licensed pinned local RGB scene segmentation/locate, nativeIK and robot guards without copying external task control. New task-specific orchestration and contact geometry.",
+  "runtime_no_hidden_state": true,
+  "parent_candidate": "candidate-007",
+  "parent_bundle_sha256": "f72d217d619d23fa7059d599c396b7fdf41846c276aa5e8f932a2a17e2d4d811",
+  "changes": [
+    "Independently written low-wall side holder grasp/common workspace from current measured geometry, public robot bases and live observations.",
+    "Multiple grasp fractions, independent canonical/near-upright stages with small lean and continuous rotation waypoints; no future aperture preflight veto on a feasible upright.",
+    "Shallow pen-end insertion at current measured rim, not table-bottom target; maintain c007 diagnostic-only residual and no local tabletop spacing gates."
+  ]
+}

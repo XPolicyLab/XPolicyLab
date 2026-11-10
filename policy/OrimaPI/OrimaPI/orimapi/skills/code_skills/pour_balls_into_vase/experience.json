@@ -1,0 +1,26 @@
+[
+  {
+    "type": "official_goal",
+    "lesson": "All seven balls inside vase AND upright cup AND both arms home, native600 actions. Score0/100, not partial credit. Support/release is an execution strategy, not an extra exact-original-location scoring requirement."
+  },
+  {
+    "type": "observed_local_failure",
+    "lesson": "Old official-skill seeds0/1/2 scored0 with12/21/12 model requests. None entered source acquisition or pouring. Seeds0/2 requested an unavailable opening-reconstruction capability after a self-imposed two-view policy; seed1 hit a same-observation tool-call restriction. Those are NOT evidence that pouring physics failed."
+  },
+  {
+    "type": "independent_implementation_hypothesis",
+    "lesson": "Own projected-circle conic fit combines current boundary samples without pairwise material correspondences. Motion is computed from measured rim-to-TCP attachment and a cylindrical source-envelope hypothesis. Grip/trajectory outputs are not true retention or ball-capture sensors. No local tabletop gap/arrival residual/operation-step timeout/180-step reserve/failure counter is added. Real failures preserve state and continue through useful alternatives; original native600, wall timeout and public joint/self/cross-arm contracts remain."
+  },
+  {
+    "type": "known_limit",
+    "lesson": "This is an untested independent implementation, not a reproduction claim. A spilled ball outside the cup/vase needs a separate grounded recovery capability; emptying/restoration alone cannot recover it or establish success. Current recovery covers view/geometry/grasp/route/upright restoration, not a verified loose-ball collection routine."
+  },
+  {
+    "type": "observed_independent_c001_failure",
+    "lesson": "Both seeds scored0 after the native600 steps, not an early policy stop. Source acquisition worked. Seed0 met cross-arm corridor rejection then a stalled actuator target; seed1 reached65-70deg before IK rejection and repeated similar restored sweeps. C002 parks the empty observer, uses signed roll-compatible discharge directions, routes real stalls into recovery, and changes axes after inverse-prefix restoration. These are unvalidated fixes, not success."
+  },
+  {
+    "type": "observed_independent_c002_results",
+    "lesson": "Seed1 natively succeeded100 with3 model requests and complete130deg pour/restore/return/home. Seed0 scored0 after native600, never acquired because mandatory empty-arm parking repeatedly failed. C003 makes parking advisory and uses actual initial observed TCP as its home target. Do not mix the parent success into current candidate qualification."
+  }
+]

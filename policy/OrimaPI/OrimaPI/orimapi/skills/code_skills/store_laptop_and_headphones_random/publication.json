@@ -1,0 +1,34 @@
+{
+  "authorization": "2026-10-24 用户明确要求：现在不论是否达到成功标准都将已经实现的skill合入到正式的skill中",
+  "campaign": "20261023",
+  "candidate": "orimapi/skills/code_skill_rsi/store_laptop_and_headphones_random/studies/20261023-automatic/candidate-014/candidate.json",
+  "candidate_sha256": "3227614c254656f4c8a22ff408d398bf6b50258bfe490889d1fb69fee50cdbec",
+  "candidate_file_sha256": "b01ef5e5603b732186d6e8f31f0719d04960779743fe4c3f74c73360e4d9ac40",
+  "evidence_snapshot_sha256": "28518e33fc4e94985a8f7515f88d052d02f1c8028219b5c913df1a982c423537",
+  "attempt_files_at_capture": {
+    "orimapi/skills/code_skill_rsi/store_laptop_and_headphones_random/studies/20261023-automatic/candidate-014/attempts/000-seed-0.json": "0c7f92ba49e402216f074e51109222150e50968d46beeba63cf62ef4d12adf9e"
+  },
+  "evidence_captured_at": "2026-10-24T07:18:56.878395+00:00",
+  "tool_snapshot_source": "runs/20261023T191246-rsi-c221f0813e48/code_tools/ac07f3436fec0c76300fbf491fce911efa4c1e277b695e0b2c1f96f4ddfb1455",
+  "mode": "user_authorized_unqualified",
+  "scope": "Published by explicit user request regardless of success. Formal availability is not native task qualification or benchmark reliability.",
+  "selection": "Latest existing frozen candidate; not a highest-score claim.",
+  "outcomes": [
+    {
+      "seed": 0,
+      "attempt_status": "returned",
+      "scored": false,
+      "success": null,
+      "score": null,
+      "run": "/root/code/OrimaPI/runs/20261023T191844-rsi-57719b50b6dd",
+      "error": "RuntimeError: RoboDojo evaluation timed out after 210.74451388962916 seconds",
+      "started_at": "2026-10-23T19:18:44.927453+00:00",
+      "ended_at": "2026-10-23T19:22:33.544815+00:00",
+      "official_result": null,
+      "controller_failures": [],
+      "terminal_failures": []
+    }
+  ],
+  "standard_qualified": false,
+  "exception_qualified": false
+}

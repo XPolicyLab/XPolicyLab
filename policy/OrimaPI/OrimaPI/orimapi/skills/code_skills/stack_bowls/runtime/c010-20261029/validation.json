@@ -1,0 +1,4033 @@
+{
+  "schema": "orimapi.stack-bowls-publication-validation/v1",
+  "tested_candidate_bundle_sha256": "f5f2537747eb25d4a9f004fa7b80532ca46d3768ee744e2443235072cc967dc8",
+  "qualification": {
+    "mode": "user_authorized_eight_layout_publication",
+    "standard_qualified": false,
+    "tested_seed_sets": [
+      0,
+      1,
+      2
+    ],
+    "successful_seed_sets": [
+      0,
+      1
+    ],
+    "scored_episodes": 8,
+    "successful_episodes": 3,
+    "mean_score_percent": 43.125,
+    "llm_model": "gpt-6-astra",
+    "require_model_match": true,
+    "validation_batch": "stack-bowls-random8-20261029-c010",
+    "scope": "Eight preselected ordinary-task layouts, one episode each. Small paired development sample; not the full official quota. Only stack_bowls is supported."
+  },
+  "source_mapping": [
+    {
+      "name": "controller",
+      "source": "/data/OrimaPI/orimapi/skills/code_skill_rsi/stack_bowls/c010-20261029/controller.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/controller.py",
+      "tested_sha256": "e026e1d7f5bac58ce60935ad777276dd8ec7d6a59e00ecc7cb8710f4ce99bd59",
+      "published_sha256": "46ac8688feffd80563e2a9fe6d071f03f442dcff3bd2be384e00110b4693f5e7",
+      "transformation": "Rebase the parent import into the formal runtime directory",
+      "class_and_function_definitions_unchanged": true
+    },
+    {
+      "name": "vision",
+      "source": "/data/OrimaPI/orimapi/skills/code_skill_rsi/stack_bowls/c002-20261028/vision.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c002-20261028/vision.py",
+      "tested_sha256": "aa1f2835472526cd8d99c88c5f139a3d03c1316c7ab422ba8511f41aec618fa5",
+      "published_sha256": "aa1f2835472526cd8d99c88c5f139a3d03c1316c7ab422ba8511f41aec618fa5",
+      "transformation": null,
+      "class_and_function_definitions_unchanged": true
+    },
+    {
+      "name": "shared_baseline_motion",
+      "source": "/data/OrimaPI/orimapi/skills/code_skills/make_kong/baseline_motion.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/make_kong/baseline_motion.py",
+      "tested_sha256": "79abd687e22cb81a94ebb5fcc6b5419934c459125645227d664046f3950097cb",
+      "published_sha256": "79abd687e22cb81a94ebb5fcc6b5419934c459125645227d664046f3950097cb",
+      "transformation": null,
+      "class_and_function_definitions_unchanged": true
+    },
+    {
+      "name": "shared_hand_clearance",
+      "source": "/data/OrimaPI/orimapi/skills/code_skills/make_kong/hand_clearance.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/make_kong/hand_clearance.py",
+      "tested_sha256": "088592a790fde9051c007a635fcc6edec1c51a29c21f367163303e87c32784e9",
+      "published_sha256": "088592a790fde9051c007a635fcc6edec1c51a29c21f367163303e87c32784e9",
+      "transformation": null,
+      "class_and_function_definitions_unchanged": true
+    },
+    {
+      "name": "shared_hand_bounds",
+      "source": "/data/OrimaPI/orimapi/skills/code_skills/make_kong/hand_bounds.json",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/make_kong/hand_bounds.json",
+      "tested_sha256": "6ecea3347942113699f1993b189fa4ad555912aa69906d43dd3a29beaed426ca",
+      "published_sha256": "6ecea3347942113699f1993b189fa4ad555912aa69906d43dd3a29beaed426ca",
+      "transformation": null,
+      "class_and_function_definitions_unchanged": true
+    },
+    {
+      "name": "native",
+      "source": "/data/OrimaPI/orimapi/skills/code_skill_rsi/stack_bowls/c002-20261028/native.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c002-20261028/native.py",
+      "tested_sha256": "a9b025e1968ba6a938094f9a4295d2e83814852baf463930a9d8b4482be73e3c",
+      "published_sha256": "a9b025e1968ba6a938094f9a4295d2e83814852baf463930a9d8b4482be73e3c",
+      "transformation": null,
+      "class_and_function_definitions_unchanged": true
+    },
+    {
+      "name": "legacy_controller",
+      "source": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/controller.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/baseline_controller.py",
+      "tested_sha256": "3563d08170f4ff187fccb6f3adc4cc2839f8206b323438eec59399a8589804bc",
+      "published_sha256": "3563d08170f4ff187fccb6f3adc4cc2839f8206b323438eec59399a8589804bc",
+      "transformation": null,
+      "class_and_function_definitions_unchanged": true
+    },
+    {
+      "name": "native_client",
+      "source": "/data/OrimaPI/orimapi/skills/code_skills/classify_objects_by_language/adapter.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/classify_objects_by_language/adapter.py",
+      "tested_sha256": "7a6e2517339c4ad09bbeba72e3d6cb356faa7b51a269eb9daced31c7be95fcc2",
+      "published_sha256": "7a6e2517339c4ad09bbeba72e3d6cb356faa7b51a269eb9daced31c7be95fcc2",
+      "transformation": null,
+      "class_and_function_definitions_unchanged": true
+    },
+    {
+      "name": "native_worker",
+      "source": "/data/OrimaPI/orimapi/skills/code_skills/classify_objects_by_language/ik_worker.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/classify_objects_by_language/ik_worker.py",
+      "tested_sha256": "92a27a877166ed808aeae0e6fff202fa9725c0bfc7dc333d6cffb2608574beba",
+      "published_sha256": "92a27a877166ed808aeae0e6fff202fa9725c0bfc7dc333d6cffb2608574beba",
+      "transformation": null,
+      "class_and_function_definitions_unchanged": true
+    },
+    {
+      "name": "parent_controller",
+      "source": "/data/OrimaPI/orimapi/skills/code_skill_rsi/stack_bowls/c007-20261028/controller.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c007-20261028/controller.py",
+      "tested_sha256": "ed308b638d8102ffb86166a48ddb1b2e0f1ed68b85727e1e536e60eaf9eae4e7",
+      "published_sha256": "ed308b638d8102ffb86166a48ddb1b2e0f1ed68b85727e1e536e60eaf9eae4e7",
+      "transformation": null,
+      "class_and_function_definitions_unchanged": true
+    },
+    {
+      "name": "grandparent_controller",
+      "source": "/data/OrimaPI/orimapi/skills/code_skill_rsi/stack_bowls/c004-20261028/controller.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c004-20261028/controller.py",
+      "tested_sha256": "d17d795b605ee8f8c90779011236b5a12e2608e73d986c6b4aeaea9f492587d5",
+      "published_sha256": "d17d795b605ee8f8c90779011236b5a12e2608e73d986c6b4aeaea9f492587d5",
+      "transformation": null,
+      "class_and_function_definitions_unchanged": true
+    },
+    {
+      "name": "c002_controller",
+      "source": "/data/OrimaPI/orimapi/skills/code_skill_rsi/stack_bowls/c002-20261028/controller.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c002-20261028/controller.py",
+      "tested_sha256": "b426457c9b9078afbfae58ca8649be77a0052b1c5066adb68bd1ec14f5a3a2c0",
+      "published_sha256": "7096304f2e85bc6d16ca5de2876f848f26564c522adc6b44789b6ff4979a7124",
+      "transformation": "Import the preserved baseline rather than recursively importing the new entry",
+      "class_and_function_definitions_unchanged": true
+    },
+    {
+      "name": "c003_controller",
+      "source": "/data/OrimaPI/orimapi/skills/code_skill_rsi/stack_bowls/c003-20261028/controller.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c003-20261028/controller.py",
+      "tested_sha256": "e13980335a101c3b7be7015f6e5afe16920138edbe3a735bf5a4798ff6a71203",
+      "published_sha256": "e13980335a101c3b7be7015f6e5afe16920138edbe3a735bf5a4798ff6a71203",
+      "transformation": null,
+      "class_and_function_definitions_unchanged": true
+    },
+    {
+      "name": "c005_controller",
+      "source": "/data/OrimaPI/orimapi/skills/code_skill_rsi/stack_bowls/c005-20261028/controller.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c005-20261028/controller.py",
+      "tested_sha256": "5728cc8f366863c933b02522a8ab9e31bf847a6187fe2d420cf4920c2dc772ba",
+      "published_sha256": "5728cc8f366863c933b02522a8ab9e31bf847a6187fe2d420cf4920c2dc772ba",
+      "transformation": null,
+      "class_and_function_definitions_unchanged": true
+    },
+    {
+      "name": "c006_controller",
+      "source": "/data/OrimaPI/orimapi/skills/code_skill_rsi/stack_bowls/c006-20261028/controller.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c006-20261028/controller.py",
+      "tested_sha256": "ebb4e78fff15a107c750e4f9c1885976d9c890f95ce32b2bf4e5c8c5ebe2360e",
+      "published_sha256": "ebb4e78fff15a107c750e4f9c1885976d9c890f95ce32b2bf4e5c8c5ebe2360e",
+      "transformation": null,
+      "class_and_function_definitions_unchanged": true
+    },
+    {
+      "name": "c008_controller",
+      "source": "/data/OrimaPI/orimapi/skills/code_skill_rsi/stack_bowls/c008-20261028/controller.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c008-20261028/controller.py",
+      "tested_sha256": "b78a0eddc5645ea872c6f26b65d4fbf1e55c5c3079d6102aaf1c2f3e3838109a",
+      "published_sha256": "b78a0eddc5645ea872c6f26b65d4fbf1e55c5c3079d6102aaf1c2f3e3838109a",
+      "transformation": null,
+      "class_and_function_definitions_unchanged": true
+    },
+    {
+      "name": "c009_controller",
+      "source": "/data/OrimaPI/orimapi/skills/code_skill_rsi/stack_bowls/c009-20261029/controller.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c009-20261029/controller.py",
+      "tested_sha256": "c10355854452bf8e05ff782bb58b1bfd28b63a22b7845b3b349b0b851f124b1a",
+      "published_sha256": "c10355854452bf8e05ff782bb58b1bfd28b63a22b7845b3b349b0b851f124b1a",
+      "transformation": null,
+      "class_and_function_definitions_unchanged": true
+    }
+  ],
+  "native_rows": [
+    {
+      "job": "gpu-0-s1-l18",
+      "seed": 1,
+      "layout_id": 18,
+      "status": "completed",
+      "score_percent": 0.0,
+      "success": false,
+      "elapsed_s": 1015.1433179240048,
+      "model_calls": 25,
+      "recovery_count": 5,
+      "route_rejections": 835,
+      "route_rejections_by_stage": {
+        "current": 835
+      },
+      "first_transfer_feasible": 0,
+      "two_transfer_plans": [],
+      "table_staging": [],
+      "retention_probes": 0,
+      "repair_support_restores": [],
+      "grasp_cycles": [
+        {
+          "step": 162,
+          "source": "right",
+          "base": "middle"
+        }
+      ],
+      "third_bowl_attempts": [],
+      "route_errors": {
+        "above rim: Discontinuous IK branch: adjacent joint jump 6.1583rad": 2,
+        "above rim: Public swept finger envelope enters table clearance": 8,
+        "straddle near rim: Arm-link origin below table clearance": 7,
+        "straddle near rim: Grasp point must remain at least 4 mm above table": 15,
+        "above rim: native_and_legacy_ik_unreachable": 523,
+        "straddle near rim: Full-width distal fingertips must remain at least 2 mm above table": 78,
+        "straddle near rim: Public swept finger envelope enters table clearance": 102,
+        "above rim: Public collision model: other-arm clearance -0.0005 m": 2,
+        "above rim: Public collision model: other-arm clearance -0.0014 m": 1,
+        "above rim: Public collision model: other-arm clearance -0.0079 m": 1,
+        "above rim: Public collision model: other-arm clearance -0.0089 m": 1,
+        "above rim: Public finger envelopes: other-arm clearance 0.0002 m": 1,
+        "above rim: Public finger envelopes: other-arm clearance -0.0137 m": 1,
+        "above rim: Public collision model: other-arm clearance 0.0003 m": 1,
+        "above rim: Public collision model: other-arm clearance -0.0073 m": 1,
+        "above rim: Public collision model: other-arm clearance -0.0083 m": 1,
+        "above rim: Public finger envelopes: other-arm clearance 0.0011 m": 1,
+        "above rim: Public finger envelopes: other-arm clearance -0.0129 m": 1,
+        "above rim: Public finger envelopes: other-arm clearance -0.0058 m": 1,
+        "above rim: Public collision model: other-arm clearance 0.0018 m": 1,
+        "above rim: Public collision model: other-arm clearance -0.0054 m": 1,
+        "above rim: Public collision model: other-arm clearance -0.0063 m": 1,
+        "above rim: Public finger envelopes: other-arm clearance -0.0099 m": 1,
+        "lower upright into base: Public swept finger envelope enters table clearance": 12,
+        "lift clear of tableware: native_and_legacy_ik_unreachable": 36,
+        "above rim: Public finger envelopes: other-arm clearance -0.0068 m": 1,
+        "above rim: Public finger envelopes: other-arm clearance -0.0065 m": 1,
+        "above rim: Public collision model: other-arm clearance -0.0048 m": 1,
+        "above rim: Public collision model: other-arm clearance -0.0058 m": 1,
+        "lift clear of tableware: Public finger envelopes: other-arm clearance 0.0005 m": 8,
+        "lift clear of tableware: Public finger envelopes: other-arm clearance 0.0001 m": 4,
+        "above rim: Public finger envelopes: other-arm clearance -0.0094 m": 1,
+        "lift clear of tableware: Public finger envelopes: other-arm clearance -0.0025 m": 2,
+        "lift clear of tableware: Public finger envelopes: other-arm clearance -0.0028 m": 1,
+        "center carried bowl over base: native_and_legacy_ik_unreachable": 12,
+        "lift clear of tableware: Public finger envelopes: other-arm clearance -0.0026 m": 2,
+        "lift clear of tableware: Public finger envelopes: other-arm clearance -0.0030 m": 1
+      },
+      "searches": [
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 388,
+          "time": "2026-10-28T16:42:37.855541+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "9500e57a36ab481fa684f72d77917637",
+          "step": 108,
+          "rejected": 2,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.05
+        }
+      ],
+      "exhausted_searches": [
+        {
+          "event": "code_skill_tool_bowl_search_exhausted",
+          "sequence": 1224,
+          "time": "2026-10-28T16:44:56.594384+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "9500e57a36ab481fa684f72d77917637",
+          "step": 335,
+          "rejected": 96,
+          "pruned": 768,
+          "continue_recovery": true
+        },
+        {
+          "event": "code_skill_tool_bowl_search_exhausted",
+          "sequence": 1604,
+          "time": "2026-10-28T16:46:34.566440+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "9500e57a36ab481fa684f72d77917637",
+          "step": 420,
+          "rejected": 96,
+          "pruned": 480,
+          "continue_recovery": true
+        },
+        {
+          "event": "code_skill_tool_bowl_search_exhausted",
+          "sequence": 1716,
+          "time": "2026-10-28T16:47:31.586080+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "9500e57a36ab481fa684f72d77917637",
+          "step": 423,
+          "rejected": 96,
+          "pruned": 480,
+          "continue_recovery": true
+        },
+        {
+          "event": "code_skill_tool_bowl_search_exhausted",
+          "sequence": 1828,
+          "time": "2026-10-28T16:48:21.573813+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "9500e57a36ab481fa684f72d77917637",
+          "step": 426,
+          "rejected": 96,
+          "pruned": 480,
+          "continue_recovery": true
+        },
+        {
+          "event": "code_skill_tool_bowl_search_exhausted",
+          "sequence": 2005,
+          "time": "2026-10-28T16:49:27.738260+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "9500e57a36ab481fa684f72d77917637",
+          "step": 429,
+          "rejected": 161,
+          "pruned": 415,
+          "continue_recovery": true
+        },
+        {
+          "event": "code_skill_tool_bowl_search_exhausted",
+          "sequence": 2597,
+          "time": "2026-10-28T16:51:35.182968+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "9500e57a36ab481fa684f72d77917637",
+          "step": 584,
+          "rejected": 96,
+          "pruned": 480,
+          "continue_recovery": true
+        },
+        {
+          "event": "code_skill_tool_bowl_search_exhausted",
+          "sequence": 2891,
+          "time": "2026-10-28T16:53:23.298966+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "9500e57a36ab481fa684f72d77917637",
+          "step": 639,
+          "rejected": 96,
+          "pruned": 480,
+          "continue_recovery": true
+        },
+        {
+          "event": "code_skill_tool_bowl_search_exhausted",
+          "sequence": 3385,
+          "time": "2026-10-28T16:55:07.136796+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "9500e57a36ab481fa684f72d77917637",
+          "step": 761,
+          "rejected": 96,
+          "pruned": 480,
+          "continue_recovery": true
+        }
+      ],
+      "uncertain_continuations": [],
+      "separate_recoveries": [
+        {
+          "event": "code_skill_tool_bowl_separate_placement_recovery",
+          "sequence": 1113,
+          "time": "2026-10-28T16:44:06.499024+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "9500e57a36ab481fa684f72d77917637",
+          "step": 333,
+          "regrasp_id": "right",
+          "confirmed_stack_ids": [
+            "middle"
+          ],
+          "pending_pose_ids": [
+            "middle"
+          ],
+          "destination_stack": {
+            "center": [
+              0.09848545745535252,
+              -0.08323985828796295,
+              0.8120449461308332
+            ],
+            "ids": [
+              "middle"
+            ],
+            "top_id": "middle",
+            "method": "base_needs_current_reacquisition",
+            "updated_step": 333
+          }
+        }
+      ],
+      "recovery_pose_updates": [
+        {
+          "event": "code_skill_tool_bowl_recovery_pose_updated",
+          "sequence": 1111,
+          "time": "2026-10-28T16:44:06.298993+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "9500e57a36ab481fa684f72d77917637",
+          "step": 333,
+          "body": {
+            "id": "right",
+            "position": [
+              0.0027660915314779953,
+              0.03884221197881293,
+              0.7847369746299006
+            ],
+            "radius_m": 0.05958134380473863,
+            "normal_world": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "method": "current_RGB_known_object_radius",
+            "camera": "cam_high",
+            "edge_support": 1.0,
+            "fit_error_px": 0.7821835290445501,
+            "selection_uncertainty_m": 0.0047032534162413635,
+            "sensor_ground_truth": false,
+            "assumptions": [
+              "Same rigid bowl radius previously measured in calibrated current views",
+              "Selected current rim is horizontal; tilt must be reviewed independently",
+              "Single-view scale uncertainty also depends on the earlier radius estimate"
+            ]
+          },
+          "known_dimensions_preserved": true
+        },
+        {
+          "event": "code_skill_tool_bowl_recovery_pose_updated",
+          "sequence": 1122,
+          "time": "2026-10-28T16:44:23.621812+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "9500e57a36ab481fa684f72d77917637",
+          "step": 334,
+          "body": {
+            "id": "middle",
+            "position": [
+              0.08674054542911515,
+              -0.07339062218611095,
+              0.7830000000000006
+            ],
+            "radius_m": 0.06161927863977968,
+            "normal_world": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "method": "current_RGB_known_object_radius",
+            "camera": "cam_high",
+            "edge_support": 1.0,
+            "fit_error_px": 0.783290763135075,
+            "selection_uncertainty_m": 0.004324176809735162,
+            "sensor_ground_truth": false,
+            "assumptions": [
+              "Same rigid bowl radius previously measured in calibrated current views",
+              "Selected current rim is horizontal; tilt must be reviewed independently",
+              "Single-view scale uncertainty also depends on the earlier radius estimate"
+            ]
+          },
+          "known_dimensions_preserved": true
+        }
+      ],
+      "placement_reviews": {
+        "separate": 1
+      },
+      "target_selection_records": [
+        {
+          "step": 108,
+          "source": "right",
+          "base": "middle",
+          "staging": false,
+          "stack_target": {
+            "center": [
+              0.09848545745535252,
+              -0.08323985828796295,
+              0.8120449461308332
+            ],
+            "ids": [
+              "middle"
+            ],
+            "top_id": "middle",
+            "method": "initial_current_table_geometry",
+            "updated_step": 108
+          },
+          "active_support": [
+            0.09848545745535252,
+            -0.08323985828796295,
+            0.8120449461308332
+          ],
+          "release_center": [
+            0.09848545745535252,
+            -0.08323985828796295,
+            0.8403063252070572
+          ]
+        }
+      ],
+      "native_result": "/data/OrimaPI/runs/stack-bowls-random8-20261029-c010/jobs/gpu-0-seed-1/attempt-001/runs/20261028T163846-44eb28936983/evaluator/native/RoboDojo/stack_bowls/orimapi_a46ef1e42286455fbbb39fdcd1ac5c5f/arx_x5/1_ckpt_name=policy-library,action_type=joint/orimapi_a46ef1e42286455fbbb39fdcd1ac5c5f/_result.json",
+      "native_result_sha256": "1095df25ec677e3db821b32b2a65ac78ae9b742db2441859b1cab2dd51f30a20"
+    },
+    {
+      "job": "gpu-1-s2-l54",
+      "seed": 2,
+      "layout_id": 54,
+      "status": "completed",
+      "score_percent": 15.0,
+      "success": false,
+      "elapsed_s": 756.7435098040005,
+      "model_calls": 23,
+      "recovery_count": 8,
+      "route_rejections": 316,
+      "route_rejections_by_stage": {
+        "current": 316
+      },
+      "first_transfer_feasible": 0,
+      "two_transfer_plans": [],
+      "table_staging": [
+        {
+          "event": "code_skill_tool_bowl_table_staging_released",
+          "sequence": 2227,
+          "time": "2026-10-28T16:47:32.562877+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "96c9072230ac40c08487b8ec77cd659b",
+          "step": 626,
+          "id": "right",
+          "position": [
+            0.20804208441603228,
+            -0.07778639577878121,
+            0.8250167178241228
+          ],
+          "destination_stack_preserved": {
+            "center": [
+              -0.1559643111714304,
+              -0.04949658719645733,
+              0.8592964017635193
+            ],
+            "ids": [
+              "left",
+              "middle"
+            ],
+            "top_id": "left",
+            "method": "commanded_release_with_current_rgb_xy",
+            "updated_step": 358
+          }
+        }
+      ],
+      "retention_probes": 0,
+      "repair_support_restores": [],
+      "grasp_cycles": [
+        {
+          "step": 179,
+          "source": "left",
+          "base": "middle"
+        },
+        {
+          "step": 409,
+          "source": "right",
+          "base": "middle"
+        },
+        {
+          "step": 686,
+          "source": "right",
+          "base": "middle"
+        }
+      ],
+      "third_bowl_attempts": [
+        {
+          "step": 409,
+          "source": "right",
+          "base": "middle",
+          "prior_review_step": 358
+        },
+        {
+          "step": 686,
+          "source": "right",
+          "base": "middle",
+          "prior_review_step": 358
+        }
+      ],
+      "route_errors": {
+        "straddle near rim: Public swept finger envelope enters table clearance": 36,
+        "above rim: native_and_legacy_ik_unreachable": 120,
+        "center carried bowl over base: native_and_legacy_ik_unreachable": 102,
+        "lift clear of tableware: native_and_legacy_ik_unreachable": 46,
+        "front transit waypoint: native_and_legacy_ik_unreachable": 8,
+        "straddle near rim: Public collision model: self clearance -0.0050 m": 2,
+        "straddle near rim: native_and_legacy_ik_unreachable": 2
+      },
+      "searches": [
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 471,
+          "time": "2026-10-28T16:43:23.674195+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "96c9072230ac40c08487b8ec77cd659b",
+          "step": 130,
+          "rejected": 22,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 1360,
+          "time": "2026-10-28T16:45:37.616419+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "96c9072230ac40c08487b8ec77cd659b",
+          "step": 359,
+          "rejected": 152,
+          "pruned": 146,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2383,
+          "time": "2026-10-28T16:48:45.224188+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "96c9072230ac40c08487b8ec77cd659b",
+          "step": 628,
+          "rejected": 142,
+          "pruned": 150,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.05
+        }
+      ],
+      "exhausted_searches": [],
+      "uncertain_continuations": [
+        {
+          "event": "code_skill_tool_bowl_uncertain_retention_continues",
+          "sequence": 2899,
+          "time": "2026-10-28T16:49:34.168332+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "96c9072230ac40c08487b8ec77cd659b",
+          "step": 789,
+          "transport": true,
+          "reason": "Retain checked continuation; use resulting changed view for next review"
+        },
+        {
+          "event": "code_skill_tool_bowl_uncertain_retention_continues",
+          "sequence": 2907,
+          "time": "2026-10-28T16:49:54.951526+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "96c9072230ac40c08487b8ec77cd659b",
+          "step": 790,
+          "transport": true,
+          "reason": "Retain checked continuation; use resulting changed view for next review"
+        },
+        {
+          "event": "code_skill_tool_bowl_uncertain_retention_continues",
+          "sequence": 2915,
+          "time": "2026-10-28T16:50:03.334289+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "96c9072230ac40c08487b8ec77cd659b",
+          "step": 791,
+          "transport": true,
+          "reason": "Retain checked continuation; use resulting changed view for next review"
+        },
+        {
+          "event": "code_skill_tool_bowl_uncertain_retention_continues",
+          "sequence": 2923,
+          "time": "2026-10-28T16:50:10.406207+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "96c9072230ac40c08487b8ec77cd659b",
+          "step": 792,
+          "transport": true,
+          "reason": "Retain checked continuation; use resulting changed view for next review"
+        },
+        {
+          "event": "code_skill_tool_bowl_uncertain_retention_continues",
+          "sequence": 2931,
+          "time": "2026-10-28T16:50:21.229193+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "96c9072230ac40c08487b8ec77cd659b",
+          "step": 793,
+          "transport": true,
+          "reason": "Retain checked continuation; use resulting changed view for next review"
+        },
+        {
+          "event": "code_skill_tool_bowl_uncertain_retention_continues",
+          "sequence": 2939,
+          "time": "2026-10-28T16:50:29.076689+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "96c9072230ac40c08487b8ec77cd659b",
+          "step": 794,
+          "transport": true,
+          "reason": "Retain checked continuation; use resulting changed view for next review"
+        },
+        {
+          "event": "code_skill_tool_bowl_uncertain_retention_continues",
+          "sequence": 2947,
+          "time": "2026-10-28T16:50:39.951593+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "96c9072230ac40c08487b8ec77cd659b",
+          "step": 795,
+          "transport": true,
+          "reason": "Retain checked continuation; use resulting changed view for next review"
+        },
+        {
+          "event": "code_skill_tool_bowl_uncertain_retention_continues",
+          "sequence": 2955,
+          "time": "2026-10-28T16:50:46.921071+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "96c9072230ac40c08487b8ec77cd659b",
+          "step": 796,
+          "transport": true,
+          "reason": "Retain checked continuation; use resulting changed view for next review"
+        }
+      ],
+      "separate_recoveries": [],
+      "recovery_pose_updates": [
+        {
+          "event": "code_skill_tool_bowl_recovery_pose_updated",
+          "sequence": 2235,
+          "time": "2026-10-28T16:47:52.060869+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "96c9072230ac40c08487b8ec77cd659b",
+          "step": 627,
+          "body": {
+            "id": "right",
+            "position": [
+              0.20099823758263866,
+              -0.07010785091969052,
+              0.8242832040353967
+            ],
+            "radius_m": 0.08023271676418771,
+            "normal_world": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "method": "current_RGB_known_object_radius",
+            "camera": "cam_high",
+            "edge_support": 1.0,
+            "fit_error_px": 0.7102532336912037,
+            "selection_uncertainty_m": 0.004087404401479149,
+            "sensor_ground_truth": false,
+            "assumptions": [
+              "Same rigid bowl radius previously measured in calibrated current views",
+              "Selected current rim is horizontal; tilt must be reviewed independently",
+              "Single-view scale uncertainty also depends on the earlier radius estimate"
+            ]
+          },
+          "known_dimensions_preserved": true
+        }
+      ],
+      "placement_reviews": {
+        "nested": 1
+      },
+      "target_selection_records": [
+        {
+          "step": 130,
+          "source": "left",
+          "base": "middle",
+          "staging": false,
+          "stack_target": {
+            "center": [
+              -0.16329388392284827,
+              -0.03013608532083832,
+              0.8242964017635193
+            ],
+            "ids": [
+              "middle"
+            ],
+            "top_id": "middle",
+            "method": "initial_current_table_geometry",
+            "updated_step": 130
+          },
+          "active_support": [
+            -0.16329388392284827,
+            -0.03013608532083832,
+            0.8242964017635193
+          ],
+          "release_center": [
+            -0.16329388392284827,
+            -0.03013608532083832,
+            0.8592964017635193
+          ]
+        },
+        {
+          "step": 359,
+          "source": "right",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              -0.1559643111714304,
+              -0.04949658719645733,
+              0.8592964017635193
+            ],
+            "ids": [
+              "left",
+              "middle"
+            ],
+            "top_id": "left",
+            "method": "commanded_release_with_current_rgb_xy",
+            "updated_step": 358
+          },
+          "active_support": [
+            0.026038886622300944,
+            -0.16364149148761928,
+            0.8250167178241228
+          ],
+          "release_center": [
+            0.026038886622300944,
+            -0.16364149148761928,
+            0.8250167178241228
+          ]
+        },
+        {
+          "step": 628,
+          "source": "right",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              -0.1559643111714304,
+              -0.04949658719645733,
+              0.8592964017635193
+            ],
+            "ids": [
+              "left",
+              "middle"
+            ],
+            "top_id": "left",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 627
+          },
+          "active_support": [
+            0.022516963205604132,
+            -0.15980221905807393,
+            0.8250167178241228
+          ],
+          "release_center": [
+            0.022516963205604132,
+            -0.15980221905807393,
+            0.8250167178241228
+          ]
+        }
+      ],
+      "native_result": "/data/OrimaPI/runs/stack-bowls-random8-20261029-c010/jobs/gpu-1-seed-2/attempt-002/runs/20261028T163846-6a06dcc99286/evaluator/native/RoboDojo/stack_bowls/orimapi_27d1b8901f484f4ea2f4b2a3cda266e9/arx_x5/2_ckpt_name=policy-library,action_type=joint/orimapi_27d1b8901f484f4ea2f4b2a3cda266e9/_result.json",
+      "native_result_sha256": "c6379cb0495eaab41d0648bc2403249137064b8e645051a4ff8da3d6d958353d"
+    },
+    {
+      "job": "gpu-2-s0-l0",
+      "seed": 0,
+      "layout_id": 0,
+      "status": "completed",
+      "score_percent": 100.0,
+      "success": true,
+      "elapsed_s": 346.3893415689963,
+      "model_calls": 8,
+      "recovery_count": 0,
+      "route_rejections": 78,
+      "route_rejections_by_stage": {
+        "current": 78
+      },
+      "first_transfer_feasible": 0,
+      "two_transfer_plans": [],
+      "table_staging": [],
+      "retention_probes": 0,
+      "repair_support_restores": [],
+      "grasp_cycles": [
+        {
+          "step": 60,
+          "source": "right",
+          "base": "middle"
+        },
+        {
+          "step": 306,
+          "source": "left",
+          "base": "middle"
+        }
+      ],
+      "third_bowl_attempts": [
+        {
+          "step": 306,
+          "source": "left",
+          "base": "middle",
+          "prior_review_step": 251
+        }
+      ],
+      "route_errors": {
+        "straddle near rim: Full-width distal fingertips must remain at least 2 mm above table": 26,
+        "above rim: native_and_legacy_ik_unreachable": 22,
+        "straddle near rim: native_and_legacy_ik_unreachable": 6,
+        "straddle near rim: Public swept finger envelope enters table clearance": 24
+      },
+      "searches": [
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 77,
+          "time": "2026-10-28T16:41:08.671815+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "272713e23bee43ab9606f0062ebc0f0f",
+          "step": 1,
+          "rejected": 52,
+          "pruned": 4,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 920,
+          "time": "2026-10-28T16:43:21.116094+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "272713e23bee43ab9606f0062ebc0f0f",
+          "step": 252,
+          "rejected": 26,
+          "pruned": 2,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.05
+        }
+      ],
+      "exhausted_searches": [],
+      "uncertain_continuations": [],
+      "separate_recoveries": [],
+      "recovery_pose_updates": [],
+      "placement_reviews": {
+        "nested": 1
+      },
+      "target_selection_records": [
+        {
+          "step": 1,
+          "source": "right",
+          "base": "middle",
+          "staging": false,
+          "stack_target": {
+            "center": [
+              0.04207548488832521,
+              -0.13876115220005644,
+              0.8136924251975625
+            ],
+            "ids": [
+              "middle"
+            ],
+            "top_id": "middle",
+            "method": "initial_current_table_geometry",
+            "updated_step": 1
+          },
+          "active_support": [
+            0.04207548488832521,
+            -0.13876115220005644,
+            0.8136924251975625
+          ],
+          "release_center": [
+            0.04207548488832521,
+            -0.13876115220005644,
+            0.8425908147096738
+          ]
+        },
+        {
+          "step": 252,
+          "source": "left",
+          "base": "middle",
+          "staging": false,
+          "stack_target": {
+            "center": [
+              0.03889521249716092,
+              -0.14878126872444697,
+              0.8425908147096738
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "commanded_release_with_current_rgb_xy",
+            "updated_step": 251
+          },
+          "active_support": [
+            0.03889521249716092,
+            -0.14878126872444697,
+            0.8425908147096738
+          ],
+          "release_center": [
+            0.03889521249716092,
+            -0.14878126872444697,
+            0.8721233354346374
+          ]
+        }
+      ],
+      "native_result": "/data/OrimaPI/runs/stack-bowls-random8-20261029-c010/jobs/gpu-2-seed-0/attempt-003/runs/20261028T163846-b1d68d75d23b/evaluator/native/RoboDojo/stack_bowls/orimapi_481e6fe22fbe472f9e43caf9f99a103c/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_481e6fe22fbe472f9e43caf9f99a103c/_result.json",
+      "native_result_sha256": "117b7aac5c033705b64fc53e97b00912e1fec4f50cff9869aee75b750b3529a6"
+    },
+    {
+      "job": "gpu-3-s1-l7",
+      "seed": 1,
+      "layout_id": 7,
+      "status": "completed",
+      "score_percent": 15.0,
+      "success": false,
+      "elapsed_s": 844.268570012995,
+      "model_calls": 14,
+      "recovery_count": 42,
+      "route_rejections": 255,
+      "route_rejections_by_stage": {
+        "current": 255
+      },
+      "first_transfer_feasible": 0,
+      "two_transfer_plans": [],
+      "table_staging": [
+        {
+          "event": "code_skill_tool_bowl_table_staging_released",
+          "sequence": 2504,
+          "time": "2026-10-28T16:47:21.417200+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 730,
+          "id": "left",
+          "position": [
+            -0.10550830865935178,
+            -0.12499397354553618,
+            0.8139947567863968
+          ],
+          "destination_stack_preserved": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "commanded_release_with_current_rgb_xy",
+            "updated_step": 488
+          }
+        }
+      ],
+      "retention_probes": 0,
+      "repair_support_restores": [],
+      "grasp_cycles": [
+        {
+          "step": 101,
+          "source": "right",
+          "base": "middle"
+        },
+        {
+          "step": 345,
+          "source": "right",
+          "base": "middle"
+        },
+        {
+          "step": 553,
+          "source": "left",
+          "base": "middle"
+        }
+      ],
+      "third_bowl_attempts": [
+        {
+          "step": 553,
+          "source": "left",
+          "base": "middle",
+          "prior_review_step": 488
+        }
+      ],
+      "route_errors": {
+        "straddle near rim: Full-width distal fingertips must remain at least 2 mm above table": 21,
+        "above rim: native_and_legacy_ik_unreachable": 110,
+        "straddle near rim: native_and_legacy_ik_unreachable": 2,
+        "straddle near rim: Public swept finger envelope enters table clearance": 29,
+        "center carried bowl over base: native_and_legacy_ik_unreachable": 60,
+        "lift clear of tableware: native_and_legacy_ik_unreachable": 33
+      },
+      "searches": [
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 195,
+          "time": "2026-10-28T16:41:56.883453+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 50,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 977,
+          "time": "2026-10-28T16:44:05.972990+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 293,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 1737,
+          "time": "2026-10-28T16:46:17.285804+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 489,
+          "rejected": 120,
+          "pruned": 196,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2743,
+          "time": "2026-10-28T16:49:04.336215+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 758,
+          "rejected": 132,
+          "pruned": 156,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2750,
+          "time": "2026-10-28T16:49:10.313332+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 759,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.075
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2757,
+          "time": "2026-10-28T16:49:21.833622+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 760,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2764,
+          "time": "2026-10-28T16:49:32.765768+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 761,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2771,
+          "time": "2026-10-28T16:49:36.562558+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 762,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "original",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2778,
+          "time": "2026-10-28T16:49:42.340243+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 763,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.075
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2785,
+          "time": "2026-10-28T16:49:47.439661+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 764,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.075
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2792,
+          "time": "2026-10-28T16:49:59.447035+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 765,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2799,
+          "time": "2026-10-28T16:50:10.900190+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 766,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2806,
+          "time": "2026-10-28T16:50:22.205425+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 767,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2813,
+          "time": "2026-10-28T16:50:33.545664+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 768,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2820,
+          "time": "2026-10-28T16:50:44.866968+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 769,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2827,
+          "time": "2026-10-28T16:50:47.093679+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 770,
+          "rejected": 0,
+          "pruned": 2,
+          "native_actions_during_search": 0,
+          "mode": "original",
+          "entry": 0.075
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2835,
+          "time": "2026-10-28T16:50:53.220054+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 771,
+          "rejected": 1,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.075
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2842,
+          "time": "2026-10-28T16:50:59.863798+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 772,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.075
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2849,
+          "time": "2026-10-28T16:51:06.533268+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 773,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.075
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2856,
+          "time": "2026-10-28T16:51:13.023390+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 774,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.075
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2863,
+          "time": "2026-10-28T16:51:18.702980+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 775,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.075
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2870,
+          "time": "2026-10-28T16:51:24.968528+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 776,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "front",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2877,
+          "time": "2026-10-28T16:51:27.779239+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 777,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "original",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2884,
+          "time": "2026-10-28T16:51:30.087499+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 778,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "original",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2891,
+          "time": "2026-10-28T16:51:32.375024+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 779,
+          "rejected": 0,
+          "pruned": 11,
+          "native_actions_during_search": 0,
+          "mode": "front",
+          "entry": 0.075
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2898,
+          "time": "2026-10-28T16:51:35.182752+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 780,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "original",
+          "entry": 0.075
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2905,
+          "time": "2026-10-28T16:51:37.489053+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 781,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "original",
+          "entry": 0.075
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2912,
+          "time": "2026-10-28T16:51:40.154538+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 782,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "original",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2919,
+          "time": "2026-10-28T16:51:42.748129+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 783,
+          "rejected": 0,
+          "pruned": 2,
+          "native_actions_during_search": 0,
+          "mode": "original",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2926,
+          "time": "2026-10-28T16:51:45.342986+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 784,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "original",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2933,
+          "time": "2026-10-28T16:51:47.947519+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 785,
+          "rejected": 0,
+          "pruned": 2,
+          "native_actions_during_search": 0,
+          "mode": "original",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2940,
+          "time": "2026-10-28T16:51:50.627503+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 786,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "original",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2947,
+          "time": "2026-10-28T16:51:57.616496+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 787,
+          "rejected": 0,
+          "pruned": 4,
+          "native_actions_during_search": 0,
+          "mode": "front",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2954,
+          "time": "2026-10-28T16:52:03.971405+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 788,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "front",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2962,
+          "time": "2026-10-28T16:52:06.749047+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 789,
+          "rejected": 1,
+          "pruned": 10,
+          "native_actions_during_search": 0,
+          "mode": "original",
+          "entry": 0.075
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2969,
+          "time": "2026-10-28T16:52:09.296698+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 790,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "original",
+          "entry": 0.075
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2976,
+          "time": "2026-10-28T16:52:11.845767+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 791,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "original",
+          "entry": 0.075
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2983,
+          "time": "2026-10-28T16:52:14.400386+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 792,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "original",
+          "entry": 0.075
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2990,
+          "time": "2026-10-28T16:52:17.043566+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 793,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "original",
+          "entry": 0.075
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2998,
+          "time": "2026-10-28T16:52:19.976221+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 794,
+          "rejected": 1,
+          "pruned": 6,
+          "native_actions_during_search": 0,
+          "mode": "front",
+          "entry": 0.075
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 3005,
+          "time": "2026-10-28T16:52:22.308504+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 795,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "front",
+          "entry": 0.075
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 3012,
+          "time": "2026-10-28T16:52:28.004547+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 796,
+          "rejected": 0,
+          "pruned": 2,
+          "native_actions_during_search": 0,
+          "mode": "front",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 3019,
+          "time": "2026-10-28T16:52:34.668450+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 797,
+          "rejected": 0,
+          "pruned": 4,
+          "native_actions_during_search": 0,
+          "mode": "front",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 3026,
+          "time": "2026-10-28T16:52:40.103672+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 798,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "front",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 3033,
+          "time": "2026-10-28T16:52:46.719997+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 799,
+          "rejected": 0,
+          "pruned": 4,
+          "native_actions_during_search": 0,
+          "mode": "front",
+          "entry": 0.05
+        }
+      ],
+      "exhausted_searches": [],
+      "uncertain_continuations": [
+        {
+          "event": "code_skill_tool_bowl_uncertain_retention_continues",
+          "sequence": 1293,
+          "time": "2026-10-28T16:44:34.707110+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 391,
+          "transport": false,
+          "reason": "Retain checked continuation; use resulting changed view for next review"
+        },
+        {
+          "event": "code_skill_tool_bowl_uncertain_retention_continues",
+          "sequence": 1419,
+          "time": "2026-10-28T16:44:52.926006+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 429,
+          "transport": true,
+          "reason": "Retain checked continuation; use resulting changed view for next review"
+        }
+      ],
+      "separate_recoveries": [],
+      "recovery_pose_updates": [
+        {
+          "event": "code_skill_tool_bowl_recovery_pose_updated",
+          "sequence": 2571,
+          "time": "2026-10-28T16:48:12.599890+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "8c10a8d2c34040bf8d0e1e5b33f5830c",
+          "step": 747,
+          "body": {
+            "position": [
+              -0.10070328959938954,
+              -0.12184254089818249,
+              0.8151408120779591
+            ],
+            "radius_m": 0.06035970760339001,
+            "method": "rgb_circle_fit",
+            "reprojection_error_px": [
+              0.22372352111843827,
+              0.6213254119197048
+            ],
+            "selection_uncertainty_m": 0.004892428537331422,
+            "sensor_ground_truth": false,
+            "assumptions": [
+              "Both outlines select the same physical horizontal circular edge",
+              "Calibration is accurate; uncertainty omits calibration error",
+              "Geometric agreement does not establish an inner opening or containment"
+            ],
+            "id": "left",
+            "cameras": [
+              "cam_high",
+              "cam_left_wrist"
+            ],
+            "edge_support": [
+              1.0,
+              1.0
+            ],
+            "normal_world": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          "known_dimensions_preserved": true
+        }
+      ],
+      "placement_reviews": {
+        "nested": 2
+      },
+      "target_selection_records": [
+        {
+          "step": 50,
+          "source": "right",
+          "base": "middle",
+          "staging": false,
+          "stack_target": {
+            "center": [
+              0.09895242774544442,
+              -0.027347944265167116,
+              0.8140036129106124
+            ],
+            "ids": [
+              "middle"
+            ],
+            "top_id": "middle",
+            "method": "initial_current_table_geometry",
+            "updated_step": 50
+          },
+          "active_support": [
+            0.09895242774544442,
+            -0.027347944265167116,
+            0.8140036129106124
+          ],
+          "release_center": [
+            0.09895242774544442,
+            -0.027347944265167116,
+            0.8434241523490136
+          ]
+        },
+        {
+          "step": 293,
+          "source": "right",
+          "base": "middle",
+          "staging": false,
+          "stack_target": {
+            "center": [
+              0.09895242774544442,
+              -0.027347944265167116,
+              0.8140036129106124
+            ],
+            "ids": [
+              "middle"
+            ],
+            "top_id": "middle",
+            "method": "lower_support_for_top_repair",
+            "updated_step": 291
+          },
+          "active_support": [
+            0.09895242774544442,
+            -0.027347944265167116,
+            0.8140036129106124
+          ],
+          "release_center": [
+            0.09895242774544442,
+            -0.027347944265167116,
+            0.8434241523490136
+          ]
+        },
+        {
+          "step": 489,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "commanded_release_with_current_rgb_xy",
+            "updated_step": 488
+          },
+          "active_support": [
+            -0.10550830865935178,
+            -0.12499397354553618,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.10550830865935178,
+            -0.12499397354553618,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 758,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 759,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 760,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 761,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 762,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 763,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 764,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 765,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 766,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 767,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 768,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 769,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 770,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 771,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 772,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 773,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 774,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 775,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 776,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 777,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 778,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 779,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 780,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 781,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 782,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 783,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 784,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 785,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 786,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 787,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 788,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 789,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 790,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 791,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 792,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 793,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 794,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 795,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 796,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 797,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 798,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        },
+        {
+          "step": 799,
+          "source": "left",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              0.09874726346568449,
+              -0.05335060736261177,
+              0.8434241523490136
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 747
+          },
+          "active_support": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ],
+          "release_center": [
+            -0.0009780130668525233,
+            -0.18759657413039713,
+            0.8139947567863968
+          ]
+        }
+      ],
+      "native_result": "/data/OrimaPI/runs/stack-bowls-random8-20261029-c010/jobs/gpu-3-seed-1/attempt-004/runs/20261028T163846-947888e26d97/evaluator/native/RoboDojo/stack_bowls/orimapi_afe33fccbc2747fc8ee8609eaa668256/arx_x5/1_ckpt_name=policy-library,action_type=joint/orimapi_afe33fccbc2747fc8ee8609eaa668256/_result.json",
+      "native_result_sha256": "b563fbedab6f0bc0e90c6475c8c9fa67128131a7a98869f3c7306727aa7bd27f"
+    },
+    {
+      "job": "gpu-4-s0-l21",
+      "seed": 0,
+      "layout_id": 21,
+      "status": "completed",
+      "score_percent": 100.0,
+      "success": true,
+      "elapsed_s": 429.71710745100427,
+      "model_calls": 11,
+      "recovery_count": 0,
+      "route_rejections": 70,
+      "route_rejections_by_stage": {
+        "current": 70
+      },
+      "first_transfer_feasible": 0,
+      "two_transfer_plans": [],
+      "table_staging": [],
+      "retention_probes": 0,
+      "repair_support_restores": [],
+      "grasp_cycles": [
+        {
+          "step": 69,
+          "source": "middle",
+          "base": "left"
+        },
+        {
+          "step": 367,
+          "source": "right",
+          "base": "left"
+        }
+      ],
+      "third_bowl_attempts": [
+        {
+          "step": 367,
+          "source": "right",
+          "base": "left",
+          "prior_review_step": 302
+        }
+      ],
+      "route_errors": {
+        "straddle near rim: Full-width distal fingertips must remain at least 2 mm above table": 13,
+        "above rim: native_and_legacy_ik_unreachable": 44,
+        "straddle near rim: native_and_legacy_ik_unreachable": 1,
+        "straddle near rim: Public swept finger envelope enters table clearance": 12
+      },
+      "searches": [
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 69,
+          "time": "2026-10-28T16:41:13.357629+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "b629a3f589524c63861148c05e04087b",
+          "step": 1,
+          "rejected": 44,
+          "pruned": 2,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 1074,
+          "time": "2026-10-28T16:43:57.957837+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "b629a3f589524c63861148c05e04087b",
+          "step": 303,
+          "rejected": 26,
+          "pruned": 2,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.05
+        }
+      ],
+      "exhausted_searches": [],
+      "uncertain_continuations": [],
+      "separate_recoveries": [],
+      "recovery_pose_updates": [],
+      "placement_reviews": {
+        "uncertain": 1,
+        "nested": 1
+      },
+      "target_selection_records": [
+        {
+          "step": 1,
+          "source": "middle",
+          "base": "left",
+          "staging": false,
+          "stack_target": {
+            "center": [
+              0.030198552422354738,
+              -0.22229193895041743,
+              0.8137355449329724
+            ],
+            "ids": [
+              "left"
+            ],
+            "top_id": "left",
+            "method": "initial_current_table_geometry",
+            "updated_step": 1
+          },
+          "active_support": [
+            0.030198552422354738,
+            -0.22229193895041743,
+            0.8137355449329724
+          ],
+          "release_center": [
+            0.030198552422354738,
+            -0.22229193895041743,
+            0.8431182295936751
+          ]
+        },
+        {
+          "step": 303,
+          "source": "right",
+          "base": "left",
+          "staging": false,
+          "stack_target": {
+            "center": [
+              0.02791391704934257,
+              -0.2211329653076301,
+              0.8120629575853155
+            ],
+            "ids": [
+              "left",
+              "middle"
+            ],
+            "top_id": "middle",
+            "method": "current_RGB_known_object_radius",
+            "updated_step": 302
+          },
+          "active_support": [
+            0.02791391704934257,
+            -0.2211329653076301,
+            0.8120629575853155
+          ],
+          "release_center": [
+            0.02791391704934257,
+            -0.2211329653076301,
+            0.8411629268441797
+          ]
+        }
+      ],
+      "native_result": "/data/OrimaPI/runs/stack-bowls-random8-20261029-c010/jobs/gpu-4-seed-0/attempt-005/runs/20261028T163846-830225de705f/evaluator/native/RoboDojo/stack_bowls/orimapi_83b1defa778e4da7b86f87f58127ce64/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_83b1defa778e4da7b86f87f58127ce64/_result.json",
+      "native_result_sha256": "b2a537f7c1c3bdbb0e3adf933c4c260648d7876175be4aac1f7b86b9cd05398a"
+    },
+    {
+      "job": "gpu-5-s0-l13",
+      "seed": 0,
+      "layout_id": 13,
+      "status": "completed",
+      "score_percent": 0.0,
+      "success": false,
+      "elapsed_s": 880.0093392039998,
+      "model_calls": 18,
+      "recovery_count": 1,
+      "route_rejections": 96,
+      "route_rejections_by_stage": {
+        "current": 96
+      },
+      "first_transfer_feasible": 0,
+      "two_transfer_plans": [],
+      "table_staging": [],
+      "retention_probes": 0,
+      "repair_support_restores": [],
+      "grasp_cycles": [
+        {
+          "step": 231,
+          "source": "right",
+          "base": "middle"
+        },
+        {
+          "step": 667,
+          "source": "right",
+          "base": "middle"
+        }
+      ],
+      "third_bowl_attempts": [],
+      "route_errors": {
+        "straddle near rim: Full-width distal fingertips must remain at least 2 mm above table": 16,
+        "above rim: native_and_legacy_ik_unreachable": 80
+      },
+      "searches": [
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 584,
+          "time": "2026-10-28T16:44:22.028444+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "91b4ba152e6a47b88393f2c105e43dac",
+          "step": 168,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 2174,
+          "time": "2026-10-28T16:49:37.960567+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "91b4ba152e6a47b88393f2c105e43dac",
+          "step": 628,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.05
+        }
+      ],
+      "exhausted_searches": [
+        {
+          "event": "code_skill_tool_bowl_search_exhausted",
+          "sequence": 1596,
+          "time": "2026-10-28T16:46:55.377330+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "91b4ba152e6a47b88393f2c105e43dac",
+          "step": 451,
+          "rejected": 96,
+          "pruned": 480,
+          "continue_recovery": true
+        }
+      ],
+      "uncertain_continuations": [],
+      "separate_recoveries": [
+        {
+          "event": "code_skill_tool_bowl_separate_placement_recovery",
+          "sequence": 1494,
+          "time": "2026-10-28T16:46:23.516856+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "91b4ba152e6a47b88393f2c105e43dac",
+          "step": 450,
+          "regrasp_id": "right",
+          "confirmed_stack_ids": [
+            "middle"
+          ],
+          "pending_pose_ids": [],
+          "destination_stack": {
+            "center": [
+              0.17517407157475276,
+              -0.04060399342284244,
+              0.8302718346083992
+            ],
+            "ids": [
+              "middle"
+            ],
+            "top_id": "middle",
+            "method": "current_known_object_reacquisition",
+            "updated_step": 450
+          }
+        }
+      ],
+      "recovery_pose_updates": [
+        {
+          "event": "code_skill_tool_bowl_recovery_pose_updated",
+          "sequence": 1492,
+          "time": "2026-10-28T16:46:20.519767+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "91b4ba152e6a47b88393f2c105e43dac",
+          "step": 450,
+          "body": {
+            "id": "right",
+            "position": [
+              0.018124715325725734,
+              0.07238837604170299,
+              0.8003420405069358
+            ],
+            "radius_m": 0.07994611049794965,
+            "normal_world": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "method": "current_RGB_known_object_radius",
+            "camera": "cam_high",
+            "edge_support": 1.0,
+            "fit_error_px": 0.454139347858827,
+            "selection_uncertainty_m": 0.0047258728575807225,
+            "sensor_ground_truth": false,
+            "assumptions": [
+              "Same rigid bowl radius previously measured in calibrated current views",
+              "Selected current rim is horizontal; tilt must be reviewed independently",
+              "Single-view scale uncertainty also depends on the earlier radius estimate"
+            ]
+          },
+          "known_dimensions_preserved": true
+        },
+        {
+          "event": "code_skill_tool_bowl_recovery_pose_updated",
+          "sequence": 1493,
+          "time": "2026-10-28T16:46:23.516592+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "91b4ba152e6a47b88393f2c105e43dac",
+          "step": 450,
+          "body": {
+            "id": "middle",
+            "position": [
+              0.17517407157475276,
+              -0.04060399342284244,
+              0.8302718346083992
+            ],
+            "radius_m": 0.07604906375209528,
+            "normal_world": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "method": "current_RGB_known_object_radius",
+            "camera": "cam_high",
+            "edge_support": 1.0,
+            "fit_error_px": 0.5047101523175462,
+            "selection_uncertainty_m": 0.004153801778923287,
+            "sensor_ground_truth": false,
+            "assumptions": [
+              "Same rigid bowl radius previously measured in calibrated current views",
+              "Selected current rim is horizontal; tilt must be reviewed independently",
+              "Single-view scale uncertainty also depends on the earlier radius estimate"
+            ]
+          },
+          "known_dimensions_preserved": true
+        }
+      ],
+      "placement_reviews": {
+        "separate": 1
+      },
+      "target_selection_records": [
+        {
+          "step": 168,
+          "source": "right",
+          "base": "middle",
+          "staging": false,
+          "stack_target": {
+            "center": [
+              0.1548882264092483,
+              -0.035895107211846695,
+              0.823982857776259
+            ],
+            "ids": [
+              "middle"
+            ],
+            "top_id": "middle",
+            "method": "initial_current_table_geometry",
+            "updated_step": 168
+          },
+          "active_support": [
+            0.1548882264092483,
+            -0.035895107211846695,
+            0.823982857776259
+          ],
+          "release_center": [
+            0.1548882264092483,
+            -0.035895107211846695,
+            0.8557236151470042
+          ]
+        },
+        {
+          "step": 628,
+          "source": "right",
+          "base": "middle",
+          "staging": false,
+          "stack_target": {
+            "center": [
+              0.17517407157475276,
+              -0.04060399342284244,
+              0.8302718346083992
+            ],
+            "ids": [
+              "middle"
+            ],
+            "top_id": "middle",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 626
+          },
+          "active_support": [
+            0.17517407157475276,
+            -0.04060399342284244,
+            0.8302718346083992
+          ],
+          "release_center": [
+            0.17517407157475276,
+            -0.04060399342284244,
+            0.8620125919791444
+          ]
+        }
+      ],
+      "native_result": "/data/OrimaPI/runs/stack-bowls-random8-20261029-c010/jobs/gpu-5-seed-0/attempt-006/runs/20261028T163846-078efacd9e46/evaluator/native/RoboDojo/stack_bowls/orimapi_16347ec1e2544703a9dd25ac3d559be8/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_16347ec1e2544703a9dd25ac3d559be8/_result.json",
+      "native_result_sha256": "5010d6a282216fe01eba42aabe292d5af8a179440d6cc123f26e3cb9af67af4e"
+    },
+    {
+      "job": "gpu-6-s1-l0",
+      "seed": 1,
+      "layout_id": 0,
+      "status": "completed",
+      "score_percent": 100.0,
+      "success": true,
+      "elapsed_s": 569.2402524939971,
+      "model_calls": 14,
+      "recovery_count": 2,
+      "route_rejections": 1,
+      "route_rejections_by_stage": {
+        "current": 1
+      },
+      "first_transfer_feasible": 0,
+      "two_transfer_plans": [],
+      "table_staging": [],
+      "retention_probes": 0,
+      "repair_support_restores": [],
+      "grasp_cycles": [
+        {
+          "step": 229,
+          "source": "right",
+          "base": "middle"
+        },
+        {
+          "step": 481,
+          "source": "left",
+          "base": "middle"
+        }
+      ],
+      "third_bowl_attempts": [
+        {
+          "step": 481,
+          "source": "left",
+          "base": "middle",
+          "prior_review_step": 431
+        }
+      ],
+      "route_errors": {
+        "Home preflight stage 0, sample 12, right rejected: Public collision model: self clearance -0.0018 m. No home action was issued. Choose a newly checked clear staging route; do not repeat this home or relax a guard.": 1
+      },
+      "searches": [
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 635,
+          "time": "2026-10-28T16:45:07.899312+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "4ab3af47e9194856ad35850a4eba497f",
+          "step": 180,
+          "rejected": 1,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 1451,
+          "time": "2026-10-28T16:47:15.049076+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "4ab3af47e9194856ad35850a4eba497f",
+          "step": 432,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.05
+        }
+      ],
+      "exhausted_searches": [],
+      "uncertain_continuations": [],
+      "separate_recoveries": [],
+      "recovery_pose_updates": [],
+      "placement_reviews": {
+        "uncertain": 1,
+        "nested": 1
+      },
+      "target_selection_records": [
+        {
+          "step": 180,
+          "source": "right",
+          "base": "middle",
+          "staging": false,
+          "stack_target": {
+            "center": [
+              0.04770261815955791,
+              -0.22261534491968532,
+              0.8201057403193105
+            ],
+            "ids": [
+              "middle"
+            ],
+            "top_id": "middle",
+            "method": "initial_current_table_geometry",
+            "updated_step": 180
+          },
+          "active_support": [
+            0.04770261815955791,
+            -0.22261534491968532,
+            0.8201057403193105
+          ],
+          "release_center": [
+            0.04770261815955791,
+            -0.22261534491968532,
+            0.8544696089166748
+          ]
+        },
+        {
+          "step": 432,
+          "source": "left",
+          "base": "middle",
+          "staging": false,
+          "stack_target": {
+            "center": [
+              0.04742290580766165,
+              -0.21645257146750527,
+              0.8325977250024931
+            ],
+            "ids": [
+              "middle",
+              "right"
+            ],
+            "top_id": "right",
+            "method": "current_RGB_known_object_radius",
+            "updated_step": 431
+          },
+          "active_support": [
+            0.04742290580766165,
+            -0.21645257146750527,
+            0.8325977250024931
+          ],
+          "release_center": [
+            0.04742290580766165,
+            -0.21645257146750527,
+            0.8675977250024931
+          ]
+        }
+      ],
+      "native_result": "/data/OrimaPI/runs/stack-bowls-random8-20261029-c010/jobs/gpu-6-seed-1/attempt-007/runs/20261028T163846-82aa7913df0a/evaluator/native/RoboDojo/stack_bowls/orimapi_1d087bea883f43258e0c21304bc7d132/arx_x5/1_ckpt_name=policy-library,action_type=joint/orimapi_1d087bea883f43258e0c21304bc7d132/_result.json",
+      "native_result_sha256": "117b7aac5c033705b64fc53e97b00912e1fec4f50cff9869aee75b750b3529a6"
+    },
+    {
+      "job": "gpu-7-s2-l24",
+      "seed": 2,
+      "layout_id": 24,
+      "status": "completed",
+      "score_percent": 15.0,
+      "success": false,
+      "elapsed_s": 556.8016580760013,
+      "model_calls": 14,
+      "recovery_count": 0,
+      "route_rejections": 158,
+      "route_rejections_by_stage": {
+        "current": 158
+      },
+      "first_transfer_feasible": 0,
+      "two_transfer_plans": [],
+      "table_staging": [
+        {
+          "event": "code_skill_tool_bowl_table_staging_released",
+          "sequence": 2653,
+          "time": "2026-10-28T16:47:20.857216+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "4252b454f2e944609573f043d8c55e5b",
+          "step": 762,
+          "id": "right",
+          "position": [
+            0.02513000157297489,
+            -0.15251454758835695,
+            0.8222920666358745
+          ],
+          "destination_stack_preserved": {
+            "center": [
+              -0.1742705284072986,
+              -0.05837824744958248,
+              0.8595371171699563
+            ],
+            "ids": [
+              "left",
+              "middle"
+            ],
+            "top_id": "left",
+            "method": "commanded_release_with_current_rgb_xy",
+            "updated_step": 546
+          }
+        }
+      ],
+      "retention_probes": 0,
+      "repair_support_restores": [],
+      "grasp_cycles": [
+        {
+          "step": 105,
+          "source": "left",
+          "base": "middle"
+        },
+        {
+          "step": 385,
+          "source": "left",
+          "base": "middle"
+        },
+        {
+          "step": 595,
+          "source": "right",
+          "base": "middle"
+        }
+      ],
+      "third_bowl_attempts": [
+        {
+          "step": 595,
+          "source": "right",
+          "base": "middle",
+          "prior_review_step": 546
+        }
+      ],
+      "route_errors": {
+        "straddle near rim: Public swept finger envelope enters table clearance": 18,
+        "above rim: native_and_legacy_ik_unreachable": 62,
+        "center carried bowl over base: native_and_legacy_ik_unreachable": 52,
+        "lift clear of tableware: native_and_legacy_ik_unreachable": 22,
+        "front transit waypoint: native_and_legacy_ik_unreachable": 4
+      },
+      "searches": [
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 176,
+          "time": "2026-10-28T16:41:49.644520+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "4252b454f2e944609573f043d8c55e5b",
+          "step": 43,
+          "rejected": 0,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 1084,
+          "time": "2026-10-28T16:43:55.700760+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "4252b454f2e944609573f043d8c55e5b",
+          "step": 320,
+          "rejected": 10,
+          "pruned": 0,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.05
+        },
+        {
+          "event": "code_skill_tool_bowl_search_completed",
+          "sequence": 1963,
+          "time": "2026-10-28T16:46:19.412062+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "4252b454f2e944609573f043d8c55e5b",
+          "step": 547,
+          "rejected": 148,
+          "pruned": 150,
+          "native_actions_during_search": 0,
+          "mode": "compact",
+          "entry": 0.05
+        }
+      ],
+      "exhausted_searches": [],
+      "uncertain_continuations": [
+        {
+          "event": "code_skill_tool_bowl_uncertain_retention_continues",
+          "sequence": 2461,
+          "time": "2026-10-28T16:47:07.121152+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "4252b454f2e944609573f043d8c55e5b",
+          "step": 702,
+          "transport": true,
+          "reason": "Retain checked continuation; use resulting changed view for next review"
+        }
+      ],
+      "separate_recoveries": [
+        {
+          "event": "code_skill_tool_bowl_separate_placement_recovery",
+          "sequence": 1068,
+          "time": "2026-10-28T16:43:40.469601+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "4252b454f2e944609573f043d8c55e5b",
+          "step": 319,
+          "regrasp_id": "left",
+          "confirmed_stack_ids": [
+            "middle"
+          ],
+          "pending_pose_ids": [],
+          "destination_stack": {
+            "center": [
+              -0.1801164712255454,
+              -0.03848068004076832,
+              0.8245371171699563
+            ],
+            "ids": [
+              "middle"
+            ],
+            "top_id": "middle",
+            "method": "current_known_object_reacquisition",
+            "updated_step": 319
+          }
+        }
+      ],
+      "recovery_pose_updates": [
+        {
+          "event": "code_skill_tool_bowl_recovery_pose_updated",
+          "sequence": 1066,
+          "time": "2026-10-28T16:43:40.066867+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "4252b454f2e944609573f043d8c55e5b",
+          "step": 319,
+          "body": {
+            "id": "left",
+            "position": [
+              -0.008808250758700214,
+              -0.0350695857579056,
+              0.8251183674023227
+            ],
+            "radius_m": 0.08047450562756675,
+            "normal_world": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "method": "current_RGB_known_object_radius",
+            "camera": "cam_high",
+            "edge_support": 1.0,
+            "fit_error_px": 0.19131270270701664,
+            "selection_uncertainty_m": 0.0042039886639324495,
+            "sensor_ground_truth": false,
+            "assumptions": [
+              "Same rigid bowl radius previously measured in calibrated current views",
+              "Selected current rim is horizontal; tilt must be reviewed independently",
+              "Single-view scale uncertainty also depends on the earlier radius estimate"
+            ]
+          },
+          "known_dimensions_preserved": true
+        },
+        {
+          "event": "code_skill_tool_bowl_recovery_pose_updated",
+          "sequence": 1067,
+          "time": "2026-10-28T16:43:40.469429+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "stack_bowls",
+          "episode_id": "4252b454f2e944609573f043d8c55e5b",
+          "step": 319,
+          "body": {
+            "id": "middle",
+            "position": [
+              -0.1801164712255454,
+              -0.03848068004076832,
+              0.8245371171699563
+            ],
+            "radius_m": 0.08077287458026616,
+            "normal_world": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "method": "current_RGB_known_object_radius",
+            "camera": "cam_high",
+            "edge_support": 1.0,
+            "fit_error_px": 0.358899005044836,
+            "selection_uncertainty_m": 0.004195644103681087,
+            "sensor_ground_truth": false,
+            "assumptions": [
+              "Same rigid bowl radius previously measured in calibrated current views",
+              "Selected current rim is horizontal; tilt must be reviewed independently",
+              "Single-view scale uncertainty also depends on the earlier radius estimate"
+            ]
+          },
+          "known_dimensions_preserved": true
+        }
+      ],
+      "placement_reviews": {
+        "separate": 1,
+        "nested": 1
+      },
+      "target_selection_records": [
+        {
+          "step": 43,
+          "source": "left",
+          "base": "middle",
+          "staging": false,
+          "stack_target": {
+            "center": [
+              -0.14299512362506878,
+              -0.0461020663215852,
+              0.8230723376333013
+            ],
+            "ids": [
+              "middle"
+            ],
+            "top_id": "middle",
+            "method": "initial_current_table_geometry",
+            "updated_step": 43
+          },
+          "active_support": [
+            -0.14299512362506878,
+            -0.0461020663215852,
+            0.8230723376333013
+          ],
+          "release_center": [
+            -0.14299512362506878,
+            -0.0461020663215852,
+            0.8580723376333014
+          ]
+        },
+        {
+          "step": 320,
+          "source": "left",
+          "base": "middle",
+          "staging": false,
+          "stack_target": {
+            "center": [
+              -0.1801164712255454,
+              -0.03848068004076832,
+              0.8245371171699563
+            ],
+            "ids": [
+              "middle"
+            ],
+            "top_id": "middle",
+            "method": "current_reacquired_stack_geometry",
+            "updated_step": 319
+          },
+          "active_support": [
+            -0.1801164712255454,
+            -0.03848068004076832,
+            0.8245371171699563
+          ],
+          "release_center": [
+            -0.1801164712255454,
+            -0.03848068004076832,
+            0.8595371171699563
+          ]
+        },
+        {
+          "step": 547,
+          "source": "right",
+          "base": "middle",
+          "staging": true,
+          "stack_target": {
+            "center": [
+              -0.1742705284072986,
+              -0.05837824744958248,
+              0.8595371171699563
+            ],
+            "ids": [
+              "left",
+              "middle"
+            ],
+            "top_id": "left",
+            "method": "commanded_release_with_current_rgb_xy",
+            "updated_step": 546
+          },
+          "active_support": [
+            0.02513000157297489,
+            -0.15251454758835695,
+            0.8222920666358745
+          ],
+          "release_center": [
+            0.02513000157297489,
+            -0.15251454758835695,
+            0.8222920666358745
+          ]
+        }
+      ],
+      "native_result": "/data/OrimaPI/runs/stack-bowls-random8-20261029-c010/jobs/gpu-7-seed-2/attempt-008/runs/20261028T163846-b4c3fb797118/evaluator/native/RoboDojo/stack_bowls/orimapi_70fcb18154f748d2bcf0868492410b44/arx_x5/2_ckpt_name=policy-library,action_type=joint/orimapi_70fcb18154f748d2bcf0868492410b44/_result.json",
+      "native_result_sha256": "2851a8b0b364d79ba75e83a126fef0097a0db0de365b57b0e901c8ff9a95ea91"
+    }
+  ],
+  "original_validation": "orimapi/skills/code_skill_rsi/stack_bowls/c010-20261029/validation.json",
+  "native_artifacts_verified": 32,
+  "known_limitations": [
+    "The mean increased by1.875 points over c006; full successes remain3/8.",
+    "Fourteen held-pose queries produced zero pose updates; changed recovery does not prove improved pose accuracy.",
+    "The earlier c009 attempt had6 completed and2 interrupted episodes; it is not combined with this result."
+  ],
+  "new_simulation_started": false
+}

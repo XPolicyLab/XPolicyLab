@@ -1,0 +1,52 @@
+{
+  "authorization": "2026-10-24 用户明确要求：现在不论是否达到成功标准都将已经实现的skill合入到正式的skill中",
+  "campaign": "20261023",
+  "candidate": "orimapi/skills/code_skill_rsi/store_laptop_and_headphones/studies/20261023-automatic/candidate-015/candidate.json",
+  "candidate_sha256": "266f26f3f20d83a893fc282759ad0ba5d0bd440b5efde1a825612343ca31d6bf",
+  "candidate_file_sha256": "05e90acc4cc930f100cb140d36f038f58d0dc5b0297b23a9d90e0051432c1339",
+  "evidence_snapshot_sha256": "519be9de5a93b4a9e52a044991233edc21f45581e8b1e7796102d5ee971fcf47",
+  "attempt_files_at_capture": {
+    "orimapi/skills/code_skill_rsi/store_laptop_and_headphones/studies/20261023-automatic/candidate-015/attempts/000-seed-0.json": "d0b9819b8afa55463064a6e0488b40ed96e8f42602796023f59d98fe5f661c60"
+  },
+  "evidence_captured_at": "2026-10-24T07:18:56.878395+00:00",
+  "tool_snapshot_source": "runs/20261023T173518-rsi-8ef13e9eb791/code_tools/1eb782be33ba7e839e9f15f5e82736f2561dccb058d21828b176bb2743c4af13",
+  "mode": "user_authorized_unqualified",
+  "scope": "Published by explicit user request regardless of success. Formal availability is not native task qualification or benchmark reliability.",
+  "selection": "Latest existing frozen candidate; not a highest-score claim.",
+  "outcomes": [
+    {
+      "seed": 0,
+      "attempt_status": "returned",
+      "scored": true,
+      "success": false,
+      "score": 0.0,
+      "run": "/root/code/OrimaPI/runs/20261023T180932-rsi-8f7e117cf559",
+      "error": null,
+      "started_at": "2026-10-23T18:09:32.364615+00:00",
+      "ended_at": "2026-10-23T18:14:30.279635+00:00",
+      "official_result": {
+        "episodes": [
+          {
+            "layout_id": 0,
+            "success": false,
+            "score": 0.0,
+            "artifact": "native/RoboDojo/store_laptop_and_headphones/orimapi_8e1f9c4a951e49b18c0fc1b6d8b4ca6b/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_8e1f9c4a951e49b18c0fc1b6d8b4ca6b/_result.json"
+          }
+        ],
+        "episode_count": 1,
+        "success_rate": 0.0,
+        "mean_score": 0.0,
+        "artifacts": [
+          {
+            "path": "native/RoboDojo/store_laptop_and_headphones/orimapi_8e1f9c4a951e49b18c0fc1b6d8b4ca6b/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_8e1f9c4a951e49b18c0fc1b6d8b4ca6b/_result.json",
+            "sha256": "99b780f4e1842dfa81b413ccd2e5302e5827cc349fea4edf978e1bd847986ed3"
+          }
+        ]
+      },
+      "controller_failures": [],
+      "terminal_failures": []
+    }
+  ],
+  "standard_qualified": false,
+  "exception_qualified": false
+}

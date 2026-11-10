@@ -1,0 +1,70 @@
+{
+  "schema": "orimapi.code-controller-skill/v1",
+  "skill_id": "stack_blocks_random",
+  "supported_tasks": [
+    "stack_blocks_random"
+  ],
+  "task_spec": {
+    "task": "stack_blocks_random",
+    "budget": 550,
+    "requirements": "Stack the three differently textured task blocks from the CURRENT random scene into one stable released pile and return both arms home. Keep one measured reachable existing base and use two complete RGB-grounded top_pick/settled_pick plus top_place transfers. Use public RGB/calibration/robot state only; no hidden dimensions, layout lookup or native reward access. Native limit550; native scoring is authoritative."
+  },
+  "tool_limits": {
+    "max_calls": 110,
+    "max_tools_per_turn": 16,
+    "history_size": 24,
+    "require_cartesian_completion": true
+  },
+  "experience": "experience.json",
+  "sources": {
+    "NOTICE.md": "NOTICE.md",
+    "__init__.py": "__init__.py",
+    "adapter.py": "adapter.py",
+    "controller.py": "controller.py",
+    "failure_experience.json": "failure_experience.json",
+    "ik_worker.py": "ik_worker.py",
+    "primitives/plane_localize/interface.md": "primitives/plane_localize/interface.md",
+    "primitives/plane_localize/tool.py": "primitives/plane_localize/tool.py",
+    "primitives/prism_localize/interface.md": "primitives/prism_localize/interface.md",
+    "primitives/prism_localize/tool.py": "primitives/prism_localize/tool.py",
+    "primitives/settled_pick/interface.md": "primitives/settled_pick/interface.md",
+    "primitives/settled_pick/tool.py": "primitives/settled_pick/tool.py",
+    "primitives/stereo_localize/interface.md": "primitives/stereo_localize/interface.md",
+    "primitives/stereo_localize/tool.py": "primitives/stereo_localize/tool.py",
+    "primitives/support/__init__.py": "primitives/support/__init__.py",
+    "primitives/support/core.py": "primitives/support/core.py",
+    "primitives/support/geometry.py": "primitives/support/geometry.py",
+    "primitives/support/motion.py": "primitives/support/motion.py",
+    "primitives/table_plane/interface.md": "primitives/table_plane/interface.md",
+    "primitives/table_plane/tool.py": "primitives/table_plane/tool.py",
+    "primitives/top_pick/interface.md": "primitives/top_pick/interface.md",
+    "primitives/top_pick/tool.py": "primitives/top_pick/tool.py",
+    "primitives/top_place/interface.md": "primitives/top_place/interface.md",
+    "primitives/top_place/tool.py": "primitives/top_place/tool.py",
+    "program_prompt.md": "program_prompt.md",
+    "source_provenance.json": "source_provenance.json",
+    "tool_documentation.md": "tool_documentation.md",
+    "published_publication_json": "publication.json",
+    "published_validation_json": "validation.json",
+    "published_RESEARCH_SUMMARY_md": "RESEARCH_SUMMARY.md"
+  },
+  "qualification": {
+    "published": true,
+    "standard_qualified": false,
+    "mode": "user_authorized_random8_promotion",
+    "tested_seeds": [
+      0,
+      1,
+      2
+    ],
+    "successful_seeds": [
+      0,
+      1,
+      2
+    ],
+    "scored_episodes": 8,
+    "successful_episodes": 7,
+    "mean_score_percent": 87.5,
+    "scope": "Eight preselected development layouts, not the full official quota."
+  }
+}

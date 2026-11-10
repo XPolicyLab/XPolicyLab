@@ -1,0 +1,46 @@
+[
+  {
+    "kind": "architecture",
+    "lesson": "GPT plans semantic phases, identities and recovery. Local measured composite tools execute fine operations. Never count commanded motion as native success."
+  },
+  {
+    "kind": "observed_local_baseline",
+    "outcomes": [
+      {
+        "seed": 0,
+        "score_native": 0.0,
+        "success": false,
+        "status": "completed"
+      },
+      {
+        "seed": 1,
+        "score_native": 0.0,
+        "success": false,
+        "status": "completed"
+      },
+      {
+        "seed": 2,
+        "score_native": 0.0,
+        "success": false,
+        "status": "completed"
+      }
+    ],
+    "lesson": "Reference mate-pair preflight passed without verified seating; repeated plane-height measurements mostly failed. Explicit paired RGB features recovered measurements, not insertion.",
+    "scope": "Historical OLD tool-loop skill, not evidence about this new candidate."
+  },
+  {
+    "kind": "reference_informed_hypothesis",
+    "lesson": [
+      "Identify charger body, directed prongs and intended socket from current RGB.",
+      "Pick the body leaving prongs clear, then inspect actual carried pose.",
+      "Measure three directed prong/socket frame features from fresh RGB. Do not use object centers or an arbitrary gripper yaw as insertion orientation.",
+      "dock performs rigid feature alignment outside the socket, axial entry and advance to current visible seat (plug shoulder aligned with socket support); then release/retract.",
+      "Inspect seating and slip. Correct geometry/grasp after failure, rather than repeating the same unreachable orientation. Home only after supported release."
+    ],
+    "scope": "External aggregate has native successes; cached detailed failure traces are not a reproduced successful charger controller."
+  },
+  {
+    "kind": "known_limitations",
+    "lesson": "No measured finger-stop/force sensor or automatic object retention/containment certificate. Attachment transforms assume no slip. Three-feature docking and support placement are implemented but unvalidated in native tasks. No new arbitrary tabletop spacing, residual-error, protected-step or retry-count gates."
+  }
+]

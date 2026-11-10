@@ -1,0 +1,45 @@
+[
+  {
+    "kind": "architecture",
+    "lesson": "GPT plans semantic phases, identities and recovery. Local measured composite tools execute fine operations. Never count commanded motion as native success."
+  },
+  {
+    "kind": "observed_local_baseline",
+    "outcomes": [
+      {
+        "seed": 0,
+        "score_native": 0.0,
+        "success": false,
+        "status": "completed"
+      },
+      {
+        "seed": 1,
+        "score_native": 0.0,
+        "success": false,
+        "status": "completed"
+      },
+      {
+        "seed": 2,
+        "score_native": 0.0,
+        "success": false,
+        "status": "completed"
+      }
+    ],
+    "lesson": "Figurines tipped after completed transfers, and completed pushes left keyboard misaligned. Repeated unavailable patch/stereo methods did not recover geometry.",
+    "scope": "Historical OLD tool-loop skill, not evidence about this new candidate."
+  },
+  {
+    "kind": "reference_informed_hypothesis",
+    "lesson": [
+      "Identify alarm clock/drawer support, figurine/stand, mouse/mouse pad, keyboard/frame.",
+      "Use complete local transfer to put alarm clock on drawer, figurine upright on stand, and mouse on pad. Choose current order preserving keyboard push corridor.",
+      "For keyboard push select current start at contact edge and end at frame alignment; local calibrated features define the trajectory, not a guessed directional nudge.",
+      "Inspect figurine tipping, actual keyboard displacement and all supports; recover only the unresolved object, then home. Do not invent a drawer-opening subtask."
+    ],
+    "scope": "External aggregate has limited native successes; the new full local operations need validation."
+  },
+  {
+    "kind": "known_limitations",
+    "lesson": "No measured finger-stop/force sensor or automatic object retention/containment certificate. Attachment transforms assume no slip. Three-feature docking and support placement are implemented but unvalidated in native tasks. No new arbitrary tabletop spacing, residual-error, protected-step or retry-count gates."
+  }
+]

@@ -1,0 +1,13 @@
+policy_name: OrimaPI
+protocol: ws
+host: localhost
+port: null
+bench_name: RoboDojo
+task_name: null
+ckpt_name: code-skills
+env_cfg_type: arx_x5
+seed: 0
+action_type: joint
+gpu_id: null
+eval_batch: false
+request_timeout_s: 3600.0

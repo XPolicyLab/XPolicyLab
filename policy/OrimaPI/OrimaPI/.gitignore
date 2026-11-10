@@ -1,0 +1,20 @@
+.DS_Store
+.venv/
+.venv-robodojo/
+/checkpoint/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+build/
+dist/
+*.egg-info/
+.env
+.env.*
+/configs/copilot.credentials.json
+/runs/
+/orimapi/code_skill_rsi/
+orimapi/skills/code_skill_rsi/
+configs/copilot.credentials.example.json
+
+# RSI generated intermediates: keep source and reports, exclude bulk outputs.
+/orimapi/skills/code_skill_rsi/**/intermediate/

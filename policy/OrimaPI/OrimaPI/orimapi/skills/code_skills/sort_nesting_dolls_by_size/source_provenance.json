@@ -1,0 +1,12 @@
+{
+  "task": "sort_nesting_dolls_by_size",
+  "baseline_formal": "orimapi/skills/code_skills/sort_nesting_dolls_by_size",
+  "baseline_manifest_sha256": "e6735c67ba79470dcc9de379a80decfaed3f80ea1658090e1147f04721597da7",
+  "runtime": "Own rewritten stage controller/geometry/composites over existing formal local providers",
+  "native_motion_provider": "fill_pen_holder c008 simulation adapter",
+  "geometry_provider": "formal classify_objects_by_language pinned RGB operations and fill_pen_holder mask refinement",
+  "conveyor_provider": "formal match_and_pick_from_conveyor local three-frame RGB tracker",
+  "not_implemented_from_external_interfaces": true,
+  "ordinary_random_algorithm_shared": true,
+  "frozen_experience_is_not_online_learning_across_seeds": true
+}
