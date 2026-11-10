@@ -1,0 +1,62 @@
+{
+  "policy.stack_blocks_lang_v5.adapter": {
+    "file": "capabilities/control/adapter_for_stack_blocks_by_language.py",
+    "resource": "resources/stack_blocks_by_language/coap/adapter.py",
+    "package": false,
+    "sha256": "0811a7d20e80e65e5f583b6888932e7ff0e4394f437e6dd9e788977942bdb690"
+  },
+  "policy.stack_blocks_lang_v5.model": {
+    "file": "capabilities/control/model_for_stack_blocks_by_language.py",
+    "resource": "resources/stack_blocks_by_language/coap/model.py",
+    "package": false,
+    "sha256": "db664ed44281f085425e9b1c686ff36f8c484dc6781fea60da25522682e8f31d"
+  },
+  "policy.stack_blocks_lang_v5.perception": {
+    "file": "capabilities/perception/perception_for_stack_blocks_by_language.py",
+    "resource": "resources/stack_blocks_by_language/coap/perception.py",
+    "package": false,
+    "sha256": "0936d4ebf16d6babc5bbf126324fca93282835afe20a0ad7b455d40bb63a4406"
+  },
+  "policy.stack_blocks_lang_v5.calibration": {
+    "file": "capabilities/control/calibration.py",
+    "resource": "resources/stack_blocks_by_language/coap/calibration.py",
+    "package": false,
+    "sha256": "24bb1d14759fc731e1c1bef1ecc182b21a6897568e5776d44fedd11c705c7e11"
+  },
+  "policy.stack_blocks_lang_v5": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/stack_blocks_by_language/coap/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "policy": {
+    "file": "capabilities/control/policy_for_sort_nesting_dolls_by_size.py",
+    "resource": "resources/stack_blocks_by_language/coap/shared/__init__.py",
+    "package": true,
+    "sha256": "b77b6c713c7b491669473b2241d12ce434d2bae9db1fd063143521797f69d99c"
+  },
+  "policy.stack_blocks_lang_v5.robot_geometry": {
+    "file": "capabilities/geometry/robot_geometry.py",
+    "resource": "resources/stack_blocks_by_language/coap/robot_geometry.py",
+    "package": false,
+    "sha256": "a67f90e81ff27dbcb886f223dba986b227c4bd6fa64318e07a4cfff58d50b209"
+  },
+  "policy.stack_blocks_lang_v5.skill_choices": {
+    "file": "capabilities/perception/skill_choices.py",
+    "resource": "resources/stack_blocks_by_language/coap/skill_choices.py",
+    "package": false,
+    "sha256": "999301f076eb56afec1f85d36a0e8d1b8049f84f39967d24e023af2e819a12c1"
+  },
+  "policy.stack_blocks_lang_v5.x5_kinematics": {
+    "file": "capabilities/motion/x5_kinematics.py",
+    "resource": "resources/stack_blocks_by_language/coap/x5_kinematics.py",
+    "package": false,
+    "sha256": "bc248fd605972d12c080b06c5f0078d2f3ca6e35320d1c10cfabca353233ee63"
+  },
+  "policy.stack_blocks_lang_v5.collision_gate": {
+    "file": "capabilities/perception/collision_gate.py",
+    "resource": "resources/stack_blocks_by_language/coap/collision_gate.py",
+    "package": false,
+    "sha256": "2020a47511a0fc1616ad0a327d0932cfdc995a34416312306166b05232dd5fd7"
+  }
+}

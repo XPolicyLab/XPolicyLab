@@ -1,0 +1,95 @@
+{
+  "head_K": [
+    [
+      288.13254096884566,
+      0,
+      320
+    ],
+    [
+      0,
+      288.13254096884566,
+      240
+    ],
+    [
+      0,
+      0,
+      1
+    ]
+  ],
+  "head_T": [
+    [
+      1,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0.8660254037844387,
+      -0.49999999999999994,
+      -0.41
+    ],
+    [
+      0,
+      0.49999999999999994,
+      0.8660254037844387,
+      1.308
+    ],
+    [
+      0,
+      0,
+      0,
+      1
+    ]
+  ],
+  "wrist_K": [
+    [
+      397.04127893104277,
+      0,
+      320
+    ],
+    [
+      0,
+      397.04127893104277,
+      240
+    ],
+    [
+      0,
+      0,
+      1
+    ]
+  ],
+  "link6_to_wrist_camera": [
+    [
+      -7.346410206780239e-06,
+      0.5000295741170634,
+      -0.8660083284555282,
+      0.08484205223250312
+    ],
+    [
+      -0.9999999999730149,
+      -3.673422367022093e-06,
+      6.362052423592802e-06,
+      -2.0453913670032604e-07
+    ],
+    [
+      1.2331325483102713e-16,
+      0.8660083284788973,
+      0.5000295741305566,
+      0.0509396809403865
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "convention": "USD camera-to-local-environment; view along -Z, up +Y; quaternion wxyz",
+  "sources": [
+    "official camera_config.yml + camera/template.py",
+    "public X5A.urdf fixed hand_to_camera_mount, camera_joint",
+    "public x5 robot_config.yml camera pos [0,0,.001], intrinsic XYZ degrees [0,-80,-90]",
+    "RobotManager.get_real_endpose default is_relative=True subtracts env origin; ee_link=link6"
+  ]
+}

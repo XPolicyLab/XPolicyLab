@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "root": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_029",
+  "manifest_sha256": "c1f08436e17f3b6a50a1f9a742c3063a7b6b3b404693a1526ad1b07bc355b2d5",
+  "detector": "grounding-dino-tiny",
+  "segmenter": "sam-vit-base",
+  "reference": "Public reference implementation reviewed; task logic independently implemented.",
+  "training": false,
+  "remote_code": false,
+  "inference_images_leave_worker": false
+}

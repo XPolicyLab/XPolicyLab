@@ -1,0 +1,9 @@
+{
+  "source_project": "PhysicalRSI",
+  "source_file": "implementations/rdj_v1_classify_objects/6bb861ace4b706d9/rdj_v1_classify_objects/robot_geometry.npz",
+  "source_license_file": "PhysicalRSI/LICENSE",
+  "contents": "Public ARX X5 arm mesh vertices in their public link frames; no task objects or episode layouts",
+  "sha256": "38022afca6311a9475f91ae8f486ed6305d58a470e9a7cd5c41f283efa5f2f71",
+  "packaged_json_sha256": "f0ad7e4298dc8f8c4525cc0629e44caced97eb55671422a58e9d9f7e6aee4eea",
+  "conversion": "Numeric float vertices rounded to 8 decimal places; link names and ordering preserved"
+}

@@ -1,0 +1,303 @@
+{
+  "coap": {
+    "file": "capabilities/control/robot.py",
+    "resource": "resources/fill_egg_holder/coap/__init__.py",
+    "package": true,
+    "sha256": "0d5ab17fdb679b7515310cbf23a56079be09c65016ddcc46a3e1a7c44a05926e",
+    "resource_identity": true
+  },
+  "coap.context": {
+    "file": "capabilities/control/context_for_imitate_sorting_sequence.py",
+    "resource": "resources/fill_egg_holder/coap/context.py",
+    "package": false,
+    "sha256": "e43c0bd2981f05158877ce9d222c7bebaef9732c57ab5cf7bacd61ad2a95c6f2",
+    "resource_identity": true
+  },
+  "coap.debug_thresholds": {
+    "file": "capabilities/control/debug_thresholds.py",
+    "resource": "resources/fill_egg_holder/coap/debug_thresholds.py",
+    "package": false,
+    "sha256": "aa9c1c978dead20c132eec86382a3ef20a30c25b001d53ddf3b419eb548a67b0",
+    "resource_identity": true
+  },
+  "coap.kinematics": {
+    "file": "capabilities/motion/kinematics.py",
+    "resource": "resources/fill_egg_holder/coap/kinematics.py",
+    "package": false,
+    "sha256": "442c04e65419032e154c228ffabc0f578e5539b4964ea193b8c026a8dcc76d3f",
+    "resource_identity": true
+  },
+  "coap.manipulation": {
+    "file": "capabilities/control/manipulation.py",
+    "resource": "resources/fill_egg_holder/coap/manipulation.py",
+    "package": false,
+    "sha256": "d4720b66e4935684c68b60fe6d31e27aae41c8177044060338b2df4c77e5a18b",
+    "resource_identity": true
+  },
+  "coap.measurement": {
+    "file": "capabilities/control/measurement.py",
+    "resource": "resources/fill_egg_holder/coap/measurement.py",
+    "package": false,
+    "sha256": "7eb45a2115cb25deef10c6e99e6d950fb101a2724436dbefda26b402866a20c3",
+    "resource_identity": true
+  },
+  "coap.motion": {
+    "file": "capabilities/motion/motion.py",
+    "resource": "resources/fill_egg_holder/coap/motion.py",
+    "package": false,
+    "sha256": "446e21c59ea4dcea011b3010c8fd9006bf103207f1b3a0673bf1bb3ae0a5f290",
+    "resource_identity": true
+  },
+  "coap.perception": {
+    "file": "capabilities/perception/perception.py",
+    "resource": "resources/fill_egg_holder/coap/perception.py",
+    "package": false,
+    "sha256": "eb51934df88e4c926ebd88af3b89e2f001b721b69168b8c54143aabd2b5e370c",
+    "resource_identity": true
+  },
+  "coap.public_mesh": {
+    "file": "capabilities/geometry/public_mesh_for_imitate_sorting_sequence.py",
+    "resource": "resources/fill_egg_holder/coap/public_mesh.py",
+    "package": false,
+    "sha256": "dc43e2e4032ec4612a4cbcfdcc95b5ec30e59c0d610665d4cd27de8ace4e34c1",
+    "resource_identity": true
+  },
+  "coap.report": {
+    "file": "capabilities/control/imitate_sorting_sequence_coap_report.py",
+    "resource": "resources/fill_egg_holder/coap/report.py",
+    "package": false,
+    "sha256": "47090f44e5e643f9c36e5b55b5f42c5d659648f7f625de5f49e3d95bb6961d22",
+    "resource_identity": true
+  },
+  "coap.robot_motion_geometry": {
+    "file": "capabilities/motion/robot_motion_geometry.py",
+    "resource": "resources/fill_egg_holder/coap/robot_motion_geometry.py",
+    "package": false,
+    "sha256": "d9fabbcc8bef9eff8a66108122eb61361e8dc104a44edf1f45353a50ba831d4c",
+    "resource_identity": true
+  },
+  "coap.tasks": {
+    "file": "capabilities/control/tasks.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/__init__.py",
+    "package": true,
+    "sha256": "5d5d455874ce30ed67d2dacda03ae4e3e89bc9ccf68cc29d42e81643186e7444",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_budget_r02_empty_only": {
+    "file": "capabilities/control/fill_egg_holder_coap_tasks_egg_budget_r02_empty_only.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/egg_budget_r02_empty_only.py",
+    "package": false,
+    "sha256": "37754a2575119fb7c2205038b74ecefe7a3323902437ace24a0fff3e5c744d7f",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_budget_r02_empty_only_empty": {
+    "file": "capabilities/control/fill_egg_holder_coap_tasks_egg_budget_r02_empty_only_empty.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/egg_budget_r02_empty_only_empty.py",
+    "package": false,
+    "sha256": "391fcf5e29712178283974f02ed8f4fe43d75b63c8fd85b77202a7be90d9010a",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_budget_r02_empty_only_gripper": {
+    "file": "capabilities/control/fill_egg_holder_coap_tasks_egg_budget_r02_empty_only_gripper.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/egg_budget_r02_empty_only_gripper.py",
+    "package": false,
+    "sha256": "c96e2b4941e48237ee7bf160e71239c0e75d56ce4548decd2e3f2a357420e203",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_carry": {
+    "file": "capabilities/control/egg_carry_for_fold_clothes.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/egg_carry.py",
+    "package": false,
+    "sha256": "c2e6c398000dfc76432c13d4c7d4de07ec5c04aa16682757940c934bf15bcea1",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_geometry": {
+    "file": "capabilities/geometry/egg_geometry.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/egg_geometry.py",
+    "package": false,
+    "sha256": "f4805dc3307bee552e48edbfbb78d73a9f5dce70fe71e900a6483bfbc230b6db",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_grasp_lookahead_r19_full_chain_pick": {
+    "file": "capabilities/control/fill_egg_holder_coap_tasks_egg_grasp_lookahead_r19_full_chain_pick.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/egg_grasp_lookahead_r19_full_chain_pick.py",
+    "package": false,
+    "sha256": "e895318e9fdc200ff320453233bee25af9b2a254e2ff4c6e5d79e9cb31e7f7ff",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_grasp_lookahead_r19_full_chain_pick_base_feedback": {
+    "file": "capabilities/control/fill_egg_holder_coap_tasks_egg_grasp_lookahead_r19_full_chain_pick_base_feedback.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/egg_grasp_lookahead_r19_full_chain_pick_base_feedback.py",
+    "package": false,
+    "sha256": "6552c1bbde32b836af66b4e4b017263e9bd5a41ab75bff855432d780e6078e2b",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_grasp_lookahead_r19_full_chain_pick_base_measure": {
+    "file": "capabilities/perception/fill_egg_holder_coap_tasks_egg_grasp_lookahead_r19_full_chain_pick_base_measure.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/egg_grasp_lookahead_r19_full_chain_pick_base_measure.py",
+    "package": false,
+    "sha256": "bc093bc1fa609e1ffce2f7e95441a9cbcabca5bedcf5521a4c6ac864eb6d9081",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_grasp_lookahead_r19_full_chain_pick_base_queue": {
+    "file": "capabilities/control/fill_egg_holder_coap_tasks_egg_grasp_lookahead_r19_full_chain_pick_base_queue.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/egg_grasp_lookahead_r19_full_chain_pick_base_queue.py",
+    "package": false,
+    "sha256": "14a43355a2b70c7d2495aacbf47047ef7aeb0ed2d7ae5db758b377e45fbb0785",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_grasp_lookahead_r19_full_chain_pick_source": {
+    "file": "capabilities/perception/fill_egg_holder_coap_tasks_egg_grasp_lookahead_r19_full_chain_pick_source.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/egg_grasp_lookahead_r19_full_chain_pick_source.py",
+    "package": false,
+    "sha256": "60745e5aad5e7917854607c25c569e9f2789fd6b9e900626487900ff0be9f558",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_initial": {
+    "file": "capabilities/control/egg_initial.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/egg_initial.py",
+    "package": false,
+    "sha256": "9da27976020255b7fdbee452a389e3940ec0d97a32a5482a65f768159f9849c9",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_lid": {
+    "file": "capabilities/control/egg_lid_for_fold_clothes.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/egg_lid.py",
+    "package": false,
+    "sha256": "4a556e23dceefad5ec8421849a6c10a68ddbb8f5313806e47fe156ab3ef7ab35",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_model_fit": {
+    "file": "capabilities/control/egg_model_fit_for_fold_clothes.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/egg_model_fit.py",
+    "package": false,
+    "sha256": "58a8caa189e1b77f2fbb416ccd3649128df12999d312eef8caa3433c597f91f6",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_motion": {
+    "file": "capabilities/motion/egg_motion_for_fold_clothes.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/egg_motion.py",
+    "package": false,
+    "sha256": "a5a44daebfbd02b28bf0d8df7c5fdd4c423e828760d6f90b487b767dd9f05543",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_policy": {
+    "file": "capabilities/control/egg_policy_for_fold_clothes.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/egg_policy.py",
+    "package": false,
+    "sha256": "59cbdfbd289e6d177d0c08b58e5306bfc6b73247e9196554f8d1cba99c1eeb81",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_quad_r03_diagfill": {
+    "file": "capabilities/control/fill_egg_holder_coap_tasks_egg_quad_r03_diagfill.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/egg_quad_r03_diagfill.py",
+    "package": false,
+    "sha256": "330d4c11e523dc75b702a9a4f692752e6f310abc3f2fc9108e4fb9238c6900bd",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_single_arm": {
+    "file": "capabilities/control/egg_single_arm_for_fold_clothes.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/egg_single_arm.py",
+    "package": false,
+    "sha256": "31d728518aa7ca9a1fdccf20aaacecda8fe8071441c78b5bcb5720f669674fa7",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_source": {
+    "file": "capabilities/control/egg_source_for_fold_clothes.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/egg_source.py",
+    "package": false,
+    "sha256": "8609d7062c55c2122878dc9792ce2072675aa8f70468eb573f55f1f8a459db11",
+    "resource_identity": true
+  },
+  "coap.tasks.finite_ik": {
+    "file": "capabilities/motion/finite_ik_for_imitate_sorting_sequence.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/finite_ik.py",
+    "package": false,
+    "sha256": "b6c70bf4c726d580c7628b372a672a443245d2d034640ae14b6ac7beae219941",
+    "resource_identity": true
+  },
+  "coap.tasks.garment": {
+    "file": "capabilities/control/garment_for_fold_clothes.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/garment.py",
+    "package": false,
+    "sha256": "fd1685427cac9a1472529a83d9c1721ff3af814b2303cfaa81051640f3cda940",
+    "resource_identity": true
+  },
+  "coap.tasks.garment_contact": {
+    "file": "capabilities/control/garment_contact_for_imitate_sorting_sequence.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/garment_contact.py",
+    "package": false,
+    "sha256": "5076be430569c49a885df6fafbbcb8aa6aff0091a5376f5285d431f9de491345",
+    "resource_identity": true
+  },
+  "coap.tasks.garment_schedule": {
+    "file": "capabilities/control/garment_schedule_for_fold_clothes.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/garment_schedule.py",
+    "package": false,
+    "sha256": "12c05d2e64b49304cb44990beee11a88ee44e1f48abac3ea551db4980cd82114",
+    "resource_identity": true
+  },
+  "coap.tasks.long_horizon": {
+    "file": "capabilities/control/long_horizon_for_fold_clothes.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/long_horizon.py",
+    "package": false,
+    "sha256": "9bfa4d2f707f8ad915a625935539f9bc4af73d80d74fde9e7522dbc0da15125c",
+    "resource_identity": true
+  },
+  "coap.tasks.mesh_kinematics": {
+    "file": "capabilities/motion/mesh_kinematics_for_imitate_sorting_sequence.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/mesh_kinematics.py",
+    "package": false,
+    "sha256": "ee18f724e4171ce07efa790296c7e550d5b431d7065417e0cec0ca7b31750193",
+    "resource_identity": true
+  },
+  "coap.tasks.pen_holder_support": {
+    "file": "capabilities/control/pen_holder_support_for_fold_clothes.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/pen_holder_support.py",
+    "package": false,
+    "sha256": "f6c114267c343ad239d31bce964439200a8b62c676d746914f40ef68ad6d09e4",
+    "resource_identity": true
+  },
+  "coap.tasks.pen_holder_visibility": {
+    "file": "capabilities/control/pen_holder_visibility_for_fold_clothes.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/pen_holder_visibility.py",
+    "package": false,
+    "sha256": "56be8d99efdf3ac214e6e33978cdd7f359aedfc788f7a7cf63fcc2f01a481a5d",
+    "resource_identity": true
+  },
+  "coap.visibility": {
+    "file": "capabilities/control/visibility.py",
+    "resource": "resources/fill_egg_holder/coap/visibility.py",
+    "package": false,
+    "sha256": "7a81173b85ce4c6ad88b14b60df57e5f9bcc42282dc258e03f290ade1af4cf0f",
+    "resource_identity": true
+  },
+  "coap.world": {
+    "file": "capabilities/planning/world.py",
+    "resource": "resources/fill_egg_holder/coap/world.py",
+    "package": false,
+    "sha256": "df1fb658d828db286d0bde2ea64b1a83d0e6f2adda3ed88d54c34722cda95b4c",
+    "resource_identity": true
+  },
+  "model": {
+    "file": "capabilities/control/model_for_imitate_sorting_sequence.py",
+    "resource": "resources/fill_egg_holder/model.py",
+    "package": false,
+    "sha256": "cfbd21dcd3e33a9133b5e607e6d07de7f5732478e2969e79e0d5cdc5cc340692",
+    "resource_identity": true
+  },
+  "deploy": {
+    "file": "capabilities/control/deploy_for_imitate_sorting_sequence.py",
+    "resource": "resources/fill_egg_holder/deploy.py",
+    "package": false,
+    "sha256": "fc406ba88b4201502a41b1eb3c7e829122b720235dd767ba22f098163ec47000",
+    "resource_identity": true
+  },
+  "coap.policy": {
+    "file": "capabilities/control/fill_egg_holder_coap_policy.py",
+    "resource": "resources/fill_egg_holder/coap/policy.py",
+    "package": false,
+    "sha256": "03c8b27fed8bb7ab440c4b31a2361f96452da3f23ff6f459cfc1c5ae7e98e1fe",
+    "resource_identity": true
+  }
+}

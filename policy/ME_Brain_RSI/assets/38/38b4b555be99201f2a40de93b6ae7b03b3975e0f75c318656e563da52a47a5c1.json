@@ -1,0 +1,17 @@
+{
+  "source": "Official arx_x5 camera_config.yml; K from released training HDF5 camera metadata, never Eval_Layout",
+  "head": {
+    "resolution": [640, 480],
+    "K": [[288.13254097, 0, 320], [0, 288.13254097, 240], [0, 0, 1]],
+    "camera_to_world_opengl": [[1, 0, 0, 0], [0, 0.866025403784, -0.5, -0.41], [0, 0.5, 0.866025403784, 1.308], [0, 0, 0, 1]]
+  },
+  "table_z": 0.765,
+  "robot_geometry_source": "Released Assets/Robots/x5/robot_config.yml: ee_link=link6, gripper_bias=0.145; URDF fingers extend along link6 +X",
+  "tool_offset_in_ee": [0.145, 0, 0],
+  "contact_tip_offset_in_ee": [0.15757, 0, 0],
+  "contact_tip_source": "Static X5A.urdf joint7 origin x=.08657 + link7.STL max x=.071; distinct from grasp-centre bias",
+  "workspace": [-0.67, 0.67, -0.30, 0.18],
+  "max_translation_step": 0.018,
+  "precision_translation_step": 0.007,
+  "max_rotation_step": 0.14
+}

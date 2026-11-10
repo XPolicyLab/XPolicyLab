@@ -1,0 +1,117 @@
+# ME_Brain_RSI
+
+**Contributor:** ME Brain 团队 | **Paper:** 未指定 | **arXiv:** 未指定 | **Original code:** 本仓库内的任务策略与 Focus-VLWA 源码
+
+通过 `ME_Brain_Adaptor` 统一调度 54 个任务，包含脚本策略和 VLA 策略。各任务使用独立的感知、几何和控制实现。
+
+公共参数、检查点命名、跨机器部署与 `EVAL_ENV_TYPE` 见 [XPolicyLab README](../../README.md)。正式结果以 [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard) 为准。
+
+## Installation
+
+脚本策略基础环境与 VLA 环境分别安装：
+
+```bash
+cd XPolicyLab/policy/ME_Brain_RSI
+bash install.sh code
+bash install.sh inference
+```
+
+扫方块、倒球入花瓶和充电器使用脚本基础环境，分别见 [扫方块任务说明](tasks/sweep_blocks/README.md)、[倒球任务说明](tasks/pour_balls_into_vase/README.md) 与 [充电器任务说明](tasks/plug_in_charger/README.md)。
+
+搭塔、标准套娃、随机套娃及两项倒液体任务共用 SAM3 文件服务，分别进行 RGB 几何测量和规划。见 [搭塔与 SAM3 服务说明](tasks/build_tower/README.md)、[标准套娃](tasks/sort_nesting_dolls_by_size/README.md)、[随机套娃](tasks/sort_nesting_dolls_by_size_random/README.md)、[标准倒液体](tasks/pour_liquid_into_cup/README.md) 与 [随机倒液体](tasks/pour_liquid_into_cup_random/README.md)。
+
+随机扫方块使用独立的 SAM3、Grounding DINO 感知与关节空间脚本控制，需要 GPU 和外部感知权重，见 [随机扫方块任务说明](tasks/sweep_blocks_random/README.md)。
+
+工具箱和盖方块任务仅使用脚本环境与随附静态几何，见 [工具箱任务说明](tasks/store_tools_in_toolbox/README.md) 与 [盖方块任务说明](tasks/cover_blocks/README.md)。模仿排序使用 DINOv2；语言分类使用 CUDA 上的 DINOv2、CLIP 和 Grounding DINO。这两个任务的模型依赖位于环境客户端，分别见 [模仿排序任务说明](tasks/imitate_sorting_sequence/README.md) 与 [语言分类任务说明](tasks/classify_objects_by_language/README.md)。
+
+整理桌面使用独立 RGB 几何策略及外部 Grounding DINO、SAM ViT-B，见 [整理桌面任务说明](tasks/organize_table/README.md)。
+
+笔记本和耳机收纳的标准、随机任务使用各自独立的 SAM3 感知和固定控制策略，见 [标准任务说明](tasks/store_laptop_and_headphones/README.md) 与 [随机任务说明](tasks/store_laptop_and_headphones_random/README.md)。
+
+填蛋托盘使用脚本基础环境与公开静态几何，见 [填蛋托盘任务说明](tasks/fill_egg_holder/README.md)。标准挂杯和随机挂杯使用独立的 SAM3 感知及原有数值运动学，随机挂杯还保留本地 Grounding DINO 回退，见 [标准挂杯任务说明](tasks/hang_mugs/README.md) 与 [随机挂杯任务说明](tasks/hang_mugs_random/README.md)。
+
+标准叠方块复用随机叠方块的 SAM3 感知和脚本控制策略，两项任务均使用 `joint` 动作，每个进程运行一个环境。评测仍加载各自的任务场景和指令；资源通过 `robot_static_path` 与 `stack_assets_root` 配置。
+
+插管、投币和拧螺丝任务需要相应的 CuRobo 环境；堆叠和方程任务需要 SAM3、DINO、Pinocchio 及其资源。投币任务使用 CUDA 专用环境及 `websockets==14.2`，详见 [投币任务说明](tasks/deposit_coin/README.md)。拧螺丝使用相同的专用环境版本要求，见 [拧螺丝任务说明](tasks/fasten_screws/README.md)。
+
+通过 `ME_BRAIN_POLICY_PYTHON` 指定策略解释器，通过 `ME_BRAIN_RUNTIME_CONFIG` 配置外部资源。权重、虚拟环境和机器配置不包含在源码中。
+
+## Data Processing
+
+脚本策略不需要训练数据。VLA 支持处理已准备的数据：
+
+```bash
+bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <prepared_dataset_root> [prepared_dataset_root ...]
+bash process_data.sh RoboDojo cotrain arx_x5 joint data/prepared/cotrain
+```
+
+## Training
+
+脚本策略不训练。VLA 使用 Focus-VLWA 训练入口：
+
+```bash
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
+bash train.sh RoboDojo cotrain arx_x5 joint 0 0
+```
+
+训练配置与依赖见 [VLA 使用说明](source/README.md)。
+
+## Evaluation
+
+支持机器人 `arx_x5`。`action_type=auto` 根据任务选择 `joint` 或 `ee`。脚本策略每个进程运行一个环境；VLA 支持批量接口。完整任务列表见 [任务接口清单](tasks/README.md)。
+
+```bash
+cd XPolicyLab/policy/ME_Brain_RSI
+export ME_BRAIN_RUNTIME_CONFIG=./runtime_config.local.json
+export ME_BRAIN_POLICY_PYTHON=./strategy_env/.venv/bin/python
+export ME_BRAIN_EVIDENCE_DIR=../../../runs/ME_Brain_RSI
+export PYTHONDONTWRITEBYTECODE=1
+EVAL_ENV_TYPE=sim bash eval.sh RoboDojo press_by_number none arx_x5 auto 0 0 0 uv base
+```
+
+从 `runtime_config.example.json` 准备机器配置，绑定实际资源后运行。跨机器评测使用 `setup_eval_policy_server.sh` 与 `setup_eval_env_client.sh`。
+
+VLA 检查点通过 XPolicyLab 公共解析器定位。可以指定 `model_path`、`checkpoint_path` 或路径形式的 `ckpt_name`，目标目录需包含 `model.safetensors`。脚本任务不加载 VLA 权重。
+
+## Model Assets
+
+
+| 权重                                  | 来源                                                                                                                                      |
+| ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| DINOv2 Small                          | [facebook/dinov2-small](https://huggingface.co/facebook/dinov2-small)                                                                     |
+| Grounding DINO Tiny                   | [IDEA-Research/grounding-dino-tiny](https://huggingface.co/IDEA-Research/grounding-dino-tiny)                                             |
+| CLIP ViT-B/32                         | [openai/clip-vit-base-patch32](https://huggingface.co/openai/clip-vit-base-patch32)                                                       |
+| SAM3                                  | [facebook/sam3](https://huggingface.co/facebook/sam3)                                                                                     |
+| SAM ViT-B                             | [facebook/sam-vit-base](https://huggingface.co/facebook/sam-vit-base)                                                                     |
+| Depth Anything V2 Metric Indoor Small | [depth-anything/Depth-Anything-V2-Metric-Indoor-Small-hf](https://huggingface.co/depth-anything/Depth-Anything-V2-Metric-Indoor-Small-hf) |
+
+## Configuration
+
+`deploy.yml` 提供标准部署参数。资源配置支持以下字段：
+
+
+| 配置                                                   | 用途                                      |
+| ------------------------------------------------------ | ----------------------------------------- |
+| `me_brain_backend`                                     | `auto` 按任务调度；`vla` 使用 VLA         |
+| `strategy_evidence_dir`                                | 运行输出根目录                            |
+| `robot_static_path`                                    | 机器人静态配置                            |
+| `stack_assets_root`                                  | 堆叠任务资源                              |
+| `equation_assets_root`                                 | 方程任务资源                              |
+| `coin_assets_root`                                     | 投币任务的外部 CuRobo`code-skills` 根目录 |
+| `screws_assets_root` | 拧螺丝任务的外部 CuRobo `code-skills` 根目录 |
+| `perception_assets_root`                               | 图像匹配任务的感知权重                    |
+| `HANG_SAM3_PATH`（环境变量） | 挂杯任务的外部固定 SAM3 资源目录 |
+| `LAPTOP_SAM3_PATH`（环境变量） | 笔记本与耳机收纳任务的外部固定 SAM3 资源目录 |
+| `focus_vlwa_source`、`policy_uv_env_path`              | VLA 源码与环境                            |
+| `model_path`、`tokenizer_path`、`asset_id`             | VLA 检查点、tokenizer 与机器人标识        |
+| `history_mode`、`max_token_len`、`num_inference_steps` | VLA 推理参数                              |
+
+资源配置和环境变量中的相对路径以本策略目录为基准。配置支持顶层 `includes` 列表，其中的相对配置文件路径以包含它的文件所在目录为基准。机器配置不能覆盖任务或协议路由。
+
+可选在线监督通过 `ME_BRAIN_API_URL` 和 `ME_BRAIN_API_TOKEN_FILE` 等环境配置。机器配置、凭据、权重和运行输出应存放在源码目录之外。
+
+## Notes
+
+`tasks/` 注册任务与模块，`capabilities/` 提供功能实现，`resources/` 保存任务资源上下文，`backends/` 桥接执行协议，`source/` 提供 Focus-VLWA 源码。任务模块在独立命名空间运行。
+
+投币任务保留 `rdj_v1_deposit_coin` 包及其固定导入目录、校准和机器人资源，辅助模块与其他任务独立。运行入口接收服务端已解码的 RGB 数组。部分任务内部的图像服务、静态参考图和诊断图片接口依照其各自数据格式工作。

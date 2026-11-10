@@ -1,0 +1,8 @@
+{
+  "source": "Public Rigid/key/00000 USD visual mesh, before runtime placement. No dynamic object state.",
+  "radius_m": 0.01,
+  "face_half_thickness_m": 0.005,
+  "hole_radius_m": 0.002,
+  "hole_center_z_m": 0.0060533,
+  "polygon_vertices": 32
+}

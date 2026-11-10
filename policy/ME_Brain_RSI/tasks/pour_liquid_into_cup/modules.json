@@ -1,0 +1,95 @@
+{
+  "adapters.COAP_ZYR.deploy": {
+    "file": "capabilities/control/deploy_for_push_t_random.py",
+    "resource": "resources/pour_liquid_into_cup/coap/adapter/deploy.py",
+    "package": false,
+    "sha256": "33b7c518a8cc4aabcf30177efc929d966388bd1e4f6f580f929a9724bf0c6855"
+  },
+  "coap.contracts": {
+    "file": "capabilities/observation/contracts_for_press_by_number.py",
+    "resource": "resources/pour_liquid_into_cup/coap/contracts.py",
+    "package": false,
+    "sha256": "4bf9c1cbeaeb0424994cc2e3b5038f7a6872fb66b8c906e29ad88282d8e3a7f2"
+  },
+  "coap": {
+    "file": "capabilities/control/robot_for_press_by_number.py",
+    "resource": "resources/pour_liquid_into_cup/coap/__init__.py",
+    "package": true,
+    "sha256": "3859b6dbbc42e387cd4dcb849ed7b15b57b12d99b60f36f82da688fc0f4a09ca"
+  },
+  "adapters.COAP_ZYR": {
+    "file": "capabilities/control/xqaux8z9.py",
+    "resource": "resources/pour_liquid_into_cup/coap/adapter/__init__.py",
+    "package": true,
+    "sha256": "a096d4d8cc35a6447231c03ba3cf17a39979dd6aa1b80f07a8069557d57427ab"
+  },
+  "adapters.COAP_ZYR.model": {
+    "file": "capabilities/control/model_for_pour_liquid_into_cup.py",
+    "resource": "resources/pour_liquid_into_cup/coap/adapter/model.py",
+    "package": false,
+    "sha256": "4881621f45205b42e9e79b9b95ad16ac4a3696be4c34a7782231ba85ce9c7068"
+  },
+  "coap.observation_audit": {
+    "file": "capabilities/observation/observation_audit.py",
+    "resource": "resources/pour_liquid_into_cup/coap/observation_audit.py",
+    "package": false,
+    "sha256": "1a23538876c849ad985c89adb70d2b7f5f54e57a38caa513cc6bd42f939ea04f"
+  },
+  "coap.policy": {
+    "file": "capabilities/control/policy_for_pour_liquid_into_cup.py",
+    "resource": "resources/pour_liquid_into_cup/coap/policy.py",
+    "package": false,
+    "sha256": "23255dfac2007a92af5d671728e0fcb283c325a45cf98e242bcb9bb231e640b4"
+  },
+  "coap.perception": {
+    "file": "capabilities/perception/perception_for_pour_liquid_into_cup.py",
+    "resource": "resources/pour_liquid_into_cup/coap/perception.py",
+    "package": false,
+    "sha256": "4b7a42ac82b32ccd3df83c95263d7b2911e8393c3a99733ea96c50b6e4f046da"
+  },
+  "coap.geometry": {
+    "file": "capabilities/geometry/geometry_for_push_t.py",
+    "resource": "resources/pour_liquid_into_cup/coap/geometry.py",
+    "package": false,
+    "sha256": "0c0058ada555f9e54a94c90a307623f3681400a11e18fd9a6b1036eab2f29855"
+  },
+  "adapters": {
+    "namespace": true
+  },
+  "coap.wristcam": {
+    "file": "capabilities/observation/build_tower_wristcam.py",
+    "resource": "resources/pour_liquid_into_cup/coap/wristcam.py",
+    "package": false,
+    "sha256": "5ed8b1dee23c2887bc735312a8e316b9fc62e9bee505ed372a7163898bbd3f5c"
+  },
+  "coap.bottle_entry": {
+    "file": "capabilities/geometry/pour_liquid_bottle_entry.py",
+    "resource": "resources/pour_liquid_into_cup/coap/bottle_entry.py",
+    "package": false,
+    "sha256": "931a62f4fc5baae71f99a1e4a7e5ae9ba7a97138dcb309b8c26987bcd24971eb"
+  },
+  "coap.rim_tracker": {
+    "file": "capabilities/perception/pour_liquid_rim_tracker.py",
+    "resource": "resources/pour_liquid_into_cup/coap/rim_tracker.py",
+    "sha256": "21ad53b982f8a080f48dc0f71267392b085c024de217ba0b3b2aadf316fcfb14",
+    "package": false
+  },
+  "coap.tool_surface": {
+    "file": "capabilities/geometry/pour_liquid_tool_surface.py",
+    "resource": "resources/pour_liquid_into_cup/coap/tool_surface.py",
+    "sha256": "3d6309ff0075f4b8323c51661a08aa2653b3880dd1236a193b6d29b2df849fc1",
+    "package": false
+  },
+  "coap.rim_update_guard": {
+    "file": "capabilities/geometry/pour_liquid_rim_update_guard.py",
+    "resource": "resources/pour_liquid_into_cup/coap/rim_update_guard.py",
+    "sha256": "b84145570cdd3d9f82fb844fb9d0fdd7ace4b80ee48887203d5ddad30d0da3e0",
+    "package": false
+  },
+  "coap.held_axis": {
+    "file": "capabilities/perception/pour_liquid_held_axis.py",
+    "resource": "resources/pour_liquid_into_cup/coap/held_axis.py",
+    "package": false,
+    "sha256": "a69892a1dd68471afef159ceee6d1f6ec74158cc5baf548be9615a434a73fa1e"
+  }
+}

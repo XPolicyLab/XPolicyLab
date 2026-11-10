@@ -1,0 +1,501 @@
+{
+  "coap": {
+    "file": "capabilities/control/robot.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/__init__.py",
+    "package": true,
+    "sha256": "0d5ab17fdb679b7515310cbf23a56079be09c65016ddcc46a3e1a7c44a05926e",
+    "resource_identity": true
+  },
+  "coap.context": {
+    "file": "capabilities/control/context_for_imitate_sorting_sequence.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/context.py",
+    "package": false,
+    "sha256": "e43c0bd2981f05158877ce9d222c7bebaef9732c57ab5cf7bacd61ad2a95c6f2",
+    "resource_identity": true
+  },
+  "coap.debug_thresholds": {
+    "file": "capabilities/control/debug_thresholds.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/debug_thresholds.py",
+    "package": false,
+    "sha256": "aa9c1c978dead20c132eec86382a3ef20a30c25b001d53ddf3b419eb548a67b0",
+    "resource_identity": true
+  },
+  "coap.kinematics": {
+    "file": "capabilities/motion/kinematics.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/kinematics.py",
+    "package": false,
+    "sha256": "442c04e65419032e154c228ffabc0f578e5539b4964ea193b8c026a8dcc76d3f",
+    "resource_identity": true
+  },
+  "coap.manipulation": {
+    "file": "capabilities/control/manipulation.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/manipulation.py",
+    "package": false,
+    "sha256": "d4720b66e4935684c68b60fe6d31e27aae41c8177044060338b2df4c77e5a18b",
+    "resource_identity": true
+  },
+  "coap.measurement": {
+    "file": "capabilities/control/measurement.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/measurement.py",
+    "package": false,
+    "sha256": "7eb45a2115cb25deef10c6e99e6d950fb101a2724436dbefda26b402866a20c3",
+    "resource_identity": true
+  },
+  "coap.motion": {
+    "file": "capabilities/motion/motion.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/motion.py",
+    "package": false,
+    "sha256": "446e21c59ea4dcea011b3010c8fd9006bf103207f1b3a0673bf1bb3ae0a5f290",
+    "resource_identity": true
+  },
+  "coap.perception": {
+    "file": "capabilities/perception/perception.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/perception.py",
+    "package": false,
+    "sha256": "eb51934df88e4c926ebd88af3b89e2f001b721b69168b8c54143aabd2b5e370c",
+    "resource_identity": true
+  },
+  "coap.public_mesh": {
+    "file": "capabilities/geometry/public_mesh_for_imitate_sorting_sequence.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/public_mesh.py",
+    "package": false,
+    "sha256": "dc43e2e4032ec4612a4cbcfdcc95b5ec30e59c0d610665d4cd27de8ace4e34c1",
+    "resource_identity": true
+  },
+  "coap.report": {
+    "file": "capabilities/control/store_laptop_and_headphones_coap_report.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/report.py",
+    "package": false,
+    "sha256": "45c5d1b27224bf829ea52b9f93ce60039d3a5ffeba81103fbe07925da9276e3a",
+    "resource_identity": true
+  },
+  "coap.robot_motion_geometry": {
+    "file": "capabilities/motion/robot_motion_geometry.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/robot_motion_geometry.py",
+    "package": false,
+    "sha256": "d9fabbcc8bef9eff8a66108122eb61361e8dc104a44edf1f45353a50ba831d4c",
+    "resource_identity": true
+  },
+  "coap.tasks": {
+    "file": "capabilities/control/tasks.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/__init__.py",
+    "package": true,
+    "sha256": "5d5d455874ce30ed67d2dacda03ae4e3e89bc9ccf68cc29d42e81643186e7444",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_carry": {
+    "file": "capabilities/control/egg_carry_for_fold_clothes.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/egg_carry.py",
+    "package": false,
+    "sha256": "c2e6c398000dfc76432c13d4c7d4de07ec5c04aa16682757940c934bf15bcea1",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_geometry": {
+    "file": "capabilities/geometry/egg_geometry.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/egg_geometry.py",
+    "package": false,
+    "sha256": "f4805dc3307bee552e48edbfbb78d73a9f5dce70fe71e900a6483bfbc230b6db",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_initial": {
+    "file": "capabilities/control/egg_initial.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/egg_initial.py",
+    "package": false,
+    "sha256": "9da27976020255b7fdbee452a389e3940ec0d97a32a5482a65f768159f9849c9",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_lid": {
+    "file": "capabilities/control/egg_lid_for_fold_clothes.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/egg_lid.py",
+    "package": false,
+    "sha256": "4a556e23dceefad5ec8421849a6c10a68ddbb8f5313806e47fe156ab3ef7ab35",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_model_fit": {
+    "file": "capabilities/control/egg_model_fit_for_fold_clothes.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/egg_model_fit.py",
+    "package": false,
+    "sha256": "58a8caa189e1b77f2fbb416ccd3649128df12999d312eef8caa3433c597f91f6",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_motion": {
+    "file": "capabilities/motion/egg_motion_for_fold_clothes.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/egg_motion.py",
+    "package": false,
+    "sha256": "a5a44daebfbd02b28bf0d8df7c5fdd4c423e828760d6f90b487b767dd9f05543",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_policy": {
+    "file": "capabilities/control/egg_policy_for_fold_clothes.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/egg_policy.py",
+    "package": false,
+    "sha256": "59cbdfbd289e6d177d0c08b58e5306bfc6b73247e9196554f8d1cba99c1eeb81",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_single_arm": {
+    "file": "capabilities/control/egg_single_arm_for_fold_clothes.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/egg_single_arm.py",
+    "package": false,
+    "sha256": "31d728518aa7ca9a1fdccf20aaacecda8fe8071441c78b5bcb5720f669674fa7",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_source": {
+    "file": "capabilities/control/egg_source_for_fold_clothes.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/egg_source.py",
+    "package": false,
+    "sha256": "8609d7062c55c2122878dc9792ce2072675aa8f70468eb573f55f1f8a459db11",
+    "resource_identity": true
+  },
+  "coap.tasks.finite_ik": {
+    "file": "capabilities/motion/finite_ik_for_imitate_sorting_sequence.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/finite_ik.py",
+    "package": false,
+    "sha256": "b6c70bf4c726d580c7628b372a672a443245d2d034640ae14b6ac7beae219941",
+    "resource_identity": true
+  },
+  "coap.tasks.garment": {
+    "file": "capabilities/control/garment_for_fold_clothes.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/garment.py",
+    "package": false,
+    "sha256": "fd1685427cac9a1472529a83d9c1721ff3af814b2303cfaa81051640f3cda940",
+    "resource_identity": true
+  },
+  "coap.tasks.garment_contact": {
+    "file": "capabilities/control/garment_contact_for_imitate_sorting_sequence.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/garment_contact.py",
+    "package": false,
+    "sha256": "5076be430569c49a885df6fafbbcb8aa6aff0091a5376f5285d431f9de491345",
+    "resource_identity": true
+  },
+  "coap.tasks.garment_schedule": {
+    "file": "capabilities/control/garment_schedule_for_fold_clothes.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/garment_schedule.py",
+    "package": false,
+    "sha256": "12c05d2e64b49304cb44990beee11a88ee44e1f48abac3ea551db4980cd82114",
+    "resource_identity": true
+  },
+  "coap.tasks.hang_axis_r31_joint_model": {
+    "file": "capabilities/perception/store_laptop_and_headphones_coap_tasks_hang_axis_r31_joint_model.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/hang_axis_r31_joint_model.py",
+    "package": false,
+    "sha256": "c5e9ccd624fbf2d1798f88421dda6daa728fe23749d9e8531f33d801993049e8",
+    "resource_identity": true
+  },
+  "coap.tasks.key_aperture": {
+    "file": "capabilities/control/key_aperture.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/key_aperture.py",
+    "package": false,
+    "sha256": "9701edb53d6fed5fe97ec8d781ddf0ed3081b093c657e9102a854c17b2ffe3e4",
+    "resource_identity": true
+  },
+  "coap.tasks.key_aperture_stereo": {
+    "file": "capabilities/control/key_aperture_stereo.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/key_aperture_stereo.py",
+    "package": false,
+    "sha256": "8927937d273133d4f8e3d3714e413a824d8b19964fd6a52a247a6d58badedbf2",
+    "resource_identity": true
+  },
+  "coap.tasks.key_collision": {
+    "file": "capabilities/motion/key_collision.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/key_collision.py",
+    "package": false,
+    "sha256": "87bc7f049e00423e56771557dc40b06b02a38ac21e1d88001c83e84398b31aa9",
+    "resource_identity": true
+  },
+  "coap.tasks.key_handoff": {
+    "file": "capabilities/control/key_handoff.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/key_handoff.py",
+    "package": false,
+    "sha256": "21aefdac1ee911a573a2938546fb113177242b09701a1db0fc9ff916c36c811d",
+    "resource_identity": true
+  },
+  "coap.tasks.key_visual": {
+    "file": "capabilities/control/key_visual.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/key_visual.py",
+    "package": false,
+    "sha256": "6ea8230c10fd45e7f54a23b9a4fb9a17e82395b7e0748f58677f54724b0366f5",
+    "resource_identity": true
+  },
+  "coap.tasks.laptop_r14_merge14": {
+    "file": "capabilities/control/store_laptop_and_headphones_random_coap_tasks_laptop_r14_merge14.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/laptop_r14_merge14.py",
+    "package": false,
+    "sha256": "25c58fb49330bfa86449b0a2ab751b9740c84f6d7ba296db9ca64e82d14ee69c",
+    "resource_identity": true
+  },
+  "coap.tasks.long_horizon": {
+    "file": "capabilities/control/long_horizon_for_fold_clothes.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/long_horizon.py",
+    "package": false,
+    "sha256": "9bfa4d2f707f8ad915a625935539f9bc4af73d80d74fde9e7522dbc0da15125c",
+    "resource_identity": true
+  },
+  "coap.tasks.memory": {
+    "file": "capabilities/planning/memory.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/memory.py",
+    "package": false,
+    "sha256": "6cb87fca653ada855a47603bb2979d9cba01638a679006476a6d5ee005fdc60b",
+    "resource_identity": true
+  },
+  "coap.tasks.memory_approach": {
+    "file": "capabilities/planning/memory_approach.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/memory_approach.py",
+    "package": false,
+    "sha256": "3649463b799926fa945b2b09437f7cbb64224d55e3a80c0d900eabaf7296e2e5",
+    "resource_identity": true
+  },
+  "coap.tasks.memory_geometry": {
+    "file": "capabilities/geometry/memory_geometry.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/memory_geometry.py",
+    "package": false,
+    "sha256": "987b4846760ae7246150d6374f53f257c3a0293c60205a346941394b85464041",
+    "resource_identity": true
+  },
+  "coap.tasks.memory_identity": {
+    "file": "capabilities/planning/memory_identity.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/memory_identity.py",
+    "package": false,
+    "sha256": "c077616f31e236701ed7af79460f9c3d0b24ab0c37be4a37c81bdf6d6cecd3ad",
+    "resource_identity": true
+  },
+  "coap.tasks.memory_initial": {
+    "file": "capabilities/planning/memory_initial.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/memory_initial.py",
+    "package": false,
+    "sha256": "7e34b40b2af7fb627fd6c094981686fb4aa6a1cf2e9a3d4c972d4ec9422a69ba",
+    "resource_identity": true
+  },
+  "coap.tasks.memory_motion": {
+    "file": "capabilities/motion/memory_motion.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/memory_motion.py",
+    "package": false,
+    "sha256": "e01c31a87606ca2bed84d0c88aa6a0d47c25c8043c170d128034bb3002ec62eb",
+    "resource_identity": true
+  },
+  "coap.tasks.memory_protocol": {
+    "file": "capabilities/planning/memory_protocol.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/memory_protocol.py",
+    "package": false,
+    "sha256": "998ef2f811be3a218ac32245b650cf70bca935df0cae2b93061c90d63bcb5651",
+    "resource_identity": true
+  },
+  "coap.tasks.memory_queue": {
+    "file": "capabilities/planning/memory_queue.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/memory_queue.py",
+    "package": false,
+    "sha256": "517a6341078e20c0ab09c724572c2a498a0519e7cc0d4d0191a0eaa2579c777e",
+    "resource_identity": true
+  },
+  "coap.tasks.memory_routes": {
+    "file": "capabilities/planning/memory_routes.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/memory_routes.py",
+    "package": false,
+    "sha256": "d2b6aa48f06258d6f629291741c8163edf398f737c46445471ad1a9273434274",
+    "resource_identity": true
+  },
+  "coap.tasks.memory_semantics": {
+    "file": "capabilities/perception/memory_semantics.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/memory_semantics.py",
+    "package": false,
+    "sha256": "928d8d2636faa08431141a2b0799b49a739d279a57f9211ce2645a23fb82acdf",
+    "resource_identity": true
+  },
+  "coap.tasks.memory_sequence": {
+    "file": "capabilities/planning/memory_sequence.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/memory_sequence.py",
+    "package": false,
+    "sha256": "41bbbf5636491d7da08ff7f1fa4193e28cf79f6d3e88a0596f098e1a5531401c",
+    "resource_identity": true
+  },
+  "coap.tasks.memory_timing": {
+    "file": "capabilities/planning/memory_timing.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/memory_timing.py",
+    "package": false,
+    "sha256": "1915db9209814b6c701c9db5218db989db4cc2006484372d462cebb8a0c8c289",
+    "resource_identity": true
+  },
+  "coap.tasks.memory_toy": {
+    "file": "capabilities/planning/memory_toy.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/memory_toy.py",
+    "package": false,
+    "sha256": "3d3c2b9dc59173cf4865badbb24b43667d392d65fcefdb2f9760dc085c3d1966",
+    "resource_identity": true
+  },
+  "coap.tasks.memory_unchecked": {
+    "file": "capabilities/planning/memory_unchecked.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/memory_unchecked.py",
+    "package": false,
+    "sha256": "145ff9ec6df5a0e9aa1bfe4480db646abc6adc8825115a36c3de9053cbd52acb",
+    "resource_identity": true
+  },
+  "coap.tasks.mesh_kinematics": {
+    "file": "capabilities/motion/mesh_kinematics_for_imitate_sorting_sequence.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/mesh_kinematics.py",
+    "package": false,
+    "sha256": "ee18f724e4171ce07efa790296c7e550d5b431d7065417e0cec0ca7b31750193",
+    "resource_identity": true
+  },
+  "coap.tasks.mug_cad": {
+    "file": "capabilities/control/mug_cad.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/mug_cad.py",
+    "package": false,
+    "sha256": "75702f52bba875f9d5dc0bdba3449906fb8f4d89f0deaa7150aa12caf63e3377",
+    "resource_identity": true
+  },
+  "coap.tasks.mug_held": {
+    "file": "capabilities/control/mug_held.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/mug_held.py",
+    "package": false,
+    "sha256": "f34f5fcf98ffe420891926505e9a095da2b5177f517fedcccc4e9583d3e8a844",
+    "resource_identity": true
+  },
+  "coap.tasks.mug_motion": {
+    "file": "capabilities/motion/mug_motion.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/mug_motion.py",
+    "package": false,
+    "sha256": "824ba61851d515a437a6b5ad755514ee28023d1d9b7e37291c5a8d466645e499",
+    "resource_identity": true
+  },
+  "coap.tasks.mug_observation": {
+    "file": "capabilities/control/mug_observation.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/mug_observation.py",
+    "package": false,
+    "sha256": "c0e4ba43b757bb2ac22218cb906bc0a0f2d52b34875b0621147bf56359d118c0",
+    "resource_identity": true
+  },
+  "coap.tasks.mug_photometry": {
+    "file": "capabilities/control/mug_photometry.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/mug_photometry.py",
+    "package": false,
+    "sha256": "f5a317dd514cd18a82281a61bc0b0e841a27ab6a894d60289bf6f48547a1177e",
+    "resource_identity": true
+  },
+  "coap.tasks.mug_registration": {
+    "file": "capabilities/control/mug_registration.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/mug_registration.py",
+    "package": false,
+    "sha256": "c72db90d5b6e3ecda7f045cdc7b0f5074ad98efa8e65cd0906ae0dba3b84f0df",
+    "resource_identity": true
+  },
+  "coap.tasks.mug_scene": {
+    "file": "capabilities/control/mug_scene.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/mug_scene.py",
+    "package": false,
+    "sha256": "21dd4372fc172c5a63dab865b6eca6d3b92dc94f3e0ee8b4defb5523b91c002c",
+    "resource_identity": true
+  },
+  "coap.tasks.mug_wall": {
+    "file": "capabilities/control/mug_wall.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/mug_wall.py",
+    "package": false,
+    "sha256": "e31afff84f80a49e68b9bdbe306852f843945b695e97b91c4a1778ddbb38bff4",
+    "resource_identity": true
+  },
+  "coap.tasks.open_motion": {
+    "file": "capabilities/motion/open_motion.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/open_motion.py",
+    "package": false,
+    "sha256": "08f730dba5c050e0f1c3a2172153217d18993c85fa29433c67aac825af83febe",
+    "resource_identity": true
+  },
+  "coap.tasks.pen_holder_support": {
+    "file": "capabilities/control/pen_holder_support_for_fold_clothes.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/pen_holder_support.py",
+    "package": false,
+    "sha256": "f6c114267c343ad239d31bce964439200a8b62c676d746914f40ef68ad6d09e4",
+    "resource_identity": true
+  },
+  "coap.tasks.pen_holder_visibility": {
+    "file": "capabilities/control/pen_holder_visibility_for_fold_clothes.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/pen_holder_visibility.py",
+    "package": false,
+    "sha256": "56be8d99efdf3ac214e6e33978cdd7f359aedfc788f7a7cf63fcc2f01a481a5d",
+    "resource_identity": true
+  },
+  "coap.tasks.precision": {
+    "file": "capabilities/control/imitate_sorting_sequence_coap_tasks_precision.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/precision.py",
+    "package": false,
+    "sha256": "69a607606d439468cbf37909e5392093ffc81c5111f323d7e23add0f89849f1f",
+    "resource_identity": true
+  },
+  "coap.tasks.precision_geometry": {
+    "file": "capabilities/geometry/precision_geometry.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/precision_geometry.py",
+    "package": false,
+    "sha256": "e65b1a875032d7b8ef94a3c50e83510de07195f8fd282363e98a51e05e9e35f8",
+    "resource_identity": true
+  },
+  "coap.tasks.precision_planning": {
+    "file": "capabilities/planning/precision_planning.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/precision_planning.py",
+    "package": false,
+    "sha256": "bae18aa4063ef13cfab86ec04d6aec8dc3f7632455a32a77547c9853cf17eae1",
+    "resource_identity": true
+  },
+  "coap.tasks.toolbox_f": {
+    "file": "capabilities/control/toolbox_f.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/toolbox_f.py",
+    "package": false,
+    "sha256": "1790972ffe391a4ff0711b4e0b446814d5b428b53a34999e42b1a629b06033ab",
+    "resource_identity": true
+  },
+  "coap.tasks.toolbox_support": {
+    "file": "capabilities/control/toolbox_support.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/tasks/toolbox_support.py",
+    "package": false,
+    "sha256": "51270278f044ed7f6b90a1db5b3fe1a927a4e87cec8cab7a288a3e3acfa45dca",
+    "resource_identity": true
+  },
+  "coap.visibility": {
+    "file": "capabilities/control/visibility.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/visibility.py",
+    "package": false,
+    "sha256": "7a81173b85ce4c6ad88b14b60df57e5f9bcc42282dc258e03f290ade1af4cf0f",
+    "resource_identity": true
+  },
+  "coap.world": {
+    "file": "capabilities/planning/world.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/world.py",
+    "package": false,
+    "sha256": "df1fb658d828db286d0bde2ea64b1a83d0e6f2adda3ed88d54c34722cda95b4c",
+    "resource_identity": true
+  },
+  "model": {
+    "file": "capabilities/control/model_for_imitate_sorting_sequence.py",
+    "resource": "resources/store_laptop_and_headphones_random/model.py",
+    "package": false,
+    "sha256": "cfbd21dcd3e33a9133b5e607e6d07de7f5732478e2969e79e0d5cdc5cc340692",
+    "resource_identity": true
+  },
+  "deploy": {
+    "file": "capabilities/control/deploy_for_imitate_sorting_sequence.py",
+    "resource": "resources/store_laptop_and_headphones_random/deploy.py",
+    "package": false,
+    "sha256": "fc406ba88b4201502a41b1eb3c7e829122b720235dd767ba22f098163ec47000",
+    "resource_identity": true
+  },
+  "coap.policy": {
+    "file": "capabilities/control/store_laptop_and_headphones_random_coap_policy.py",
+    "resource": "resources/store_laptop_and_headphones_random/coap/policy.py",
+    "package": false,
+    "sha256": "93b5adec1797892a341d420da4f4d194af913105228b224e8665a6f089a3832f",
+    "resource_identity": true
+  },
+  "vendor": {
+    "namespace": true
+  },
+  "vendor.physicalrsi_open": {
+    "namespace": true
+  },
+  "vendor.physicalrsi_open.toolbox": {
+    "namespace": true
+  },
+  "vendor.physicalrsi_open.toolbox.box_registration": {
+    "file": "capabilities/control/box_registration.py",
+    "resource": "resources/store_laptop_and_headphones_random/vendor/physicalrsi_open/toolbox/box_registration.py",
+    "package": false,
+    "sha256": "f5281a5e666f63f408158f8791d5d66844186bcd70e0eff6372396ea50fa83cf",
+    "resource_identity": true
+  }
+}
