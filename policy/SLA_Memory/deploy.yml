@@ -1,0 +1,17 @@
+policy_name: SLA_Memory
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+action_type: ee
+gpu_id: null
+eval_batch: false
+# Model-specific keys, see the README.
+policy_uv_env_path: openpi
+train_config_name: train_robodojo_sim
+extra_frames_first: true
+attention_impl: xla

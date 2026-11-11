@@ -1,0 +1,125 @@
+[project]
+name = "openpi"
+version = "0.1.0"
+description = "Physical Intelligence open source repo"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+dependencies = [
+    "augmax>=0.3.4",
+    "beartype==0.19.0",
+    "datasets==4.0.0",
+    "dm-tree>=0.1.8",
+    "einops>=0.8.0",
+    "filelock>=3.16.1",
+    "flax==0.10.2",
+    "fsspec[gcs]>=2024.6.0",
+    "jax[cuda12]==0.5.3",
+    "jaxtyping==0.2.36",
+    "lerobot",
+    "numpy==1.26.4",
+    "numpydantic>=1.6.6",
+    "openpi-client",
+    "orbax-checkpoint==0.11.13",
+    "pillow>=11.0.0",
+    "scipy",
+    "sentencepiece>=0.2.0",
+    "torch==2.7.1",
+    "torchcodec==0.5.*",
+    "tqdm-loggable>=0.2",
+    "typing-extensions>=4.12.2",
+    "tyro>=0.9.5",
+    "wandb>=0.19.1",
+]
+
+
+[project.urls]
+Repository = "https://github.com/Physical-Intelligence/openpi"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.4",
+    "ruff>=0.8.6",
+    "pynvml>=12.0.0",
+]
+
+[tool.uv]
+# pyarrow>=26 needs NumPy 2, which this project does not use.
+override-dependencies = ["datasets==4.0.0", "ml-dtypes==0.4.1", "tensorstore==0.1.74", "pyarrow==25.0.1"]
+
+[tool.uv.sources]
+openpi-client = { workspace = true }
+# Vendored copy of huggingface/lerobot at commit 0cf8648 with three local fixes (see the notices in its files).
+lerobot = { path = "packages/lerobot", editable = true }
+
+[tool.uv.workspace]
+members = ["packages/*"]
+# lerobot stays a path dependency: as a workspace member, uv would also lock all of its optional extras,
+# some of which are git URLs.
+exclude = ["packages/lerobot"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+extend-exclude = ["packages/lerobot"]
+
+[tool.ruff.lint]
+# https://docs.astral.sh/ruff/rules/
+select = [
+    "B",
+    "C4",
+    "DTZ",
+    "E4",
+    "E7",
+    "E9",
+    "F",
+    "FBT",
+    "FURB",
+    "I",
+    "ICN",
+    "ISC",
+    "LOG",
+    "N",
+    "PD",
+    "PERF",
+    "PIE",
+    "PLC",
+    "PLE",
+    "PLR1",
+    "PLR5",
+    "PLW",
+    "PT",
+    "Q",
+    "RET",
+    "RUF",
+    "SIM",
+    "SLF",
+    "T10",
+    "T20",
+    "UP",
+    "W",
+]
+ignore = [
+    "F722",   # Conflicts with array typing.
+    "T201",   # We use print statements.
+    "PD008",  # Lots of false positives.
+    "ISC001", # Disabling to support ruff format.
+    "LOG015", # Use logger.info.
+]
+unfixable = [
+    "B905", # Fix defaults to strict=False, which is not what we want.
+]
+
+[tool.ruff.lint.isort]
+force-single-line = true
+force-sort-within-sections = true
+single-line-exclusions = ["collections.abc", "typing", "typing_extensions"]
+known-third-party = ["wandb"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+markers = ["manual: should be run manually."]
+testpaths = ["src", "scripts", "packages"]
+addopts = "--ignore=packages/lerobot"
