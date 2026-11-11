@@ -66,6 +66,90 @@ Supported settings: `bench_name=RoboDojo`, `env_cfg_type=arx_x5`, `action_type=j
 
 Simulation uses the native task budget by default. Set `EVAL_EPISODES=1` for one episode; an explicit `EVAL_NUM` takes precedence, and `EVAL_NUM=native` restores the native budget.
 
+## Results
+
+The released checkpoint achieves **14.6333% success rate** and **20.1475 Score**, averaged over two independent full RoboDojo evaluations. Both runs use native seed 0, continuous gripper widths, 50 predicted actions and 16 executed actions per request. Each run uses the official fixed budget of 2,100 episodes.
+
+The 54 native task variants are aggregated into 42 official tasks. Generalization tasks combine their fixed and random layouts. Each category averages its tasks, and the overall result is the equally weighted mean of the five categories. All values below are means of the two runs.
+
+| Category | Success rate (%) | Score |
+| --- | ---: | ---: |
+| Generalization | 12.0833 | 17.4250 |
+| Precision | 15.0000 | 23.6813 |
+| Long-Horizon | 14.3750 | 27.0125 |
+| Memory | 28.3333 | 29.0250 |
+| Open | 3.3750 | 3.5938 |
+| **Overall** | **14.6333** | **20.1475** |
+
+### Per-task results
+
+#### Generalization
+
+| Task | Success rate (%) | Score |
+| --- | ---: | ---: |
+| `stack_bowls` | 27.00 | 32.10 |
+| `push_T` | 0.00 | 0.00 |
+| `pack_objects_into_box` | 1.00 | 10.40 |
+| `fold_clothes` | 42.00 | 45.00 |
+| `hang_mugs` | 2.00 | 10.25 |
+| `sweep_blocks` | 2.00 | 2.00 |
+| `pour_liquid_into_cup` | 0.00 | 0.00 |
+| `make_toast` | 0.00 | 10.25 |
+| `arrange_largest_number` | 15.00 | 20.10 |
+| `sort_nesting_dolls_by_size` | 14.00 | 14.00 |
+| `store_laptop_and_headphones` | 18.00 | 36.80 |
+| `stack_blocks` | 24.00 | 28.20 |
+
+#### Precision
+
+| Task | Success rate (%) | Score |
+| --- | ---: | ---: |
+| `fasten_screws` | 11.00 | 31.00 |
+| `plug_in_charger` | 2.00 | 2.00 |
+| `insert_tubes` | 52.00 | 65.40 |
+| `pour_balls_into_vase` | 19.00 | 19.00 |
+| `play_Xylophone` | 2.00 | 2.00 |
+| `deposit_coin` | 9.00 | 14.00 |
+| `insert_key` | 0.00 | 13.95 |
+| `build_tower` | 25.00 | 42.10 |
+
+#### Long-Horizon
+
+| Task | Success rate (%) | Score |
+| --- | ---: | ---: |
+| `put_bottles_into_dustbin` | 68.00 | 77.80 |
+| `fill_pen_holder` | 0.00 | 4.55 |
+| `classify_objects` | 12.00 | 22.80 |
+| `play_tic_tac_toe` | 26.00 | 53.90 |
+| `fill_egg_holder` | 0.00 | 2.90 |
+| `organize_table` | 6.00 | 50.75 |
+| `make_kong` | 3.00 | 3.00 |
+| `play_stacking_toy` | 0.00 | 0.40 |
+
+#### Memory
+
+| Task | Success rate (%) | Score |
+| --- | ---: | ---: |
+| `cover_blocks` | 85.00 | 87.95 |
+| `match_and_pick_from_conveyor` | 75.00 | 75.00 |
+| `swap_blocks` | 2.00 | 2.00 |
+| `swap_T` | 0.00 | 0.00 |
+| `press_by_number` | 7.00 | 7.00 |
+| `imitate_sorting_sequence` | 1.00 | 2.20 |
+
+#### Open
+
+| Task | Success rate (%) | Score |
+| --- | ---: | ---: |
+| `align_blocks` | 0.00 | 0.00 |
+| `general_pickup` | 27.00 | 27.00 |
+| `stack_blocks_by_language` | 0.00 | 1.00 |
+| `solve_equation` | 0.00 | 0.00 |
+| `classify_objects_by_language` | 0.00 | 0.50 |
+| `pick_from_conveyor_by_image` | 0.00 | 0.00 |
+| `store_tools_in_toolbox` | 0.00 | 0.25 |
+| `pour_by_language` | 0.00 | 0.00 |
+
 ## Configuration
 
 - `ROBODOJO_ASSET_ROOT` / `asset_root`: directory containing the three model assets.
