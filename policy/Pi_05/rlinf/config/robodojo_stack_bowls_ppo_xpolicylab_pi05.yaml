@@ -1,0 +1,129 @@
+defaults:
+- env/robodojo_stack_bowls@env.train
+- env/robodojo_stack_bowls@env.eval
+- model/xpolicylab_pi05@actor.model
+- hybrid_engines/fsdp@actor.fsdp_config
+- weight_syncer/patch_syncer@weight_syncer
+- override hydra/job_logging: stdout
+- _self_
+task_name: stack_bowls
+episode_steps: 800
+hydra:
+  run:
+    dir: .
+  output_subdir: null
+  searchpath:
+  - file://${oc.env:RLINF_PATH}/examples/embodiment/config
+cluster:
+  num_nodes: 1
+  component_placement:
+    actor, env, rollout: all
+runner:
+  task_type: embodied
+  logger:
+    log_path: ${oc.env:RLINF_PATH}/../results
+    project_name: robodojo_rlinf
+    experiment_name: robodojo_${env.train.init_params.task_name}_ppo_xpolicylab_pi05
+    logger_backends:
+    - tensorboard
+  max_epochs: 1000
+  max_steps: -1
+  only_eval: false
+  val_check_interval: 10
+  save_interval: 10
+  resume_dir: null
+  ckpt_path: null
+algorithm:
+  recompute_logprobs: false
+  normalize_advantages: true
+  kl_penalty: kl
+  group_size: 1
+  reward_type: chunk_level
+  logprob_type: chunk_level
+  entropy_type: token_level
+  update_epoch: 5
+  adv_type: gae
+  loss_type: actor_critic
+  loss_agg_func: token-mean
+  kl_beta: 0.0
+  entropy_bonus: 0
+  clip_ratio_high: 0.2
+  clip_ratio_low: 0.2
+  clip_ratio_c: 3.0
+  value_clip: 0.2
+  huber_delta: 10.0
+  gamma: 0.99
+  gae_lambda: 0.95
+  filter_rewards: false
+  rewards_lower_bound: 0.1
+  rewards_upper_bound: 0.9
+env:
+  group_name: EnvGroup
+  enable_offload: false
+  eval:
+    total_num_envs: 128
+    is_eval: true
+    init_params:
+      layout_seed: 1
+  train:
+    rollout_epoch: 4
+    total_num_envs: 256
+    group_size: ${algorithm.group_size}
+rollout:
+  group_name: RolloutGroup
+  rollout_backend: huggingface
+  enable_offload: false
+  pipeline_stage_num: 1
+  model:
+    model_path: ${actor.model.model_path}
+    precision: ${actor.model.precision}
+actor:
+  group_name: ActorGroup
+  training_backend: fsdp
+  micro_batch_size: 1
+  global_batch_size: 2048
+  seed: 1234
+  enable_offload: false
+  model:
+    model_path: ${oc.env:POLICY_MODEL_PATH}
+    num_action_chunks: 50
+    action_dim: 14
+    add_value_head: true
+    xpolicylab:
+      policy_name: Pi_05
+      rl_backend: rlinf_v0_4
+      required_mode: ppo
+      train_config_name: ${oc.env:PI05_TRAIN_CONFIG,pi05_base_aloha_full_sim_arx-x5_seed_0}
+      repo_id: ${oc.env:PI05_REPO_ID,robodojo_${env.train.init_params.task_name}}
+      env_cfg_type: arx_x5
+      action_type: joint
+      rl_head:
+        num_steps: 5
+        noise_method: flow_sde
+        noise_level: 0.3
+        value_after_vlm: true
+        detach_critic_input: true
+        train_expert_only: true
+      task_name: ${env.train.init_params.task_name}
+  optim:
+    lr: 5.0e-06
+    value_lr: 0.0001
+    adam_beta1: 0.9
+    adam_beta2: 0.95
+    adam_eps: 1.0e-08
+    weight_decay: 0.01
+    clip_grad: 1.0
+    critic_warmup_steps: 0
+  fsdp_config:
+    strategy: fsdp
+    sharding_strategy: full_shard
+    use_orig_params: true
+    gradient_checkpointing: false
+    mixed_precision:
+      param_dtype: null
+      reduce_dtype: null
+      buffer_dtype: null
+reward:
+  use_reward_model: false
+critic:
+  use_critic_model: false

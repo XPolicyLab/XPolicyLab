@@ -44,6 +44,7 @@ XPolicyLab 是策略代码与评测环境之间的共享层。每个模型的依
 - [数据与 Checkpoint](#-数据与-checkpoint)
 - [接入你自己的策略](#-接入你自己的策略)
 - [编程 Agent](#-编程-agent)
+- [在 RoboDojo 和 RoboTwin 上做 RL 训练](#在-robodojo-和-robotwin-上做-rl-训练)
 - [引用](#-引用)
 - [联系方式](#-联系方式)
 
@@ -76,7 +77,7 @@ XPolicyLab 与具体 benchmark 解耦：任意 benchmark、仿真器或真机方
 
 **基础设施**
 
-- **[RLinf](https://github.com/RLinf/RLinf)** *（即将支持）*：策略开发与部署工作流的基础设施目标。
+- **RLinf 0.4.0** 在 RoboDojo 和 RoboTwin 上提供 Pi0.5 的 PPO/GRPO 配置。[Pi0.5 部署与启动](infra/RLinf/doc/GUIDE_zh.md)
 - **StarVLA**：基础设施与策略栈；见 [policy/StarVLA](policy/StarVLA/README.md)。
 
 
@@ -138,7 +139,8 @@ policy/<POLICY>/
 ├── setup_eval_env_client.sh     # environment-side client
 ├── deploy.yml                   # deployment config
 ├── deploy.py                    # deployment loop
-└── model.py                     # model adapter, served by the policy server
+├── model.py                     # model adapter, served by the policy server
+└── rl.py                        # optional RLinf fill-in: _sample_policy, _log_prob_value
 ```
 
 `model.py` 实现面向模型的 API。`deploy.py` 把环境观测桥接到模型 server 调用。最小参考见 [policy/demo_policy](policy/demo_policy/README.md)。
@@ -154,7 +156,11 @@ policy/<POLICY>/
 | `get_action()`                        | 返回一个动作 chunk（动作字典列表）。                                                |
 | `get_action_batch(env_idx_list=None)` | 返回与活跃环境索引对齐的 batch 动作 chunk。                                         |
 | `reset()`                             | 在评测 episode 之间清空模型侧状态。无参数 —— 需要首帧观测的策略应先 `reset()`，再正常 `update_obs`。 |
+| `predict_action_batch_rl(obs_list, mode="train", compute_values=True)` | 可选的 RLinf rollout。动作为 `pack_robot_state` 顺序的 `[B, H, D]`，并带 `prev_logprobs`、`prev_values`（`[B, 1]`）和 `forward_inputs`。 |
+| `compute_logprob_value(forward_inputs, compute_values=False)` | 可选。带梯度重算该样本：`logprobs`（与 `prev_logprobs` 同形）、`values`（`[B]`）、`entropy`（`[B, 1]`）。 |
 
+
+RLinf 的 PPO 与 GRPO 使用上面两个可选方法。填空样例是 [policy/demo_policy](policy/demo_policy/README.md#rl-training)：在 `rl.py` 里实现 `_sample_policy` 和 `_log_prob_value`，把可训练的 `nn.Module` 放到 `self.model` 或 `self.policy`，log-prob 真实可用后再把 `"ppo"` 或 `"grpo"` 加进 `RL_MODES`。`RL_MODES = ("eval",)` 时，评测仍使用 `get_action` / `get_action_batch`。
 
 策略 server 在 `update_obs` / `update_obs_batch` 之前已解码相机颜色，因此 `obs["vision"][<camera>]["color"]` 始终是图像数组 —— `model.py` 从不解码。
 
@@ -526,6 +532,10 @@ python scripts/transform_lerobot_v21_format.py "<bench_name>.*.*" \
 - `xpolicylab-adapter-check` —— PR 前审计（`Check policy/<POLICY_NAME>`）。
 
 不支持这些机制时要粘贴的清单在 [CONTRIBUTING.md](CONTRIBUTING.md#using-a-coding-agent)。
+
+## 在 RoboDojo 和 RoboTwin 上做 RL 训练
+
+选择 RoboTwin（`adjust_bottle`）或官方 RoboDojo（`stack_bowls`），从 XPolicyLab 启动 Pi0.5 PPO 或 GRPO。[RLinf 部署指南](infra/RLinf/doc/GUIDE_zh.md)
 
 ## 📝 引用
 
