@@ -1,0 +1,15 @@
+numpy==1.26.4
+scipy==1.15.3
+opencv-python-headless==4.11.0.86
+pillow==11.3.0
+torch==2.7.0+cu128
+torchvision==0.22.0+cu128
+ultralytics==8.4.190
+ultralytics-thop==2.2.3
+nvidia-ml-py==13.580.82
+PyYAML==6.0.2
+h5py==3.14.0
+websockets==14.2
+msgpack==1.1.1
+msgpack-numpy==0.4.8
+pydantic==2.11.10

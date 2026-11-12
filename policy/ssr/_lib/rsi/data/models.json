@@ -1,0 +1,32 @@
+{
+  "coco_maskrcnn_v2": {
+    "version": "1",
+    "file": "maskrcnn_resnet50_fpn_v2_coco-73cbd019.pth",
+    "sha256": "73cbd0190fcbe3ba339921fbce2c3a0b6bb9126c9a133c85e43a2a8e060a109e"
+  },
+  "seg_yolo": {
+    "version": "1",
+    "file": "best.pt",
+    "sha256": "c59552efdce114757655b85c4b81db5a0fa5ef058daa9cfa63a5b44a9b806d44",
+    "params": {
+      "imgsz": 1280,
+      "conf": 0.35,
+      "iou": 0.8,
+      "half": true,
+      "min_area": 20,
+      "agnostic": true,
+      "mask_nms": 0.6,
+      "e2e": false
+    }
+  },
+  "pack_car_front": {
+    "version": "1",
+    "file": "car_front.pt",
+    "sha256": "594d69198f580e8fef2955c7e3625510cb82aca186075ef88e0d9a58dbe19d74"
+  },
+  "pack_shoe_front": {
+    "version": "1",
+    "file": "shoe_front.pt",
+    "sha256": "fe93126df3f50344baa0661240141b23949933b6c64115e7ed65a192545ed6e8"
+  }
+}
