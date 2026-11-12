@@ -12,7 +12,7 @@ if [[ "${EVAL_ENV_TYPE:-sim}" == debug ]]; then
 fi
 [[ "$1" == RoboDojo && "$4" == arx_x5 && "$5" == ee ]] || { echo 'Only RoboDojo/arx_x5/ee supported' >&2; exit 2; }
 # Explicit provenance; no simulator/physics files are modified.
-# simulator_entry resolves SDK rendering automatically when HY_OBS_LAG > 0.
+# SDK rendering and current observations are the deployment defaults.
 export OMNI_KIT_ACCEPT_EULA=YES
 export EVAL_NUM="${EVAL_NUM:-native}"
 export ROBODOJO_NUM_ENVS="${ROBODOJO_NUM_ENVS:-10}"

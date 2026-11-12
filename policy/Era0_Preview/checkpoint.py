@@ -29,6 +29,12 @@ def resolve_assets(cfg):
         action_context_mode='prefix_kv', num_actions=25, action_loss_mode='flow_matching')
     for key, value in expected.items():
         if spec.get(key) != value: raise ValueError(f"Checkpoint {key}: {spec.get(key)!r} != {value!r}")
+    from .runtime.models.qwen_history_time_rope import resolve_spec, phase
+    time = resolve_spec(spec.get('qwen_history_time_rope'))
+    expected_time = dict(dim=16, max_phase=1.0, reference_history_slots=8, frame_interval=40)
+    if (time is None or any(time[k] != v for k,v in expected_time.items())
+            or phase(time) != 1.0):
+        raise ValueError('This adapter revision requires the prepared 9/1/1 assets with completed 1.0-radian time RoPE; use the earlier adapter for earlier assets')
     adapter = json.loads((model/'hy_xvla_adapter.json').read_text())
     for key,value in dict(domain_id=16,action_representation='relative_chunk_ee_RT',
                           action_normalization='zscore',action_loss_mode='flow_matching').items():

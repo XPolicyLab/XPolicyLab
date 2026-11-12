@@ -1,5 +1,7 @@
 # Era0-Preview submission checklist
 
+**Prepared local revision:** assets and deployment defaults have changed. This revision has not been uploaded; the existing public assets and the historical test evidence below refer to the previous release. Use the relative local asset directory in `checkpoint_release.json`. See [PREPARATION_CHECKS.md](PREPARATION_CHECKS.md).
+
 The [model repository](https://huggingface.co/roboterax/Era0-5B-Preview-RoboDojo) provides model weights, inference assets and exact normalization. Evaluation code is maintained in the XPolicyLab policy directory.
 
 - Contributor: **RobotEra Team**; organization: **RobotEra**.
@@ -13,7 +15,7 @@ The [model repository](https://huggingface.co/roboterax/Era0-5B-Preview-RoboDojo
 - Download: `bash download_checkpoint.sh`; pinned repository/revision and weight/norm hashes are in [checkpoint_release.json](checkpoint_release.json). The published model assets use a flat layout including `norm_stats.pkl`.
 - Preserve the selected checkpoint's `config.json`, `hy_xvla_adapter.json`, processor/tokenizer files, all safetensors, and exact normalization pickle.
 - Preserve the saved time-RoPE configuration. Do not switch action coordinates, normalization, chunk horizon, color order or prompt placement.
-- Defaults use policy-side image delay (`HY_OBS_LAG=1`) with SDK rendering, and retain local IK protection. For the audited official execution/render combination, select `--execution-profile official --render-mode sdk`, or `ERA0_EXECUTION_PROFILE=official ROBODOJO_EVAL_LEGACY_RENDER=0` on standard entries. Both profiles preserve SDK-native output/resume and video paths. The official profile executes the selected SDK files without path changes. Setting the rendering switch alone retains IK protection. Disclose compatibility settings; see [SDK_COMPATIBILITY.md](SDK_COMPATIBILITY.md).
+- Prepared defaults use current observations (`HY_OBS_LAG=0`) with SDK rendering, and retain local IK protection. For the audited official execution/render combination, select `--execution-profile official --render-mode sdk`, or `ERA0_EXECUTION_PROFILE=official ROBODOJO_EVAL_LEGACY_RENDER=0` on standard entries. Both profiles preserve SDK-native output/resume and video paths. The official profile executes the selected SDK files without path changes. Setting the rendering switch alone retains IK protection. Disclose compatibility settings; see [SDK_COMPATIBILITY.md](SDK_COMPATIBILITY.md).
 - Missing trajectories remain incomplete, including unstable `make_toast_random`; no 520-episode acceptance shortcut.
 
 Code distribution: use the XPolicyLab `feature/era0_preview` branch directly. No code archive is required.
@@ -66,9 +68,6 @@ The plain and encoded debug loops, plus focused observation-delay regression, pa
 
 Additional local checks: isolated package model import, local checkpoint processor load without downloading weights, 54-task/6,300-trial preview against existing checkpoint metadata, and official RoboDojo `eval` / native `benchmark` dry-run resolution. A separate simulator smoke test completed two independent ten-episode `press_by_number`, seed-0 runs with policy image lag 1, SDK rendering/physics and the official execution profile: Scores 90 and 80. This checks one task only and does not establish full-suite equivalence.
 
-Policy image delay is enabled by default: `HY_OBS_LAG=1` on the policy server,
-or `--obs-lag 1` in the bundled all-task driver. Set `HY_OBS_LAG=0` or
-`--obs-lag 0` to disable it while retaining SDK rendering. This preserves current state/language and requires
-SDK rendering. The smoke test above used this option.
+Policy image delay is disabled by default: `HY_OBS_LAG=0` / `--obs-lag 0`. The earlier smoke tests above used the previous release with lag 1 and do not validate the prepared assets.
 
 SDK integration: the result report comes exclusively from the installed SDK `scripts/internal/summarize_result.py`, writing `eval_result/RoboDojo/_summary.md`. The policy does not ship a result summarizer. Video names and directories are the SDK defaults. A CPU-only integration fixture with 300 result records and 900 placeholder camera filenames passed the official summary inventory check (zero mismatches); this is not a simulator score.

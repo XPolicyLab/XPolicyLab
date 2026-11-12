@@ -34,7 +34,7 @@ In the local profile, each arm's IK result is compared with its live measured jo
 
 ## Image timing
 
-The default is policy-side image lag 1 (`HY_OBS_LAG=1` / `--obs-lag 1`) with SDK rendering (`ROBODOJO_EVAL_LEGACY_RENDER=0` / `--render-mode sdk`). All cameras lag by one observation update; state and language remain current. Physics, rewards and layouts are unchanged. Explicitly setting lag to 0 keeps SDK rendering. Legacy rendering is an optional diagnostic mode requiring lag 0 and an explicit legacy switch.
+The prepared revision defaults to current observations (`HY_OBS_LAG=0` / `--obs-lag 0`) with SDK rendering (`ROBODOJO_EVAL_LEGACY_RENDER=0` / `--render-mode sdk`). Optional observation lag and legacy rendering are retained for earlier assets only. Physics, rewards and layouts are unchanged.
 
 ## Verification limits
 

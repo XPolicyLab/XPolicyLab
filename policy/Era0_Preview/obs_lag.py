@@ -7,7 +7,7 @@ import re
 def observation_lag(value=None):
     """Resolve the same nonnegative update count in server and client tools."""
     if value is None:
-        value = os.environ.get('HY_OBS_LAG', '1')
+        value = os.environ.get('HY_OBS_LAG', '0')
     if isinstance(value, bool) or not re.fullmatch(r'[0-9]+', str(value).strip()):
         raise ValueError('HY_OBS_LAG must be a nonnegative integer')
     return int(str(value).strip())

@@ -7,7 +7,7 @@ export ROBODOJO_ROOT="${ROBODOJO_ROOT:-${BENCH_ROOT}}"
 export PYTHONPATH="${ROBODOJO_ROOT}:${BENCH_ROOT}:${XPL_ROOT}${PYTHONPATH:+:${PYTHONPATH}}"
 export PYTHONNOUSERSITE=1
 # Image timing compatibility lives in the policy; SDK rendering stays unchanged.
-export HY_OBS_LAG="${HY_OBS_LAG:-1}"
+export HY_OBS_LAG="${HY_OBS_LAG:-0}"
 export ROBODOJO_EVAL_LEGACY_RENDER="${ROBODOJO_EVAL_LEGACY_RENDER:-0}"
 resolve_python() {
     local requested=$1

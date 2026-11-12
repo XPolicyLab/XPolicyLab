@@ -169,12 +169,12 @@ class Model(ModelTemplate):
         self.exc_action_size = int(cfg.get("exc_action_size", 10))
         self.exc_action_interval = int(cfg.get("exc_action_interval", 1))
         self.history_cadence = str(cfg.get("history_cadence", "chunk")).lower()
-        self.img_history_size = int(cfg.get("img_history_size", 6))
+        self.img_history_size = int(cfg.get("img_history_size", 9))
         self.img_history_size_per_view = _parse_history_per_view(
             cfg.get("img_history_size_per_view"),
             history_size=self.img_history_size,
         )
-        self.img_history_interval = int(cfg.get("img_history_interval", 20))
+        self.img_history_interval = int(cfg.get("img_history_interval", 40))
         self.inference_steps = int(cfg.get("inference_steps", 10))
         self.gripper_close_hold = GripperCloseHold(
             offset=cfg.get("gripper_close_offset", 0.0),
