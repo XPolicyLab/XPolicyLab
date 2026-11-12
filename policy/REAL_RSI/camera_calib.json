@@ -1,5 +1,5 @@
 {
- "source": "scripts/lilo_experiment/xpl_calib.py (stack_blocks, 10 random dual-arm poses); max wrist error: pos <1e-15 m, rot 0.027 deg",
+ "source": "Reconstructed from the simulator camera configuration of arx_x5 and observed end-effector poses at 10 random dual-arm poses; max wrist error: pos <1e-15 m, rot 0.027 deg",
  "cameras": {
   "cam_head": {
    "K": [

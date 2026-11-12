@@ -1,8 +1,3 @@
-"""RGB-only monocular depth used by REAL_RSI evaluation.
-
-Camera extrinsics are camera-to-world, looking along -Z with +Y up.
-Depth is distance to the image plane; scale is fitted to the table plane.
-"""
 from real_rsi_assets import model_path as _real_rsi_model_path
 import numpy as np
 import torch
@@ -10,12 +5,7 @@ import torch.nn.functional as F
 
 DA2_LARGE = _real_rsi_model_path('depth-anything__Depth-Anything-V2-Large-hf')
 
-
 class MonoPlaneDepth:
-    """RGB-only metric depth: Depth Anything V2 (relative, affine-invariant inverse depth) per camera, scaled to metres
-    by a RANSAC affine fit to the table plane. Pixels whose ray meets the plane z = table_z give exact depths; the fit
-    picks the table pixels itself (objects and the robot are outliers). Needs only RGB, K, the camera pose and the
-    table height. If a camera's fit fails (table hardly visible), its last good coefficients are reused."""
 
     def __init__(self, model_dir=DA2_LARGE, table_z=0.765, device=None, tol=0.02, iters=300):
         from transformers import AutoImageProcessor, AutoModelForDepthEstimation
@@ -59,7 +49,6 @@ class MonoPlaneDepth:
         return np.polyfit(r[best], inv_p[best], 1)
 
     def estimate(self, cams, targets=None):
-        """cams: {name: {'color', 'intrinsic_matrix', 'extrinsic_matrix'}} -> {name: HxW float32 depth (m)}."""
         out = {}
         for name in (targets or list(cams)):
             c = cams[name]
@@ -74,7 +63,7 @@ class MonoPlaneDepth:
                 coef = self._fit(raw.ravel()[idx], 1.0 / pd.ravel()[idx])
             if coef is None:
                 coef = self.last.get(name)
-            if coef is None:                       # no table in view and no earlier fit: table-plane depth
+            if coef is None:
                 out[name] = np.nan_to_num(pd, nan=3.0).astype(np.float32)
                 continue
             self.last[name] = coef

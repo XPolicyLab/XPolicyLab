@@ -1,272 +1,272 @@
 {
   "swap_T": {
-    "program": "scripts/swap_T",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/swap_T.py",
+    "action_type": "joint"
   },
   "swap_blocks": {
-    "program": "scripts/swap_blocks",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/swap_blocks.py",
+    "action_type": "joint"
   },
   "cover_blocks": {
-    "program": "scripts/cover_blocks",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/cover_blocks.py",
+    "action_type": "joint"
   },
   "align_blocks": {
-    "program": "scripts/align_blocks",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/align_blocks.py",
+    "action_type": "joint"
   },
   "arrange_largest_number": {
-    "program": "scripts/arrange_largest_number",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/arrange_largest_number.py",
+    "action_type": "joint"
   },
   "arrange_largest_number_random": {
-    "program": "scripts/arrange_largest_number_random",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/arrange_largest_number.py",
+    "action_type": "joint"
   },
   "build_tower": {
-    "program": "scripts/build_tower",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/build_tower.py",
+    "action_type": "joint"
   },
   "classify_objects": {
-    "program": "scripts/classify_objects",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/classify_objects.py",
+    "action_type": "joint"
   },
   "classify_objects_by_language": {
-    "program": "scripts/classify_objects_by_language",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/classify_objects_by_language.py",
+    "action_type": "joint"
   },
   "deposit_coin": {
-    "program": "scripts/deposit_coin",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/deposit_coin.py",
+    "action_type": "joint"
   },
   "fasten_screws": {
-    "program": "scripts/fasten_screws",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/fasten_screws.py",
+    "action_type": "joint"
   },
   "fill_egg_holder": {
-    "program": "scripts/fill_egg_holder",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/fill_egg_holder.py",
+    "action_type": "joint"
   },
   "fill_pen_holder": {
-    "program": "scripts/fill_pen_holder",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/fill_pen_holder.py",
+    "action_type": "joint"
   },
   "fold_clothes": {
-    "program": "scripts/fold_clothes",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/fold_clothes.py",
+    "action_type": "joint"
   },
   "fold_clothes_random": {
-    "program": "scripts/fold_clothes_random",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/fold_clothes.py",
+    "action_type": "joint"
   },
   "general_pickup": {
-    "program": "scripts/general_pickup",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/general_pickup.py",
+    "action_type": "joint"
   },
   "hang_mugs": {
-    "program": "scripts/hang_mugs",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/hang_mugs.py",
+    "action_type": "joint"
   },
   "hang_mugs_random": {
-    "program": "scripts/hang_mugs_random",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/hang_mugs.py",
+    "action_type": "joint"
   },
   "imitate_sorting_sequence": {
-    "program": "scripts/imitate_sorting_sequence",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/imitate_sorting_sequence.py",
+    "action_type": "joint"
   },
   "insert_key": {
-    "program": "scripts/insert_key",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "program": "pyrua_programs/insert_key",
+    "action_type": "joint",
+    "depth_provider": "none"
   },
   "insert_tubes": {
-    "program": "scripts/insert_tubes",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/insert_tubes.py",
+    "action_type": "joint"
   },
   "make_kong": {
-    "program": "scripts/make_kong",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/make_kong.py",
+    "action_type": "joint"
   },
   "make_toast": {
-    "program": "scripts/make_toast",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/make_toast.py",
+    "action_type": "joint"
   },
   "make_toast_random": {
-    "program": "scripts/make_toast",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/make_toast.py",
+    "action_type": "joint"
   },
   "match_and_pick_from_conveyor": {
-    "program": "scripts/match_and_pick_from_conveyor",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/match_and_pick_from_conveyor.py",
+    "action_type": "joint"
   },
   "organize_table": {
-    "program": "scripts/organize_table",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/organize_table.py",
+    "action_type": "joint"
   },
   "pack_objects_into_box": {
-    "program": "scripts/pack_objects_into_box",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/pack_objects_into_box.py",
+    "action_type": "joint"
   },
   "pack_objects_into_box_random": {
-    "program": "scripts/pack_objects_into_box",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/pack_objects_into_box.py",
+    "action_type": "joint"
   },
   "pick_from_conveyor_by_image": {
-    "program": "scripts/pick_from_conveyor_by_image",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/pick_from_conveyor_by_image.py",
+    "action_type": "joint"
   },
   "play_Xylophone": {
-    "program": "scripts/play_Xylophone",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/play_Xylophone.py",
+    "action_type": "joint"
   },
   "play_stacking_toy": {
-    "program": "scripts/play_stacking_toy",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/play_stacking_toy.py",
+    "action_type": "joint"
   },
   "play_tic_tac_toe": {
-    "program": "scripts/play_tic_tac_toe",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/play_tic_tac_toe.py",
+    "action_type": "joint"
   },
   "plug_in_charger": {
-    "program": "scripts/plug_in_charger",
-    "action_type": "ee",
-    "depth_provider": "none"
+    "engine": "pyrua",
+    "program": "pyrua_programs/plug_in_charger.py",
+    "action_type": "joint"
   },
   "pour_balls_into_vase": {
-    "program": "scripts/pour_balls_into_vase",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/pour_balls_into_vase.py",
+    "action_type": "joint"
   },
   "pour_by_language": {
-    "program": "scripts/pour_by_language",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/pour_by_language.py",
+    "action_type": "joint"
   },
   "pour_liquid_into_cup": {
-    "program": "scripts/pour_liquid_into_cup",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/pour_liquid_into_cup.py",
+    "action_type": "joint"
   },
   "pour_liquid_into_cup_random": {
-    "program": "scripts/pour_liquid_into_cup_random",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/pour_liquid_into_cup.py",
+    "action_type": "joint"
   },
   "press_by_number": {
-    "program": "scripts/press_by_number",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/press_by_number.py",
+    "action_type": "joint"
   },
   "push_T": {
-    "program": "scripts/push_T",
-    "action_type": "ee",
-    "depth_provider": "none"
+    "engine": "pyrua",
+    "program": "pyrua_programs/push_T.py",
+    "action_type": "joint"
   },
   "push_T_random": {
-    "program": "scripts/push_T_random",
-    "action_type": "ee",
-    "depth_provider": "none"
+    "engine": "pyrua",
+    "program": "pyrua_programs/push_T.py",
+    "action_type": "joint"
   },
   "put_bottles_into_dustbin": {
-    "program": "scripts/put_bottles_into_dustbin",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/put_bottles_into_dustbin.py",
+    "action_type": "joint"
   },
   "solve_equation": {
-    "program": "scripts/solve_equation",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/solve_equation.py",
+    "action_type": "joint"
   },
   "sort_nesting_dolls_by_size": {
-    "program": "scripts/sort_nesting_dolls_by_size",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/sort_nesting_dolls_by_size.py",
+    "action_type": "joint"
   },
   "sort_nesting_dolls_by_size_random": {
-    "program": "scripts/sort_nesting_dolls_by_size_random",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/sort_nesting_dolls_by_size.py",
+    "action_type": "joint"
   },
   "stack_blocks": {
-    "program": "scripts/stack_blocks",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/stack_blocks.py",
+    "action_type": "joint"
   },
   "stack_blocks_random": {
-    "program": "scripts/stack_blocks_random",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/stack_blocks.py",
+    "action_type": "joint"
   },
   "stack_blocks_by_language": {
-    "program": "scripts/stack_blocks_by_language",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/stack_blocks_by_language.py",
+    "action_type": "joint"
   },
   "stack_bowls": {
-    "program": "scripts/stack_bowls",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/stack_bowls.py",
+    "action_type": "joint"
   },
   "stack_bowls_random": {
-    "program": "scripts/stack_bowls_random",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/stack_bowls.py",
+    "action_type": "joint"
   },
   "store_laptop_and_headphones": {
-    "program": "scripts/store_laptop_and_headphones",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/store_laptop_and_headphones.py",
+    "action_type": "joint"
   },
   "store_laptop_and_headphones_random": {
-    "program": "scripts/store_laptop_and_headphones",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/store_laptop_and_headphones.py",
+    "action_type": "joint"
   },
   "store_tools_in_toolbox": {
-    "program": "scripts/store_tools_in_toolbox",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/store_tools_in_toolbox.py",
+    "action_type": "joint"
   },
   "sweep_blocks": {
-    "program": "scripts/sweep_blocks",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/sweep_blocks.py",
+    "action_type": "joint"
   },
   "sweep_blocks_random": {
-    "program": "scripts/sweep_blocks_random",
-    "action_type": "ee",
-    "depth_provider": "mono"
+    "engine": "pyrua",
+    "program": "pyrua_programs/sweep_blocks.py",
+    "action_type": "joint"
   }
 }

@@ -21,3 +21,10 @@ matplotlib>=3.7
 setuptools_scm>=6.2
 ninja
 wheel
+pyrualean @ git+https://github.com/DAGroup-PKU/PyRUA-Lean.git@c6861200bfb190169953d1827260ccf71320eea1
+sam3 @ git+https://github.com/RLinf/sam3.git@c1f6b1e83967c912f675d8975d437ccdc41e17d8
+httpx>=0.27
+mcp>=1.8,<2
+uvicorn
+pycocotools
+psutil

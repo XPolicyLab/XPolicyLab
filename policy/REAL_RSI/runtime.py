@@ -1,11 +1,3 @@
-"""Child process that hosts one frozen LILO policy for one episode.
-
-Run as `python runtime.py <policy.py> <task> [depth_provider] [model_dir]`. depth_provider 'mono' fills
-obs['vision'][cam]['depth'] from RGB + camera matrices (stereo.MonoPlaneDepth: Depth Anything V2 + table-plane
-calibration) before every call, so policies written for RGB-D run on RGB-only observations. The parent sends length-prefixed pickles of (op, obs) with op in
-{'reset', 'act'}; the child answers one JSON line {"ok": bool, "result"|"error": ...}. A fresh process per episode
-keeps module-level state from leaking between episodes, matching how the policies were developed and tested.
-"""
 import contextlib
 import importlib.util
 import json
@@ -16,7 +8,6 @@ import sys
 
 import numpy as np
 
-
 def from_wire(value):
     if isinstance(value, tuple) and len(value) == 4 and value[0] == '__nd__':
         return np.frombuffer(value[3], dtype=np.dtype(value[1])).reshape(value[2]).copy()
@@ -26,10 +17,9 @@ def from_wire(value):
         return type(value)(from_wire(v) for v in value)
     return value
 
-
 def main(policy_path, task, depth_provider='none', model_dir=None):
     from real_rsi_assets import model_path
-    os.environ['LILO_MODELS'] = model_path()
+    os.environ['REAL_RSI_MODEL_DIR'] = model_path()
     source, sink = sys.stdin.buffer, sys.stdout
     null = open(os.devnull, 'w')
     estimator = None
@@ -63,7 +53,6 @@ def main(policy_path, task, depth_provider='none', model_dir=None):
             line = json.dumps(dict(ok=False, error=repr(exc)))
         sink.write(line + '\n')
         sink.flush()
-
 
 if __name__ == '__main__':
     main(*sys.argv[1:5])

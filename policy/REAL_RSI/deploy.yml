@@ -17,5 +17,24 @@ hold_chunk: 50
 reset_timeout_s: 240
 act_timeout_s: 120
 policy_python: null
-# Surface runtime failures to the evaluator instead of silently producing holds.
 strict_errors: true
+pyrua:
+  robot: robodojo_xpl_rgb
+  primitives: no-vla
+  runtime: openai
+  model: offline-program
+  max_turns: 100
+  budget_s: 5400
+  images: on-demand
+  feedback: pure
+  poll_s: 20.0
+  wrap_up_s: 30.0
+  result_dir: ./pyrua_results
+  openai_options:
+    max_tokens: 8192
+    tool_choice: required
+    temperature: 1.0
+    nudges: 20
+    extra_body:
+      top_p: 0.95
+      top_k: 20

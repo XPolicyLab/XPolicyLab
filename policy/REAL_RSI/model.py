@@ -1,24 +1,3 @@
-"""XPolicyLab adapter for frozen LILO programmatic policies.
-
-A frozen policy is a directory `<ckpt_root>/scripts/<task>/policy.py` defining `Policy(task, seed)` with
-`reset(obs)` and `act(obs)`. `act` returns a macro command
-    {'targets': {'left_ee_pose': [x, y, z, qw, qx, qy, qz], 'right_ee_joint_state': [g], ...},
-     'frames': n, 'phase': str}
-or {'op': 'stop'}. This adapter expands each macro into an n-step ee-pose action chunk with the same
-smoothstep position / slerp rotation interpolation the policies were developed against.
-Checkpoints declaring action_type=joint instead emit native arm_joint_state targets, interpolated
-without inverse kinematics. Their manifest may override depth_provider for RGB-only policies.
-
-Observation contract: RoboDojo eval sends RGB + robot state only. The policies were written against
-RGB-D with per-camera `intrinsic_matrix` / `extrinsic_matrix`; the adapter reconstructs both matrices
-from public camera config and the observed ee poses (`camera_calib.json`, produced by
-scripts/lilo_experiment/xpl_calib.py in the RoboDojo workspace). `depth_provider: mono` estimates depth from
-RGB in the policy child (stereo.MonoPlaneDepth: Depth Anything V2 Large + table-plane calibration);
-`depth_provider: none` passes observations through without a depth key.
-
-After a policy stops (or raises), the adapter holds the current pose until the environment ends the
-episode, because success is only decided by the environment's own episode-end check.
-"""
 import json
 import os
 from pathlib import Path
@@ -38,17 +17,13 @@ from XPolicyLab.utils.process_data import get_robot_action_dim_info
 POLICY_DIR = Path(__file__).resolve().parent
 ARMS = ('left', 'right')
 
-
 def quat_mul(a, b):
-    """Hamilton product of [w, x, y, z] quaternions."""
     w1, x1, y1, z1 = a
     w2, x2, y2, z2 = b
     return np.array([w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2, w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2,
                      w1 * y2 - x1 * z2 + y1 * w2 + z1 * x2, w1 * z2 + x1 * y2 - y1 * x2 + z1 * w2])
 
-
 def slerp(q0, q1, t):
-    """Shortest-path geodesic interpolation of [w, x, y, z] quaternions (same path as scipy Slerp)."""
     q0, q1 = q0 / np.linalg.norm(q0), q1 / np.linalg.norm(q1)
     rel = quat_mul(q0 * [1, -1, -1, -1], q1)
     if rel[0] < 0:
@@ -59,9 +34,7 @@ def slerp(q0, q1, t):
     angle = 2 * np.arctan2(s, rel[0]) * t
     return quat_mul(q0, np.concatenate([[np.cos(angle / 2)], rel[1:] / s * np.sin(angle / 2)]))
 
-
 def pose_matrix(pose):
-    """[x, y, z, qw, qx, qy, qz] -> 4x4 world transform."""
     x, y, z, w, qx, qy, qz = np.asarray(pose, float)
     n = np.sqrt(w * w + qx * qx + qy * qy + qz * qz)
     w, qx, qy, qz = w / n, qx / n, qy / n, qz / n
@@ -72,9 +45,7 @@ def pose_matrix(pose):
     t[:3, 3] = x, y, z
     return t
 
-
 def to_wire(value):
-    """numpy-version-neutral encoding for the child (which may run a different numpy than the server)."""
     if isinstance(value, np.ndarray):
         return ('__nd__', value.dtype.str, value.shape, np.ascontiguousarray(value).tobytes())
     if isinstance(value, np.generic):
@@ -85,9 +56,7 @@ def to_wire(value):
         return type(value)(to_wire(v) for v in value)
     return value
 
-
 class FrozenPolicyProcess:
-    """One child process per episode; replies are JSON, observations go down as pickles."""
 
     def __init__(self, python, policy_path, task, reset_timeout, act_timeout, depth_provider='none', model_dir=''):
         self.reset_timeout, self.act_timeout = reset_timeout, act_timeout
@@ -126,14 +95,13 @@ class FrozenPolicyProcess:
                 self.proc.kill()
                 self.proc.wait(timeout=3)
 
-
 class Model(ModelTemplate):
     def __init__(self, model_cfg):
         self.model_cfg = model_cfg
         if model_cfg['env_cfg_type'] != 'arx_x5':
             raise ValueError('REAL_RSI camera calibration supports env_cfg_type=arx_x5 only')
         self.task_name = str(model_cfg['task_name'])
-        self.action_type = model_cfg.get('action_type') or 'ee'
+        self.action_type = model_cfg.get('action_type') or 'joint'
         if self.action_type not in ('ee', 'joint'):
             raise ValueError('REAL_RSI supports action_type=ee or joint')
         dims = get_robot_action_dim_info(model_cfg['env_cfg_type'])
@@ -150,20 +118,25 @@ class Model(ModelTemplate):
         if self.task_name not in routes:
             raise ValueError(f'Unsupported REAL_RSI task: {self.task_name}')
         route = routes[self.task_name]
+        required_action = route['action_type']
+        if self.action_type != required_action:
+            raise ValueError(f'Checkpoint requires action_type={required_action}, got {self.action_type}')
+        self.engine = None
+        if route.get('engine') == 'pyrua':
+            from .pyrua_engine import PyruaEngine
+            self.engine = PyruaEngine(model_cfg, self.task_name, root / route['program'])
+            return
         task_dir = root / route['program']
         self.policy_path = task_dir / 'policy.py'
         if not self.policy_path.is_file():
             raise FileNotFoundError(f'no frozen policy for {self.task_name} under {root}')
         manifest_path = task_dir / 'manifest.json'
         manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else {}
-        required_action = route['action_type']
-        if self.action_type != required_action:
-            raise ValueError(f'Checkpoint requires action_type={required_action}, got {self.action_type}')
         self.calib = json.loads((POLICY_DIR / model_cfg.get('camera_calib', 'camera_calib.json')).read_text())
         self.depth_provider = route['depth_provider']
         if self.depth_provider not in ('none', 'mono'):
             raise ValueError(f'unknown depth_provider {self.depth_provider!r}')
-        self.mono_model_dir = model_cfg.get('mono_model_dir') or ''   # '' -> stereo.DA2_LARGE
+        self.mono_model_dir = model_cfg.get('mono_model_dir') or ''
         self.hold_chunk = int(model_cfg.get('hold_chunk', 50))
         self.reset_timeout = float(model_cfg.get('reset_timeout_s', 240))
         self.act_timeout = float(model_cfg.get('act_timeout_s', 120))
@@ -172,7 +145,6 @@ class Model(ModelTemplate):
         self.process = None
         self.reset()
 
-    # observation -------------------------------------------------------------------------------------------
     def _augment(self, obs):
         state = obs['state']
         vision = {}
@@ -189,6 +161,8 @@ class Model(ModelTemplate):
         return dict(obs, vision=vision)
 
     def update_obs(self, obs):
+        if self.engine is not None:
+            return self.engine.update_obs(obs)
         self.obs = self._augment(obs)
         if self.started or self.failed:
             return
@@ -203,7 +177,6 @@ class Model(ModelTemplate):
     def update_obs_batch(self, obs_list):
         raise NotImplementedError('REAL_RSI runs with eval_batch: false')
 
-    # action ------------------------------------------------------------------------------------------------
     def _current(self):
         cur = {k: np.asarray(self.obs['state'][k], float) for k in self.action_shapes if k not in self.grips}
         cur.update({k: np.asarray(v, float) for k, v in self.grips.items()})
@@ -224,6 +197,8 @@ class Model(ModelTemplate):
             raise RuntimeError(f'REAL_RSI policy {self.task_name} failed: {exc}') from exc
 
     def get_action(self):
+        if self.engine is not None:
+            return self.engine.get_action()
         if self.stopped or self.failed:
             return self._hold()
         try:
@@ -265,7 +240,14 @@ class Model(ModelTemplate):
     def get_action_batch(self, env_idx_list=None):
         raise NotImplementedError('REAL_RSI runs with eval_batch: false')
 
+    def on_trial_end(self, result=None):
+        if self.engine is not None:
+            return self.engine.on_trial_end(result)
+        return True
+
     def reset(self):
+        if self.engine is not None:
+            return self.engine.reset()
         if self.process is not None:
             self.process.close()
         self.process = None

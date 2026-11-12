@@ -1,11 +1,9 @@
-"""Fetch pinned public vision weights; verify every file against the evaluated copy."""
 import argparse
 import hashlib
 import json
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-
 
 def verify(path, expected):
     if not path.is_file() or path.stat().st_size != expected['size']:
@@ -15,7 +13,6 @@ def verify(path, expected):
         for data in iter(lambda: stream.read(1024 * 1024), b''):
             digest.update(data)
     return digest.hexdigest() == expected['sha256']
-
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
@@ -41,7 +38,6 @@ def main():
     if errors:
         raise SystemExit('Missing or mismatched files:\n' + '\n'.join(errors))
     print(f'All {len(lock)} model snapshots verified: {root}')
-
 
 if __name__ == '__main__':
     main()
