@@ -19,13 +19,11 @@ bash install.sh
 
 ## Checkpoint Setup
 
-From the XPolicyLab root, run the following with Git LFS installed and access to the checkpoint repository:
+From the root of the checkout containing this adapter, install Git LFS and fetch the four weights:
 
 ```bash
-GIT_LFS_SKIP_SMUDGE=1 git clone https://github.com/robotssr/robodojo.git ssr-checkpoint-source
-git -C ssr-checkpoint-source checkout 46a768b1311ee59c9143cdfff17d582db5894553
-git -C ssr-checkpoint-source lfs pull --include='policy/rsi/checkpoints/**'
-cp -R ssr-checkpoint-source/policy/rsi/checkpoints policy/ssr/
+git lfs install --local
+git lfs pull --include='policy/ssr/checkpoints/**'
 ```
 
 The checkpoint label stays `rsi` for compatibility with the existing checkpoint layout.
