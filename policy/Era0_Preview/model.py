@@ -128,7 +128,6 @@ def _parse_history_per_view(value: Any, *, history_size: int, num_views: int = 3
 from XPolicyLab.model_template import ModelTemplate
 from XPolicyLab.utils.process_data import get_robot_action_dim_info
 from .checkpoint import resolve_assets
-from .obs_lag import ImageObservationLag, observation_lag, legacy_render_setting
 
 
 class Model(ModelTemplate):
@@ -136,10 +135,6 @@ class Model(ModelTemplate):
 
     def __init__(self, cfg: dict[str, Any]):
         cfg = dict(cfg)
-        self.obs_lag = observation_lag()
-        legacy_render_setting(self.obs_lag)
-        self._image_lag = ImageObservationLag(self.obs_lag)
-        print(f"[obs_delay] image lag={self.obs_lag} observation updates; state/language=current", flush=True)
         if cfg.get("action_type", "ee") != "ee" or cfg.get("env_cfg_type", "arx_x5") != "arx_x5":
             raise ValueError("This checkpoint supports RoboDojo arx_x5 with action_type=ee only")
         dims = get_robot_action_dim_info(cfg.get("env_cfg_type", "arx_x5"))
@@ -288,7 +283,6 @@ class Model(ModelTemplate):
     def reset(self):
         self.policy.reset()
         self.gripper_close_hold.reset()
-        self._image_lag.reset()
         self._obs_by_env.clear()
         self._top_by_env.clear()
         self._left_by_env.clear()
@@ -307,7 +301,7 @@ class Model(ModelTemplate):
             raise ValueError("update_obs_batch requires an observation list")
         self._latest_env_idx_list = [int(obs.get("env_idx", i)) for i, obs in enumerate(obs_list)]
         for env_idx, obs in zip(self._latest_env_idx_list, obs_list):
-            batch = self._image_lag.apply(env_idx, encode_obs(obs))
+            batch = encode_obs(obs)
             self._obs_by_env[env_idx] = batch
             if self.use_video_encoder and self.history_cadence == "step":
                 self._append_history_frames(env_idx, batch)

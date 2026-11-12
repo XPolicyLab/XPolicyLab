@@ -6,9 +6,7 @@ BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
 export ROBODOJO_ROOT="${ROBODOJO_ROOT:-${BENCH_ROOT}}"
 export PYTHONPATH="${ROBODOJO_ROOT}:${BENCH_ROOT}:${XPL_ROOT}${PYTHONPATH:+:${PYTHONPATH}}"
 export PYTHONNOUSERSITE=1
-# Image timing compatibility lives in the policy; SDK rendering stays unchanged.
-export HY_OBS_LAG="${HY_OBS_LAG:-0}"
-export ROBODOJO_EVAL_LEGACY_RENDER="${ROBODOJO_EVAL_LEGACY_RENDER:-0}"
+# Camera observations and rendering use the SDK directly.
 resolve_python() {
     local requested=$1
     if [[ -x "${requested}" && ! -d "${requested}" ]]; then

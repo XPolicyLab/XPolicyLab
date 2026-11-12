@@ -10,12 +10,12 @@ Verified on 2026-11-04 using the released model assets and the standard XPolicyL
 | Final launcher message | `[MAIN] eval finished` in both runs |
 | Tracebacks | None in either successful run |
 
-## Reproduce
+## Current debug command
 
-From `policy/Era0_Preview`, after installing the policy environment and downloading the model:
+From `policy/Era0_Preview`, after installing the policy environment and selecting matching prepared model assets. This checks the current adapter; it does not reproduce the earlier observation-delay experiment:
 
 ```bash
-EVAL_ENV_TYPE=debug DEBUG_OBS_ENCODED=0 HY_OBS_LAG=1 \
+EVAL_ENV_TYPE=debug DEBUG_OBS_ENCODED=0 \
 ERA0_EXECUTION_PROFILE=official \
   bash eval.sh RoboDojo stack_bowls era0-preview arx_x5 ee 0 0 0 .venv .venv
 ```
@@ -32,7 +32,7 @@ Both successful logs end with:
 [MAIN] eval finished
 ```
 
-## Observation-delay regression
+## Historical observation-delay regression (removed functionality)
 
 A separate CPU check exercised the real `Model.update_obs_batch` and `Model.reset` methods, the shared RGB decoder and the image-delay queue. Model construction and inference were omitted in this focused check; the GPU closed loops above loaded the actual weights. Distinct image values were used because the standard debug client's all-black images cannot reveal a temporal offset.
 
@@ -45,7 +45,7 @@ Both plain and encoded input cases passed:
 - Reset clears delayed images and stored observations.
 - Lag 0 uses current images; combining image delay with legacy render delay is rejected.
 
-These checks verify transport and adapter behavior, not simulation success rates.
+These historical checks verify the earlier transport and adapter behavior, not simulation success rates. Image-delay queues and camera-render overrides have since been removed.
 
 ## Clean installation verification
 

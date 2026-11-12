@@ -46,9 +46,6 @@ def fingerprint(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-from XPolicyLab.policy.Era0_Preview.obs_lag import observation_lag
-
-
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--checkpoint', required=True, help='Portable bundle root, model directory, or checkpoint name')
@@ -61,9 +58,6 @@ def main():
     parser.add_argument('--num-envs', type=int, default=10)
     parser.add_argument('--execution-profile', choices=['local','official'], default='local',
                         help='local: SDK execution with IK guard; official: unmodified SDK execution')
-    parser.add_argument('--render-mode', choices=['legacy', 'sdk'], default=None)
-    parser.add_argument('--obs-lag', type=observation_lag, default=observation_lag(),
-                        help='Image-only delay in observation updates; default HY_OBS_LAG or 0')
     parser.add_argument('--seeds', default='0,1,2', help='Comma-separated subset of 0,1,2; default: full evaluation')
     parser.add_argument('--eval-num', default='native', help='native or a positive diagnostic episode limit per task')
     parser.add_argument('--skip-summary', action='store_true',
@@ -80,9 +74,6 @@ def main():
         if limit is not None and limit <= 0: raise ValueError
     except ValueError:
         parser.error('--seeds must be a unique subset of 0,1,2; --eval-num must be native or positive')
-    args.render_mode = args.render_mode or 'sdk'
-    if args.obs_lag and args.render_mode == 'legacy':
-        parser.error('--obs-lag > 0 requires --render-mode sdk')
     args.output = args.output.expanduser().resolve()
     args.robodojo_root = args.robodojo_root.expanduser().resolve()
     assets = resolve_assets(dict(ckpt_name=args.checkpoint))
@@ -114,8 +105,8 @@ def main():
 
     plan = dict(model_name='Era0-Preview', policy=POLICY.name, checkpoint=str(assets['model']), seeds=seeds,
         eval_num=args.eval_num, task_counts=counts, expected_episodes=len(seeds)*sum(counts.values()),
-        full_suite=set(tasks)==set(all_tasks) and set(seeds)=={0,1,2} and limit is None, sdk_default_tasks=all_tasks, task_inventory_sha256=fingerprint(args.robodojo_root/'scripts/internal/task_inventory.py'), num_envs=args.num_envs, render_mode=args.render_mode,
-        policy_image_lag_updates=args.obs_lag, physics='sdk_unchanged', execution=execution, norm_sha256=fingerprint(assets['norm']),
+        full_suite=set(tasks)==set(all_tasks) and set(seeds)=={0,1,2} and limit is None, sdk_default_tasks=all_tasks, task_inventory_sha256=fingerprint(args.robodojo_root/'scripts/internal/task_inventory.py'), num_envs=args.num_envs, render_mode='sdk',
+        policy_image_lag_updates=0, physics='sdk_unchanged', execution=execution, norm_sha256=fingerprint(assets['norm']),
         config_sha256=fingerprint(assets['model']/'config.json'),
         sdk_revision=revision(args.robodojo_root), xpolicylab_revision=revision(POLICY.parents[1]),
         task_count_config_sha256=fingerprint(args.robodojo_root/'task/RoboDojo/config/_task.yml'),
@@ -134,8 +125,7 @@ def main():
     run_id = time.strftime('%Y-%m-%d_%H-%M-%S')
     base_env = dict(os.environ, ROBODOJO_ROOT=str(args.robodojo_root),
         ERA0_CHECKPOINT_PATH=str(assets['model']), ROBODOJO_RUN_ID=run_id,
-        ROBODOJO_NUM_ENVS=str(args.num_envs), ROBODOJO_EVAL_LEGACY_RENDER=str(int(args.render_mode=='legacy')),
-        HY_OBS_LAG=str(args.obs_lag), ERA0_EXECUTION_PROFILE=args.execution_profile, EVAL_NUM=args.eval_num, PYTHONNOUSERSITE='1', OMP_NUM_THREADS='4', MKL_NUM_THREADS='4', WANDB_MODE='disabled')
+        ROBODOJO_NUM_ENVS=str(args.num_envs), ERA0_EXECUTION_PROFILE=args.execution_profile, EVAL_NUM=args.eval_num, PYTHONNOUSERSITE='1', OMP_NUM_THREADS='4', MKL_NUM_THREADS='4', WANDB_MODE='disabled')
     base_env.pop('ROBODOJO_EVAL_OUTPUT_DIR', None)
     base_env.pop('ROBODOJO_EVAL_ROOT', None)
     # A caller's local debug/subsample settings must not reduce the full benchmark.
