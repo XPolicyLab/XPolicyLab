@@ -12,8 +12,15 @@ Installs XPolicyLab in editable mode so the policy server can import `XPolicyLab
 
 ```bash
 cd XPolicyLab/policy/demo_policy
-bash install.sh
 conda activate <policy_env>  # e.g. demo-policy
+bash install.sh
+```
+
+`bash install.sh` does not install the RLinf runtime. After the eval install, activate that env and run the runtime script yourself.
+
+```bash
+conda activate <policy_env>
+bash ../../infra/RLinf/scripts/install_rl_runtime.sh
 ```
 
 ## Data Processing
@@ -52,6 +59,20 @@ EVAL_ENV_TYPE=debug bash eval.sh RoboDojo stack_bowls demo arx_x5 joint 0 0 0 <p
 ```
 
 `EVAL_ENV_TYPE=debug` runs the offline wiring check (no simulator); leave it unset or set `EVAL_ENV_TYPE=sim` for RoboDojo simulation. For split-machine deployment via `setup_eval_policy_server.sh` / `setup_eval_env_client.sh`, follow the [Deployment Flow](../../README.md#-deployment-flow).
+
+## RL training
+
+`rl.py` is the RLinf fill-in. `RL_MODES` is `("eval",)`, so a run with `required_mode: eval` keeps using `get_action` / `get_action_batch`.
+
+To train with PPO or GRPO:
+
+1. Implement `_sample_policy` and `_log_prob_value` in `rl.py`. `sample_actions_rl` and `get_log_prob_value` already return the shapes RLinf expects. Log-probs have to come from the policy sample.
+2. Assign the trainable `nn.Module` to `self.model` or `self.policy` in `Model.__init__`.
+3. Add `"ppo"` and/or `"grpo"` to `Model.RL_MODES`.
+4. Add a Hydra training config under `policy/<policy_name>/rlinf/config/` and set `actor.model.xpolicylab.required_mode` to the mode you enabled. Pi0.5 provides PPO examples for [RoboDojo `stack_bowls`](../Pi_05/rlinf/config/robodojo_stack_bowls_ppo_xpolicylab_pi05.yaml) and [RoboTwin `adjust_bottle`](../Pi_05/rlinf/config/robotwin_adjust_bottle_ppo_xpolicylab_pi05.yaml). For custom model registration, see the [Pi0.5 extension](../Pi_05/rlinf/extension.py).
+5. Install the runtime with `bash ../../infra/RLinf/scripts/install_rl_runtime.sh`, then follow [RL training on RoboDojo and RoboTwin](../../README.md#rl-training-on-robodojo-and-robotwin) to select your simulator and launch your config.
+
+`predict_action_batch_rl` returns actions `[B, H, D]` in `pack_robot_state` order, plus `prev_logprobs`, `prev_values` (`[B, 1]`), and `forward_inputs`. `compute_logprob_value` returns `logprobs` (same shape as `prev_logprobs`), `values` (`[B]`), and `entropy` (`[B, 1]`).
 
 ## Notes
 

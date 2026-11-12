@@ -1,0 +1,26 @@
+# Optional OpenPI/LeRobot data integration tests; install requirements-cpu-test.txt first.
+# Install lerobot==0.4.4 separately with --no-deps: its optional viewer depends
+# on NumPy 2, while this OpenPI checkout requires NumPy <2. No viewer is used.
+jax==0.5.3
+flax==0.10.2
+orbax-checkpoint==0.11.13
+optax==0.2.4
+chex==0.1.89
+equinox==0.11.12
+augmax==0.3.4
+jaxtyping==0.2.36
+beartype==0.19.0
+numpydantic==1.8.1
+sentencepiece==0.2.2
+tyro==1.0.16
+etils[epath]==1.14.0
+ml_collections==1.0.0
+dm-tree==0.1.10
+tqdm-loggable==0.4.1
+datasets==4.1.1
+pyarrow==21.0.0
+pandas==2.3.3
+fsspec[gcs]==2025.9.0
+deepdiff==8.6.2
+draccus==0.10.0
+jsonlines==4.0.0

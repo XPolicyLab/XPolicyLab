@@ -4,6 +4,10 @@ from XPolicyLab.utils.process_data import get_robot_action_dim_info, get_batch_s
 
 
 class Model(ModelTemplate):
+    # Add "ppo" and/or "grpo" after _sample_policy in rl.py returns real log-probs.
+    # Put the trainable nn.Module on self.model or self.policy.
+    RL_MODES = ("eval",)
+
     def __init__(self, model_cfg):
         # Store the configuration
         self.model_cfg = model_cfg
@@ -96,3 +100,27 @@ class Model(ModelTemplate):
         # Reset model state here if it has internal state, such as an RNN hidden state
         print("[Model] Model successfully reset")
         pass
+
+    def predict_action_batch_rl(self, obs_list, mode="train", compute_values=True, **kwargs):
+        # Fill _sample_policy in rl.py. sample_actions_rl already returns this shape.
+        # mode "train" samples and records log-probs; mode "eval" is deterministic.
+        # compute_values is for PPO. Add "ppo" or "grpo" to RL_MODES when the
+        # log-probs are real; until then RLinf eval keeps using get_action_batch.
+        from .rl import sample_actions_rl
+
+        outputs = sample_actions_rl(
+            self, obs_list, mode=mode, compute_values=compute_values
+        )
+        return outputs["actions"], {
+            "prev_logprobs": outputs["prev_logprobs"],
+            "prev_values": outputs["prev_values"],
+            "forward_inputs": outputs["forward_inputs"],
+        }
+
+    def compute_logprob_value(self, forward_inputs, compute_values=False, **kwargs):
+        # Recompute the rollout sample with gradients. Fill _log_prob_value in rl.py.
+        from .rl import get_log_prob_value
+
+        return get_log_prob_value(
+            self, forward_inputs, compute_values=compute_values
+        )

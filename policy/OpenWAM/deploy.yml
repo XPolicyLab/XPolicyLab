@@ -38,3 +38,6 @@ default_instruction: follow the instruction
 # true skips checkpoint loading and returns hold-position chunks (protocol
 # debugging only; never valid for a real evaluation).
 allow_dummy_policy: false
+
+# Opt-in RoboTwin branch; RoboDojo serving remains the default.
+openwam_benchmark: robodojo
