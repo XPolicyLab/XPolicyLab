@@ -1,0 +1,53 @@
+{
+  "official_revision": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
+  "host_files": {
+    "src/eval_client/main.py": [
+      "ca6ba652b6f123506370f1907b1d88060d83f56c9e91ce6e6930f63d9f2b71a8"
+    ],
+    "src/eval_client/eval_env.py": [
+      "3ae75304d8a840ede2589441f987824f50b2a89cc2ef37f4d43ce0a8dbc4fd88"
+    ],
+    "utils/pipeline_utils.py": [
+      "d5d8da29e6ca84ab04323a2f79130f930572785b4399634e06a42834ed4087ae"
+    ],
+    "src/eval_client/ik_guard.py": [
+      null,
+      "f3e499e71b21d8e9281f1ac2b2ddcc152e7a2df1af4cb3bcc882c8a167a3bc46"
+    ]
+  },
+  "profiles": {
+    "local": {
+      "src/eval_client/main.py": {
+        "file": "sdk_sources/local/src/eval_client/main.py",
+        "sha256": "ca6ba652b6f123506370f1907b1d88060d83f56c9e91ce6e6930f63d9f2b71a8"
+      },
+      "src/eval_client/eval_env.py": {
+        "file": "sdk_sources/local/src/eval_client/eval_env.py",
+        "sha256": "08a49bafda13dc186993c36950fc1f81decfaf3837ab8395872b72e973687d0c"
+      },
+      "utils/pipeline_utils.py": {
+        "file": "sdk_sources/local/utils/pipeline_utils.py",
+        "sha256": "d5d8da29e6ca84ab04323a2f79130f930572785b4399634e06a42834ed4087ae"
+      },
+      "src/eval_client/ik_guard.py": {
+        "file": "sdk_sources/local/src/eval_client/ik_guard.py",
+        "sha256": "f3e499e71b21d8e9281f1ac2b2ddcc152e7a2df1af4cb3bcc882c8a167a3bc46"
+      }
+    },
+    "official": {
+      "src/eval_client/main.py": {
+        "file": "sdk_sources/official/src/eval_client/main.py",
+        "sha256": "ca6ba652b6f123506370f1907b1d88060d83f56c9e91ce6e6930f63d9f2b71a8"
+      },
+      "src/eval_client/eval_env.py": {
+        "file": "sdk_sources/official/src/eval_client/eval_env.py",
+        "sha256": "3ae75304d8a840ede2589441f987824f50b2a89cc2ef37f4d43ce0a8dbc4fd88"
+      },
+      "utils/pipeline_utils.py": {
+        "file": "sdk_sources/official/utils/pipeline_utils.py",
+        "sha256": "d5d8da29e6ca84ab04323a2f79130f930572785b4399634e06a42834ed4087ae"
+      }
+    }
+  },
+  "local_profile": "Audited SDK with IK protection only"
+}

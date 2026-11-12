@@ -1,0 +1,92 @@
+--- a/src/eval_client/eval_env.py
++++ b/src/eval_client/eval_env.py
+@@ -14,6 +14,7 @@
+ from env.global_configs import BENCHMARK
+ from env.observation_manager.obs_manager import ObsManager
+ from env.seed_manager.seed_manager import SeedManager
++from src.eval_client.ik_guard import IKGuard
+ from utils.cluttered_generator import UnStableError
+ from utils.pipeline_utils import get_robot_action_dim_info
+ from utils.save_file import VideoStreamWriter, format_video_saved_message, save_json
+@@ -53,6 +54,8 @@
+         def __init__(self, config, app, resume_state=None, **kwargs):
+             super().__init__(config, app, **kwargs)
+             self.eval_cfg = config.eval_cfg
++            self.ik_guard = IKGuard(self.eval_cfg.get("ik_max_joint_delta_rad", 0.5))
++            self.ik_rejections = [{} for _ in range(self.num_envs)]
+             self.config_name = self.eval_cfg.get("config_name", None)
+             self.task_name = self.eval_cfg.get("task_name", None)
+             self.eval_batch = self.eval_cfg.get("eval_batch", False)
+@@ -92,6 +95,20 @@
+                 if resumed_save_dir:
+                     self.save_dir = resumed_save_dir
+ 
++            save_json(
++                {
++                    "enabled": True,
++                    "max_joint_delta_rad": self.ik_guard.max_joint_delta_rad,
++                    "reference": "measured_joint_position_before_interpolation",
++                    "rejection_action": "hold_measured_arm_position",
++                },
++                os.path.join(self.save_dir, "ik_guard_config.json"),
++            )
++            logger.warning(
++                "[IKGuard] enabled: max per-joint delta=%g rad; rejected IK holds measured arm position",
++                self.ik_guard.max_joint_delta_rad,
++            )
++
+             # Temp dir for in-progress streaming videos. Orphans left behind by
+             # a hard kill (SIGKILL/crash) can't be cleaned via the in-memory
+             # writer dict, so sweep them from disk on startup: any *.tmp.mp4
+@@ -113,6 +130,7 @@
+ 
+             self.success = [True] * self.num_envs
+             self.end_flag = [False] * self.num_envs
++            self.ik_rejections = [{} for _ in range(self.num_envs)]
+             self.take_action_cnt = [0] * self.num_envs
+             # Per-env streaming video writers: {env_idx: {camera_key: writer}}.
+             # Replaces the old full-episode frame cache; only vision frames are
+@@ -217,6 +235,7 @@
+ 
+             self.success = [True] * self.num_envs
+             self.end_flag = [False] * self.num_envs
++            self.ik_rejections = [{} for _ in range(self.num_envs)]
+             self.take_action_cnt = [0] * self.num_envs
+             # Discard any writers left open by a previous (e.g. crashed or
+             # unstable) batch before starting a fresh one.
+@@ -417,10 +436,23 @@
+                             env_idx=env_idx,
+                             robot=robot,
+                         )
+-                        if ik_result["status"] == "Success":
+-                            control_info[obs_name] = {
+-                                "position": ik_result["joint_value"],
+-                            }
++                        current_position = self.robot_manager.get_joint(robot, env_idx_list=[env_idx])[env_idx]
++                        try:
++                            safe_position, rejection = self.ik_guard.filter_result(current_position, ik_result)
++                        except ValueError as exc:
++                            # There is no valid measured position to hold. Do
++                            # not push any part of this batch to the controller.
++                            raise UnStableError(f"[IKGuard] env={env_idx} arm={robot.arm_name}: {exc}") from exc
++                        control_info[obs_name] = {"position": safe_position.tolist()}
++                        if rejection is not None:
++                            counts = self.ik_rejections[env_idx]
++                            counts[robot.arm_name] = counts.get(robot.arm_name, 0) + 1
++                            count = counts[robot.arm_name]
++                            if count <= 5 or count % 100 == 0:
++                                logger.warning(
++                                    "[IKGuard] rejected env=%s arm=%s step=%s count=%s: %s; holding measured joints",
++                                    env_idx, robot.arm_name, self.take_action_cnt[env_idx], count, rejection,
++                                )
+ 
+                         key_name = self.robot_manager.process_name(robot.gripper_name)
+                         if robot.ee_type == "gripper":
+@@ -814,6 +846,7 @@
+                     "layout_id": int(self.env_seeds[env_idx]),
+                     "success": bool(self.success[env_idx]),
+                     "score": episode_score,
++                    "ik_rejections": dict(self.ik_rejections[env_idx]),
+                 }
+                 video_path = os.path.join(self.save_dir, f"episode_{index:07d}.mp4")
+                 self.save_video(env_idx, video_path, tag)
