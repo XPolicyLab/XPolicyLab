@@ -1,6 +1,6 @@
 # Evaluation package checks
 
-Matching model assets are prepared locally and have not been published. No model files are included in Git.
+Matching model assets are published separately with a pinned revision and file checksums. No model files are included in Git.
 
 - PASS: weight and normalization file integrity; independent asset copies.
 - PASS: offline model configuration and processor loading; compatible tensor structure.

@@ -2,12 +2,13 @@
   "model_name": "Era0-Preview",
   "repo_id": "roboterax/Era0-5B-Preview-RoboDojo",
   "url": "https://huggingface.co/roboterax/Era0-5B-Preview-RoboDojo",
-  "revision": "main",
-  "revision_url": "https://huggingface.co/roboterax/Era0-5B-Preview-RoboDojo/tree/main",
+  "revision": "2428cb95960c76978d619c904af95fc85bc423f5",
+  "revision_url": "https://huggingface.co/roboterax/Era0-5B-Preview-RoboDojo/tree/2428cb95960c76978d619c904af95fc85bc423f5",
   "layout": "flat",
   "norm_filename": "norm_stats.pkl",
   "norm_sha256": "f0d1a21fc63e778ef5d75799073a719470b507f96f3822a905b4195ed755b285",
   "weights_filename": "model.safetensors",
   "weights_size_bytes": 11885672542,
-  "weights_sha256": "9eb231ef6303395d22c39d8e57ba107c99e4f76fb5bfd1ae187ce3cbbc9b1383"
+  "weights_sha256": "9eb231ef6303395d22c39d8e57ba107c99e4f76fb5bfd1ae187ce3cbbc9b1383",
+  "archive_tag": "previous-release-2428cb95"
 }

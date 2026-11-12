@@ -11,21 +11,22 @@ Install [RoboDojo](https://robodojo-benchmark.com/doc/usage/installation/) and p
 ```bash
 cd RoboDojo/XPolicyLab/policy/Era0_Preview
 bash install.sh
+bash download_checkpoint.sh
 ```
 
 ## Model assets
 
 Model repository: [roboterax/Era0-5B-Preview-RoboDojo](https://huggingface.co/roboterax/Era0-5B-Preview-RoboDojo).
 
-**The matching assets for this revision are prepared locally; publication is pending.** The existing public assets require their earlier adapter. Default downloading is disabled until the matching assets are published.
+`bash download_checkpoint.sh` downloads the matching model assets to `checkpoints/era0-preview/`. The exact model revision and file checksums are pinned in `checkpoint_release.json`.
 
 Keep `model.safetensors`, `config.json`, `hy_xvla_adapter.json`, processor/tokenizer files and `norm_stats.pkl` together. Set the directory before evaluation:
 
 ```bash
-export ERA0_CHECKPOINT_PATH=/path/to/matching/model
+export ERA0_CHECKPOINT_PATH="$(pwd)/checkpoints/era0-preview"
 ```
 
-The local prepared directory and file checksums are recorded in `checkpoint_release.json`. Observations use the standard XPolicyLab schema: three RGB camera views (`cam_head`, `cam_left_wrist`, `cam_right_wrist`), a language instruction and robot state. Preserve the supplied configuration and normalization file.
+Observations use the standard XPolicyLab schema: three RGB camera views (`cam_head`, `cam_left_wrist`, `cam_right_wrist`), a language instruction and robot state. Preserve the supplied configuration and normalization file.
 
 ## Evaluation
 

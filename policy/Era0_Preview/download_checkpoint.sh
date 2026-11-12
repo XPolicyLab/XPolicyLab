@@ -19,8 +19,6 @@ if '--help' in args or '-h' in args:
 if len(args) > 3:
     raise SystemExit('Expected [DESTINATION] or HF_REPO_ID DESTINATION [REVISION]')
 release = json.loads((policy/'checkpoint_release.json').read_text())
-if release.get('release_state') == 'local_prepared' and len(args) < 2:
-    raise SystemExit('This revision is prepared locally and is not published. Use the local directory from checkpoint_release.json. Explicit HF_REPO_ID DESTINATION [REVISION] is required for remote assets; the earlier public model requires its earlier adapter defaults.')
 repo = args[0] if len(args) >= 2 else release['repo_id']
 destination = Path(args[1] if len(args) >= 2 else args[0] if args else policy/'checkpoints/era0-preview').expanduser().resolve()
 revision = args[2] if len(args) == 3 else release['revision'] if repo == release['repo_id'] else None
@@ -30,7 +28,7 @@ if dry_run:
 from huggingface_hub import snapshot_download
 snapshot_download(repo_id=repo, local_dir=destination, revision=revision,
                   ignore_patterns=['*.tar.gz', '*.tgz', '*.zip'])
-if release.get('release_state') != 'local_prepared' and repo == release['repo_id'] and revision == release['revision']:
+if repo == release['repo_id'] and revision == release['revision']:
     norm = destination/release['norm_filename']
     if hashlib.sha256(norm.read_bytes()).hexdigest() != release['norm_sha256']:
         raise RuntimeError('Published normalization SHA256 mismatch')

@@ -7,7 +7,7 @@
 - Model display name: **Era0-Preview**; policy directory: **Era0_Preview**.
 - Supported environment/action: **RoboDojo / arx_x5 / ee**.
 - Code: inference runtime and evaluation adapter included in this policy directory.
-- Assets: [model repository](https://huggingface.co/roboterax/Era0-5B-Preview-RoboDojo). Matching assets for the current adapter are prepared locally and not yet published; the existing public assets belong to an earlier revision.
+- Assets: [model repository](https://huggingface.co/roboterax/Era0-5B-Preview-RoboDojo). Matching inference assets are published; download the pinned revision with `bash download_checkpoint.sh`.
 
 ## Evaluation evidence
 
@@ -25,4 +25,4 @@ The intended evaluation uses all SDK default tasks, seeds 0/1/2 and native episo
 
 Installation and launch instructions are in [README.md](README.md). Current validation is recorded in [PREPARATION_CHECKS.md](PREPARATION_CHECKS.md); earlier-release transport and simulator checks remain explicitly labelled historical in their respective reports.
 
-Before publishing updated submission assets, publish matching model files and update `checkpoint_release.json` and download instructions. A complete native result remains pending. No additional artifact-release commitment is implied.
+Matching model files and download instructions are supplied. A complete native result remains pending. No additional artifact-release commitment is implied.
