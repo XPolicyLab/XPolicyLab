@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100005, "instruction": "Grab the bottle with ridged orange grip and the glossy brown bottle at the same time.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100005, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100008, "instruction": "Grasp the yellow bottle for liquid storage and the shiny red bottle simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100009, "instruction": "Pick up both the plastic orange bottle with rounded base and the lightweight plastic brown bottle together.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100013, "instruction": "Grab the medium plastic bottle and the medium-sized plastic bottle with capped top at the same time.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100024, "instruction": "Use each arm to grab one of the bottle with red screw cap and the bottle with curved body.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100026, "instruction": "Lift the yellow rectangular bottle as the other arm lifts the white capped orange plastic bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100027, "instruction": "Lift the shiny red bottle as the other arm lifts the plastic soda bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100029, "instruction": "Use each arm to grab one of the shiny red bottle and the white capped orange plastic bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100035, "instruction": "Pick up both the hand-sized yellow plastic bottle and the bottle with red screw cap together.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100035, "success": false}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100037, "instruction": "Take hold of the brown bottle with glossy swirls and the white capped orange plastic bottle at once.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100038, "instruction": "Use each arm to grab one of the bottle with ridged orange grip and the yellow rectangular bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100048, "instruction": "Lift the bottle with curved neck design as the other arm lifts the brown bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100048, "success": false}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100051, "instruction": "Lift the lightweight plastic brown bottle and the plastic bottle with blue label simultaneously with separate arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100054, "instruction": "Lift the bottle with curved neck design and the green plastic bottle with ridged bottom simultaneously with separate arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100056, "instruction": "Take hold of the bottle with green base and black prints and the bottle with curved neck design at once.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100057, "instruction": "Raise both different bottles, the white capped orange plastic bottle and the brown bottle, together.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100058, "instruction": "Lift the lightweight plastic brown bottle as the other arm lifts the lightweight plastic brown bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100059, "instruction": "Use each arm to grab one of the yellow bottle with white cap and the green plastic bottle with ridged bottom.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100061, "instruction": "Pick up both the green plastic bottle with ridged bottom and the blue-capped plastic bottle together.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100063, "instruction": "Pick up both the plastic bottle with blue label and the brown cylindrical bottle with label together.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100069, "instruction": "Lift the cylindrical bottle with curved sides and the brown bottle simultaneously with separate arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100069, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100075, "instruction": "Lift the bottle with yellow Chinese characters as the other arm lifts the green plastic bottle with ridged bottom.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100076, "instruction": "Grasp the brown bottle and the white capped orange plastic bottle simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100087, "instruction": "Pick up both the hand-sized yellow plastic bottle and the blue-capped plastic bottle together.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100089, "instruction": "Lift the bottle with green base and black prints and the bottle with glossy surface simultaneously with separate arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100090, "instruction": "Grab the lightweight plastic brown bottle and the smooth bottle with blue text at the same time.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100092, "instruction": "Take hold of the medium-sized plastic bottle with capped top and the yellow bottle with white cap at once.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100093, "instruction": "Raise both different bottles, the yellow rectangular bottle and the plastic bottle with blue label, together.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100095, "instruction": "Use one arm for the curvy orange bottle with white section and the other for the curvy orange bottle with white section.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100101, "instruction": "Pick up both the hand-sized bottle with ridged bottom and the hand-sized bottle with ridged bottom together.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100103, "instruction": "Pick up the bottle with yellow sticker label and the plastic bottle with blue label in parallel.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100103, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100104, "instruction": "Lift the bottle with ridged orange grip and the green plastic bottle with ridged bottom simultaneously with separate arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100104, "success": false}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100107, "instruction": "Lift the green bottle and the curvy orange bottle with white section simultaneously with separate arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100107, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100108, "instruction": "Pick up both the green bottle with white label and the brown bottle with glossy swirls together.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100108, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100110, "instruction": "Pick up the bottle with ridged neck and the brown bottle in parallel.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100110, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100113, "instruction": "Use each arm to grab one of the bottle with red screw cap and the bottle with red screw cap.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100113, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100116, "instruction": "Pick up the bottle with white and yellow label and the medium bottle for liquids in parallel.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100116, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100117, "instruction": "Take hold of the medium plastic bottle and the bottle with curved body at once.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100117, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100121, "instruction": "Grab the medium plastic bottle and the medium plastic bottle at the same time.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100121, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100123, "instruction": "Take hold of the plastic soda bottle and the brown bottle at once.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100123, "success": false}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100127, "instruction": "Pick up the brown bottle and the plastic bottle with blue label in parallel.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100127, "success": false}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100130, "instruction": "Pick up both the bottle with printed label and the plastic bottle with blue label together.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100130, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100131, "instruction": "Lift the green plastic bottle with ridged bottom as the other arm lifts the shiny red bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100131, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100132, "instruction": "Grab the brown cylindrical bottle with label and the handheld orange bottle at the same time.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100132, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100133, "instruction": "Raise both different bottles, the green plastic bottle with ridged bottom and the liquid container dark brown plastic, together.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100133, "success": false}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100134, "instruction": "Lift the cylindrical bottle with curved sides as the other arm lifts the white capped orange plastic bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100134, "success": false}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100135, "instruction": "Grab the white capped orange plastic bottle and the green bottle with white label at the same time.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100135, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100138, "instruction": "Use one arm for the bottle with yellow sticker label and the other for the yellow bottle for liquid storage.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100138, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100148, "instruction": "Lift the green plastic bottle with ridged bottom as the other arm lifts the medium plastic bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100148, "success": false}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100150, "instruction": "Lift the orange bottle with smooth texture as the other arm lifts the bottle with printed label.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100150, "success": false}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100152, "instruction": "Lift the plastic bottle with blue label as the other arm lifts the plastic soda bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100152, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100154, "instruction": "Grasp the bottle with green label and white lid and the bottle with curved body simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100154, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100159, "instruction": "Pick up the yellow rectangular bottle and the hand-sized bottle with ridged bottom in parallel.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100159, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100160, "instruction": "Take hold of the bottle with white cap and the cylindrical bottle with curved sides at once.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100160, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100161, "instruction": "Grasp the bottle with ridges near base and the white capped orange plastic bottle simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100161, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100165, "instruction": "Lift the bottle with green base and black prints and the white capped orange plastic bottle simultaneously with separate arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100165, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100176, "instruction": "Pick up both the bottle with ridges near base and the liquid container dark brown plastic together.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100176, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100177, "instruction": "Lift the bottle with curved neck design as the other arm lifts the medium bottle for liquids.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100177, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100178, "instruction": "Grasp the medium plastic bottle and the bottle with white and yellow label simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100178, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100186, "instruction": "Use each arm to grab one of the medium bottle for liquids and the bottle with red screw cap.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100186, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100190, "instruction": "Take hold of the bottle with red screw cap and the lightweight plastic brown bottle at once.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100190, "success": false}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100194, "instruction": "Use one arm for the medium bottle for liquids and the other for the shiny red bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100194, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100199, "instruction": "Use one arm for the shiny red bottle and the other for the bottle with white and yellow label.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100199, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100210, "instruction": "Grab the medium plastic bottle and the bottle with ridged orange grip at the same time.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100210, "success": false}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100211, "instruction": "Use each arm to grab one of the bottle with coffee-colored body and the medium plastic bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100211, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100212, "instruction": "Take hold of the brown cylindrical bottle with label and the green plastic bottle with ridged bottom at once.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100212, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100214, "instruction": "Grasp the bottle with ridged orange grip and the brown bottle simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100214, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100215, "instruction": "Grab the curvy orange bottle with white section and the bottle with ridges near base at the same time.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100215, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100217, "instruction": "Raise both different bottles, the lightweight plastic brown bottle and the bottle with printed label, together.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100217, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100218, "instruction": "Pick up both the bottle with yellow Chinese characters and the shiny red bottle together.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100218, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100222, "instruction": "Pick up both the green bottle and the curvy orange bottle with white section together.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100222, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100227, "instruction": "Pick up the medium-sized plastic bottle with capped top and the blue-capped plastic bottle in parallel.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100227, "success": false}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100232, "instruction": "Pick up both the bottle with green label and white lid and the bottle with ridges near base together.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100232, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100234, "instruction": "Pick up the medium plastic bottle and the curvy orange bottle with white section in parallel.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100234, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100238, "instruction": "Lift the plastic soda bottle and the green bottle simultaneously with separate arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100238, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100239, "instruction": "Raise both different bottles, the bottle with red screw cap and the medium-sized plastic bottle with capped top, together.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100239, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100241, "instruction": "Take hold of the hand-sized bottle with ridged bottom and the bottle with ridges near base at once.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100241, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100243, "instruction": "Lift the medium plastic bottle as the other arm lifts the liquid container dark brown plastic.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100243, "success": false}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100245, "instruction": "Take hold of the bottle with ridged orange grip and the yellow rectangular bottle at once.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100245, "success": false}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100248, "instruction": "Raise both different bottles, the lightweight plastic brown bottle and the bottle with curved body, together.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100248, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100250, "instruction": "Raise both different bottles, the orange bottle with smooth texture and the bottle with yellow sticker label, together.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100250, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100253, "instruction": "Raise both different bottles, the bottle with printed label and the shiny red bottle, together.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100253, "success": false}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100255, "instruction": "Take hold of the bottle with curved neck design and the lightweight plastic brown bottle at once.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100255, "success": false}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100256, "instruction": "Grasp the medium-sized plastic bottle with capped top and the curvy orange bottle with white section simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100256, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100257, "instruction": "Grasp the curvy orange bottle with white section and the hand-sized yellow plastic bottle simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100257, "success": false}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100260, "instruction": "Grasp the medium plastic bottle and the yellow bottle for liquid storage simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100260, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100265, "instruction": "Take hold of the bottle with printed label and the bottle with green label and white lid at once.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100265, "success": false}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100267, "instruction": "Grasp the bottle with curved body and the hand-sized bottle with ridged bottom simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100267, "success": false}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100273, "instruction": "Pick up both the plastic bottle with blue label and the hand-sized bottle with ridged bottom together.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100273, "success": false}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100275, "instruction": "Lift the yellow rectangular bottle and the green plastic bottle with ridged bottom simultaneously with separate arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100275, "success": false}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100283, "instruction": "Pick up the plastic orange bottle with rounded base and the medium bottle in parallel.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100283, "success": false}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100285, "instruction": "Lift the plastic orange bottle with rounded base and the blue-capped plastic bottle simultaneously with separate arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100285, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100289, "instruction": "Use each arm to grab one of the bottle with red screw cap and the handheld orange bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100289, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100290, "instruction": "Grab the blue-capped plastic bottle and the bottle with yellow sticker label at the same time.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100290, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100293, "instruction": "Pick up both the green plastic bottle with ridged bottom and the blue-capped plastic bottle together.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100293, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100301, "instruction": "Grab the curvy orange bottle with white section and the medium bottle at the same time.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100301, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100307, "instruction": "Pick up the medium bottle for liquids and the yellow rectangular bottle in parallel.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100307, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100308, "instruction": "Pick up the glossy brown bottle and the lightweight plastic brown bottle in parallel.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100308, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100311, "instruction": "Lift the bottle with curved body and the white capped orange plastic bottle simultaneously with separate arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100311, "success": true}
+{"event": "case_prepared", "task_name": "pick_diverse_bottles", "seed": 100317, "instruction": "Lift the bottle with green label and white lid as the other arm lifts the medium plastic bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_diverse_bottles", "seed": 100317, "success": false}

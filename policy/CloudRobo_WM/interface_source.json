@@ -1,0 +1,21 @@
+{
+  "adapter_standard": "https://github.com/XPolicyLab/XPolicyLab/blob/0075cc96a1bf24c5d66a4a3a5e29eae6d739fef3/CONTRIBUTING.md",
+  "interface_revision": "0075cc96a1bf24c5d66a4a3a5e29eae6d739fef3",
+  "simulator_revision": "ea8b21121ebb3cd201ff5b3fe361944ac94eda3f",
+  "simulator_source": "https://github.com/RoboTwin-Platform/RoboTwin",
+  "policy_import_name": "CloudRobo_WM",
+  "official_online_entry": {
+    "entry": "eval.sh",
+    "online_expert_check": true,
+    "online_instruction_generation": true,
+    "setup_stability_abort_preserved": true,
+    "historical_trial_cache_used": false
+  },
+  "saved_input_entry": {
+    "entry": "eval_fixed.sh",
+    "expert_check": false,
+    "setup_stability_check": false,
+    "historical_trial_cache_used": true
+  },
+  "reported_results": "results/evaluation_results.json"
+}

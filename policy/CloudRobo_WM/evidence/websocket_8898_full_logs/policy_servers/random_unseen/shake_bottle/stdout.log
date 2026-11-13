@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100001, "instruction": "Grab the curvy yellow plastic bottle, shake it properly, then set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100002, "instruction": "Pick and shake the liquid container dark brown plastic with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100003, "instruction": "Pick up the bottle with rounded edges with the right arm and shake.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100003, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100004, "instruction": "Shake the bottle with curved body after picking it with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100007, "instruction": "Pick up the bottle with green label and white lid with the left arm and shake.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100008, "instruction": "Use the right arm to pick the brown bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100010, "instruction": "Pick up the plastic soda bottle and shake it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100011, "instruction": "Use the left arm to pick the bottle with ridged neck.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100011, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100013, "instruction": "Shake the gray bottle for holding drinks after picking it with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100014, "instruction": "Use the right arm to pick the orange bottle with smooth texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100015, "instruction": "Grab the green bottle with white label and give it a shake.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100016, "instruction": "Grab the hand-sized yellow plastic bottle and give it a shake.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100017, "instruction": "Pick up the bottle with ridged neck with the left arm and shake.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100017, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100018, "instruction": "Pick up the white capped orange plastic bottle with the right arm and shake.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100018, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100020, "instruction": "Pick up the bottle with white cap and shake it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100021, "instruction": "Grab the curvy orange bottle with white section and give it a shake.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100022, "instruction": "Pick up the plastic soda bottle and shake it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100022, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100024, "instruction": "Grab the brown bottle and shake it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100025, "instruction": "Grab the brown bottle and give it a shake.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100027, "instruction": "Grab the bottle with red screw cap and give it a shake.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100029, "instruction": "Use the left arm to pick the yellow bottle for liquid storage.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100032, "instruction": "Pick and shake the bottle with orange cap with the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100035, "instruction": "Pick and shake the handheld orange bottle with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100037, "instruction": "Shake the hand-sized bottle with ridged bottom after picking it with the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100038, "instruction": "Pick up the medium plastic bottle and shake it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100039, "instruction": "Use the right arm to pick the plastic bottle with blue label.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100039, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100041, "instruction": "Pick up the liquid container dark brown plastic and shake it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100047, "instruction": "Grab the bottle with yellow Chinese characters, shake it properly, then set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100048, "instruction": "Shake the orange bottle with smooth texture after picking it with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100049, "instruction": "Use the right arm to pick the light gray bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100050, "instruction": "Shake the bottle with green label and white lid after picking it with the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100050, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100052, "instruction": "Pick and shake the hand-sized bottle with ridged bottom with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100054, "instruction": "Pick and shake the white capped orange plastic bottle with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100056, "instruction": "Use the right arm to pick the green plastic bottle with ridged bottom.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100057, "instruction": "Pick up the bottle with curved body and shake it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100058, "instruction": "Grab the bottle with glossy surface and shake it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100059, "instruction": "Pick up the liquid container dark brown plastic and shake it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100061, "instruction": "Use the left arm to pick the hand-sized bottle with ridged bottom.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100063, "instruction": "Use the left arm to pick the plastic bottle with blue label.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100066, "instruction": "Grab the brown bottle, shake it properly, then set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100067, "instruction": "Use the left arm to pick the medium-sized drink bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100068, "instruction": "Pick and shake the medium plastic bottle with the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100070, "instruction": "Grab the medium-sized drink bottle, shake it properly, then set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100071, "instruction": "Use the left arm to pick the white capped orange plastic bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100071, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100072, "instruction": "Grab the yellow rectangular bottle and shake it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100073, "instruction": "Grab the white capped orange plastic bottle and shake it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100075, "instruction": "Pick up the medium-sized drink bottle and shake it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100076, "instruction": "Use the left arm to grab the yellow rectangular bottle and shake.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100077, "instruction": "Pick up the bottle with curved neck design and shake it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100077, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100082, "instruction": "Use the left arm to grab the bottle with ridged orange grip and shake.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100082, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100084, "instruction": "Grab the bottle with curved body, shake it properly, then set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100084, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100086, "instruction": "Shake the white capped orange plastic bottle after picking it with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100086, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100087, "instruction": "Shake the hand-sized bottle with ridged bottom after picking it with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100088, "instruction": "Pick up the bottle with ridges near base and shake it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100089, "instruction": "Grab the white capped orange plastic bottle, shake it properly, then set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100090, "instruction": "Pick and shake the label-covered orange bottle with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100091, "instruction": "Shake the hand-sized bottle with ridged bottom after picking it with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100091, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100092, "instruction": "Pick up the brown cylindrical bottle with label and shake it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100093, "instruction": "Pick up the white capped orange plastic bottle with the right arm and shake.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100098, "instruction": "Pick up the bottle with curved neck design with the left arm and shake.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100099, "instruction": "Shake the hand-sized bottle with ridged bottom after picking it with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100100, "instruction": "Use the right arm to pick the brown bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100100, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100101, "instruction": "Pick and shake the medium bottle for liquids with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100102, "instruction": "Grab the bottle with white and yellow label and shake it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100102, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100104, "instruction": "Grab the bottle with yellow sticker label and give it a shake.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100104, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100105, "instruction": "Grab the bottle with green label and white lid and give it a shake.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100105, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100108, "instruction": "Pick up the plastic soda bottle with the right arm and shake.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100108, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100110, "instruction": "Pick up the brown cylindrical bottle with label and shake it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100110, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100111, "instruction": "Pick up the bottle with glossy surface and shake it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100111, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100115, "instruction": "Pick up the bottle with ridged neck and shake it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100115, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100118, "instruction": "Pick up the bottle with orange cap and shake it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100118, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100119, "instruction": "Grab the bottle with ridged orange grip, shake it properly, then set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100119, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100121, "instruction": "Pick up the yellow rectangular bottle with the left arm and shake.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100121, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100124, "instruction": "Pick up the bottle with red screw cap and shake it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100124, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100125, "instruction": "Grab the white capped orange plastic bottle and give it a shake.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100125, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100126, "instruction": "Pick up the hand-sized bottle with ridged bottom with the right arm and shake.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100126, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100127, "instruction": "Pick up the bottle with ridged orange grip and shake it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100127, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100129, "instruction": "Pick up the yellow bottle with white cap with the right arm and shake.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100129, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100131, "instruction": "Grab the orange bottle with smooth texture and give it a shake.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100131, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100134, "instruction": "Pick up the bottle with white and yellow label with the right arm and shake.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100134, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100136, "instruction": "Use the left arm to pick the bottle with green label and white lid.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100136, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100137, "instruction": "Pick up the orange bottle with smooth texture and shake it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100137, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100138, "instruction": "Pick up the gray bottle for holding drinks and shake it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100138, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100139, "instruction": "Use the right arm to pick the brown bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100139, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100141, "instruction": "Grab the bottle with rounded cap top, shake it properly, then set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100141, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100142, "instruction": "Shake the liquid container dark brown plastic after picking it with the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100142, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100143, "instruction": "Grab the bottle with ridged orange grip, shake it properly, then set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100143, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100146, "instruction": "Use the left arm to grab the curvy orange bottle with white section and shake.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100146, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100147, "instruction": "Pick up the bottle with ridged neck and shake it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100147, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100148, "instruction": "Grab the bottle with red screw cap and give it a shake.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100148, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100149, "instruction": "Grab the bottle with ridged orange grip, shake it properly, then set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100149, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100152, "instruction": "Grab the plastic soda bottle and give it a shake.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100152, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100153, "instruction": "Use the right arm to grab the white capped orange plastic bottle and shake.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100153, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100158, "instruction": "Use the left arm to grab the bottle with glossy surface and shake.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100158, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100159, "instruction": "Use the right arm to grab the curvy orange bottle with white section and shake.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100159, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100160, "instruction": "Grab the smooth blue water bottle and shake it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100160, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100161, "instruction": "Shake the green bottle with white label after picking it with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100161, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100162, "instruction": "Grab the brown cylindrical bottle with label and shake it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100162, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100163, "instruction": "Grab the light gray bottle, shake it properly, then set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100163, "success": true}
+{"event": "case_prepared", "task_name": "shake_bottle", "seed": 100164, "instruction": "Pick up the lightweight plastic brown bottle and shake it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "shake_bottle", "seed": 100164, "success": true}

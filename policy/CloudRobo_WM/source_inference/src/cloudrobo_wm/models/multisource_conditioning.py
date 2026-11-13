@@ -1,0 +1,93 @@
+import torch
+from torch import nn
+import torch.nn.functional as F
+
+class MultiSourceConditioning(nn.Module):
+
+    def __init__(self, text_dim, branch_dims, condition_count=256):
+        super().__init__()
+        self.state_valid = nn.Linear(96, text_dim, bias=False)
+        self.action_valid = nn.Linear(90, branch_dims['action'], bias=False)
+        self.conditions = nn.Embedding(condition_count, text_dim)
+        self.time_encoder = nn.Sequential(nn.Linear(8 * 9, 128), nn.SiLU(), nn.Linear(128, 128))
+        self.time_projection = nn.ModuleDict({k: nn.Linear(128, d, bias=False) for k, d in branch_dims.items()})
+        for layer in self.time_projection.values():
+            nn.init.zeros_(layer.weight)
+        self.register_buffer('frequencies', torch.tensor([0.25, 1.0, 4.0, 16.0]), persistent=True)
+
+    def time(self, branch, grid, valid, dtype):
+        grid = torch.where(valid[..., None], grid, 0).float()
+        phase = grid[..., None] * self.frequencies * torch.pi
+        features = torch.cat([grid[..., None], phase.sin(), phase.cos()], -1).flatten(-2)
+        hidden = self.time_encoder(features.to(self.time_encoder[0].weight.dtype))
+        return self.time_projection[branch](hidden).to(dtype) * valid[..., None]
+
+def conservative_latent_frames(image_valid):
+    if image_valid.shape[-1] != 9:
+        raise ValueError('Expected nine visual frames')
+    return torch.stack((image_valid[:, 0], image_valid[:, 1:5].all(1), image_valid[:, 5:9].all(1)), 1)
+
+def camera_canvas_mask(camera_valid, height, width):
+    B = camera_valid.shape[0]
+    mask = torch.zeros(B, 1, 384, 320, device=camera_valid.device)
+    mask[:, :, 256:, :160] = camera_valid[:, 1, None, None, None]
+    mask[:, :, 256:, 160:] = camera_valid[:, 2, None, None, None]
+    mask[:, :, :256, :] = camera_valid[:, 0, None, None, None]
+    return F.adaptive_avg_pool2d(mask, (height, width))[:, 0] >= 1 - 1e-07
+
+def label_masks(sample, device, dino_patches=(196, 49, 49)):
+    cam = sample['camera_valid'].to(device).bool()
+    image = ~sample['image_is_pad'].to(device).bool()
+    latent = conservative_latent_frames(image)
+    modality = sample['modality_valid'].to(device).bool()
+    spatial = camera_canvas_mask(cam, 24, 20)
+    video = latent[:, :, None, None] & spatial[:, None] & modality[:, 0, None, None, None]
+    point = video & modality[:, 3, None, None, None]
+    if 'pointmap_pixel_valid' in sample:
+        raw = sample['pointmap_pixel_valid'].to(device).bool()
+        raw = torch.stack((raw[:, 0], raw[:, 1:5].all(1), raw[:, 5:9].all(1)), 1)
+        valid = F.adaptive_avg_pool2d(raw.float().flatten(0, 1).unsqueeze(1), (24, 20))[:, 0] >= 1 - 1e-07
+        point &= valid.reshape_as(point)
+    dcam = torch.cat([cam[:, i, None].expand(-1, n) for i, n in enumerate(dino_patches)], 1)
+    dino = image[:, [0, 4, 8], None] & dcam[:, None] & modality[:, 2, None, None]
+    if 'per_cam_rgb_valid' in sample:
+        from cloudrobo_wm.datasets.multisource.schema import CAMERAS
+        canvas = torch.zeros(cam.shape[0], 1, 384, 320, device=device)
+        dino_spatial = []
+        for i, name in enumerate(CAMERAS):
+            raw = sample['per_cam_rgb_valid'][name].to(device).float()[:, None]
+            hw = (256, 320) if i == 0 else (128, 160)
+            resized = F.interpolate(raw, size=hw, mode='bilinear', align_corners=False, antialias=True) >= 1 - 1e-06
+            if i == 0:
+                canvas[:, :, :256] = resized
+            else:
+                canvas[:, :, 256:, (i - 1) * 160:i * 160] = resized
+            encoder = F.interpolate(raw, size=(224, 224), mode='bilinear', align_corners=False, antialias=True) >= 1 - 1e-06
+            side = int(dino_patches[i] ** 0.5)
+            if side * side != dino_patches[i]:
+                raise ValueError('Expected square DINO patch grid')
+            dino_spatial.append((F.adaptive_avg_pool2d(encoder.float(), (side, side)) >= 1 - 1e-07).flatten(1))
+        video &= (F.adaptive_avg_pool2d(canvas, (24, 20))[:, 0] >= 1 - 1e-07)[:, None]
+        dino &= torch.cat(dino_spatial, 1)[:, None]
+    transitions = sample['flow_transition_valid'].to(device).bool().reshape(-1, 2, 4).all(-1)
+    history = sample['flow_history_valid'].to(device).bool()
+    flow = transitions[:, :, None, None] & history[:, None, None, None] & spatial[:, None] & modality[:, 4, None, None, None]
+    if 'flow_pixel_valid' in sample:
+        raw = sample['flow_pixel_valid'].to(device).bool()
+        raw = torch.stack((raw[:, 0] & raw[:, 1:5].all(1), raw[:, 0] & raw[:, 5:9].all(1)), 1)
+        valid = F.adaptive_avg_pool2d(raw.float().flatten(0, 1)[:, None], (24, 20))[:, 0] >= 1 - 1e-07
+        flow &= valid.reshape_as(flow)
+    return dict(video=video, pointmap=point, dino=dino, flow=flow, action=sample['action_valid'].to(device).bool())
+
+def restrict_attention(mask, valid):
+    if mask.ndim == 2:
+        mask = mask[None].expand(valid.shape[0], -1, -1)
+    if mask.ndim == 4:
+        key = valid[:, None, None, :]
+        query = valid[:, None, :, None]
+        eye = torch.eye(valid.shape[-1], device=mask.device, dtype=torch.bool)[None, None]
+    else:
+        key = valid[:, None, :]
+        query = valid[:, :, None]
+        eye = torch.eye(valid.shape[-1], device=mask.device, dtype=torch.bool)[None]
+    return mask & key & query | eye & ~query

@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100000, "instruction": "Command the left arm to engage the switch with darker rectangle", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100001, "instruction": "Deploy the right arm to press the toggle switch with brown rectangle button", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100002, "instruction": "Click on the small light tan switch precisely", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100005, "instruction": "Command the right arm to engage the compact switch with flat base", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100005, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100006, "instruction": "Click the medium switch with trapezoidal base using automated tools", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100007, "instruction": "Trigger the beige switch with precision", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100008, "instruction": "Interact with the switch with three metal pins.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100009, "instruction": "Tap the flat switch to engage it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100010, "instruction": "Engage the electric toggle switch with a press.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100011, "instruction": "Move to the smooth tan switch with textured sides and click it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100011, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100013, "instruction": "Locate and press the flat square with raised center", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100014, "instruction": "Click the red and black electrical switch using automated tools", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100015, "instruction": "Directly interact with the gray plastic switch", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100022, "instruction": "Trigger the tiny rectangular switch with precision", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100022, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100023, "instruction": "Direct the left arm to operate the rectangular switch with slanted sides", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100024, "instruction": "Press the trapezoid-shaped switch smooth surface to activate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100025, "instruction": "Locate and press the small square switch", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100025, "success": false}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100026, "instruction": "Command the right arm to engage the plastic switch with metal prongs", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100027, "instruction": "Interact with the light tan rectangular switch smooth finish.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100028, "instruction": "Deploy the left arm to press the square switch with red bar", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100028, "success": false}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100029, "instruction": "Engage the left arm to press the small switch", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100030, "instruction": "Interact with the small switch with red lever directly", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100031, "instruction": "Engage the switch for electrical control using the robotic arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100031, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100032, "instruction": "Press the tiny rectangular switch with the left arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100033, "instruction": "Press the sleek black rectangular switch with the left arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100033, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100035, "instruction": "Engage the right arm to press the handheld switch", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100036, "instruction": "Trigger the handheld switch with precision", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100036, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100040, "instruction": "Use the right arm for switching the plastic switch with matte buttons", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100040, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100041, "instruction": "Trigger the toggle switch with brown rectangle button using the left arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100042, "instruction": "Deploy the right arm to operate the beige switch with smooth finish", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100043, "instruction": "Switch the square gray switch panel to its active state", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100043, "success": false}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100044, "instruction": "Set the left arm to press the switch with three metal pins", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100048, "instruction": "Engage with the hand-sized switch tan smooth finish manually", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100049, "instruction": "Use the right arm for switching the switch with thin red toggle", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100050, "instruction": "Press the light tan rectangular switch smooth finish carefully with the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100050, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100051, "instruction": "Operate the plastic gray body switch with the left arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100051, "success": false}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100052, "instruction": "Activate the palm-sized black switch via the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100053, "instruction": "Approach and tap the angled switch light tan color via the left arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100053, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100054, "instruction": "Activate the slanted-edge plastic black switch by pressing it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100055, "instruction": "Engage the smooth gray switch using the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100055, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100058, "instruction": "Interact with the red and black electrical switch.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100058, "success": false}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100059, "instruction": "Press the square gray switch panel carefully with the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100060, "instruction": "Operate the smooth gray switch with the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100062, "instruction": "Switch the palm-sized light gray switch to its active state", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100062, "success": false}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100066, "instruction": "Initiate the medium switch with trapezoidal base by clicking", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100067, "instruction": "Deploy the right arm to operate the trapezoidal base switch", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100068, "instruction": "Locate and press the light tan rectangular switch smooth finish", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100069, "instruction": "Push the square switch with smooth surface via the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100069, "success": false}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100071, "instruction": "Use the right arm for switching the red bar switch", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100071, "success": false}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100072, "instruction": "Locate and press the smooth gray switch", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100073, "instruction": "Click the gray switch with black buttons using automated tools", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100075, "instruction": "Tap the medium switch with trapezoidal base to engage it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100076, "instruction": "Click the small light tan switch directly.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100077, "instruction": "Press the medium-sized black rectangular switch directly", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100077, "success": false}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100078, "instruction": "Engage the switch with brown button with a press.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100079, "instruction": "Deploy the right arm to operate the toggle switch with black housing", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100080, "instruction": "Engage with the switch manually", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100080, "success": false}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100081, "instruction": "Click the toggle switch light gray base with robotic precision", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100081, "success": false}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100083, "instruction": "Interact with the switch with curved red toggle directly", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100085, "instruction": "Press the switch with smooth light gray finish directly", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100085, "success": false}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100086, "instruction": "Press the square switch with smooth surface with the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100086, "success": false}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100087, "instruction": "Press the medium-sized black rectangular switch carefully with the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100088, "instruction": "Press the gray base with black buttons using the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100088, "success": false}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100089, "instruction": "Activate the small square switch made of plastic via the left arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100090, "instruction": "Activate the switch with smooth light gray finish with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100091, "instruction": "Command the left arm to engage the light-colored trapezoid-shaped plastic switch", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100091, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100092, "instruction": "Interact with the square switch with red bar.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100092, "success": false}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100094, "instruction": "Press the gray smooth surface switch with the left arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100095, "instruction": "Press the flat switch carefully with the left arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100096, "instruction": "Press the plastic switch with metal prongs directly", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100097, "instruction": "Click on the beige switch precisely", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100097, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100099, "instruction": "Trigger the smooth tan switch with textured sides using the left arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100100, "instruction": "Trigger the beige switch using the left arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100100, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100101, "instruction": "Approach and tap the smooth tan switch with textured sides via the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100106, "instruction": "Toggle the smooth tan switch with textured sides with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100106, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100107, "instruction": "Direct the right arm to operate the handheld switch", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100107, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100108, "instruction": "Set the right arm to press the plastic switch with metal terminals", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100108, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100110, "instruction": "Tap the electrical switch with protruding toggle to engage it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100110, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100111, "instruction": "Use the left arm to engage the switch trapezoid shape brown marking", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100111, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100112, "instruction": "Set the switch at the black switch with slim profile", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100112, "success": false}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100115, "instruction": "Engage the palm-sized light gray switch using the robotic arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100115, "success": false}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100116, "instruction": "Click the hand-sized light beige switch using automated tools", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100116, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100118, "instruction": "Engage the light tan rectangular switch smooth finish using the left arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100118, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100119, "instruction": "Command the left arm to engage the trapezoid-shaped switch smooth surface", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100119, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100120, "instruction": "Deploy the right arm to operate the hand-sized switch tan smooth finish", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100120, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100121, "instruction": "Press the medium-sized black rectangular switch to activate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100121, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100123, "instruction": "Operate the plastic switch with metal prongs with the left arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100123, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100124, "instruction": "Move to the small square switch and click it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100124, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100126, "instruction": "Engage the trapezoid-shaped switch smooth surface with a press.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100126, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100127, "instruction": "Engage the toggle switch with brown rectangle button using the left arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100127, "success": false}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100128, "instruction": "Press the compact switch with flat base carefully with the left arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100128, "success": false}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100129, "instruction": "Command the left arm to engage the black rectangular control switch", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100129, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100130, "instruction": "Click the black base switch with red toggle with robotic precision", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100130, "success": false}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100131, "instruction": "Switch the red-top black switch to its active state", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100131, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100132, "instruction": "Activate the switch with a smooth top by pressing it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100132, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100134, "instruction": "Trigger the black switch without referencing the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100134, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100136, "instruction": "Click the smooth red switch with labels directly.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100136, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100138, "instruction": "Click the light plastic switch directly.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100138, "success": true}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100139, "instruction": "Click on the compact switch with toggle on top precisely", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100139, "success": false}
+{"event": "case_prepared", "task_name": "turn_switch", "seed": 100140, "instruction": "Operate the smooth gray switch with the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "turn_switch", "seed": 100140, "success": false}

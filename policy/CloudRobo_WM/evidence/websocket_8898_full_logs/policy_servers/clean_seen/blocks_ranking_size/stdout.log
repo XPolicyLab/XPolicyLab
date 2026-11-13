@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100000, "instruction": "Shift large block, medium block, small block to the center; align by size left to right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100001, "instruction": "Grab large block, medium block, small block, and arrange them in size order at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100002, "instruction": "Move large block, medium block, and small block to the table center in size order.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100003, "instruction": "Use the left arm, the right arm, and the left arm to center large block, medium block, and small block in order.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100003, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100006, "instruction": "Relocate large block, medium block, and small block to the center and arrange them by size.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100007, "instruction": "Shift large block, medium block, and small block to the table's center and sort by size.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100008, "instruction": "Set large block, medium block, and small block in the center area, arranging from largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100009, "instruction": "Arrange large block, medium block, small block in size order, largest on the left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100009, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100010, "instruction": "Bring large block, medium block, small block to the table's center and position them left to right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100011, "instruction": "Bring large block, medium block, and small block to the center, sorting largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100011, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100013, "instruction": "Position large block, medium block, and small block centrally, ordered from largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100013, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100014, "instruction": "Use the right arm, the left arm, and the right arm to arrange large block, medium block, and small block centrally by size.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100015, "instruction": "Grab large block, medium block, small block, and arrange them in size order at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100018, "instruction": "Transfer large block, medium block, small block to the center, aligning from largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100018, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100019, "instruction": "Center large block, medium block, small block with the right arm, the left arm, and the left arm following size order.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100019, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100020, "instruction": "Set large block, medium block, and small block in the center area, arranging from largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100021, "instruction": "Transfer large block, medium block, small block to the center, aligning from largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100022, "instruction": "Grab large block, medium block, and small block and align them by size at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100022, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100023, "instruction": "Align large block, medium block, and small block in the center by size, using the right arm, the left arm, and the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100024, "instruction": "Move small block, then medium block, then large block to their center positions.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100025, "instruction": "Relocate large block, medium block, and small block to the center and arrange them by size.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100026, "instruction": "Align large block, medium block, and small block by size from left to right at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100027, "instruction": "Move large block with the right arm, medium block with the left arm, and small block with the left arm to arrange them.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100028, "instruction": "Using your tools, align large block, medium block, small block by size in the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100028, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100029, "instruction": "Arrange large block leftmost, medium block in the middle, and small block rightmost.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100029, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100030, "instruction": "Arrange blocks large block, medium block, and small block in decreasing size order.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100031, "instruction": "Arrange large block, medium block, and small block by size at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100031, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100032, "instruction": "Arrange large block, medium block, and small block by size at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100033, "instruction": "Arrange large block leftmost, medium block in the middle, and small block rightmost.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100033, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100035, "instruction": "Set large block, medium block, and small block in the center area, arranging from largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100036, "instruction": "Grab large block, medium block, small block, move them, and arrange by size centrally.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100036, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100037, "instruction": "Shift large block, medium block, and small block to the table's center and sort by size.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100038, "instruction": "Use the left arm, the right arm, and the right arm to center large block, medium block, and small block in order.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100039, "instruction": "Position small block, then medium block, then large block at the center by size.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100039, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100040, "instruction": "Shift large block, medium block, and small block to the table's center and sort by size.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100040, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100041, "instruction": "Align large block, medium block, and small block in the center by size, using the left arm, the left arm, and the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100042, "instruction": "Use the left arm, the right arm, the right arm to place large block, medium block, and small block by size at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100043, "instruction": "Arrange blocks large block, medium block, and small block in decreasing size order.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100043, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100044, "instruction": "Move large block with the left arm, medium block with the right arm, and small block with the left arm to sort them.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100045, "instruction": "Grab large block, medium block, small block, and arrange them in size order at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100045, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100046, "instruction": "Bring large block, medium block, and small block to the center using the right arm, the right arm, and the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100046, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100047, "instruction": "Position large block, medium block, and small block centrally, ordered from largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100047, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100048, "instruction": "Grab large block, medium block, small block, and arrange them in size order at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100049, "instruction": "Shift large block, medium block, and small block to the center and align by size.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100049, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100050, "instruction": "Shift large block, medium block, and small block to the center and align by size.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100050, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100051, "instruction": "Organize large block, medium block, and small block centrally, with the largest leftmost.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100052, "instruction": "Grab large block, medium block, small block, move them, and arrange by size centrally.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100053, "instruction": "Position large block, medium block, and small block centrally, ordered from largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100053, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100054, "instruction": "Use the right arm, the right arm, the left arm to place large block, medium block, and small block by size at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100055, "instruction": "Move large block with the right arm, medium block with the left arm, and small block with the right arm to arrange them.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100055, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100056, "instruction": "Move large block, medium block, and small block to the table center in size order.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100056, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100057, "instruction": "Shift large block, medium block, and small block to the center and align by size.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100057, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100058, "instruction": "Place small block, then medium block, then large block, arranging them by size centrally.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100058, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100059, "instruction": "Relocate large block, medium block, and small block to the center and arrange them by size.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100059, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100060, "instruction": "Move large block, medium block, and small block to the center, arranging them by size.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100061, "instruction": "Arrange blocks large block, medium block, and small block in decreasing size order.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100061, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100062, "instruction": "Shift large block, medium block, and small block to the table's center and sort by size.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100062, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100063, "instruction": "Bring large block, medium block, and small block to the center, sorting largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100063, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100064, "instruction": "Use the left arm, the left arm, and the right arm to bring large block, medium block, small block to the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100065, "instruction": "Shift large block, medium block, and small block to the center and align by size.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100066, "instruction": "Use the left arm, the right arm, and the left arm to bring large block, medium block, small block to the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100067, "instruction": "Grab large block, medium block, small block, and arrange them in size order at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100068, "instruction": "Place large block, medium block, small block centrally and arrange largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100068, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100069, "instruction": "Bring large block, medium block, small block to the table's center and position them left to right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100069, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100070, "instruction": "Center large block, medium block, small block with the right arm, the left arm, and the right arm following size order.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100071, "instruction": "Place small block, then medium block, then large block, arranging them by size centrally.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100071, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100072, "instruction": "Use the left arm, the left arm, and the right arm to bring large block, medium block, small block to the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100072, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100073, "instruction": "Relocate large block, medium block, and small block to the center and arrange them by size.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100074, "instruction": "Use the left arm, the right arm, and the right arm to arrange large block, medium block, small block in order here.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100075, "instruction": "Arrange large block, medium block, small block in size order, largest on the left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100076, "instruction": "Position large block, medium block, and small block centrally, ordered from largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100077, "instruction": "Shift large block, medium block, and small block to the table's center and sort by size.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100077, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100078, "instruction": "Place small block, then medium block, then large block, arranging them by size centrally.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100078, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100079, "instruction": "Grab large block, medium block, small block with the right arm, the left arm, the left arm and organize them by descending size.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100080, "instruction": "Grab large block, medium block, small block, move them, and arrange by size centrally.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100080, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100081, "instruction": "Use the left arm, the right arm, the right arm to place large block, medium block, and small block by size at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100081, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100082, "instruction": "Arrange large block, medium block, small block in size order, largest on the left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100082, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100083, "instruction": "Shift large block, medium block, small block to the center; align by size left to right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100084, "instruction": "Align large block, medium block, and small block in the center by size, using the right arm, the left arm, and the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100084, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100085, "instruction": "Shift large block, medium block, small block to the center; align by size left to right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100085, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100088, "instruction": "Place large block, medium block, small block centrally and arrange largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100089, "instruction": "Shift large block, medium block, small block to the center; align by size left to right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100090, "instruction": "Align large block, medium block, and small block in the center by size, using the right arm, the left arm, and the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100091, "instruction": "Shift large block, medium block, and small block to the center and align by size.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100091, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100092, "instruction": "Grab large block, medium block, small block with the right arm, the right arm, the left arm and organize them by descending size.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100093, "instruction": "Place small block, then medium block, then large block, arranging them by size centrally.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100093, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100094, "instruction": "Use the left arm, the right arm, and the left arm to arrange large block, medium block, small block in order here.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100095, "instruction": "Arrange large block leftmost, medium block in the middle, and small block rightmost.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100096, "instruction": "Transfer large block, medium block, small block to the center, aligning from largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100097, "instruction": "Set large block, medium block, and small block in the center area, arranging from largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100097, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100098, "instruction": "Use the left arm, the right arm, and the left arm to bring large block, medium block, small block to the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100099, "instruction": "Move large block, medium block, and small block to the center and align.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100100, "instruction": "Bring large block, medium block, and small block to the center using the left arm, the left arm, and the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100100, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100101, "instruction": "Bring large block, medium block, small block to the table's center and position them left to right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100102, "instruction": "Grab large block, medium block, small block with the right arm, the left arm, the left arm and organize them by descending size.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100102, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100103, "instruction": "Move large block with the left arm, medium block with the right arm, and small block with the right arm to arrange them.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100103, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100104, "instruction": "Grab large block, medium block, and small block and align them by size at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100104, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100105, "instruction": "Align large block, medium block, and small block by size from left to right at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100105, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100106, "instruction": "Use the left arm, the right arm, and the right arm to bring large block, medium block, small block to the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100106, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100108, "instruction": "Bring large block, medium block, small block to the table's center and position them left to right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100108, "success": true}

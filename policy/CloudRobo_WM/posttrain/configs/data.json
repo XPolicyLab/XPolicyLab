@@ -1,0 +1,153 @@
+{
+  "manifests": [
+    "indices/train_manifest_0000.json"
+  ],
+  "stats_path": "indices/train_stats.json",
+  "split": "train",
+  "horizon": 32,
+  "stride": 1,
+  "window_stride": 1,
+  "weights": null,
+  "mixture": null,
+  "samples_per_epoch": null,
+  "context_len": 128,
+  "text_model_id": "Wan-AI/Wan2.2-TI2V-5B",
+  "tokenizer_model_id": "Wan-AI/Wan2.1-T2V-1.3B",
+  "allow_legacy_text_cache": false,
+  "require_full_coverage": true,
+  "normalization_mode": "z-score",
+  "required_modalities": [
+    "pointmap"
+  ],
+  "pointmap_depth_validity": "finite_positive",
+  "augment_rgb_dino_depth": false,
+  "augment_camera_keys": [
+    "cam_high"
+  ],
+  "augment_crop_scale": 0.95,
+  "augment_rotate_degrees": 5.0,
+  "augment_color_jitter_brightness": 0.3,
+  "augment_color_jitter_contrast": 0.4,
+  "augment_color_jitter_saturation": 0.5,
+  "augment_color_jitter_hue": 0.0,
+  "image_augmentation": {
+    "enabled": true,
+    "probability": 0.8,
+    "seed": 42,
+    "crop_linear_scale": [
+      0.95,
+      1.0
+    ],
+    "rotation_degrees": [
+      -5.0,
+      5.0
+    ],
+    "brightness": [
+      0.6,
+      1.4
+    ],
+    "contrast": [
+      0.6,
+      1.4
+    ],
+    "saturation": [
+      0.6,
+      1.4
+    ],
+    "hue_degrees": [
+      -36.0,
+      36.0
+    ],
+    "gamma": [
+      0.7,
+      1.4
+    ],
+    "exposure_stops": [
+      -0.5,
+      0.5
+    ],
+    "red_blue_gain": [
+      0.85,
+      1.15
+    ],
+    "blur_probability": 0.3,
+    "blur_kernel": 5,
+    "blur_sigma": [
+      0.1,
+      2.0
+    ],
+    "noise_sigma": 0.03,
+    "adain_probability": 0.5,
+    "adain_target_mean": [
+      0.2,
+      0.8
+    ],
+    "adain_target_std": [
+      0.05,
+      0.3
+    ],
+    "adain_blend": [
+      0.2,
+      0.5
+    ],
+    "fft_probability": 0.5,
+    "fft_amplitude": [
+      0.5,
+      1.5
+    ]
+  },
+  "instruction_overlay": {
+    "root": "instruction_overlay",
+    "source_group": "clean",
+    "revision_id": "robotwin-train-instructions-583c0d948ea462f589bb09cbbd70d2b9ee16bec8d66df6ea0136e6aa2007b8cd",
+    "reader_rows_sha256": "145b8b1c398220e52cde36daf94bf214c060976f36f19df4e17dd30f404ffcde",
+    "jobs_file_sha256": "2dd6b44a9f8a6c44fa786560f83f484b5e4dad67617f209d8f579d0768cd6251"
+  },
+  "prompt_augmentation": {
+    "enabled": false,
+    "root": "prompt_clean",
+    "manifest_sha256": "f02455479ba8ab7e764054066e0b488329d383de8c5cedcdc6f5be8ef7240bd9",
+    "seed": 42,
+    "epoch_samples": 563328,
+    "max_cached_vectors": 64
+  },
+  "history": {
+    "mode": "gated",
+    "rope": "slots",
+    "sampling": "episode_anchor_recent_split_v3",
+    "offsets": [
+      "episode_first",
+      -20,
+      -16,
+      -12,
+      -8,
+      -4
+    ],
+    "visibility": "observed_clean_anchors_v3"
+  },
+  "history_light_augmentation": {
+    "enabled": true,
+    "probability": 0.1,
+    "seed": 42,
+    "exposure_stops": [
+      -0.25,
+      0.25
+    ],
+    "red_gain": [
+      0.9,
+      1.1
+    ],
+    "blue_gain": [
+      0.9,
+      1.1
+    ],
+    "eligible_positions": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  }
+}

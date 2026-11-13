@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100009, "instruction": "Pull open the rectangular slanted cabinet's drawer and place the blue and white playingcards packaging inside it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100014, "instruction": "Pull open the drawer of the cabinet with angled sides and place the stapler with metallic staple slot inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100021, "instruction": "Pull open the gray and wood cabinet's drawer and place the solid rectangular soap inside it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100026, "instruction": "Pull open the rectangular cabinet's drawer and place the multi-sided rubikscube with rotating pieces into it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100027, "instruction": "Pull open the drawer of the gray and wood cabinet and move the golden bread into it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100029, "instruction": "Slide out the drawer of the light wood top cabinet and stick the manual blue stapler inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100030, "instruction": "Pull open the drawer of the cabinet with metal reinforcements and place the palm-fitting mouse inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100031, "instruction": "Set the red top black bottom stapler into the cabinet with gray sides's drawer after opening it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100031, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100044, "instruction": "Set the blue pack holding playingcards into the light wood cabinet's drawer after opening it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100048, "instruction": "Slide open the drawer of the cabinet with angled sides and set the yellow and red playingcards box into it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100050, "instruction": "Open the light wood cabinet's drawer and place the palm-sized phone inside it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100050, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100051, "instruction": "Open the cabinet with gray sides's drawer and move the smooth-screen phone into it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100053, "instruction": "Slide out the drawer of the smooth-surface cabinet and stick the toycar with rounded edges inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100053, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100069, "instruction": "Open the smooth-surface cabinet's drawer and move the compact matte gray computer mouse into it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100069, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100078, "instruction": "Open the drawer of the gray and wood cabinet before placing the small square rubikscube inside it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100082, "instruction": "Set the phone with polished silver border into the storage cabinet's drawer after opening it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100082, "success": false}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100084, "instruction": "Open the drawer of the light wood cabinet before placing the colorful rubikscube inside it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100084, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100092, "instruction": "Slide the storage cabinet's drawer open and move the red and yellow playingcards case inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100102, "instruction": "Place the light gray soap with angled ends into the drawer of the cabinet with metal reinforcements after sliding it open.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100102, "success": false}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100103, "instruction": "Open the drawer of the medium-sized cabinet before placing the fluffy baked bread inside it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100103, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100110, "instruction": "Open the drawer of the cabinet with metal reinforcements and drop the plastic stapler with metal on base inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100110, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100111, "instruction": "Open the drawer of the smooth-surface cabinet and move the bright blue toycar into it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100111, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100113, "instruction": "Open the drawer of the wooden cabinet and drop the toycar with shiny wheels inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100113, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100123, "instruction": "Open the cabinet with angled sides's drawer and carefully drop the bright sleek toycar into it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100123, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100127, "instruction": "Slide open the drawer of the rectangular slanted cabinet and set the black phone into it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100127, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100128, "instruction": "Open the light wood top cabinet's drawer first, then place the mouse with curved top inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100128, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100129, "instruction": "Slide open the drawer of the gray and wood cabinet before putting the white stapler with rounded design inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100129, "success": false}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100132, "instruction": "Put the yellow soap bar for cleaning into the medium-sized cabinet's drawer once it is opened.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100132, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100146, "instruction": "Pull open the storage cabinet's drawer and put the smooth yellow rectangular soap bar inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100146, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100168, "instruction": "Slide open the drawer of the smooth-surface cabinet before putting the rectangular bread loaf with fluffy texture inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100168, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100175, "instruction": "Slide open the cabinet with metal reinforcements's drawer and set the colorful rubikscube inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100175, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100176, "instruction": "Pull open the light wood cabinet's drawer and put the small plastic rubikscube inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100176, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100182, "instruction": "Pull open the medium-sized cabinet's drawer and put the dark gray mouse with smooth texture inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100182, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100183, "instruction": "Open the drawer of the gray and wood cabinet before placing the brown and gray multimedia phone inside it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100183, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100190, "instruction": "Pull the storage cabinet's drawer open and transfer the blue stapler with shiny silver parts into it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100190, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100202, "instruction": "Pull open the cabinet with gray sides's drawer and place the rounded top mouse with glossy logo inside it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100202, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100210, "instruction": "Pull open the drawer of the cabinet with gray sides and place the black smooth-textured stapler inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100210, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100218, "instruction": "Slide open the drawer of the rectangular slanted cabinet and set the smooth dark gray computer mouse into it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100218, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100222, "instruction": "Pull open the wooden cabinet's drawer and place the rectangular yellow tea box inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100222, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100227, "instruction": "Pull open the cabinet with angled sides's drawer and place the toycar for kids play inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100227, "success": false}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100228, "instruction": "Pull the smooth-surface cabinet's drawer open and transfer the toycar with dark gray windows into it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100228, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100233, "instruction": "Put the playingcards box with white accents into the light wood cabinet's drawer once it is opened.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100233, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100244, "instruction": "Slide the rectangular cabinet's drawer open and move the rubikscube with yellow and orange squares inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100244, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100249, "instruction": "Pull open the light wood top cabinet's drawer and place the metal and glass smartphone inside it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100249, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100255, "instruction": "Slide open the drawer of the cabinet with metal reinforcements and set the curved black stapler into it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100255, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100265, "instruction": "Slide open the cabinet with gray sides's drawer and set the small pink plastic toycar inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100265, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100268, "instruction": "Access the wooden cabinet's drawer and set the phone with digital display inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100268, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100269, "instruction": "Pull open the cabinet with metal reinforcements's drawer and place the yellow soap bar for cleaning inside it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100269, "success": false}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100271, "instruction": "Access the rectangular slanted cabinet's drawer and set the phone with screen and side buttons inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100271, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100280, "instruction": "Place the solid rectangular soap into the drawer of the rectangular slanted cabinet after sliding it open.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100280, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100283, "instruction": "Slide open the medium-sized cabinet's drawer and drop the coffee-box with creamy coffee image inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100283, "success": false}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100285, "instruction": "Pull open the cabinet with metal reinforcements's drawer and place the smooth glossy tea-box inside it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100285, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100286, "instruction": "Pull open the cabinet with metal reinforcements's drawer and place the medium-sized golden bread inside it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100286, "success": false}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100287, "instruction": "Place the modern design stapler into the drawer of the gray and wood cabinet after sliding it open.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100287, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100289, "instruction": "Open the drawer of the gray and wood cabinet and move the blue soap for hand washing into the drawer.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100289, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100290, "instruction": "Open the rectangular cabinet's drawer and carefully drop the light gray soap bar into it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100290, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100292, "instruction": "Slide open the light wood cabinet's drawer and drop the round-topped golden bread inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100292, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100295, "instruction": "Access the rectangular slanted cabinet's drawer and set the gray rectangular soap with angled edges inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100295, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100310, "instruction": "Pull open the medium-sized cabinet's drawer and place the tea box inside it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100310, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100320, "instruction": "Open the drawer of the gray and wood cabinet and move the light gray rectangular cleaning soap into the drawer.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100320, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100325, "instruction": "Place the phone with black touchscreen into the drawer of the light wood cabinet after sliding it open.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100325, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100328, "instruction": "Set the dark mouse with logo on top into the cabinet with metal reinforcements's drawer after opening it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100328, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100334, "instruction": "Pull open the drawer of the storage cabinet and move the light teal toycar with white roof into it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100334, "success": false}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100338, "instruction": "Access the gray and wood cabinet's drawer and set the palm-sized phone inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100338, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100352, "instruction": "Pull open the rectangular cabinet's drawer and place the phone featuring glass and silver frame inside it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100352, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100354, "instruction": "Open the drawer of the light wood cabinet before placing the toycar for kids play inside it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100354, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100358, "instruction": "Open the light wood cabinet's drawer and place the pink car with purple windows inside it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100358, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100365, "instruction": "Open the gray and wood cabinet's drawer and transfer the rectangular soap with rounded edges into it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100365, "success": false}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100369, "instruction": "Pull open the gray and wood cabinet's drawer and place the oval-shaped mouse for computer use inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100369, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100371, "instruction": "Pull the cabinet with metal reinforcements's drawer open and transfer the small mouse with smooth surface into it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100371, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100377, "instruction": "Slide open the rectangular slanted cabinet's drawer and drop the rubikscube showing red and white squares inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100377, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100385, "instruction": "Pull open the cabinet with gray sides's drawer and place the mouse with ergonomic design inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100385, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100388, "instruction": "Access the light wood top cabinet's drawer and set the yellow and red playingcards box inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100388, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100396, "instruction": "Slide out the drawer of the cabinet with metal reinforcements and stick the slim palm-sized phone inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100396, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100402, "instruction": "Pull open the light wood cabinet's drawer and place the stapler with orange button into it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100402, "success": false}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100438, "instruction": "Set the medium-sized golden bread into the light wood cabinet's drawer after opening it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100438, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100447, "instruction": "Open the drawer of the rectangular slanted cabinet and set the soap with smooth edges inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100447, "success": false}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100464, "instruction": "Access the cabinet with angled sides's drawer and set the tea-box inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100464, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100467, "instruction": "Set the black stapler with curved top into the gray and wood cabinet's drawer after opening it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100467, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100468, "instruction": "Slide open the rectangular slanted cabinet's drawer and drop the soap bar inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100468, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100469, "instruction": "Open the rectangular cabinet's drawer first, then place the colorful rubikscube inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100469, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100478, "instruction": "Open the rectangular slanted cabinet's drawer and carefully drop the rubikscube with smooth square tiles into it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100478, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100482, "instruction": "Open the drawer of the rectangular cabinet and drop the playingcards pack with blue top inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100482, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100483, "instruction": "Pull the wooden cabinet's drawer open and transfer the soap bar with light blue shade into it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100483, "success": false}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100484, "instruction": "Slide open the rectangular slanted cabinet's drawer and drop the plastic stapler with metallic interior inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100484, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100487, "instruction": "Slide open the drawer of the light wood cabinet before putting the rubikscube featuring white, green, orange tiles inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100487, "success": false}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100490, "instruction": "Slide open the drawer of the light wood cabinet before putting the red and yellow playingcards case inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100490, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100500, "instruction": "Pull open the light wood cabinet's drawer and place the small office stapler into it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100500, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100504, "instruction": "Pull open the cabinet with gray sides's drawer and place the smooth glass phone into it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100504, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100509, "instruction": "Open the drawer of the gray and wood cabinet before placing the playingcards box with white symbols inside it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100509, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100513, "instruction": "Open the rectangular slanted cabinet's drawer and transfer the coffee-box with Nescafe branding into it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100513, "success": false}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100515, "instruction": "Place the handheld stapler into the drawer of the light wood top cabinet after sliding it open.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100515, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100520, "instruction": "Pull open the drawer of the smooth-surface cabinet and move the small plastic toycar into it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100520, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100523, "instruction": "Pull the storage cabinet's drawer open and transfer the bright sleek toycar into it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100523, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100524, "instruction": "Slide open the drawer of the light wood top cabinet before putting the plastic mouse with smooth finish inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100524, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100529, "instruction": "Slide open the medium-sized cabinet's drawer and drop the box for playingcards inside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100529, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100531, "instruction": "Pull open the drawer of the cabinet with metal reinforcements and move the rubikscube with rotating rows and columns into it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100531, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100532, "instruction": "Open the rectangular cabinet's drawer and carefully drop the small loaf with curved top into it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100532, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100534, "instruction": "Pull the rectangular slanted cabinet's drawer open and transfer the loaf of bread into it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100534, "success": true}
+{"event": "case_prepared", "task_name": "put_object_cabinet", "seed": 100537, "instruction": "Pull open the rectangular slanted cabinet's drawer and place the small solid gray cleaning soap into it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_object_cabinet", "seed": 100537, "success": true}

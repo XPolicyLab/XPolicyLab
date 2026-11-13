@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100000, "instruction": "Take the red can with smooth metallic texture and put it in the basket with perforated sides, then lift the basket with perforated sides.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100001, "instruction": "Place the can with flat silver bottom inside the brown basket, then lift the brown basket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100002, "instruction": "Take the green red metallic soda can with the left arm, drop it into the carrying basket with black plastic handle, and lift the carrying basket with black plastic handle using another arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100003, "instruction": "Use one arm for the rounded red Coca-Cola soda container, then the other arm lifts the carrying basket with black plastic handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100003, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100004, "instruction": "Grab the small soda can with lime graphics, place it in the plastic basket, and raise the plastic basket using the other arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100006, "instruction": "Grab the red and gold cylindrical can, set it into the brown basket, then raise the brown basket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100007, "instruction": "Use the right arm to set the can with red-orange text in the basket with perforated sides; another arm lifts the basket with perforated sides.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100007, "success": false}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100008, "instruction": "Pick up the smooth red soda can with the left arm, place into the basket with arched black grip, the other arm raises the basket with arched black grip.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100009, "instruction": "Take the can with flat silver bottom, place it into the rectangular yellow basket, then lift the rectangular yellow basket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100010, "instruction": "Grab and drop the metallic red beverage can in the basket with black handle, lift the basket with black handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100011, "instruction": "Pick the gold-decorated aluminum can, set it in the basket with loop handle, then lift the basket with loop handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100011, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100012, "instruction": "Take the hand-sized metallic can and put it in the medium yellow basket with slots, then lift the medium yellow basket with slots.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100012, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100013, "instruction": "Grab the drink can with smooth red finish, drop it into the brown basket, and raise the brown basket with the other arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100014, "instruction": "Grab the red can with gold illustrations, set it into the plastic basket, then raise the plastic basket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100015, "instruction": "Grab the can with red green label, place it in the light brown oval basket, and then lift the light brown oval basket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100016, "instruction": "Pick up the red drink can with white lid with the right arm, place into the basket for holding items, the other arm raises the basket for holding items.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100017, "instruction": "Grab the palm-sized drink can with the right arm, put it into the basket with black handle, and lift the basket with black handle with the other arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100017, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100018, "instruction": "Grab and drop the can with red green label in the rectangular basket with smooth surface, lift the rectangular basket with smooth surface.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100018, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100019, "instruction": "Grab the palm-sized drink can, drop it into the rectangular yellow basket, and raise the rectangular yellow basket with the other arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100019, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100020, "instruction": "Use the left arm to drop the red can with decorative label in the plastic basket; the other arm lifts the plastic basket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100021, "instruction": "Grab the smooth cylindrical can with lime pattern, place it in the carrying basket with black plastic handle, and raise the carrying basket with black plastic handle using the other arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100025, "instruction": "Grab the metallic can with rounded edges, drop it into the basket with arched black grip, and raise the basket with arched black grip with the other arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100026, "instruction": "Take the gold-decorated aluminum can and put it in the rectangular yellow basket, then lift the rectangular yellow basket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100029, "instruction": "Place the small soda can with lime graphics in the bright yellow basket and then use another arm to lift the bright yellow basket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100030, "instruction": "Grab the colorful can with lime and orange design, place it in the handheld basket, and lift the handheld basket upwards.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100032, "instruction": "Lift the drink can with light brown shade, set it in the yellow basket, and elevate the yellow basket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100033, "instruction": "Lift the medium metal can, set it in the basket made of woven wood, and elevate the basket made of woven wood.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100033, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100034, "instruction": "Lift the cylindrical metal can, place it in the basket with handle, pick up the basket with handle afterward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100034, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100035, "instruction": "Place the bright red drink container can in the bright yellow basket and then use another arm to lift the bright yellow basket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100036, "instruction": "Use the right arm to set the can with flat silver bottom in the medium yellow basket with slots; another arm lifts the medium yellow basket with slots.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100036, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100037, "instruction": "Use the left arm to grab the smooth red can and place in the rectangular basket with smooth surface, lift the rectangular basket with smooth surface with another arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100038, "instruction": "Pick the palm-sized drink can with one arm, place it in the medium yellow basket with slots, and lift the medium yellow basket with slots using another arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100038, "success": false}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100042, "instruction": "Pick up the beverage can with red green graphics, put it into the plastic basket, and lift the plastic basket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100043, "instruction": "Grab the rounded red Coca-Cola soda container, drop it into the basket with arched black grip, then use another arm for the basket with arched black grip.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100043, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100044, "instruction": "Grab the hand-sized metallic can, place it in the plastic basket, and raise the plastic basket using the other arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100045, "instruction": "Lift the white can with 3D RADY label, set it in the bright yellow basket, and elevate the bright yellow basket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100045, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100046, "instruction": "Lift the metallic drink can with pull-tab, place it in the bright yellow basket, and raise the bright yellow basket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100046, "success": false}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100047, "instruction": "Place the Coca-Cola soda can in the rectangular basket with smooth surface and then use another arm to lift the rectangular basket with smooth surface.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100048, "instruction": "Pick the rounded metallic can with the left arm, set it in the yellow basket, and lift the yellow basket using another arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100052, "instruction": "Pick up the red can with white Coca-Cola logo, put it in the handheld basket, and lift the handheld basket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100053, "instruction": "Lift the red drink can with white lid, place it in the brown basket with woven ridges, and raise the brown basket with woven ridges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100053, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100055, "instruction": "Use the right arm to grab the can with flat silver bottom, put it into the basket for holding items, and lift the basket for holding items with another arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100055, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100056, "instruction": "Pick up the red cylindrical can with silver top, put it in the carrying basket with black plastic handle, and lift the carrying basket with black plastic handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100058, "instruction": "Pick up the white can with the left arm, place into the basket made of woven wood, the other arm raises the basket made of woven wood.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100059, "instruction": "Pick the red soda can with green accents using the right arm, drop it in the plastic basket, and lift the plastic basket with the other arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100060, "instruction": "Lift the red can with smooth metallic texture, put it in the basket with arched black grip, and carry the basket with arched black grip afterward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100060, "success": false}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100061, "instruction": "Pick up the red can, place it in the rectangular basket with smooth surface, and then lift the rectangular basket with smooth surface.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100061, "success": false}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100062, "instruction": "Grab the Coca-Cola soda can, drop it into the plastic basket, then use another arm for the plastic basket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100063, "instruction": "Lift the white patterned brown metal can, put it in the basket with arched black grip, and carry the basket with arched black grip afterward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100065, "instruction": "Lift the can with flat silver bottom, place it inside the basket made of woven wood, and elevate the basket made of woven wood.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100066, "instruction": "Pick the palm-sized drink can, set it in the plastic basket, and lift the plastic basket upward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100067, "instruction": "Pick up the metallic soda can, put it into the bright yellow basket, and lift the bright yellow basket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100068, "instruction": "Use the left arm to insert the green red metallic soda can in the rectangular basket with smooth surface; the other arm lifts the rectangular basket with smooth surface.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100069, "instruction": "Take the red-orange text on white can, set it into the basket with perforated sides, and raise the basket with perforated sides.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100069, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100070, "instruction": "Use the right arm to put the medium metal can in the brown basket; the other arm lifts the brown basket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100071, "instruction": "Grab the green red metallic soda can, put it in the brown basket with woven ridges, then raise the brown basket with woven ridges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100071, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100072, "instruction": "Use the right arm to insert the small white can with branding in the basket with black handle; the other arm lifts the basket with black handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100073, "instruction": "Grab the metallic red beverage can, set it into the rectangular basket with smooth surface, then raise the rectangular basket with smooth surface.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100075, "instruction": "Take the brown can, place it into the plastic basket, then lift the plastic basket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100076, "instruction": "Use one arm for the metallic drink can with pull-tab, then the other arm lifts the basket for holding items.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100077, "instruction": "Pick up the hand-sized red can for drinks, set it inside the basket with arched black grip, then lift the basket with arched black grip.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100077, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100078, "instruction": "Grab and drop the white patterned brown metal can in the basket with perforated sides, lift the basket with perforated sides.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100079, "instruction": "Pick up the rounded metallic can, put it into the brown basket, and lift the brown basket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100081, "instruction": "Grab the can with gold top lid with the left arm, put it into the smooth ribbed light brown basket, and lift the smooth ribbed light brown basket with the other arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100081, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100083, "instruction": "Grab the smooth red can, place it in the plastic basket, and lift the plastic basket upwards.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100086, "instruction": "Lift the metal can with red base, set it in the carrying basket with black plastic handle, and elevate the carrying basket with black plastic handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100086, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100089, "instruction": "Pick up the smooth red soda can, put it in the smooth ribbed light brown basket, and lift the smooth ribbed light brown basket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100090, "instruction": "Pick the red green can with the right arm, drop it in the basket with perforated sides, lift the basket with perforated sides with another arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100091, "instruction": "Take the beverage can with printed label and put it in the yellow basket, then lift the yellow basket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100091, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100092, "instruction": "Pick up the red and gold cylindrical can with the left arm, place into the wooden basket with curved handle, the other arm raises the wooden basket with curved handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100094, "instruction": "Lift the hand-sized metallic can, set it in the plastic basket, and elevate the plastic basket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100094, "success": false}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100095, "instruction": "Pick the drink can with bright colors using the left arm, drop it in the brown basket with woven ridges, and lift the brown basket with woven ridges with the other arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100096, "instruction": "Pick up the hand-sized red can for drinks, set it inside the woven basket, then lift the woven basket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100096, "success": false}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100097, "instruction": "Take the smooth red can with the right arm, drop it into the carrying basket with black plastic handle, and lift the carrying basket with black plastic handle using another arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100097, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100098, "instruction": "Lift the gold-decorated aluminum can, place it in the medium yellow basket with slots, and raise the medium yellow basket with slots.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100099, "instruction": "Lift the red beverage can with curved top, place it inside the rectangular basket with smooth surface, and elevate the rectangular basket with smooth surface.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100100, "instruction": "Lift the can with red-orange text, place it inside the light brown oval basket, and elevate the light brown oval basket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100100, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100101, "instruction": "Lift the can with flat silver bottom, place it in the basket for holding items, and raise the basket for holding items.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100102, "instruction": "Grab the medium metal can, place it in the handheld basket, and lift the handheld basket upwards.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100102, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100103, "instruction": "Take the beverage can with printed label and put it in the oval-shaped basket with woven body, then lift the oval-shaped basket with woven body.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100103, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100104, "instruction": "Use the left arm to set the can with gold top lid in the basket for holding items; another arm lifts the basket for holding items.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100104, "success": false}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100106, "instruction": "Use the left arm to grab the hand-sized metallic can and place in the rectangular yellow basket, lift the rectangular yellow basket with another arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100106, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100107, "instruction": "Use the right arm to put the metal can with white decorative designs in the yellow basket; the other arm raises the yellow basket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100107, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100108, "instruction": "Grab the red beverage can with curved top, place it in the yellow basket for carrying stuff, and raise the yellow basket for carrying stuff using the other arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100108, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100109, "instruction": "Lift the small white can with branding, drop it into the carrying basket with black plastic handle, then carry the carrying basket with black plastic handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100109, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100110, "instruction": "Take the metallic soda can, place it into the basket with arched black grip, then lift the basket with arched black grip.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100110, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100111, "instruction": "Use the left arm to put the metal can with red base in the rectangular basket with smooth surface; another arm lifts the rectangular basket with smooth surface.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100111, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100113, "instruction": "Grab the white can, set it into the bright yellow basket, then raise the bright yellow basket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100113, "success": false}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100114, "instruction": "Use the right arm to insert the beverage can with printed label in the rectangular yellow basket; the other arm lifts the rectangular yellow basket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100114, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100115, "instruction": "Use the right arm to place the compact metal drink can in the rectangular yellow basket; the other arm lifts the rectangular yellow basket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100115, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100116, "instruction": "Grab the medium metal can, set it into the smooth ribbed light brown basket, then raise the smooth ribbed light brown basket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100116, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100117, "instruction": "Pick the red can, set it in the woven basket, then lift the woven basket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100117, "success": false}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100118, "instruction": "Use the left arm to grab the small white can with branding, put it into the yellow basket, and lift the yellow basket with another arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100118, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100121, "instruction": "Take the red can in the right arm, place it into the carrying basket with black plastic handle, another arm lifts the carrying basket with black plastic handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100121, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100122, "instruction": "Grab the small light brown cylindrical can, drop it into the carrying basket with black plastic handle, then use another arm for the carrying basket with black plastic handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100122, "success": false}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100123, "instruction": "Lift the red can with gold illustrations, put it in the brown basket with woven ridges, and carry the brown basket with woven ridges afterward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100123, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100124, "instruction": "Pick the beverage can with red green graphics, set it in the basket with arched black grip, then lift the basket with arched black grip.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100124, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100125, "instruction": "Lift the red soda can with green accents, put it in the bright yellow basket, and carry the bright yellow basket afterward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100125, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100126, "instruction": "Grab and drop the metallic red beverage can in the handheld basket, lift the handheld basket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100126, "success": true}
+{"event": "case_prepared", "task_name": "place_can_basket", "seed": 100127, "instruction": "Use the right arm to grab the metallic drink can with pull-tab, put it into the carrying basket with black plastic handle, and lift the carrying basket with black plastic handle with another arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_can_basket", "seed": 100127, "success": true}

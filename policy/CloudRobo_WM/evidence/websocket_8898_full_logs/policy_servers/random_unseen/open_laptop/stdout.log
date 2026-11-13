@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100000, "instruction": "Lift the compact laptop with orange exterior's lid gently.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100001, "instruction": "Open the thin rectangular laptop with one motion.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100002, "instruction": "Lift the flat orange laptop using the left arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100004, "instruction": "Open the thin rectangular laptop using the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100007, "instruction": "Pull up the silver laptop's lid.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100008, "instruction": "Open the foldable laptop carefully using the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100009, "instruction": "Lift the foldable laptop's lid fully.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100011, "instruction": "Open the silver laptop carefully using the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100011, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100012, "instruction": "Lift the black laptop fitting laptop bags using the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100012, "success": false}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100013, "instruction": "Open the black laptop slightly rounded at edges using the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100014, "instruction": "Open the laptop with display and keyboard carefully using the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100016, "instruction": "Open the rectangular laptop with smooth finish with care", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100017, "instruction": "Pull up the black laptop's lid.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100017, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100019, "instruction": "Pull up the foldable laptop's lid.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100019, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100020, "instruction": "Lift the medium laptop with black case's lid fully.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100021, "instruction": "Open the laptop with smooth edges and flat case with care", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100023, "instruction": "Lift the compact silver laptop's lid fully.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100024, "instruction": "Lift the medium laptop with black case's lid gently.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100025, "instruction": "Open the medium laptop with black case with care", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100026, "instruction": "Open the laptop with black cover and bottom carefully using the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100027, "instruction": "Open the computer with black screen with care", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100028, "instruction": "Open the laptop with glossy black display with one motion.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100028, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100031, "instruction": "Open the sleek laptop with one motion.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100031, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100032, "instruction": "Lift the thin rectangular laptop using the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100033, "instruction": "Open the medium-sized laptop for portable use with one motion.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100033, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100034, "instruction": "Grab the rectangular laptop with smooth finish and open it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100034, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100038, "instruction": "Grab the medium laptop with black case and open it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100039, "instruction": "Open the medium-sized laptop for portable use carefully using the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100039, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100040, "instruction": "Open the laptop with smooth edges and flat case carefully using the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100040, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100041, "instruction": "Lift the foldable laptop's lid fully.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100042, "instruction": "Open the foldable laptop with one motion.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100043, "instruction": "Lift the medium laptop with silver body's lid gently.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100043, "success": false}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100044, "instruction": "Lift the flat orange laptop using the left arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100046, "instruction": "Lift the laptop with glossy black display using the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100046, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100047, "instruction": "Open the laptop with display and keyboard with one motion.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100049, "instruction": "Open the portable laptop carefully using the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100051, "instruction": "Lift the silver laptop using the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100052, "instruction": "Lift the compact laptop with orange exterior using the left arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100054, "instruction": "Lift the computer with black screen using the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100054, "success": false}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100055, "instruction": "Open the black laptop carefully using the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100055, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100056, "instruction": "Open the compact silver laptop carefully using the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100057, "instruction": "Lift the black laptop's lid fully.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100058, "instruction": "Lift the foldable laptop's lid gently.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100059, "instruction": "Grab the silver laptop and open it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100060, "instruction": "Lift the silver laptop using the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100061, "instruction": "Open the computer with black screen carefully using the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100062, "instruction": "Open the thin rectangular laptop with one motion.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100063, "instruction": "Open the silver laptop carefully using the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100064, "instruction": "Open the laptop with patterned keyboard surface with care", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100064, "success": false}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100065, "instruction": "Lift the folding laptop with black keyboard using the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100066, "instruction": "Open the flat orange laptop with one motion.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100068, "instruction": "Lift the laptop computer using the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100069, "instruction": "Grab the smooth black plastic laptop and open it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100069, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100070, "instruction": "Open the portable laptop with one motion.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100071, "instruction": "Open the black laptop with compact design carefully using the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100071, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100073, "instruction": "Lift the black laptop with compact design's lid gently.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100074, "instruction": "Grab the compact laptop with orange exterior and open it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100075, "instruction": "Grab the black laptop fitting laptop bags and open it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100076, "instruction": "Lift the portable laptop using the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100077, "instruction": "Lift the black laptop with compact design's lid fully.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100077, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100078, "instruction": "Pull up the folding laptop with black keyboard's lid.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100079, "instruction": "Open the black laptop fitting laptop bags carefully using the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100080, "instruction": "Lift the laptop with patterned keyboard surface's lid fully.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100080, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100083, "instruction": "Open the black laptop fitting laptop bags with care", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100084, "instruction": "Open the medium-sized black laptop with one motion.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100084, "success": false}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100085, "instruction": "Open the medium-sized laptop for portable use with one motion.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100085, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100086, "instruction": "Open the laptop with smooth edges and flat case using the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100086, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100088, "instruction": "Lift the portable laptop's lid fully.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100089, "instruction": "Open the laptop with smooth edges and flat case with one motion.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100090, "instruction": "Lift the foldable laptop using the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100092, "instruction": "Lift the laptop with display and keyboard's lid fully.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100093, "instruction": "Pull up the compact laptop with orange exterior's lid.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100094, "instruction": "Lift the sleek laptop using the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100095, "instruction": "Open the thin rectangular laptop carefully using the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100096, "instruction": "Pull up the black laptop fitting laptop bags's lid.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100099, "instruction": "Open the laptop with patterned keyboard surface using the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100100, "instruction": "Open the black laptop carefully using the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100100, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100101, "instruction": "Lift the medium-sized laptop for portable use using the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100102, "instruction": "Lift the foldable laptop's lid gently.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100102, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100104, "instruction": "Open the laptop with black cover and bottom with care", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100104, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100105, "instruction": "Open the foldable laptop with care", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100105, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100106, "instruction": "Lift the laptop with smooth surfaces's lid fully.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100106, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100107, "instruction": "Open the laptop computer using the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100107, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100110, "instruction": "Lift the laptop with glossy black display's lid fully.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100110, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100113, "instruction": "Lift the medium laptop with silver body using the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100113, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100114, "instruction": "Lift the black laptop with shiny hinges using the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100114, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100115, "instruction": "Lift the laptop computer's lid fully.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100115, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100117, "instruction": "Lift the black laptop fitting laptop bags's lid gently.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100117, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100119, "instruction": "Open the silver laptop with one motion.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100119, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100121, "instruction": "Pull up the black laptop fitting laptop bags's lid.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100121, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100122, "instruction": "Open the silver laptop with care", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100122, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100123, "instruction": "Open the hinged laptop with keyboard and screen using the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100123, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100124, "instruction": "Grab the laptop with smooth edges and flat case and open it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100124, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100125, "instruction": "Open the folding laptop with black keyboard with care", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100125, "success": false}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100126, "instruction": "Pull up the laptop with glossy black display's lid.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100126, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100127, "instruction": "Lift the silver laptop's lid fully.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100127, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100128, "instruction": "Open the portable Toshiba laptop with one motion.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100128, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100130, "instruction": "Open the black laptop with shiny hinges with care", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100130, "success": false}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100131, "instruction": "Open the computer with black screen with care", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100131, "success": true}
+{"event": "case_prepared", "task_name": "open_laptop", "seed": 100132, "instruction": "Grab the medium laptop with black case and open it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "open_laptop", "seed": 100132, "success": true}

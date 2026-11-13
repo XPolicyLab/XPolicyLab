@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100000, "instruction": "Hold the light brown cylindrical roller with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100001, "instruction": "Use arms to grab the smooth wooden roller.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100002, "instruction": "Hold the smooth wooden roller with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100004, "instruction": "Grab the wooden roller on the table with arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100006, "instruction": "Use both arms to grab the wooden roller.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100007, "instruction": "Grab the smooth wooden roller on the table with arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100008, "instruction": "Grab the wooden roller on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100009, "instruction": "Use arms to grab the light brown cylindrical roller.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100011, "instruction": "Grab the light brown wooden roller with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100011, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100012, "instruction": "Use both arms to grab the roller with tapered ends.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100012, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100013, "instruction": "Grab the light brown cylindrical roller on the table using arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100015, "instruction": "Grab the roller with tapered tips on the table with arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100016, "instruction": "Grab the wooden roller on the table using arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100017, "instruction": "Grab the smooth wooden roller on the table with arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100017, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100018, "instruction": "Use both arms to grab the light brown wooden roller.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100018, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100019, "instruction": "Reach and grab the wooden roller with both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100019, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100020, "instruction": "Grab the smooth wooden roller on the table using arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100021, "instruction": "Reach and grab the light brown cylindrical roller with both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100022, "instruction": "Grab the smooth wooden roller on the table with arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100022, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100023, "instruction": "Use both arms to grab the light brown cylindrical roller.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100024, "instruction": "Grab the roller with tapered ends on the table with arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100025, "instruction": "Hold the smooth wooden roller with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100026, "instruction": "Grab the roller with tapered ends on the table with arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100027, "instruction": "Grab the light brown cylindrical roller on the table with arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100029, "instruction": "Hold the roller with tapered tips with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100030, "instruction": "Grab the light brown cylindrical roller on the table with arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100031, "instruction": "Use arms to grab the smooth wooden roller.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100031, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100032, "instruction": "Grab the light brown wooden roller on the table using arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100034, "instruction": "Use both arms to grab the roller with tapered ends.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100034, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100035, "instruction": "Reach and grab the roller with tapered ends with both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100036, "instruction": "Use arms to grab the wooden roller.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100036, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100037, "instruction": "Use both arms to grab the light brown cylindrical roller.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100038, "instruction": "Hold the light brown cylindrical roller with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100039, "instruction": "Grab the roller with tapered ends on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100039, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100040, "instruction": "Hold the light brown wooden roller with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100040, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100045, "instruction": "Use arms to grab the wooden roller.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100045, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100046, "instruction": "Grab the roller with tapered tips on the table using arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100046, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100047, "instruction": "Use arms to grab the light brown cylindrical roller.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100048, "instruction": "Grab the smooth wooden roller on the table with arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100051, "instruction": "Use both arms to grab the light brown wooden roller.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100053, "instruction": "Hold the wooden roller with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100053, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100058, "instruction": "Use both arms to grab the wooden roller.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100059, "instruction": "Use both arms to grab the light brown wooden roller.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100060, "instruction": "Grab the roller with tapered ends on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100061, "instruction": "Grab the smooth wooden roller with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100062, "instruction": "Hold the wooden roller with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100064, "instruction": "Reach and grab the roller with tapered ends with both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100065, "instruction": "Grab the roller with tapered ends with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100066, "instruction": "Use both arms to grab the light brown cylindrical roller.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100067, "instruction": "Grab the light brown wooden roller with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100068, "instruction": "Grab the light brown wooden roller on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100069, "instruction": "Grab the roller with tapered tips on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100069, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100070, "instruction": "Reach and grab the light brown wooden roller with both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100071, "instruction": "Grab the light brown cylindrical roller on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100071, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100073, "instruction": "Use arms to grab the wooden roller.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100074, "instruction": "Grab the smooth wooden roller on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100075, "instruction": "Grab the light brown wooden roller on the table with arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100076, "instruction": "Use both arms to grab the wooden roller.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100078, "instruction": "Grab the wooden roller on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100079, "instruction": "Grab the smooth wooden roller on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100080, "instruction": "Use both arms to grab the roller with tapered ends.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100080, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100082, "instruction": "Hold the light brown cylindrical roller with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100082, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100083, "instruction": "Grab the smooth wooden roller on the table using arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100084, "instruction": "Grab the roller with tapered tips on the table with arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100084, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100085, "instruction": "Hold the light brown cylindrical roller with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100085, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100086, "instruction": "Reach and grab the light brown wooden roller with both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100086, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100087, "instruction": "Grab the light brown wooden roller on the table with arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100088, "instruction": "Reach and grab the wooden roller with both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100089, "instruction": "Grab the light brown cylindrical roller on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100090, "instruction": "Grab the light brown wooden roller on the table using arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100091, "instruction": "Grab the roller with tapered tips on the table with arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100091, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100093, "instruction": "Grab the light brown cylindrical roller with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100094, "instruction": "Use both arms to grab the light brown cylindrical roller.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100095, "instruction": "Grab the roller with tapered ends on the table using arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100096, "instruction": "Grab the light brown cylindrical roller on the table with arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100097, "instruction": "Grab the smooth wooden roller with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100097, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100098, "instruction": "Use arms to grab the light brown wooden roller.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100099, "instruction": "Reach and grab the light brown wooden roller with both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100101, "instruction": "Grab the roller with tapered ends on the table using arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100103, "instruction": "Grab the wooden roller on the table using arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100103, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100104, "instruction": "Grab the roller with tapered tips with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100104, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100105, "instruction": "Grab the roller with tapered ends on the table with arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100105, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100106, "instruction": "Grab the roller with tapered tips on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100106, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100107, "instruction": "Grab the roller with tapered tips on the table with arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100107, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100111, "instruction": "Grab the wooden roller on the table using arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100111, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100112, "instruction": "Grab the light brown wooden roller on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100112, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100115, "instruction": "Grab the roller with tapered tips on the table using arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100115, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100116, "instruction": "Use both arms to grab the light brown cylindrical roller.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100116, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100117, "instruction": "Grab the wooden roller with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100117, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100119, "instruction": "Grab the light brown cylindrical roller on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100119, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100120, "instruction": "Grab the roller with tapered tips with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100120, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100121, "instruction": "Grab the roller with tapered ends on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100121, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100122, "instruction": "Use both arms to grab the roller with tapered ends.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100122, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100123, "instruction": "Grab the light brown wooden roller on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100123, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100124, "instruction": "Hold the smooth wooden roller with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100124, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100126, "instruction": "Grab the smooth wooden roller on the table using arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100126, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100127, "instruction": "Grab the wooden roller on the table with arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100127, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100128, "instruction": "Reach and grab the light brown cylindrical roller with both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100128, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100129, "instruction": "Grab the light brown cylindrical roller with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100129, "success": true}
+{"event": "case_prepared", "task_name": "grab_roller", "seed": 100130, "instruction": "Reach and grab the roller with tapered ends with both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "grab_roller", "seed": 100130, "success": true}

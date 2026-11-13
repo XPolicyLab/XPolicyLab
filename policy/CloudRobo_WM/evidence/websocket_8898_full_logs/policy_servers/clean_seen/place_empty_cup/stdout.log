@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100000, "instruction": "Use an arm to place the medium-sized plastic blue cup on the smooth round palm-sized coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100001, "instruction": "Carefully place the smooth blue drinking cup onto the round coaster without arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100002, "instruction": "Direct the blue rounded-bottom cup to the light gray streaked wooden coaster and let it rest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100004, "instruction": "Grab the medium blue cylindrical cup and set it onto the wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100005, "instruction": "Use an arm to place the rounded base blue cup on the smooth round palm-sized coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100005, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100007, "instruction": "Using the arm, drop the cup for holding liquids onto the smooth round palm-sized coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100008, "instruction": "Position the plastic cup for drinks carefully on the light gray round grainy coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100009, "instruction": "Grab the smooth blue drinking cup and place it on the coaster made of smooth wood.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100010, "instruction": "Stick the plastic cup for drinks onto the coaster with circular shape using the arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100011, "instruction": "Slide the cup with light blue color onto the coaster with circular shape", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100011, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100012, "instruction": "Use an arm to place the cup for holding liquids on the small coaster with grain texture", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100012, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100013, "instruction": "Set the medium-sized plastic blue cup securely on the round coaster using the arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100014, "instruction": "Drop the smooth blue cup for liquids on top of the wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100015, "instruction": "Use an arm to drop the plastic cup for drinks on the flat round wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100016, "instruction": "Position the cup with light blue color carefully on the coaster made of smooth wood", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100017, "instruction": "Grab the cup for holding liquids, then place it onto the coaster with circular shape.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100017, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100018, "instruction": "Stick the plastic cup for drinks onto the round coaster with light streaks using the arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100018, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100019, "instruction": "Set the cup for holding liquids securely on the coaster made of smooth wood using the arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100019, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100020, "instruction": "Lift the cylindrical light blue cup and stick it onto the wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100021, "instruction": "Grab the cup with smooth plastic surface and set it onto the light gray streaked wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100023, "instruction": "Using the arm, align the light blue plastic cup over the smooth round palm-sized coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100024, "instruction": "Use an arm to drop the rounded base blue cup on the grainy texture coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100025, "instruction": "Set the medium-sized plastic blue cup securely on the light gray round grainy coaster using the arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100026, "instruction": "Use an arm to place the cup with light blue color on the coaster made of smooth wood", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100028, "instruction": "Carefully place the smooth blue drinking cup onto the wooden coaster without arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100028, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100029, "instruction": "Use the arm to set the medium blue cylindrical cup on the flat round wooden coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100030, "instruction": "Lift the medium-sized plastic blue cup and place it onto the grainy texture coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100032, "instruction": "Grab the smooth blue drinking cup and place it over the round coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100033, "instruction": "Grab the light blue plastic cup and place it over the smooth round palm-sized coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100033, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100034, "instruction": "Move the light blue plastic cup to the grainy texture coaster using the arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100034, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100035, "instruction": "Use the arm to set the medium blue cylindrical cup on the flat round wooden coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100036, "instruction": "Using the arm, drop the smooth blue drinking cup onto the small coaster with grain texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100036, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100037, "instruction": "Set the rounded base blue cup carefully onto the round coaster with light streaks", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100038, "instruction": "Stick the cup for holding liquids onto the small coaster with grain texture using the arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100040, "instruction": "Lift the medium blue cylindrical cup up and drop it on the light gray streaked wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100040, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100041, "instruction": "Position the cup for holding liquids squarely on top of the round coaster with light streaks.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100042, "instruction": "Slide the smooth blue cup for liquids onto the wooden coaster with the arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100044, "instruction": "Grab the cup for holding liquids and set it onto the wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100046, "instruction": "Position the cylindrical light blue cup on the flat round wooden coaster with the arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100046, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100047, "instruction": "Use the arm to set the light blue plastic cup on the round coaster with light streaks", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100049, "instruction": "Lift the cylindrical light blue cup up and drop it on the small coaster with grain texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100050, "instruction": "Using the arm, slide the medium-sized plastic blue cup onto the coaster with circular shape.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100050, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100051, "instruction": "Set the cup for holding liquids on the small coaster with grain texture using the arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100052, "instruction": "Move the cup with light blue color to the grainy texture coaster and set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100054, "instruction": "Set the rounded base blue cup onto the grainy texture coaster using the arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100056, "instruction": "Move the medium blue cylindrical cup to the light gray streaked wooden coaster and set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100057, "instruction": "Stick the medium blue cylindrical cup onto the light gray round grainy coaster using the arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100059, "instruction": "Using the arm, slide the smooth blue cup for liquids onto the wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100060, "instruction": "Set the medium-sized plastic blue cup on the light gray round grainy coaster using the arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100061, "instruction": "Drop the rounded base blue cup firmly on the round coaster with light streaks using arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100062, "instruction": "Relocate the light blue plastic cup precisely onto the wooden coaster with arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100063, "instruction": "Set the blue rounded-bottom cup on the light gray round grainy coaster using the arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100064, "instruction": "Slide the smooth blue cup for liquids onto the small coaster with grain texture", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100065, "instruction": "Position the smooth blue drinking cup squarely on top of the smooth round palm-sized coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100066, "instruction": "Use the arm to position the cup for holding liquids on the wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100067, "instruction": "Slide the light blue plastic cup onto the flat round wooden coaster with the arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100068, "instruction": "Use the arm to position the blue rounded-bottom cup onto the round coaster with light streaks.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100069, "instruction": "Use arm to place the cup with light blue color on the smooth round palm-sized coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100069, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100070, "instruction": "Move the light blue plastic cup onto the round coaster with the arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100071, "instruction": "Lift the blue rounded-bottom cup up and drop it on the small coaster with grain texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100071, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100072, "instruction": "Use the arm to position the smooth blue cup for liquids onto the coaster with circular shape.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100073, "instruction": "Drop the plastic cup for drinks on top of the round coaster with light streaks.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100074, "instruction": "Stick the medium-sized plastic blue cup onto the light gray round grainy coaster using the arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100075, "instruction": "Grab the rounded base blue cup and place it on the wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100076, "instruction": "Set the cylindrical light blue cup down on the coaster made of smooth wood", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100077, "instruction": "Lift the smooth blue drinking cup and place it over the light gray round grainy coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100077, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100078, "instruction": "Stick the blue rounded-bottom cup onto the smooth round palm-sized coaster using the arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100079, "instruction": "Slide the light blue plastic cup onto the round coaster with the arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100080, "instruction": "Make sure the rounded base blue cup ends up on the round coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100080, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100081, "instruction": "Grab the plastic cup for drinks, then place it onto the round coaster with light streaks.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100081, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100082, "instruction": "Slide the medium-sized plastic blue cup onto the light gray streaked wooden coaster with the arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100082, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100083, "instruction": "Lift the rounded base blue cup and place it onto the wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100084, "instruction": "Use an arm to drop the medium blue cylindrical cup on the grainy texture coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100084, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100085, "instruction": "Lift the cylindrical light blue cup and place it over the round coaster with light streaks", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100085, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100086, "instruction": "Grab the cup for holding liquids and place it over the light gray streaked wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100086, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100087, "instruction": "Using the arm, slide the cup with smooth plastic surface onto the coaster made of smooth wood.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100088, "instruction": "Move the cup for holding liquids to the light gray streaked wooden coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100089, "instruction": "Move the plastic cup for drinks to the round coaster with light streaks and set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100090, "instruction": "Place the rounded base blue cup on top of the smooth round palm-sized coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100091, "instruction": "Use an arm to place the medium-sized plastic blue cup on the round coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100091, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100092, "instruction": "Position the cylindrical light blue cup carefully on the flat surface gray wooden coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100093, "instruction": "Using the arm, slide the medium-sized plastic blue cup onto the light gray round grainy coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100094, "instruction": "Grab the cup for holding liquids and place it over the wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100096, "instruction": "Lift the smooth blue drinking cup and place it over the wooden coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100097, "instruction": "Direct the rounded base blue cup to the light gray streaked wooden coaster and let it rest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100097, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100099, "instruction": "Position the cup with smooth plastic surface squarely on top of the round coaster with light streaks.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100100, "instruction": "Position the cup for holding liquids squarely on top of the flat round wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100100, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100101, "instruction": "Position the smooth blue drinking cup on the coaster made of smooth wood with the arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100103, "instruction": "Use an arm to place the medium-sized plastic blue cup on the light gray streaked wooden coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100103, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100104, "instruction": "Using the arm, drop the plastic cup for drinks onto the coaster made of smooth wood.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100104, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100106, "instruction": "Set the cup for holding liquids carefully onto the coaster made of smooth wood", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100106, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100107, "instruction": "Using the arm, align the cup with smooth plastic surface over the round coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100107, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100108, "instruction": "Grab the cup with smooth plastic surface and set it onto the flat surface gray wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100108, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100109, "instruction": "Pick the smooth blue cup for liquids up and drop it on the light gray streaked wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100109, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100110, "instruction": "Grab the light blue plastic cup and place it on the light gray round grainy coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100110, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100112, "instruction": "Grab the light blue plastic cup and lower it onto the grainy texture coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100112, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100113, "instruction": "Drop the rounded base blue cup on top of the flat round wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100113, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100114, "instruction": "Use the arm to position the medium-sized plastic blue cup onto the coaster made of smooth wood.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100114, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100115, "instruction": "Use the arm to put the blue rounded-bottom cup onto the coaster made of smooth wood.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100115, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100116, "instruction": "Drop the light blue plastic cup on top of the round coaster with light streaks.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100116, "success": true}

@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100000, "instruction": "Grasp both bottles in parallel: the bottle with red screw cap and the green bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100001, "instruction": "Grasp both bottles in parallel: the bottle with red screw cap and the green bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100002, "instruction": "Pick up the plastic soda bottle and the green bottle simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100003, "instruction": "Pick up the bottle with red screw cap and the green bottle simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100003, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100004, "instruction": "Hold the plastic soda bottle in one arm and the green bottle in the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100005, "instruction": "Pick up the plastic soda bottle and the green bottle simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100005, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100006, "instruction": "Use separate arms to pick the brown bottle and the green bottle simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100007, "instruction": "Lift the plastic soda bottle and the green bottle with white label at the same time.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100008, "instruction": "Use separate arms to pick the bottle with red screw cap and the green bottle simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100009, "instruction": "Hold the bottle with red screw cap in one arm and the green bottle with white label in the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100011, "instruction": "Use one arm for the plastic soda bottle and the other for the green bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100011, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100012, "instruction": "Pick up the plastic soda bottle and the green bottle with white label simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100012, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100015, "instruction": "Grasp both bottles in parallel: the bottle with red screw cap and the green plastic bottle with ridged bottom.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100015, "success": false}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100016, "instruction": "Pick both the brown bottle and the green bottle up in parallel.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100016, "success": false}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100017, "instruction": "Take hold of the bottle with red screw cap and the green bottle at once.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100017, "success": false}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100018, "instruction": "Lift the bottle with red screw cap and the green bottle at the same time.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100018, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100019, "instruction": "Pick both the brown bottle and the green bottle up in parallel.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100019, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100020, "instruction": "Grab the plastic soda bottle and the green bottle together with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100021, "instruction": "Grab the plastic soda bottle and the green bottle together with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100022, "instruction": "Hold the bottle with red screw cap in one arm and the green bottle with white label in the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100022, "success": false}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100023, "instruction": "Use separate arms to pick the bottle with red screw cap and the green bottle simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100025, "instruction": "Pick both the bottle with red screw cap and the green bottle with white label up in parallel.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100026, "instruction": "Pick both the brown bottle and the green plastic bottle with ridged bottom up in parallel.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100028, "instruction": "Pick both the brown bottle and the green plastic bottle with ridged bottom up in parallel.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100028, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100029, "instruction": "Lift the brown bottle and the green plastic bottle with ridged bottom at the same time.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100030, "instruction": "Raise the brown bottle and the green bottle together.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100030, "success": false}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100031, "instruction": "Pick both the bottle with red screw cap and the green bottle with white label up in parallel.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100031, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100032, "instruction": "Lift the plastic soda bottle and the green plastic bottle with ridged bottom at the same time.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100032, "success": false}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100035, "instruction": "Hold the plastic soda bottle in one arm and the green plastic bottle with ridged bottom in the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100036, "instruction": "Use one arm for the plastic soda bottle and the other for the green bottle with white label.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100036, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100037, "instruction": "Take hold of the plastic soda bottle and the green plastic bottle with ridged bottom at once.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100037, "success": false}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100038, "instruction": "Lift the plastic soda bottle and the green bottle at the same time.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100039, "instruction": "Grab the plastic soda bottle and the green bottle with white label together with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100039, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100040, "instruction": "Lift the bottle with red screw cap and the green bottle with white label at the same time.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100040, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100041, "instruction": "Grasp both bottles in parallel: the brown bottle and the green plastic bottle with ridged bottom.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100043, "instruction": "Raise the bottle with red screw cap and the green plastic bottle with ridged bottom together.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100043, "success": false}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100044, "instruction": "Grab the plastic soda bottle and the green bottle with white label together with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100045, "instruction": "Pick up the plastic soda bottle and the green bottle with white label simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100045, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100046, "instruction": "Use separate arms to pick the plastic soda bottle and the green plastic bottle with ridged bottom simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100046, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100047, "instruction": "Use separate arms to pick the brown bottle and the green bottle simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100048, "instruction": "Pick both the bottle with red screw cap and the green bottle up in parallel.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100050, "instruction": "Use one arm for the plastic soda bottle and the other for the green plastic bottle with ridged bottom.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100050, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100051, "instruction": "Use one arm for the plastic soda bottle and the other for the green bottle with white label.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100052, "instruction": "Take hold of the bottle with red screw cap and the green bottle with white label at once.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100053, "instruction": "Grab the plastic soda bottle and the green plastic bottle with ridged bottom together with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100053, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100054, "instruction": "Use one arm for the bottle with red screw cap and the other for the green plastic bottle with ridged bottom.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100054, "success": false}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100055, "instruction": "Take hold of the plastic soda bottle and the green plastic bottle with ridged bottom at once.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100055, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100056, "instruction": "Take hold of the plastic soda bottle and the green plastic bottle with ridged bottom at once.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100057, "instruction": "Raise the bottle with red screw cap and the green bottle together.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100058, "instruction": "Pick both the plastic soda bottle and the green bottle with white label up in parallel.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100058, "success": false}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100059, "instruction": "Lift the bottle with red screw cap and the green plastic bottle with ridged bottom at the same time.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100060, "instruction": "Use separate arms to pick the plastic soda bottle and the green bottle with white label simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100061, "instruction": "Hold the bottle with red screw cap in one arm and the green bottle with white label in the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100062, "instruction": "Use separate arms to pick the brown bottle and the green plastic bottle with ridged bottom simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100063, "instruction": "Hold the plastic soda bottle in one arm and the green plastic bottle with ridged bottom in the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100065, "instruction": "Lift the bottle with red screw cap and the green plastic bottle with ridged bottom at the same time.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100066, "instruction": "Take hold of the brown bottle and the green bottle at once.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100067, "instruction": "Use separate arms to pick the plastic soda bottle and the green bottle simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100068, "instruction": "Use one arm for the brown bottle and the other for the green bottle with white label.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100069, "instruction": "Use one arm for the bottle with red screw cap and the other for the green bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100069, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100070, "instruction": "Lift the brown bottle and the green plastic bottle with ridged bottom at the same time.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100071, "instruction": "Raise the plastic soda bottle and the green bottle together.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100071, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100072, "instruction": "Use separate arms to pick the brown bottle and the green plastic bottle with ridged bottom simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100073, "instruction": "Hold the plastic soda bottle in one arm and the green bottle in the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100074, "instruction": "Raise the bottle with red screw cap and the green plastic bottle with ridged bottom together.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100075, "instruction": "Pick both the bottle with red screw cap and the green plastic bottle with ridged bottom up in parallel.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100075, "success": false}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100076, "instruction": "Use separate arms to pick the brown bottle and the green plastic bottle with ridged bottom simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100077, "instruction": "Grasp both bottles in parallel: the plastic soda bottle and the green plastic bottle with ridged bottom.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100077, "success": false}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100078, "instruction": "Raise the brown bottle and the green bottle with white label together.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100079, "instruction": "Hold the brown bottle in one arm and the green bottle with white label in the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100081, "instruction": "Grab the plastic soda bottle and the green bottle with white label together with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100081, "success": false}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100083, "instruction": "Use separate arms to pick the brown bottle and the green bottle with white label simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100084, "instruction": "Use separate arms to pick the brown bottle and the green bottle simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100084, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100085, "instruction": "Use separate arms to pick the brown bottle and the green plastic bottle with ridged bottom simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100085, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100086, "instruction": "Take hold of the plastic soda bottle and the green plastic bottle with ridged bottom at once.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100086, "success": false}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100087, "instruction": "Hold the plastic soda bottle in one arm and the green bottle with white label in the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100088, "instruction": "Take hold of the brown bottle and the green bottle at once.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100089, "instruction": "Use one arm for the plastic soda bottle and the other for the green bottle with white label.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100091, "instruction": "Take hold of the bottle with red screw cap and the green plastic bottle with ridged bottom at once.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100091, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100092, "instruction": "Take hold of the bottle with red screw cap and the green plastic bottle with ridged bottom at once.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100093, "instruction": "Raise the brown bottle and the green bottle with white label together.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100094, "instruction": "Take hold of the bottle with red screw cap and the green plastic bottle with ridged bottom at once.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100095, "instruction": "Grab the bottle with red screw cap and the green plastic bottle with ridged bottom together with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100096, "instruction": "Hold the bottle with red screw cap in one arm and the green plastic bottle with ridged bottom in the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100097, "instruction": "Hold the bottle with red screw cap in one arm and the green bottle with white label in the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100097, "success": false}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100098, "instruction": "Use one arm for the bottle with red screw cap and the other for the green plastic bottle with ridged bottom.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100099, "instruction": "Lift the bottle with red screw cap and the green plastic bottle with ridged bottom at the same time.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100100, "instruction": "Lift the plastic soda bottle and the green bottle at the same time.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100100, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100101, "instruction": "Hold the bottle with red screw cap in one arm and the green plastic bottle with ridged bottom in the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100102, "instruction": "Use one arm for the bottle with red screw cap and the other for the green bottle with white label.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100102, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100103, "instruction": "Grasp both bottles in parallel: the plastic soda bottle and the green bottle with white label.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100103, "success": false}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100104, "instruction": "Use one arm for the plastic soda bottle and the other for the green plastic bottle with ridged bottom.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100104, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100105, "instruction": "Use separate arms to pick the bottle with red screw cap and the green bottle with white label simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100105, "success": false}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100106, "instruction": "Hold the brown bottle in one arm and the green bottle in the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100106, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100107, "instruction": "Use one arm for the brown bottle and the other for the green plastic bottle with ridged bottom.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100107, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100108, "instruction": "Hold the plastic soda bottle in one arm and the green bottle with white label in the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100108, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100109, "instruction": "Grasp both bottles in parallel: the plastic soda bottle and the green bottle with white label.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100109, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100110, "instruction": "Grasp both bottles in parallel: the brown bottle and the green bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100110, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100111, "instruction": "Grasp both bottles in parallel: the plastic soda bottle and the green bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100111, "success": true}
+{"event": "case_prepared", "task_name": "pick_dual_bottles", "seed": 100112, "instruction": "Use one arm for the brown bottle and the other for the green bottle with white label.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "pick_dual_bottles", "seed": 100112, "success": true}

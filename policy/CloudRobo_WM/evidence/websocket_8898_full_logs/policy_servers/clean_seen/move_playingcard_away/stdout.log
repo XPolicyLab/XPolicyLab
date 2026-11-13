@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100000, "instruction": "Take the rectangle-shaped cards box and place it further outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100001, "instruction": "Move the black box with rectangular shape off the table outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100002, "instruction": "Pick the smooth playingcards holder and slide it further outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100003, "instruction": "With the right arm, pick up the compact box for playing cards and slide it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100003, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100004, "instruction": "Pick the smooth playingcards holder and move it outward from the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100005, "instruction": "Take the red and yellow playingcards case and place it further outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100005, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100006, "instruction": "Take the playingcards box with white accents and move it away from the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100007, "instruction": "Grab the box with cards inside from the table and shift it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100008, "instruction": "Lift the smooth black cards container and set it away from the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100009, "instruction": "Lift the box for playingcards using the left arm and transfer it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100010, "instruction": "Pick up the rectangle-shaped cards box with the right arm and place it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100011, "instruction": "Lift the hand-sized playingcards container and relocate it off the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100011, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100012, "instruction": "Take the black playing cards box and place it further outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100012, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100013, "instruction": "Relocate the smooth black cards container farther outward using the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100014, "instruction": "Take the playingcards pack with blue top and move it away from the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100015, "instruction": "Lift the box holding playing cards and slide it off the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100016, "instruction": "Lift the blue pack holding playingcards and set it away from the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100017, "instruction": "Grab the glossy rectangular playingcards box and take it away from the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100017, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100018, "instruction": "Pick up the box holding playing cards with the left arm and place it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100018, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100019, "instruction": "Relocate the red and yellow playingcards case farther outward using the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100019, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100020, "instruction": "Grab the small playingcards pack with the left arm and move it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100021, "instruction": "Pick the small black box with cards and move it outward from the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100022, "instruction": "Grab the box holding playing cards from the table and shift it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100022, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100023, "instruction": "Lift the palm-sized box for playing cards and shift it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100024, "instruction": "Grab the black box with rectangular shape and move it further outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100025, "instruction": "Relocate the blue playingcards box farther outward using the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100026, "instruction": "Take the hand-sized playingcards container and place it further outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100027, "instruction": "Lift the rectangular box for card storage and set it away from the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100028, "instruction": "Move the playingcards storage box off the table outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100028, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100029, "instruction": "Lift the blue playingcards box and push it off the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100030, "instruction": "Lift the rectangular playingcards case from the table and move it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100031, "instruction": "Use the right arm to grab the blue carton for playingcards and move it away.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100031, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100032, "instruction": "Take the small playingcards pack and push it further away.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100033, "instruction": "Take the rectangular playingcards case and push it further away.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100033, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100034, "instruction": "Pick up the blue pack holding playingcards and move it farther outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100034, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100035, "instruction": "Lift the box of playingcards and push it off the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100036, "instruction": "Grab the box with cards inside from the table and shift it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100036, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100037, "instruction": "Pick up the box holding playing cards and shift it further outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100038, "instruction": "Use the left arm to pick the box of playingcards and shift it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100039, "instruction": "Take the box with cards inside and push it further away.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100039, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100040, "instruction": "Take the glossy rectangular playingcards box and place it beyond the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100040, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100041, "instruction": "Pick the playingcards box with white symbols from the table and shift it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100042, "instruction": "Lift the yellow and red playingcards box and place it farther away with the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100043, "instruction": "Place the small playingcards pack away from the table outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100043, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100044, "instruction": "Pick the compact red playingcards pack and move it outward from the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100045, "instruction": "Take the glossy rectangular playingcards box and push it further away.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100045, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100046, "instruction": "Use the left arm to pick up the small playingcards pack and move it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100046, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100047, "instruction": "Lift the small playingcards pack and push it off the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100048, "instruction": "Lift the blue pack holding playingcards with the right arm and move it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100049, "instruction": "Take the compact red playingcards pack and place it beyond the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100050, "instruction": "Grab the rectangular box for card storage using the left arm and move it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100050, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100051, "instruction": "Grab the small playingcards container and shift it farther away from the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100052, "instruction": "Move the small playingcards pack away from its position on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100053, "instruction": "Use the right arm to pick up the playingcards storage box and move it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100053, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100054, "instruction": "Grab the hand-sized playingcards container using the right arm and push it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100055, "instruction": "Shift the box for playingcards outward after grabbing it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100055, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100056, "instruction": "Move the box for playingcards away from its position on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100057, "instruction": "Use the right arm to pick the small playingcards pack and shift it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100058, "instruction": "Lift the playingcards pack with blue top and set it away from the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100059, "instruction": "Grab the small playingcards pack using the right arm and move it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100060, "instruction": "Grab the box for playingcards and shift it farther away from the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100061, "instruction": "Using the right arm, lift the glossy rectangular playingcards box and move it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100062, "instruction": "Place the playingcards storage box away from the table outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100063, "instruction": "Grab the blue and white playingcards packaging and shift it farther away from the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100064, "instruction": "Lift the compact red playingcards pack and relocate it off the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100065, "instruction": "Pick the red and yellow playingcards case from the table and shift it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100066, "instruction": "Pick up the playingcards box with white accents and place it further away.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100067, "instruction": "Lift the blue carton for playingcards and place it farther away with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100068, "instruction": "Use the right arm to pick the rectangular box for card storage and move it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100069, "instruction": "Use the right arm to grab the palm-sized box for playing cards and move it aside.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100069, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100070, "instruction": "Move the hand-sized playingcards container outward from the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100071, "instruction": "Take the blue playingcards box and place it beyond the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100071, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100072, "instruction": "Use the left arm to pick the box for playingcards and move it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100073, "instruction": "Take the rectangular blue playingcards case and move it away from the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100074, "instruction": "Pick up the playingcards storage box with the right arm and place it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100075, "instruction": "Lift the blue and white playingcards packaging using the right arm and transfer it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100076, "instruction": "With the left arm, pick up the smooth playingcards holder and slide it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100077, "instruction": "Pick up the glossy rectangular playingcards box and move it away.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100077, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100078, "instruction": "Pick up the rectangle-shaped cards box with the left arm and place it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100079, "instruction": "Lift the playingcards box with white symbols and place it farther away with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100080, "instruction": "Lift the box with cards inside with the right arm and move it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100080, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100081, "instruction": "Grab the hand-sized playingcards container and take it away from the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100081, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100082, "instruction": "Lift the cardboard playing cards box and place it farther away with the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100082, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100083, "instruction": "Lift the playingcards storage box from the table and move it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100084, "instruction": "Grab the small playingcards container and move it further outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100084, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100085, "instruction": "Pick up the rectangular box for card storage and move it away.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100085, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100086, "instruction": "Take the red and yellow playingcards case and push it further away.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100086, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100087, "instruction": "Grab the playingcards box with white symbols using the left arm and move it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100088, "instruction": "Move the palm-sized playingcards carton further outward after picking it up.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100089, "instruction": "Move the rectangular blue playingcards case away from its position on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100090, "instruction": "Pick up the blue and white playingcards packaging using the right arm and shift it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100091, "instruction": "Take the blue and white playingcards packaging and place it further outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100091, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100092, "instruction": "Lift the playingcards storage box and set it away from the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100093, "instruction": "Grab the blue pack holding playingcards using the right arm and move it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100094, "instruction": "Take the compact red playingcards pack and push it further away.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100095, "instruction": "Grab the blue playingcards box using the left arm and move it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100096, "instruction": "Pick up the playing cards box with gold text and move it away.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100097, "instruction": "Pick the red playingcards box and slide it further outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100097, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100098, "instruction": "Use the right arm to pick up the rectangular blue playingcards case and move it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "move_playingcard_away", "seed": 100099, "instruction": "Pick the hand-sized playingcards container from the table and shift it outward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_playingcard_away", "seed": 100099, "success": true}

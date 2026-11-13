@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100000, "instruction": "Set the blue cup down on the small drink-protecting wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100001, "instruction": "Set the handheld round blue cup on top of the small drink-protecting wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100002, "instruction": "Place the blue cup onto the disc-shaped light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100003, "instruction": "Place the blue cup onto the light gray coaster gently.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100003, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100004, "instruction": "Place the handheld round blue cup onto the small drink-protecting wooden coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100005, "instruction": "Place the handheld round blue cup onto the disc-shaped light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100005, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100006, "instruction": "Use arm to set the blue cup on the small drink-protecting wooden coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100007, "instruction": "Place the blue cup onto the disc-shaped light gray coaster gently.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100008, "instruction": "Place the handheld round blue cup on top of the light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100009, "instruction": "Use arm to set the blue cup on the light gray coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100010, "instruction": "Place the handheld round blue cup carefully onto the light gray coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100013, "instruction": "Place the small smooth cup onto the disc-shaped light gray coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100014, "instruction": "Place the blue cup on top of the small drink-protecting wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100015, "instruction": "Set the small smooth cup on top of the light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100017, "instruction": "Place the handheld round blue cup onto the light gray coaster gently.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100017, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100019, "instruction": "Place the blue cup onto the disc-shaped light gray coaster gently.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100019, "success": false}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100020, "instruction": "Use arm to set the small smooth cup on the disc-shaped light gray coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100021, "instruction": "Set the small smooth cup on top of the small drink-protecting wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100024, "instruction": "Set the handheld round blue cup down on the small drink-protecting wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100025, "instruction": "Set the small smooth cup on top of the disc-shaped light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100026, "instruction": "Place the small smooth cup on top of the small drink-protecting wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100028, "instruction": "Set the handheld round blue cup on top of the light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100028, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100029, "instruction": "Place the small smooth cup on top of the small drink-protecting wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100031, "instruction": "Set the handheld round blue cup on top of the small drink-protecting wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100031, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100032, "instruction": "Place the small smooth cup onto the disc-shaped light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100033, "instruction": "Set the handheld round blue cup on top of the disc-shaped light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100033, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100034, "instruction": "Place the handheld round blue cup carefully onto the small drink-protecting wooden coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100034, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100035, "instruction": "Place the blue cup onto the disc-shaped light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100036, "instruction": "Set the small smooth cup down on the disc-shaped light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100036, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100037, "instruction": "Place the small smooth cup onto the small drink-protecting wooden coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100040, "instruction": "Place the blue cup on top of the disc-shaped light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100040, "success": false}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100042, "instruction": "Set the small smooth cup on top of the disc-shaped light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100043, "instruction": "Set the handheld round blue cup down on the light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100043, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100044, "instruction": "Place the handheld round blue cup onto the light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100045, "instruction": "Place the handheld round blue cup onto the light gray coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100045, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100046, "instruction": "Place the blue cup onto the light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100046, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100047, "instruction": "Set the blue cup on top of the light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100048, "instruction": "Place the small smooth cup onto the small drink-protecting wooden coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100049, "instruction": "Place the handheld round blue cup on top of the small drink-protecting wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100050, "instruction": "Place the small smooth cup onto the disc-shaped light gray coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100050, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100051, "instruction": "Pick the blue cup and position it on the light gray coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100051, "success": false}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100053, "instruction": "Place the small smooth cup onto the disc-shaped light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100053, "success": false}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100054, "instruction": "Place the small smooth cup onto the disc-shaped light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100055, "instruction": "Place the small smooth cup on top of the small drink-protecting wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100055, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100056, "instruction": "Place the small smooth cup on top of the light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100057, "instruction": "Use arm to set the blue cup on the small drink-protecting wooden coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100058, "instruction": "Set the small smooth cup down on the small drink-protecting wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100059, "instruction": "Place the small smooth cup carefully onto the small drink-protecting wooden coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100060, "instruction": "Pick the small smooth cup and position it on the light gray coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100060, "success": false}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100062, "instruction": "Set the small smooth cup on top of the disc-shaped light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100062, "success": false}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100063, "instruction": "Place the blue cup on top of the light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100064, "instruction": "Set the blue cup on top of the small drink-protecting wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100067, "instruction": "Place the small smooth cup on top of the light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100067, "success": false}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100068, "instruction": "Place the handheld round blue cup onto the disc-shaped light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100071, "instruction": "Place the blue cup on top of the light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100071, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100072, "instruction": "Set the handheld round blue cup down on the small drink-protecting wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100072, "success": false}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100073, "instruction": "Set the small smooth cup down on the light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100074, "instruction": "Place the blue cup carefully onto the disc-shaped light gray coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100075, "instruction": "Place the small smooth cup carefully onto the small drink-protecting wooden coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100076, "instruction": "Pick the handheld round blue cup and position it on the light gray coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100077, "instruction": "Use arm to set the small smooth cup on the disc-shaped light gray coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100077, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100078, "instruction": "Place the blue cup onto the small drink-protecting wooden coaster gently.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100079, "instruction": "Place the handheld round blue cup on top of the disc-shaped light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100081, "instruction": "Set the handheld round blue cup down on the light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100081, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100082, "instruction": "Pick the small smooth cup and position it on the light gray coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100082, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100083, "instruction": "Set the handheld round blue cup on top of the small drink-protecting wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100085, "instruction": "Set the handheld round blue cup on top of the small drink-protecting wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100085, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100086, "instruction": "Place the blue cup onto the small drink-protecting wooden coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100086, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100087, "instruction": "Place the handheld round blue cup onto the light gray coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100088, "instruction": "Use arm to set the small smooth cup on the small drink-protecting wooden coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100091, "instruction": "Place the small smooth cup onto the disc-shaped light gray coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100091, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100092, "instruction": "Use arm to set the small smooth cup on the small drink-protecting wooden coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100093, "instruction": "Place the blue cup onto the light gray coaster gently.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100095, "instruction": "Place the small smooth cup on top of the disc-shaped light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100095, "success": false}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100096, "instruction": "Place the handheld round blue cup onto the disc-shaped light gray coaster gently.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100098, "instruction": "Place the blue cup onto the light gray coaster gently.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100099, "instruction": "Place the blue cup onto the light gray coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100101, "instruction": "Place the small smooth cup onto the disc-shaped light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100102, "instruction": "Set the small smooth cup down on the disc-shaped light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100102, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100103, "instruction": "Place the blue cup onto the small drink-protecting wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100103, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100104, "instruction": "Set the small smooth cup on top of the light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100104, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100106, "instruction": "Use arm to set the small smooth cup on the small drink-protecting wooden coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100106, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100107, "instruction": "Place the blue cup onto the light gray coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100107, "success": false}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100108, "instruction": "Place the blue cup onto the small drink-protecting wooden coaster gently.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100108, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100109, "instruction": "Place the blue cup onto the small drink-protecting wooden coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100109, "success": false}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100110, "instruction": "Use arm to set the small smooth cup on the light gray coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100110, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100111, "instruction": "Place the handheld round blue cup carefully onto the small drink-protecting wooden coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100111, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100114, "instruction": "Place the blue cup onto the small drink-protecting wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100114, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100115, "instruction": "Use arm to set the small smooth cup on the disc-shaped light gray coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100115, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100116, "instruction": "Place the handheld round blue cup onto the disc-shaped light gray coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100116, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100119, "instruction": "Set the handheld round blue cup on top of the disc-shaped light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100119, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100120, "instruction": "Place the small smooth cup on top of the light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100120, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100122, "instruction": "Set the handheld round blue cup on top of the light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100122, "success": false}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100123, "instruction": "Place the handheld round blue cup onto the disc-shaped light gray coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100123, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100124, "instruction": "Place the small smooth cup carefully onto the small drink-protecting wooden coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100124, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100125, "instruction": "Set the small smooth cup on top of the disc-shaped light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100125, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100126, "instruction": "Place the handheld round blue cup onto the light gray coaster gently.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100126, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100127, "instruction": "Use arm to set the small smooth cup on the small drink-protecting wooden coaster", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100127, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100128, "instruction": "Set the blue cup on top of the small drink-protecting wooden coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100128, "success": true}
+{"event": "case_prepared", "task_name": "place_empty_cup", "seed": 100130, "instruction": "Set the handheld round blue cup on top of the disc-shaped light gray coaster.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_empty_cup", "seed": 100130, "success": true}

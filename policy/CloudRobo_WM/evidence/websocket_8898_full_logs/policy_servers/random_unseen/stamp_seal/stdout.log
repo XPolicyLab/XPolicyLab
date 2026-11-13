@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100003, "instruction": "Pick the block-shaped seal with angled edges to stamp Blue", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100003, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100004, "instruction": "Grab the small carved seal using the right arm and stamp Yellow", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100005, "instruction": "Pick the reddish rectangular seal to stamp Maroon", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100005, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100006, "instruction": "Grab the small slanted-edged brown seal, press onto Magenta", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100007, "instruction": "Use the left arm to grab the small slanted-edged brown seal, stamp Orange.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100010, "instruction": "Grab the seal used for pressing stamps using the right arm and stamp Purple", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100011, "instruction": "Pick the seal with smooth texture to stamp Yellow", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100011, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100012, "instruction": "Grab the smooth stone seal with writing and stamp Cyan", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100012, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100013, "instruction": "Use the left arm to grab the red seal on rectangular base, stamp Purple.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100015, "instruction": "Pick the small slanted-edged brown seal and stamp on Brown", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100021, "instruction": "Pick the red seal on rectangular base and press on Maroon.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100022, "instruction": "Pick the round base seal to stamp Red", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100022, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100028, "instruction": "Pick the small slanted-edged brown seal and stamp on Teal", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100028, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100029, "instruction": "Pick the small slanted-edged brown seal and press on Lime.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100030, "instruction": "Grab the block-shaped seal with angled edges, press onto Blue", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100031, "instruction": "Stamp Teal using the round base seal", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100031, "success": false}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100034, "instruction": "Pick the brown seal with leaf carvings and stamp Pink", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100034, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100035, "instruction": "Pick the smooth stone seal with writing and stamp on Orange", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100036, "instruction": "Pick the seal with black base and press on Brown.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100036, "success": false}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100037, "instruction": "Pick the small rectangular seal for stamping to stamp Magenta", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100038, "instruction": "Pick the seal used for pressing stamps and press on Tan.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100039, "instruction": "Grab the round base seal using the right arm and stamp Cyan", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100039, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100041, "instruction": "Pick the seal with smooth texture and press on Gray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100042, "instruction": "Grab the stamp with beige handle, press onto Black", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100043, "instruction": "Use the right arm to grab the small rectangular seal for stamping, stamp Teal.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100043, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100044, "instruction": "Grab the brown seal with leaf carvings using the right arm and stamp Pink", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100045, "instruction": "Use the left arm to grab the reddish rectangular seal, stamp Black.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100045, "success": false}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100046, "instruction": "Grab the brown seal with leaf carvings using the left arm and stamp Cyan", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100046, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100047, "instruction": "Pick the small rectangular seal for stamping and press on Cyan.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100051, "instruction": "Pick the seal used for pressing stamps to stamp Red", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100053, "instruction": "Pick the small rectangular seal for stamping and press on Turquoise.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100053, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100054, "instruction": "Grab the round base seal, press onto Pink", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100055, "instruction": "Grab the reddish rectangular seal, press onto Yellow", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100055, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100056, "instruction": "Grab the small rectangular seal for stamping and stamp Coral", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100061, "instruction": "Pick the round base seal and press on Black.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100062, "instruction": "Grab the reddish rectangular seal and stamp Green", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100064, "instruction": "Grab the smooth stone seal with writing using the right arm and stamp Green", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100065, "instruction": "Pick the brown seal with leaf carvings and stamp on Silver", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100065, "success": false}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100066, "instruction": "Grab the block-shaped seal with angled edges and stamp Olive", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100066, "success": false}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100067, "instruction": "Pick the stamp with beige handle and press on Magenta.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100070, "instruction": "Pick the small rectangular seal for stamping and stamp Blue", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100072, "instruction": "Stamp Indigo using the small rectangular seal for stamping", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100073, "instruction": "Pick the reddish rectangular seal and stamp on Cyan", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100074, "instruction": "Use the left arm to grab the stamp with beige handle, stamp Turquoise.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100076, "instruction": "Stamp Orange using the small slanted-edged brown seal", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100078, "instruction": "Grab the small carved seal and stamp Orange", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100083, "instruction": "Pick the reddish rectangular seal and press on Pink.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100083, "success": false}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100085, "instruction": "Grab the seal with black base, press onto Indigo", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100085, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100087, "instruction": "Pick the smooth stone seal with writing and stamp Yellow", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100088, "instruction": "Use the left arm to grab the reddish rectangular seal, stamp Blue.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100089, "instruction": "Pick the red seal on rectangular base to stamp Lime", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100090, "instruction": "Pick the small rectangular seal for stamping and stamp on Red", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100092, "instruction": "Pick the brown seal with leaf carvings and stamp on Lime", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100092, "success": false}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100093, "instruction": "Pick the reddish rectangular seal to stamp Lime", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100094, "instruction": "Pick the seal used for pressing stamps and stamp on Teal", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100095, "instruction": "Stamp Pink using the brown seal with leaf carvings", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100096, "instruction": "Use the left arm to grab the block-shaped seal with angled edges, stamp Tan.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100097, "instruction": "Grab the small slanted-edged brown seal and stamp Red", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100097, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100101, "instruction": "Pick the small carved seal and stamp on Red", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100103, "instruction": "Grab the small rectangular seal for stamping, press onto Silver", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100103, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100104, "instruction": "Pick the seal with black base and stamp Olive", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100104, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100106, "instruction": "Grab the stamp with beige handle using the right arm and stamp Black", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100106, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100107, "instruction": "Pick the small rectangular seal for stamping to stamp Indigo", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100107, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100108, "instruction": "Pick the small slanted-edged brown seal and stamp Yellow", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100108, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100109, "instruction": "Pick the reddish rectangular seal and press on Tan.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100109, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100111, "instruction": "Pick the stamp with beige handle and stamp on Tan", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100111, "success": false}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100112, "instruction": "Pick the small rectangular seal for stamping and press on Pink.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100112, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100113, "instruction": "Grab the block-shaped seal with angled edges using the left arm and stamp Brown", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100113, "success": false}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100114, "instruction": "Stamp Turquoise using the small rectangular seal for stamping", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100114, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100115, "instruction": "Grab the small rectangular seal for stamping and stamp Magenta", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100115, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100116, "instruction": "Grab the stamp with beige handle, press onto Orange", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100116, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100117, "instruction": "Stamp Pink using the reddish rectangular seal", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100117, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100120, "instruction": "Pick the solid brown seal and press on Olive.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100120, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100121, "instruction": "Stamp Teal using the block-shaped seal with angled edges", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100121, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100122, "instruction": "Pick the smooth stone seal with writing and press on Beige.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100122, "success": false}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100125, "instruction": "Stamp Purple using the solid brown seal", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100125, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100127, "instruction": "Pick the solid brown seal to stamp Cyan", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100127, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100129, "instruction": "Pick the red seal on rectangular base and press on Green.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100129, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100130, "instruction": "Grab the solid brown seal using the right arm and stamp Teal", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100130, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100131, "instruction": "Pick the red seal on rectangular base to stamp Olive", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100131, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100133, "instruction": "Grab the seal used for pressing stamps using the right arm and stamp Magenta", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100133, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100135, "instruction": "Grab the brown seal with leaf carvings, press onto Silver", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100135, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100136, "instruction": "Use the right arm to grab the small carved seal, stamp Turquoise.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100136, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100138, "instruction": "Grab the small carved seal, press onto Yellow", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100138, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100139, "instruction": "Grab the small rectangular seal for stamping, press onto Brown", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100139, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100140, "instruction": "Grab the round base seal, press onto Cyan", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100140, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100141, "instruction": "Grab the seal used for pressing stamps using the right arm and stamp Gray", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100141, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100145, "instruction": "Pick the small rectangular seal for stamping to stamp Tan", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100145, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100146, "instruction": "Grab the seal with smooth texture using the left arm and stamp Navy", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100146, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100147, "instruction": "Stamp Beige using the seal used for pressing stamps", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100147, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100149, "instruction": "Pick the seal used for pressing stamps and stamp Pink", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100149, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100150, "instruction": "Grab the smooth stone seal with writing, press onto Coral", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100150, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100152, "instruction": "Grab the seal with black base using the left arm and stamp Beige", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100152, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100156, "instruction": "Grab the solid brown seal, press onto Olive", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100156, "success": false}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100157, "instruction": "Grab the reddish rectangular seal and stamp Olive", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100157, "success": false}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100158, "instruction": "Pick the stamp with beige handle and stamp on Orange", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100158, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100160, "instruction": "Grab the small rectangular seal for stamping and stamp Gray", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100160, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100161, "instruction": "Pick the small rectangular seal for stamping to stamp Navy", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100161, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100162, "instruction": "Grab the solid brown seal and stamp Lime", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100162, "success": true}
+{"event": "case_prepared", "task_name": "stamp_seal", "seed": 100171, "instruction": "Grab the round base seal, press onto Purple", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stamp_seal", "seed": 100171, "success": true}
