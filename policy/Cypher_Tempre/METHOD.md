@@ -26,4 +26,4 @@ An official skill-enabled score alone cannot establish the skill's causal benefi
 
 ## Evidence available in this draft
 
-See `VALIDATION.md`. Transport checks and a zero-call native wiring diagnostic passed. No official online evaluation, hidden-layout verification, skill-lift estimate or full task score is reported for this adapter.
+See `VALIDATION.md`. Transport checks and a zero-call native wiring diagnostic passed. One subsequent local integration trial scored 100 on an already-seen `stack_bowls` layout while retaining the same live state. The intended CLI model session remains unvalidated, and this exposed-layout interactive trial cannot estimate skill lift or an overall benchmark score. No official online evaluation or hidden-layout verification is reported.

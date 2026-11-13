@@ -1,6 +1,8 @@
 import base64
 import json
 import tempfile
+import subprocess
+import sys
 import threading
 import time
 import unittest
@@ -101,6 +103,26 @@ class TransportTests(unittest.TestCase):
     def test_external_plain_http_is_refused(self):
         with self.assertRaises(ValueError):
             RemoteContinualClient({'CYPHER_TEMPRE_BROKER_URL': 'http://example.com', 'CYPHER_TEMPRE_BROKER_TOKEN': 'x' * 32})
+
+    def test_closed_episode_cannot_block_or_receive_a_later_action(self):
+        stream = self.root / 'stream'
+        old, current = '0' * 32, '1' * 32
+        for session, created in [(old, 0), (current, 1)]:
+            folder = stream / 'sessions' / session
+            folder.mkdir(parents=True)
+            atomic_json(folder / 'session.json', {'created_at': created})
+            atomic_json(folder / 'request-001.json', {'session': session, 'turn': 1, 'images': [], 'tools': TOOLS})
+        closed = stream / 'sessions' / old
+        atomic_json(closed / 'episode-ended.json', {'ended': True})
+        io = Path(__file__).resolve().parents[1] / 'agent_io.py'
+        command = [sys.executable, str(io), '--stream-root', str(stream)]
+        result = subprocess.run([*command, 'observe', '--wait', '0'], capture_output=True, text=True, check=True)
+        self.assertEqual(json.loads(result.stdout)['session'], current)
+        reply = self.root / 'reply.json'
+        atomic_json(reply, REPLY)
+        result = subprocess.run([*command, 'act', old, '1', str(reply)], capture_output=True, text=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertFalse((closed / 'reply-001.json').exists())
 
 
 if __name__ == '__main__':

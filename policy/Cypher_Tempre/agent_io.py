@@ -12,6 +12,8 @@ from client import atomic_json, validate_reply
 def pending(root):
     sessions = []
     for folder in (root / 'sessions').glob('*'):
+        if (folder / 'episode-ended.json').exists():
+            continue
         descriptor = folder / 'session.json'
         if descriptor.is_file():
             sessions.append((json.loads(descriptor.read_text(encoding='utf-8'))['created_at'], folder))
@@ -62,6 +64,8 @@ def main():
     if not re.fullmatch('[0-9a-f]{32}', args.session) or args.turn < 1:
         parser.error('Invalid session or turn.')
     folder = root / 'sessions' / args.session
+    if (folder / 'episode-ended.json').exists():
+        raise RuntimeError('This robot episode has ended; no stale action is relayed.')
     request = json.loads((folder / f'request-{args.turn:03}.json').read_text(encoding='utf-8'))
     reply = validate_reply(json.loads(args.reply_file.read_text(encoding='utf-8-sig')), request['tools'])
     target = folder / f'reply-{args.turn:03}.json'
