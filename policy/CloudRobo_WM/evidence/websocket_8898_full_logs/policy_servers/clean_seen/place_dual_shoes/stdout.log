@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100001, "instruction": "Move two the shoe with lace holes, tip ends left, and set them in the medium-sized box with Nike swoosh.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100003, "instruction": "Move two the sports shoe green with beige sole, tip ends left, and set them in the medium orange box with smooth surface.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100003, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100004, "instruction": "Make sure tips point left, then place the medium-sized shoe in the smooth bright orange box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100006, "instruction": "Move two the small brown footwear replica into the orange shoe-box, ensure tips point left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100007, "instruction": "Hold two the white shoe with rounded toe, tips left, and place in the orange Nike shoe-box with logo.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100008, "instruction": "With both arms, move two the shoe with rounded and open form into the orange shoe-box, tips facing left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100009, "instruction": "Pick two the shoe with open straps, ensure tips facing left, and position in the orange Nike shoe-box with logo.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100012, "instruction": "Place both items matching the synthetic leather shoe into the orange cardboard shoe-box, ensure shoe tips face left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100012, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100016, "instruction": "Retrieve two the shoe with thick ribbed sole, orienting tips left, and place in the shoe-box with Nike printed logo.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100020, "instruction": "Grab both the synthetic leather shoe and put them into the bright orange shoe-box, tips left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100022, "instruction": "Set two the shoe with beige sole into the orange cardboard shoe-box, align tips to the left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100022, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100023, "instruction": "Place both items matching the dual-tone shoe with sleek design into the medium-sized box with Nike swoosh, ensure shoe tips face left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100024, "instruction": "Drop a pair of the white shoe with black lines into the rectangular shoe-box with orange lid, tips align left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100025, "instruction": "Grab two the dark shoe with grooves on sole, tip left, place them in the orange Nike shoe-box with logo.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100026, "instruction": "Pick up two the green upper white logo shoe together and place in the smooth orange box for shoes, tips left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100027, "instruction": "Slide both the sports shoe into the shoe-box with Nike printed logo with tips pointing left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100028, "instruction": "Lift two the rubber sole shoe, ensure left tips, drop in the orange shoe-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100028, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100030, "instruction": "Place both items matching the medium shoe with synthetic material in the shoe-box with Nike printed logo, tip left when set.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100034, "instruction": "Arrange the two the shoe with flat rubber sole, tips left, inside the rectangular shoe-box with orange lid.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100034, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100036, "instruction": "Transfer two the shoe with open straps, tips left-aligned, into the bright orange shoe-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100036, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100038, "instruction": "Grab and place both items matching the synthetic leather white shoe in the rectangular orange shoe-box, tips left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100040, "instruction": "Grasp two the shoe with patterned bottom, tips aligned left, and place them in the medium orange box with smooth surface.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100040, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100043, "instruction": "Hold two the shoe for walking with rubber grip, drop them in the bright orange shoe-box, tips pointing left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100043, "success": false}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100044, "instruction": "Put two the smooth white shoe in the bright orange shoe-box with tips facing left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100050, "instruction": "Put two the white sneaker with red accents in the rectangular orange shoe-box with tips facing left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100050, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100051, "instruction": "Lift two the dark brown leather shoe, ensure left tips, drop in the medium-sized box with Nike swoosh.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100052, "instruction": "Lift two the white shoe with curved top, position them in the orange shoe-box, tips to the left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100056, "instruction": "Position two the synthetic leather white shoe into the medium orange box with smooth surface, shoe tips leftward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100058, "instruction": "Position two the shoe made of rubber and leather into the orange Nike shoe-box with logo, shoe tips leftward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100059, "instruction": "With both arms, move two the dark brown leather shoe into the medium-sized box with Nike swoosh, tips facing left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100060, "instruction": "Transfer two the shoe with textured bottom, tips left-aligned, into the rectangular orange shoe-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100060, "success": false}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100063, "instruction": "Take two the white sneaker shoe, ensure tips left, place in the orange Nike shoe-box with logo.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100064, "instruction": "Grab two the shoe with textured bottom, tips left, place them carefully in the shoe-box with Nike printed logo.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100067, "instruction": "Use both arms to place both items matching the shoe with curved sole into the medium-sized box with Nike swoosh, tips left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100070, "instruction": "Hold two the rubber-soled black-striped shoe, drop them in the Nike-branded orange shoe-box, tips pointing left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100071, "instruction": "Move two the shoe for everyday wear into the shoe-box with Nike printed logo, ensure tips point left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100071, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100072, "instruction": "Take two the rounded shoe with visible straps, ensure tips left, place in the rectangular orange shoe-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100072, "success": false}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100073, "instruction": "Grab two the shoe with open straps, tips left, place them carefully in the rectangular shoe-box with orange lid.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100074, "instruction": "Arrange the two the light brown shoe with white sole, tips left, inside the orange Nike shoe-box with logo.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100075, "instruction": "Hold two the shoe with open straps, drop them in the rectangular orange shoe-box, tips pointing left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100079, "instruction": "Grasp two the shoe with beige sole, tips aligned left, and place them in the orange shoe-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100081, "instruction": "Put two the rounded front shoe into the rectangular shoe-box with orange lid, shoe tips left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100081, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100084, "instruction": "Lift two the shoe with beige sole, ensure left tips, drop in the rectangular shoe-box with orange lid.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100084, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100086, "instruction": "Move a pair of the average adult-sized shoe into the medium orange box with smooth surface, left tips first.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100086, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100087, "instruction": "Grasp two the black and white shoe, tips aligned left, and place them in the orange cardboard shoe-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100088, "instruction": "Use both arms to set two the light brown shoe in the orange shoe-box, tips left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100089, "instruction": "Place both items matching the shoe for everyday wear into the rectangular orange shoe-box, ensure shoe tips face left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100090, "instruction": "Use both arms to set two the light brown shoe in the Nike-branded orange shoe-box, tips left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100093, "instruction": "Put two the white shoe with rubber sole in the orange Nike shoe-box with logo with tips facing left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100097, "instruction": "Put two the smooth white shoe, tips to the left, into the smooth bright orange box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100097, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100098, "instruction": "Stick both the shoe with lace-up front in the medium-sized box with Nike swoosh, shoe tips pointing left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100100, "instruction": "Collect two the medium white shoe, tips facing left, and put in the rectangular shoe-box with orange lid.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100100, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100101, "instruction": "Place both items matching the footwear with white top in the smooth orange box for shoes, tip left when set.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100102, "instruction": "Use arms to lift two the shoe with colorful stripes, tips left, and set in the bright orange shoe-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100102, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100104, "instruction": "Grab two the white-laced green running shoe, tip left, place them in the rectangular shoe-box with orange lid.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100104, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100106, "instruction": "Set two the shoe made of rubber and leather into the medium-sized box with Nike swoosh, align tips to the left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100106, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100108, "instruction": "Grab two the medium-sized black and white shoe, tips left, place them carefully in the orange shoe-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100108, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100111, "instruction": "Place both items matching the shoe with lace-up front tips leftward into the smooth bright orange box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100111, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100112, "instruction": "Lift two the medium-sized shoe, ensure left tips, drop in the smooth bright orange box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100112, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100114, "instruction": "Take two the rubber-soled black-striped shoe, ensure tips left, place in the Nike-branded orange shoe-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100114, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100115, "instruction": "Pick two the shoe for everyday wear, ensure tips facing left, and position in the smooth orange box for shoes.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100115, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100116, "instruction": "Use both arms to place both items matching the shoe with lace holes into the smooth bright orange box, tips left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100116, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100117, "instruction": "Set two the brown shoe in the bright orange shoe-box with tips left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100117, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100119, "instruction": "Slide both the medium-sized black and white shoe into the shoe-box with Nike printed logo with tips pointing left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100119, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100120, "instruction": "Hold two the white shoe with black accents, tips left, and place in the rectangular orange shoe-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100120, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100121, "instruction": "Grab two the medium shoe with synthetic material, tip left, place them in the shoe-box with Nike printed logo.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100121, "success": false}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100122, "instruction": "Put two the light brown shoe with white sole into the smooth orange box for shoes, shoe tips left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100122, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100125, "instruction": "Pick two the white shoe with black lines, ensure tips facing left, and position in the orange cardboard shoe-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100125, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100127, "instruction": "Place both items matching the white sneaker shoe tips leftward into the shoe-box with Nike printed logo.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100127, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100128, "instruction": "Grab a pair of the rounded front shoe, tips left, put them into the Nike-branded orange shoe-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100128, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100129, "instruction": "Pick up two the rounded front shoe and set them in the orange Nike shoe-box with logo, tips left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100129, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100131, "instruction": "Put two the red sneaker into the medium orange box with smooth surface, shoe tips left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100131, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100132, "instruction": "Move two the shoe for walking, tip ends left, and set them in the medium orange box with smooth surface.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100132, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100133, "instruction": "Set two the synthetic leather white shoe into the rectangular shoe-box with orange lid, align tips to the left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100133, "success": false}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100137, "instruction": "Lay down two the white shoe in the orange shoe-box, tips oriented left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100137, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100138, "instruction": "Lift two the medium-sized rounded white shoe, ensure left tips, drop in the shoe-box with Nike printed logo.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100138, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100139, "instruction": "Stick both the black shoe with white accents in the orange shoe-box, shoe tips pointing left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100139, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100140, "instruction": "Pick up two the green lace-up sneaker, tips left, drop them into the orange shoe-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100140, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100142, "instruction": "Put two the sports shoe in the Nike-branded orange shoe-box with tips facing left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100142, "success": false}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100143, "instruction": "Grab both the white and black combination shoe, ensure tips left, place in the smooth bright orange box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100143, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100144, "instruction": "Lay down two the rounded front shoe in the orange Nike shoe-box with logo, tips oriented left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100144, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100145, "instruction": "Place both items matching the rounded front shoe inside the rectangular shoe-box with orange lid, make tips face left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100145, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100146, "instruction": "Handle two the sports shoe green with beige sole, tips directed left, and drop them into the orange shoe-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100146, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100148, "instruction": "Put two the medium shoe with synthetic material in the bright orange shoe-box with tips facing left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100148, "success": false}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100149, "instruction": "Put two the lace-up red sports shoe in the smooth bright orange box with tips facing left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100149, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100150, "instruction": "Lift two the sports shoe white and black, ensure left tips, drop in the medium-sized box with Nike swoosh.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100150, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100151, "instruction": "Slide both the shoe with black accents into the smooth orange box for shoes with tips pointing left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100151, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100152, "instruction": "Ensure two the smooth-textured red shoe are in the shoe-box with Nike printed logo, tips facing left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100152, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100153, "instruction": "Handle two the footwear with white top, tips directed left, and drop them into the rectangular orange shoe-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100153, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100154, "instruction": "Put two the medium-sized rounded white shoe, tips to the left, into the smooth orange box for shoes.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100154, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100158, "instruction": "Put two the smooth leather shoe into the smooth bright orange box, shoe tips left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100158, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100159, "instruction": "Drop a pair of the white-laced green running shoe into the bright orange shoe-box, tips align left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100159, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100160, "instruction": "Slide both the footwear with red top white sole into the rectangular shoe-box with orange lid with tips pointing left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100160, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100161, "instruction": "Move two the average adult-sized shoe into the shoe-box with Nike printed logo, ensure tips point left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100161, "success": false}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100162, "instruction": "Collect two the medium red shoe, tips facing left, and put in the orange shoe-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100162, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100165, "instruction": "Slide both the canvas shoe with grooved sole into the orange Nike shoe-box with logo with tips pointing left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100165, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100166, "instruction": "Grab two the red shoe with white sole, tip left, place them in the rectangular shoe-box with orange lid.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100166, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100167, "instruction": "Put two the rounded tip leather shoe in the orange shoe-box with tips facing left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100167, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100168, "instruction": "Grab two the lace-up canvas shoe, tips left, place them carefully in the shoe-box with Nike printed logo.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100168, "success": true}
+{"event": "case_prepared", "task_name": "place_dual_shoes", "seed": 100170, "instruction": "Make sure tips point left, then place the lace-up canvas shoe in the Nike-branded orange shoe-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_dual_shoes", "seed": 100170, "success": true}

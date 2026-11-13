@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100000, "instruction": "Arrange the bowl with brown outer rim one on top of another.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100001, "instruction": "Stack the dark inside bowl light blue outside by arranging them sequentially.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100002, "instruction": "Align and stack the bowl with shiny texture step by step using arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100004, "instruction": "Place one the bowl with shiny texture down and carefully stack the others above it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100006, "instruction": "Arrange the three the blue bowl with slightly rounded base by stacking them one over the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100011, "instruction": "Pick up the ceramic bowl with earthy brown trim and stack them from biggest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100011, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100017, "instruction": "Grab a the dark inside bowl light blue outside, set it down, and stack the rest on it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100017, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100020, "instruction": "Position the second the bowl with shiny texture over the first, then the third on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100022, "instruction": "Use arms to stack each the bowl with shiny texture carefully.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100022, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100023, "instruction": "Hold the medium-sized bowl for holding food, place them one after another.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100023, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100024, "instruction": "Position the dark inside bowl light blue outside one on top of the other largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100024, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100025, "instruction": "Stack all three the ceramic bowl directly on top of each other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100026, "instruction": "Arrange the ceramic bowl with earthy brown trim one on top of another.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100027, "instruction": "Form a tower with bowls the blue bowl with slightly rounded base, placing smallest last.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100030, "instruction": "Stack the curved bowl light blue shade without arms in a vertical sequence.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100030, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100032, "instruction": "Pick up each the bowl with shiny texture and set them one over another.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100034, "instruction": "Place the first the glazed bowl with curved sides down, then stack the next two above it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100034, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100035, "instruction": "Place each the blue bowl on top of the previous one.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100038, "instruction": "Start with one the blue bowl, and stack the other two on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100039, "instruction": "Pick up each the blue bowl and set them one over another.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100039, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100042, "instruction": "Take the bottom the rounded bowl with light blue color and sequentially pile the other two above.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100044, "instruction": "Place one the glazed bowl with curved sides down and carefully stack the others above it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100047, "instruction": "Place each the bowl with shiny texture on top of the previous one.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100048, "instruction": "Use the arm to stack the glazed bowl with curved sides one by one.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100049, "instruction": "Stack all the glazed bowl with curved sides sequentially while handling one at a time.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100051, "instruction": "Position the first the bowl with brown outer rim, and sequentially add the two above it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100054, "instruction": "Align the second the ceramic bowl with earthy brown trim atop the first, then add the third above.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100054, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100056, "instruction": "Place three the ceramic bowl on top of each other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100057, "instruction": "Start with one the bowl with shiny texture, and stack the other two on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100060, "instruction": "Position the first the ceramic bowl, and sequentially add the two above it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100060, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100062, "instruction": "Start with the bottom the small bowl with brown edge and finish stacking.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100062, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100063, "instruction": "Position the first the blue bowl with slightly rounded base, and sequentially add the two above it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100063, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100065, "instruction": "Place the first the medium-sized bowl for holding food, then align the others on top using the arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100067, "instruction": "Take the bottom the curved bowl light blue shade and sequentially pile the other two above.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100068, "instruction": "Start with the first the blue bowl with slightly rounded base, adding the next two in sequence.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100069, "instruction": "Organize bowls the medium-sized bowl for holding food by stacking them in size order.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100069, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100070, "instruction": "Lift each the ceramic bowl with earthy brown trim and stack them together neatly.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100071, "instruction": "Stack all the ceramic bowl sequentially while handling one at a time.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100071, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100073, "instruction": "Arrange the three the ceramic bowl with earthy brown trim by stacking them one over the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100073, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100074, "instruction": "Grab the small bowl with brown edge, stack from largest at the base to the smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100075, "instruction": "Stack the blue bowl with slightly rounded base sequentially using your arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100077, "instruction": "Grab the dark inside bowl light blue outside, arrange them vertically.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100077, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100078, "instruction": "Grab the bowl with brown outer rim, stack from largest at the base to the smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100081, "instruction": "Grab a the ceramic bowl with earthy brown trim, set it down, and stack the rest on it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100081, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100086, "instruction": "Pick up each the medium-sized bowl for holding food and set them one over another.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100086, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100091, "instruction": "Arrange the blue bowl with slightly rounded base one on top of another.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100091, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100094, "instruction": "Pick up each the glazed bowl with curved sides and set them one over another.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100095, "instruction": "Use arms to place each the ceramic bowl atop the previous one.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100097, "instruction": "Align and stack the blue bowl step by step using arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100097, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100098, "instruction": "Take each the ceramic bowl with earthy brown trim and place them one by one on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100099, "instruction": "Place the first the ceramic bowl with earthy brown trim, then align the others on top using the arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100100, "instruction": "Place the first the blue bowl, then align the others on top using the arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100100, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100101, "instruction": "Take each the ceramic bowl with earthy brown trim and place them one by one on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100101, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100103, "instruction": "Arrange the blue bowl one on top of another.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100103, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100105, "instruction": "Arrange the medium-sized bowl for holding food one on top of another.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100105, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100108, "instruction": "Place one the medium-sized bowl for holding food down and carefully stack the others above it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100108, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100112, "instruction": "Stack the small bowl with brown edge from the base up to the top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100112, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100113, "instruction": "Arrange the three the ceramic bowl by stacking them one over the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100113, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100116, "instruction": "Arrange the three the curved bowl light blue shade by stacking them one over the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100116, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100117, "instruction": "Pick up the medium-sized bowl for holding food and stack them from biggest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100117, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100118, "instruction": "Sequentially stack the blue bowl with slightly rounded base using arms to align them.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100118, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100119, "instruction": "Arrange the dark inside bowl light blue outside one on top of another.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100119, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100120, "instruction": "Take the bottom the glazed bowl with curved sides and sequentially pile the other two above.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100120, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100122, "instruction": "Start with the bottom the ceramic bowl with earthy brown trim and finish stacking.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100122, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100124, "instruction": "Pick up the ceramic bowl and stack them from biggest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100124, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100126, "instruction": "Grab the dark inside bowl light blue outside, stack from largest at the base to the smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100126, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100127, "instruction": "Sequentially stack the dark inside bowl light blue outside using arms to align them.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100127, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100129, "instruction": "Arrange the rounded bowl with light blue color one on top of another.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100129, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100137, "instruction": "Hold the dark inside bowl light blue outside, place them one after another.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100137, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100138, "instruction": "Align bowls the ceramic bowl in descending size, forming a stack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100138, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100139, "instruction": "Align and stack the rounded bowl with light blue color step by step using arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100139, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100140, "instruction": "Position the first the ceramic bowl, and sequentially add the two above it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100140, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100141, "instruction": "Arrange the bowl with shiny texture one on top of another.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100141, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100145, "instruction": "Use the arm to stack the rounded bowl with light blue color one by one.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100145, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100146, "instruction": "Lift each the bowl with shiny texture and stack it over the previous one.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100146, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100147, "instruction": "Start with the first the bowl with brown outer rim, adding the next two in sequence.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100147, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100149, "instruction": "Start with the bottom the curved bowl light blue shade and finish stacking.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100149, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100150, "instruction": "Take the bottom the blue bowl and sequentially pile the other two above.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100150, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100154, "instruction": "Pick up the small bowl with brown edge and stack them from biggest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100154, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100157, "instruction": "Use the arm to stack the blue bowl with slightly rounded base one by one.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100157, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100159, "instruction": "Place the first the medium-sized bowl for holding food down, then stack the next two above it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100159, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100161, "instruction": "Place the bowl with brown outer rim in a stack with the largest at the foundation.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100161, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100164, "instruction": "Stack all three the ceramic bowl with earthy brown trim by placing one on top of another.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100164, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100167, "instruction": "Lift each the glazed bowl with curved sides and stack it over the previous one.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100167, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100168, "instruction": "Align bowls the ceramic bowl in descending size, forming a stack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100168, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100175, "instruction": "Position the ceramic bowl one on top of the other largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100175, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100178, "instruction": "Take the ceramic bowl, stack them from bottom to top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100178, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100180, "instruction": "Place the first the ceramic bowl with earthy brown trim, then align the others on top using the arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100180, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100182, "instruction": "Place the curved bowl light blue shade in a stack with the largest at the foundation.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100182, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100183, "instruction": "Stack the curved bowl light blue shade by arranging them sequentially.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100183, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100188, "instruction": "Grab the dark inside bowl light blue outside, stack from largest at the base to the smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100188, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100192, "instruction": "Position the bowl with shiny texture one on top of the other largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100192, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100194, "instruction": "Lift each the blue bowl and stack them together neatly.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100194, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100195, "instruction": "Carefully stack the ceramic bowl with earthy brown trim piece by piece.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100195, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100197, "instruction": "Stack the blue bowl sequentially using your arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100197, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100198, "instruction": "Use arms to place each the small bowl with brown edge atop the previous one.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100198, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100200, "instruction": "Pick up each the glazed bowl with curved sides and set them one over another.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100200, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100201, "instruction": "Stack all three the glazed bowl with curved sides by placing one on top of another.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100201, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100202, "instruction": "Align and stack the medium-sized bowl for holding food step by step using arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100202, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100203, "instruction": "Use arms to stack each the rounded bowl with light blue color carefully.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100203, "success": true}

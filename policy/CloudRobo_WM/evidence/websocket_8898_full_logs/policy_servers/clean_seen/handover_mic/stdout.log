@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100000, "instruction": "Lift the metal head microphone and hand it to someone else.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100001, "instruction": "Grasp the microphone with textured metal head and shift it to the opposite hand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100002, "instruction": "Lift the dark blue microphone using the left arm and pass it to the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100003, "instruction": "Lift the microphone with slider switch and pass it across.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100003, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100005, "instruction": "Lift the microphone with rounded mesh head, then pass it across without delay.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100005, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100006, "instruction": "Take the white bottom microphone with textured tip, pass it, and release it to complete the task.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100007, "instruction": "Pick up the microphone with black tip and white body and transfer it to the opposite side.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100008, "instruction": "Use the left arm to hold the textured white microphone head, then give it to the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100009, "instruction": "Grasp the rounded white tip microphone and pass it across.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100011, "instruction": "Take the white and teal sound microphone and move it to the other hand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100011, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100012, "instruction": "Lift the microphone with dark blue padding and pass it across.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100012, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100013, "instruction": "Grab the microphone with round foam head and transfer it to another hand", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100014, "instruction": "Pick up the compact size microphone and transfer it to the opposite side.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100015, "instruction": "Pick up the microphone with round foam head and hand it to the other side.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100016, "instruction": "Grab the microphone for voice recording and smoothly give it to the other arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100018, "instruction": "Hold the handheld teal microphone and shift it to the other arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100018, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100020, "instruction": "Use the left arm to hold the microphone for voice recording, then give it to the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100021, "instruction": "Lift the gray and dark blue microphone using the left arm and pass it to the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100022, "instruction": "Take the round head microphone using the left arm and transfer it to the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100022, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100025, "instruction": "Grip the rounded white tip microphone and pass it to the other side", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100027, "instruction": "Take the medium microphone with two-tone color, shift it, and release it to the other side.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100028, "instruction": "Grab the microphone with dark blue padding and give it to the opposite arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100028, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100030, "instruction": "Reach for the gray and dark blue microphone and move it to the other hand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100031, "instruction": "Secure the microphone with rounded mesh head from the table and transfer it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100031, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100032, "instruction": "Take the microphone for voice recording using the right arm and transfer it to the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100034, "instruction": "Hold the handheld microphone and shift it to the other arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100034, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100035, "instruction": "Pick up the microphone with smooth gray stem and hand it to the other side.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100038, "instruction": "Lift the textured white microphone head using the right arm and pass it to the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100039, "instruction": "Take the microphone with slider switch and move it to another hand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100039, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100040, "instruction": "Lift the dark blue microphone and deliver it to the other side.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100040, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100041, "instruction": "Lift the microphone with white rounded head, then pass it across without delay.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100042, "instruction": "Grasp the microphone covered with foam tip, then give it to the other arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100043, "instruction": "Grasp the compact size microphone and shift it to the opposite hand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100043, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100044, "instruction": "Use one arm to pick up the long microphone with smooth teal grip and give it to the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100046, "instruction": "Hold the microphone with smooth gray stem firmly and pass it to the other arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100046, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100047, "instruction": "Seize the gray and dark blue microphone and offer it to the other arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100048, "instruction": "Hold the plastic teal microphone with slider and shift it to the other arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100051, "instruction": "Pick up the microphone with dark blue padding and hand it to the other side.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100052, "instruction": "Grasp the microphone with cylindrical handle, transfer it, then let go of it smoothly.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100055, "instruction": "Pick up the microphone with rounded mesh head and move it to the opposite side", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100055, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100056, "instruction": "Lift the white microphone handle black accents and pass it across.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100057, "instruction": "Use one hand to grab the microphone covered with foam tip and pass it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100058, "instruction": "Grasp the teal microphone and pass it across.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100059, "instruction": "Grasp the metal head microphone and shift it to the opposite hand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100061, "instruction": "Seize the round head microphone and offer it to the other arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100062, "instruction": "Secure the microphone covered with foam tip using one arm and transfer it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100063, "instruction": "Secure the microphone with textured metal head using one arm and transfer it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100064, "instruction": "Pick the microphone with black tip and white body from the surface and switch hands.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100065, "instruction": "Grasp the microphone with rounded mesh head and switch it to another hand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100066, "instruction": "Hold the microphone with textured metal head and shift it to the other arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100067, "instruction": "Lift the compact size microphone and pass it across.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100068, "instruction": "Lift the round head microphone using the left arm and pass it to the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100069, "instruction": "Seize the teal microphone and offer it to the other arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100069, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100070, "instruction": "Hold the microphone with dark blue padding and pass it to the other hand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100071, "instruction": "Lift the gray stem microphone with foam top and hand it over to the other side.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100071, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100074, "instruction": "Hold the smooth plastic microphone handle and pass it to the other hand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100075, "instruction": "Take the microphone for voice recording using the right arm and transfer it to the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100076, "instruction": "Use the left arm to grab the microphone with dark blue padding and transfer it to the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100077, "instruction": "Grasp the dark blue microphone and shift it to the opposite hand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100077, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100078, "instruction": "Pick up the black and white microphone and transfer it to the opposite side.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100079, "instruction": "Hold the microphone with round foam head firmly and pass it to the other arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100080, "instruction": "Pick the teal microphone from the surface and switch hands.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100080, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100081, "instruction": "Hold the metal head microphone securely and shift it to another arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100081, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100082, "instruction": "Use one hand to grab the black and white microphone and pass it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100082, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100085, "instruction": "Pick up the microphone with cylindrical handle and transfer it to the opposite side.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100085, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100088, "instruction": "Grasp the mesh-patterned microphone head and pass it across.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100090, "instruction": "Lift the metal head microphone, then pass it across without delay.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100091, "instruction": "Pick the microphone with cylindrical handle and transfer it to the other arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100091, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100092, "instruction": "Take the long microphone with smooth teal grip, pass it, and release it to complete the task.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100093, "instruction": "Grasp the microphone with round foam head, then give it to the other arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100094, "instruction": "Hold the dark blue microphone with one hand and transfer it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100095, "instruction": "Seize the microphone with dark blue padding and offer it to the other arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100096, "instruction": "Pick up the microphone with cylindrical handle and hand it to the other side.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100097, "instruction": "Seize the round head microphone and offer it to the other arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100097, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100098, "instruction": "Take the microphone with textured metal head and pass it to another hand", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100099, "instruction": "Take the microphone with white rounded head and move it to the other hand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100100, "instruction": "Grasp the white bottom microphone with textured tip, transfer it, then let go of it smoothly.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100100, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100101, "instruction": "Secure the medium microphone with two-tone color using one arm and transfer it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100103, "instruction": "Hold the microphone for recording sound securely and shift it to another arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100103, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100105, "instruction": "Pick the compact size microphone and transfer it to the other arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100105, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100106, "instruction": "Grab the black and white microphone using the left arm and pass it over to the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100106, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100107, "instruction": "Use the right arm to hold the sound microphone with teal body, then give it to the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100107, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100108, "instruction": "Grab the white and teal sound microphone and smoothly give it to the other arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100108, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100111, "instruction": "Pick up the smooth plastic microphone handle and transfer it to the opposite side.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100111, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100112, "instruction": "Grasp the white bottom microphone with textured tip and switch it to another hand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100112, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100113, "instruction": "Grab the handheld microphone and smoothly give it to the other arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100113, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100114, "instruction": "Lift the textured white microphone head and hand it over to the other arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100114, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100115, "instruction": "Lift the dark blue microphone and hand it over to the other arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100115, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100116, "instruction": "Grasp the audio microphone with soft covering and pass it across.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100116, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100117, "instruction": "Lift the textured white microphone head using the right arm and pass it to the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100117, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100118, "instruction": "Secure the microphone with dark blue padding using one arm and transfer it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100118, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100119, "instruction": "Grab the dark blue microphone using the left arm and pass it over to the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100119, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100120, "instruction": "Grasp the microphone with smooth gray stem, transfer it, then let go of it smoothly.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100120, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100121, "instruction": "Pick up the microphone with cylindrical handle and hand it to the other side.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100121, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100122, "instruction": "Take the gray and dark blue microphone and move it to the other hand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100122, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100124, "instruction": "Lift the textured white microphone head, then pass it across without delay.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100124, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100128, "instruction": "Use the left arm to hold the medium microphone with two-tone color, then give it to the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100128, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100129, "instruction": "Pick up the small audio microphone and transfer it to the opposite side.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100129, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100131, "instruction": "Grasp the plastic teal microphone with slider and pass it across.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100131, "success": true}
+{"event": "case_prepared", "task_name": "handover_mic", "seed": 100133, "instruction": "Use the right arm to grab the microphone with rounded mesh head and transfer it to the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "handover_mic", "seed": 100133, "success": true}

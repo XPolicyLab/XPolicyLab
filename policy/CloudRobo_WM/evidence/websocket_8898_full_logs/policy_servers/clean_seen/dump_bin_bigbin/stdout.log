@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100002, "instruction": "Use the compact tabletop trashbin to pour the balls out.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100003, "instruction": "Use the arm to move the cylindrical tabletrashbin and pour.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100003, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100004, "instruction": "Lift the compact tabletop trashbin, pour the balls into big bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100005, "instruction": "Pick up the white bin with flared top edge using the arm, pour balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100005, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100007, "instruction": "Grab the light gray trash bin and pour it out.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100010, "instruction": "Control the arm to raise the white round tabletrashbin and pour.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100011, "instruction": "Hold the tabletrashbin with smooth grooves and dump its balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100011, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100012, "instruction": "Pick up the open-top tabletrashbin using the arm, pour balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100012, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100015, "instruction": "Take the small tabletop trashbin and pour contents.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100016, "instruction": "Use the arm to empty the mini white trashbin for desk into the bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100017, "instruction": "Use arm to pick the tabletrashbin with grooves on sides, pour in bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100017, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100019, "instruction": "Pour balls from the light gray trashbin with open top into the bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100019, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100022, "instruction": "Grab the small tabletop trashbin and pour it out.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100022, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100023, "instruction": "Use the arm to lift the light gray trashbin with open top and empty it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100024, "instruction": "Direct the arm to grab the tabletrashbin with grooves on sides and tilt.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100024, "success": false}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100027, "instruction": "Use the arm to empty the light gray cylindrical trashbin into the bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100029, "instruction": "Lift the small white trashbin and pour balls into the bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100031, "instruction": "Pick up the smooth plastic tabletrashbin, empty into the big bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100031, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100032, "instruction": "Grab the small tabletop trashbin and transfer balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100033, "instruction": "Grab the smooth plastic tabletrashbin and transfer balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100033, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100034, "instruction": "Grab the simple tabletop trashbin with arm and pour contents", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100034, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100035, "instruction": "Lift the gray plastic trashbin and pour balls into the bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100036, "instruction": "Grab the gray plastic trashbin and pour it out.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100036, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100038, "instruction": "Hold the tabletrashbin, dump balls in big bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100041, "instruction": "Grasp the cylindrical small white trashbin and empty it out.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100042, "instruction": "Pick the small rectangular bin for waste up, pour all balls inside bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100044, "instruction": "Lift the black-specked gray tabletrashbin, pour the balls into big bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100045, "instruction": "Grab the light gray bucket-shaped waste bin and transfer balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100045, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100047, "instruction": "Lift the smooth plastic tabletrashbin and pour balls into the bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100050, "instruction": "Pick the cylindrical tabletrashbin with flared rim, pour its contents out.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100050, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100053, "instruction": "Lift the tabletrashbin for tabletop trash and pour contents down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100053, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100056, "instruction": "Hold the small trash container, then pour contents.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100057, "instruction": "Hold the light gray tabletrashbin, dump balls in big bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100058, "instruction": "Use the arm to empty the compact speckled surface tabletrashbin into the bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100061, "instruction": "Raise the light gray bucket-shaped waste bin to dump its contents out.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100062, "instruction": "Grab the bucket-shaped gray trashbin and transfer balls to the bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100063, "instruction": "Hold the cylindrical tabletrashbin with flared rim and pour all balls into bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100067, "instruction": "Pick the smooth plastic tabletrashbin up, pour all balls inside bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100068, "instruction": "Hold the light gray cylindrical trashbin and pour the balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100073, "instruction": "Use arm to grab the desk-sized white tabletrashbin, dump contents", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100074, "instruction": "Control the arm to raise the tabletrashbin for tabletop trash and pour.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100075, "instruction": "Lift the cylindrical tabletrashbin with flared rim, pour into the big bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100078, "instruction": "Control the arm to raise the open gray tabletrashbin and pour.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100080, "instruction": "Secure the light gray trash bin and pour the balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100080, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100082, "instruction": "Pick the smooth plastic tabletrashbin up, pour all balls inside bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100082, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100084, "instruction": "Direct the arm to grab the white round tabletrashbin and tilt.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100084, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100087, "instruction": "Pick the cylindrical small white trashbin, pour its contents out.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100088, "instruction": "Grab the cylindrical tabletrashbin and empty it into the bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100093, "instruction": "Pick the mini white trashbin for desk, pour its contents out.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100096, "instruction": "Use the arm to grab the compact rectangular tabletrashbin and pour.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100098, "instruction": "Lift the minimalist gray tabletrashbin and pour contents down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100103, "instruction": "Pick up the tabletrashbin using the arm, pour balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100103, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100105, "instruction": "Pick up the small container with yellow logo using the arm, pour balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100105, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100107, "instruction": "Use the arm to lift the tabletrashbin and empty it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100107, "success": false}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100112, "instruction": "Lift the white cylindrical waste bin using the arm to pour balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100112, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100114, "instruction": "Hold the tabletrashbin with yellow symbol and pour the balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100114, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100118, "instruction": "Grab the cylindrical tabletrashbin with flared rim, pour its contents away.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100118, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100121, "instruction": "Direct the arm to grab the cylindrical small white trashbin and tilt.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100121, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100124, "instruction": "Hold the open-top tabletrashbin and dump its balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100124, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100125, "instruction": "Hold the white round tabletrashbin and pour all balls into bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100125, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100126, "instruction": "Control the arm to raise the tabletrashbin with grooves on sides and pour.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100126, "success": false}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100129, "instruction": "Pick up the simple white plastic trashbin using the arm, pour balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100129, "success": false}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100131, "instruction": "Grab the open gray tabletrashbin and transfer balls to the bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100131, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100132, "instruction": "Take the bucket-shaped gray trashbin and pour the balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100132, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100134, "instruction": "Grab the tabletrashbin, then pour balls into the bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100134, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100136, "instruction": "Use the arm to move the small rectangular bin for waste and pour.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100136, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100141, "instruction": "Pick up the compact tabletop trashbin using the arm, pour balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100141, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100142, "instruction": "Grasp the small rectangular tabletrashbin and empty it out.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100142, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100143, "instruction": "Take hold of the small white trashbin and dump the balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100143, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100146, "instruction": "Take the compact tabletop trashbin and empty its contents.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100146, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100147, "instruction": "Hold the tabletrashbin with black specks and pour the balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100147, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100150, "instruction": "Pick the gray plastic trashbin up, pour all balls inside bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100150, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100153, "instruction": "Lift the gray tabletrashbin, pour contents into big bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100153, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100154, "instruction": "Hold the light gray tabletrashbin and dump its balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100154, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100155, "instruction": "Use the arm to lift the simple white plastic trashbin and empty it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100155, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100157, "instruction": "Secure the rectangular tabletop waste container and pour the balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100157, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100164, "instruction": "Pick up the minimalist gray tabletrashbin and pour carefully.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100164, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100166, "instruction": "Lift the tabletrashbin made of plastic and pour its contents into bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100166, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100167, "instruction": "Take the simple tabletop trashbin and empty its contents.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100167, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100168, "instruction": "Use the arm to move the small tabletrashbin and pour.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100168, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100170, "instruction": "Move the arm, take the tabletrashbin with black specks, and pour.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100170, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100172, "instruction": "Grab the open-top tabletrashbin, then pour balls into the bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100172, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100174, "instruction": "Use arm to grab the small tabletop trashbin, dump contents", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100174, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100180, "instruction": "Grasp the desk-sized white tabletrashbin and empty it out.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100180, "success": false}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100183, "instruction": "Lift the round gray tabletrashbin and pour its contents into bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100183, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100184, "instruction": "Pick up the compact rectangular tabletrashbin and pour carefully.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100184, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100190, "instruction": "Pick up the small light gray waste bin, empty into the big bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100190, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100191, "instruction": "Use the arm to empty the plastic tabletrashbin with dark pattern into the bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100191, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100192, "instruction": "Direct the arm to grab the smooth plastic tabletrashbin and tilt.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100192, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100194, "instruction": "Take the tabletrashbin and empty balls into the bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100194, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100195, "instruction": "Take hold of the desk-sized white tabletrashbin and dump the balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100195, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100200, "instruction": "Grab the tabletrashbin for holding waste and transfer balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100200, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100204, "instruction": "Lift the cylindrical tabletrashbin with flared rim and pour its contents into bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100204, "success": false}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100206, "instruction": "Pick up the light gray bucket-shaped waste bin and pour carefully.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100206, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100209, "instruction": "Hold the simple white plastic trashbin, dump balls in big bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100209, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100210, "instruction": "Hold the light gray smooth tabletrashbin, then pour contents.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100210, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100212, "instruction": "Raise the minimalist gray tabletrashbin to dump its contents out.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100212, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100215, "instruction": "Lift the open gray tabletrashbin, pour contents into big bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100215, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100216, "instruction": "Take the open-top tabletrashbin using arm, pour contents inside", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100216, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100218, "instruction": "Take the small tabletop trashbin and empty balls into the bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100218, "success": true}

@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100001, "instruction": "Move the cylindrical bottle with ridged white lid to the pad and let it rest there", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100002, "instruction": "Place the white bottle with orange label on the pad after lifting it up.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100005, "instruction": "Pick the hand-held cylindrical white bottle with the right arm and position it onto pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100005, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100006, "instruction": "Use the right arm to lift the compact bottle with teal and white design and position it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100007, "instruction": "Place the bottle with white cap onto the pad after picking it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100008, "instruction": "Take the small bottle with ridged orange cap and put it onto the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100009, "instruction": "Lift the smooth white bottle using the right arm and position it on the pad.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100010, "instruction": "Lift the medium-sized pharmacy bottle with the right arm and set it down", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100011, "instruction": "Pick the teal-bottom bottle with cylindrical body and place it on the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100011, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100013, "instruction": "Move the orange bottle for pills or liquid to the pad and release it there.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100015, "instruction": "Move the white cap on orange bottle and drop it on the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100016, "instruction": "Take the orange bottle for pills or liquid and put it onto the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100017, "instruction": "Pick the plastic bottle with orange screw lid up and drop it onto the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100017, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100018, "instruction": "Lift the lightweight plastic bottle with the left arm and set it down", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100018, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100020, "instruction": "Pick the white cap on orange bottle with the left arm and place it down", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100021, "instruction": "Pick the rounded bottle with small white cap using the left arm and set it on pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100023, "instruction": "Pick the hand-held cylindrical white bottle up and set it onto the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100025, "instruction": "Move the bottle with bright orange top to the pad and release it there.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100026, "instruction": "Pick the plastic bottle with labeled surface with the left arm and position it onto pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100028, "instruction": "Move the smooth plastic orange bottle to the pad and let it rest there", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100028, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100029, "instruction": "Use the left arm to lift the flat base orange bottle and place it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100030, "instruction": "Grab the round bottle with orange screw-top and carefully set it onto the pad.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100035, "instruction": "Use the right arm to lift the white bottle and place it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100037, "instruction": "Move the white bottle with orange label and position it on the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100038, "instruction": "Lift the white bottle and set it on the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100039, "instruction": "Grab the white bottle and position it on the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100039, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100041, "instruction": "Grab the cylindrical bottle with ridged white lid carefully and drop it on pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100042, "instruction": "Take the palm-sized bottle with orange cover and place it onto the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100043, "instruction": "Set the white cap on orange bottle on pad after lifting it with the left arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100043, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100044, "instruction": "Pick the orange bottle for pills or liquid using the right arm and set it on pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100046, "instruction": "Use the left arm to grab the small plastic bottle and put it on the pad.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100046, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100047, "instruction": "Use the right arm to lift the white cap on orange bottle and place it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100049, "instruction": "Hold the white bottle with screw-on lid and position it on the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100052, "instruction": "Grab the white cap on orange bottle with the right arm and move it to the pad.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100053, "instruction": "Use the right arm to grab the smooth-textured brown bottle and put it on the pad.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100053, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100054, "instruction": "Direct the right arm to grab the plastic bottle with labeled surface and drop it there", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100056, "instruction": "Grab the rounded small bottle with the left arm and move it to the pad.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100057, "instruction": "Lift the plastic bottle with teal bands and set it on the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100058, "instruction": "Take the orange bottle with blue stripe label and put it onto the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100059, "instruction": "Use the right arm to pick and place the small plastic bottle onto the pad.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100060, "instruction": "Move the teal and white plastic bottle to the pad and leave it there", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100061, "instruction": "Grab and transfer the cylindrical bottle with brown surface with the left arm to pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100062, "instruction": "Set the white and orange storage bottle on pad after lifting it with the left arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100063, "instruction": "Move the bottle featuring blue horizontal stripe to the pad and leave it there", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100064, "instruction": "Pick the white bottle with screw-on lid and place it on the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100065, "instruction": "Grab the white body bottle with textured cap carefully and drop it on pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100067, "instruction": "Take the medicine bottle with screw cap and place it onto the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100069, "instruction": "Use the right arm to set the smooth cylindrical bottle with teal ends onto the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100069, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100070, "instruction": "Place the plastic bottle with labeled surface on pad after lifting with the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100072, "instruction": "Use the left arm to place the teal and white plastic bottle on the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100074, "instruction": "Lift the bottle with white screw cap with the right arm and set it down", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100075, "instruction": "Lift the bottle featuring blue horizontal stripe using the right arm and position it on the pad.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100076, "instruction": "Use the left arm to move the small plastic bottle to the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100077, "instruction": "Move the bottle with smooth body and ridged cap using the right arm and drop it on pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100077, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100078, "instruction": "Lift the brown bottle with white cap with the left arm and set it down", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100079, "instruction": "Take the orange cylindrical bottle for medicine and place it onto the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100080, "instruction": "Control the right arm to pick the bottle with white cap and set it down", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100080, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100081, "instruction": "Pick the white bottle with ridged orange lid up and drop it onto the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100081, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100082, "instruction": "Take the plastic bottle with ridged white cap and place it onto the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100082, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100083, "instruction": "Grab the smooth plastic orange bottle and carefully set it onto the pad.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100084, "instruction": "Grab the bottle with teal top and bottom and drop it onto the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100084, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100085, "instruction": "Move the compact plastic bottle with screw cap using the left arm and drop it on pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100085, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100087, "instruction": "Use the left arm to pick and place the plastic bottle with orange screw lid onto the pad.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100088, "instruction": "Move the white bottle for pills or liquids with one arm to the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100089, "instruction": "Grab the brown bottle with wide white label with the left arm and move it to the pad.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100090, "instruction": "Lift the compact bottle with teal and white design with the left arm and drop on pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100092, "instruction": "Take the smooth-textured brown bottle and put it onto the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100093, "instruction": "Use the right arm to pick and place the small bottle with ridged orange cap onto the pad.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100094, "instruction": "Grab the white-capped cylindrical bottle and position it on the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100096, "instruction": "Move the teal-bottom bottle with cylindrical body using the left arm and drop it on pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100097, "instruction": "Place the bottle with white cap on the pad after lifting it up.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100097, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100098, "instruction": "Use the right arm to grab the brown bottle with wide white label and put it on the pad.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100099, "instruction": "Grab the teal-bottom bottle with cylindrical body carefully and drop it on pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100100, "instruction": "Grab the smooth plastic bottle carefully and drop it on pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100100, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100101, "instruction": "Use the left arm to grab the brown bottle with wide white label and put it on the pad.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100102, "instruction": "Grab the lightweight plastic bottle and carefully set it onto the pad.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100102, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100103, "instruction": "Pick the white bottle with the left arm and position it onto pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100103, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100104, "instruction": "Place the white bottle onto the pad after picking it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100104, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100106, "instruction": "Move the brown bottle with wide white label and position it on the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100106, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100107, "instruction": "Pick the white bottle up and set it onto the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100107, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100108, "instruction": "Pick the white body bottle with textured cap using the left arm and set it on pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100108, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100110, "instruction": "Lift the compact bottle with teal and white design using the left arm and position it on the pad.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100110, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100112, "instruction": "Grab the rounded bottle with small white cap and drop it on the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100112, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100115, "instruction": "Grab the rounded bottle with small white cap and place it on the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100115, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100117, "instruction": "Pick the smooth cylindrical bottle with teal ends and place it on the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100117, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100118, "instruction": "Set the medium-sized white cylindrical container down on the pad after picking it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100118, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100121, "instruction": "Grab the cylindrical bottle with brown surface and drop it onto the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100121, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100122, "instruction": "Set the teal-bottom bottle with cylindrical body on pad after lifting it with the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100122, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100123, "instruction": "Move the plastic bottle with labeled surface to the pad and leave it there", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100123, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100124, "instruction": "Pick the bottle with bright orange top and place it on the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100124, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100125, "instruction": "Move the bottle with large orange label to the pad and leave it there", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100125, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100127, "instruction": "Set the cylindrical bottle with brown surface down on the pad after picking it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100127, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100128, "instruction": "Use the left arm to pick and place the hand-held cylindrical white bottle onto the pad.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100128, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100129, "instruction": "Pick the white bottle for pills or liquids with the right arm and position it onto pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100129, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100130, "instruction": "Pick the orange bottle for pills or liquid up and drop it onto the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100130, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100131, "instruction": "Set the bottle with teal top and bottom on pad after lifting it with the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100131, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100132, "instruction": "Direct the left arm to grab the rounded bottle with small white cap and drop it there", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100132, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100133, "instruction": "Grab the white cap on orange bottle and drop it on the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100133, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100135, "instruction": "Move the medium-sized white cylindrical container onto the pad using the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100135, "success": true}
+{"event": "case_prepared", "task_name": "move_pillbottle_pad", "seed": 100137, "instruction": "Pick the cylindrical bottle with ridged white lid up and set it onto the pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_pillbottle_pad", "seed": 100137, "success": true}

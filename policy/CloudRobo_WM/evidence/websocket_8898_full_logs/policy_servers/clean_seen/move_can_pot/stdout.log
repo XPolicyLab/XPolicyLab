@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100000, "instruction": "Move the printed label sauce can beside the kitchenpot with smooth metallic lid after lifting it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100001, "instruction": "Use the right arm to lift the brown-lid sauce can and place it near the pots for boiling and cooking", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100002, "instruction": "Grab the brown and yellow cylindrical sauce can with the left arm and move it close to the metallic pot with matte finish", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100003, "instruction": "Lift the brown and yellow cylindrical sauce can using the right arm and drop it beside the black kitchenpot with silver and black handles", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100003, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100004, "instruction": "Lift the hand-held sauce container and set it beside the kitchenpot with two sturdy blue handles", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100005, "instruction": "Move the printed label sauce can beside the grey kitchenpot after lifting it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100005, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100006, "instruction": "Take the red sauce can to the metallic pot with plastic handles using the left arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100007, "instruction": "Use the left arm to grab the printed label sauce can and transfer it near the metal pot with dark handles", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100008, "instruction": "Pick the white plastic lid sauce can up and carefully position it beside the kitchenpot for boiling food", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100009, "instruction": "Pick up the sauce can with flat top and put it beside the rounded silver pot with handles", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100010, "instruction": "Take the white sauce can with label with the left arm, bring it, and set next to the kitchenpot with flat lid and knob", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100011, "instruction": "Move the white sauce can with label from its spot to near the rounded pot with curved handles", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100011, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100013, "instruction": "Lift the sauce can using the left arm and position it by the kitchenpot used for cooking meals", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100014, "instruction": "Take the hand-held sauce container to the black kitchenpot with silver handle bars using the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100015, "instruction": "Lift the plastic lid sauce can and set it next to the silver pot with matching lid", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100016, "instruction": "Pick the red can with orange label up and carefully position it beside the medium teal-colored pot with flat lid", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100017, "instruction": "Use the left arm to move the cylindrical sauce can beside the gray pot for boiling food", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100017, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100018, "instruction": "Take the compact sauce can with plastic lid with the right arm, bring it, and set next to the pot with round lid", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100018, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100019, "instruction": "Lift the metal can with plastic lid using the left arm and position it by the medium silver pot for cooking", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100019, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100020, "instruction": "Pick up the hand-held sauce container using the right arm, transfer it beside the kitchenpot with sturdy plastic body", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100021, "instruction": "Lift the sauce can with ingredient information and set it beside the round teal cooking pot with matte texture", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100022, "instruction": "Use the right arm to grab the brown sauce can and transfer it near the black kitchenpot with flat lid", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100022, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100023, "instruction": "Use the right arm to grab the brown cap sauce storage can and move it beside the silver pot with black grips", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100024, "instruction": "Grab the cylindrical sauce can, shift it, and place it close to the silver kitchenpot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100025, "instruction": "Lift the small metal sauce container using the right arm and position it by the kitchenpot used for cooking meals", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100026, "instruction": "Move the sauce can with flat top beside the black cooking pot with silver handles after lifting it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100027, "instruction": "Pick the medium sauce can with white lid up and carefully position it beside the medium silver pot for cooking", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100028, "instruction": "Use the left arm to lift the metal sauce can and place it near the light grey kitchenpot with dark top", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100028, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100029, "instruction": "Pick the plastic lid sauce can up and move it next to the kitchenpot with smooth exterior", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100030, "instruction": "Bring the cylindrical sauce can over and set it near the black kitchenpot with plastic lid handle", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100031, "instruction": "Use the left arm to take the sturdy sauce can with glossy finish to the pot with lid and sturdy handles", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100031, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100032, "instruction": "Grab the smooth sauce can, move it to the kitchenpot with metallic round lid's side", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100033, "instruction": "Grab the printed label sauce can, move it to the blue cylinder pot with smooth lid's side", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100033, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100034, "instruction": "Pick up the medium sauce can with the right arm and set by the round kitchenpot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100034, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100035, "instruction": "Pick the plastic lid sauce can up and move it next to the blue kitchenpot lid with black knob", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100036, "instruction": "Use the left arm to grab the medium-sized red sauce can and transfer it near the medium gray pot with handles", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100036, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100037, "instruction": "Pick the round sauce can with yellow pattern with the left arm and relocate it near the silver kitchenpot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100038, "instruction": "Grab the sauce can for condiments, move it, and place by the metal pot with dark handles", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100039, "instruction": "Grab the medium-sized red sauce can, move it to the dark gray stove kitchenpot's side", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100039, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100040, "instruction": "Grab the sauce can with ingredient information and move it close to the blue kitchenpot lid with black knob", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100040, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100041, "instruction": "Lift the cylindrical can brown round top, place it by the metal pot with dark handles", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100043, "instruction": "Set the sauce can with flat bottom near the medium-sized smooth gray cooking pot after picking it up", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100043, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100044, "instruction": "Lift the metal body sauce can and set it beside the black kitchenpot with flat lid", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100045, "instruction": "Grab the brown top sauce can, move it to the metallic pot with plastic handles's side", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100045, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100046, "instruction": "Place the brown top sauce can next to the gray pot with blue circular lid", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100046, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100048, "instruction": "Use the left arm to grab the brown-lid sauce can, move it beside the silver pot with black grips", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100049, "instruction": "Grab the medium-sized red sauce can and move it close to the kitchenpot with sturdy plastic body", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100050, "instruction": "Use the left arm to lift the red and orange sauce can and place it next to the kitchenpot with smooth metallic lid", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100050, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100051, "instruction": "Move the smooth metal sauce can white to the kitchenpot with black base with the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100052, "instruction": "Lift the cylindrical sauce can and set it next to the medium teal-colored pot with flat lid", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100053, "instruction": "Place the sauce can with glossy finish next to the rounded pot with curved handles", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100053, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100054, "instruction": "Use the right arm to pick the cylindrical sauce can, position it near the teal pot for boiling and cooking", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100055, "instruction": "Use the right arm to pick the rounded-edge sauce can up and set it beside the light grey kitchenpot with dark top", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100055, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100056, "instruction": "Lift the sauce can with ingredient information and set it next to the kitchenpot with two sturdy blue handles", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100057, "instruction": "Grab the sauce can with brown lid, move it, and place by the cooking kitchenpot with sturdy handles", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100058, "instruction": "Pick the small cylindrical sauce can up and carefully position it beside the black kitchenpot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100059, "instruction": "Use the right arm to lift the metal sauce can and place it next to the pot with lid and sturdy handles", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100060, "instruction": "Move the white plastic lid sauce can to the medium teal blue kitchenpot with handles with the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100062, "instruction": "Set the metal sauce can near the metal cooking pot after picking it up", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100063, "instruction": "Move the white label brown lidded can to the cooking pot with two handles with the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100064, "instruction": "Move the sauce can with printed design from its spot to near the cylindrical kitchenpot with flat edges", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100065, "instruction": "Lift the small cylindrical sauce can, place it by the medium gray pot with handles", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100066, "instruction": "Move the hand-sized sauce can to be next to the cooking pot with two blue handles", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100068, "instruction": "Take the smooth cylindrical sauce can using the right arm, set it next to the metallic pot with matte finish", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100069, "instruction": "Using the right arm, lift the red cylindrical sauce can and place it by the round pot with dark gray knob", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100069, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100070, "instruction": "Place the brown sauce can beside the blue cylinder pot with smooth lid after picking it up", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100071, "instruction": "Grab the sauce can with printed design and move it close to the kitchenpot with two side handles", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100071, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100072, "instruction": "Take the cylindrical sauce can using the right arm, set it next to the metal kitchenpot with brown handles", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100073, "instruction": "Take the sauce can with white details to the pot with round lid using the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100074, "instruction": "Take the sauce can with brown lid with the right arm, bring it, and set next to the grey kitchenpot with dark circle inside", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100075, "instruction": "Pick up the metal body sauce can and put it beside the gray kitchenpot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100076, "instruction": "Lift the metal can with plastic lid using the left arm and drop it beside the metallic pot with plastic handles", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100077, "instruction": "Grab the white plastic lid sauce can with the right arm and set it near the round kitchenpot with two side grips", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100077, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100078, "instruction": "Take the sauce can with sealed top with the right arm, bring it, and set next to the cooking pot with two handles", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100079, "instruction": "Set the brown sauce can right next to the black metal kitchenpot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100082, "instruction": "Set the brown and yellow cylindrical sauce can right next to the kitchenpot with plastic knob on lid", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100082, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100083, "instruction": "Bring the smooth sauce can over and set it near the gray kitchenpot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100084, "instruction": "Grab the brown top white sauce can, shift it, and place it close to the kitchenpot with two sturdy blue handles", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100084, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100085, "instruction": "Grab the sauce can with white details with the left arm and set it near the kitchenpot with smooth texture", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100085, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100086, "instruction": "Grab the red sauce can for holding condiments, move it to the gray pot for boiling food's side", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100086, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100087, "instruction": "Use the left arm to lift the red can with orange label and place it next to the round teal cooking pot with matte texture", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100088, "instruction": "Use the left arm to grab the brown and yellow cylindrical sauce can and move it next to the kitchenpot with black base", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100089, "instruction": "Lift the round sauce can with yellow pattern and set it next to the pot with round lid", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100090, "instruction": "Pick the brown cap sauce storage can up with the right arm then place near the gray kitchenpot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100092, "instruction": "Pick the white cylindrical sauce holder up and carefully position it beside the kitchenpot with sturdy plastic body", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100094, "instruction": "Grab the hand-sized sauce can, move it to the metal pot with dark handles's side", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100095, "instruction": "Use the left arm to lift the smooth metal sauce can white and place it next to the rounded silver pot with handles", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100096, "instruction": "Grab the hand-sized sauce can with the left arm and set it near the kitchenpot with metallic round lid", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100097, "instruction": "Grab the brown and yellow cylindrical sauce can with the right arm and move it close to the gray kitchenpot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100097, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100098, "instruction": "Place the sauce can for condiments next to the matte gray pot with durable lid", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100099, "instruction": "Lift the round sauce can with yellow pattern, place it by the medium-sized pot with plastic grips", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100100, "instruction": "Lift the brown top sauce can, place it by the metal pot with dark handles", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100100, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100101, "instruction": "Place the metal can with plastic lid next to the rounded silver pot with handles", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100102, "instruction": "Bring the cylindrical sauce can over and set it near the black metal kitchenpot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100102, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100103, "instruction": "Move the cylindrical container for sauce beside the kitchenpot with plastic knob on lid after lifting it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100103, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100104, "instruction": "Use the left arm to grab the metal can with plastic lid and transfer it near the kitchenpot for boiling food", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100104, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100105, "instruction": "Move the white sauce can with label beside the smooth teal kitchenpot for stovetop use after lifting it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100105, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100106, "instruction": "Pick the rounded-edge sauce can with the right arm and relocate it near the medium silver pot for cooking", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100106, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100107, "instruction": "Use the right arm to grab the sauce can and move it beside the medium-sized smooth gray cooking pot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100107, "success": true}
+{"event": "case_prepared", "task_name": "move_can_pot", "seed": 100108, "instruction": "Lift the yellow and brown sauce can and set it beside the kitchenpot for boiling and cooking", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_can_pot", "seed": 100108, "success": true}

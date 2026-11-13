@@ -1,0 +1,11 @@
+{
+  "test": "online_smoke",
+  "native_exit": 0,
+  "actual_wait": true,
+  "group_absent": true,
+  "finished": 1794451821.9615636,
+  "timed_out": false,
+  "eval_finished": true,
+  "traceback": false,
+  "log_sha256": "9e41fd0d3d1318badcb078ceb8388b37ad036385a7431ed5ec5414d1305590c9"
+}

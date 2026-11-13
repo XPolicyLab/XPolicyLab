@@ -1,0 +1,61 @@
+{
+  "qualified_at_utc": "2026-11-12T02:50:52.229693+00:00",
+  "policy_import_name": "CloudRobo_WM",
+  "weight_sha256": "660bc6bd55d526366ea0f4abccb660d1b5aa1a29c8af1c7bfb1566a4b9e0462d",
+  "source_manifest_sha256": "0edd85900f8ea60a0b03fe87ec4b47d0ed1c34308655cecf36d076eb2f351867",
+  "input_files_verified_before_and_after": 215,
+  "source_scope": "All packaged non-documentation files outside evidence/results, excluding the top-level checksum index. Includes training sources; runtime checks do not execute training.",
+  "tests": {
+    "debug_raw": {
+      "native_exit": 0,
+      "eval_finished": true,
+      "traceback": false,
+      "group_absent": true,
+      "log_sha256": "d31c6bba7c5beee0f5036c0bb63d989854661bccaac590019a81ac45d11c70d1",
+      "episodes": 10,
+      "action_steps": 200,
+      "encoded_observations": false
+    },
+    "debug_encoded": {
+      "native_exit": 0,
+      "eval_finished": true,
+      "traceback": false,
+      "group_absent": true,
+      "log_sha256": "4ed5eac6fc612c9007352933cbcdb6ff38cda05c2e72ad59eb6997746d3df95c",
+      "episodes": 10,
+      "action_steps": 200,
+      "encoded_observations": true
+    },
+    "online_smoke": {
+      "native_exit": 0,
+      "eval_finished": true,
+      "traceback": false,
+      "group_absent": true,
+      "log_sha256": "9e41fd0d3d1318badcb078ceb8388b37ad036385a7431ed5ec5414d1305590c9",
+      "task": "stack_bowls_two",
+      "profile": "demo_clean",
+      "instruction_type": "seen",
+      "expert_check": true,
+      "completed_trials": 1,
+      "successes": 1,
+      "case": {
+        "event": "case_prepared",
+        "task_name": "stack_bowls_two",
+        "seed": 100000,
+        "instruction": "Set the curved bowl light blue shade down, then add the ceramic bowl with earthy brown trim over it.",
+        "action_type": "joint"
+      },
+      "trial": {
+        "event": "trial_ended",
+        "task_name": "stack_bowls_two",
+        "seed": 100000,
+        "success": true
+      },
+      "official_result_source": "eval_result/stack_bowls_two/CloudRobo_WM/demo_clean/main/2026-11-12_10-49-13_682766/_result.txt"
+    }
+  },
+  "test_root": "/data/adapter_validation_20261112",
+  "result_directory": "/data/adapter_validation_20261112/results_20261112_cloudrobo_wm",
+  "gpu_locks_released": true,
+  "scope": "Entrypoint runtime verification with the actual CloudRobo_WM installation. Not a training execution or a full performance evaluation; these trials are not added to the 88.98% score."
+}

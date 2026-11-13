@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100000, "instruction": "Pick the soft square bread using the right arm and set it in the brown breadbasket with rounded corners.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100001, "instruction": "Move both breads, the doughy and soft bread and the light golden brown bread, into the breadbasket with smooth woven texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100002, "instruction": "Lift the soft doughy bread and set it in the palm-sized breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100004, "instruction": "Move the single bread the golden bread into the breadbasket shaped like a bowl.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100005, "instruction": "Set the two breads the square-shaped bread piece and the bread with firm crust edges in the breadbasket made of woven wood.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100005, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100006, "instruction": "Relocate the golden bread and the bread with rounded corners into the basket the white oval breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100007, "instruction": "Ensure the bread with golden-brown crust and the small loaf with curved top are both inside the breadbasket with rounded edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100008, "instruction": "Move every bread, the small golden baked bread and the round bread with braided top, into the beige plastic breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100009, "instruction": "Relocate the golden baked bread from the table to the beige breadbasket for holding bread.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100010, "instruction": "Move both breads, the bread loaf with square shape and the square-shaped bread, into the breadbasket for baking.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100011, "instruction": "Move every bread, the light golden brown bread and the sponge-textured golden bread, into the breadbasket with wicker weave pattern.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100011, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100012, "instruction": "Transfer both the golden brown bread with braided design and the bread with split top to the medium oval breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100012, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100013, "instruction": "Move every bread, the bread block with light patches and the doughy and soft bread, into the breadbasket for small food items.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100015, "instruction": "Collect the brown loaf and the hand-sized bread block in the beige basket for holding bread.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100016, "instruction": "Grab the light brown bread with ridges and the hand-sized oval loaf and put them in the breadbasket shaped like a bowl.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100018, "instruction": "Move both breads, the fluffy baked bread and the golden brown loaf-shaped bread, into the breadbasket for dough.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100018, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100019, "instruction": "Pick up both the slice-shaped bread and the rectangular bread soft inside for the oval breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100019, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100020, "instruction": "Transfer both the golden brown loaf-shaped bread and the bread loaf with square shape to the basket for bread beige plastic.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100021, "instruction": "Place both breads the golden baked bread and the bread with soft texture into the light brown breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100022, "instruction": "Place the small golden baked bread in the wooden breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100022, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100023, "instruction": "Transfer the medium-sized bread piece to the oval perforated breadbasket white edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100024, "instruction": "Ensure the smooth crusty small bread and the soft bread are both inside the light brown basket for bread.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100025, "instruction": "Pick the bread with golden surface color using the right arm and set it in the plastic mesh breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100026, "instruction": "Move every bread, the round bread with crusty texture and the golden baked bread, into the medium breadbasket with perforated sides.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100027, "instruction": "Transfer both the doughy and soft bread and the golden bread loaf to the woven plastic breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100028, "instruction": "Use the right arm to transfer the bread block with light patches to the smooth textured brown breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100028, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100029, "instruction": "Grab the brown bread loaf and the sponge-textured golden bread and put them in the breadbasket for baking.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100030, "instruction": "Take the soft golden baked bread and the hand-sized oval loaf from the table to the beige breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100031, "instruction": "Put the cuboid bread and the fluffy baked bread inside the woven light beige breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100031, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100032, "instruction": "Set the two breads the bread with golden crust and the bread loaf with bumpy surface in the medium plastic breadbasket oval shape.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100033, "instruction": "Move the soft brown bread from the table into the smooth beige breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100033, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100034, "instruction": "Relocate the small bread from the table to the smooth-textured breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100034, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100035, "instruction": "Transfer both the light brown loaf with smooth sides and the bread with golden-brown crust to the breadbasket for small food items.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100036, "instruction": "Put the bread the bread with warm golden color into the rectangular breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100036, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100037, "instruction": "Move every bread, the rectangular bread soft inside and the bread loaf with bumpy surface, into the medium rectangular breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100038, "instruction": "Pick up both the bread with golden-brown crust and the square-shaped bread for the breadbasket with spiral lines.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100039, "instruction": "Pick up both the cuboid bread and the bread with rough texture for the smooth textured brown breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100039, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100041, "instruction": "Transfer both the square-shaped bread and the bread with rounded corners to the round breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100042, "instruction": "Place both breads the braided bread loaf and the brown bread loaf into the oval perforated breadbasket white edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100043, "instruction": "Lift the golden crusted bread slice and set it in the basket with light brown weaving.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100043, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100044, "instruction": "Set the bread with rough texture inside the basket the beige plastic breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100046, "instruction": "Pick up both the light brown bread with ridges and the golden bread loaf for the breadbasket for holding bread.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100046, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100047, "instruction": "Place both breads the golden baked bread and the brown bread loaf into the beige plastic breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100048, "instruction": "Relocate the golden brown bread from the table to the woven light beige breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100049, "instruction": "Take the square-shaped bread and the golden brown bread from the table to the medium plastic breadbasket oval shape.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100050, "instruction": "Move every bread, the square-shaped bread and the bread with soft texture, into the breadbasket with flat base.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100050, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100051, "instruction": "Move every bread, the hand-sized bread block and the light golden brown bread, into the light brown basket for bread.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100053, "instruction": "Set the golden crusted bread slice inside the basket the beige basket with white grid design.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100053, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100054, "instruction": "Pick up both the rounded square loaf and the bread with golden crust for the basket for bread beige plastic.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100055, "instruction": "Pick up the smooth loaf with rounded edges and put it in the medium-sized rectangular breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100055, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100056, "instruction": "Place the golden bread loaf and the bread loaf with uneven edges in the smooth textured brown breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100057, "instruction": "Pick up the small golden brown bread and put it in the medium rectangular breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100058, "instruction": "Transfer both the bread block with light patches and the bread with rounded edges to the breadbasket with curved base.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100059, "instruction": "Move the brown loaf from the table into the oval-shaped breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100060, "instruction": "Set the two breads the light brown porous bread and the sponge-textured golden bread in the woven plastic breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100061, "instruction": "Pick up both the golden bread loaf with soft inside and the golden brown bread for the synthetic material breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100062, "instruction": "Place the soft bread and the golden bread in the beige breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100063, "instruction": "Set the two breads the square loaf of bread and the small loaf with curved top in the basket with light brown weaving.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100064, "instruction": "Take the soft golden baked bread and the golden bread loaf with soft inside from the table to the woven rectangular breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100065, "instruction": "Transfer both the soft bread and the slice-shaped bread to the basket for bread beige plastic.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100066, "instruction": "Deposit the square-shaped bread piece and the small golden baked bread inside the plastic breadbasket with mesh sides.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100067, "instruction": "Put the bread the smooth crusty small bread into the medium breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100068, "instruction": "Move the single bread the soft bread into the palm-sized breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100069, "instruction": "Collect the soft bread and the soft square bread in the smooth-textured breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100069, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100070, "instruction": "Set the two breads the doughy and soft bread and the cuboid bread in the woven light beige breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100072, "instruction": "Deposit the bread with firm crust edges and the soft doughy bread inside the beige plastic breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100073, "instruction": "Place both breads the bread with rough texture and the bread with golden-brown crust into the spiral ridged breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100074, "instruction": "Take the soft golden baked bread and the smooth loaf with rounded edges from the table to the beige plastic breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100076, "instruction": "Place the golden brown bread and the small golden brown bread in the light brown wicker breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100077, "instruction": "Deposit the round bread with crusty texture and the bread loaf with square shape inside the medium oval basket for bread.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100077, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100078, "instruction": "Put the bread the brown bread loaf into the breadbasket for small food items.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100079, "instruction": "Move the smooth crusty small bread from the table into the light beige rectangular breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100080, "instruction": "Lift the bread with golden-brown crust and set it in the smooth textured brown breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100080, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100081, "instruction": "Place the small loaf with curved top and the soft doughy bread in the beige basket with white grid design.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100081, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100082, "instruction": "Move both breads, the bread with golden surface color and the soft bread, into the breadbasket made of woven wood.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100082, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100083, "instruction": "Place the rounded square loaf in the spiral ridged breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100084, "instruction": "Put the hand-sized bread block and the golden brown loaf-shaped bread inside the round breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100084, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100085, "instruction": "Grab the light golden brown bread and the soft bread and put them in the medium-sized rectangular breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100085, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100086, "instruction": "Transfer the golden brown bread to the breadbasket for holding bread.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100086, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100087, "instruction": "Lift the bread with rounded edges and set it in the palm-sized breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100088, "instruction": "Move every bread, the fluffy baked bread and the light brown porous bread, into the smooth beige breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100089, "instruction": "Deposit the square loaf of bread and the smooth loaf with rounded edges inside the woven light beige breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100090, "instruction": "Lift the cuboid bread and the bread with rounded corners and place them in the spiral ridged breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100091, "instruction": "Place both breads the soft golden bread and the golden bread loaf into the palm-sized breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100091, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100092, "instruction": "Place both breads the small golden baked bread and the bread with firm crust edges into the beige breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100093, "instruction": "Move every bread, the medium bread with rounded sides and the bread with golden-brown crust, into the wooden breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100094, "instruction": "Move every bread, the soft bread and the square-shaped bread piece, into the basket for bread beige plastic.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100095, "instruction": "Take the soft bread and drop it in the breadbasket with rounded edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100096, "instruction": "Take the round bread with crusty texture and the golden brown bread with braided design from the table to the smooth textured brown breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100096, "success": false}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100097, "instruction": "Pick the golden bread using the right arm and set it in the brown breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100097, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100098, "instruction": "With the right arm, move the braided bread loaf into the light beige rectangular breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100100, "instruction": "Ensure the braided bread loaf and the small golden baked bread are both inside the basket for carrying bread beige.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100100, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100101, "instruction": "Pick up the round bread with crusty texture and put it in the breadbasket with smooth woven texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100102, "instruction": "Move the single bread the bread with rough texture into the synthetic material breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100102, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100103, "instruction": "Deposit the bread with golden-brown crust and the soft golden baked bread inside the medium breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100103, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100104, "instruction": "Collect the light brown porous bread and the square loaf of bread in the white oval breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100104, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100105, "instruction": "Grab the light golden brown bread and the golden crusted bread slice and put them in the light brown wicker breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100105, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100106, "instruction": "Place both breads the golden bread and the golden brown bread into the beige basket with white grid design.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100106, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100107, "instruction": "Take the brown bread loaf and the golden brown bread from the table to the medium breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100107, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_basket", "seed": 100108, "instruction": "Move both breads, the small golden brown bread and the square-shaped bread piece, into the plastic mesh breadbasket.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_basket", "seed": 100108, "success": true}

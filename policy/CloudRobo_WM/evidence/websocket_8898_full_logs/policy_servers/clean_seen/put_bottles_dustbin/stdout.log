@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100002, "instruction": "Use the robot arms to place the yellow bottle body with tapered neck, the bottle for holding liquids, and the drink bottle with slim neck in the black dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100004, "instruction": "Gather the yellow bottle with smooth texture, the hand-sized bottle, and the hand-sized drinking bottle and put all of them in the trash bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100005, "instruction": "Move the complete set of bottles, the yellow bottle, the bottle with ribbed design, and the hand-sized drinking bottle, into the medium black garbage container.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100005, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100006, "instruction": "Transfer the yellow liquid container with green top, the bottle with narrow neck, and the red-labeled soda bottle off the table into the medium black garbage container.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100007, "instruction": "Take all of the yellow bottle body with tapered neck, the hand-sized bottle, and the black soda bottle with white top to the plastic dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100008, "instruction": "Collect the bottles the cylindrical yellow bottle for holding liquids, the smooth transparent plastic bottle, and the red and black beverage bottle in the black bin with white liner.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100010, "instruction": "Use the robot arms to place the bottle with green cap, the bottle with ribbed design, and the drink bottle with slim neck in the black and white trash holder.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100013, "instruction": "Remove the bottle with green cap, the water bottle with textured body, and the bottle with curved body shape from the table and place them in the plastic dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100015, "instruction": "Move all three targets the yellow bottle with smooth texture, the clear bottle with blue sections, and the black soda bottle with white top to the dustbin with white inner bag.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100017, "instruction": "Move each target bottle, the bottle made of smooth plastic, the blue-accented cylindrical bottle, and the red and black beverage bottle, into the black dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100017, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100018, "instruction": "Load the medium black garbage container with the three bottles the bottle made of smooth plastic, the blue-accented cylindrical bottle, and the plastic bottle with red cap.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100018, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100019, "instruction": "Make sure the dustbin the dustbin with lid and bag contains the yellow liquid container with green top, the bottle with narrow neck, and the drink bottle with slim neck.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100019, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100020, "instruction": "Collect the bottles the bottle with small ridged green cap, the transparent bottle, and the black soda bottle with white top in the dustbin with lid and bag.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100024, "instruction": "Transfer the cylindrical yellow bottle for holding liquids, the bottle with narrow neck, and the smooth plastic bottle off the table into the dustbin with lid and bag.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100027, "instruction": "Use the arms to transfer every bottle, the medium yellow cylindrical bottle, the transparent bottle, and the red bottle, to the smooth black dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100028, "instruction": "Gather every bottle, including the green-striped cap on yellow bottle, the blue-accented cylindrical bottle, and the black bottle with red label, in the smooth black dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100028, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100029, "instruction": "Transfer all bottles, the yellow bottle body with tapered neck, the blue-accented cylindrical bottle, and the black bottle with red label, into the left-side the medium-sized black plastic dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100030, "instruction": "Clear the table by putting the bottle made of smooth plastic, the hand-sized bottle, and the bottle with curved body shape into the trash bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100031, "instruction": "Transfer the full group the green-striped cap on yellow bottle, the bottle with turquoise cap, and the black soda bottle with white top into the medium-sized black plastic dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100031, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100032, "instruction": "Put the smooth yellow bottle with ridged cap, the bottle with turquoise cap, and the rounded bottle with a white neck inside the medium black garbage container.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100033, "instruction": "Remove the bottle with small ridged green cap, the cylindrical bottle, and the bottle with curved body shape from the table and place them in the black dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100033, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100034, "instruction": "Gather the green-striped cap on yellow bottle, the hand-sized bottle, and the drink bottle with slim neck and put all of them in the dustbin with lid and bag.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100034, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100035, "instruction": "Place the three bottles the smooth yellow bottle with ridged cap, the medium-sized water bottle, and the red-labeled soda bottle inside the black and white trash holder.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100035, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100036, "instruction": "Make sure the dustbin the plastic dustbin contains the smooth yellow bottle with ridged cap, the smooth transparent plastic bottle, and the rounded bottle with a white neck.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100036, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100037, "instruction": "Use the available arms to move the yellow liquid container with green top, the bottle with turquoise cap, and the red and black beverage bottle into the medium black garbage container.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100038, "instruction": "Place the three bottles the yellow bottle, the bottle with ribbed design, and the smooth plastic bottle inside the black bin with white liner.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100039, "instruction": "Take all of the bottle with small ridged green cap, the transparent bottle, and the red and black beverage bottle to the black bin with white liner.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100039, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100040, "instruction": "Take all of the bottle made of smooth plastic, the blue-accented cylindrical bottle, and the hand-sized drinking bottle to the medium black garbage container.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100040, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100041, "instruction": "Load the trash bin with the three bottles the green-striped cap on yellow bottle, the transparent bottle, and the red bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100043, "instruction": "Use the robot arms to place the yellow liquid container with green top, the bottle with narrow neck, and the red bottle in the dustbin with lid and bag.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100043, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100044, "instruction": "Gather the yellow bottle, the medium-sized water bottle, and the bottle with curved body shape and put all of them in the dustbin with lid and bag.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100045, "instruction": "Gather the medium plastic bottle with tapered neck, the water bottle with textured body, and the red and black beverage bottle and put all of them in the dustbin with white inner bag.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100045, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100046, "instruction": "Transfer the full group the medium plastic bottle with tapered neck, the water bottle with textured body, and the black soda bottle with white top into the medium black garbage container.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100046, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100047, "instruction": "Load the black dustbin with the three bottles the bottle with green cap, the transparent bottle, and the red and black beverage bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100049, "instruction": "Relocate the medium yellow cylindrical bottle, the clear bottle with blue sections, and the hand-sized drinking bottle to the plastic dustbin on the table's left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100050, "instruction": "Gather the bottle made of smooth plastic, the bottle with turquoise cap, and the black bottle with red label and put all of them in the black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100050, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100051, "instruction": "Transfer the yellow liquid container with green top, the cylindrical bottle, and the red bottle off the table into the rectangular black trash holder.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100052, "instruction": "Load the medium-sized black plastic dustbin with the three bottles the yellow liquid container with green top, the bottle with turquoise cap, and the smooth plastic bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100054, "instruction": "Move all three targets the yellow bottle with smooth texture, the clear bottle with blue sections, and the red and black beverage bottle to the black dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100055, "instruction": "Clear the table by putting the yellow liquid container with green top, the smooth transparent plastic bottle, and the smooth plastic bottle into the black bin with white liner.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100055, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100056, "instruction": "Move the complete set of bottles, the yellow bottle with smooth texture, the smooth transparent plastic bottle, and the rounded bottle with a white neck, into the black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100057, "instruction": "Place the three bottles the cylindrical yellow bottle for holding liquids, the bottle with narrow neck, and the black and red bottle inside the smooth black dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100058, "instruction": "Place the three bottles the smooth yellow bottle with ridged cap, the bottle with ribbed design, and the red bottle inside the black bin with white liner.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100060, "instruction": "Put the smooth yellow bottle with ridged cap, the bottle for holding liquids, and the red-labeled soda bottle inside the medium black garbage container.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100061, "instruction": "Clear the table by putting the bottle with small ridged green cap, the smooth transparent plastic bottle, and the black bottle with red label into the black bin with white liner.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100063, "instruction": "Pick up every bottle, the bottle with small ridged green cap, the hand-sized bottle, and the black bottle with red label, and put it in the plastic dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100065, "instruction": "Transfer the full group the yellow bottle with smooth texture, the cylindrical bottle, and the smooth plastic bottle into the black and white trash holder.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100067, "instruction": "Take all of the bottle with green cap, the hand-sized bottle, and the red and black beverage bottle to the black dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100068, "instruction": "Use the arms to clear the bottle with green cap, the bottle with turquoise cap, and the red and black beverage bottle into the black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100069, "instruction": "Take all of the green-striped cap on yellow bottle, the bottle with narrow neck, and the red bottle to the smooth black dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100069, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100070, "instruction": "Remove the yellow liquid container with green top, the bottle with narrow neck, and the red bottle from the table and place them in the trash bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100072, "instruction": "Move the yellow bottle with smooth texture, the bottle for holding liquids, and the red-labeled soda bottle from the table into the smooth black dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100074, "instruction": "Transfer the yellow liquid container with green top, the hand-sized bottle, and the bottle with curved body shape off the table into the trash bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100075, "instruction": "Use the robot arms to place the medium yellow cylindrical bottle, the water bottle with textured body, and the drink bottle with slim neck in the smooth black dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100076, "instruction": "Gather every bottle, including the yellow bottle body with tapered neck, the smooth transparent plastic bottle, and the bottle with curved body shape, in the dustbin with white inner bag.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100078, "instruction": "Put the bottle with small ridged green cap, the cylindrical bottle, and the black bottle with red label inside the trash bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100080, "instruction": "Clear the table by putting the bottle with small ridged green cap, the medium-sized water bottle, and the red bottle into the medium-sized black plastic dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100080, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100081, "instruction": "Deposit all of the yellow bottle, the bottle with turquoise cap, and the plastic bottle with red cap into the left-hand the plastic dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100081, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100082, "instruction": "Transfer the full group the green-striped cap on yellow bottle, the water bottle with textured body, and the rounded bottle with a white neck into the plastic dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100082, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100083, "instruction": "Place the green-striped cap on yellow bottle, the hand-sized bottle, and the black and red bottle within the dustbin the rectangular black trash holder.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100084, "instruction": "Remove the bottles the medium yellow cylindrical bottle, the bottle with narrow neck, and the red-labeled soda bottle by placing them in the medium black garbage container.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100084, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100085, "instruction": "Transfer the full group the smooth yellow bottle with ridged cap, the bottle with narrow neck, and the red and black beverage bottle into the black bin with white liner.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100085, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100086, "instruction": "Use the available arms to move the yellow bottle body with tapered neck, the cylindrical bottle, and the red and black beverage bottle into the rectangular black trash holder.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100086, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100089, "instruction": "Remove the yellow liquid container with green top, the bottle with narrow neck, and the bottle with curved body shape from the table and place them in the medium black garbage container.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100090, "instruction": "Put the bottle with small ridged green cap, the blue-accented cylindrical bottle, and the rounded bottle with a white neck inside the medium black garbage container.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100092, "instruction": "Use the robot arms to place the bottle made of smooth plastic, the hand-sized bottle, and the drink bottle with slim neck in the medium black garbage container.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100093, "instruction": "Transfer all bottles, the cylindrical yellow bottle for holding liquids, the bottle with narrow neck, and the smooth plastic bottle, into the left-side the black dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100094, "instruction": "Deposit all of the bottle with green cap, the medium-sized water bottle, and the plastic bottle with red cap into the left-hand the medium-sized black plastic dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100095, "instruction": "Deposit each of the cylindrical yellow bottle for holding liquids, the bottle with narrow neck, and the black bottle with red label into the smooth black dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100096, "instruction": "Relocate the green-striped cap on yellow bottle, the clear bottle with blue sections, and the bottle with curved body shape to the trash bin on the table's left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100099, "instruction": "Move each target bottle, the medium yellow cylindrical bottle, the bottle with narrow neck, and the plastic bottle with red cap, into the dustbin with lid and bag.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100100, "instruction": "Put every target bottle, the medium plastic bottle with tapered neck, the blue-accented cylindrical bottle, and the smooth plastic bottle, in the black bin with white liner.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100100, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100101, "instruction": "Clear the table by putting the yellow bottle body with tapered neck, the blue-accented cylindrical bottle, and the plastic bottle with red cap into the medium black garbage container.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100102, "instruction": "Transfer all bottles, the medium yellow cylindrical bottle, the bottle with ribbed design, and the bottle with curved body shape, into the left-side the plastic dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100102, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100104, "instruction": "Make sure the dustbin the plastic dustbin contains the bottle with green cap, the cylindrical bottle, and the plastic bottle with red cap.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100104, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100105, "instruction": "Use the robot arms to place the smooth yellow bottle with ridged cap, the blue-accented cylindrical bottle, and the plastic bottle with red cap in the plastic dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100105, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100107, "instruction": "Transfer the smooth yellow bottle with ridged cap, the bottle with ribbed design, and the hand-sized drinking bottle off the table into the black and white trash holder.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100107, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100108, "instruction": "Deposit all of the yellow bottle with smooth texture, the bottle for holding liquids, and the red-labeled soda bottle into the left-hand the medium black garbage container.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100108, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100109, "instruction": "Clear the table by putting the cylindrical yellow bottle for holding liquids, the cylindrical bottle, and the red-labeled soda bottle into the smooth black dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100109, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100110, "instruction": "Gather the green-striped cap on yellow bottle, the bottle with narrow neck, and the red-labeled soda bottle and put all of them in the dustbin with white inner bag.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100110, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100111, "instruction": "Put the yellow bottle body with tapered neck, the bottle for holding liquids, and the red-labeled soda bottle inside the medium black garbage container.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100111, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100112, "instruction": "Gather the yellow bottle, the medium-sized water bottle, and the rounded bottle with a white neck and put all of them in the medium-sized black plastic dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100112, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100113, "instruction": "Move all three targets the bottle with small ridged green cap, the medium-sized water bottle, and the red bottle to the dustbin with white inner bag.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100113, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100114, "instruction": "Make sure the dustbin the black dustbin contains the medium yellow cylindrical bottle, the bottle with narrow neck, and the black soda bottle with white top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100114, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100115, "instruction": "Use the robot arms to place the medium yellow cylindrical bottle, the clear bottle with blue sections, and the red bottle in the dustbin with lid and bag.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100115, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100116, "instruction": "Pick up every bottle, the cylindrical yellow bottle for holding liquids, the transparent bottle, and the bottle with curved body shape, and put it in the smooth black dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100116, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100118, "instruction": "Use the arms to transfer every bottle, the bottle with green cap, the bottle for holding liquids, and the drink bottle with slim neck, to the plastic dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100118, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100120, "instruction": "Gather the yellow bottle with smooth texture, the medium-sized water bottle, and the bottle with curved body shape and put all of them in the medium black garbage container.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100120, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100121, "instruction": "Gather every bottle, including the yellow liquid container with green top, the hand-sized bottle, and the drink bottle with slim neck, in the black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100121, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100123, "instruction": "Clear the table by putting the medium yellow cylindrical bottle, the blue-accented cylindrical bottle, and the red-labeled soda bottle into the black dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100123, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100124, "instruction": "Make sure the dustbin the medium-sized black plastic dustbin contains the bottle with green cap, the bottle with narrow neck, and the drink bottle with slim neck.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100124, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100125, "instruction": "Place the three bottles the smooth yellow bottle with ridged cap, the blue-accented cylindrical bottle, and the plastic bottle with red cap inside the black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100125, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100127, "instruction": "Ensure the bottle with green cap, the bottle with ribbed design, and the plastic bottle with red cap are all inside the medium black garbage container.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100127, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100128, "instruction": "Use the robot arms to place the bottle made of smooth plastic, the medium-sized water bottle, and the plastic bottle with red cap in the dustbin with white inner bag.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100128, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100129, "instruction": "Use the available arms to move the green-striped cap on yellow bottle, the smooth transparent plastic bottle, and the black soda bottle with white top into the dustbin with white inner bag.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100129, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100130, "instruction": "Load the black and white trash holder with the three bottles the medium plastic bottle with tapered neck, the bottle for holding liquids, and the black soda bottle with white top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100130, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100132, "instruction": "Take all of the cylindrical yellow bottle for holding liquids, the cylindrical bottle, and the red and black beverage bottle to the smooth black dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100132, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100133, "instruction": "Put the medium yellow cylindrical bottle, the bottle with ribbed design, and the drink bottle with slim neck inside the smooth black dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100133, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100134, "instruction": "Pick up every bottle, the cylindrical yellow bottle for holding liquids, the clear bottle with blue sections, and the plastic bottle with red cap, and put it in the dustbin with white inner bag.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100134, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100135, "instruction": "Make sure the dustbin the medium-sized black plastic dustbin contains the green-striped cap on yellow bottle, the hand-sized bottle, and the plastic bottle with red cap.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100135, "success": true}

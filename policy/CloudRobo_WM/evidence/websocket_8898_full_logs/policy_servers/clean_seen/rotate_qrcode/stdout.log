@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100000, "instruction": "Locate the gray slanted panel with text, pick it up, adjust its angle, then put it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100001, "instruction": "Lift the smooth plastic paymentsign with QR code with the right arm, rotate it to make the qrcode visible, then place it back.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100002, "instruction": "Grab the smooth beige paymentsign using the left arm, rotate the QR code to face forward, then place it back.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100003, "instruction": "Catch the small black stand for payments, raise it, turn the QR code to face you, then lower it back", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100003, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100004, "instruction": "Use the left arm to grab the smooth beige paymentsign, face the QR code to you, then set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100005, "instruction": "Locate the rectangular paymentsign with colorful top, pick it up, adjust its angle, then put it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100005, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100006, "instruction": "Using the right arm, catch the rectangular plastic paymentsign with codes, rotate it to face the QR code, then set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100008, "instruction": "Lift the sign with yellow payment section, adjust its angle towards you, then place it back down", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100009, "instruction": "Lift the QR code paymentsign from the table, turn it QR code forward, then place it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100010, "instruction": "Take the gray slanted panel with text with the right arm, turn the QR to you, then put it down and release", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100011, "instruction": "Lift the paymentsign with angled black stand from the table, rotate it towards you, then put it back down", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100011, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100012, "instruction": "Locate the gray top with QR code, pick it up, adjust its angle, then put it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100012, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100013, "instruction": "Take the triangular stand with QR code from the table, rotate it QR code toward you, then set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100014, "instruction": "Using the right arm, catch the rectangular paymentsign with colorful top, rotate it to face the QR code, then set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100015, "instruction": "Lift the tabletop-sized payment sign, turn it to face you, then set it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100016, "instruction": "Lift the small paymentsign for mobile payments, adjust its angle towards you, then place it back down", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100017, "instruction": "Grab the smooth plastic paymentsign with QR code using the right arm, lift and rotate until the QR faces you, then set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100017, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100018, "instruction": "Take the tabletop-sized payment sign with the left arm, turn the QR to you, then put it down and release", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100018, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100019, "instruction": "Take the paymentsign with glossy blue panel from the table, rotate it QR code toward you, then set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100019, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100020, "instruction": "Catch the blue and white paymentsign, pick it up, rotate to view the qrcode, then put it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100021, "instruction": "Use the left arm to grab the payment sign with green logo, face the QR code to you, then set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100022, "instruction": "Use the left arm to grab the tabletop-sized payment sign, point the QR code to you, then set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100022, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100023, "instruction": "Grab the green payment logo on gray top using the right arm, rotate it until the qrcode faces you, then set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100024, "instruction": "Grab the small payment stand with black base, lift it, rotate it QR front, then return it to the table", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100025, "instruction": "Take the QR code paymentsign from the table, rotate it QR code toward you, then set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100026, "instruction": "Locate the paymentsign with angled black stand, pick it up, adjust its angle, then put it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100027, "instruction": "Lift the slanted gray panel for QR code scan, adjust its angle towards you, then place it back down", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100028, "instruction": "Lift the small paymentsign with stand with the left arm, rotate it to make the qrcode visible, then place it back.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100028, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100029, "instruction": "Find the QR code paymentsign, grab it, turn it towards yourself, then set it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100030, "instruction": "Lift the rectangular plastic paymentsign, orient its QR code to you with the right arm, then set it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100031, "instruction": "Catch and lift the paymentsign with blue and white text, turn it to show the QR code, then set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100031, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100032, "instruction": "Take the tabletop-sized payment sign, raise it, make the qrcode face you, then place it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100033, "instruction": "Take the yellow panel white paymentsign, raise it, make the qrcode face you, then place it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100033, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100034, "instruction": "Catch the triangular stand with QR code with the left arm, rotate to make the QR code visible, then put it back.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100034, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100036, "instruction": "Use the right arm to grab the paymentsign, point the QR code to you, then set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100036, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100037, "instruction": "Take the tabletop-sized payment sign, lift it, orient it so the QR faces you, then set it down", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100038, "instruction": "Lift the beige paymentsign, rotate it so the code faces you, then place it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100039, "instruction": "Take the paymentsign, raise it, make the qrcode face you, then place it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100039, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100040, "instruction": "Lift the blue and white rectangular paymentsign, rotate for its qrcode to face you, then set it down again.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100040, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100041, "instruction": "Pick the stand-up paymentsign with rectangular top up, rotate to make its qrcode visible, then put it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100042, "instruction": "Catch the yellow and white payment display using the left arm, turn it to face the QR code, then put it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100043, "instruction": "Pick up the blue and white paymentsign, face the qrcode towards you, then put it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100043, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100044, "instruction": "Use the right arm to grab the paymentsign for scanning QR codes, face the QR code to you, then set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100045, "instruction": "Take the blue and white rectangular paymentsign, raise it, make the qrcode face you, then place it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100045, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100046, "instruction": "Catch the tabletop paymentsign, lift it, adjust its QR code to face you, then put it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100046, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100047, "instruction": "Find the blue and white paymentsign, grab it, turn it towards yourself, then set it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100048, "instruction": "Catch the small paymentsign for mobile payments off the table, rotate its qrcode to you, then set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100050, "instruction": "Pick the paymentsign with tilted rectangular panel up, rotate the QR code to face you, then put it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100050, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100051, "instruction": "Catch the plastic smooth paymentsign, pick it up, rotate to show the QR code, then put it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100052, "instruction": "Catch the blue and white paymentsign, lift it, rotate it QR facing, then lower it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100053, "instruction": "Catch the small paymentsign with stand, lift it, adjust its QR code to face you, then put it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100053, "success": false}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100054, "instruction": "Catch the paymentsign with angled black stand, lift, rotate to align the qrcode to you, then put it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100055, "instruction": "Pick the white stand sign up, turn its QR code to you using the left arm, then set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100055, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100056, "instruction": "Catch the white stand sign, lift it, rotate it QR facing, then lower it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100057, "instruction": "Lift the tabletop paymentsign, rotate it so the code faces you, then place it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100058, "instruction": "Lift the green payment logo on gray top, adjust its angle towards you, then place it back down", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100059, "instruction": "Pick the blue and white paymentsign up, rotate the QR code to face you, then put it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100060, "instruction": "Catch the gray top with QR code, pick it up, rotate to show the QR code, then put it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100062, "instruction": "Pick up the small paymentsign with stand, face the qrcode towards you, then put it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100063, "instruction": "Catch the slanted gray panel for QR code scan, pick it up, rotate to show the QR code, then put it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100064, "instruction": "Lift the sign with yellow payment section from the table, rotate it towards you, then put it back down", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100065, "instruction": "Pick the paymentsign with glossy blue panel up, rotate to make its qrcode visible, then put it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100066, "instruction": "Use the right arm to lift the paymentsign with tilted rectangular panel, rotate it QR code toward you, then place it back.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100067, "instruction": "Catch the paymentsign with blue and white text using the right arm, turn it to face the QR code, then put it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100068, "instruction": "Grab the slanted gray panel for QR code scan, pick it up, turn its qrcode toward you, then place it back.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100069, "instruction": "Employ the right arm to seize the green payment logo on gray top, raise it, rotate it QR-forward, then put it back", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100069, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100070, "instruction": "Slide the compact paymentsign for scanning payments off the table, turn it to face you, then put it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100071, "instruction": "Lift the white stand sign, rotate for its qrcode to face you, then set it down again.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100071, "success": false}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100072, "instruction": "Grab the white stand sign, pick it up, turn its qrcode toward you, then place it back.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100074, "instruction": "Take the small paymentsign with stand with the right arm, turn the QR to you, then put it down and release", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100075, "instruction": "Lift the paymentsign with tilted rectangular panel from the table, turn it QR code forward, then place it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100076, "instruction": "Catch the tabletop paymentsign, raise it, turn the QR code to face you, then lower it back", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100077, "instruction": "Use the right arm to grab the smooth plastic paymentsign with QR code, rotate the qrcode to face you, then set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100077, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100078, "instruction": "Take the plastic smooth paymentsign with the left arm, turn the QR to you, then put it down and release", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100079, "instruction": "Catch the stand-up paymentsign with rectangular top using the right arm, turn it to face the QR code, then put it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100080, "instruction": "Catch the paymentsign off the table, rotate its qrcode to you, then set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100080, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100082, "instruction": "Catch the paymentsign with blue and white text using the right arm, turn it to face the QR code, then put it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100082, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100083, "instruction": "Lift the paymentsign with QR code area, orient its QR code to you with the left arm, then set it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100084, "instruction": "Grab the paymentsign showing QR code label, lift it, rotate it QR front, then return it to the table", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100084, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100085, "instruction": "Use the left arm to grab the white rectangular paymentsign with yellow details, rotate the qrcode to face you, then set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100085, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100086, "instruction": "Take the rectangular paymentsign with stand, raise it, make the qrcode face you, then place it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100086, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100087, "instruction": "Pick the stand-up paymentsign with rectangular top up, rotate the QR code to face you, then put it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100088, "instruction": "Pick up the beige paymentsign with printed details, rotate it so the QR code faces you, then set it down", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100089, "instruction": "Catch the compact paymentsign for scanning payments, lift it, rotate it QR facing, then lower it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100090, "instruction": "Use the right arm to grab the paymentsign with tilted rectangular panel, lift and turn it QR forward, then set it down", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100091, "instruction": "Locate the paymentsign with tilted rectangular panel, pick it up, adjust its angle, then put it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100091, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100092, "instruction": "Lift the paymentsign with QR code area, adjust its angle towards you, then place it back down", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100093, "instruction": "Pick the small paymentsign for mobile payments up, rotate the QR code to face you, then put it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100094, "instruction": "Take the triangular stand with QR code, raise it, make the qrcode face you, then place it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100095, "instruction": "Pick the gray top with QR code up, rotate the QR code to face you, then put it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100096, "instruction": "Use the left arm to grab the black base with tilted gray panel, rotate the qrcode to face you, then set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100098, "instruction": "Catch the black base with tilted gray panel, lift it, adjust its QR code to face you, then put it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100099, "instruction": "Pick the paymentsign with angled black stand up, rotate to make its qrcode visible, then put it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100099, "success": false}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100100, "instruction": "Pick the tabletop paymentsign up, rotate to make its qrcode visible, then put it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100100, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100101, "instruction": "Catch the white paymentsign with raised base, lift it, adjust its QR code to face you, then put it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100102, "instruction": "Lift the tabletop-sized payment sign, orient its QR code to you with the right arm, then set it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100102, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100103, "instruction": "Locate the beige paymentsign, pick it up, adjust its angle, then put it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100103, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100104, "instruction": "Use the right arm to grab the paymentsign, point the QR code to you, then set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100104, "success": true}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100105, "instruction": "Locate the rectangular paymentsign with stand, pick it up, adjust its angle, then put it back down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100105, "success": false}
+{"event": "case_prepared", "task_name": "rotate_qrcode", "seed": 100106, "instruction": "Take the paymentsign with angled black stand, lift it, orient it so the QR faces you, then set it down", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "rotate_qrcode", "seed": 100106, "success": true}

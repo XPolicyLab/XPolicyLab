@@ -1,6 +1,6 @@
-# Normalize packaged source text without changing code semantics.
 * text=auto eol=lf
-# These two strict-SHA assets intentionally retain upstream whitespace.
-# The exception is limited to their trailing whitespace and EOF blanks.
-source_inference/configs/kinematics/config.yml text eol=lf whitespace=-blank-at-eol,-blank-at-eof
-source_inference/configs/kinematics/arx5_description_isaac.urdf text eol=lf whitespace=-blank-at-eol,-blank-at-eof
+
+# Preserve original URDF asset bytes: runtime checks and manifests pin strict SHA256.
+# Limit whitespace exceptions to these two URDF files; other source checks remain enabled.
+source_inference/configs/kinematics/arx5_description_isaac.urdf -text whitespace=-blank-at-eol,-blank-at-eof
+source_inference/configs/kinematics/urdf/arx5_description_isaac.urdf -text whitespace=-blank-at-eol,-blank-at-eof

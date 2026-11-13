@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100000, "instruction": "Center the blue bowl with slightly rounded base on top of the round plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100003, "instruction": "Set the gray cup with faded brown spots on top of the smooth ceramic plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100003, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100004, "instruction": "Set the drinking cup medium palm size on top of the greenish-gray flat dinner plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100005, "instruction": "Set the rounded bowl with light blue color on top of the smooth greenish table plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100005, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100006, "instruction": "Use the right arm to place the cylindrical cup with grainy surface onto the ceramic plate with smooth surface.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100007, "instruction": "Grab the medium-sized smooth bowl with the right arm and place it on the ceramic plate with smooth surface.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100008, "instruction": "Transfer the light gray ceramic bowl to the top of the ceramic plate with smooth surface.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100009, "instruction": "Carry the ceramic bowl with glossy surface to the dish plate and set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100010, "instruction": "Relocate the medium bowl for food from the table onto the medium round flat plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100011, "instruction": "Place the dark inside bowl light blue outside squarely on top of the smooth ceramic plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100011, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100012, "instruction": "Place the smooth cylindrical cup squarely on top of the smooth ceramic plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100012, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100014, "instruction": "Pick up the medium cup for holding liquids and place it on the medium round ceramic plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100015, "instruction": "Use the right arm to place the simple drinking cup onto the greenish-gray flat dinner plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100016, "instruction": "Grab the cylindrical cup with the left arm and place it on the flat round greenish plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100017, "instruction": "Grab the gray bowl with the left arm and place it on the medium round ceramic plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100017, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100018, "instruction": "Position the medium-sized beverage cup securely on the ceramic plate with smooth surface.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100018, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100019, "instruction": "Use the left arm to position the bowl with shiny texture on the smooth greenish table plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100019, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100020, "instruction": "Put the white bowl with curved shape on the center of the flat round greenish plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100021, "instruction": "Place the medium-sized beverage cup onto the food plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100023, "instruction": "Set the cup with black circular base on top of the smooth greenish table plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100024, "instruction": "Grab the ceramic bowl with glossy surface with the left arm and place it on the ceramic plate with smooth surface.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100025, "instruction": "Place the small bowl with brown edge squarely on top of the smooth greenish table plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100026, "instruction": "Transfer the hand-sized rough metal cup to the top of the smooth greenish table plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100027, "instruction": "Carry the cup with ridges for grip to the ceramic plate with smooth surface and set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100028, "instruction": "Use the right arm to position the white cup for serving drinks on the medium round ceramic plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100028, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100030, "instruction": "Relocate the gray cup from the table onto the flat round greenish plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100031, "instruction": "Use the right arm to position the white bowl on the round plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100031, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100032, "instruction": "Grab the glazed bowl with curved sides with the right arm and place it on the flat round greenish plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100033, "instruction": "Use the left arm to position the dark gray cylinder cup on the greenish-gray flat dinner plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100033, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100034, "instruction": "Relocate the gray bowl from the table onto the ceramic plate with smooth surface.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100034, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100035, "instruction": "Use the right arm to place the plastic cup onto the smooth greenish table plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100036, "instruction": "Use the left arm to position the small ceramic cup on the medium round flat plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100036, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100037, "instruction": "Set the dark green smooth drinking cup on top of the medium round flat plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100038, "instruction": "Position the ceramic bowl with earthy brown trim securely on the food plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100039, "instruction": "Move the white drinking cup onto the medium round ceramic plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100039, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100041, "instruction": "Lift the open-top round light gray bowl with the right arm and set it on the round plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100042, "instruction": "Move the bowl with black interior onto the smooth ceramic plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100043, "instruction": "Lift the rounded white cup with the right arm and set it on the smooth ceramic plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100043, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100044, "instruction": "Transfer the medium ceramic bowl to the top of the medium plate for food.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100045, "instruction": "Relocate the bowl for holding items from the table onto the food plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100045, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100046, "instruction": "Center the ceramic bowl light gray on top of the food plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100046, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100048, "instruction": "Center the white bowl with smooth texture on top of the medium plate for food.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100049, "instruction": "Pick up the tapered cylindrical plastic green cup and place it on the dish plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100050, "instruction": "Center the gray bowl with polished surface on top of the round plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100050, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100051, "instruction": "Place the tapered cylindrical plastic green cup onto the ceramic plate with smooth surface.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100053, "instruction": "Use the left arm to position the bowl with shiny texture on the flat round greenish plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100053, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100056, "instruction": "Put the smooth light gray bowl on the center of the medium round ceramic plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100057, "instruction": "Pick up the small ceramic cup and place it on the greenish-gray flat dinner plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100058, "instruction": "Place the gray cup onto the smooth greenish table plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100059, "instruction": "Place the cup shaped like ribbed cylinder squarely on top of the ceramic plate with smooth surface.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100060, "instruction": "Lift the white ceramic cup with blue flowers with the left arm and set it on the medium round flat plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100061, "instruction": "Position the bowl-shaped white ceramic cup securely on the medium plate for food.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100062, "instruction": "Put the hand-sized white bowl cup on the center of the medium plate for food.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100063, "instruction": "Relocate the bowl with shiny texture from the table onto the medium plate for food.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100064, "instruction": "Position the light gray round bowl securely on the medium plate for food.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100065, "instruction": "Transfer the ceramic bowl to the top of the medium plate for food.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100066, "instruction": "Place the bowl with deep black hollow squarely on top of the food plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100067, "instruction": "Lift the blue bowl with slightly rounded base with the left arm and set it on the smooth ceramic plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100068, "instruction": "Position the simple dark gray drinking cup securely on the food plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100069, "instruction": "Use the right arm to move the cylindrical cup with grainy surface onto the flat ceramic plate with smooth texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100069, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100070, "instruction": "Position the small cup with floral design securely on the greenish-gray flat dinner plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100071, "instruction": "Put the blue patterned drinking cup on the center of the round plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100071, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100072, "instruction": "Set the smooth gray bowl on top of the ceramic plate with smooth surface.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100073, "instruction": "Lift the dark brown ribbed cup with the left arm and set it on the medium round flat plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100074, "instruction": "Carry the ceramic bowl with earthy brown trim to the round plate and set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100075, "instruction": "Position the bowl with brown outer rim securely on the greenish-gray flat dinner plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100076, "instruction": "Set the cup with ribbed sides on top of the smooth ceramic plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100077, "instruction": "Move the dark green cup onto the smooth greenish table plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100077, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100078, "instruction": "Place the blue bowl squarely on top of the medium round flat plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100079, "instruction": "Use the right arm to move the hand-sized plastic cup onto the flat round greenish plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100080, "instruction": "Put the hand-sized rough metal cup on the center of the medium round flat plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100080, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100081, "instruction": "Pick up the ceramic bowl and place it on the food plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100081, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100082, "instruction": "Place the medium green cup with smooth sides onto the round plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100082, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100083, "instruction": "Place the round white bowl onto the greenish-gray flat dinner plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100084, "instruction": "Put the smooth gray bowl on the center of the smooth greenish table plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100084, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100085, "instruction": "Pick up the medium-sized bowl for holding food and place it on the smooth greenish table plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100085, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100086, "instruction": "Position the dark green smooth drinking cup securely on the ceramic plate with smooth surface.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100086, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100087, "instruction": "Place the palm-sized cup with smooth surface onto the round plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100088, "instruction": "Grab the dark green cup with the right arm and place it on the medium round ceramic plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100089, "instruction": "Lift the gray cup with faded brown spots with the left arm and set it on the smooth ceramic plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100090, "instruction": "Grab the white bowl with curved shape with the right arm and place it on the flat ceramic plate with smooth texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100091, "instruction": "Grab the gray ceramic bowl with open top with the left arm and place it on the food plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100091, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100092, "instruction": "Transfer the light gray ceramic bowl to the top of the medium round flat plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100096, "instruction": "Lift the bowl with deep black hollow with the left arm and set it on the food plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100097, "instruction": "Transfer the brown plastic cup smooth top to the top of the medium plate for food.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100097, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100098, "instruction": "Use the left arm to position the curved bowl light blue shade on the round plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100099, "instruction": "Carry the smooth bowl with curved edges to the smooth greenish table plate and set it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100100, "instruction": "Relocate the light gray ceramic bowl from the table onto the smooth greenish table plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100100, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100101, "instruction": "Place the hand-sized white bowl cup onto the round plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100103, "instruction": "Use the left arm to place the dark green cup onto the smooth ceramic plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100103, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100104, "instruction": "Place the medium-sized smooth bowl squarely on top of the ceramic plate with smooth surface.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100104, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100105, "instruction": "Grab the medium-sized smooth bowl with the left arm and place it on the medium round ceramic plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100105, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100106, "instruction": "Place the bowl with brown outer rim onto the dish plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100106, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100107, "instruction": "Transfer the small bowl with brown edge to the top of the smooth ceramic plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100107, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100108, "instruction": "Place the gray cup squarely on top of the food plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100108, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100109, "instruction": "Place the open-top round light gray bowl onto the medium round ceramic plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100109, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100110, "instruction": "Lift the white bowl with curved shape with the left arm and set it on the flat round greenish plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100110, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100111, "instruction": "Place the light gray ceramic bowl squarely on top of the medium round ceramic plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100111, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100112, "instruction": "Pick up the cylindrical cup with grainy surface and place it on the smooth ceramic plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100112, "success": true}
+{"event": "case_prepared", "task_name": "place_container_plate", "seed": 100113, "instruction": "Transfer the gray bowl to the top of the medium round ceramic plate.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_container_plate", "seed": 100113, "success": true}

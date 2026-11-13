@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100000, "instruction": "With the left arm, grab the grippy handle hammer and beat the block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100002, "instruction": "Use the left arm to grab the nail-driving hammer and beat block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100003, "instruction": "Employ the right arm to grab the hammer with two-tone handle and hit.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100003, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100004, "instruction": "Grab the nail-driving hammer using the left arm and strike the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100006, "instruction": "Pick up the black and yellow hammer grip and use it on the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100007, "instruction": "Grab the silver hammer with the left arm and strike block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100008, "instruction": "Catch the hammer with claw-shaped end and use it on the block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100009, "instruction": "Hold the hammer for nails then hit the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100010, "instruction": "Utilize the right arm to hold the grippy handle hammer and strike.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100011, "instruction": "Take the handheld medium claw hammer and smash the block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100011, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100012, "instruction": "With the right arm, grab the hammer for nails and beat the block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100012, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100013, "instruction": "Grab the hammer with claw-shaped end using the right arm then pound block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100014, "instruction": "Pick up the plastic handle metal hammer and use it on the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100015, "instruction": "Use the right arm to grab the nail-driving hammer and beat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100017, "instruction": "Grab the yellow and black hammer grip using the right arm, then beat the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100017, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100018, "instruction": "Utilize the left arm to hold the nail-driving hammer and strike.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100018, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100019, "instruction": "Grab the plastic handle metal hammer using the left arm then pound block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100019, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100020, "instruction": "Grab the nail-driving hammer using the left arm and hit the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100021, "instruction": "Grab the medium-sized metal hammer using the left arm and strike the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100022, "instruction": "Grab the nail-driving hammer with the left arm and strike block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100022, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100023, "instruction": "Grab the plastic handle metal hammer to beat the block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100025, "instruction": "Grab the hammer for nails using the left arm then pound block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100026, "instruction": "With the left arm, grab the handheld medium claw hammer and beat the block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100027, "instruction": "Catch the black and yellow hammer grip and use it on the block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100028, "instruction": "Lift the medium-sized metal hammer and hit the block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100028, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100029, "instruction": "Pick up the hammer for nails with the left arm, strike the block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100030, "instruction": "Take the silver curved hammer head and strike the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100032, "instruction": "Take the nail-driving hammer and strike the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100035, "instruction": "Pick up the silver hammer with the right arm, strike the block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100037, "instruction": "Grip the nail-driving hammer firmly and hit the block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100038, "instruction": "Grab the silver hammer with the left arm and hit the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100039, "instruction": "Take the silver hammer and strike the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100039, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100040, "instruction": "Take the yellow and black hammer grip and beat the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100040, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100041, "instruction": "Use the left arm to take the yellow and black hammer grip and strike", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100042, "instruction": "With the left arm, grab the hammer with two-tone handle and hammer the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100044, "instruction": "Grab the hammer with claw-shaped end using the right arm and strike the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100046, "instruction": "Grab the nail-driving hammer, then hit the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100046, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100047, "instruction": "Pick up the nail-driving hammer with the right arm, strike the block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100048, "instruction": "Grab the hammer with claw-shaped end and use it to hit", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100049, "instruction": "Take the hammer with claw-shaped end and beat the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100051, "instruction": "Lift the grippy handle hammer and hit the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100052, "instruction": "Beat the block after grabbing the nail-driving hammer", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100053, "instruction": "Grab the medium-sized metal hammer, then hit the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100053, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100054, "instruction": "Pick the handheld medium claw hammer from the table and strike", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100055, "instruction": "Lift the hammer for nails with the left arm then strike block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100055, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100056, "instruction": "Beat the block after grabbing the hammer for nails", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100057, "instruction": "Grab the nail-driving hammer with the left arm and hit the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100059, "instruction": "Grab the nail-driving hammer with the right arm and hit block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100060, "instruction": "Lift the hammer for nails and hit the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100061, "instruction": "Make the left arm grab the yellow and black hammer grip and strike the block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100063, "instruction": "Lift the black and yellow hammer grip and hit the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100064, "instruction": "Take the hammer with claw-shaped end and smash the block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100065, "instruction": "Use the right arm to take the plastic handle metal hammer and strike", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100066, "instruction": "Pick the black and yellow hammer grip and smash the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100067, "instruction": "With the right arm, grab the silver curved hammer head and hammer the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100068, "instruction": "Pick the black and yellow hammer grip with the right arm and hit the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100069, "instruction": "Grab the plastic handle metal hammer with the right arm and beat the block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100069, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100070, "instruction": "Take the handheld medium claw hammer using the right arm, hit the block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100071, "instruction": "Take the hammer for nails and beat the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100071, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100072, "instruction": "Pick the hammer for nails with the left arm and hit the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100073, "instruction": "Pick up the handheld medium claw hammer and use it on the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100074, "instruction": "Utilize the right arm to hold the medium-sized metal hammer and strike.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100075, "instruction": "Hold the black and yellow hammer grip then hit the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100077, "instruction": "Lift the yellow and black hammer grip, then beat the block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100077, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100079, "instruction": "With the right arm, grab the yellow and black hammer grip and hammer the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100080, "instruction": "Grab the silver hammer and use it to hit", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100080, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100081, "instruction": "Grab the handheld medium claw hammer using the right arm, then beat the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100081, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100083, "instruction": "Take the medium-sized metal hammer and strike the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100084, "instruction": "Hold the grippy handle hammer and pound the block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100084, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100085, "instruction": "Lift the black and yellow hammer grip, then beat the block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100085, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100086, "instruction": "Take the plastic handle metal hammer and strike the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100086, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100087, "instruction": "Grab the yellow and black hammer grip with the left arm and hit block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100089, "instruction": "Beat the block after grabbing the handheld medium claw hammer", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100090, "instruction": "Lift the black and yellow hammer grip using the right arm to hit the block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100091, "instruction": "With the right arm, grab the black and yellow hammer grip and beat the block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100091, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100092, "instruction": "Catch the medium-sized metal hammer and use it on the block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100093, "instruction": "Grab the hammer with claw-shaped end with the right arm and hit block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100094, "instruction": "Take the hammer with claw-shaped end and strike the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100095, "instruction": "Grab the hammer for nails with the left arm and hit block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100097, "instruction": "Use the right arm to grab the silver hammer and beat block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100097, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100098, "instruction": "Grab the handheld medium claw hammer, then hit the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100099, "instruction": "Use the left arm to take the handheld medium claw hammer and strike", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100100, "instruction": "Use the right arm to take the silver hammer and strike", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100100, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100101, "instruction": "Grab the handheld medium claw hammer, then hit the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100102, "instruction": "Take the nail-driving hammer and strike the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100102, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100104, "instruction": "Grab the silver hammer with the right arm and strike block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100104, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100105, "instruction": "With the left arm, grab the plastic handle metal hammer and beat the block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100105, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100107, "instruction": "Grab the silver hammer to beat the block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100107, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100109, "instruction": "Pick up the black and yellow hammer grip and strike the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100109, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100110, "instruction": "Hold the black and yellow hammer grip then hit the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100110, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100111, "instruction": "Take the hammer with two-tone handle and beat the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100111, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100112, "instruction": "Use the medium-sized metal hammer to hammer the block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100112, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100113, "instruction": "Pick up the hammer for nails and use it on the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100113, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100114, "instruction": "Pick the hammer with two-tone handle with the right arm and hit the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100114, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100115, "instruction": "With the left arm, grab the medium-sized metal hammer and hit the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100115, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100116, "instruction": "Pick up the silver curved hammer head and use it on the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100116, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100117, "instruction": "Take the plastic handle metal hammer and smash the block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100117, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100118, "instruction": "Lift the black and yellow hammer grip with the right arm then strike block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100118, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100119, "instruction": "With the left arm, grab the yellow and black hammer grip and beat the block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100119, "success": true}
+{"event": "case_prepared", "task_name": "beat_block_hammer", "seed": 100120, "instruction": "With the right arm, grab the hammer with claw-shaped end and hammer the block", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "beat_block_hammer", "seed": 100120, "success": true}

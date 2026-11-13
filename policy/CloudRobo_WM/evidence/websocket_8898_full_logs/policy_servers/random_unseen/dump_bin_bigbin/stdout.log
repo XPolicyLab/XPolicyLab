@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100003, "instruction": "Take the rectangular light gray trash bin and empty it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100003, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100006, "instruction": "Lift the portable gray speckled tabletrashbin and transfer the contents.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100007, "instruction": "Take the plastic tiny trashbin for tables and empty it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100010, "instruction": "Grab the smooth plastic tabletrashbin and pour the balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100013, "instruction": "Pick up the little tabletrashbin with smooth texture and pour it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100016, "instruction": "Take the tabletrashbin for tabletop use and empty into big bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100019, "instruction": "Take the smooth plastic tabletrashbin and empty it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100019, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100020, "instruction": "Lift the small bin for table waste and transfer the contents.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100021, "instruction": "Take the desktop tabletrashbin for small trash and empty into big bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100023, "instruction": "Lift the lightweight round tabletop trashbin and transfer the contents.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100026, "instruction": "Lift the smooth plastic tabletrashbin and empty it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100027, "instruction": "Take the desktop tabletrashbin for small trash and empty into big bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100033, "instruction": "Pour the tabletrashbin for tabletop use into the big bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100033, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100038, "instruction": "Grab the compact tabletop trashbin and pour the balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100041, "instruction": "Lift the compact tabletop trashbin and transfer the contents.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100042, "instruction": "Pour the plastic tiny trashbin for tables into the big bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100046, "instruction": "Grab the lightweight round tabletop trashbin and pour into big bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100046, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100049, "instruction": "Lift the small bin for table waste and empty it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100054, "instruction": "Grab the lightweight round tabletop trashbin and pour into big bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100055, "instruction": "Lift the rectangular plastic bin and empty it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100055, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100056, "instruction": "Lift the rectangular light gray trash bin and empty it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100057, "instruction": "Lift the compact tabletop trashbin and transfer the contents.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100057, "success": false}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100062, "instruction": "Pour the small smooth gray trashbin into the big bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100066, "instruction": "Pour the small smooth gray trashbin into the big bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100070, "instruction": "Pour the small bin for table waste into the big bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100072, "instruction": "Grab the small bin for table waste and pour balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100073, "instruction": "Grab the lightweight round tabletop trashbin and pour balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100073, "success": false}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100074, "instruction": "Grab the lightweight round tabletop trashbin and pour the balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100077, "instruction": "Lift the lightweight round tabletop trashbin and transfer the contents.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100077, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100080, "instruction": "Lift the lightweight round tabletop trashbin and transfer the contents.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100080, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100081, "instruction": "Grab the tabletrashbin made of plastic and pour balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100081, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100083, "instruction": "Take the compact tabletop trashbin and empty into big bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100083, "success": false}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100086, "instruction": "Pick up the lightweight round tabletop trashbin and pour it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100086, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100087, "instruction": "Pick up the lightweight round tabletop trashbin and pour it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100089, "instruction": "Pour the lightweight round tabletop trashbin into the big bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100089, "success": false}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100092, "instruction": "Lift the lightweight round tabletop trashbin and transfer the contents.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100093, "instruction": "Take the lightweight round tabletop trashbin and empty it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100094, "instruction": "Pick up the small smooth gray trashbin, pour balls into the bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100095, "instruction": "Lift the small bin for table waste and empty it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100095, "success": false}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100098, "instruction": "Take the lightweight round tabletop trashbin and empty it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100099, "instruction": "Pick up the lightweight round tabletop trashbin and pour it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100100, "instruction": "Lift the small bin for table waste and empty it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100100, "success": false}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100102, "instruction": "Grab the smooth plastic tabletrashbin and pour balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100102, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100106, "instruction": "Lift the gray trashbin for tabletop and transfer the contents.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100106, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100108, "instruction": "Take the gray trashbin for tabletop and empty it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100108, "success": false}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100109, "instruction": "Pick up the rectangular light gray trash bin and pour it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100109, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100110, "instruction": "Lift the little tabletrashbin with smooth texture and transfer the contents.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100110, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100111, "instruction": "Grab the tabletrashbin for holding small trash and pour the balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100111, "success": false}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100113, "instruction": "Pick up the plastic tiny trashbin for tables, pour balls into the bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100113, "success": false}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100117, "instruction": "Grab the compact tabletop trashbin and pour balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100117, "success": false}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100119, "instruction": "Pour the plastic tiny trashbin for tables into the big bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100119, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100120, "instruction": "Lift the portable gray speckled tabletrashbin and empty it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100120, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100123, "instruction": "Pick up the lightweight round tabletop trashbin and pour it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100123, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100125, "instruction": "Take the lightweight round tabletop trashbin and empty into big bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100125, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100127, "instruction": "Lift the plastic tiny trashbin for tables and transfer the contents.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100127, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100130, "instruction": "Take the tabletrashbin for holding small trash and empty into big bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100130, "success": false}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100131, "instruction": "Take the lightweight round tabletop trashbin and empty into big bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100131, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100132, "instruction": "Grab the small smooth gray trashbin and pour the balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100132, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100134, "instruction": "Take the plastic tiny trashbin for tables and empty it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100134, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100139, "instruction": "Lift the compact tabletop trashbin and empty it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100139, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100140, "instruction": "Pour the smooth plastic tabletrashbin into the big bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100140, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100142, "instruction": "Pick up the small smooth gray trashbin and pour it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100142, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100143, "instruction": "Pour the plastic tiny trashbin for tables into the big bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100143, "success": false}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100144, "instruction": "Grab the desktop tabletrashbin for small trash and pour the balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100144, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100146, "instruction": "Pick up the desktop tabletrashbin for small trash, pour balls into the bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100146, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100151, "instruction": "Grab the portable gray speckled tabletrashbin and pour into big bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100151, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100157, "instruction": "Lift the gray trashbin for tabletop and transfer the contents.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100157, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100161, "instruction": "Pick up the gray trashbin for tabletop and pour it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100161, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100166, "instruction": "Pick up the tabletrashbin for tabletop use and pour it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100166, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100169, "instruction": "Lift the rectangular light gray trash bin and transfer the contents.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100169, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100170, "instruction": "Take the small bin for table waste and empty into big bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100170, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100171, "instruction": "Pick up the lightweight round tabletop trashbin, pour balls into the bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100171, "success": false}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100173, "instruction": "Grab the tabletrashbin for tabletop use and pour into big bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100173, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100178, "instruction": "Lift the plastic tiny trashbin for tables and transfer the contents.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100178, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100195, "instruction": "Pick up the portable gray speckled tabletrashbin, pour balls into the bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100195, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100197, "instruction": "Grab the lightweight round tabletop trashbin and pour the balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100197, "success": false}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100199, "instruction": "Grab the small bin for table waste and pour the balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100199, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100200, "instruction": "Lift the tabletrashbin for tabletop use and empty it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100200, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100203, "instruction": "Grab the smooth plastic tabletrashbin and pour into big bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100203, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100205, "instruction": "Pick up the gray trashbin for tabletop, pour balls into the bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100205, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100210, "instruction": "Grab the small bin for table waste and pour the balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100210, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100211, "instruction": "Grab the portable gray speckled tabletrashbin and pour balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100211, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100217, "instruction": "Take the plastic tiny trashbin for tables and empty it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100217, "success": false}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100218, "instruction": "Take the lightweight round tabletop trashbin and empty it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100218, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100219, "instruction": "Lift the compact tabletop trashbin and transfer the contents.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100219, "success": false}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100220, "instruction": "Lift the compact tabletop trashbin and transfer the contents.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100220, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100221, "instruction": "Take the plastic tiny trashbin for tables and empty into big bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100221, "success": false}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100223, "instruction": "Pick up the desktop tabletrashbin for small trash and pour it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100223, "success": false}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100225, "instruction": "Pick up the smooth plastic tabletrashbin, pour balls into the bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100225, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100228, "instruction": "Grab the tabletrashbin for tabletop use and pour the balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100228, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100232, "instruction": "Pick up the desktop tabletrashbin for small trash, pour balls into the bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100232, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100234, "instruction": "Lift the lightweight round tabletop trashbin and transfer the contents.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100234, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100240, "instruction": "Lift the small bin for table waste and empty it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100240, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100241, "instruction": "Grab the gray trashbin for tabletop and pour into big bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100241, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100243, "instruction": "Pick up the compact tabletop trashbin, pour balls into the bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100243, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100244, "instruction": "Grab the compact tabletop trashbin and pour balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100244, "success": false}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100245, "instruction": "Take the tabletrashbin for tabletop use and empty into big bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100245, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100247, "instruction": "Lift the plastic tiny trashbin for tables and transfer the contents.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100247, "success": false}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100248, "instruction": "Grab the desktop tabletrashbin for small trash and pour balls.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100248, "success": true}
+{"event": "case_prepared", "task_name": "dump_bin_bigbin", "seed": 100252, "instruction": "Grab the tabletrashbin made of plastic and pour into big bin", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "dump_bin_bigbin", "seed": 100252, "success": false}

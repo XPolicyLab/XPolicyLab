@@ -1,0 +1,11 @@
+{
+  "protocol_cc950e7ce359": "cloudrobo.egowm_image_augmentation.v1",
+  "protocol_54d6a2eea6b0": "cloudrobo.flow.fp16_x264rgb.final_tile.stride4.v1",
+  "protocol_10f52802acb2": "cloudrobo.flow.input_normalization.v1",
+  "protocol_cc4c3236de60": "cloudrobo.media_replica.sha256.v1",
+  "protocol_76834ffeb390": "cloudrobo.s96_a90.v1",
+  "protocol_e164d2f33ff5": "cloudrobo.text.v1",
+  "protocol_2b9331249965": "cloudrobo.trainer",
+  "protocol_f63d64ab95ae": "cloudrobo.runtime",
+  "protocol_bff2359de7cb": "cloudrobo."
+}

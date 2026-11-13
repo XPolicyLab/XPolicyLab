@@ -1,5 +1,5 @@
 {
-  "format": "crwm.joint14_eef.normalization.v1",
+  "format": "cloudrobo_wm.joint14_eef.normalization.v1",
   "stats_key": "robotwin_aloha_joint14_eef_cleanonly_zscore_v1",
   "group": {
     "action": {

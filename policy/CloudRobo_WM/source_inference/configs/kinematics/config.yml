@@ -23,7 +23,7 @@ planner: "curobo"
 dual_arm: True
 rotate_lim: [0, 1]
 grasp_perfect_direction: ['front_right', 'front_left']
-static_camera_list: 
+static_camera_list:
 - name: head_camera
   type: D435
   position:

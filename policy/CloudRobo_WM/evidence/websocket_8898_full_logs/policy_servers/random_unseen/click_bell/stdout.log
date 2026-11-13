@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100000, "instruction": "Use the left arm to press the smooth metal bell's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100001, "instruction": "Use the left arm to press the lightweight bell with smooth surface's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100002, "instruction": "Use the right arm to press the lightweight bell with smooth surface's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100003, "instruction": "Click the top center of the medium-sized bell.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100003, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100004, "instruction": "Find the bell with raised round top and click its top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100005, "instruction": "Find the blue bell with glossy finish and click its top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100005, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100006, "instruction": "Use the right arm to press the smooth metal bell's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100007, "instruction": "Use the left arm to press the lightweight bell with smooth surface's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100008, "instruction": "Use the left arm to press the smooth metal bell's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100009, "instruction": "Use the left arm to press the smooth metal bell's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100010, "instruction": "Direct the right arm to click the blue bell with glossy finish's top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100011, "instruction": "Find the bell with raised round top and click its top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100011, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100012, "instruction": "Click the blue bell with glossy finish's top center on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100012, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100013, "instruction": "Find the smooth metal bell and click its top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100014, "instruction": "Direct the left arm to click the blue bell with glossy finish's top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100015, "instruction": "Click the top center of the medium-sized bell.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100016, "instruction": "Click the top center of the medium-sized bell.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100017, "instruction": "Click the top center of the medium-sized bell.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100017, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100018, "instruction": "Find the medium-sized bell and click its top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100018, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100019, "instruction": "Click the palm-sized bell's top center on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100019, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100020, "instruction": "Click the top center of the lightweight bell with smooth surface.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100021, "instruction": "Use the left arm to press the smooth metal bell's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100022, "instruction": "Use the left arm to press the medium-sized bell's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100022, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100023, "instruction": "Direct the left arm to click the smooth metal bell's top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100024, "instruction": "Find the smooth metal bell and click its top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100025, "instruction": "Use the right arm to press the medium-sized bell's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100027, "instruction": "Click the top center of the blue bell with glossy finish.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100028, "instruction": "Direct the right arm to click the palm-sized bell's top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100028, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100029, "instruction": "Find the smooth metal bell and click its top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100030, "instruction": "Click the top center of the medium-sized bell.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100031, "instruction": "Use the left arm to press the medium-sized bell's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100031, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100032, "instruction": "Use the left arm to press the medium-sized bell's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100033, "instruction": "Direct the left arm to click the bell with raised round top's top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100033, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100034, "instruction": "Direct the left arm to click the blue bell with glossy finish's top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100034, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100035, "instruction": "Use the left arm to press the blue bell with glossy finish's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100036, "instruction": "Use the right arm to press the lightweight bell with smooth surface's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100036, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100037, "instruction": "Use the left arm to press the bell with raised round top's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100038, "instruction": "Click the lightweight bell with smooth surface's top center on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100039, "instruction": "Use the right arm to press the medium-sized bell's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100039, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100040, "instruction": "Use the right arm to press the palm-sized bell's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100040, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100041, "instruction": "Use the right arm to press the smooth metal bell's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100042, "instruction": "Use the right arm to press the lightweight bell with smooth surface's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100043, "instruction": "Use the right arm to press the blue bell with glossy finish's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100043, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100044, "instruction": "Use the right arm to press the smooth metal bell's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100045, "instruction": "Click the top center of the smooth metal bell.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100045, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100046, "instruction": "Click the top center of the blue bell with glossy finish.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100046, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100048, "instruction": "Find the blue bell with glossy finish and click its top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100049, "instruction": "Click the top center of the bell with raised round top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100050, "instruction": "Find the lightweight bell with smooth surface and click its top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100050, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100051, "instruction": "Use the right arm to press the lightweight bell with smooth surface's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100052, "instruction": "Find the bell with raised round top and click its top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100053, "instruction": "Click the palm-sized bell's top center on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100053, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100054, "instruction": "Click the palm-sized bell's top center on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100055, "instruction": "Use the right arm to press the bell with raised round top's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100055, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100056, "instruction": "Click the top center of the bell with raised round top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100057, "instruction": "Use the right arm to press the bell with raised round top's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100058, "instruction": "Use the right arm to press the bell with raised round top's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100059, "instruction": "Use the right arm to press the lightweight bell with smooth surface's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100060, "instruction": "Click the lightweight bell with smooth surface's top center on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100061, "instruction": "Click the smooth metal bell's top center on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100062, "instruction": "Find the bell with raised round top and click its top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100063, "instruction": "Find the palm-sized bell and click its top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100064, "instruction": "Direct the right arm to click the palm-sized bell's top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100065, "instruction": "Use the right arm to press the blue bell with glossy finish's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100066, "instruction": "Use the right arm to press the blue bell with glossy finish's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100067, "instruction": "Use the right arm to press the bell with raised round top's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100068, "instruction": "Find the smooth metal bell and click its top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100069, "instruction": "Click the medium-sized bell's top center on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100069, "success": false}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100070, "instruction": "Direct the left arm to click the bell with raised round top's top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100071, "instruction": "Click the top center of the lightweight bell with smooth surface.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100071, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100072, "instruction": "Click the top center of the palm-sized bell.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100074, "instruction": "Find the palm-sized bell and click its top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100075, "instruction": "Use the left arm to press the blue bell with glossy finish's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100076, "instruction": "Find the blue bell with glossy finish and click its top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100077, "instruction": "Click the top center of the medium-sized bell.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100077, "success": false}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100078, "instruction": "Use the right arm to press the palm-sized bell's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100079, "instruction": "Direct the right arm to click the lightweight bell with smooth surface's top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100080, "instruction": "Click the top center of the medium-sized bell.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100080, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100081, "instruction": "Click the bell with raised round top's top center on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100081, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100082, "instruction": "Click the smooth metal bell's top center on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100082, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100083, "instruction": "Click the blue bell with glossy finish's top center on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100084, "instruction": "Use the right arm to press the medium-sized bell's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100084, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100085, "instruction": "Use the left arm to press the medium-sized bell's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100085, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100086, "instruction": "Use the right arm to press the blue bell with glossy finish's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100086, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100087, "instruction": "Click the palm-sized bell's top center on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100088, "instruction": "Direct the left arm to click the bell with raised round top's top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100089, "instruction": "Click the lightweight bell with smooth surface's top center on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100091, "instruction": "Use the left arm to press the bell with raised round top's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100091, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100092, "instruction": "Use the left arm to press the blue bell with glossy finish's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100093, "instruction": "Use the right arm to press the palm-sized bell's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100094, "instruction": "Use the left arm to press the bell with raised round top's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100095, "instruction": "Find the blue bell with glossy finish and click its top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100096, "instruction": "Find the medium-sized bell and click its top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100097, "instruction": "Click the top center of the smooth metal bell.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100097, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100098, "instruction": "Click the smooth metal bell's top center on the table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100099, "instruction": "Find the medium-sized bell and click its top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100100, "instruction": "Use the right arm to press the lightweight bell with smooth surface's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100100, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100101, "instruction": "Use the left arm to press the bell with raised round top's top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100102, "instruction": "Direct the right arm to click the bell with raised round top's top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100102, "success": true}
+{"event": "case_prepared", "task_name": "click_bell", "seed": 100103, "instruction": "Find the palm-sized bell and click its top center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_bell", "seed": 100103, "success": true}

@@ -1,0 +1,38 @@
+{
+  "argv": [
+    "bash",
+    "/data/adapter_validation_20261112/RoboTwin/XPolicyLab/policy/CloudRobo_WM/eval.sh",
+    "RoboTwin",
+    "stack_bowls_two",
+    "/data/adapter_validation_20261112/models/main",
+    "arx_x5",
+    "joint",
+    "0",
+    "4",
+    "1",
+    "/data/adapter_validation_20261112/envs/policy/bin/python",
+    "/data/adapter_validation_20261112/envs/sim"
+  ],
+  "cwd": "/data/adapter_validation_20261112/RoboTwin",
+  "environment": {
+    "PATH": "/data/adapter_validation_20261112/conda/bin:/data/adapter_validation_20261112/envs/sim/bin:/data/adapter_validation_20261112/bin:/usr/bin:/bin",
+    "CLOUDROBO_ZERO_DEPTH_WORKSPACE": "/data/adapter_validation_20261112/RoboTwin",
+    "CLOUDROBO_MODEL_POLICY_ROOT": "/data/adapter_validation_20261112/RoboTwin/XPolicyLab/policy/CloudRobo_WM",
+    "CLOUDROBO_BOOTSTRAP_AUX_CONTEXT_OBSERVER": "1",
+    "CLOUDROBO_CACHE_ROOT": "/data/adapter_validation_20261112/cache",
+    "PYTHONPATH": "/data/adapter_validation_20261112/compatibility/simulator_guard:/data/adapter_validation_20261112/compatibility/renderer/sapien_overlay:/data/adapter_validation_20261112/RoboTwin:/data/adapter_validation_20261112/RoboTwin/XPolicyLab",
+    "TMPDIR": "/data/adapter_validation_20261112/tmp",
+    "XDG_CACHE_HOME": "/data/adapter_validation_20261112/cache",
+    "HF_HOME": "/data/adapter_validation_20261112/cache/huggingface",
+    "TORCH_EXTENSIONS_DIR": "/data/adapter_validation_20261112/cache/torch_extensions",
+    "EVAL_ENV_TYPE": "sim",
+    "DEBUG_OBS_ENCODED": "0",
+    "CLOUDROBO_TASK_CONFIG": "demo_clean",
+    "CLOUDROBO_INSTRUCTION_TYPE": "seen",
+    "CLOUDROBO_TEST_NUM": "1",
+    "CLOUDROBO_ZERO_DEPTH_GUARD_OUTPUT": "/data/adapter_validation_20261112/results_20261112_cloudrobo_wm/online_smoke/simulator_witness"
+  },
+  "weight_sha256": "660bc6bd55d526366ea0f4abccb660d1b5aa1a29c8af1c7bfb1566a4b9e0462d",
+  "entrypoint_sha256": "18194d569cef672fbda896e2f2dcbfd2af4dd8339b6dca21948e366f29d2e7d7",
+  "renderer_binding_verified": true
+}

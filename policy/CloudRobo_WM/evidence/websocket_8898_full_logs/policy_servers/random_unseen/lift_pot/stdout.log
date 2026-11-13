@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100000, "instruction": "Lift the gray kitchenpot with rounded edges with both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100001, "instruction": "Lift the dark gray cooking kitchenpot using both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100002, "instruction": "Lift the dark gray cooking kitchenpot with both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100007, "instruction": "Use both arms for the kitchenpot with two side handles", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100009, "instruction": "Lift the dark gray cooking kitchenpot upward using arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100017, "instruction": "Use both arms for the dark gray cooking kitchenpot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100017, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100021, "instruction": "Together lift the gray kitchenpot with rounded edges up", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100022, "instruction": "Lift the kitchenpot with two side handles upward using arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100022, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100029, "instruction": "Use both arms to lift the gray kitchenpot with rounded edges", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100037, "instruction": "Grab the gray kitchenpot with rounded edges with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100038, "instruction": "Lift the dark gray cooking kitchenpot using both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100041, "instruction": "Lift the dark gray cooking kitchenpot upward using arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100047, "instruction": "Lift the gray kitchenpot with rounded edges using both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100048, "instruction": "Grab the gray kitchenpot with rounded edges with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100052, "instruction": "Lift the gray kitchenpot with rounded edges with both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100054, "instruction": "Lift the gray kitchenpot with rounded edges with both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100055, "instruction": "Use both arms to lift the dark gray cooking kitchenpot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100055, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100066, "instruction": "Lift the dark gray cooking kitchenpot using both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100071, "instruction": "Use both arms to lift the gray kitchenpot with rounded edges", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100071, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100074, "instruction": "Lift the gray kitchenpot with rounded edges using both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100079, "instruction": "Use both arms to lift the dark gray cooking kitchenpot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100082, "instruction": "Hold the kitchenpot with two side handles firmly and lift it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100082, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100085, "instruction": "Lift the kitchenpot with two side handles using both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100085, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100089, "instruction": "Lift the gray kitchenpot with rounded edges using both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100089, "success": false}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100091, "instruction": "Grab the gray kitchenpot with rounded edges with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100091, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100093, "instruction": "Use both arms for the gray kitchenpot with rounded edges", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100094, "instruction": "Hold the dark gray cooking kitchenpot firmly and lift it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100096, "instruction": "Use both arms for the dark gray cooking kitchenpot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100104, "instruction": "Together lift the kitchenpot with two side handles up", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100104, "success": false}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100106, "instruction": "Lift the kitchenpot with two side handles upward using arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100106, "success": false}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100107, "instruction": "Grab the dark gray cooking kitchenpot with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100107, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100109, "instruction": "Grab the gray kitchenpot with rounded edges with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100109, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100115, "instruction": "Lift the dark gray cooking kitchenpot upward using arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100115, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100116, "instruction": "Grab the dark gray cooking kitchenpot with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100116, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100119, "instruction": "Lift the kitchenpot with two side handles using both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100119, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100124, "instruction": "Lift the gray kitchenpot with rounded edges using both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100124, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100126, "instruction": "Use both arms for the gray kitchenpot with rounded edges", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100126, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100128, "instruction": "Lift the kitchenpot with two side handles using both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100128, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100138, "instruction": "Lift the gray kitchenpot with rounded edges upward using arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100138, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100142, "instruction": "Grab the dark gray cooking kitchenpot with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100142, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100146, "instruction": "Hold the gray kitchenpot with rounded edges firmly and lift it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100146, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100150, "instruction": "Lift the dark gray cooking kitchenpot upward using arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100150, "success": false}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100151, "instruction": "Lift the dark gray cooking kitchenpot with both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100151, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100158, "instruction": "Hold the kitchenpot with two side handles firmly and lift it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100158, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100159, "instruction": "Hold the gray kitchenpot with rounded edges firmly and lift it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100159, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100161, "instruction": "Grab the kitchenpot with two side handles with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100161, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100163, "instruction": "Lift the dark gray cooking kitchenpot using both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100163, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100164, "instruction": "Lift the kitchenpot with two side handles upward using arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100164, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100165, "instruction": "Lift the gray kitchenpot with rounded edges using both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100165, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100166, "instruction": "Grab the kitchenpot with two side handles with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100166, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100168, "instruction": "Lift the dark gray cooking kitchenpot with both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100168, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100171, "instruction": "Hold the gray kitchenpot with rounded edges firmly and lift it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100171, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100174, "instruction": "Lift the kitchenpot with two side handles using both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100174, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100175, "instruction": "Together lift the kitchenpot with two side handles up", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100175, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100179, "instruction": "Lift the dark gray cooking kitchenpot upward using arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100179, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100183, "instruction": "Use both arms for the dark gray cooking kitchenpot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100183, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100184, "instruction": "Lift the dark gray cooking kitchenpot upward using arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100184, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100191, "instruction": "Hold the kitchenpot with two side handles firmly and lift it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100191, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100193, "instruction": "Lift the dark gray cooking kitchenpot with both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100193, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100197, "instruction": "Lift the gray kitchenpot with rounded edges using both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100197, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100199, "instruction": "Lift the dark gray cooking kitchenpot using both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100199, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100203, "instruction": "Lift the kitchenpot with two side handles with both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100203, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100206, "instruction": "Hold the dark gray cooking kitchenpot firmly and lift it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100206, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100207, "instruction": "Hold the dark gray cooking kitchenpot firmly and lift it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100207, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100209, "instruction": "Lift the gray kitchenpot with rounded edges using both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100209, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100213, "instruction": "Lift the dark gray cooking kitchenpot using both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100213, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100218, "instruction": "Use both arms for the gray kitchenpot with rounded edges", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100218, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100219, "instruction": "Lift the dark gray cooking kitchenpot upward using arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100219, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100222, "instruction": "Use both arms for the dark gray cooking kitchenpot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100222, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100223, "instruction": "Grab the gray kitchenpot with rounded edges with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100223, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100225, "instruction": "Hold the kitchenpot with two side handles firmly and lift it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100225, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100232, "instruction": "Hold the gray kitchenpot with rounded edges firmly and lift it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100232, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100233, "instruction": "Lift the gray kitchenpot with rounded edges using both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100233, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100235, "instruction": "Use both arms to lift the dark gray cooking kitchenpot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100235, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100241, "instruction": "Lift the kitchenpot with two side handles with both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100241, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100244, "instruction": "Lift the dark gray cooking kitchenpot with both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100244, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100245, "instruction": "Together lift the kitchenpot with two side handles up", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100245, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100255, "instruction": "Lift the kitchenpot with two side handles using both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100255, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100263, "instruction": "Use both arms to lift the dark gray cooking kitchenpot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100263, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100264, "instruction": "Together lift the kitchenpot with two side handles up", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100264, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100266, "instruction": "Lift the dark gray cooking kitchenpot using both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100266, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100270, "instruction": "Use both arms for the gray kitchenpot with rounded edges", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100270, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100273, "instruction": "Lift the dark gray cooking kitchenpot with both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100273, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100275, "instruction": "Lift the gray kitchenpot with rounded edges using both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100275, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100278, "instruction": "Lift the dark gray cooking kitchenpot using both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100278, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100288, "instruction": "Lift the gray kitchenpot with rounded edges using both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100288, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100291, "instruction": "Lift the kitchenpot with two side handles using both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100291, "success": false}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100294, "instruction": "Use both arms for the dark gray cooking kitchenpot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100294, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100295, "instruction": "Grab the kitchenpot with two side handles with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100295, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100297, "instruction": "Use both arms to lift the dark gray cooking kitchenpot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100297, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100304, "instruction": "Lift the kitchenpot with two side handles with both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100304, "success": false}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100305, "instruction": "Together lift the gray kitchenpot with rounded edges up", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100305, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100308, "instruction": "Lift the gray kitchenpot with rounded edges upward using arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100308, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100310, "instruction": "Grab the gray kitchenpot with rounded edges with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100310, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100320, "instruction": "Lift the kitchenpot with two side handles upward using arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100320, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100321, "instruction": "Lift the gray kitchenpot with rounded edges using both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100321, "success": false}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100323, "instruction": "Use both arms to lift the gray kitchenpot with rounded edges", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100323, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100325, "instruction": "Hold the gray kitchenpot with rounded edges firmly and lift it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100325, "success": false}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100327, "instruction": "Together lift the gray kitchenpot with rounded edges up", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100327, "success": true}
+{"event": "case_prepared", "task_name": "lift_pot", "seed": 100328, "instruction": "Together lift the gray kitchenpot with rounded edges up", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "lift_pot", "seed": 100328, "success": true}

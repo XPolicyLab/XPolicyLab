@@ -1,0 +1,106 @@
+{
+  "ASSETS_VERIFIED.json": {
+    "sha256": "99b710c67734128c0d98ca87fce05afc8bc29337355225b35a4e09ea87567d3d",
+    "bytes": 1282
+  },
+  "CPU_READY.json": {
+    "sha256": "834281c4b0dfbc6d319bfbd1ab727fb37bc8d46eec2ad38790ac2cc311b17a4a",
+    "bytes": 3433
+  },
+  "FINISHED.json": {
+    "sha256": "93cd76db958a5ca2fca663f80a5343d3d88855c31621b53bf3495d09d9dc018c",
+    "bytes": 54
+  },
+  "README.md": {
+    "sha256": "0df82c40d5b0443ffe1bd9a93b28c663efccc37aaa495c3e5ad20d0899d77ce4",
+    "bytes": 392
+  },
+  "RESOURCE_ADMITTED.json": {
+    "sha256": "21b76e632cf9189478b914e15350a0ff9a1865ffe3a1fbf1c21b9100706cdfda",
+    "bytes": 128
+  },
+  "SOURCE_CHECKSUMS.json": {
+    "sha256": "0edd85900f8ea60a0b03fe87ec4b47d0ed1c34308655cecf36d076eb2f351867",
+    "bytes": 36271
+  },
+  "STARTED.json": {
+    "sha256": "9912189d4f44f7b6f97c7c5079ad6817a88fa6509fcfc6204df79904e089a09c",
+    "bytes": 165
+  },
+  "TESTS_PASSED.json": {
+    "sha256": "d115f34ae36405ff073fc43ead3ebc0caacf950cdad9a06eb83ff7909292e2e5",
+    "bytes": 1170
+  },
+  "VERIFIED.json": {
+    "sha256": "1cc8d316b1b4e95429dffec97593328dbaabfd1498038a20c4ea6f29f7956d1e",
+    "bytes": 2480
+  },
+  "debug_encoded/COMMAND.json": {
+    "sha256": "e1dfaf7fe46004906e2cecacb22a82c9b882147b21e20a44c4d2d7cbc2e9c9c9",
+    "bytes": 1999
+  },
+  "debug_encoded/EXIT.json": {
+    "sha256": "a276598e0e52987d604a388834cd474803fca099f2283a0c4010dde6e7fd769b",
+    "bytes": 284
+  },
+  "debug_encoded/LAUNCH.json": {
+    "sha256": "d62bcc7e9de978151e7f781a6c3ff2131efe3b8a29b84b9c6704fba8317ea646",
+    "bytes": 160
+  },
+  "debug_encoded/official.log": {
+    "sha256": "4ed5eac6fc612c9007352933cbcdb6ff38cda05c2e72ad59eb6997746d3df95c",
+    "bytes": 18007
+  },
+  "debug_raw/COMMAND.json": {
+    "sha256": "6b5ec808bacbfdda778466ba9981f7e61162147ed1e9e4551e1b142bd2df55ac",
+    "bytes": 1995
+  },
+  "debug_raw/EXIT.json": {
+    "sha256": "dc1a29bb97b23ed4ed2a8ed604d65f88b28dcb8da72dd0cc6a1045097bffbf44",
+    "bytes": 279
+  },
+  "debug_raw/LAUNCH.json": {
+    "sha256": "394e942aca5bb2d6af46ccdacb9e626560d62a4af8240b737302ae318e5d2bc7",
+    "bytes": 160
+  },
+  "debug_raw/official.log": {
+    "sha256": "d31c6bba7c5beee0f5036c0bb63d989854661bccaac590019a81ac45d11c70d1",
+    "bytes": 18007
+  },
+  "online_smoke/COMMAND.json": {
+    "sha256": "f042b266b5476c68de645cce0a6f3cb29b07bbe645016e864dbec3466095c3c4",
+    "bytes": 1996
+  },
+  "online_smoke/EXIT.json": {
+    "sha256": "e0026203a90e475a197a39ec1d97176348327d6fb705ba08e2225e22e01a11e9",
+    "bytes": 283
+  },
+  "online_smoke/LAUNCH.json": {
+    "sha256": "588692a7e2e1e5002939bae11b4e7db5b102c10367d02a382a9bd4e1c2227982",
+    "bytes": 160
+  },
+  "online_smoke/OBSERVATION_CHECK.json": {
+    "sha256": "a80298641270dceaee6ca848ac8f6421b1786e920664392b5648aae85d221400",
+    "bytes": 366
+  },
+  "online_smoke/official.log": {
+    "sha256": "9e41fd0d3d1318badcb078ceb8388b37ad036385a7431ed5ec5414d1305590c9",
+    "bytes": 10080
+  },
+  "online_smoke/official_result.txt": {
+    "sha256": "58663897099daf3c70c29b684e9f0e7c08f2262511b2d762881bf559ded6bb7d",
+    "bytes": 66
+  },
+  "online_smoke/rgb_samples/head_camera.png": {
+    "sha256": "18cfc8132bf3a509dd104273964af00685b717899c28c95aac9ee5afc4eaa14d",
+    "bytes": 51671
+  },
+  "online_smoke/rgb_samples/left_camera.png": {
+    "sha256": "8c341aab58b4b03ba6bda0e13db9b8b5ac59680124a5600f065802837db9edd1",
+    "bytes": 40859
+  },
+  "online_smoke/rgb_samples/right_camera.png": {
+    "sha256": "092e9512990b5fad80caed23dfba180dba70512dee5ced5fcea3a3633941ee6c",
+    "bytes": 29551
+  }
+}

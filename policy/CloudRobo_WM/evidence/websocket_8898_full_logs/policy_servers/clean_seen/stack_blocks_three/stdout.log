@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100000, "instruction": "Stack the blocks bottom-up: red block, then green block, then blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100001, "instruction": "Stack the blocks bottom-up: red block, then green block, then blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100002, "instruction": "Using the left arm, the left arm, and the right arm, build a stack with red block below green block below blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100003, "instruction": "Place red block beneath green block and green block beneath blue block in one centered tower.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100003, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100004, "instruction": "Place red block with the left arm, then green block with the right arm, then blue block with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100005, "instruction": "Move red block, green block, and blue block using the left arm, the right arm, and the right arm to form a centered stack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100005, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100006, "instruction": "Relocate the blocks into a centered stack ordered red block, green block, blue block from bottom upward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100008, "instruction": "Create a stack with red block at the bottom, green block in the middle, and blue block on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100009, "instruction": "Place red block as the base, green block above it, and blue block at the top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100010, "instruction": "Using the right arm, the left arm, and the right arm, build a stack with red block below green block below blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100011, "instruction": "Place red block beneath green block and green block beneath blue block in one centered tower.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100011, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100012, "instruction": "Set red block at the center and stack green block and blue block above it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100012, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100013, "instruction": "Move red block to the center, add green block, then add blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100014, "instruction": "Center red block, then put green block on red block and blue block on green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100015, "instruction": "Complete a centered stack with red block supporting green block, and green block supporting blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100016, "instruction": "Center red block, then put green block on red block and blue block on green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100017, "instruction": "Put red block at the base and stack green block and blue block above it in order.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100017, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100019, "instruction": "Set red block at the center and stack green block and blue block above it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100019, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100020, "instruction": "Create a stack with red block at the bottom, green block in the middle, and blue block on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100021, "instruction": "Make red block the base, set green block on it, and set blue block on green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100022, "instruction": "Place red block at the center, then green block on red block, then blue block on green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100022, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100023, "instruction": "Place red block at the center, then green block on red block, then blue block on green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100024, "instruction": "Relocate the blocks into a centered stack ordered red block, green block, blue block from bottom upward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100025, "instruction": "Create a stack with red block at the bottom, green block in the middle, and blue block on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100026, "instruction": "Stack green block on red block, then stack blue block on green block at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100027, "instruction": "Set red block down first, place green block on it, and finish with blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100028, "instruction": "Arrange blue block above green block and green block above red block at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100028, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100029, "instruction": "Arrange red block, green block, and blue block as a bottom-to-top stack at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100030, "instruction": "Stack red block, green block, and blue block centrally with blue block on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100031, "instruction": "Build the centered tower by adding green block to red block, then blue block to green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100031, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100032, "instruction": "Stack green block on red block, then stack blue block on green block at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100033, "instruction": "Move red block to the center, add green block, then add blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100033, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100034, "instruction": "Place red block with the right arm, then green block with the left arm, then blue block with the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100034, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100035, "instruction": "Position red block centrally and build upward with green block and then blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100036, "instruction": "Set red block at the center and stack green block and blue block above it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100036, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100038, "instruction": "Position red block centrally and build upward with green block and then blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100039, "instruction": "Form a three-block tower: red block bottom, green block middle, blue block top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100039, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100040, "instruction": "Form a three-block tower: red block bottom, green block middle, blue block top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100040, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100043, "instruction": "Using the left arm, the right arm, and the left arm, build a stack with red block below green block below blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100043, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100044, "instruction": "Place red block with the right arm, then green block with the left arm, then blue block with the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100045, "instruction": "Place red block with the left arm, then green block with the left arm, then blue block with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100045, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100046, "instruction": "Build the centered tower by adding green block to red block, then blue block to green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100046, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100047, "instruction": "At the center, place green block on red block, followed by blue block on green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100048, "instruction": "Place red block at the center, then green block on red block, then blue block on green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100049, "instruction": "With the right arm, place red block; with the left arm, add green block; with the right arm, add blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100050, "instruction": "Place red block with the right arm, then green block with the left arm, then blue block with the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100050, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100051, "instruction": "Relocate the blocks into a centered stack ordered red block, green block, blue block from bottom upward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100052, "instruction": "At the center, place green block on red block, followed by blue block on green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100053, "instruction": "Arrange red block, green block, and blue block as a bottom-to-top stack at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100053, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100054, "instruction": "Complete a centered stack with red block supporting green block, and green block supporting blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100056, "instruction": "Move red block, green block, and blue block using the left arm, the right arm, and the left arm to form a centered stack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100058, "instruction": "Position red block centrally and build upward with green block and then blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100059, "instruction": "Create a stack with red block at the bottom, green block in the middle, and blue block on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100060, "instruction": "Stack green block on red block, then stack blue block on green block at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100061, "instruction": "Stack red block, green block, and blue block centrally with blue block on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100062, "instruction": "Build the centered tower by adding green block to red block, then blue block to green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100063, "instruction": "Use the right arm for red block, the right arm for green block, and the left arm for blue block, stacking bottom-up.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100064, "instruction": "Build the centered tower by adding green block to red block, then blue block to green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100065, "instruction": "Build the centered tower by adding green block to red block, then blue block to green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100066, "instruction": "Place red block beneath green block and green block beneath blue block in one centered tower.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100067, "instruction": "Form a three-block tower: red block bottom, green block middle, blue block top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100068, "instruction": "Build upward from red block to green block to blue block at the table's center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100070, "instruction": "Move red block to the center, add green block, then add blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100071, "instruction": "Put red block at the base and stack green block and blue block above it in order.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100071, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100072, "instruction": "Build a centered stack with red block below green block and green block below blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100073, "instruction": "With the left arm, place red block; with the right arm, add green block; with the left arm, add blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100074, "instruction": "Relocate the blocks into a centered stack ordered red block, green block, blue block from bottom upward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100075, "instruction": "Using the right arm, the left arm, and the right arm, build a stack with red block below green block below blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100076, "instruction": "Arrange blue block above green block and green block above red block at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100076, "success": false}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100077, "instruction": "Move red block, green block, and blue block using the right arm, the left arm, and the right arm to form a centered stack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100077, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100078, "instruction": "Stack green block on red block, then stack blue block on green block at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100079, "instruction": "Stack red block, green block, and blue block centrally with blue block on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100080, "instruction": "Stack red block, green block, and blue block centrally with blue block on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100080, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100081, "instruction": "Place red block beneath green block and green block beneath blue block in one centered tower.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100081, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100082, "instruction": "Build the centered tower by adding green block to red block, then blue block to green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100082, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100083, "instruction": "Use the left arm, the right arm, and the left arm to stack red block, green block, and blue block from bottom to top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100084, "instruction": "Move red block, green block, and blue block into a tower with red block as its base.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100084, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100085, "instruction": "Build the centered tower by adding green block to red block, then blue block to green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100085, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100086, "instruction": "Stack the blocks bottom-up: red block, then green block, then blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100086, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100087, "instruction": "Stack green block on red block, then stack blue block on green block at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100088, "instruction": "Stack green block on red block, then stack blue block on green block at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100089, "instruction": "Move red block to the center, add green block, then add blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100090, "instruction": "Stack green block on red block, then stack blue block on green block at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100091, "instruction": "Build a centered stack with red block below green block and green block below blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100091, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100092, "instruction": "Using the right arm, the left arm, and the left arm, build a stack with red block below green block below blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100093, "instruction": "Arrange red block, green block, and blue block as a bottom-to-top stack at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100094, "instruction": "Place red block beneath green block and green block beneath blue block in one centered tower.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100095, "instruction": "Place red block as the base, green block above it, and blue block at the top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100096, "instruction": "With the left arm, place red block; with the right arm, add green block; with the right arm, add blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100097, "instruction": "Arrange blue block above green block and green block above red block at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100097, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100099, "instruction": "Put red block at the base and stack green block and blue block above it in order.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100100, "instruction": "Make red block the base, set green block on it, and set blue block on green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100100, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100101, "instruction": "Stack red block, green block, and blue block centrally with blue block on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100103, "instruction": "Set red block at the center and stack green block and blue block above it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100103, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100104, "instruction": "Set red block at the center and stack green block and blue block above it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100104, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100105, "instruction": "Using the left arm, the right arm, and the left arm, build a stack with red block below green block below blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100105, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100106, "instruction": "Build a centered stack with red block below green block and green block below blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100106, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100108, "instruction": "Place red block beneath green block and green block beneath blue block in one centered tower.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100108, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100109, "instruction": "Stack red block, green block, and blue block centrally with blue block on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100109, "success": true}
+{"event": "case_prepared", "task_name": "stack_blocks_three", "seed": 100110, "instruction": "Place red block with the left arm, then green block with the right arm, then blue block with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_blocks_three", "seed": 100110, "success": true}
