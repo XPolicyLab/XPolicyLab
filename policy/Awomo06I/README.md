@@ -1,6 +1,6 @@
 # Awomo-0.6I
 
-**Contributor:** Awomo-WAM Team | **Related report:** [Awomo-0.5 Technical Report](https://github.com/Awomo-WestlakeDI/Awomo-0.5/blob/main/Awomo_0_5.pdf) | **Original code:** [TianhengW/Awomo-0.6I](https://github.com/TianhengW/Awomo-0.6I) | **Model assets:** [Awomo-0.6I RoboTwin checkpoint](https://huggingface.co/QZWang/Awomo-0.6-RoboTwin-AP338)
+**Contributor:** Awomo-WAM Team | **Related report:** [Awomo-0.5 Technical Report](https://github.com/Awomo-WestlakeDI/Awomo-0.5/blob/main/Awomo_0_5.pdf) | **Earlier project:** [Awomo-WestlakeDI/Awomo-0.5](https://github.com/Awomo-WestlakeDI/Awomo-0.5) | **Adapter source:** [TianhengW/Awomo-0.6I](https://github.com/TianhengW/Awomo-0.6I) | **Model assets:** [Awomo-0.6I RoboTwin checkpoint](https://huggingface.co/QZWang/Awomo-0.6-RoboTwin-AP338)
 
 Awomo-0.6I is an image-conditioned world-action model. This adapter targets RoboTwin dual-arm `joint` control and directly loads the AP338 100k-pretrained, 40k-SFT Power EMA checkpoint. It is an eval-only integration; a training adapter is not included and its release timeline is TBD.
 
