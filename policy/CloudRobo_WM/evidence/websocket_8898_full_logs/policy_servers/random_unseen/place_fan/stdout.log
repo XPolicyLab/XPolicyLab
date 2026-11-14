@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100002, "instruction": "Grab the plastic fan and set it on the Maroon mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100002, "success": false}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100003, "instruction": "Grab the off-white fan with beige accents and set it on the Pink mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100003, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100005, "instruction": "Grab the plastic fan and set it on the Lime mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100005, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100006, "instruction": "Use the right arm to grab the beige circular blade fan, then place it on the Purple mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100009, "instruction": "Use the left arm to grab the plastic fan, then place it on the Olive mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100010, "instruction": "Grab the portable curved handle fan and set it on the Navy mat facing the robot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100011, "instruction": "Grab the plastic fan with the left arm and position it on the Red mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100011, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100012, "instruction": "Grab the beige circular blade fan and set it on the Coral mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100012, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100013, "instruction": "Pick up the off-white fan with beige accents and set it on the Yellow mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100014, "instruction": "Grab the fan with small round shape with the left arm and position it on the Gray mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100019, "instruction": "Grab the portable curved handle fan and set it on the Indigo mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100019, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100023, "instruction": "Use the left arm to grab the fan with small round shape, then place it on the Magenta mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100025, "instruction": "Place the plastic fan onto the Indigo colored mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100025, "success": false}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100026, "instruction": "Grab the portable curved handle fan with the left arm and position it on the Yellow mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100027, "instruction": "Place the off-white fan with beige accents onto the Purple colored mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100028, "instruction": "Use the right arm to grab the fan with small round shape and place it on the Tan mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100028, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100029, "instruction": "Grab the fan with small round shape with the left arm and position it on the Teal mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100031, "instruction": "Use the left arm to grab the beige circular blade fan and place it on the Tan mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100031, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100032, "instruction": "Grab the plastic fan and set it on the Purple mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100032, "success": false}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100033, "instruction": "Use the left arm to grab the portable curved handle fan and place it on the Pink mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100033, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100035, "instruction": "Grab the beige circular blade fan and set it on the Orange mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100037, "instruction": "Pick up the off-white fan with beige accents and set it on the Purple mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100038, "instruction": "Grab the beige circular blade fan and set it on the Pink mat facing the robot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100038, "success": false}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100039, "instruction": "Grab the white desk fan with the right arm and position it on the Tan mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100039, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100042, "instruction": "Use the right arm to grab the white desk fan and place it on the Olive mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100043, "instruction": "Pick the portable curved handle fan and set it on the Navy mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100043, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100044, "instruction": "Grab the beige circular blade fan and set it on the Olive mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100045, "instruction": "Pick up the plastic fan and set it on the Green mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100045, "success": false}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100047, "instruction": "Use the left arm to grab the fan with small round shape and place it on the Turquoise mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100048, "instruction": "Pick up the fan with small round shape and set it on the Coral mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100049, "instruction": "Grab the plastic fan with the left arm and position it on the Yellow mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100050, "instruction": "Pick up the portable curved handle fan and set it on the Teal mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100050, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100052, "instruction": "Grab the off-white fan with beige accents and set it on the Olive mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100053, "instruction": "Grab the off-white fan with beige accents and set it on the Magenta mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100053, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100054, "instruction": "Grab the fan with small round shape and set it on the Pink mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100055, "instruction": "Grab the beige circular blade fan with the right arm and position it on the Teal mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100055, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100056, "instruction": "Grab the off-white fan with beige accents with the left arm and position it on the Orange mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100057, "instruction": "Use the right arm to grab the beige circular blade fan, then place it on the Red mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100058, "instruction": "Pick the portable curved handle fan and set it on the Olive mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100058, "success": false}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100059, "instruction": "Grab the plastic fan and set it on the Turquoise mat facing the robot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100059, "success": false}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100060, "instruction": "Pick the beige circular blade fan, place it on the Coral mat, face it toward the robot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100061, "instruction": "Grab the fan with small round shape with the left arm and position it on the Black mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100062, "instruction": "Use the right arm to grab the plastic fan and place it on the Turquoise mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100063, "instruction": "Grab the portable curved handle fan with the right arm and position it on the Orange mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100064, "instruction": "Place the off-white fan with beige accents onto the Green colored mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100065, "instruction": "Pick the off-white fan with beige accents, place it on the Beige mat, face it toward the robot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100066, "instruction": "Use the right arm to grab the plastic fan and place it on the Indigo mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100068, "instruction": "Grab the plastic fan and set it on the Pink mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100070, "instruction": "Use the left arm to grab the plastic fan and place it on the Coral mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100072, "instruction": "Pick the beige circular blade fan and set it on the Indigo mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100073, "instruction": "Pick the off-white fan with beige accents and set it on the Red mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100074, "instruction": "Grab the fan with small round shape and set it on the Turquoise mat facing the robot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100075, "instruction": "Grab the plastic fan and set it on the Red mat facing the robot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100078, "instruction": "Grab the off-white fan with beige accents and set it on the Green mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100082, "instruction": "Pick the white desk fan, place it on the Yellow mat, face it toward the robot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100082, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100083, "instruction": "Place the beige circular blade fan onto the Pink colored mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100084, "instruction": "Use the right arm to grab the beige circular blade fan and place it on the Green mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100084, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100087, "instruction": "Pick up the fan with small round shape and set it on the Coral mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100088, "instruction": "Use the left arm to grab the beige circular blade fan, then place it on the Blue mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100089, "instruction": "Use the right arm to grab the off-white fan with beige accents and place it on the Coral mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100090, "instruction": "Grab the white desk fan and set it on the Blue mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100091, "instruction": "Pick up the off-white fan with beige accents and set it on the Red mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100091, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100094, "instruction": "Pick the plastic fan, place it on the Blue mat, face it toward the robot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100095, "instruction": "Grab the plastic fan with the right arm and position it on the Silver mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100096, "instruction": "Grab the plastic fan and set it on the Red mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100098, "instruction": "Grab the fan with small round shape and set it on the Purple mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100099, "instruction": "Pick up the fan with small round shape and set it on the Red mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100100, "instruction": "Grab the plastic fan with the right arm and position it on the Silver mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100100, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100101, "instruction": "Grab the portable curved handle fan and set it on the Indigo mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100102, "instruction": "Pick the portable curved handle fan and set it on the Lime mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100102, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100103, "instruction": "Grab the beige circular blade fan and set it on the Pink mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100103, "success": false}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100104, "instruction": "Place the white desk fan onto the Red colored mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100104, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100105, "instruction": "Place the portable curved handle fan onto the Green colored mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100105, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100106, "instruction": "Use the right arm to grab the white desk fan, then place it on the Beige mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100106, "success": false}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100107, "instruction": "Pick up the beige circular blade fan and set it on the Navy mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100107, "success": false}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100108, "instruction": "Grab the portable curved handle fan and set it on the Maroon mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100108, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100109, "instruction": "Pick up the fan with small round shape and set it on the Coral mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100109, "success": false}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100110, "instruction": "Use the left arm to grab the fan with small round shape, then place it on the Pink mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100110, "success": false}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100111, "instruction": "Grab the portable curved handle fan and set it on the Teal mat facing the robot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100111, "success": false}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100112, "instruction": "Pick the off-white fan with beige accents, place it on the Magenta mat, face it toward the robot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100112, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100113, "instruction": "Pick the white desk fan, place it on the Blue mat, face it toward the robot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100113, "success": false}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100115, "instruction": "Use the left arm to grab the beige circular blade fan, then place it on the Turquoise mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100115, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100117, "instruction": "Pick the beige circular blade fan and set it on the Pink mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100117, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100118, "instruction": "Grab the plastic fan and set it on the Purple mat facing the robot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100118, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100119, "instruction": "Use the left arm to grab the portable curved handle fan and place it on the Maroon mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100119, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100120, "instruction": "Grab the beige circular blade fan with the left arm and position it on the Indigo mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100120, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100122, "instruction": "Place the white desk fan onto the Silver colored mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100122, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100123, "instruction": "Pick up the fan with small round shape and set it on the Yellow mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100123, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100126, "instruction": "Grab the fan with small round shape and set it on the Brown mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100126, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100127, "instruction": "Use the left arm to grab the white desk fan, then place it on the Turquoise mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100127, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100128, "instruction": "Use the left arm to grab the white desk fan and place it on the Red mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100128, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100131, "instruction": "Place the off-white fan with beige accents onto the Gray colored mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100131, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100133, "instruction": "Pick the off-white fan with beige accents, place it on the Black mat, face it toward the robot", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100133, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100134, "instruction": "Grab the white desk fan and set it on the Navy mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100134, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100135, "instruction": "Grab the off-white fan with beige accents and set it on the Magenta mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100135, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100136, "instruction": "Grab the portable curved handle fan with the right arm and position it on the Maroon mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100136, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100137, "instruction": "Use the right arm to grab the fan with small round shape, then place it on the Maroon mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100137, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100138, "instruction": "Use the right arm to grab the off-white fan with beige accents, then place it on the Indigo mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100138, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100139, "instruction": "Grab the beige circular blade fan with the left arm and position it on the Teal mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100139, "success": true}
+{"event": "case_prepared", "task_name": "place_fan", "seed": 100141, "instruction": "Use the right arm to grab the white desk fan and place it on the Maroon mat facing the robot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_fan", "seed": 100141, "success": true}

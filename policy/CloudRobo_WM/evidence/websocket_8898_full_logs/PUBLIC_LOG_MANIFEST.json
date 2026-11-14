@@ -1,0 +1,1531 @@
+{
+  "scored_tasks": 100,
+  "count": 10000,
+  "success": 8898,
+  "rate_percent": 88.98,
+  "weight_sha256": "660bc6bd55d526366ea0f4abccb660d1b5aa1a29c8af1c7bfb1566a4b9e0462d",
+  "cache_manifest_sha256": "d4e522a5988089d81be52425a3a48466488677c0280ffeeda55c03913a583b58",
+  "task_native_exit_zero": 100,
+  "files": [
+    {
+      "file": "evidence/INPUTS_AND_OUTCOMES.json",
+      "sha256": "f377e66bf86febe686453b4726f293f15591e9ed324447956d9f40229066fce8",
+      "bytes": 6130956
+    },
+    {
+      "file": "evidence/README.txt",
+      "sha256": "6c2a5dcf15d3be716b00a90aa8e5f3d8c42924811890c70e3810ba87ce34348b",
+      "bytes": 1123
+    },
+    {
+      "file": "official_results/clean_seen/adjust_bottle/_result.txt",
+      "sha256": "9ba03a8baef133ca699b5418c48fde407e524e4c715aa3a3bc44e0d5b3f26d5d",
+      "bytes": 67
+    },
+    {
+      "file": "official_results/clean_seen/beat_block_hammer/_result.txt",
+      "sha256": "51b59fe0e53357c629713bea6ba857da5dc3cad918d824fd60f7ff4df30cafed",
+      "bytes": 66
+    },
+    {
+      "file": "official_results/clean_seen/blocks_ranking_rgb/_result.txt",
+      "sha256": "140a5f476889e152bcae41d4574ff3feecf1a9214330b03e119bf3c11e96a446",
+      "bytes": 67
+    },
+    {
+      "file": "official_results/clean_seen/blocks_ranking_size/_result.txt",
+      "sha256": "17374f0a539d5eba1313f1ae5e73615fdd75491863b6af242f08553435806bd3",
+      "bytes": 67
+    },
+    {
+      "file": "official_results/clean_seen/click_alarmclock/_result.txt",
+      "sha256": "594cc13ea4c336f3ba12159b9879bfd2594ab35b25c5dad40eb832712d2ece4f",
+      "bytes": 66
+    },
+    {
+      "file": "official_results/clean_seen/click_bell/_result.txt",
+      "sha256": "e4d5528416234a75421365f263372f556a7453dbb841f8debc85aa91a9b0b59a",
+      "bytes": 66
+    },
+    {
+      "file": "official_results/clean_seen/dump_bin_bigbin/_result.txt",
+      "sha256": "8931a0afa4949f18abdefa5969d48b6a6ccb926ee198956a13232dfd3c190a87",
+      "bytes": 67
+    },
+    {
+      "file": "official_results/clean_seen/grab_roller/_result.txt",
+      "sha256": "2f15855a77a318b81613d204b939ff788aafe2b4e096e6c79073de6a0c4466ef",
+      "bytes": 66
+    },
+    {
+      "file": "official_results/clean_seen/handover_block/_result.txt",
+      "sha256": "aacc89161eb6562ab9770ac7af9f6dc73bfc93054a1d256488e672ce30d5bd52",
+      "bytes": 66
+    },
+    {
+      "file": "official_results/clean_seen/handover_mic/_result.txt",
+      "sha256": "52726134421210b2b8f55d0b9243147f987d1b7fce42d7729f9057d1c10a9133",
+      "bytes": 66
+    },
+    {
+      "file": "official_results/clean_seen/hanging_mug/_result.txt",
+      "sha256": "543eb6566cb4f8b18517c1b09b700e9f0b6889f058b0f363381dd9652ce2063f",
+      "bytes": 67
+    },
+    {
+      "file": "official_results/clean_seen/lift_pot/_result.txt",
+      "sha256": "2582aae3f7649fd1563c94d5b4162f4f0feedccbdfa8ad0a7acc7b9d5a77a65f",
+      "bytes": 66
+    },
+    {
+      "file": "official_results/clean_seen/move_can_pot/_result.txt",
+      "sha256": "95401507affc1da16aedf9d0b9d39c7d7b8e6fcaac8c7e0746e89e22e2373795",
+      "bytes": 66
+    },
+    {
+      "file": "official_results/clean_seen/move_pillbottle_pad/_result.txt",
+      "sha256": "0fc47ef4307a92147b9e5aad44540e8e91b9ce3519148773279cf18544d8f488",
+      "bytes": 66
+    },
+    {
+      "file": "official_results/clean_seen/move_playingcard_away/_result.txt",
+      "sha256": "7630bcc8a38545f19f622d61d9b6993058b42462cf1f7bbdccc9642999fe678d",
+      "bytes": 66
+    },
+    {
+      "file": "official_results/clean_seen/move_stapler_pad/_result.txt",
+      "sha256": "890beec49fa6c70546952f833808583401b068a84a3bda059a48230108a9ea44",
+      "bytes": 66
+    },
+    {
+      "file": "official_results/clean_seen/open_laptop/_result.txt",
+      "sha256": "75be5337d725677191a673f7cc0e05398f22c02956f779ef25720a24f71b62bf",
+      "bytes": 67
+    },
+    {
+      "file": "official_results/clean_seen/open_microwave/_result.txt",
+      "sha256": "ef24b64c77a7d76188f8c462df76bc5732c581a1b43378ffb4f88280980f01c2",
+      "bytes": 67
+    },
+    {
+      "file": "official_results/clean_seen/pick_diverse_bottles/_result.txt",
+      "sha256": "dc34f49e417f73e444ca585889027fef0129fecbd36c2d7770c7816c9c3b28a2",
+      "bytes": 66
+    },
+    {
+      "file": "official_results/clean_seen/pick_dual_bottles/_result.txt",
+      "sha256": "7513e5b754e812ec3cb69ec292ca87c1be923da667d46302fbdea2301d32788e",
+      "bytes": 66
+    },
+    {
+      "file": "official_results/clean_seen/place_a2b_left/_result.txt",
+      "sha256": "e90a3312fb24ed97821c7f640b1b965b2e81f3c0191b923481f1880d040c4038",
+      "bytes": 67
+    },
+    {
+      "file": "official_results/clean_seen/place_a2b_right/_result.txt",
+      "sha256": "ad0230e3698d57bf58e86e4bc47eeca4517f94edfea63af73f7a5013613cd2b9",
+      "bytes": 67
+    },
+    {
+      "file": "official_results/clean_seen/place_bread_basket/_result.txt",
+      "sha256": "ab21d79578c98d5970e4933e334497ea8f88457e29c060a8a2eace84a9b437a1",
+      "bytes": 67
+    },
+    {
+      "file": "official_results/clean_seen/place_bread_skillet/_result.txt",
+      "sha256": "74cb0216ed202a9eb6052bba954b739d5a4eb6f3a9af3535d6ce1e1ec9688ede",
+      "bytes": 67
+    },
+    {
+      "file": "official_results/clean_seen/place_burger_fries/_result.txt",
+      "sha256": "48463a3735ac2297258a84402b0e2ce287015dfacd7b202f0ded149af09c53f5",
+      "bytes": 67
+    },
+    {
+      "file": "official_results/clean_seen/place_can_basket/_result.txt",
+      "sha256": "a46942ea82cda4b7b93d04013aee6e164b7a6160a02bf9fdebb162bc32ef22f0",
+      "bytes": 67
+    },
+    {
+      "file": "official_results/clean_seen/place_cans_plasticbox/_result.txt",
+      "sha256": "3c15f02b3540edf1c7399541c8ab221bee5b51e9bab01563a5b922fa5942f9f4",
+      "bytes": 66
+    },
+    {
+      "file": "official_results/clean_seen/place_container_plate/_result.txt",
+      "sha256": "87762f50398684760c9f95a31ad42c12f951fe31eaf036a9685be4735f3158d0",
+      "bytes": 66
+    },
+    {
+      "file": "official_results/clean_seen/place_dual_shoes/_result.txt",
+      "sha256": "7e457d18bee347379b1c54a2c0c55cef7b80a3dc880361ca9eeb450c88d26bd0",
+      "bytes": 67
+    },
+    {
+      "file": "official_results/clean_seen/place_empty_cup/_result.txt",
+      "sha256": "9ee8ec7c9d63c8905a00b1a4c0c1513a2e62d61a6dca38c23ccbdeb1f16434d7",
+      "bytes": 66
+    },
+    {
+      "file": "official_results/clean_seen/place_fan/_result.txt",
+      "sha256": "a1b96a37eb7a87b1023ecbd737f1e337a0ec0d41b7d6279565ff67167b6a50ef",
+      "bytes": 67
+    },
+    {
+      "file": "official_results/clean_seen/place_mouse_pad/_result.txt",
+      "sha256": "fd358d89a7f5d7212e83a30eef34b91c7b1b9fef60e90c49d50feb4b348bd0de",
+      "bytes": 67
+    },
+    {
+      "file": "official_results/clean_seen/place_object_basket/_result.txt",
+      "sha256": "3956464c6fdcbae13c0f20764baada4600cf05755b57358f0e87506ed1a2736b",
+      "bytes": 67
+    },
+    {
+      "file": "official_results/clean_seen/place_object_scale/_result.txt",
+      "sha256": "5f72045e57cf3842cd0a03878b1dabcc78ba2df6488c3a499debb7e44dc68648",
+      "bytes": 67
+    },
+    {
+      "file": "official_results/clean_seen/place_object_stand/_result.txt",
+      "sha256": "a42b8ba3e480bf8e49bc74d0d01ff37e166adc647b88cda0285570738a315db6",
+      "bytes": 66
+    },
+    {
+      "file": "official_results/clean_seen/place_phone_stand/_result.txt",
+      "sha256": "4ee055e6ae5a89192736af5a3bdf3f790c3ca603ee7207304bf16ab90cf629f0",
+      "bytes": 67
+    },
+    {
+      "file": "official_results/clean_seen/place_shoe/_result.txt",
+      "sha256": "5ca28d6d99b945239991722906b7cf34a345af347396f744379360a8616293f4",
+      "bytes": 67
+    },
+    {
+      "file": "official_results/clean_seen/press_stapler/_result.txt",
+      "sha256": "949e39b3c8c8d73ac914aa647354de3429703fdf3b9ef21b3adc85b53d19e9e3",
+      "bytes": 67
+    },
+    {
+      "file": "official_results/clean_seen/put_bottles_dustbin/_result.txt",
+      "sha256": "50902ee7567b495ad395a9639ac9784f93edb0cb6dc93df96365d97f389ab7b1",
+      "bytes": 67
+    },
+    {
+      "file": "official_results/clean_seen/put_object_cabinet/_result.txt",
+      "sha256": "806a4773ab1848eea1234e91737102b64773417a3c95e5af6b352ce4afe19d30",
+      "bytes": 67
+    },
+    {
+      "file": "official_results/clean_seen/rotate_qrcode/_result.txt",
+      "sha256": "18e2aedfd8df6863b99d600041f45e135e44561a99919ba0339f96a4f6e27eed",
+      "bytes": 67
+    },
+    {
+      "file": "official_results/clean_seen/scan_object/_result.txt",
+      "sha256": "1553ce2f61f51757c66e6c8ef2581fa792c8965b7c1e1c040b7814724823de66",
+      "bytes": 67
+    },
+    {
+      "file": "official_results/clean_seen/shake_bottle/_result.txt",
+      "sha256": "3fa91f2c1881dda22eed936bb12a22710a740b33281923bb78b4b952bc7fd874",
+      "bytes": 67
+    },
+    {
+      "file": "official_results/clean_seen/shake_bottle_horizontally/_result.txt",
+      "sha256": "c368ddb57479633feec85de7be04bfabf3ce522ccafeba3d33d63589e7e98188",
+      "bytes": 66
+    },
+    {
+      "file": "official_results/clean_seen/stack_blocks_three/_result.txt",
+      "sha256": "22e1583d09ce93f3fe8ce233b9c823697002d87b53d8c0452d9a44075cb0cead",
+      "bytes": 67
+    },
+    {
+      "file": "official_results/clean_seen/stack_blocks_two/_result.txt",
+      "sha256": "82f36b9bdf4fdd5a432c99d2aad6c767f4b56ea969f8e6a04f775fa93d86a54c",
+      "bytes": 66
+    },
+    {
+      "file": "official_results/clean_seen/stack_bowls_three/_result.txt",
+      "sha256": "17c07ac2da6b1d274c76a324c38a6c7019c00dec7cedfdf9284681cb7482314f",
+      "bytes": 67
+    },
+    {
+      "file": "official_results/clean_seen/stack_bowls_two/_result.txt",
+      "sha256": "fc9478c7a892c3bc31e83e1842c8810cfff7c49fa0f71f6fe21712453dd24d8d",
+      "bytes": 67
+    },
+    {
+      "file": "official_results/clean_seen/stamp_seal/_result.txt",
+      "sha256": "37daf331f08c0e5febfcaaaad127c6bfc68ea5c918890d98ca820bd6730f21ca",
+      "bytes": 66
+    },
+    {
+      "file": "official_results/clean_seen/turn_switch/_result.txt",
+      "sha256": "f867167568b36399117e5a5d43ef88befd270463214d504efbe1736d0072d773",
+      "bytes": 67
+    },
+    {
+      "file": "official_results/random_unseen/adjust_bottle/_result.txt",
+      "sha256": "f938fa020e2cc2a72c05c74c475cf7137fc2a558c572130890a6cd4fbf52dd88",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/beat_block_hammer/_result.txt",
+      "sha256": "237bea615ca8177fa402f05dcf994f6b0032197770df16fb4d9cf04014558d2c",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/blocks_ranking_rgb/_result.txt",
+      "sha256": "540976ed347fdafc6ea5bfb770525e5004dda53949e7db15281064aec07c736e",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/blocks_ranking_size/_result.txt",
+      "sha256": "c21bddab9c9120087babd86797d1a344f8a4c01f0997782c67dddfea89adcb09",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/click_alarmclock/_result.txt",
+      "sha256": "43d8a3c257ea111d605f38540dcc3f60237fa2d7bbe4ea87c93d157eea715657",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/click_bell/_result.txt",
+      "sha256": "b3a934e5e08ac11e14dd26b2cc910e6851192778ed44614a3461a97512f5d8b5",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/dump_bin_bigbin/_result.txt",
+      "sha256": "b52972eb8b058748b52318119088cfc13e2f6cd7b003367dac783f86817c4110",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/grab_roller/_result.txt",
+      "sha256": "3dc8a6b5c4775224a6c5859945af8a722737586ce8f3b407260de7623f51580c",
+      "bytes": 68
+    },
+    {
+      "file": "official_results/random_unseen/handover_block/_result.txt",
+      "sha256": "6c11c0ecdd2ae505739c2abc07f0655858d223bb3c4efa9bcbebca87488454f0",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/handover_mic/_result.txt",
+      "sha256": "66108cbbdf3012811e04127d515179654d3fb634fc2a7b19f8a5d612619bc307",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/hanging_mug/_result.txt",
+      "sha256": "8f80abebf32e2002d9658d6b3b68cb9fb0203ad6685f432665717fce82701658",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/lift_pot/_result.txt",
+      "sha256": "f3f27d565b89f57539b0eef9155ac0418ce949e2f2c0e5c41e23d0d53cfa0306",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/move_can_pot/_result.txt",
+      "sha256": "e2997d6c30e12f18f3419f46a081ab1a1fca01220bedcc4df5b3394952208067",
+      "bytes": 68
+    },
+    {
+      "file": "official_results/random_unseen/move_pillbottle_pad/_result.txt",
+      "sha256": "23324bc65afa5d13fcd1a6f1a20444b70d823f17a6d75789cc202c6132ded9ca",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/move_playingcard_away/_result.txt",
+      "sha256": "e9a12a8b4781a369cfb7b5e25520117d25a9e76df84f571825b5915198f6b7c4",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/move_stapler_pad/_result.txt",
+      "sha256": "79f5bd8c7b520db56146bc09364638e15e9ef812d738b1c50468a0016b2df347",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/open_laptop/_result.txt",
+      "sha256": "e22f6ca0a8465125bd6400934fa97067fff6a0a99c162b264cd6dbad6ad8aac1",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/open_microwave/_result.txt",
+      "sha256": "ca43cfb6262eaf714f252026d654f71e052a16b67a724f82c3ac11627139b9ac",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/pick_diverse_bottles/_result.txt",
+      "sha256": "29e92abca5a49fabaa7fa3e615d8a198fa4b472306ec8dc789a3f7f37b27e758",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/pick_dual_bottles/_result.txt",
+      "sha256": "fa30d413424dca267f123763e5642d41b4ec32ef211cabd6e0226452349a7431",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/place_a2b_left/_result.txt",
+      "sha256": "38efcd82ed7cff8250e9460f4e36838f34997b474ed63c4fafef29c917fe5c95",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/place_a2b_right/_result.txt",
+      "sha256": "2578323d7e6624e70d523f7af16b099e2a9505e212cd92aa9869e0d7f07b6fd8",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/place_bread_basket/_result.txt",
+      "sha256": "2eeed0f929bf373c14c0aa5df82ce757280cf277eacfa5feda8bd2b15491c843",
+      "bytes": 68
+    },
+    {
+      "file": "official_results/random_unseen/place_bread_skillet/_result.txt",
+      "sha256": "e52a6b2a92ed5dc5c6361184eeda9dc72d55768a21851ffdab8269030b08e1be",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/place_burger_fries/_result.txt",
+      "sha256": "8ce4bcdeccc56e12d4c07badf8ee0c957e62de76b75a38c38b3be5ea8d36f04d",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/place_can_basket/_result.txt",
+      "sha256": "fbb16edd9845ce4f7a7b906de64bf23c7b81d5db184f0454a11e50abf2ff14ab",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/place_cans_plasticbox/_result.txt",
+      "sha256": "3ec4815d1adcc5b98d0db11c90bc40ebe31453ada3db4f1dfee0525c27cd15e4",
+      "bytes": 68
+    },
+    {
+      "file": "official_results/random_unseen/place_container_plate/_result.txt",
+      "sha256": "ed7461673d61dc2e686c96777d4217dfbb68b28cd7746f23cdc62b49b290c3dd",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/place_dual_shoes/_result.txt",
+      "sha256": "b636d15ce40bc88424d08aeaae83a71ef4ab72617864c0de44d3bee1a01dd4c2",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/place_empty_cup/_result.txt",
+      "sha256": "84c197f9c82dc19cbcad5278f5d140a6448853f498ceec2cb8613cebce275b7c",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/place_fan/_result.txt",
+      "sha256": "2aa7233c410684cb631f432ef5641026ff89b842d1fe5040ce9c2ff770a04cb7",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/place_mouse_pad/_result.txt",
+      "sha256": "88d1b355c17231d7ec9162e9685d5d0e26b6fc7c5e0e89fb0c58feea54f6427c",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/place_object_basket/_result.txt",
+      "sha256": "35d894b994ba8a8b35aa6cc835f2e98356934a64f9f022b50bb1a8ae68de7d6b",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/place_object_scale/_result.txt",
+      "sha256": "b1ddce1b86dfa0527577463da67f40e302782c103f246f312c782047c17098ca",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/place_object_stand/_result.txt",
+      "sha256": "646697febe81371e0f2c36e6b8092bcc33683046fd295744e05c7676cfe8934a",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/place_phone_stand/_result.txt",
+      "sha256": "292a72b9779c19711a1a3718aad893e398ddd27c989c3f2ea2e42d9fd2a1d172",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/place_shoe/_result.txt",
+      "sha256": "f6e2145648462695a1f036168ace347706b8adb75d1cef83e75b8fe29a675bfd",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/press_stapler/_result.txt",
+      "sha256": "04d05721296468a58b7b060c7659fd8e730ba7dd533e2b31a58eee8b77503e1a",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/put_bottles_dustbin/_result.txt",
+      "sha256": "36f9b0d42cf9256dc28a7eac392fa1a65dafb527ecbb9edebbb5961a8e18c178",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/put_object_cabinet/_result.txt",
+      "sha256": "33d4ed2c259dd5ed951a91073f5afb9cb22329388ad9f2a696493dcbe9905f4d",
+      "bytes": 68
+    },
+    {
+      "file": "official_results/random_unseen/rotate_qrcode/_result.txt",
+      "sha256": "00fd957d851f033b1158d817a29e8b5aee281721387da0ee4dd94318a6040b7f",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/scan_object/_result.txt",
+      "sha256": "22270f61a88c1187390f38bd7685e52b1eabf6d0c00ad13800eb3cf3439d1ed5",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/shake_bottle/_result.txt",
+      "sha256": "e5ea66439dca1b97716e8669a52f71a6ff70971269c14f98b848eeff94a9dca4",
+      "bytes": 68
+    },
+    {
+      "file": "official_results/random_unseen/shake_bottle_horizontally/_result.txt",
+      "sha256": "6a751ed10688dc38bc4bd598af7863cedb8795c785ce0ab1fc3a9179f6858bca",
+      "bytes": 68
+    },
+    {
+      "file": "official_results/random_unseen/stack_blocks_three/_result.txt",
+      "sha256": "64ff46a2bab973adc1c2c164619a4dbd61ff798733f5c66362cf02463392a614",
+      "bytes": 68
+    },
+    {
+      "file": "official_results/random_unseen/stack_blocks_two/_result.txt",
+      "sha256": "b6236fd2a01cf31e952d5fd48c6ed85f3823fbfc77334a9d76cd5162630a94e6",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/stack_bowls_three/_result.txt",
+      "sha256": "4dae72ad5c66944a131f7aaddaf5dd5fccd7f1a73efff78b2593c581bb55bf82",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/stack_bowls_two/_result.txt",
+      "sha256": "947a19171a119409710a756125c2be50d908fd7235a65cb6dda1bed66ac6d201",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/stamp_seal/_result.txt",
+      "sha256": "906bcce09bae399dafbeece8af018fa124ef9f89dd44537eb207ad1bbbf18ae4",
+      "bytes": 69
+    },
+    {
+      "file": "official_results/random_unseen/turn_switch/_result.txt",
+      "sha256": "9a8564f8ffcec2767b63b4b18d12d71d7a8926a3a363baadbf3ffdbc6cfd88ab",
+      "bytes": 69
+    },
+    {
+      "file": "official_task_logs/clean_seen/adjust_bottle.log",
+      "sha256": "cb6a07d63cf03826da7d6b4bdbb155b334c908643b0b7bb150df1927e839862f",
+      "bytes": 339614
+    },
+    {
+      "file": "official_task_logs/clean_seen/beat_block_hammer.log",
+      "sha256": "081de7d7e08f806de7fd73adf5d0ae4ddac0c870aa046c9690bac40bc1d728fd",
+      "bytes": 302553
+    },
+    {
+      "file": "official_task_logs/clean_seen/blocks_ranking_rgb.log",
+      "sha256": "80950f92a86be3246c26b05d1efe6388bfa060730976b5749a4f9b1128b58377",
+      "bytes": 1297218
+    },
+    {
+      "file": "official_task_logs/clean_seen/blocks_ranking_size.log",
+      "sha256": "6bd9d0bc68a90b619287c92f1a47e91b050fe540e47044cafa91432b6ba2d349",
+      "bytes": 1697106
+    },
+    {
+      "file": "official_task_logs/clean_seen/click_alarmclock.log",
+      "sha256": "d628925b23ec2c9db8a036f4a42ca0ee7d0d2be69b13a9d5c3eafdb45d44c897",
+      "bytes": 182589
+    },
+    {
+      "file": "official_task_logs/clean_seen/click_bell.log",
+      "sha256": "4540f68e6880f2e685d84cb3317478c75f2bb1eea246dff5ddb1c6a9550298cf",
+      "bytes": 177201
+    },
+    {
+      "file": "official_task_logs/clean_seen/dump_bin_bigbin.log",
+      "sha256": "d9abbb756bc52029ee407401e08d62347b843788da36f03c9b464e6fcc9ca87a",
+      "bytes": 601873
+    },
+    {
+      "file": "official_task_logs/clean_seen/grab_roller.log",
+      "sha256": "4ea9de2d5156c0ae0ad9ae326c81e03e1897a7df481ad67af07808ddab3554e3",
+      "bytes": 242612
+    },
+    {
+      "file": "official_task_logs/clean_seen/handover_block.log",
+      "sha256": "8b234b4b5ca80ab2c1d3be969de6c104966ff891eb79af1e759027b54406c91f",
+      "bytes": 717528
+    },
+    {
+      "file": "official_task_logs/clean_seen/handover_mic.log",
+      "sha256": "6ed976807e1e953d2655c9efc9eb137794602707e1d50595fc06ab46521e7e7c",
+      "bytes": 543668
+    },
+    {
+      "file": "official_task_logs/clean_seen/hanging_mug.log",
+      "sha256": "2da7bb032c56d214dc6327b50ca8245cba95eb8194f763579bb76134ab60ac65",
+      "bytes": 1071907
+    },
+    {
+      "file": "official_task_logs/clean_seen/lift_pot.log",
+      "sha256": "36ef764e6f15d1962eeb03382d0eaa867eff2f512bf9527bb9399c7cb3990475",
+      "bytes": 274766
+    },
+    {
+      "file": "official_task_logs/clean_seen/move_can_pot.log",
+      "sha256": "3b39c1b881a5bfaa9b6ced42000343177d9a6b78216666d3434aac94effebc76",
+      "bytes": 400543
+    },
+    {
+      "file": "official_task_logs/clean_seen/move_pillbottle_pad.log",
+      "sha256": "74ee4816f4f22dd720428ba6082e78fb5524871c2b8177ad804811295de2626d",
+      "bytes": 372313
+    },
+    {
+      "file": "official_task_logs/clean_seen/move_playingcard_away.log",
+      "sha256": "3f5643990d24464d8c64434e2219ffd7b1b0064cd8e0cef7b6473ea18ad34b18",
+      "bytes": 299992
+    },
+    {
+      "file": "official_task_logs/clean_seen/move_stapler_pad.log",
+      "sha256": "8e56b21aa86d6b455c68fb0872b8220107996241f4818d8ee7b0447733e54a9b",
+      "bytes": 515819
+    },
+    {
+      "file": "official_task_logs/clean_seen/open_laptop.log",
+      "sha256": "26d0ce1a1a59c518230b82a77535e3d94bd43a040590ced4d69b603993416577",
+      "bytes": 410580
+    },
+    {
+      "file": "official_task_logs/clean_seen/open_microwave.log",
+      "sha256": "e3c638ed64a040966c1b13c3d8b9bc7c7ee5e3f3e122034c0691ffa06b701c0d",
+      "bytes": 1204540
+    },
+    {
+      "file": "official_task_logs/clean_seen/pick_diverse_bottles.log",
+      "sha256": "84981655b5e4fb48a6da9d75c0132e8d5765354e0f5cdf2d2402d50fdeab4c45",
+      "bytes": 285913
+    },
+    {
+      "file": "official_task_logs/clean_seen/pick_dual_bottles.log",
+      "sha256": "ec800e5fa401d4503caac602db1a3953dcb070980afe4757b3932eaa86aec4b2",
+      "bytes": 285287
+    },
+    {
+      "file": "official_task_logs/clean_seen/place_a2b_left.log",
+      "sha256": "cad963c92847fa93a778e10f0c2221cf357cc6a4bddbb58c1b3e78cef026f859",
+      "bytes": 398861
+    },
+    {
+      "file": "official_task_logs/clean_seen/place_a2b_right.log",
+      "sha256": "5b0f535d5655190faf5ba012909f8009bcb4e54eeed98ada8be742e84145760c",
+      "bytes": 401180
+    },
+    {
+      "file": "official_task_logs/clean_seen/place_bread_basket.log",
+      "sha256": "d8ac3bf9c5ed969882641dc24d8e4dce20c3a8a3a715d2b3580e9eb163c8bdcb",
+      "bytes": 544893
+    },
+    {
+      "file": "official_task_logs/clean_seen/place_bread_skillet.log",
+      "sha256": "2a92331f5ca3c0278110bb3d3d91aed6e72f1f4ba2324dd5b4975ef406ce4d6e",
+      "bytes": 371028
+    },
+    {
+      "file": "official_task_logs/clean_seen/place_burger_fries.log",
+      "sha256": "d20f59c2542a07029b5491033b2c09ea63192531f930d2023431b7e400b2456c",
+      "bytes": 580822
+    },
+    {
+      "file": "official_task_logs/clean_seen/place_can_basket.log",
+      "sha256": "8aa3b56daf0fa36b77018858e546660cb0c7cc425c4b938fba503e39c9972e5f",
+      "bytes": 778851
+    },
+    {
+      "file": "official_task_logs/clean_seen/place_cans_plasticbox.log",
+      "sha256": "ac800b5a4ac1a439581feb2528d2fe7e079a4adab38ba72e56b6e3e44d96827d",
+      "bytes": 604567
+    },
+    {
+      "file": "official_task_logs/clean_seen/place_container_plate.log",
+      "sha256": "cade4cfaf6f019688084ce9dbe5c09d7ea7c95dfef2b60007c21c0a27bf80fc0",
+      "bytes": 362236
+    },
+    {
+      "file": "official_task_logs/clean_seen/place_dual_shoes.log",
+      "sha256": "4e48f7f2800e7b6df1f368af93f22eda09412e675e062817ad37367769daccc5",
+      "bytes": 669052
+    },
+    {
+      "file": "official_task_logs/clean_seen/place_empty_cup.log",
+      "sha256": "c646c669f2e57678a3a1fb05a232c985e5e5bb66ffabe1403ae079a628956837",
+      "bytes": 393505
+    },
+    {
+      "file": "official_task_logs/clean_seen/place_fan.log",
+      "sha256": "b3211420e520387ebff84f3aa5a83aa2f41210f9eb1b8e5dc810a986c5c7d371",
+      "bytes": 387840
+    },
+    {
+      "file": "official_task_logs/clean_seen/place_mouse_pad.log",
+      "sha256": "b7b9b9d059654bd1158e01a757ebaef5b6409f9d5b8179d2c39279f539511840",
+      "bytes": 500812
+    },
+    {
+      "file": "official_task_logs/clean_seen/place_object_basket.log",
+      "sha256": "89cd061260a11ac0c87afcf4909b8ad14687cdf0c57c5606cc7414347107bb04",
+      "bytes": 768082
+    },
+    {
+      "file": "official_task_logs/clean_seen/place_object_scale.log",
+      "sha256": "6b618d491bd71595abf5c64f4e1e589262db4ece7087cb3eb7516d02710866c8",
+      "bytes": 382249
+    },
+    {
+      "file": "official_task_logs/clean_seen/place_object_stand.log",
+      "sha256": "f2550de34258d4ea7548b42a029b726b38c0ac517110a35117f1a5dd6742e973",
+      "bytes": 360630
+    },
+    {
+      "file": "official_task_logs/clean_seen/place_phone_stand.log",
+      "sha256": "81b92605d98f3c0a8fd4363015b3221000e182e326fddd78719a94e337e3d9fb",
+      "bytes": 352137
+    },
+    {
+      "file": "official_task_logs/clean_seen/place_shoe.log",
+      "sha256": "15545086ecfcdd78d02636b9563672d76b67ac18e5ef8993e70895574c7d89ab",
+      "bytes": 398372
+    },
+    {
+      "file": "official_task_logs/clean_seen/press_stapler.log",
+      "sha256": "e645a7a281e55e42032d389397e9dfdf13c47f6d64f7415ad0f9f614bd780c4a",
+      "bytes": 377184
+    },
+    {
+      "file": "official_task_logs/clean_seen/put_bottles_dustbin.log",
+      "sha256": "ee849617db50efa02cae1436899c71c95c24afc44934e2a446b35a1bedd21bcf",
+      "bytes": 1716868
+    },
+    {
+      "file": "official_task_logs/clean_seen/put_object_cabinet.log",
+      "sha256": "87187b805c1fe5b356bc9b96fea83a10bdb993dec97a2bf70303c9b815f4f40f",
+      "bytes": 832406
+    },
+    {
+      "file": "official_task_logs/clean_seen/rotate_qrcode.log",
+      "sha256": "eaefe0e582000835c4aeba1de5ed795397a189c15d0b52521637f71fd8b924f5",
+      "bytes": 414311
+    },
+    {
+      "file": "official_task_logs/clean_seen/scan_object.log",
+      "sha256": "4ba2d0fbfa7a00d6a37d6a92270c4ca997b57350589e7450db04338f6deede12",
+      "bytes": 479007
+    },
+    {
+      "file": "official_task_logs/clean_seen/shake_bottle.log",
+      "sha256": "a59807b29b2ce2581377eab589dec4e1ce8e119ee9429c22a302699ad1103faf",
+      "bytes": 283939
+    },
+    {
+      "file": "official_task_logs/clean_seen/shake_bottle_horizontally.log",
+      "sha256": "92dc6f157af7a0b8eccda7b7baaa1bbe65bfb7f1f05c4ebe122c4a98451e7547",
+      "bytes": 268266
+    },
+    {
+      "file": "official_task_logs/clean_seen/stack_blocks_three.log",
+      "sha256": "061a2f5ecd4755642777b92f0fc4d041b6b302234dede01dda2785620ee5b4b9",
+      "bytes": 1232480
+    },
+    {
+      "file": "official_task_logs/clean_seen/stack_blocks_two.log",
+      "sha256": "ab6bae1395a6e9980c38fec81931328fe0e7ac76a8768286cd4875fdcdc387f5",
+      "bytes": 764682
+    },
+    {
+      "file": "official_task_logs/clean_seen/stack_bowls_three.log",
+      "sha256": "cb8e5a425a3a26e405161ba2eab9f2ec499acc8d8c0d26ab000e3773a33cdaad",
+      "bytes": 1533051
+    },
+    {
+      "file": "official_task_logs/clean_seen/stack_bowls_two.log",
+      "sha256": "01ab680c0a8f5b2df2634739288e8f0134f7602bc2d696e02d7b47c7dc6fb408",
+      "bytes": 872353
+    },
+    {
+      "file": "official_task_logs/clean_seen/stamp_seal.log",
+      "sha256": "43135459f2e00eecd7e1a4939755271a218a5c18a9f149a9c1978d223e081be8",
+      "bytes": 364095
+    },
+    {
+      "file": "official_task_logs/clean_seen/turn_switch.log",
+      "sha256": "dfb8416bdffe438eef7084527419f7730850127fee5c58518b63461b5b07afe3",
+      "bytes": 376335
+    },
+    {
+      "file": "official_task_logs/random_unseen/adjust_bottle.log",
+      "sha256": "7226af1ba4df62847979c17de5351cfbe09ff0d27ee9f5d3d9d338977fd40395",
+      "bytes": 349427
+    },
+    {
+      "file": "official_task_logs/random_unseen/beat_block_hammer.log",
+      "sha256": "4639d3f88fdf2c50e17b84f51d8387fc5596e78fb85c4e0a6fb974d68647fb19",
+      "bytes": 577938
+    },
+    {
+      "file": "official_task_logs/random_unseen/blocks_ranking_rgb.log",
+      "sha256": "5ae6f4c4339e094c966ce0e126ab7307bdc45800c43d11dc9995dd1a14964f58",
+      "bytes": 1614896
+    },
+    {
+      "file": "official_task_logs/random_unseen/blocks_ranking_size.log",
+      "sha256": "ad8707ba822e20c624b0673d52db7cf96bbfa5d7d586b791add2eccd0c0d6e28",
+      "bytes": 1927686
+    },
+    {
+      "file": "official_task_logs/random_unseen/click_alarmclock.log",
+      "sha256": "bb08c98361392b27e295c9728ae45d672e1ea9a50afd7a61931aaf0e4d5af909",
+      "bytes": 205147
+    },
+    {
+      "file": "official_task_logs/random_unseen/click_bell.log",
+      "sha256": "2fae5a6d0d23edb6c715209ecf69d3e7824973156cbafd5720f1aee8bfe09693",
+      "bytes": 203362
+    },
+    {
+      "file": "official_task_logs/random_unseen/dump_bin_bigbin.log",
+      "sha256": "00a4e6682b2f9225e42b6bc4cf87f4db671c3393ed31f6fd66801d3d9ede6ace",
+      "bytes": 771729
+    },
+    {
+      "file": "official_task_logs/random_unseen/grab_roller.log",
+      "sha256": "96e9f20284b9d6fbc0e5d1c37f9b291bf56e81c68064834e256997c6a8c19864",
+      "bytes": 241904
+    },
+    {
+      "file": "official_task_logs/random_unseen/handover_block.log",
+      "sha256": "ece1a679cffeda819a3e7e234edd4398c035018b1e4aabebd58d3e73e68c5894",
+      "bytes": 797542
+    },
+    {
+      "file": "official_task_logs/random_unseen/handover_mic.log",
+      "sha256": "dd9de3b04a9de8891f9b386740c52f5bb04eaff7331bbdbee3d94671ee63bc31",
+      "bytes": 554590
+    },
+    {
+      "file": "official_task_logs/random_unseen/hanging_mug.log",
+      "sha256": "003d952b8dc09ba7c49f540b6977457529106247819956678cb8139a5aa0a64b",
+      "bytes": 1447631
+    },
+    {
+      "file": "official_task_logs/random_unseen/lift_pot.log",
+      "sha256": "bc753dc486a6c821a1b420e3520892d515f9fb56198b3daee05c4b34ea27b429",
+      "bytes": 343656
+    },
+    {
+      "file": "official_task_logs/random_unseen/move_can_pot.log",
+      "sha256": "bd1098fc4c79270a61bf398ebe66d5c831c24d35ab733edc48e4b7437a0fb7ad",
+      "bytes": 708478
+    },
+    {
+      "file": "official_task_logs/random_unseen/move_pillbottle_pad.log",
+      "sha256": "2ee98d65336715d7db8952d45e28aafa193cdc827adcdb3f6f91171ecb2f934a",
+      "bytes": 484695
+    },
+    {
+      "file": "official_task_logs/random_unseen/move_playingcard_away.log",
+      "sha256": "1c31935a8510355ab99aee9055e1bd8f8ef10a380e5359de4ced617f6ca51d62",
+      "bytes": 330813
+    },
+    {
+      "file": "official_task_logs/random_unseen/move_stapler_pad.log",
+      "sha256": "a36517cd14ab333ef39061536698b36acaddc548875b560b500d5200207652aa",
+      "bytes": 643064
+    },
+    {
+      "file": "official_task_logs/random_unseen/open_laptop.log",
+      "sha256": "49fb8886426f9a4b18c762d528520d59ad2eadce6b2a375be0c888d2c9d3d14d",
+      "bytes": 454454
+    },
+    {
+      "file": "official_task_logs/random_unseen/open_microwave.log",
+      "sha256": "740119e8588fe5b63fe3cc3e76f8310c3157022803bea3c69cabff0da6fe6715",
+      "bytes": 2006545
+    },
+    {
+      "file": "official_task_logs/random_unseen/pick_diverse_bottles.log",
+      "sha256": "82535b95a0301d766d6cc48098a552618fb28f11d881d323e6b3d64ec152b819",
+      "bytes": 455506
+    },
+    {
+      "file": "official_task_logs/random_unseen/pick_dual_bottles.log",
+      "sha256": "2f699bab7541ffb3e4062c2fd39915407cee8b3748be9375e3b42771388d7f8c",
+      "bytes": 426297
+    },
+    {
+      "file": "official_task_logs/random_unseen/place_a2b_left.log",
+      "sha256": "1346e18326cf682c2034355ca5d9a140b4965db4266f045f4dbe9a461ecde51f",
+      "bytes": 501734
+    },
+    {
+      "file": "official_task_logs/random_unseen/place_a2b_right.log",
+      "sha256": "2948df2ae10bd4dd4af97fc3e6774a4b7ea4bab0960668052d0691120094c643",
+      "bytes": 587928
+    },
+    {
+      "file": "official_task_logs/random_unseen/place_bread_basket.log",
+      "sha256": "0db05194063df825454751ea5d94d96ae3ec681c948ef0fa161d238e189d0f45",
+      "bytes": 706345
+    },
+    {
+      "file": "official_task_logs/random_unseen/place_bread_skillet.log",
+      "sha256": "9cc3bfe2ec04b21ada991b62aecaea2476ccd53234f63ec29b38189867f5bb1c",
+      "bytes": 587743
+    },
+    {
+      "file": "official_task_logs/random_unseen/place_burger_fries.log",
+      "sha256": "384f1062cce7601292dacb40aedb25459ba37b275ad8d9e88446bea85de1b09e",
+      "bytes": 621093
+    },
+    {
+      "file": "official_task_logs/random_unseen/place_can_basket.log",
+      "sha256": "0e6ca943165270bbf4a88f7c6c6ab8f6fc4bab6bec1c3e2a565303b3c7cdb2c3",
+      "bytes": 1087125
+    },
+    {
+      "file": "official_task_logs/random_unseen/place_cans_plasticbox.log",
+      "sha256": "7c3b25b72cb8765440fed2a270013b3dd99c269254edbc754fec52900eefef7b",
+      "bytes": 618155
+    },
+    {
+      "file": "official_task_logs/random_unseen/place_container_plate.log",
+      "sha256": "7b3732861bee903e0898ae43b01c6ba30cca553b7a4b51ed8f7c0c58fcf176f9",
+      "bytes": 469936
+    },
+    {
+      "file": "official_task_logs/random_unseen/place_dual_shoes.log",
+      "sha256": "5eb72ea6c0732620cda9d24bed5277cfa2eff5cc4860f3abdb6ca1f209943680",
+      "bytes": 760444
+    },
+    {
+      "file": "official_task_logs/random_unseen/place_empty_cup.log",
+      "sha256": "16f418c242b674b7c32c82b7cb0cf9eaa433dae20eb8350c8544026de11961ee",
+      "bytes": 588700
+    },
+    {
+      "file": "official_task_logs/random_unseen/place_fan.log",
+      "sha256": "674df7d5c9093f4b622aa963303255cf3db8da79ae348c47da79d2bb4591289c",
+      "bytes": 470040
+    },
+    {
+      "file": "official_task_logs/random_unseen/place_mouse_pad.log",
+      "sha256": "13d63fd9d1d787ba25881cb222d737de779f9f6a1175c644aff8bad2f8130e07",
+      "bytes": 521966
+    },
+    {
+      "file": "official_task_logs/random_unseen/place_object_basket.log",
+      "sha256": "4bef67d5589a25286a1758e1015af6d15d0e68f921a531b043cec3a1ccce8f93",
+      "bytes": 981071
+    },
+    {
+      "file": "official_task_logs/random_unseen/place_object_scale.log",
+      "sha256": "b1bc85d969ec594e3944033ee834a09b170ba49e0c5812d363d24839fce50f57",
+      "bytes": 518423
+    },
+    {
+      "file": "official_task_logs/random_unseen/place_object_stand.log",
+      "sha256": "33f3901169d993dd81e5c7e7e5d0e7b5ee4763bb4e7490efe751e5f4cb8ed555",
+      "bytes": 426661
+    },
+    {
+      "file": "official_task_logs/random_unseen/place_phone_stand.log",
+      "sha256": "d515308337abc80e13ae5c51860e26b880a3c65cac7356588db79bb3f9eba1ef",
+      "bytes": 455252
+    },
+    {
+      "file": "official_task_logs/random_unseen/place_shoe.log",
+      "sha256": "6d3a3d051d28e85925a69426cf585ee2a7cf6fc0464094133b692450ecfe52d6",
+      "bytes": 484645
+    },
+    {
+      "file": "official_task_logs/random_unseen/press_stapler.log",
+      "sha256": "76567d5f963e22d7ac3547ac6dca99ef64902bbd26fa597fbfed374ccf26a36d",
+      "bytes": 452720
+    },
+    {
+      "file": "official_task_logs/random_unseen/put_bottles_dustbin.log",
+      "sha256": "2be51f24f3f6c5e0fc6dae6b2b68aef35e7a1f599cdac283435e2803f1cdd2a0",
+      "bytes": 3410413
+    },
+    {
+      "file": "official_task_logs/random_unseen/put_object_cabinet.log",
+      "sha256": "1b9216851ec8aad32f768e4c12f17d70e8b64cfa122ce8856f5705f18c26874b",
+      "bytes": 1013936
+    },
+    {
+      "file": "official_task_logs/random_unseen/rotate_qrcode.log",
+      "sha256": "7cae7938df13c45b1923f7b6ed8d8f8e2581ca69674966c3e3e6293c27e3d530",
+      "bytes": 631354
+    },
+    {
+      "file": "official_task_logs/random_unseen/scan_object.log",
+      "sha256": "d747266ab8649fd3198dfb716fbffce987f4988ff655b68ab56526ba7321c523",
+      "bytes": 573291
+    },
+    {
+      "file": "official_task_logs/random_unseen/shake_bottle.log",
+      "sha256": "960315a4a991f2ef9b1eef2aeae9c677a23ef403022376f03a4c803a1bfa28a9",
+      "bytes": 259036
+    },
+    {
+      "file": "official_task_logs/random_unseen/shake_bottle_horizontally.log",
+      "sha256": "cb84cd5e03dc762f592430be4597c33f9b9b6fb22321ebca003ef9c762c7c198",
+      "bytes": 263692
+    },
+    {
+      "file": "official_task_logs/random_unseen/stack_blocks_three.log",
+      "sha256": "2149c1e5e6a4ac67f7d9546db4fcceca561c26bda41b3911d0ecfdc9791f4cb6",
+      "bytes": 1496518
+    },
+    {
+      "file": "official_task_logs/random_unseen/stack_blocks_two.log",
+      "sha256": "9f83364d9272e55e8398ebaa58f4f5d2ef95ce1bcaf16bb3139c03325930bd31",
+      "bytes": 792068
+    },
+    {
+      "file": "official_task_logs/random_unseen/stack_bowls_three.log",
+      "sha256": "a602b96251a2bcb820516e428d42e2083f9ca57d141a02a52bc8247c2e8c8b75",
+      "bytes": 1658559
+    },
+    {
+      "file": "official_task_logs/random_unseen/stack_bowls_two.log",
+      "sha256": "d6f403e6b2fbeb7a476abfd58e951d14cdad97cd54e4c00f4ef35ccc68f8bb23",
+      "bytes": 1114678
+    },
+    {
+      "file": "official_task_logs/random_unseen/stamp_seal.log",
+      "sha256": "c159d0e8882f22b172312a619d3b92c70840c142a58f92f1eac185846f8395d5",
+      "bytes": 542740
+    },
+    {
+      "file": "official_task_logs/random_unseen/turn_switch.log",
+      "sha256": "a6b584f9846da986916a89592a54521ee012796b4bda3aa13a619c50bbccdb89",
+      "bytes": 465604
+    },
+    {
+      "file": "policy_servers/clean_seen/adjust_bottle/stdout.log",
+      "sha256": "8ddeb6b6424941097a18ff0f86071bbbf70cdbb98fd158a156390ed09c95ba90",
+      "bytes": 26849
+    },
+    {
+      "file": "policy_servers/clean_seen/beat_block_hammer/stdout.log",
+      "sha256": "f364bfa3bb609e02b3a885ca7474c8881fd9265c29ba1877e7079136e43074bf",
+      "bytes": 27371
+    },
+    {
+      "file": "policy_servers/clean_seen/blocks_ranking_rgb/stdout.log",
+      "sha256": "b901b810d522614e405bcb8220f2e2d15e2286c1175d060b34d9c09b1a85a29c",
+      "bytes": 34474
+    },
+    {
+      "file": "policy_servers/clean_seen/blocks_ranking_size/stdout.log",
+      "sha256": "64d243ef89f2b78a4da0170891e2f46372a9b8803dc587a27246a2e7618ddc3e",
+      "bytes": 31313
+    },
+    {
+      "file": "policy_servers/clean_seen/click_alarmclock/stdout.log",
+      "sha256": "97b43106fc6d6f4a001dd0c81cf3bc066805ef6154957b2304792a8e21cb97aa",
+      "bytes": 27552
+    },
+    {
+      "file": "policy_servers/clean_seen/click_bell/stdout.log",
+      "sha256": "e678570a913e739eeff396153bff595fbf2366b791ff1ad0d8413b398aca5b9c",
+      "bytes": 26253
+    },
+    {
+      "file": "policy_servers/clean_seen/dump_bin_bigbin/stdout.log",
+      "sha256": "0255079cdf76b425cdf01f5f67184b9e2738d4dc1859c3797ac81cb8948716e6",
+      "bytes": 27059
+    },
+    {
+      "file": "policy_servers/clean_seen/grab_roller/stdout.log",
+      "sha256": "70b2129ba570b5fc373437b1e4a1eb3731f1d0e17da94dfdeee8c69f2337e9ee",
+      "bytes": 25255
+    },
+    {
+      "file": "policy_servers/clean_seen/handover_block/stdout.log",
+      "sha256": "6cf3e8b03e21905b4a88dbaf10094eac7cddc544df1792d41735a04b97999cd4",
+      "bytes": 30191
+    },
+    {
+      "file": "policy_servers/clean_seen/handover_mic/stdout.log",
+      "sha256": "43bee49d1eca78e9e6656d18de0fa6fda3c6c1ef3cee3cfaa97dde8e7677f1f2",
+      "bytes": 27703
+    },
+    {
+      "file": "policy_servers/clean_seen/hanging_mug/stdout.log",
+      "sha256": "33cb3e9b85d45bf691b2188659237d6c0bde3b41ed48ebf22fdd2023408ed03d",
+      "bytes": 32593
+    },
+    {
+      "file": "policy_servers/clean_seen/lift_pot/stdout.log",
+      "sha256": "6a858ef49f856d2bac90969e9e62749958534ee00621dde32c6030bdf5f27582",
+      "bytes": 24911
+    },
+    {
+      "file": "policy_servers/clean_seen/move_can_pot/stdout.log",
+      "sha256": "f4cfff396e6122272b33831d99ed07a0fc5292ba3f404475934838d9e271233c",
+      "bytes": 29945
+    },
+    {
+      "file": "policy_servers/clean_seen/move_pillbottle_pad/stdout.log",
+      "sha256": "f63a7fc139aabd3bb4390110668c0fc3581596f45d8e245d74757b3954e366bf",
+      "bytes": 28942
+    },
+    {
+      "file": "policy_servers/clean_seen/move_playingcard_away/stdout.log",
+      "sha256": "f539aa015798aafe1728bcb141c15b49be348510ccbb7c4b786b4061b5000386",
+      "bytes": 29203
+    },
+    {
+      "file": "policy_servers/clean_seen/move_stapler_pad/stdout.log",
+      "sha256": "8c5cda63dac79a93722f2dd3df927509b0677c3351353ff52bb2c29129a66a22",
+      "bytes": 27711
+    },
+    {
+      "file": "policy_servers/clean_seen/open_laptop/stdout.log",
+      "sha256": "257a83fd193b2030519e57f0dd23560947b37ac65457c4135c534cbae87fb3d7",
+      "bytes": 25735
+    },
+    {
+      "file": "policy_servers/clean_seen/open_microwave/stdout.log",
+      "sha256": "6a2a82127701c677e527d40e1a6a219755a7a91996865768ebd375dceec12a4e",
+      "bytes": 26750
+    },
+    {
+      "file": "policy_servers/clean_seen/pick_diverse_bottles/stdout.log",
+      "sha256": "fd861d975c8881da018c9a3c285c66640c8b588910b00c8dcb973dd8670bac4d",
+      "bytes": 31367
+    },
+    {
+      "file": "policy_servers/clean_seen/pick_dual_bottles/stdout.log",
+      "sha256": "884e9981479ee190df2fe1be00b2961cf2715660ac9a6bceb64f16e6a953c6ac",
+      "bytes": 30194
+    },
+    {
+      "file": "policy_servers/clean_seen/place_a2b_left/stdout.log",
+      "sha256": "099691b550ee69b3b94277687e4e629a13945ff068f8101936a1872a8e275fbb",
+      "bytes": 29818
+    },
+    {
+      "file": "policy_servers/clean_seen/place_a2b_right/stdout.log",
+      "sha256": "62f5e012918a186c29d41b5a98e075a5727cc5aa55ae67145ecd42915784a042",
+      "bytes": 30180
+    },
+    {
+      "file": "policy_servers/clean_seen/place_bread_basket/stdout.log",
+      "sha256": "4981ccb50747c5877cc5a75c5e3dd380b8709b8ccacc7fb0d6eec2d373aa2d15",
+      "bytes": 31650
+    },
+    {
+      "file": "policy_servers/clean_seen/place_bread_skillet/stdout.log",
+      "sha256": "95e83f68503e26fc6624d64e3c7945724d3f8742508f6dce94bfb20e56ca9ba6",
+      "bytes": 30994
+    },
+    {
+      "file": "policy_servers/clean_seen/place_burger_fries/stdout.log",
+      "sha256": "7152a8149ab34b5a7ac3061f22c9adc2c37fef12f5bb48ab55de3715f991953e",
+      "bytes": 34717
+    },
+    {
+      "file": "policy_servers/clean_seen/place_can_basket/stdout.log",
+      "sha256": "47ddc023ca7a79c2b252d3fa414f7ad520586ec10a85eb872dcd5451bbe0f5ea",
+      "bytes": 34152
+    },
+    {
+      "file": "policy_servers/clean_seen/place_cans_plasticbox/stdout.log",
+      "sha256": "b70e41657124bf24523c9301af8a6b71eb9830b2bc671fb35097cb2022f32bbf",
+      "bytes": 36277
+    },
+    {
+      "file": "policy_servers/clean_seen/place_container_plate/stdout.log",
+      "sha256": "974775b3228addea1733dedd12078f221c1178a56d65ce7db6c8629debcf29da",
+      "bytes": 30188
+    },
+    {
+      "file": "policy_servers/clean_seen/place_dual_shoes/stdout.log",
+      "sha256": "c9d8adbfef0246c5a60b0266d7007cb2215aee953835cbf0ce72c2a249a46736",
+      "bytes": 31217
+    },
+    {
+      "file": "policy_servers/clean_seen/place_empty_cup/stdout.log",
+      "sha256": "e3874bfd0a8496485add1f022406f53a90bb1c3b3b7a3600ac3a5e4fb00f0dd1",
+      "bytes": 29161
+    },
+    {
+      "file": "policy_servers/clean_seen/place_fan/stdout.log",
+      "sha256": "89037b46a1e851645fb9b874cb867c3b5d81e239dbecbb0e08560326ed50244d",
+      "bytes": 29392
+    },
+    {
+      "file": "policy_servers/clean_seen/place_mouse_pad/stdout.log",
+      "sha256": "d057ee9e51355804667feda45c0eb3f3d06d675193a186238ff0c12a41b5bc4c",
+      "bytes": 28346
+    },
+    {
+      "file": "policy_servers/clean_seen/place_object_basket/stdout.log",
+      "sha256": "de55b63f7781a83818ac39fbc25ef0ce0089f2254588786be2dc8f85b9b46b9a",
+      "bytes": 33018
+    },
+    {
+      "file": "policy_servers/clean_seen/place_object_scale/stdout.log",
+      "sha256": "1c9c5d45943db46219e1067e15e653bd41cdc8870d8e7f4df8d1ee5bc0dabe04",
+      "bytes": 31129
+    },
+    {
+      "file": "policy_servers/clean_seen/place_object_stand/stdout.log",
+      "sha256": "a2ea025eb20a0661482ce340b2340d32c545a4767e42e422cfc9496903a6c26e",
+      "bytes": 30980
+    },
+    {
+      "file": "policy_servers/clean_seen/place_phone_stand/stdout.log",
+      "sha256": "945a88379c4c3cb424f0229543894f2d1cf4f66a5b56fbb759bdb70d8252ce01",
+      "bytes": 28197
+    },
+    {
+      "file": "policy_servers/clean_seen/place_shoe/stdout.log",
+      "sha256": "0d56acbd08746217b97d1b5f36d48d7985877740d910aad3eeaffdea1cd73265",
+      "bytes": 27836
+    },
+    {
+      "file": "policy_servers/clean_seen/press_stapler/stdout.log",
+      "sha256": "ab469f63887eb8cec38120c56bf422714e789b2640e09fb600742b92d9dd2b72",
+      "bytes": 26713
+    },
+    {
+      "file": "policy_servers/clean_seen/put_bottles_dustbin/stdout.log",
+      "sha256": "d54616aedf5c027dd51d555af9f48c6c7d74112d6b66defa53c0eadf00e9ea75",
+      "bytes": 37770
+    },
+    {
+      "file": "policy_servers/clean_seen/put_object_cabinet/stdout.log",
+      "sha256": "78da59428c56fe31c528ab79de4b8f87c840eff6a158535d7934f46fa7110718",
+      "bytes": 31215
+    },
+    {
+      "file": "policy_servers/clean_seen/rotate_qrcode/stdout.log",
+      "sha256": "968668f1046ef850e6bd0e398045e73a396fcb108bb2a1f5a0c883fc7aa7cdc8",
+      "bytes": 30548
+    },
+    {
+      "file": "policy_servers/clean_seen/scan_object/stdout.log",
+      "sha256": "b4ad52e999a0e5dc97b51d268e208abbabd7ae77334a95f23675548039ae3542",
+      "bytes": 34234
+    },
+    {
+      "file": "policy_servers/clean_seen/shake_bottle/stdout.log",
+      "sha256": "5e7bebff5bbd14c834569be58b50d564b538d8a4e37ac9045b5cc90351a10fb7",
+      "bytes": 26667
+    },
+    {
+      "file": "policy_servers/clean_seen/shake_bottle_horizontally/stdout.log",
+      "sha256": "03695abc1247d37b8d5cf32d0233f53a082d5fe77c30d2569a27a2d5b4e1e08e",
+      "bytes": 30136
+    },
+    {
+      "file": "policy_servers/clean_seen/stack_blocks_three/stdout.log",
+      "sha256": "d2edf054e220a8361df335134925cbaf3bc99a185371d3f938a97e4334fc9130",
+      "bytes": 30445
+    },
+    {
+      "file": "policy_servers/clean_seen/stack_blocks_two/stdout.log",
+      "sha256": "d4251f106a48f41752c32cd35ca00cb7cdecf42ff5c638264c61be1b0aae8d60",
+      "bytes": 30099
+    },
+    {
+      "file": "policy_servers/clean_seen/stack_bowls_three/stdout.log",
+      "sha256": "a9176265927166a3f82eb552d0f6a477d96b1a83ed50ff6b35975ab89b2e5dd0",
+      "bytes": 28934
+    },
+    {
+      "file": "policy_servers/clean_seen/stack_bowls_two/stdout.log",
+      "sha256": "0b0bdab862bc6b0c56e9a9734d03ed813d0da23660db911e959142c0458bac72",
+      "bytes": 31379
+    },
+    {
+      "file": "policy_servers/clean_seen/stamp_seal/stdout.log",
+      "sha256": "8e5e1350a2805812266f1713f1fc59eae997b11a9522e2037bddd701f2297ee2",
+      "bytes": 25658
+    },
+    {
+      "file": "policy_servers/clean_seen/turn_switch/stdout.log",
+      "sha256": "4a8a5bffd16bad10cb4cfbf922153e2fdc26fa43a59424c03c3e50681cd3fbd6",
+      "bytes": 25788
+    },
+    {
+      "file": "policy_servers/random_unseen/adjust_bottle/stdout.log",
+      "sha256": "dd6a755f5da53db3bb1f4a701aaf8b8a0aa689ea06f94a950694a7337a47d512",
+      "bytes": 26603
+    },
+    {
+      "file": "policy_servers/random_unseen/beat_block_hammer/stdout.log",
+      "sha256": "34df77e4ae07f2cab77dd6b1c67e156bba883f94f360c83b6dfa3680998272b1",
+      "bytes": 27283
+    },
+    {
+      "file": "policy_servers/random_unseen/blocks_ranking_rgb/stdout.log",
+      "sha256": "ed9b59d8c7ebbc1c76bb2d98c40304b12ecd033cb64486495b854aaa016eb97f",
+      "bytes": 32296
+    },
+    {
+      "file": "policy_servers/random_unseen/blocks_ranking_size/stdout.log",
+      "sha256": "6379a36763406e788d15ce47577bf6ceddfffd3ad2c60bfa3333f335afc1da8c",
+      "bytes": 29278
+    },
+    {
+      "file": "policy_servers/random_unseen/click_alarmclock/stdout.log",
+      "sha256": "533a6efeddf2014f5cb9f86cc78bc9a0d2f5a5b37531fec6acbb12542d6e8a4c",
+      "bytes": 26852
+    },
+    {
+      "file": "policy_servers/random_unseen/click_bell/stdout.log",
+      "sha256": "17c54d62ae65f6c06bd467367711911987f8ce4be349e175f71daa6d046937db",
+      "bytes": 26005
+    },
+    {
+      "file": "policy_servers/random_unseen/dump_bin_bigbin/stdout.log",
+      "sha256": "72962f11426011a2c0e77e72d4b911d67393993544f0d211b8a31dd1733a27b4",
+      "bytes": 26849
+    },
+    {
+      "file": "policy_servers/random_unseen/grab_roller/stdout.log",
+      "sha256": "cdde50fe4e51c83036a3929649ae39c3ce615245c2cbcb6f84ea6739bf39cce6",
+      "bytes": 25101
+    },
+    {
+      "file": "policy_servers/random_unseen/handover_block/stdout.log",
+      "sha256": "ef1d065716b89f200b493e690afc720f729d5ba85fd37eb00c01d38f8015644c",
+      "bytes": 30185
+    },
+    {
+      "file": "policy_servers/random_unseen/handover_mic/stdout.log",
+      "sha256": "784216fdc6d7f707dd8971c66d2933842a2fab83d171231680729a5d7e1bbf8a",
+      "bytes": 27354
+    },
+    {
+      "file": "policy_servers/random_unseen/hanging_mug/stdout.log",
+      "sha256": "482540489de8092283a0c1e855d5f34e90be9ff42a97e8c6545b042226d026fc",
+      "bytes": 32478
+    },
+    {
+      "file": "policy_servers/random_unseen/lift_pot/stdout.log",
+      "sha256": "fafb300ce5f9d8e2367b87fb2cc47eba19be2ffdfd88d67d0e2c1b37c94cce3e",
+      "bytes": 25045
+    },
+    {
+      "file": "policy_servers/random_unseen/move_can_pot/stdout.log",
+      "sha256": "db5f2f7481f28e2f0a009ae204a240162b118e706c6fb6cb0697af2f972e44a3",
+      "bytes": 29397
+    },
+    {
+      "file": "policy_servers/random_unseen/move_pillbottle_pad/stdout.log",
+      "sha256": "32919a2c4f7dc9202e8585469c542ba68632eeb858689fd93de3b8603d830399",
+      "bytes": 28235
+    },
+    {
+      "file": "policy_servers/random_unseen/move_playingcard_away/stdout.log",
+      "sha256": "8bbfd53c6a258bb9b367f2bdf0c88a04847171f552e7511beec6743354a08a2d",
+      "bytes": 29015
+    },
+    {
+      "file": "policy_servers/random_unseen/move_stapler_pad/stdout.log",
+      "sha256": "46a7664fc0a11075ac3077603fee05e780861c35f59b3be4bde4ac4de34e0959",
+      "bytes": 26977
+    },
+    {
+      "file": "policy_servers/random_unseen/open_laptop/stdout.log",
+      "sha256": "616cc96776f42c37a4fcf3ff03576d5d29e5c20b26e8ad5dc62f621a17c6dae0",
+      "bytes": 25204
+    },
+    {
+      "file": "policy_servers/random_unseen/open_microwave/stdout.log",
+      "sha256": "d6f6d74acec29b25106458b21ca1c27b1497b37af4dff028a383dc2a370356cf",
+      "bytes": 27860
+    },
+    {
+      "file": "policy_servers/random_unseen/pick_diverse_bottles/stdout.log",
+      "sha256": "3f801a0be633917a1d6f12abc3a5dd6a0c5f52191efe56e6423df1355747e204",
+      "bytes": 31572
+    },
+    {
+      "file": "policy_servers/random_unseen/pick_dual_bottles/stdout.log",
+      "sha256": "d8cecc06c9e3e4b0b07880264b8ca2ee9077bc62eb79398b507fcf54e41bead9",
+      "bytes": 30050
+    },
+    {
+      "file": "policy_servers/random_unseen/place_a2b_left/stdout.log",
+      "sha256": "f4e8566b93acaf257cde55cb041499e244d6b693492740db41544bd3be434fd3",
+      "bytes": 29552
+    },
+    {
+      "file": "policy_servers/random_unseen/place_a2b_right/stdout.log",
+      "sha256": "f255982d6f7d433e81fec3906cf671259eab4fa5d4985b147baf15e927579fe8",
+      "bytes": 29392
+    },
+    {
+      "file": "policy_servers/random_unseen/place_bread_basket/stdout.log",
+      "sha256": "3f60d8e946aa450a08041347a50905d29f9d98b8282ae245a308912f9975386d",
+      "bytes": 31436
+    },
+    {
+      "file": "policy_servers/random_unseen/place_bread_skillet/stdout.log",
+      "sha256": "f817a3898b376eb8ab478e6dc1703418b1ac139589245b26ba541e0410845652",
+      "bytes": 31147
+    },
+    {
+      "file": "policy_servers/random_unseen/place_burger_fries/stdout.log",
+      "sha256": "206d1b81188a6fc0949af602440b50a3a4744da05493d22e515c438aeb763a73",
+      "bytes": 34224
+    },
+    {
+      "file": "policy_servers/random_unseen/place_can_basket/stdout.log",
+      "sha256": "eaf776adf86538e1ac4166903aa1677f360b37a9fb02c6b55a5a669215585b09",
+      "bytes": 35978
+    },
+    {
+      "file": "policy_servers/random_unseen/place_cans_plasticbox/stdout.log",
+      "sha256": "d7e0de4f9ec13d721d39e2cd17cba7e031e08392419fefeeeb000347e0dbf421",
+      "bytes": 35656
+    },
+    {
+      "file": "policy_servers/random_unseen/place_container_plate/stdout.log",
+      "sha256": "fc4edb400e36fcbad7650aabb09f8807c8911716c335fba13aaa26e6d062dac2",
+      "bytes": 29792
+    },
+    {
+      "file": "policy_servers/random_unseen/place_dual_shoes/stdout.log",
+      "sha256": "f63293a2db987f7b68d76022efdcf3a23c509d840f69545a270b9eb1b078aa57",
+      "bytes": 30669
+    },
+    {
+      "file": "policy_servers/random_unseen/place_empty_cup/stdout.log",
+      "sha256": "13f4e5d98dcd25712a34530fa37a0d0631103d0d289a060dcf0d34d13cdb8964",
+      "bytes": 27734
+    },
+    {
+      "file": "policy_servers/random_unseen/place_fan/stdout.log",
+      "sha256": "ab7bcd15778c109fb39f8070b6443de931e495190fe83164430e75ea58ad50a9",
+      "bytes": 28134
+    },
+    {
+      "file": "policy_servers/random_unseen/place_mouse_pad/stdout.log",
+      "sha256": "3bd3bdb6b94435e98753bf3020ead80cc05ec3cddfa0fe4c537fa47051382058",
+      "bytes": 28024
+    },
+    {
+      "file": "policy_servers/random_unseen/place_object_basket/stdout.log",
+      "sha256": "860622f521f9e0566fa365f010cf6bc72785b6a332c41f9eb5911b2aca76ad9f",
+      "bytes": 32651
+    },
+    {
+      "file": "policy_servers/random_unseen/place_object_scale/stdout.log",
+      "sha256": "abef5da1822a4e5ffbeaf805548ed640313a035819253d80e8903ad576a0dc48",
+      "bytes": 30781
+    },
+    {
+      "file": "policy_servers/random_unseen/place_object_stand/stdout.log",
+      "sha256": "46b1cc543c4ac1ec5c28c4ce08a81c516c87939cfd148d91f4876208531c9601",
+      "bytes": 30931
+    },
+    {
+      "file": "policy_servers/random_unseen/place_phone_stand/stdout.log",
+      "sha256": "784d8bd04a5e2243af1fc3ccb79f0d67504bfc2cff6869d789598b5430fefaac",
+      "bytes": 28120
+    },
+    {
+      "file": "policy_servers/random_unseen/place_shoe/stdout.log",
+      "sha256": "ce86d2a55c26eada560d7c46e7fe06e823844f34750f2867148f6bbb02b0f988",
+      "bytes": 27198
+    },
+    {
+      "file": "policy_servers/random_unseen/press_stapler/stdout.log",
+      "sha256": "d43190795b074ed318ee4f53e72f963ab0111767cfa490e3d25b28ded8d1e73e",
+      "bytes": 26879
+    },
+    {
+      "file": "policy_servers/random_unseen/put_bottles_dustbin/stdout.log",
+      "sha256": "ce9dbc22fcc2512ba7465c087080b761fc569d84b3d8e595c44b64836a8f27f7",
+      "bytes": 37230
+    },
+    {
+      "file": "policy_servers/random_unseen/put_object_cabinet/stdout.log",
+      "sha256": "936f99d674c8bdc80f04fa5c980d3fa01b5243bf56344ba1bae931c159615dae",
+      "bytes": 32050
+    },
+    {
+      "file": "policy_servers/random_unseen/rotate_qrcode/stdout.log",
+      "sha256": "41991a596272b8e77d91bddebe7ed28e9a883e2c0d1d2e08936dd0c782c6f435",
+      "bytes": 29567
+    },
+    {
+      "file": "policy_servers/random_unseen/scan_object/stdout.log",
+      "sha256": "d0363dd96e6bfc44934289243bbff5e11fcc00171d913f94f9c6b2a18f89124c",
+      "bytes": 33014
+    },
+    {
+      "file": "policy_servers/random_unseen/shake_bottle/stdout.log",
+      "sha256": "2bebc81e53b3d7c7c1e7451ba267f73d2a91c35003e76e5802ea16834dd88d56",
+      "bytes": 26548
+    },
+    {
+      "file": "policy_servers/random_unseen/shake_bottle_horizontally/stdout.log",
+      "sha256": "e36c5ddb1ef37a0bf8ab147341a6bb456e0adb8968953bc8fae1435d412a9e8f",
+      "bytes": 29879
+    },
+    {
+      "file": "policy_servers/random_unseen/stack_blocks_three/stdout.log",
+      "sha256": "f9008d53e9c1e78d00254fa41ab97433d30c09ffdd97613a77749f3c512cd935",
+      "bytes": 29921
+    },
+    {
+      "file": "policy_servers/random_unseen/stack_blocks_two/stdout.log",
+      "sha256": "e6846de818d1cd6d684f058099c9fc6013062a14a9844e6b8c6211cf93134765",
+      "bytes": 29393
+    },
+    {
+      "file": "policy_servers/random_unseen/stack_bowls_three/stdout.log",
+      "sha256": "d0735bd42733aeec9e0aeaeea7da7754668ca1810407fe850c47cd4ebd3428a7",
+      "bytes": 28554
+    },
+    {
+      "file": "policy_servers/random_unseen/stack_bowls_two/stdout.log",
+      "sha256": "ff88ad612bd01d8861ec5042beb73aa3dca66e58f293a557a647d1dc5ef9b008",
+      "bytes": 30543
+    },
+    {
+      "file": "policy_servers/random_unseen/stamp_seal/stdout.log",
+      "sha256": "ec6f5b6c9dd221b5bca7a5f5aae39b90388ff4bc7390f75cac3cec75bffc00c0",
+      "bytes": 25455
+    },
+    {
+      "file": "policy_servers/random_unseen/turn_switch/stdout.log",
+      "sha256": "107779caefef0ac8fcf7332d4abffb14cd74f16bb8650ac2849addb0672a855f",
+      "bytes": 25653
+    },
+    {
+      "file": "results/evaluation_results.json",
+      "sha256": "1e55cb39410e43eeff03fb117c884996424a2b761790c7bb57c89ac1741cfdb4",
+      "bytes": 11216
+    },
+    {
+      "file": "results/evaluation_results.md",
+      "sha256": "7802c16a266abddeb8251cb3f7858e941ace8491e53de0da8b7611d4020df043",
+      "bytes": 1795
+    }
+  ]
+}

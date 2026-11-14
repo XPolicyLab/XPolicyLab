@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100000, "instruction": "Pick up the hamburg with white sides and the Crispy potato fries with red box and place them on the green tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100001, "instruction": "Place the rounded rectangular hamburg wrap and the golden crispy fries inside red box onto the rectangular tray with rounded edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100002, "instruction": "Grab the hamburg with uneven white surface and the golden fries in red holder, then set them on the beige tray with soft edges", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100004, "instruction": "Pick the hamburg with curved surfaces and the Golden fries in red carton box, then place them on the rectangular tray with rounded edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100005, "instruction": "Grab the hamburg with soft texture and the golden fries in red holder, then set them on the beige tray with soft edges", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100005, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100006, "instruction": "Grab the rectangular cardboard box for hamburg and the Crispy potato fries with red box together, setting them on the rectangular bright orange serving tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100007, "instruction": "Pick the small yellow-marked hamburg wrapper and the Crispy potato fries with red box, place them on the medium beige plastic tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100008, "instruction": "Use both arms to grab the hamburg with light brown top and the golden fries in red holder and set them on the tray for carrying items.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100009, "instruction": "Grab the small yellow-marked hamburg wrapper and the Golden fries in red carton box together, setting them on the green tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100010, "instruction": "Pick up the small rectangular hamburg and the golden fries in red holder, then place on the rectangular bright orange serving tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100012, "instruction": "Grab the hamburg with soft texture and the golden crispy fries inside red box, then set them on the tray for carrying items", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100012, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100014, "instruction": "Use both arms to grab the hamburg with white and orange and the Red carton box fries crispy golden and set them on the medium green tray for carrying.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100015, "instruction": "Pick up the cardboard hamburg box and the hand-sized fries container together, then drop on the beige tray with soft edges", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100016, "instruction": "Pick up the compact hamburg box and the golden fries in red holder together, then drop on the medium flat tray", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100017, "instruction": "Pick the stackable hamburg box and the hand-sized fries container, place them on the tray for carrying items.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100017, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100018, "instruction": "Pick the golden brown food within wrapper and the golden fries in red holder, place them on the green tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100018, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100019, "instruction": "Pick the hamburg with white and orange and the Golden fries in red carton box, place them on the tray for carrying items.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100019, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100020, "instruction": "Grab the hamburg with white and orange and the Crispy potato fries with red box together, setting them on the beige tray with soft edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100021, "instruction": "Pick up the stackable hamburg box and the Crispy potato fries with red box together, then drop on the rectangular bright orange serving tray", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100022, "instruction": "Grab the rectangular cardboard box for hamburg and the Crispy potato fries with red box together, setting them on the medium-sized tray with rounded corners.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100022, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100024, "instruction": "Pick up the stackable hamburg box and the golden fries in red holder and place them on the medium beige plastic tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100025, "instruction": "Pick up the stackable hamburg box and the Golden fries in red carton box together, then drop on the medium beige plastic tray", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100027, "instruction": "Pick up the hamburg with uneven white surface and the golden crispy fries inside red box together, then drop on the flat brown serving tray", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100028, "instruction": "Place the rectangular cardboard box for hamburg and the golden crispy fries inside red box onto the beige tray with soft edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100028, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100029, "instruction": "Use both arms to grab the cardboard hamburg box and the Crispy potato fries with red box and set them on the rectangular beige tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100033, "instruction": "Place the hamburg with uneven white surface and the Red carton box fries crispy golden onto the tray for carrying items.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100033, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100034, "instruction": "Pick up the hamburg with curved surfaces and the Red carton box fries crispy golden, then place on the rectangular tray with rounded edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100034, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100037, "instruction": "Pick the hamburg with white and orange and the golden crispy fries inside red box, then place them on the flat brown serving tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100038, "instruction": "Pick up the cardboard hamburg container and the golden fries in red holder, then place on the rectangular bright orange serving tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100039, "instruction": "Use both arms to grab the hamburg with curved surfaces and the Red carton box fries crispy golden and set them on the green tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100039, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100040, "instruction": "Use both arms to grab the stackable hamburg box and the Crispy potato fries with red box and set them on the medium-sized tray with rounded corners.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100040, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100042, "instruction": "Place the small rectangular hamburg and the golden crispy fries inside red box onto the beige tray with soft edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100043, "instruction": "Pick up the hamburg with uneven white surface and the golden crispy fries inside red box and place them on the flat brown serving tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100043, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100044, "instruction": "Grab the hamburg with light brown top and the golden crispy fries inside red box, then set them on the medium-sized tray with rounded corners", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100046, "instruction": "Grab the hamburg pack with printed details and the golden fries in red holder, then set them on the medium flat tray", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100046, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100049, "instruction": "Use both arms to grab the small yellow-marked hamburg wrapper and the hand-sized fries container and set them on the rectangular beige tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100050, "instruction": "Pick the hamburg with uneven white surface and the Golden fries in red carton box, then place them on the flat brown serving tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100050, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100051, "instruction": "Use both arms to place the hamburg with white and orange and the Golden fries in red carton box on the medium-sized tray with rounded corners.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100052, "instruction": "Grab the stackable hamburg box and the golden fries in red holder, then set them on the medium flat tray", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100053, "instruction": "Grab the hamburg with white sides and the golden crispy fries inside red box, then set them on the medium-sized tray with rounded corners", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100053, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100054, "instruction": "Grab the hamburg with curved surfaces and the Red carton box fries crispy golden, then set them on the rectangular beige tray", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100055, "instruction": "Use both arms to grab the small yellow-marked hamburg wrapper and the golden fries in red holder and set them on the tray for carrying items.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100055, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100056, "instruction": "Use both arms to grab the hamburg with curved surfaces and the golden crispy fries inside red box and set them on the rectangular tray with rounded edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100057, "instruction": "Grab the hamburg with uneven white surface and the Crispy potato fries with red box together, setting them on the rectangular bright orange serving tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100058, "instruction": "Pick up the hamburg with white sides and the golden crispy fries inside red box and place them on the medium flat tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100060, "instruction": "Use both arms to place the hamburg with white sides and the golden fries in red holder on the medium flat tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100061, "instruction": "Use both arms to grab the hamburg pack with printed details and the Red carton box fries crispy golden and set them on the smooth green tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100062, "instruction": "Place the small rectangular hamburg and the golden fries in red holder onto the smooth green tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100063, "instruction": "Use both arms to grab the compact hamburg box and the hand-sized fries container and set them on the medium-sized tray with rounded corners.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100064, "instruction": "Pick up the cardboard hamburg container and the golden fries in red holder together, then drop on the rectangular bright orange serving tray", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100065, "instruction": "Use both arms to place the palm-sized hamburg and the Red carton box fries crispy golden on the tray for carrying items.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100066, "instruction": "Place the cardboard hamburg box and the Red carton box fries crispy golden onto the medium green tray for carrying.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100067, "instruction": "Use both arms to grab the cardboard hamburg container and the hand-sized fries container and set them on the rectangular tray with rounded edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100068, "instruction": "Grab the hamburg with soft texture and the hand-sized fries container, then set them on the smooth green tray", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100069, "instruction": "Pick up the small yellow-marked hamburg wrapper and the Golden fries in red carton box, then place on the rectangular tray with rounded edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100069, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100070, "instruction": "Place the hamburg with uneven white surface and the Red carton box fries crispy golden onto the medium beige plastic tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100071, "instruction": "Use both arms to grab the golden brown hamburg and the Golden fries in red carton box and set them on the beige tray with soft edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100071, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100072, "instruction": "Pick up the rectangular cardboard box for hamburg and the Red carton box fries crispy golden and place them on the medium flat tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100073, "instruction": "Pick up the cardboard hamburg container and the Golden fries in red carton box and place them on the tray for carrying items.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100074, "instruction": "Pick up the compact hamburg box and the Crispy potato fries with red box, then place on the rectangular beige tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100075, "instruction": "Pick up the stackable hamburg box and the Golden fries in red carton box, then place on the green tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100076, "instruction": "Use both arms to place the cardboard hamburg box and the golden crispy fries inside red box on the medium-sized tray with rounded corners.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100077, "instruction": "Grab the hamburg with curved surfaces and the hand-sized fries container together, setting them on the medium green tray for carrying.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100077, "success": false}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100078, "instruction": "Pick the cardboard hamburg box and the Golden fries in red carton box, place them on the tray for carrying items.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100080, "instruction": "Grab the cardboard hamburg box and the Red carton box fries crispy golden together, setting them on the smooth green tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100080, "success": false}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100081, "instruction": "Pick up the hamburg with soft texture and the golden fries in red holder and place them on the green tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100081, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100082, "instruction": "Use both arms to place the stackable hamburg box and the golden fries in red holder on the rectangular beige tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100082, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100083, "instruction": "Pick up the cardboard hamburg container and the Golden fries in red carton box together, then drop on the tray for carrying items", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100084, "instruction": "Place the compact hamburg box and the hand-sized fries container onto the rectangular tray with rounded edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100084, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100085, "instruction": "Place the stackable hamburg box and the golden crispy fries inside red box onto the medium green tray for carrying.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100085, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100086, "instruction": "Pick the rounded rectangular hamburg wrap and the golden crispy fries inside red box, then place them on the flat brown serving tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100086, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100087, "instruction": "Pick the rounded rectangular hamburg wrap and the Red carton box fries crispy golden, then place them on the rectangular beige tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100088, "instruction": "Grab the hamburg with uneven white surface and the golden crispy fries inside red box together, setting them on the rectangular bright orange serving tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100089, "instruction": "Place the hamburg pack with printed details and the hand-sized fries container onto the flat brown serving tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100090, "instruction": "Grab the cardboard hamburg box and the Crispy potato fries with red box, then set them on the medium green tray for carrying", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100091, "instruction": "Pick the rectangular cardboard box for hamburg and the hand-sized fries container, then place them on the medium flat tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100091, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100093, "instruction": "Pick the small rectangular hamburg and the golden fries in red holder, place them on the smooth green tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100094, "instruction": "Use both arms to place the hamburg with white and orange and the Crispy potato fries with red box on the smooth green tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100095, "instruction": "Use both arms to grab the cardboard hamburg box and the hand-sized fries container and set them on the medium beige plastic tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100096, "instruction": "Pick the small rectangular hamburg and the hand-sized fries container, place them on the green tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100097, "instruction": "Pick up the stackable hamburg box and the golden fries in red holder together, then drop on the smooth green tray", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100097, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100098, "instruction": "Pick the golden brown hamburg and the Golden fries in red carton box, place them on the medium beige plastic tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100098, "success": false}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100099, "instruction": "Pick the hamburg pack with printed details and the golden crispy fries inside red box, then place them on the beige tray with soft edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100100, "instruction": "Use both arms to grab the cardboard hamburg container and the Golden fries in red carton box and set them on the rectangular beige tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100100, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100101, "instruction": "Grab the stackable hamburg box and the Crispy potato fries with red box, then set them on the flat brown serving tray", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100102, "instruction": "Pick up the stackable hamburg box and the golden crispy fries inside red box and place them on the medium-sized tray with rounded corners.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100102, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100103, "instruction": "Grab the stackable hamburg box and the Golden fries in red carton box, then set them on the tray for carrying items", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100103, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100105, "instruction": "Pick up the hamburg with soft texture and the Red carton box fries crispy golden together, then drop on the rectangular tray with rounded edges", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100105, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100106, "instruction": "Grab the hamburg pack with printed details and the golden crispy fries inside red box together, setting them on the medium beige plastic tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100106, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100107, "instruction": "Pick the rounded rectangular hamburg wrap and the Red carton box fries crispy golden, then place them on the rectangular bright orange serving tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100107, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100108, "instruction": "Pick the compact hamburg box and the Crispy potato fries with red box, place them on the rectangular tray with rounded edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100108, "success": false}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100110, "instruction": "Grab the small rectangular hamburg and the Red carton box fries crispy golden together, setting them on the beige tray with soft edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100110, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100111, "instruction": "Pick up the hamburg with curved surfaces and the Crispy potato fries with red box, then place on the tray for carrying items.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100111, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100112, "instruction": "Use both arms to place the cardboard hamburg box and the Red carton box fries crispy golden on the rectangular tray with rounded edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100112, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100113, "instruction": "Use both arms to place the cardboard hamburg box and the Red carton box fries crispy golden on the rectangular beige tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100113, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100114, "instruction": "Grab the cardboard hamburg container and the Crispy potato fries with red box, then set them on the medium-sized tray with rounded corners", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100114, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100115, "instruction": "Grab the stackable hamburg box and the golden fries in red holder together, setting them on the rectangular bright orange serving tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100115, "success": false}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100116, "instruction": "Pick the hamburg pack with printed details and the Red carton box fries crispy golden, then place them on the medium-sized tray with rounded corners.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100116, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100118, "instruction": "Pick up the stackable hamburg box and the Crispy potato fries with red box, then place on the medium green tray for carrying.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100118, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100120, "instruction": "Use both arms to grab the hamburg with curved surfaces and the hand-sized fries container and set them on the rectangular bright orange serving tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100120, "success": true}

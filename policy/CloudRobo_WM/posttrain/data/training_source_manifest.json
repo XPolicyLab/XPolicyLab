@@ -1,0 +1,520 @@
+{
+  "version": "cloudrobo_wm.code_manifest.v1",
+  "files": [
+    {
+      "path": "FULL_TRAIN.sh",
+      "bytes": 422,
+      "sha256": "254eb4b22e5b0c78532ba368688d5a4f269893c73751c915a22bd8a52fb889b0"
+    },
+    {
+      "path": "SMOKE_RESUME.sh",
+      "bytes": 142,
+      "sha256": "11f6c44a6ee39969ab97340701213bf5ad86f03a9768275d74f26643ed301d88"
+    },
+    {
+      "path": "configs/data.json",
+      "bytes": 3040,
+      "sha256": "f7cbad0e9985ae2a32d2c7de10d3f63c009b106d0cd53463124fe1d4d8290d75"
+    },
+    {
+      "path": "configs/gradient_order.json",
+      "bytes": 339681,
+      "sha256": "5f7f8b58e4a46daec57bc7a1287c1b03303bfaef7fa3233a80947811157c88d3"
+    },
+    {
+      "path": "configs/model.json",
+      "bytes": 3707,
+      "sha256": "1387b817fdfd0fa7f3c52c53cb9ef2bb303799ab10b045959a481877ea6cefde"
+    },
+    {
+      "path": "configs/train_bf16.json",
+      "bytes": 1378,
+      "sha256": "07d37f21a8444940f8048757aad7092af153c86b759a387de1037d5f624e756a"
+    },
+    {
+      "path": "configs/train_bf16_gc.json",
+      "bytes": 1377,
+      "sha256": "6058887b4cce5275ae0c40c0c51df4c0417e1630ba25c7ea0303a0d841856c15"
+    },
+    {
+      "path": "configs/train_fp32.json",
+      "bytes": 1378,
+      "sha256": "27b7aef8158ae2d6b973db2857ee7bb1d71c015f7fe722bdc12be72d854564d5"
+    },
+    {
+      "path": "configs/train_fp32_gc.json",
+      "bytes": 1377,
+      "sha256": "d44c326fd88dbe4aacccb965ea2505f9c0790def2743771e9280cc24b0e2f90b"
+    },
+    {
+      "path": "data/contracts/original_protocols.json",
+      "bytes": 519,
+      "sha256": "03f9c9fe57efeae643e1d919685b2e8f61ef36b35d667a9de79af38bea1cc9e6"
+    },
+    {
+      "path": "data/contracts/path_aliases.json",
+      "bytes": 750,
+      "sha256": "af21e2d65c6a3a4484ac42c676d10cc7147c059d2adee35f69a2ef632b8c1c54"
+    },
+    {
+      "path": "runtime/launch.py",
+      "bytes": 6371,
+      "sha256": "44a4000ddaa73c6584c44979c05ddee39aa3e4616866bbc4799b7fb378201372"
+    },
+    {
+      "path": "runtime/topology.py",
+      "bytes": 8052,
+      "sha256": "91fea70645f4a1036d2f27adb90ec84bd4a7957c3995f9a0b017311b89a78184"
+    },
+    {
+      "path": "src/cloudrobo_wm/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "src/cloudrobo_wm/acceptance.py",
+      "bytes": 9664,
+      "sha256": "231746d4a8668f4875ab5a679c07b5c88ebc6ded4c99b33cba03ed21a96a5148"
+    },
+    {
+      "path": "src/cloudrobo_wm/checkpoint.py",
+      "bytes": 6790,
+      "sha256": "cd07eec1655a2daabe0dbf91e1e169b0ea2cdca1f15678635e4bad7e60d06042"
+    },
+    {
+      "path": "src/cloudrobo_wm/composite_layouts.py",
+      "bytes": 9260,
+      "sha256": "b916613a26cb1a3329fc6863c068f8b986d18d5b90fb8d7d13a2448a17e29cc7"
+    },
+    {
+      "path": "src/cloudrobo_wm/contracts.py",
+      "bytes": 273,
+      "sha256": "7daed71bd1fdd91778adc0444c04d16a284007fcb7396b16db6d66388285f857"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/history_light_augmentation.py",
+      "bytes": 7596,
+      "sha256": "0ec56d221024ed2abec256484a38fc813f27457a06cc3f1b88ad06ab2fcc0666"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/lerobot/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/lerobot/lerobot/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/lerobot/lerobot/datasets/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/lerobot/processors/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/lerobot/transforms/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/lerobot/utils/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/media.py",
+      "bytes": 2635,
+      "sha256": "392476751a809affb556e23cace93e963455c8ebab9e8f95109daf775d0b1461"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/multisource/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/multisource/adapters.py",
+      "bytes": 13481,
+      "sha256": "ba204aa4d59ac4b27381598b5d29348915ad85e9245b9d3ce763535c96fa2e59"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/multisource/auxiliary.py",
+      "bytes": 2422,
+      "sha256": "b6a07bd74c8a2f4be823799557c1b206b58b4ce42839e5a1c13e03554b53fd9c"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/multisource/codec.py",
+      "bytes": 8265,
+      "sha256": "d9a087c5acf43d643faf56a415120ee406f1fde852e388b295326694e70dcb61"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/multisource/curation.py",
+      "bytes": 13475,
+      "sha256": "0f4f78b9edba3cd91107ec3340fae63f7fb322ddc3a4a2791f08151d97365ffb"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/multisource/curation_contract.py",
+      "bytes": 4128,
+      "sha256": "ea55e80e29b1ecf3fce3b33cacc6be7575e7e07791a6f9e250ae55777bb027a0"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/multisource/curation_report.py",
+      "bytes": 3900,
+      "sha256": "a231696395f079f8228a585dfe1515ac81d831bfbe41a437fb815b900d0b8f53"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/multisource/dataset.py",
+      "bytes": 13469,
+      "sha256": "eb4a85d549346218c86fcf962c2ddf6bdaf4ec8970ba994c00f8744dd7e1068c"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/multisource/geometry.py",
+      "bytes": 6534,
+      "sha256": "0263f4bd7591852cc29c3d5ee891bcb9405b150d95bf0d8a438fee6fd49533d8"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/multisource/history.py",
+      "bytes": 5685,
+      "sha256": "20f6067aaec2c90d423e3932dd48459b006ef442ba96b26a7c9b1f8a53795b5b"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/multisource/image_augmentation.py",
+      "bytes": 663,
+      "sha256": "48851ab36343276c7f6c387d06e54e8f87c3101b9e95c7df3773779ab0cc2deb"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/multisource/instruction_overlay.py",
+      "bytes": 5030,
+      "sha256": "5d28befa29f786c0c83c59c2f309e701e1dfc115f6e4f4392be27890fd01cb32"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/multisource/language.py",
+      "bytes": 5017,
+      "sha256": "e003faa2ea0389f54aab1632697993b6ebbf6080a16cfdd3a4ff1f364a40be18"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/multisource/manifest.py",
+      "bytes": 8481,
+      "sha256": "48720319218b4896f50215b4072288f27fccfc5a8e82b02f66fd0728729d18d3"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/multisource/media_identity.py",
+      "bytes": 1207,
+      "sha256": "bc8db4163dc88927e80bc30258990abb60e1a32ca978012e8b1d10af3d0bf023"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/multisource/prompt_augmentation.py",
+      "bytes": 7227,
+      "sha256": "bfa319760b858466839874ba90c2d0d51f95ddf69e66764ab17dcb4716e06e39"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/multisource/required_modalities.py",
+      "bytes": 2045,
+      "sha256": "1630c7159778959daf95b69738ef1befe37c682f4599441b0e0704e7c2616c9f"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/multisource/rich_image_augmentation.py",
+      "bytes": 3636,
+      "sha256": "5638fd2c9fb7c0f845bb9ffeff021f5c826f3b9879848df99e643b34699709fc"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/multisource/robotwin_cleanonly.py",
+      "bytes": 10094,
+      "sha256": "cbea6e566436f16e4d3836a516a835de4fe9877383d81089b49d04c27dee7c5b"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/multisource/robotwin_eef_cleanonly.py",
+      "bytes": 8528,
+      "sha256": "b39bc9415a5718ee16a07c8abc217d41282b04ec894c23af9edf6621f66100fd"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/multisource/robotwin_joint14.py",
+      "bytes": 5926,
+      "sha256": "25958ce480756c3d09ce60c1f4786ef325eeedf22b5cfcc977779c3000335d1d"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/multisource/sampling.py",
+      "bytes": 9919,
+      "sha256": "1469a0cd0c685442230151c18656fafae14a1db68865e763f50d1a4fda6955ab"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/multisource/schema.py",
+      "bytes": 2318,
+      "sha256": "1404652dc298441373071e63141ea37c525997ca4fcf2b3ddd7053ffccebe285"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/multisource/sidecar.py",
+      "bytes": 4420,
+      "sha256": "8b8a2b00c16989cec446a0b2b6999ea3c3e5ef6591a18db8b9a7bddfa80f631e"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/multisource/stats.py",
+      "bytes": 8768,
+      "sha256": "fc9b06bedc7836a2ee690b854bc655203a7ef99ea696e510f1d78e022f6cf7d6"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/multisource/timing.py",
+      "bytes": 1761,
+      "sha256": "780e3a6aa7e745da26c000a6f72e2648485d807141d4f04dee7c5bff1983da0d"
+    },
+    {
+      "path": "src/cloudrobo_wm/datasets/robotwin_image_augmentation.py",
+      "bytes": 16758,
+      "sha256": "a824879c13e045837ca46d93d8ce1c14c8a0b57362a8d8d0445edd2947174834"
+    },
+    {
+      "path": "src/cloudrobo_wm/history_sampling.py",
+      "bytes": 1032,
+      "sha256": "b245bd54c86c7532cae162e045cc8dd929436ce21f510ab537ae668df5c51ecc"
+    },
+    {
+      "path": "src/cloudrobo_wm/model_factory.py",
+      "bytes": 4868,
+      "sha256": "e881994c0a7eba73a9d40db0dcb92a734ac1b4aa9e51b1256e831bfbbb1562e4"
+    },
+    {
+      "path": "src/cloudrobo_wm/models/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "src/cloudrobo_wm/models/action_dit.py",
+      "bytes": 11393,
+      "sha256": "4252b41c660da73c93c4cb7348bf5ab66f5d9280e99da1edec31fcc33f264649"
+    },
+    {
+      "path": "src/cloudrobo_wm/models/backbone.py",
+      "bytes": 16458,
+      "sha256": "fa2c3a71901a245b5d4efb99201593d077106ff23cdeda78dd1e5560d29f8d7e"
+    },
+    {
+      "path": "src/cloudrobo_wm/models/cloudrobo_wm.py",
+      "bytes": 49605,
+      "sha256": "7bedf417a32cd4cf9386a6cae1c6c731273be804c6921a1575346b187fee8a50"
+    },
+    {
+      "path": "src/cloudrobo_wm/models/dino_encoder.py",
+      "bytes": 12211,
+      "sha256": "dfe504cc3e86cd5b762c80e0143468f9f96348f520eadc75a9914486fb727e33"
+    },
+    {
+      "path": "src/cloudrobo_wm/models/dual_action_initialization.py",
+      "bytes": 10129,
+      "sha256": "2e99c3555c020a2e1ae29a4858fba03234224f45a037f6699365c9f1d324a173"
+    },
+    {
+      "path": "src/cloudrobo_wm/models/dual_cooperative_action.py",
+      "bytes": 11159,
+      "sha256": "cfdd5b1298071cc83869e692cbc73f003667bac344e1c545509fab49a53d12fb"
+    },
+    {
+      "path": "src/cloudrobo_wm/models/dual_multisource.py",
+      "bytes": 7440,
+      "sha256": "0513e42b6668132caecf742f95d4166b16aad1fda6b568d6c29b658af60a307a"
+    },
+    {
+      "path": "src/cloudrobo_wm/models/flow_cloudrobo_wm.py",
+      "bytes": 29946,
+      "sha256": "f0241e5cd64e4dafb2f3ed62f482df6fe7ec9003e7224b609d94a8a898310cda"
+    },
+    {
+      "path": "src/cloudrobo_wm/models/helpers/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "src/cloudrobo_wm/models/helpers/dino.py",
+      "bytes": 2666,
+      "sha256": "5217f1e73691acca3bbe32a6a3615561631df7b5ebe0acb025d7a70a42e03e5e"
+    },
+    {
+      "path": "src/cloudrobo_wm/models/helpers/gradient.py",
+      "bytes": 486,
+      "sha256": "7ebac9811b473ddcb781a5ce803bc57e56dd04093d470a5a7bf2c7239b1ce748"
+    },
+    {
+      "path": "src/cloudrobo_wm/models/helpers/joint_modalities.py",
+      "bytes": 2840,
+      "sha256": "cee97e8a5fe31062e9235f46fa6b58427c17c947ea0688044e76e61304a23243"
+    },
+    {
+      "path": "src/cloudrobo_wm/models/history_attention.py",
+      "bytes": 14417,
+      "sha256": "b7566cb7e801b471a0fbd7c3bcb9d1c11ec3d0ba87a967336054d3bf68f070e9"
+    },
+    {
+      "path": "src/cloudrobo_wm/models/history_multisource.py",
+      "bytes": 8176,
+      "sha256": "d7b814b4374dbdec026dead88176d985e483a8ef7af85d24c444b5761b2f0bc3"
+    },
+    {
+      "path": "src/cloudrobo_wm/models/mot.py",
+      "bytes": 20667,
+      "sha256": "5dfc936af7aa83c53490d3608a169dc15f2b289e32bcca0557286929355de700"
+    },
+    {
+      "path": "src/cloudrobo_wm/models/multisource_cloudrobo_wm.py",
+      "bytes": 29223,
+      "sha256": "9caa9e79d2aae6006f31d39485631c588300c5ec11dd052325a3f41e46b7dc28"
+    },
+    {
+      "path": "src/cloudrobo_wm/models/multisource_conditioning.py",
+      "bytes": 6038,
+      "sha256": "79446c0e34ce8db2902dd0a879dadd3713895818273a265bb2e06514ece164de"
+    },
+    {
+      "path": "src/cloudrobo_wm/models/multisource_loss.py",
+      "bytes": 3682,
+      "sha256": "b53ec8c6c37b7b7dc4dcb11e10ca34f9b75fc870496bf1ce1b61fe2eb22c8dd2"
+    },
+    {
+      "path": "src/cloudrobo_wm/models/perception.py",
+      "bytes": 4358,
+      "sha256": "8148950c8c97008b3a3b824a186a249ec64ce1715d0c69390035c5de28477564"
+    },
+    {
+      "path": "src/cloudrobo_wm/models/pointmap_contraction.py",
+      "bytes": 9849,
+      "sha256": "48f005a294972caca6cceabe0f8f52ffbd2fb66b5c918a44ac3c9e1f4f67c8b3"
+    },
+    {
+      "path": "src/cloudrobo_wm/models/pointmap_encoder.py",
+      "bytes": 6988,
+      "sha256": "187f3e181b3aba70c5f10520d44eb05572b31702830bac44eaed4866f870010e"
+    },
+    {
+      "path": "src/cloudrobo_wm/models/schedulers/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "src/cloudrobo_wm/models/schedulers/scheduler_continuous.py",
+      "bytes": 4137,
+      "sha256": "9679abd8837df8426426f4a8a2745c204ca52883b024f187179623ff3953b3e6"
+    },
+    {
+      "path": "src/cloudrobo_wm/models/stage_initialization.py",
+      "bytes": 4957,
+      "sha256": "f1246fe5e7a2bd83f0c5bc826e8b3aff621d99365d19f8732672a6fcf6279cb9"
+    },
+    {
+      "path": "src/cloudrobo_wm/models/wan_video_dit.py",
+      "bytes": 25166,
+      "sha256": "0b6343aa56bd2060ad110a3a6562adc9bac99f7f8508a87455c9114281dbffdc"
+    },
+    {
+      "path": "src/cloudrobo_wm/models/wan_video_vae.py",
+      "bytes": 40112,
+      "sha256": "7b147ddcd985468d456355865058d00ba2745bd34e628e4681fdbec24f3186f0"
+    },
+    {
+      "path": "src/cloudrobo_wm/per_cam_compose.py",
+      "bytes": 4356,
+      "sha256": "b623f88326e41be2771e55f8505551c74d59d57e8da5994cb9bb6198aa9ef4fd"
+    },
+    {
+      "path": "src/cloudrobo_wm/platform/__init__.py",
+      "bytes": 1,
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": "src/cloudrobo_wm/platform/ascend_runtime.py",
+      "bytes": 21196,
+      "sha256": "b5ff7ec445e88d26e4021fcc565aaefa5ca4c68a835c26c30510820a4bb506a1"
+    },
+    {
+      "path": "src/cloudrobo_wm/platform/backend.py",
+      "bytes": 4897,
+      "sha256": "812c1002732fda2330a16053156a784876108af3a9fd884ce793e73c0a93d44d"
+    },
+    {
+      "path": "src/cloudrobo_wm/platform/bounded_reduction.py",
+      "bytes": 3164,
+      "sha256": "825cf7976a8dc9428379f2e6dea6f7423eb09a893161d78688b665df53c642b4"
+    },
+    {
+      "path": "src/cloudrobo_wm/platform/initialization.py",
+      "bytes": 3678,
+      "sha256": "b0ff62f64c3ae3c84c617b6b9018cb43ee69f6b28d71768a3f4a052d328f4ffb"
+    },
+    {
+      "path": "src/cloudrobo_wm/platform/io.py",
+      "bytes": 712,
+      "sha256": "ef63dc18d6117cb7e3a58222d54b41b268ce05d96e7961a08ce225121880e732"
+    },
+    {
+      "path": "src/cloudrobo_wm/platform/ordered_zero2.py",
+      "bytes": 9247,
+      "sha256": "3b6da77e1d69d4ebeadde80eaa904ce0a52bdc962e37086e28c9d78a0c259fc5"
+    },
+    {
+      "path": "src/cloudrobo_wm/platform/resize.py",
+      "bytes": 821,
+      "sha256": "9d27250bf1e480e3c8104a68cb91e2670d20f80143c1227066f3b53d48f2d93c"
+    },
+    {
+      "path": "src/cloudrobo_wm/platform/zero2.py",
+      "bytes": 25025,
+      "sha256": "41ecfb94f5efe7d2f3bf2d0a8c11670f89bebac78c37390fc0c01fbc04122c3b"
+    },
+    {
+      "path": "src/cloudrobo_wm/pointmap_validity.py",
+      "bytes": 651,
+      "sha256": "fe12b6d7e85b1aa2da0253569234eb749a8676b2fd72d01c554affc66b5615f9"
+    },
+    {
+      "path": "src/cloudrobo_wm/storage.py",
+      "bytes": 990,
+      "sha256": "9cce2652996a5e30e6b37d42af463dfa29f21b1612281748c5a2312ec3ed61c4"
+    },
+    {
+      "path": "src/cloudrobo_wm/text_conditioning.py",
+      "bytes": 4885,
+      "sha256": "080a90013862f0c2349fbd029873ee9e38d4aedc43c9dd07bb212bbea99bcdab"
+    },
+    {
+      "path": "src/cloudrobo_wm/training.py",
+      "bytes": 11731,
+      "sha256": "215b07325c9ec1b0bdfe888452dfadc3437290a7823604308d2061e0e9a11fb9"
+    },
+    {
+      "path": "src/cloudrobo_wm/training_metrics.py",
+      "bytes": 4876,
+      "sha256": "1d70a91acf2e57a4ea83fdf476e69282be8ae475eb1296668524583a36379ceb"
+    },
+    {
+      "path": "src/cloudrobo_wm/utils/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "src/cloudrobo_wm/utils/logging_config.py",
+      "bytes": 4143,
+      "sha256": "ecb8866babbfe1ec6e76ad2b5196af24786ec84e1a2afa2c99565cbb707a8f37"
+    },
+    {
+      "path": "src/cloudrobo_wm/utils/pointmap_checkpoint.py",
+      "bytes": 811,
+      "sha256": "c504bb3182df6bf85b6436f9856a5fc03fb6c1f68d49c4678b231ac012b5b884"
+    },
+    {
+      "path": "src/cloudrobo_wm/utils/pytorch_utils.py",
+      "bytes": 894,
+      "sha256": "9013bf8784d8754d28013545cb03dc28e26597be073322a51b49ffa1162f1da1"
+    },
+    {
+      "path": "src/cloudrobo_wm/weights.py",
+      "bytes": 2775,
+      "sha256": "e750a27dc76122accdc86e50451e63bb299ed23ad3642d2f13f62de686ecf95d"
+    }
+  ]
+}

@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100000, "instruction": "Move the Coca-Cola can and the beverage can with red green graphics into the plasticbox for keeping items safe using separate arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100001, "instruction": "Lift the metal can with red base and the red green beverage can together, then place each in the medium storage plasticbox.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100002, "instruction": "Grab the white patterned brown metal can and the can with flat silver bottom together, then transfer them to the smooth blue plasticbox with handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100003, "instruction": "Pick the green red metallic soda can and the red can with decorative label simultaneously, then place them inside the blue plasticbox for storing things.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100003, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100004, "instruction": "Lift the gold-decorated aluminum can and the medium-sized soda can, and stick them into the plasticbox with rounded corners and lid", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100005, "instruction": "Move the red soda can with green accents and the colorful can with lime and orange design into the rectangular plasticbox with rounded edges using separate arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100005, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100006, "instruction": "Transfer the metallic can with rounded edges and the white can into the deep blue box for storage using dual arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100007, "instruction": "Grab the can with sealed gold top and the brown can together, then insert each into the rectangular plasticbox with rounded edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100008, "instruction": "Place the metallic can with rounded edges in the rectangular storage box with grooves, follow with the cylindrical white glossy can using each arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100009, "instruction": "Place the red and gold cylindrical can and the green red metallic soda can in the smooth blue plasticbox with handle using both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100010, "instruction": "Use dual arms to pick the smooth red can and the metal can with white decorative designs, placing both in the light blue rectangular storage plasticbox.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100011, "instruction": "With both arms, transfer the small soda can with lime graphics and the small aluminum red drink can into the blue box with angled edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100011, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100012, "instruction": "Move the smooth cylindrical can with lime pattern and the red beverage can with curved top into the plasticbox with smooth plastic texture using separate arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100012, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100013, "instruction": "Place the red can into the plasticbox with smooth plastic texture, then place the Coca-Cola soda can into the plasticbox with smooth plastic texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100014, "instruction": "Transfer the small white can with branding and the rounded red Coca-Cola soda container into the blue plasticbox for storing things using dual arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100015, "instruction": "Use both arms to place the soda can with lime illustration and the red can with decorative label into the plasticbox with hinged lid.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100016, "instruction": "Place the metallic can with rounded edges in the plasticbox for carrying items, follow with the red green can using each arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100017, "instruction": "Pick the red and gold cylindrical can and the white can with 3D RADY label using both arms and put them in the blue plasticbox", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100017, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100018, "instruction": "Use dual arms to pick the metal can with printed white graphics and the colorful can with lime and orange design, placing both in the smooth blue plasticbox with handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100018, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100019, "instruction": "Place the can with sealed gold top into the plasticbox with rounded corners and lid, then place the red can with decorative label into the plasticbox with rounded corners and lid.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100019, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100020, "instruction": "First grasp the smooth light brown can and the metal can with printed white graphics together, then place both in the blue box with angled edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100021, "instruction": "Lift the Coca-Cola soda can and the small white can with branding, and stick them into the plasticbox for carrying items", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100022, "instruction": "Grab the drink can with smooth red finish and the metal can with red base together, then insert each into the plasticbox for carrying items.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100022, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100023, "instruction": "Use arms to set the small cylindrical drink container and the soda can with lime illustration into the plasticbox with hinged lid.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100024, "instruction": "Pick the rounded red Coca-Cola soda container and the smooth white can with accents together, then move both into the blue plasticbox for storing things.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100025, "instruction": "Place the drink can with light brown shade into the light blue rectangular storage plasticbox, then place the beverage can with red green graphics into the light blue rectangular storage plasticbox.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100026, "instruction": "Move the metal can with white decorative designs and the cylindrical metal can into the blue box for storing things using separate arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100027, "instruction": "Place the red can with gold illustrations in the boxy light blue plasticbox, follow with the red shiny can with green label using each arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100028, "instruction": "Lift the drink can with bright colors and the metal can with red base together, then place each in the blue box with angled edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100028, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100029, "instruction": "Move the metal can with printed white graphics to the durable plasticbox with side handle and repeat with the smooth red can with silver bottom.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100030, "instruction": "Both arms lift the metal can with white decorative designs and the red green can, then place them in the rectangular storage box with grooves.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100031, "instruction": "Use both arms to move the red can with white Coca-Cola logo and the cylindrical metal can into the light blue plasticbox", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100031, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100032, "instruction": "Lift the cylindrical can with flat surfaces and the white can simultaneously, then set them into the blue plasticbox for storing things.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100033, "instruction": "Lift the cylindrical white glossy can and the cylindrical can with flat surfaces simultaneously, then set them into the blue box for storing things.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100033, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100034, "instruction": "Place the smooth white can with accents and the metallic red beverage can into the plasticbox with rounded corners and lid with dual arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100034, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100035, "instruction": "Move the beverage can with printed label to the rectangular storage box with grooves and repeat with the metallic red beverage can.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100037, "instruction": "First move the metallic red beverage can to the medium box with angled sides, then move the palm-sized drink can into the medium box with angled sides.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100038, "instruction": "Pick the green red metallic soda can and the can with flat silver bottom together, then move each into the light blue plasticbox", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100039, "instruction": "Lift the red and white beverage can and the bright red drink container can simultaneously, then set them into the rectangular storage box with grooves.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100039, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100040, "instruction": "Transfer the red can with white lettering into the blue plastic rectangular storage box, then position the white can within the blue plastic rectangular storage box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100040, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100041, "instruction": "Begin with the red can, place it in the smooth blue plasticbox with handle, finish with the red can with decorative label into the smooth blue plasticbox with handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100042, "instruction": "Pick the smooth red can and the soda can with lime illustration together, then drop each into the blue plastic rectangular storage box", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100043, "instruction": "Pick and drop the white patterned brown metal can and the red beverage can with curved top into the rectangular storage box with grooves.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100043, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100044, "instruction": "Lift the can with flat silver bottom and the metallic soda can, and stick them into the blue plasticbox", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100045, "instruction": "Lift the white patterned brown metal can and the can with red green label simultaneously, then set them into the deep blue plasticbox with grooves.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100045, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100046, "instruction": "Grasp the metallic drink can with pull-tab and the metal can with printed white graphics simultaneously, then place both in the medium storage plasticbox.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100046, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100047, "instruction": "Move the metallic drink can with pull-tab to the blue plastic rectangular storage box and repeat with the cylindrical metal can.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100048, "instruction": "Use both arms, position the red and white beverage can and the smooth white can with accents within the boxy light blue plasticbox.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100049, "instruction": "Transfer the gold patterned beverage can into the plasticbox with grooved sides, then position the metal can with red base within the plasticbox with grooved sides.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100050, "instruction": "Pick the soda can with lime illustration and the Coca-Cola soda can together, then put both inside the light blue plasticbox.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100050, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100051, "instruction": "Drop the metallic soda can and the metallic soda can into the blue plastic rectangular storage box with both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100052, "instruction": "Use both arms to grab the can with red-orange text and the red shiny can with green label, place them in the deep blue box for storage.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100053, "instruction": "Grasp the red cylindrical can with silver top and the red soda can with green accents simultaneously, then place both in the medium storage plasticbox.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100053, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100054, "instruction": "Employ both arms to pick the metallic soda can and the beverage can with red green graphics, and place them inside the blue box with angled edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100055, "instruction": "Use both arms to pick the medium metal can and the light brown can with smooth texture together for the blue box for storing things.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100055, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100056, "instruction": "Use both arms to grab the red green beverage can and the gold patterned beverage can, place them in the plasticbox with grooved sides.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100057, "instruction": "Pick the red can with smooth metallic texture and the red and white beverage can together, then move each into the deep blue plasticbox with grooves", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100058, "instruction": "Place the bright red drink container can in the light blue plasticbox, follow with the small cylindrical drink container using each arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100059, "instruction": "Pick the smooth red soda can and the beverage can with red green graphics together, then put both inside the blue plastic rectangular storage box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100060, "instruction": "Drop the white can with 3D RADY label and the can with flat silver bottom into the light blue plasticbox with both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100061, "instruction": "Use your arms to set the red cylindrical can with silver top and the can with red green label gently into the rectangular storage box with grooves.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100062, "instruction": "Pick and drop the red drink can with white lid and the hand-sized metallic can into the deep blue plasticbox with grooves.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100063, "instruction": "Drop the metal can with white decorative designs and the red soda can with green accents into the rectangular plasticbox with rounded edges with both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100064, "instruction": "With both arms, transfer the metallic soda can and the red and white beverage can into the blue plastic rectangular storage box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100065, "instruction": "Begin with the compact metal drink can, place it in the blue plastic rectangular storage box, finish with the brown can into the blue plastic rectangular storage box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100066, "instruction": "Pick up the metal can with pull-tab top and the red can with white lettering with separate arms, then fill the blue plasticbox for storing things.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100067, "instruction": "Pick the can with sealed gold top and the cylindrical metal can together, then drop each into the durable plasticbox with side handle", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100068, "instruction": "Utilize the arms to deposit both the red green can and the small soda can with lime graphics into the plasticbox with grooved sides.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100069, "instruction": "Transfer the red can with gold illustrations to the blue plasticbox for storing things, then transfer the can with red green label to the blue plasticbox for storing things.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100069, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100070, "instruction": "Pick the gold-decorated aluminum can and the cylindrical white glossy can together; place the gold-decorated aluminum can, then the cylindrical white glossy can, in the plasticbox with rounded corners and lid.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100071, "instruction": "Transfer the white can with 3D RADY label into the deep blue box for storage, then position the brown can within the deep blue box for storage.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100071, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100072, "instruction": "Utilize the arms to deposit both the rounded metallic can and the red can with gold illustrations into the blue box for storing things.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100073, "instruction": "Transfer the cylindrical metal can and the smooth red can with silver bottom into the deep blue plasticbox with grooves using dual arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100074, "instruction": "Use dual arms to pick the bright red drink container can and the brown can, placing both in the blue plasticbox.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100075, "instruction": "Place the cylindrical white glossy can and the light brown can with smooth texture in the plasticbox with smooth plastic texture using both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100076, "instruction": "Pick the cylindrical white glossy can and the palm-sized drink can simultaneously, then place them inside the blue plastic rectangular storage box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100077, "instruction": "Use both arms to place the gold-decorated aluminum can and the compact metal drink can inside the plasticbox with grooved sides.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100077, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100078, "instruction": "Use dual arms to pick the red drink can with white lid and the red can with smooth metallic texture, placing both in the medium box with angled sides.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100079, "instruction": "Pick the white can and the compact metal drink can together, then drop each into the blue plasticbox for storing things", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100080, "instruction": "Use both arms, position the metal can with printed white graphics and the can with sealed gold top within the plasticbox with grooved sides.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100080, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100081, "instruction": "Pick the beverage can with printed label and the colorful can with lime and orange design using both arms and put them in the medium box with angled sides", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100081, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100082, "instruction": "Pick the cylindrical white glossy can and the drink can with smooth red finish together, then drop each into the plasticbox with rounded corners and lid", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100082, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100083, "instruction": "Both arms lift the rounded red Coca-Cola soda container and the red cylindrical can with silver top, then place them in the rectangular plasticbox with rounded edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100084, "instruction": "Pick the red and gold cylindrical can and the green red metallic soda can together, then move both into the boxy light blue plasticbox.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100084, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100085, "instruction": "Use both arms to place the gold-decorated aluminum can and the colorful can with lime and orange design inside the blue plastic rectangular storage box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100085, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100086, "instruction": "Lift the metal can with white decorative designs and the red can with gold illustrations simultaneously, then set them into the medium box with angled sides.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100086, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100087, "instruction": "Pick the cylindrical metal can and the brown can together, then put both inside the smooth blue plasticbox with handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100088, "instruction": "Use both arms to move the light brown can with smooth texture and the red cylindrical can with silver top into the durable plasticbox with side handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100089, "instruction": "Use both arms to grab the white patterned brown metal can and the small light brown cylindrical can, place them in the durable plasticbox with side handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100090, "instruction": "Lift the metallic can with rounded edges and the smooth red can with silver bottom together, then place both in the plasticbox for carrying items.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100091, "instruction": "Move the gold-decorated aluminum can and the red beverage can with curved top into the blue plasticbox for storing things using separate arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100091, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100092, "instruction": "Place the red drink can with white lid in the blue box for storing things, follow with the metal can with pull-tab top using each arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100093, "instruction": "Pick the red can with white Coca-Cola logo and the can with flat silver bottom together, then put both inside the smooth blue plasticbox with handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100094, "instruction": "Lift the metal can with pull-tab top and the soda can with lime illustration simultaneously, then set them into the blue plasticbox for storing things.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100095, "instruction": "Pick the smooth white can with accents and the cylindrical red drink can with logo together, then put both inside the blue plasticbox for storing things.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100096, "instruction": "Use both arms to place the rounded metallic can and the can with red green label inside the plasticbox with smooth plastic texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100097, "instruction": "Grab the gold patterned beverage can and the can with red green label together, then transfer them to the blue plasticbox.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100097, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100098, "instruction": "Grasp the metal can with pull-tab top and the gold patterned beverage can simultaneously, then place both in the rectangular plasticbox with rounded edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100099, "instruction": "Begin with the gold-decorated aluminum can, place it in the plasticbox with smooth plastic texture, finish with the small aluminum red drink can into the plasticbox with smooth plastic texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "place_cans_plasticbox", "seed": 100100, "instruction": "Begin with the small soda can with lime graphics, place it in the blue plasticbox, finish with the smooth red can with silver bottom into the blue plasticbox.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_cans_plasticbox", "seed": 100100, "success": true}

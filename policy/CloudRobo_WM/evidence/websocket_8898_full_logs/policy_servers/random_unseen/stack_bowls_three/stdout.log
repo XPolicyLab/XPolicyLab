@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100000, "instruction": "Grab the first the light blue bowl with darkened rim and stack the others on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100001, "instruction": "Stack the first the smooth bowl with glossy finish, then the second, then the third.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100002, "instruction": "Stack the three the smooth bowl with glossy finish one above the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100006, "instruction": "Put the smooth bowl with glossy finish in a pile, largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100007, "instruction": "Grab the small smooth brown-rimmed bowl, stack them one by one.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100008, "instruction": "Pick up the first the smooth bowl with glossy finish and layer the rest above it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100012, "instruction": "Stack the three the smooth bowl with glossy finish one above the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100012, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100016, "instruction": "Position one the small smooth brown-rimmed bowl and stack two others on it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100023, "instruction": "Put the light blue bowl with darkened rim in a pile, largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100024, "instruction": "Grab the first the smooth bowl with glossy finish and stack the others on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100027, "instruction": "Position one the light blue bowl with darkened rim and stack two others on it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100029, "instruction": "Pick up the first the light blue bowl with darkened rim and layer the rest above it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100030, "instruction": "Pick up the first the small smooth brown-rimmed bowl and layer the rest above it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100033, "instruction": "Stack the first the small smooth brown-rimmed bowl, then the second, then the third.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100033, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100035, "instruction": "Stack the three the smooth bowl with glossy finish one above the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100037, "instruction": "Stack the light blue bowl with darkened rim by placing smallest on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100039, "instruction": "Pick up the first the small smooth brown-rimmed bowl and layer the rest above it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100039, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100040, "instruction": "Pick up the first the light blue bowl with darkened rim and layer the rest above it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100040, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100043, "instruction": "Grab the first the small smooth brown-rimmed bowl and stack the others on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100043, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100044, "instruction": "Stack the three the smooth bowl with glossy finish one above the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100045, "instruction": "Stack the smooth bowl with glossy finish by placing smallest on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100045, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100049, "instruction": "Pick up the first the smooth bowl with glossy finish and layer the rest above it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100051, "instruction": "Start stacking the small smooth brown-rimmed bowl from the bottom to the top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100052, "instruction": "Stack the three the light blue bowl with darkened rim one above the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100053, "instruction": "Stack the three the light blue bowl with darkened rim one above the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100053, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100054, "instruction": "Stack the three the light blue bowl with darkened rim one above the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100057, "instruction": "Put the smooth bowl with glossy finish in a pile, largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100058, "instruction": "Grab the first the small smooth brown-rimmed bowl and stack the others on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100059, "instruction": "Stack the smooth bowl with glossy finish together one by one.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100059, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100060, "instruction": "Start stacking the smooth bowl with glossy finish from the bottom to the top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100062, "instruction": "Stack the first the smooth bowl with glossy finish, then the second, then the third.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100063, "instruction": "Pick up the first the small smooth brown-rimmed bowl and layer the rest above it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100067, "instruction": "Pick up the first the smooth bowl with glossy finish and layer the rest above it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100069, "instruction": "Stack the small smooth brown-rimmed bowl together one by one.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100069, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100070, "instruction": "Stack the first the smooth bowl with glossy finish, then the second, then the third.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100078, "instruction": "Grab the light blue bowl with darkened rim, stack them one by one.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100079, "instruction": "Pick up the first the smooth bowl with glossy finish and layer the rest above it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100080, "instruction": "Put the light blue bowl with darkened rim in a pile, largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100080, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100082, "instruction": "Start stacking the small smooth brown-rimmed bowl from the bottom to the top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100082, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100086, "instruction": "Stack the light blue bowl with darkened rim by placing smallest on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100086, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100087, "instruction": "Stack the light blue bowl with darkened rim by placing smallest on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100087, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100091, "instruction": "Stack the light blue bowl with darkened rim by placing smallest on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100091, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100092, "instruction": "Put the light blue bowl with darkened rim in a pile, largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100093, "instruction": "Grab the light blue bowl with darkened rim, stack them one by one.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100096, "instruction": "Grab the smooth bowl with glossy finish, stack them one by one.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100097, "instruction": "Position one the small smooth brown-rimmed bowl and stack two others on it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100097, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100098, "instruction": "Grab the light blue bowl with darkened rim, stack them one by one.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100099, "instruction": "Stack the light blue bowl with darkened rim by placing smallest on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100100, "instruction": "Pick up the first the smooth bowl with glossy finish and layer the rest above it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100100, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100101, "instruction": "Stack the three the small smooth brown-rimmed bowl one above the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100102, "instruction": "Grab the first the small smooth brown-rimmed bowl and stack the others on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100102, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100104, "instruction": "Position one the small smooth brown-rimmed bowl and stack two others on it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100104, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100106, "instruction": "Put the small smooth brown-rimmed bowl in a pile, largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100106, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100107, "instruction": "Stack the smooth bowl with glossy finish by placing smallest on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100107, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100108, "instruction": "Grab the small smooth brown-rimmed bowl, stack them one by one.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100108, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100110, "instruction": "Put the light blue bowl with darkened rim in a pile, largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100110, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100111, "instruction": "Stack the small smooth brown-rimmed bowl together one by one.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100111, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100112, "instruction": "Start stacking the light blue bowl with darkened rim from the bottom to the top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100112, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100113, "instruction": "Start stacking the small smooth brown-rimmed bowl from the bottom to the top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100113, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100114, "instruction": "Stack the three the small smooth brown-rimmed bowl one above the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100114, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100116, "instruction": "Stack the smooth bowl with glossy finish by placing smallest on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100116, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100118, "instruction": "Stack the smooth bowl with glossy finish together one by one.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100118, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100126, "instruction": "Grab the light blue bowl with darkened rim, stack them one by one.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100126, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100128, "instruction": "Stack the first the small smooth brown-rimmed bowl, then the second, then the third.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100128, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100129, "instruction": "Grab the light blue bowl with darkened rim, stack them one by one.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100129, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100131, "instruction": "Position one the light blue bowl with darkened rim and stack two others on it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100131, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100133, "instruction": "Start stacking the light blue bowl with darkened rim from the bottom to the top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100133, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100134, "instruction": "Grab the small smooth brown-rimmed bowl, stack them one by one.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100134, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100137, "instruction": "Put the light blue bowl with darkened rim in a pile, largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100137, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100140, "instruction": "Stack the first the small smooth brown-rimmed bowl, then the second, then the third.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100140, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100142, "instruction": "Stack the smooth bowl with glossy finish by placing smallest on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100142, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100143, "instruction": "Stack the first the small smooth brown-rimmed bowl, then the second, then the third.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100143, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100147, "instruction": "Put the smooth bowl with glossy finish in a pile, largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100147, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100152, "instruction": "Position one the small smooth brown-rimmed bowl and stack two others on it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100152, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100154, "instruction": "Grab the first the small smooth brown-rimmed bowl and stack the others on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100154, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100157, "instruction": "Put the small smooth brown-rimmed bowl in a pile, largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100157, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100158, "instruction": "Start stacking the small smooth brown-rimmed bowl from the bottom to the top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100158, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100159, "instruction": "Start stacking the light blue bowl with darkened rim from the bottom to the top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100159, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100160, "instruction": "Grab the first the smooth bowl with glossy finish and stack the others on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100160, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100161, "instruction": "Stack the small smooth brown-rimmed bowl by placing smallest on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100161, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100162, "instruction": "Grab the first the light blue bowl with darkened rim and stack the others on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100162, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100164, "instruction": "Put the small smooth brown-rimmed bowl in a pile, largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100164, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100165, "instruction": "Stack the light blue bowl with darkened rim together one by one.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100165, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100166, "instruction": "Stack the small smooth brown-rimmed bowl by placing smallest on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100166, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100167, "instruction": "Stack the three the smooth bowl with glossy finish one above the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100167, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100173, "instruction": "Stack the three the small smooth brown-rimmed bowl one above the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100173, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100174, "instruction": "Stack the small smooth brown-rimmed bowl together one by one.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100174, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100175, "instruction": "Position one the small smooth brown-rimmed bowl and stack two others on it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100175, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100179, "instruction": "Put the smooth bowl with glossy finish in a pile, largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100179, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100181, "instruction": "Position one the light blue bowl with darkened rim and stack two others on it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100181, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100185, "instruction": "Stack the small smooth brown-rimmed bowl by placing smallest on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100185, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100186, "instruction": "Stack the smooth bowl with glossy finish together one by one.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100186, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100187, "instruction": "Grab the first the light blue bowl with darkened rim and stack the others on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100187, "success": false}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100188, "instruction": "Position one the smooth bowl with glossy finish and stack two others on it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100188, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100189, "instruction": "Grab the first the light blue bowl with darkened rim and stack the others on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100189, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100191, "instruction": "Start stacking the small smooth brown-rimmed bowl from the bottom to the top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100191, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100192, "instruction": "Stack the light blue bowl with darkened rim by placing smallest on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100192, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100194, "instruction": "Put the smooth bowl with glossy finish in a pile, largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100194, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100196, "instruction": "Stack the small smooth brown-rimmed bowl together one by one.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100196, "success": true}
+{"event": "case_prepared", "task_name": "stack_bowls_three", "seed": 100197, "instruction": "Stack the light blue bowl with darkened rim together one by one.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "stack_bowls_three", "seed": 100197, "success": true}

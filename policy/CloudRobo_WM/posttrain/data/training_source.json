@@ -1,0 +1,27 @@
+{
+  "version": "cloudrobo_wm.history_policy_posttrain_source.v1",
+  "source_job_id": "ba5f4052-e547-402c-9e43-ab76a2c6536b",
+  "source_job_name": "cloudrobo-wm-as2-history-full-18node-20261106-002",
+  "source_code_manifest_sha256": "d9cc24f0a01607caf3259cade00db31895e314cab8ea0a367c5bc5847928d7cc",
+  "source_model_reader_runtime_and_config_files_byte_identical": true,
+  "history": {
+    "mode": "gated",
+    "rope": "slots",
+    "sampling": "episode_anchor_recent_split_v3",
+    "offsets": [
+      "episode_first",
+      -20,
+      -16,
+      -12,
+      -8,
+      -4
+    ],
+    "visibility": "observed_clean_anchors_v3"
+  },
+  "initialization_tensors": 2509,
+  "initialization_sha256": "9e105d2f047dfa482dfd172ea912ffbcedd8ae5de35143ffe91c502076160a59",
+  "base_initialization_sha256": "91cebee590558fae98e8daf1a8cdbb5a99080173e904e3c8dc94f3a319d56d19",
+  "global_metric_protocol": "cloudrobo_wm.as2.metrics.global_rank_mean.v1",
+  "running_training_modified": false,
+  "inference_or_weights_modified": false
+}

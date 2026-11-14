@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100000, "instruction": "Collect the plastic bottle with two distinct parts, the plastic bottle, and the bottle with red screw cap inside the left-side the smooth surface dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100005, "instruction": "Put all three bottles, the plastic bottle with two distinct parts, the bottle with ridges, and the plastic bottle with ridges near bottom, into the curved rectangular trash can.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100005, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100009, "instruction": "Use the arms to move the yellow plastic bottle, the bottle with ridges, and the medium black bottle inside the smooth surface dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100010, "instruction": "Transfer every target, the yellow plastic bottle, the bottle with ridges, and the plastic bottle with ridges near bottom, to the curved rectangular trash can.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100010, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100015, "instruction": "Collect the plastic bottle with two distinct parts, the bottle with blue highlights, and the plastic bottle with ridges near bottom inside the left-side the smooth surface dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100015, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100016, "instruction": "Ensure the dustbin the smooth surface dustbin contains the yellow bottle with elongated cylinder body, the bottle with ridges, and the medium black bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100017, "instruction": "Deposit the full set the yellow plastic bottle, the bottle with blue highlights, and the plastic bottle with ridges near bottom in the simple black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100017, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100021, "instruction": "Transfer every target, the yellow bottle with elongated cylinder body, the bottle with ridges, and the medium black bottle, to the curved rectangular trash can.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100021, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100022, "instruction": "Use the arms to move the yellow bottle with elongated cylinder body, the bottle with ridges, and the plastic bottle with ridges near bottom inside the smooth surface dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100022, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100024, "instruction": "Clear the yellow plastic bottle, the bottle with ridges, and the bottle with red screw cap from the table into the smooth surface dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100024, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100025, "instruction": "Ensure the dustbin the simple black garbage bin contains the yellow bottle with elongated cylinder body, the bottle with ridges, and the plastic bottle with ridges near bottom.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100025, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100026, "instruction": "Ensure the dustbin the simple black garbage bin contains the plastic bottle with two distinct parts, the bottle with blue highlights, and the bottle with red screw cap.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100026, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100028, "instruction": "Ensure the dustbin the smooth surface dustbin contains the plastic bottle with two distinct parts, the bottle with ridges, and the bottle with red screw cap.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100028, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100029, "instruction": "Clear the yellow bottle with elongated cylinder body, the bottle with ridges, and the medium black bottle from the table into the simple black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100029, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100030, "instruction": "Move all of the yellow bottle with elongated cylinder body, the plastic bottle, and the bottle with red screw cap into the simple black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100031, "instruction": "Ensure the dustbin the curved rectangular trash can contains the plastic bottle with two distinct parts, the bottle with ridges, and the plastic bottle with ridges near bottom.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100031, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100033, "instruction": "Deposit the full set the yellow plastic bottle, the bottle with ridges, and the bottle with red screw cap in the simple black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100033, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100034, "instruction": "Ensure the dustbin the smooth surface dustbin contains the yellow plastic bottle, the bottle with ridges, and the bottle with red screw cap.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100034, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100035, "instruction": "Use the arms to move the plastic bottle with two distinct parts, the bottle with ridges, and the bottle with red screw cap inside the simple black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100035, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100037, "instruction": "Deposit the full set the plastic bottle with two distinct parts, the bottle with ridges, and the bottle with red screw cap in the simple black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100037, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100038, "instruction": "Clear the yellow bottle with elongated cylinder body, the plastic bottle, and the medium black bottle from the table into the simple black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100040, "instruction": "Clear the plastic bottle with two distinct parts, the plastic bottle, and the plastic bottle with ridges near bottom from the table into the curved rectangular trash can.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100040, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100041, "instruction": "Collect the plastic bottle with two distinct parts, the bottle with blue highlights, and the medium black bottle inside the left-side the curved rectangular trash can.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100041, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100042, "instruction": "Fill the simple black garbage bin with the bottles the plastic bottle with two distinct parts, the plastic bottle, and the bottle with red screw cap.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100042, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100045, "instruction": "Put all three bottles, the plastic bottle with two distinct parts, the bottle with blue highlights, and the medium black bottle, into the curved rectangular trash can.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100045, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100047, "instruction": "Fill the curved rectangular trash can with the bottles the yellow plastic bottle, the bottle with blue highlights, and the medium black bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100047, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100048, "instruction": "Ensure the dustbin the simple black garbage bin contains the yellow plastic bottle, the bottle with blue highlights, and the bottle with red screw cap.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100049, "instruction": "Ensure the dustbin the smooth surface dustbin contains the yellow bottle with elongated cylinder body, the bottle with ridges, and the plastic bottle with ridges near bottom.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100051, "instruction": "Place the yellow plastic bottle, the plastic bottle, and the plastic bottle with ridges near bottom in the dustbin the simple black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100051, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100052, "instruction": "Deposit the full set the yellow bottle with elongated cylinder body, the bottle with blue highlights, and the medium black bottle in the simple black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100055, "instruction": "Deposit the full set the yellow bottle with elongated cylinder body, the bottle with blue highlights, and the bottle with red screw cap in the simple black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100055, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100060, "instruction": "Fill the simple black garbage bin with the bottles the yellow bottle with elongated cylinder body, the bottle with blue highlights, and the bottle with red screw cap.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100060, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100061, "instruction": "Use the arms to move the yellow bottle with elongated cylinder body, the plastic bottle, and the bottle with red screw cap inside the curved rectangular trash can.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100062, "instruction": "Fill the smooth surface dustbin with the bottles the plastic bottle with two distinct parts, the bottle with ridges, and the medium black bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100066, "instruction": "Deposit the full set the yellow plastic bottle, the bottle with ridges, and the medium black bottle in the smooth surface dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100066, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100067, "instruction": "Fill the simple black garbage bin with the bottles the yellow plastic bottle, the bottle with ridges, and the plastic bottle with ridges near bottom.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100068, "instruction": "Place the plastic bottle with two distinct parts, the bottle with blue highlights, and the medium black bottle in the dustbin the smooth surface dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100068, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100069, "instruction": "Place the plastic bottle with two distinct parts, the bottle with blue highlights, and the medium black bottle in the dustbin the simple black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100069, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100070, "instruction": "Clear the plastic bottle with two distinct parts, the bottle with ridges, and the bottle with red screw cap from the table into the curved rectangular trash can.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100071, "instruction": "Move all of the yellow bottle with elongated cylinder body, the bottle with blue highlights, and the plastic bottle with ridges near bottom into the curved rectangular trash can.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100071, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100074, "instruction": "Move all of the yellow bottle with elongated cylinder body, the plastic bottle, and the bottle with red screw cap into the curved rectangular trash can.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100075, "instruction": "Ensure the dustbin the curved rectangular trash can contains the plastic bottle with two distinct parts, the bottle with blue highlights, and the medium black bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100075, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100076, "instruction": "Fill the curved rectangular trash can with the bottles the plastic bottle with two distinct parts, the bottle with blue highlights, and the medium black bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100076, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100078, "instruction": "Move all of the plastic bottle with two distinct parts, the bottle with blue highlights, and the bottle with red screw cap into the curved rectangular trash can.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100078, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100079, "instruction": "Use the arms to move the yellow plastic bottle, the plastic bottle, and the bottle with red screw cap inside the simple black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100080, "instruction": "Transfer every target, the yellow plastic bottle, the plastic bottle, and the medium black bottle, to the smooth surface dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100080, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100082, "instruction": "Clear the yellow bottle with elongated cylinder body, the plastic bottle, and the bottle with red screw cap from the table into the curved rectangular trash can.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100082, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100086, "instruction": "Deposit the full set the plastic bottle with two distinct parts, the plastic bottle, and the bottle with red screw cap in the curved rectangular trash can.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100086, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100092, "instruction": "Deposit the full set the plastic bottle with two distinct parts, the bottle with blue highlights, and the bottle with red screw cap in the curved rectangular trash can.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100092, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100093, "instruction": "Move all of the plastic bottle with two distinct parts, the plastic bottle, and the plastic bottle with ridges near bottom into the smooth surface dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100095, "instruction": "Transfer every target, the yellow bottle with elongated cylinder body, the bottle with blue highlights, and the medium black bottle, to the curved rectangular trash can.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100095, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100100, "instruction": "Clear the plastic bottle with two distinct parts, the plastic bottle, and the medium black bottle from the table into the simple black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100100, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100102, "instruction": "Place the yellow plastic bottle, the bottle with blue highlights, and the medium black bottle in the dustbin the curved rectangular trash can.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100102, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100106, "instruction": "Use the arms to move the yellow plastic bottle, the bottle with ridges, and the bottle with red screw cap inside the simple black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100106, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100107, "instruction": "Place the yellow plastic bottle, the plastic bottle, and the bottle with red screw cap in the dustbin the simple black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100107, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100110, "instruction": "Collect the yellow plastic bottle, the plastic bottle, and the medium black bottle inside the left-side the smooth surface dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100110, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100114, "instruction": "Ensure the dustbin the curved rectangular trash can contains the yellow plastic bottle, the plastic bottle, and the plastic bottle with ridges near bottom.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100114, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100115, "instruction": "Put all three bottles, the plastic bottle with two distinct parts, the plastic bottle, and the medium black bottle, into the simple black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100115, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100116, "instruction": "Collect the yellow plastic bottle, the plastic bottle, and the medium black bottle inside the left-side the smooth surface dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100116, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100120, "instruction": "Use the arms to move the plastic bottle with two distinct parts, the bottle with blue highlights, and the medium black bottle inside the smooth surface dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100120, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100121, "instruction": "Put all three bottles, the yellow bottle with elongated cylinder body, the plastic bottle, and the bottle with red screw cap, into the simple black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100121, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100123, "instruction": "Deposit the full set the yellow bottle with elongated cylinder body, the plastic bottle, and the plastic bottle with ridges near bottom in the simple black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100123, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100126, "instruction": "Put all three bottles, the yellow plastic bottle, the plastic bottle, and the bottle with red screw cap, into the curved rectangular trash can.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100126, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100131, "instruction": "Ensure the dustbin the curved rectangular trash can contains the yellow plastic bottle, the plastic bottle, and the medium black bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100131, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100134, "instruction": "Ensure the dustbin the simple black garbage bin contains the plastic bottle with two distinct parts, the bottle with blue highlights, and the bottle with red screw cap.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100134, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100137, "instruction": "Put all three bottles, the yellow bottle with elongated cylinder body, the plastic bottle, and the medium black bottle, into the curved rectangular trash can.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100137, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100138, "instruction": "Transfer every target, the yellow plastic bottle, the bottle with blue highlights, and the plastic bottle with ridges near bottom, to the simple black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100138, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100142, "instruction": "Move all of the yellow bottle with elongated cylinder body, the plastic bottle, and the plastic bottle with ridges near bottom into the simple black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100142, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100143, "instruction": "Transfer every target, the yellow bottle with elongated cylinder body, the plastic bottle, and the plastic bottle with ridges near bottom, to the simple black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100143, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100144, "instruction": "Place the yellow plastic bottle, the bottle with blue highlights, and the medium black bottle in the dustbin the curved rectangular trash can.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100144, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100145, "instruction": "Deposit the full set the yellow bottle with elongated cylinder body, the bottle with blue highlights, and the bottle with red screw cap in the curved rectangular trash can.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100145, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100147, "instruction": "Transfer every target, the plastic bottle with two distinct parts, the bottle with blue highlights, and the bottle with red screw cap, to the simple black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100147, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100148, "instruction": "Ensure the dustbin the simple black garbage bin contains the yellow plastic bottle, the bottle with blue highlights, and the bottle with red screw cap.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100148, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100149, "instruction": "Use the arms to move the plastic bottle with two distinct parts, the bottle with blue highlights, and the plastic bottle with ridges near bottom inside the smooth surface dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100149, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100151, "instruction": "Place the yellow bottle with elongated cylinder body, the bottle with blue highlights, and the medium black bottle in the dustbin the curved rectangular trash can.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100151, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100152, "instruction": "Ensure the dustbin the simple black garbage bin contains the yellow bottle with elongated cylinder body, the bottle with blue highlights, and the bottle with red screw cap.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100152, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100156, "instruction": "Collect the yellow plastic bottle, the bottle with ridges, and the bottle with red screw cap inside the left-side the curved rectangular trash can.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100156, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100157, "instruction": "Use the arms to move the yellow plastic bottle, the plastic bottle, and the medium black bottle inside the simple black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100157, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100158, "instruction": "Deposit the full set the yellow plastic bottle, the bottle with blue highlights, and the medium black bottle in the curved rectangular trash can.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100158, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100159, "instruction": "Collect the yellow plastic bottle, the bottle with ridges, and the bottle with red screw cap inside the left-side the smooth surface dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100159, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100160, "instruction": "Deposit the full set the yellow bottle with elongated cylinder body, the plastic bottle, and the bottle with red screw cap in the curved rectangular trash can.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100160, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100161, "instruction": "Fill the simple black garbage bin with the bottles the yellow bottle with elongated cylinder body, the bottle with ridges, and the plastic bottle with ridges near bottom.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100161, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100162, "instruction": "Move all of the plastic bottle with two distinct parts, the bottle with blue highlights, and the plastic bottle with ridges near bottom into the smooth surface dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100162, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100164, "instruction": "Clear the yellow bottle with elongated cylinder body, the bottle with blue highlights, and the medium black bottle from the table into the smooth surface dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100164, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100168, "instruction": "Collect the plastic bottle with two distinct parts, the bottle with ridges, and the bottle with red screw cap inside the left-side the smooth surface dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100168, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100169, "instruction": "Collect the yellow plastic bottle, the plastic bottle, and the bottle with red screw cap inside the left-side the smooth surface dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100169, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100170, "instruction": "Clear the yellow bottle with elongated cylinder body, the plastic bottle, and the medium black bottle from the table into the curved rectangular trash can.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100170, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100172, "instruction": "Ensure the dustbin the curved rectangular trash can contains the plastic bottle with two distinct parts, the bottle with blue highlights, and the medium black bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100172, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100173, "instruction": "Collect the plastic bottle with two distinct parts, the plastic bottle, and the medium black bottle inside the left-side the simple black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100173, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100174, "instruction": "Fill the simple black garbage bin with the bottles the plastic bottle with two distinct parts, the plastic bottle, and the plastic bottle with ridges near bottom.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100174, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100175, "instruction": "Use the arms to move the plastic bottle with two distinct parts, the bottle with ridges, and the medium black bottle inside the simple black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100175, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100177, "instruction": "Ensure the dustbin the simple black garbage bin contains the yellow plastic bottle, the plastic bottle, and the plastic bottle with ridges near bottom.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100177, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100179, "instruction": "Clear the yellow plastic bottle, the bottle with ridges, and the bottle with red screw cap from the table into the curved rectangular trash can.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100179, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100182, "instruction": "Put all three bottles, the plastic bottle with two distinct parts, the plastic bottle, and the medium black bottle, into the simple black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100182, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100183, "instruction": "Clear the yellow bottle with elongated cylinder body, the bottle with ridges, and the plastic bottle with ridges near bottom from the table into the curved rectangular trash can.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100183, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100184, "instruction": "Use the arms to move the yellow bottle with elongated cylinder body, the plastic bottle, and the plastic bottle with ridges near bottom inside the smooth surface dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100184, "success": true}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100185, "instruction": "Put all three bottles, the yellow plastic bottle, the bottle with ridges, and the bottle with red screw cap, into the smooth surface dustbin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100185, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100187, "instruction": "Ensure the dustbin the simple black garbage bin contains the yellow plastic bottle, the bottle with blue highlights, and the medium black bottle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100187, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100189, "instruction": "Place the yellow bottle with elongated cylinder body, the bottle with ridges, and the medium black bottle in the dustbin the simple black garbage bin.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100189, "success": false}
+{"event": "case_prepared", "task_name": "put_bottles_dustbin", "seed": 100190, "instruction": "Deposit the full set the plastic bottle with two distinct parts, the bottle with ridges, and the medium black bottle in the curved rectangular trash can.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "put_bottles_dustbin", "seed": 100190, "success": true}

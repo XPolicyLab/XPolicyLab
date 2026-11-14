@@ -1,0 +1,75 @@
+{
+  "time": 1794451351.0517414,
+  "test_root": "/data/adapter_validation_20261112",
+  "policy_import_name": "CloudRobo_WM",
+  "environments": {
+    "policy": {
+      "executable": "/data/adapter_validation_20261112/envs/policy/bin/python",
+      "prefix": "/data/adapter_validation_20261112/envs/policy",
+      "sys_path": [
+        "",
+        "/data/adapter_validation_20261112/compatibility/renderer/sapien_overlay",
+        "/data/adapter_validation_20261112/RoboTwin",
+        "/data/adapter_validation_20261112/RoboTwin/XPolicyLab",
+        "/data/adapter_validation_20261112/envs/policy/lib/python310.zip",
+        "/data/adapter_validation_20261112/envs/policy/lib/python3.10",
+        "/data/adapter_validation_20261112/envs/policy/lib/python3.10/lib-dynload",
+        "/data/adapter_validation_20261112/envs/policy/lib/python3.10/site-packages"
+      ],
+      "modules": {
+        "torch": "/data/adapter_validation_20261112/envs/policy/lib/python3.10/site-packages/torch/__init__.py",
+        "safetensors": "/data/adapter_validation_20261112/envs/policy/lib/python3.10/site-packages/safetensors/__init__.py",
+        "transformers": "/data/adapter_validation_20261112/envs/policy/lib/python3.10/site-packages/transformers/__init__.py"
+      }
+    },
+    "sim": {
+      "executable": "/data/adapter_validation_20261112/envs/sim/bin/python",
+      "prefix": "/data/adapter_validation_20261112/envs/sim",
+      "sys_path": [
+        "",
+        "/data/adapter_validation_20261112/compatibility/renderer/sapien_overlay",
+        "/data/adapter_validation_20261112/RoboTwin",
+        "/data/adapter_validation_20261112/RoboTwin/XPolicyLab",
+        "/data/adapter_validation_20261112/envs/sim/lib/python310.zip",
+        "/data/adapter_validation_20261112/envs/sim/lib/python3.10",
+        "/data/adapter_validation_20261112/envs/sim/lib/python3.10/lib-dynload",
+        "/data/adapter_validation_20261112/envs/sim/lib/python3.10/site-packages",
+        "/data/adapter_validation_20261112/RoboTwin/envs/curobo/src"
+      ],
+      "modules": {
+        "torch": "/data/adapter_validation_20261112/envs/sim/lib/python3.10/site-packages/torch/__init__.py",
+        "sapien": "/data/adapter_validation_20261112/compatibility/renderer/sapien_overlay/sapien/__init__.py",
+        "curobo": "/data/adapter_validation_20261112/RoboTwin/envs/curobo/src/curobo/__init__.py"
+      }
+    }
+  },
+  "official_runtime_files": {
+    "scripts/eval_policy.sh": {
+      "sha256": "86b77a323912a3ae60401950d97bf170e413125ba65c9b6e5bdd10539dfd90a7",
+      "bytes": 1129
+    },
+    "scripts/eval_policy_xpolicylab.py": {
+      "sha256": "78821388d58daf8aa65db55c5952df3742486dd93e717ce6a96374a3795dfc7a",
+      "bytes": 52057
+    },
+    "XPolicyLab/setup_policy_server.py": {
+      "sha256": "de2f4a0d53f17bab7ee653ef8ceace207a0a963930097023d6186197fcf673cb",
+      "bytes": 6265
+    },
+    "XPolicyLab/utils/setup_env_client.sh": {
+      "sha256": "767b85abb5caf3806b8d520479196483ef66ccf12ddead3140afedf078c36b5a",
+      "bytes": 2947
+    },
+    "XPolicyLab/utils/debug_env_client.py": {
+      "sha256": "005dab63b8bdc2e2cf0562cbb749326086769796552c1b1d1c2054cedf612805",
+      "bytes": 14916
+    },
+    "XPolicyLab/client_server/ws/model_server.py": {
+      "sha256": "4988823b436cd05e6a4d8b13012cc30c7ffd57711b72497b1223a6b10dc0c043",
+      "bytes": 27288
+    }
+  },
+  "external_symlinks": [],
+  "source_files": 215,
+  "assets_verified": true
+}

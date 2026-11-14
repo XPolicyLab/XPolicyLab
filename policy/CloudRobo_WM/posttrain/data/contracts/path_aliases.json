@@ -1,0 +1,9 @@
+{
+  "/data/datasets/lx/robotwin_3d_fk_sidecars": "eef",
+  "/data/datasets/lx/robotwin_3d": "robotwin_3d",
+  "/data/datasets/lx/robotwin_train_text_aug/robotwin-train-seen-aug240-a753f64a40422fcd_clean": "prompt_clean",
+  "/data/lx/train_controls/as2_as2_dual170k_20261030/code/cluster_inputs": "indices",
+  "/data/lx/train_controls/as2_as2_dual170k_20261030/training_instructions": "instruction_overlay",
+  "/data/lx/train_controls/as2_robotwin_pretrain150000_perception_dinox0fix_dual_action_cooperative_20261026/training_instructions": "instruction_overlay",
+  "/data/datasets/lx/robotwin_train_text_embeds_instruction_revisions/robotwin-train-instructions-583c0d948ea462f589bb09cbbd70d2b9ee16bec8d66df6ea0136e6aa2007b8cd": "instruction_overlay"
+}

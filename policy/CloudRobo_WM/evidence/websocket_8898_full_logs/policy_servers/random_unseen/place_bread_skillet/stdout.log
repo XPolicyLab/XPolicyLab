@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100001, "instruction": "Hold the versatile skillet for frying and sauteing with the left arm; the other arm places the spongy golden brown bread.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100004, "instruction": "Grab the rectangular bread loaf and place it in the round cast-iron skillet.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100006, "instruction": "Lift the dark skillet with shiny finish using the left arm while the other arm moves the rectangular bread loaf.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100008, "instruction": "Lift the versatile skillet for frying and sauteing using the left arm while the other arm moves the spongy golden brown bread.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100013, "instruction": "Take the oval-shaped soft bread and put it in the dark skillet with shiny finish.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100029, "instruction": "Position the square bread with light spots in the lifted the dark skillet with shiny finish.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100031, "instruction": "Hold the cooking skillet with grippy handle in one arm; move the rounded oval bread with the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100031, "success": false}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100034, "instruction": "Hold the round cast-iron skillet in one arm; move the rectangular bread loaf with the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100034, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100035, "instruction": "Grab the square bread with light spots and place it in the round cast-iron skillet.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100038, "instruction": "Position the small loaf-shaped bread in the lifted the blackish-gray cast iron skillet.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100045, "instruction": "Take the soft bread with golden edges and put it in the pan-shaped skillet with hole in handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100045, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100049, "instruction": "Hold the round cast-iron skillet in one arm; move the bread with golden crust with the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100055, "instruction": "Keep the pan-shaped skillet with hole in handle raised and place the palm-sized braided golden bread inside it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100055, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100059, "instruction": "Position the bread loaf with soft surface in the lifted the versatile skillet for frying and sauteing.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100060, "instruction": "Lift the pan-shaped skillet with hole in handle using the right arm while the other arm moves the bread with golden crust.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100068, "instruction": "Move the braided top round bread from the table into the round black skillet.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100070, "instruction": "Position the bread loaf with soft surface in the lifted the black skillet.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100073, "instruction": "Grab the spongy golden brown bread and place it in the pan-shaped skillet with hole in handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100074, "instruction": "Use the left arm for the iron skillet for frying foods and the other arm for the square bread with light spots.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100075, "instruction": "Hold the iron skillet for frying foods in one arm; move the palm-sized braided golden bread with the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100075, "success": false}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100078, "instruction": "Use the right arm for the dark skillet with shiny finish and the other arm for the bread with golden crust.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100080, "instruction": "Pick up the bread with golden crust and set it inside the iron skillet for frying foods.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100080, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100081, "instruction": "Pick up the soft bread with golden edges and set it inside the pan-shaped skillet with hole in handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100081, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100089, "instruction": "Move the bread loaf medium-sized from the table into the pan-shaped skillet with hole in handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100089, "success": false}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100090, "instruction": "Take the bread loaf medium-sized and put it in the pan-shaped skillet with hole in handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100094, "instruction": "Keep the iron skillet for frying foods raised and place the oval-shaped soft bread inside it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100095, "instruction": "Pick up the square bread with light spots and set it inside the iron skillet for frying foods.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100096, "instruction": "Grab the soft rectangular bread loaf and place it in the versatile skillet for frying and sauteing.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100096, "success": false}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100104, "instruction": "Move the soft rectangular bread loaf from the table into the pan-shaped skillet with hole in handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100104, "success": false}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100110, "instruction": "Hold the dark skillet with shiny finish with the left arm; the other arm places the oval bread.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100110, "success": false}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100111, "instruction": "Hold the round cast-iron skillet with the left arm; the other arm places the small loaf-shaped bread.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100111, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100112, "instruction": "Move the bread with golden crust from the table into the dark skillet with shiny finish.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100112, "success": false}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100121, "instruction": "Take the round braided loaf and put it in the dark skillet with shiny finish.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100121, "success": false}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100126, "instruction": "Take the oval bread and put it in the pan-shaped skillet with hole in handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100126, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100133, "instruction": "Use the right arm for the versatile skillet for frying and sauteing and the other arm for the round braided loaf.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100133, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100136, "instruction": "Hold the iron skillet for frying foods with the right arm; the other arm places the bread with golden crust.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100136, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100141, "instruction": "Hold the dark skillet with shiny finish with the right arm; the other arm places the bread loaf medium-sized.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100141, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100142, "instruction": "Use the right arm for the smooth interior skillet and the other arm for the small loaf-shaped bread.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100142, "success": false}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100143, "instruction": "Pick up the bread loaf with soft surface and set it inside the round black skillet.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100143, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100145, "instruction": "Keep the versatile skillet for frying and sauteing raised and place the palm-sized braided golden bread inside it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100145, "success": false}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100147, "instruction": "Pick up the soft bread with golden edges and set it inside the dark skillet with shiny finish.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100147, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100151, "instruction": "Move the palm-sized braided golden bread from the table into the pan-shaped skillet with hole in handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100151, "success": false}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100156, "instruction": "Hold the dark skillet with shiny finish with the left arm; the other arm places the bread with golden crust.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100156, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100157, "instruction": "Grab the oval-shaped soft bread and place it in the versatile skillet for frying and sauteing.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100157, "success": false}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100167, "instruction": "Move the oval bread from the table into the dark skillet with shiny finish.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100167, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100169, "instruction": "Hold the dark skillet with shiny finish with the left arm; the other arm places the bread loaf with soft surface.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100169, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100170, "instruction": "Position the oval bread in the lifted the iron skillet for frying foods.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100170, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100172, "instruction": "Hold the iron skillet for frying foods in one arm; move the rectangular bread loaf with the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100172, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100173, "instruction": "Hold the round cast-iron skillet with the left arm; the other arm places the spongy golden brown bread.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100173, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100181, "instruction": "Grab the bread loaf with soft surface and place it in the dark skillet with shiny finish.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100181, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100182, "instruction": "Take the bread loaf with soft surface and put it in the versatile skillet for frying and sauteing.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100182, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100183, "instruction": "Position the oval bread in the lifted the pan-shaped skillet with hole in handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100183, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100184, "instruction": "Grab the round braided loaf and place it in the iron skillet for frying foods.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100184, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100188, "instruction": "Position the palm-sized braided golden bread in the lifted the round cast-iron skillet.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100188, "success": false}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100189, "instruction": "Move the oval-shaped soft bread from the table into the versatile skillet for frying and sauteing.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100189, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100190, "instruction": "Keep the iron skillet for frying foods raised and place the soft bread with golden edges inside it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100190, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100191, "instruction": "Lift the cooking skillet with grippy handle using the right arm while the other arm moves the soft rectangular bread loaf.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100191, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100194, "instruction": "Pick up the round braided loaf and set it inside the pan-shaped skillet with hole in handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100194, "success": false}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100197, "instruction": "Use the left arm for the pan-shaped skillet with hole in handle and the other arm for the oval-shaped soft bread.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100197, "success": false}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100200, "instruction": "Pick up the soft bread with golden edges and set it inside the dark skillet with shiny finish.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100200, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100201, "instruction": "Pick up the rectangular bread loaf and set it inside the versatile skillet for frying and sauteing.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100201, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100203, "instruction": "Take the rounded oval bread and put it in the iron skillet for frying foods.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100203, "success": false}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100204, "instruction": "Keep the versatile skillet for frying and sauteing raised and place the bread loaf with soft surface inside it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100204, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100205, "instruction": "Keep the iron skillet for frying foods raised and place the bread loaf with soft surface inside it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100205, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100206, "instruction": "Position the rounded oval bread in the lifted the iron skillet for frying foods.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100206, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100207, "instruction": "Move the palm-sized braided golden bread from the table into the black skillet.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100207, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100211, "instruction": "Position the rectangular bread loaf in the lifted the round cast-iron skillet.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100211, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100212, "instruction": "Keep the versatile skillet for frying and sauteing raised and place the palm-sized braided golden bread inside it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100212, "success": false}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100213, "instruction": "Lift the pan-shaped skillet with hole in handle using the right arm while the other arm moves the soft bread with golden edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100213, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100218, "instruction": "Grab the round braided loaf and place it in the iron skillet for frying foods.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100218, "success": false}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100219, "instruction": "Lift the dark skillet with shiny finish using the right arm while the other arm moves the small loaf-shaped bread.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100219, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100223, "instruction": "Hold the smooth interior skillet in one arm; move the round braided loaf with the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100223, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100225, "instruction": "Position the bread with golden crust in the lifted the versatile skillet for frying and sauteing.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100225, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100226, "instruction": "Move the spongy golden brown bread from the table into the black skillet.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100226, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100230, "instruction": "Grab the spongy golden brown bread and place it in the dark skillet with shiny finish.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100230, "success": false}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100232, "instruction": "Grab the oval bread and place it in the round cast-iron skillet.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100232, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100236, "instruction": "Pick up the oval-shaped soft bread and set it inside the pan-shaped skillet with hole in handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100236, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100246, "instruction": "Take the bread loaf with soft surface and put it in the round cast-iron skillet.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100246, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100251, "instruction": "Use the left arm for the iron skillet for frying foods and the other arm for the soft bread with golden edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100251, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100252, "instruction": "Hold the round black skillet with the right arm; the other arm places the soft bread with golden edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100252, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100253, "instruction": "Use the right arm for the pan-shaped skillet with hole in handle and the other arm for the spongy golden brown bread.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100253, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100254, "instruction": "Hold the black skillet with the left arm; the other arm places the spongy golden brown bread.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100254, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100258, "instruction": "Take the oval bread and put it in the round cast-iron skillet.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100258, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100259, "instruction": "Move the bread loaf with soft surface from the table into the round cast-iron skillet.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100259, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100262, "instruction": "Position the bread loaf with soft surface in the lifted the versatile skillet for frying and sauteing.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100262, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100263, "instruction": "Hold the dark gray round cast iron pan with the right arm; the other arm places the rounded oval bread.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100263, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100265, "instruction": "Keep the round cast-iron skillet raised and place the soft bread with golden edges inside it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100265, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100268, "instruction": "Hold the cooking skillet with grippy handle with the left arm; the other arm places the small loaf-shaped bread.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100268, "success": false}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100269, "instruction": "Position the soft rectangular bread loaf in the lifted the iron skillet for frying foods.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100269, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100272, "instruction": "Hold the round cast-iron skillet in one arm; move the rounded oval bread with the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100272, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100273, "instruction": "Grab the oval-shaped soft bread and place it in the pan-shaped skillet with hole in handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100273, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100276, "instruction": "Take the spongy golden brown bread and put it in the dark skillet with shiny finish.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100276, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100283, "instruction": "Hold the versatile skillet for frying and sauteing with the right arm; the other arm places the spongy golden brown bread.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100283, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100286, "instruction": "Take the rounded oval bread and put it in the round cast-iron skillet.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100286, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100288, "instruction": "Move the oval-shaped soft bread from the table into the blackish-gray cast iron skillet.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100288, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100292, "instruction": "Use the right arm for the round cast-iron skillet and the other arm for the oval-shaped soft bread.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100292, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100296, "instruction": "Hold the iron skillet for frying foods in one arm; move the bread with golden crust with the other.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100296, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100302, "instruction": "Grab the oval bread and place it in the dark skillet with shiny finish.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100302, "success": true}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100304, "instruction": "Grab the soft rectangular bread loaf and place it in the iron skillet for frying foods.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100304, "success": false}
+{"event": "case_prepared", "task_name": "place_bread_skillet", "seed": 100307, "instruction": "Hold the pan-shaped skillet with hole in handle with the left arm; the other arm places the small loaf-shaped bread.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_bread_skillet", "seed": 100307, "success": false}

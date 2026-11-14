@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100000, "instruction": "Pick up the white bell with black bottom and set it on the electronicscale with black control panel", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100002, "instruction": "With the left arm, secure the dark gray mouse with smooth texture then release it on the white body electronicscale", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100003, "instruction": "Lift the metal bell with plastic parts with the right arm and position it on the electronicscale with round weight platform", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100003, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100004, "instruction": "After grabbing the ergonomic mouse, place it on the electronicscale small and rectangular.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100006, "instruction": "Use the right arm to lift the red stapler and place on the electronicscale for weighing objects.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100007, "instruction": "Using the left arm, pick the blue dome-shaped bell then place it on the small rectangular electronicscale", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100009, "instruction": "Lift the mouse with scroll wheel and drop it onto the lightweight electronicscale", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100010, "instruction": "Grab the bell with black flat base, then place it smoothly on the electronicscale with rubber feet", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100011, "instruction": "Grab the plastic and metal stapler with the right arm and set it on the electronicscale with silver buttons", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100011, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100012, "instruction": "Pick up the rounded bell with flat black part and set it on the small rectangular electronicscale", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100012, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100015, "instruction": "Use the right arm to lift the flat-topped bell onto the handheld electronicscale", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100016, "instruction": "Use the left arm to hold the smooth plastic mouse and drop it on the small weighing electronicscale", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100018, "instruction": "Grab the compact bell with round base, then place it smoothly on the compact electronicscale", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100018, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100019, "instruction": "With the left arm, lift the metallic stapler with blue cover to set it on the electronicscale portable", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100019, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100020, "instruction": "Place the simple stapler carefully on the electronicscale smooth and glossy using the left arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100021, "instruction": "After grabbing the metal bell with plastic parts, place it on the electronicscale with round weight platform.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100023, "instruction": "Set the blue dome-shaped bell onto the compact electronicscale after grabbing", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100024, "instruction": "Pick the compact tabletop bell and carefully move it to the white electronicscale", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100025, "instruction": "With the left arm, lift the mouse for cursor control to set it on the electronicscale with black control panel", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100026, "instruction": "Pick up the metallic stapler with blue cover and set it on the electronicscale white main body", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100027, "instruction": "Use the left arm to hold the bell shaped like half-circle dome and drop it on the handheld electronicscale", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100028, "instruction": "Carry the small office stapler with one arm to the electronicscale with metallic dial", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100028, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100029, "instruction": "Set the palm-fitting mouse down on the electronicscale with small LCD screen using one arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100030, "instruction": "Take the small red stapler and lay it onto the electronicscale with white plastic casing", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100031, "instruction": "Pick up the mouse with two buttons and wheel and drop it on the electronicscale with clear digital screen.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100031, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100034, "instruction": "Move the smooth blue bell to the compact electronicscale and leave it there.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100034, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100035, "instruction": "Set the compact blue stapler down on the electronicscale with small LCD screen using one arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100036, "instruction": "Using the right arm, pick the compact oval-shaped mouse then place it on the electronicscale with digital screen", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100036, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100037, "instruction": "Hold the blue stapler with shiny silver parts with the right arm, set it down on the white electronicscale", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100038, "instruction": "Pick the oval-shaped mouse for computer use up and set it on the electronicscale with black pad.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100042, "instruction": "Transport the compact black stapler to the white electronicscale with red buttons and put it there.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100043, "instruction": "Grab the small lightweight blue stapler and drop it on the electronicscale with round weight platform", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100043, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100044, "instruction": "After grabbing the compact stapler, place it on the handheld electronicscale.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100045, "instruction": "Lift the smooth plastic stapler and position it on the electronicscale with smooth finish", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100045, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100046, "instruction": "Pick up the curved red stapler and drop it on the electronicscale for weighing objects", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100046, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100048, "instruction": "Pick the plastic mouse with the right arm and move it to the compact electronicscale", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100051, "instruction": "Using the left arm, grab the mouse with buttons and wheel and transfer it to the small rectangular electronicscale.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100052, "instruction": "Pick up the small red stapler and set it on the small weighing electronicscale", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100054, "instruction": "With the right arm, pick the bright blue smooth stapler and position it on the white electronicscale", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100055, "instruction": "Using the left arm, grab the metallic stapler with blue cover and put it on the electronicscale digital display", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100055, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100056, "instruction": "Pick up the small black stapler with metal core and set it on the electronicscale with circular gold ring", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100057, "instruction": "Pick the blue stapler with ergonomic curve up and set it on the electronicscale with circular gold ring.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100058, "instruction": "Use the left arm to hold the blue dome-shaped bell and drop it on the electronicscale", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100059, "instruction": "Using the right arm, grasp the compact black stapler and position it on the medium electronicscale with gold top", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100060, "instruction": "Using the right arm, grab the bell with circular body and transfer it to the electronicscale with white plastic casing.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100061, "instruction": "Pick the plastic blue stapler with metal parts and lay it down gently onto the compact white electronicscale", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100062, "instruction": "Grab the compact black stapler and drop it on the compact electronicscale", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100063, "instruction": "Using the left arm, grab the white and black colored bell and transfer it to the electronicscale with smooth surface.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100064, "instruction": "Grab the plastic stapler with metal top with the right arm and set it on the electronicscale with clear digital screen", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100065, "instruction": "Take the blue stapler for paper fastening and put it down on the electronicscale digital display", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100066, "instruction": "Take the ergonomic mouse and place it over the electronicscale portable", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100067, "instruction": "Transport the palm-fitting mouse to the compact electronicscale and put it there.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100068, "instruction": "Using the left arm, grab the red plastic stapler with smooth top and place on the white body electronicscale", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100069, "instruction": "Lift the blue dome-shaped bell and stick it on the small weighing electronicscale carefully", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100069, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100070, "instruction": "Put the plastic mouse on the black and white electronicscale without mention of arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100072, "instruction": "Using the left arm, grab the black smooth-textured stapler and place on the white electronicscale with red buttons", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100073, "instruction": "Use the left arm to lift the wireless dark gray computer mouse and place on the white body electronicscale.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100075, "instruction": "Lift the dark gray mouse and drop it onto the compact white electronicscale", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100076, "instruction": "Lift the mouse with scroll wheel with the left arm and position it on the electronicscale with a glass display", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100077, "instruction": "Place the small lightweight blue stapler on the electronicscale digital display with one arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100077, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100078, "instruction": "Grab the white bell with black bottom, then place it smoothly on the small rectangular electronicscale", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100079, "instruction": "Transport the dark gray mouse to the black and white electronicscale and put it there.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100080, "instruction": "Pick the blue bell with the right arm and move it to the white electronicscale", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100080, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100083, "instruction": "Take the white dome bell and lay it onto the white electronicscale", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100085, "instruction": "Place the compact red stapler with silver accents on the electronicscale with a glass display with one arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100085, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100086, "instruction": "Lift the small black stapler with metal core and position it on the electronicscale portable", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100086, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100087, "instruction": "Using the left arm, grasp the smooth plastic mouse and position it on the electronicscale with round weight platform", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100088, "instruction": "Use the left arm to grab the bell with metallic top and plastic base for the small rectangular electronicscale", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100089, "instruction": "Pick up the mouse with two buttons and a scroll wheel and set it on the handheld electronicscale", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100090, "instruction": "Place the black stapler for joining pages on the electronicscale after picking it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100092, "instruction": "Use the right arm to hold the blue stapler with silver staple tray and drop it on the electronicscale with smooth finish", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100093, "instruction": "Using the right arm, grasp the mouse for cursor control and position it on the electronicscale with black control panel", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100094, "instruction": "Lift the white dome bell and position it on the small rectangular electronicscale", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100094, "success": false}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100095, "instruction": "Using the left arm, grasp the small blue and brown bell and position it on the electronicscale with digital screen", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100096, "instruction": "Place the round bell on the electronicscale digital display with one arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100098, "instruction": "Pick up the rounded bell with flat black part and drop it on the small weighing electronicscale", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100099, "instruction": "Take the mouse with two buttons and a scroll wheel and put it down on the modern electronicscale with durable design", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100100, "instruction": "Take the black stapler with curved top and put it down on the electronicscale with black pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100100, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100101, "instruction": "Pick up the small desk bell for tapping and drop it on the electronicscale digital display", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100102, "instruction": "Take the smooth blue bell and lay it onto the compact electronicscale", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100102, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100103, "instruction": "Pick up the mouse with two buttons and wheel and set it on the electronicscale for measuring weights", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100103, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100105, "instruction": "Pick up the bell with black flat base and set it on the electronicscale smooth and glossy", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100105, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100106, "instruction": "Hold the stapler with orange button with the left arm, set it down on the handheld electronicscale", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100106, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100108, "instruction": "After grabbing the dark mouse with logo on top, place it on the electronicscale with flat rectangular base.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100108, "success": false}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100109, "instruction": "Lift the dark ergonomic mouse for computer navigation with the left arm and set it on the medium electronicscale with gold top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100109, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100110, "instruction": "Lift the metallic stapler with red body and drop it onto the compact electronicscale", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100110, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100111, "instruction": "Set the mouse with two buttons and a scroll wheel on the handheld electronicscale after grabbing it with the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100111, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100112, "instruction": "Use one arm to place the small mouse with smooth surface on the white electronicscale", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100112, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100113, "instruction": "Use the left arm to lift the curved blue and silver stapler and place on the compact white electronicscale.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100113, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100114, "instruction": "Using the left arm, grab the compact matte gray computer mouse and place on the electronicscale for measuring weights", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100114, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100115, "instruction": "Pick up the compact matte gray computer mouse and drop it on the electronicscale red accents.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100115, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100116, "instruction": "Use the left arm to lift the white body stapler with accents and place on the compact electronicscale.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100116, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100117, "instruction": "Grab the computer mouse with the left arm and set it on the electronicscale", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100117, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100118, "instruction": "Using the left arm, grab the blue stapler and put it on the white electronicscale with red buttons", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100118, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100119, "instruction": "Pick up the flat-topped bell and set it on the electronicscale with smooth surface", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100119, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100120, "instruction": "Transport the blue stapler with white accents to the electronicscale for measuring weights and put it there.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100120, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100121, "instruction": "Pick the dark gray mouse with smooth texture and carefully move it to the electronicscale", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100121, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100124, "instruction": "Grab the white and black colored bell with the right arm and set it on the electronicscale with black weighing pad", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100124, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100125, "instruction": "Using the left arm, grab the plastic mouse with smooth finish and transfer it to the white electronicscale with red buttons.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100125, "success": true}
+{"event": "case_prepared", "task_name": "place_object_scale", "seed": 100126, "instruction": "Grab the compact tabletop bell, then place it smoothly on the electronicscale with rubber feet", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_scale", "seed": 100126, "success": true}

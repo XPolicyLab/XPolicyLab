@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100002, "instruction": "Hold the cardboard tea-box using the right arm and the gun-shaped scanner using the left arm, then scan the cardboard tea-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100006, "instruction": "Secure the tea-box and the black and gray portable scanner at once, then scan the tea-box using the black and gray portable scanner.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100011, "instruction": "Raise both the box for holding tea and the gray scanner with black scanning head simultaneously and complete the scan.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100011, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100014, "instruction": "Lift the green box with tea label and the barcode scanner with yellow body together before scanning the green box with tea label with the barcode scanner with yellow body.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100019, "instruction": "Hold the smooth black scanner with blue stripe opposite the beige-edged green tea box after lifting both at the same time.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100019, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100029, "instruction": "Hold the object the compact golden tea box and scanner the small black handheld scanner in separate arms and scan.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100037, "instruction": "Hold the small rectangular tea-box steady in one arm while the other uses the black scanner with gray handle to scan it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100038, "instruction": "Pick up the scanner the handheld scanner and object the tea-box simultaneously, then scan.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100040, "instruction": "Use the right arm for scanner the scanner with black rubber grip and the left arm for object the small rectangular tea-box, grasping simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100040, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100041, "instruction": "Lift the small cuboid tea box with the left arm as the right arm lifts the rubber-grip yellow barcode scanner, then scan the small cuboid tea box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100042, "instruction": "Use one arm for the beige-edged green tea box and one for the curved black scanner with trigger; scan the beige-edged green tea box with the curved black scanner with trigger.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100043, "instruction": "Hold the beige tea-box with handle using the left arm and the hand scanner with blue lens area using the right arm, then scan the beige tea-box with handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100043, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100044, "instruction": "Simultaneously grasp the printed tea box with lid with the right arm and the black and gray portable scanner with the left arm, then scan the printed tea box with lid.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100046, "instruction": "Pick both items up together and use the smooth plastic barcode scanner to scan the box for holding tea.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100046, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100049, "instruction": "With the right arm, hold the medium-sized red tea-box; with the left arm, hold the scanner with gray and black design; then scan the medium-sized red tea-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100051, "instruction": "Secure the tea-box with white TEA text and the barcode scanner at once, then scan the tea-box with white TEA text using the barcode scanner.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100052, "instruction": "Lift the printed tea-box with the left arm as the right arm lifts the barcode scanner with gray accents, then scan the printed tea-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100054, "instruction": "Simultaneously secure the palm-sized tea container and the handheld scanner, then move the handheld scanner close to scan the palm-sized tea container.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100055, "instruction": "Pick up the cube tea box with embossed designs and the scanner with ergonomic grip design in parallel with the left arm and the right arm, then scan.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100055, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100059, "instruction": "Grab the compact beige box for tea and the black scanner at the same time and scan the compact beige box for tea with the black scanner.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100063, "instruction": "Use the left arm for the cardboard tea-box and the right arm for the scanner for reading barcodes simultaneously, then scan the cardboard tea-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100064, "instruction": "Pick both items up together and use the scanner with ergonomic grip design to scan the rectangular tea-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100065, "instruction": "Pick both items up together and use the barcode scanner to scan the light yellow tea box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100067, "instruction": "Use the right arm for scanner the barcode scanner with gray accents and the left arm for object the box for holding tea, grasping simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100072, "instruction": "Use separate arms to grasp the tea-box with top lid and the matte black scanner together, then scan the tea-box with top lid.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100092, "instruction": "Hold the green box with tea label using the right arm and the matte black scanner using the left arm, then scan the green box with tea label.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100092, "success": false}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100098, "instruction": "Pick up the yellow tea box with smooth surface and the barcode scanner with flat top simultaneously, then scan the yellow tea box with smooth surface with the barcode scanner with flat top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100101, "instruction": "Pick up the cardboard tea box with logo and the scanner with flat reading surface in parallel with the right arm and the left arm, then scan.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100110, "instruction": "Simultaneously grasp the tea box with beige edges with the right arm and the hand scanner with blue lens area with the left arm, then scan the tea box with beige edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100110, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100119, "instruction": "Use separate arms to grasp the medium-sized red tea-box and the scanner with gray and black design together, then scan the medium-sized red tea-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100119, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100122, "instruction": "Use the left arm and the right arm together to lift the rectangular box for tea and the scanner with ergonomic grip design, then scan.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100122, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100126, "instruction": "Hold the red cuboid-shaped tea-box steady in one arm while the other uses the compact black scanner for easy grip to scan it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100126, "success": false}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100127, "instruction": "Lift the plastic tea-box and the scanner with flat reading surface together before scanning the plastic tea-box with the scanner with flat reading surface.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100127, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100130, "instruction": "Lift the tea box with beige edges with the right arm as the left arm lifts the scanner with curved top and flat bottom, then scan the tea box with beige edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100130, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100135, "instruction": "Hold the scanner with blue scanning area opposite the tea box with floral designs after lifting both at the same time.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100135, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100139, "instruction": "Grasp the tea-box and the small black handheld scanner together using the right arm and the left arm; scan the tea-box with the small black handheld scanner.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100139, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100141, "instruction": "Pick the black tea-box with turquoise sides using the right arm while the left arm picks the compact black scanner for easy grip, then scan the black tea-box with turquoise sides.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100141, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100143, "instruction": "Take the compact rectangular tea-box and the barcode scanner together, one per arm, and scan the compact rectangular tea-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100143, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100144, "instruction": "Grasp the smooth tea box with print and the barcode scanner together using the right arm and the left arm; scan the smooth tea box with print with the barcode scanner.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100144, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100145, "instruction": "Pick the tea box using the right arm while the left arm picks the scanner for reading barcodes, then scan the tea box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100145, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100146, "instruction": "Grab the tea-box with top lid and the handheld scanner at the same time and scan the tea-box with top lid with the handheld scanner.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100146, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100148, "instruction": "Pick up the tea-box with white TEA text and the black scanner with gray handle in parallel with the left arm and the right arm, then scan.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100148, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100153, "instruction": "Hold the tea-box with top lid in one arm and the scanner for reading barcodes in the other, then scan the tea-box with top lid.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100153, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100154, "instruction": "Hold the printed tea box with lid in one arm and the black scanner with smooth texture in the other, then scan the printed tea box with lid.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100154, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100162, "instruction": "Grab the small cuboid tea box and the black scanner at the same time and scan the small cuboid tea box with the black scanner.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100162, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100163, "instruction": "Use one arm for the red cardboard tea-box and one for the small black handheld scanner; scan the red cardboard tea-box with the small black handheld scanner.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100163, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100167, "instruction": "Use separate arms to grasp the printed tea box with lid and the scanner with blue scanning area together, then scan the printed tea box with lid.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100167, "success": false}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100168, "instruction": "Use the right arm for the cuboid tea box and the left arm for the scanner with smooth black body simultaneously, then scan the cuboid tea box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100168, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100170, "instruction": "Use both arms in parallel for the tea-box and the black scanner, then perform the scan.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100170, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100172, "instruction": "Grasp the red cuboid-shaped tea-box and the handheld scanner together using the right arm and the left arm; scan the red cuboid-shaped tea-box with the handheld scanner.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100172, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100179, "instruction": "Lift the tea-box with curved edges with the left arm as the right arm lifts the smooth plastic barcode scanner, then scan the tea-box with curved edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100179, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100181, "instruction": "Raise both the tea box with leafy design and the barcode scanner with gray accents simultaneously and complete the scan.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100181, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100188, "instruction": "Grasp the smooth tea box with print and the black plastic scanner with blue trim in parallel, then align the black plastic scanner with blue trim with the smooth tea box with print.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100188, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100189, "instruction": "Pick both items up together and use the handheld scanner to scan the black tea-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100189, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100190, "instruction": "Hold the tea-box with white TEA text steady in one arm while the other uses the gun-shaped scanner to scan it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100190, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100191, "instruction": "Grasp the box for tea storage and the scanner with trigger on handle together using the right arm and the left arm; scan the box for tea storage with the scanner with trigger on handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100191, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100192, "instruction": "Raise both the green box with tea label and the scanner with gray and black design simultaneously and complete the scan.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100192, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100196, "instruction": "Pick both items up together and use the scanner with gray and black design to scan the tea box with floral designs.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100196, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100198, "instruction": "Hold the small cube-shaped tea container steady in one arm while the other uses the black scanner to scan it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100198, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100200, "instruction": "Pick up the scanner the scanner with curved grip and object the tea-box with white TEA text simultaneously, then scan.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100200, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100201, "instruction": "Grasp the beige cube with golden leaf patterns and the scanner with curved top and flat bottom in parallel, then align the scanner with curved top and flat bottom with the beige cube with golden leaf patterns.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100201, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100202, "instruction": "Hold the rectangle tea-box in one arm and the handheld scanner in the other, then scan the rectangle tea-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100202, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100203, "instruction": "Hold the gold accented tea-box in one arm and the scanner with gray and black design in the other, then scan the gold accented tea-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100203, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100205, "instruction": "Use separate arms to grasp the square-shaped tea box and the scanner with curved handle together, then scan the square-shaped tea box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100205, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100206, "instruction": "Simultaneously secure the light green cardboard tea box and the black scanner, then move the black scanner close to scan the light green cardboard tea box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100206, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100208, "instruction": "Simultaneously lift the glossy bright tea-box and the scanner with ergonomic grip design, then use the scanner with ergonomic grip design to scan the glossy bright tea-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100208, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100210, "instruction": "Hold the small rectangular tea-box using the right arm and the scanner with blue scanning area using the left arm, then scan the small rectangular tea-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100210, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100214, "instruction": "Secure the smooth tea-box and the scanner with curved handle at once, then scan the smooth tea-box using the scanner with curved handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100214, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100215, "instruction": "Use one arm for the leaf-patterned green tea storage and one for the hand scanner with blue lens area; scan the leaf-patterned green tea storage with the hand scanner with blue lens area.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100215, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100216, "instruction": "Simultaneously lift the light beige box for tea and the scanner with ergonomic grip design, then use the scanner with ergonomic grip design to scan the light beige box for tea.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100216, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100220, "instruction": "Pick up the scanner the black scanner with gray handle and object the glossy bright tea-box simultaneously, then scan.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100220, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100231, "instruction": "Use the left arm for scanner the scanner for reading barcodes and the right arm for object the cube tea box with embossed designs, grasping simultaneously.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100231, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100232, "instruction": "Lift the cardboard tea-box with the right arm as the left arm lifts the black plastic scanner with blue trim, then scan the cardboard tea-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100232, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100234, "instruction": "Grab the red cuboid-shaped tea-box and the smooth black scanner with blue stripe at the same time and scan the red cuboid-shaped tea-box with the smooth black scanner with blue stripe.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100234, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100237, "instruction": "Pick both items up together and use the barcode scanner to scan the golden tea box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100237, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100239, "instruction": "Grasp both the palm-sized tea container and the small black handheld scanner simultaneously, then bring the small black handheld scanner to the palm-sized tea container.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100239, "success": false}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100240, "instruction": "Pick up the red cardboard tea-box and the matte black scanner simultaneously, then scan the red cardboard tea-box with the matte black scanner.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100240, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100241, "instruction": "Use the left arm for the smooth black tea-box and the right arm for the black and gray portable scanner simultaneously, then scan the smooth black tea-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100241, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100244, "instruction": "Lift the light yellow tea box and the curved black scanner with trigger together before scanning the light yellow tea box with the curved black scanner with trigger.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100244, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100247, "instruction": "Use one arm for the printed tea-box and one for the black scanner with smooth texture; scan the printed tea-box with the black scanner with smooth texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100247, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100253, "instruction": "Pick both items up together and use the L-shaped scanner for barcode reading to scan the tea box with printed leaves.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100253, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100256, "instruction": "Pick the rectangular yellow tea box while picking the lightweight handheld barcode scanner with the other arm, then scan the rectangular yellow tea box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100256, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100257, "instruction": "Use one arm for the light beige box with embossed gold leaf and one for the curved black scanner with trigger; scan the light beige box with embossed gold leaf with the curved black scanner with trigger.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100257, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100258, "instruction": "Hold the yellow box for tea in one arm and the scanner with smooth black body in the other, then scan the yellow box for tea.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100258, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100260, "instruction": "Raise both the light yellow tea box and the scanner with flat reading surface simultaneously and complete the scan.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100260, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100261, "instruction": "Use both arms in parallel for the decorative tea-box and the black scanner with gray handle, then perform the scan.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100261, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100266, "instruction": "Simultaneously secure the smooth black tea-box and the barcode scanner, then move the barcode scanner close to scan the smooth black tea-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100266, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100272, "instruction": "Pick the beige cube with golden leaf patterns while picking the black scanner with gray textured tip with the other arm, then scan the beige cube with golden leaf patterns.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100272, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100273, "instruction": "With the left arm, hold the light beige box with embossed gold leaf; with the right arm, hold the barcode scanner with flat top; then scan the light beige box with embossed gold leaf.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100273, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100283, "instruction": "Pick up the yellow box for tea and the scanner with curved handle simultaneously, then scan the yellow box for tea with the scanner with curved handle.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100283, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100288, "instruction": "Use one arm for the black tea-box with turquoise sides and one for the scanner with curved grip; scan the black tea-box with turquoise sides with the scanner with curved grip.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100288, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100290, "instruction": "Grasp the cube tea box with embossed designs and the black scanner together using the left arm and the right arm; scan the cube tea box with embossed designs with the black scanner.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100290, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100293, "instruction": "Pick the black tea-box with turquoise sides while picking the lightweight handheld barcode scanner with the other arm, then scan the black tea-box with turquoise sides.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100293, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100298, "instruction": "Lift the tea-box with bold white writing with the right arm as the left arm lifts the barcode scanner with flat top, then scan the tea-box with bold white writing.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100298, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100303, "instruction": "Simultaneously lift the rectangular tea-box and the barcode scanner, then use the barcode scanner to scan the rectangular tea-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100303, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100305, "instruction": "Raise both the smooth tea-box and the handheld scanner simultaneously and complete the scan.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100305, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100309, "instruction": "Lift the bright red tea-box with logo and the scanner with pointed bottom tip together before scanning the bright red tea-box with logo with the scanner with pointed bottom tip.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100309, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100311, "instruction": "Hold the compact tea-box in one arm and the smooth plastic barcode scanner in the other, then scan the compact tea-box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100311, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100312, "instruction": "Hold the compact beige box for tea steady in one arm while the other uses the scanner with broad top flat area to scan it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100312, "success": true}
+{"event": "case_prepared", "task_name": "scan_object", "seed": 100317, "instruction": "Grasp the tea-box with floral design and the handheld scanner in parallel, then align the handheld scanner with the tea-box with floral design.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "scan_object", "seed": 100317, "success": true}

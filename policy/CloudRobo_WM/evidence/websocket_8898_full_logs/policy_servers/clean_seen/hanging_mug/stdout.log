@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100000, "instruction": "With the left arm, grab the basic mug in solid white, spin it, place it down, then use the right arm to hang it on the metallic rack with smooth finish.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100001, "instruction": "Lift the hand-sized black mug, twist it, set it back, and secure it onto the dark gray rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100002, "instruction": "Pick the hand-held ceramic mug, turn it, put it in the center, and transfer it to the medium rack with protruding rods.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100003, "instruction": "Grab the mug for drinking liquids, rotate it, place it in the middle, and hang it on the angular rack with slanted support rod.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100003, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100004, "instruction": "Lift the mug with cartoon design, twist it, set it back, and secure it onto the metallic rack with smooth finish.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100005, "instruction": "Use the right arm to lift the black mug with smooth surface, rotate it, and attach it to the medium rack with protruding rods after setting it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100005, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100006, "instruction": "Lift the medium beige mug from the table, rotate it, place it in the middle, and hang it on the smooth dark gray rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100008, "instruction": "Take the mug with round handle with one arm, rotate it, and hang it onto the smooth rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100010, "instruction": "Take the mug with round handle from the table, rotate it, place it in the center, then hang it onto the metallic rack with smooth finish.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100011, "instruction": "Use your left arm to grab the drinking mug with smooth body, rotate it, set it down, then hang on the metal rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100011, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100012, "instruction": "Pick the ceramic mug smooth outside using your left arm, turn it, set it on the table, and hang it on the rack with two rods sticking out with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100012, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100013, "instruction": "Grab the glossy beige ceramic drinking mug, turn it around, put it back, then attach it to the smooth rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100014, "instruction": "With the left arm, pick the white mug with rounded handle, rotate it, place it, then hang it onto the smooth rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100015, "instruction": "Lift the brown mug, twist it, set it back, and secure it onto the angular rack with slanted support rod.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100016, "instruction": "Use the left arm to pick the medium mug with blue design, turn it, place it, then hang on the metallic rack with smooth finish.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100017, "instruction": "Lift the blue mug for hot drinks from the table, turn it, put it down in the middle, then hang it onto the angular rack with slanted support rod.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100017, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100018, "instruction": "Take the smooth ceramic beige mug from the table, turn it, set it down, and attach it to the smooth rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100018, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100021, "instruction": "Take the mug for hot drinks from the table, turn it, set it down, and attach it to the rack with two rods sticking out.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100021, "success": false}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100022, "instruction": "Use your left arm to grab the medium mug with blue design, rotate it, place it in the middle, then use the right arm to hang it onto the smooth rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100022, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100023, "instruction": "Use the left arm to lift the black mug glossy ceramic material, rotate it, put it down, then hook onto the medium rack with protruding rods.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100024, "instruction": "Use the left arm to grab the medium mug fits in hand, flip it, set it down, and then attach it to the smooth dark gray rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100026, "instruction": "Use one arm to grab the cylindrical mug with curved handle, turn it, set it centrally, and use the other to hang it onto the medium rack with protruding rods.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100028, "instruction": "Pick the medium beige mug from the table using one hand, rotate, and hang it on the angular rack with slanted support rod.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100028, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100029, "instruction": "Lift the logo mug, turn it, place it back, and move it onto the angular rack with slanted support rod with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100030, "instruction": "Grab the medium light mug, rotate it, place it on the table, and hook it onto the metallic rack with smooth finish.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100030, "success": false}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100032, "instruction": "Use the left arm to grab the medium mug with blue design, rotate it, place it in the middle, then use the right arm to hang it onto the dark gray angled rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100033, "instruction": "Lift the medium mug fits in hand, turn it, place it back, and move it onto the angled rack with long and short rods with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100033, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100034, "instruction": "Using the left arm, pick the ceramic mug, turn it, place it down, and hang it on the smooth rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100034, "success": false}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100035, "instruction": "Take the smooth ceramic mug with one arm, rotate it, and hang it onto the dark gray rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100036, "instruction": "Pick the mug with side handle up, twist it, place it back, then hang it onto the rack with angular body.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100036, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100038, "instruction": "Grab the cylindrical mug made of ceramic, rotate it, place it in the middle, and hang it on the smooth rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100040, "instruction": "With the left arm, grab the drinking mug from the table, rotate it, place it centrally, and with the right arm, hang it onto the angled rack with long and short rods.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100040, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100041, "instruction": "Use the left arm to lift the plain glossy mug, rotate it, put it down, then hook onto the medium rack with protruding rods.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100042, "instruction": "Take the white mug, rotate it, place it back on the table, and hang it on the rack with angular body afterward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100044, "instruction": "Lift the black mug for liquids, rotate it, put it down in the table's center, then hang it onto the angled rack with long and short rods.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100044, "success": false}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100045, "instruction": "Lift the light brown mug, twist it, set it back, and secure it onto the metallic angular rack with rod pair.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100045, "success": false}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100046, "instruction": "Pick up the cylindrical mug made of ceramic, turn it, place it centrally, then hang the cylindrical mug made of ceramic onto the metallic angular rack with rod pair.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100046, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100047, "instruction": "Grab the beige mug, turn it around, put it back, then attach it to the dark gray angled rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100048, "instruction": "Lift the brown mug, twist it, set it back, and secure it onto the smooth dark gray rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100049, "instruction": "Use the right arm to lift the smooth ceramic mug, rotate it, and attach it to the metallic angular rack with rod pair after setting it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100052, "instruction": "Pick the curved handle mug up, twist it, place it back, then hang it onto the angled rack with long and short rods.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100052, "success": false}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100053, "instruction": "Grab the brown mug, turn it around, put it back, then attach it to the rack with angular body.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100053, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100054, "instruction": "Take the mug with logo design on side, rotate it, place it back on the table, and hang it on the rack with two rods sticking out afterward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100054, "success": false}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100055, "instruction": "Take the mug with round handle, rotate it, set it on the table's center, then hang it onto the rack with angular body.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100055, "success": false}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100056, "instruction": "Pick the mug with cartoon design, turn it, put it in the center, and transfer it to the metallic rack with smooth finish.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100057, "instruction": "Use the right arm to lift the beige mug used for drinks, rotate it, and attach it to the metallic rack with smooth finish after setting it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100058, "instruction": "Using your left arm, lift the mug with curved black handle, rotate it, place it down, then your right arm to hang it onto the rack with angular body.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100059, "instruction": "Lift the medium-sized drinking mug from the table, rotate it, place it in the middle, and hang it on the medium rack with protruding rods.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100060, "instruction": "Use the left arm to grab the smooth ceramic mug, rotate it, place it down, and hang it onto the smooth dark gray rack with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100061, "instruction": "Grab the medium-sized white mug, rotate it, place it on the table, and hook it onto the dark gray angled rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100062, "instruction": "With the left arm, grab the cylindrical mug made of ceramic from the table, rotate it, place it centrally, and with the right arm, hang it onto the metal rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100063, "instruction": "Use your left arm to grab the black mug, rotate it, set it down, then hang on the angular rack with slanted support rod.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100064, "instruction": "Lift the smooth ceramic mug from the table, turn it, put it down in the middle, then hang it onto the smooth dark gray rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100065, "instruction": "Use the right arm to lift the medium mug with blue design, rotate it, and attach it to the metallic rack with smooth finish after setting it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100066, "instruction": "Lift the medium beige mug from the table, turn it, put it down in the middle, then hang it onto the dark gray angled rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100067, "instruction": "Lift the black mug, twist it, set it back, and secure it onto the metal rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100068, "instruction": "Take the smooth ceramic mug from the table, spin it, place it in the center, then hang it on the angled rack with long and short rods.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100070, "instruction": "Use your left arm to pick the mug with prints, rotate it, set it down, and hang it onto the metallic angular rack with rod pair.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100070, "success": false}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100072, "instruction": "Lift the mug with logo design on side from the table, turn it, put it down in the middle, then hang it onto the smooth dark gray rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100073, "instruction": "Lift the beige mug used for drinks from the table, rotate it, place it in the middle, and hang it on the dark gray angled rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100074, "instruction": "Grab the mug with round handle, rotate it, place it in the middle, and hang it onto the smooth rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100075, "instruction": "Grab the mug with rounded base from the table, rotate it, place it, and hang it onto the metal rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100077, "instruction": "With the left arm, grab the glossy beige ceramic drinking mug from the table, rotate it, place it centrally, and with the right arm, hang it onto the dark gray angled rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100077, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100079, "instruction": "Lift the ceramic mug, turn it around, set it in the middle, and place it on the metal rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100081, "instruction": "Take the medium beige mug, rotate it, place it back on the table, and hang it on the rack with angular body afterward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100081, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100082, "instruction": "Grab the mug with thick sturdy handle from the table, rotate it, place it, and hang it onto the metallic rack with smooth finish.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100082, "success": false}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100084, "instruction": "Use the left arm to lift the white ceramic mug with handle, rotate it, put it down, then hook onto the smooth rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100084, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100086, "instruction": "Use the left arm to grab the glossy black mug medium-sized for drinking, flip it, set it down, and then attach it to the medium rack with protruding rods.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100086, "success": false}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100087, "instruction": "Lift the medium black mug with handle, turn it around, set it in the middle, and place it on the metal rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100088, "instruction": "Take the beige mug used for drinks from the table, spin it, place it in the center, then hang it on the angled rack with long and short rods.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100090, "instruction": "Use the left arm to lift the mug with logo design on side, rotate it, put it down, then hook onto the dark gray rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100091, "instruction": "Use the right arm to lift the plain glossy mug, rotate it, and attach it to the metal rack after setting it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100091, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100092, "instruction": "Lift the white mug, turn it around, set it in the middle, and place it on the metal rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100093, "instruction": "Using your left arm, lift the black mug with handle, rotate it, place it down, then your right arm to hang it onto the dark gray rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100094, "instruction": "Grab the beige mug used for drinks, rotate it, place it in the middle, and hang it onto the smooth dark gray rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100094, "success": false}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100095, "instruction": "Lift the hand-held ceramic mug, turn it, place it back, and move it onto the rack with angular body with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100095, "success": false}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100097, "instruction": "Take the mug with thick sturdy handle with one arm, rotate it, and hang it onto the metal rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100097, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100098, "instruction": "Lift the smooth white mug with curved handle from the table, turn it, put it down in the middle, then hang it onto the metallic angular rack with rod pair.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100099, "instruction": "Use the left arm to grab the light brown cylindrical mug, rotate it, set it down, then hang the light brown cylindrical mug onto the metallic angular rack with rod pair.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100100, "instruction": "Pick up the black mug for liquids, turn it, place it centrally, then hang the black mug for liquids onto the metallic rack with smooth finish.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100100, "success": false}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100101, "instruction": "Take the hand-held ceramic mug from the table, rotate it, place it in the center, then hang it onto the rack with angular body.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100102, "instruction": "Lift the beige mug used for drinks, turn it around, set it in the middle, and place it on the dark gray rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100102, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100103, "instruction": "Take the smooth black ceramic mug, rotate it, set it on the table's center, then hang it onto the dark gray rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100103, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100104, "instruction": "Use your left arm to grab the mug for drinking liquids, rotate it, place it in the middle, then use the right arm to hang it onto the rack with angular body.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100104, "success": false}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100107, "instruction": "Take the smooth white mug, rotate it, set it in the middle, then hang it on the dark gray angled rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100107, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100108, "instruction": "Take the glossy black mug medium-sized for drinking from the table, rotate it, place it in the center, then hang it onto the dark gray rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100108, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100109, "instruction": "Take the curved handle mug from the table, rotate it, place it in the center, then hang it onto the smooth rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100109, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100110, "instruction": "Use the left arm to grab the glossy mug for beverages, rotate it, place it in the middle, then use the right arm to hang it onto the metallic rack with smooth finish.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100110, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100112, "instruction": "Use the left arm to grab the medium mug fits in hand, rotate it, set it down, then hang the medium mug fits in hand onto the metallic angular rack with rod pair.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100112, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100114, "instruction": "Take the mug with yellow chicken image, rotate it, place it back on the table, and hang it on the angled rack with long and short rods afterward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100114, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100115, "instruction": "Use your left arm to pick the medium-sized drinking mug, rotate it, set it down, and hang it onto the angled rack with long and short rods.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100115, "success": false}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100116, "instruction": "With the left arm, grab the black mug with smooth surface, spin it, place it down, then use the right arm to hang it on the smooth rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100116, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100118, "instruction": "Use the right arm to lift the brown mug, rotate it, and attach it to the smooth dark gray rack after setting it down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100118, "success": false}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100119, "instruction": "With the left arm, pick the mug with curved black handle, rotate it, place it, then hang it onto the smooth rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100119, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100120, "instruction": "With the left arm, grab the ceramic mug, spin it, place it down, then use the right arm to hang it on the angular rack with slanted support rod.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100120, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100121, "instruction": "Using your left arm, lift the smooth ceramic mug, rotate it, place it down, then your right arm to hang it onto the metal rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100121, "success": false}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100122, "instruction": "Lift the smooth ceramic mug, rotate it, put it down in the table's center, then hang it onto the rack with two rods sticking out.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100122, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100123, "instruction": "With the left arm, grab the mug for drinking liquids, spin it, place it down, then use the right arm to hang it on the dark gray angled rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100123, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100124, "instruction": "Take the cylindrical blue mug, rotate it, place it in the center, then hang it on the angled rack with long and short rods.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100124, "success": true}
+{"event": "case_prepared", "task_name": "hanging_mug", "seed": 100125, "instruction": "Lift the mug with prints, turn it, place it back, and move it onto the metallic angular rack with rod pair with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "hanging_mug", "seed": 100125, "success": true}

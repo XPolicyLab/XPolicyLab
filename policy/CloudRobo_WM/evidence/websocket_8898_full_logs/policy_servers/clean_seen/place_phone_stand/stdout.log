@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100000, "instruction": "Lift the rectangular phone onto the compact adjustable phone holder.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100001, "instruction": "Carry the flat phone to the compact phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100002, "instruction": "Take the phone with glass front and back to the phonestand with slot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100005, "instruction": "Move the phone with smooth glass front onto the phonestand with smooth texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100005, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100006, "instruction": "Put the phone with smooth glossy screen atop the compact phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100010, "instruction": "Lift the sleek black phone onto the angled holder for phones.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100012, "instruction": "Carry the smooth black phone to the angled holder for phones.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100012, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100014, "instruction": "Take the phone with smooth back panel to the light brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100015, "instruction": "Put the rectangular phone with rounded corners atop the compact phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100016, "instruction": "Take the black and white phone to the curved phonestand with phone slot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100017, "instruction": "Put the black phone atop the green plastic holder.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100017, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100018, "instruction": "Move the phone with black touchscreen onto the angled holder for phones.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100018, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100019, "instruction": "Carry the silver phone to the green phone rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100019, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100020, "instruction": "Take the phone with smooth glass front to the small plastic phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100021, "instruction": "Put the compact phone with flat design atop the phonestand with slot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100025, "instruction": "Lift the rectangular glossy black phone onto the phonestand with green hooks.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100026, "instruction": "Move the sleek phone onto the phonestand with smooth texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100027, "instruction": "Lift the thin metallic phone onto the compact plastic phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100029, "instruction": "Carry the metallic phone with glass screen front to the angled green phone support.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100031, "instruction": "Lift the rectangular glossy black phone onto the metal adjustable phone clamp.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100031, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100032, "instruction": "Put the metallic phone with glass screen front atop the small green and silver stand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100035, "instruction": "Move the sleek phone onto the compact adjustable phone holder.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100035, "success": false}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100036, "instruction": "Lift the rectangular glossy black phone onto the phonestand with smooth texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100036, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100037, "instruction": "Put the phone with black touchscreen atop the angled holder for phones.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100038, "instruction": "Lift the phone with screen and side buttons onto the light brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100038, "success": false}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100040, "instruction": "Move the phone with metallic body onto the metal adjustable phone clamp.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100040, "success": false}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100042, "instruction": "Move the phone with screen and side buttons onto the curved phonestand with phone slot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100043, "instruction": "Put the metallic phone with glass screen front atop the phonestand with smooth texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100043, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100044, "instruction": "Take the palm-sized phone to the compact phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100046, "instruction": "Take the smooth black phone to the green phone rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100046, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100047, "instruction": "Move the sleek black phone onto the curved phonestand with phone slot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100048, "instruction": "Lift the phone with black touchscreen onto the smooth brown phone holder.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100049, "instruction": "Take the glass-front black phone to the smooth brown phone holder.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100050, "instruction": "Take the glass and metal smartphone to the angled holder for phones.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100050, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100053, "instruction": "Take the glass-faced phone to the angled green phone support.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100053, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100054, "instruction": "Lift the thin metallic phone onto the phonestand with green hooks.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100057, "instruction": "Carry the palm-sized black and white phone to the dark green holder with clamp.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100058, "instruction": "Carry the phone with buttons and screen to the green phone rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100060, "instruction": "Carry the glass-front black phone to the angled green phone support.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100061, "instruction": "Move the phone with black touchscreen onto the metal adjustable phone clamp.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100062, "instruction": "Put the multi-camera black phone atop the compact adjustable phone holder.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100064, "instruction": "Take the compact rectangular phone to the light brown phone holder.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100065, "instruction": "Carry the flat phone to the green plastic holder.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100066, "instruction": "Put the rectangular glossy black phone atop the small plastic phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100067, "instruction": "Lift the phone with screen and side buttons onto the curved phonestand with phone slot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100069, "instruction": "Put the smooth black phone atop the metal adjustable phone clamp.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100069, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100070, "instruction": "Carry the sleek black-faced smartphone to the dark green holder with clamp.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100071, "instruction": "Move the slim palm-sized phone onto the smooth brown phone holder.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100071, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100072, "instruction": "Move the silver phone onto the curved phonestand with phone slot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100073, "instruction": "Carry the phone with smooth back panel to the phonestand with slot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100074, "instruction": "Lift the rectangle-shaped communication phone onto the light brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100076, "instruction": "Lift the rectangle-shaped communication phone onto the flat base phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100077, "instruction": "Take the thin metallic phone to the small plastic phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100077, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100078, "instruction": "Take the smooth black phone to the flat base phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100079, "instruction": "Move the phone with touchscreen onto the green plastic holder.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100080, "instruction": "Take the glass-faced phone to the light brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100080, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100081, "instruction": "Put the compact phone with shiny texture atop the angled holder for phones.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100081, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100082, "instruction": "Lift the phone with smooth back panel onto the compact phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100082, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100083, "instruction": "Move the phone with screen and side buttons onto the dark green holder with clamp.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100084, "instruction": "Lift the phone with buttons and screen onto the small green and silver stand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100084, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100085, "instruction": "Put the sleek phone atop the angled holder for phones.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100085, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100086, "instruction": "Take the phone with glass front and back to the angled holder for phones.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100086, "success": false}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100087, "instruction": "Move the lightweight phone onto the phonestand for holding phones.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100089, "instruction": "Carry the rectangular phone with rounded corners to the angled holder for phones.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100090, "instruction": "Carry the rectangular glossy black phone to the small green and silver stand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100091, "instruction": "Carry the silver phone with black screen to the angled holder for phones.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100091, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100092, "instruction": "Carry the phone featuring glass and silver frame to the small plastic phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100094, "instruction": "Take the phone with smooth glass front to the phonestand with smooth texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100095, "instruction": "Carry the slim palm-sized phone to the phonestand with curved edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100096, "instruction": "Move the phone with buttons and screen onto the phonestand with curved edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100097, "instruction": "Take the phone with black touchscreen to the light brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100097, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100098, "instruction": "Lift the rectangular phone onto the dark green holder with clamp.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100099, "instruction": "Carry the phone with black touchscreen to the dark green holder with clamp.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100101, "instruction": "Move the phone featuring glass and silver frame onto the curved phonestand with phone slot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100102, "instruction": "Move the compact rectangular phone onto the angled holder for phones.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100102, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100103, "instruction": "Move the compact phone with shiny texture onto the green phone rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100103, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100104, "instruction": "Carry the phone for calls and apps to the curved phonestand with phone slot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100104, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100105, "instruction": "Carry the phone with black touchscreen to the phonestand with smooth texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100105, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100108, "instruction": "Move the silver phone with black screen onto the curved phonestand with phone slot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100108, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100109, "instruction": "Put the glass-front black phone atop the phonestand with curved edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100109, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100110, "instruction": "Carry the phone with smooth glass front to the metal adjustable phone clamp.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100110, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100111, "instruction": "Put the phone with black touchscreen atop the compact plastic phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100111, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100112, "instruction": "Move the metal and glass black phone onto the angled holder for phones.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100112, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100113, "instruction": "Put the phone with smooth glass front atop the phonestand with curved edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100113, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100114, "instruction": "Lift the thin phone with smooth texture onto the green phone rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100114, "success": false}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100116, "instruction": "Take the sleek rectangular phone to the phonestand with curved edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100116, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100117, "instruction": "Carry the sleek rectangular phone to the compact phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100117, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100118, "instruction": "Carry the phone with black touchscreen to the phonestand with smooth texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100118, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100119, "instruction": "Take the flat phone to the light brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100119, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100120, "instruction": "Take the black and white phone to the dark green holder with clamp.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100120, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100121, "instruction": "Move the multi-camera black phone onto the metal adjustable phone clamp.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100121, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100122, "instruction": "Put the phone with screen and side buttons atop the light brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100122, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100124, "instruction": "Lift the phone with screen and side buttons onto the phonestand with curved edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100124, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100125, "instruction": "Carry the rectangular glossy black phone to the phonestand with slot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100125, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100126, "instruction": "Lift the silver phone with black screen onto the phonestand with slot.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100126, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100128, "instruction": "Move the smooth-screen phone onto the green phone rack.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100128, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100129, "instruction": "Put the sleek phone atop the metal adjustable phone clamp.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100129, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100130, "instruction": "Move the rectangular phone with rounded corners onto the angled green phone support.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100130, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100132, "instruction": "Lift the palm-sized black and white phone onto the small green and silver stand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100132, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100133, "instruction": "Lift the black phone onto the small green and silver stand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100133, "success": true}

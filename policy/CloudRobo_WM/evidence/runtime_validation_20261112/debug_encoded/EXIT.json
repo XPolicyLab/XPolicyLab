@@ -1,0 +1,11 @@
+{
+  "test": "debug_encoded",
+  "native_exit": 0,
+  "actual_wait": true,
+  "group_absent": true,
+  "finished": 1794451627.7686315,
+  "timed_out": false,
+  "eval_finished": true,
+  "traceback": false,
+  "log_sha256": "4ed5eac6fc612c9007352933cbcdb6ff38cda05c2e72ad59eb6997746d3df95c"
+}

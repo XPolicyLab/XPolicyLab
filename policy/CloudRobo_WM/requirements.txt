@@ -1,0 +1,10 @@
+numpy==1.26.4
+PyYAML>=6
+Pillow>=10
+safetensors>=0.4.5
+opencv-python-headless==4.11.0.86
+h5py>=3.8
+websockets>=14.0
+msgpack>=1.0.8
+msgpack-numpy>=0.4.8
+pydantic>=2.5

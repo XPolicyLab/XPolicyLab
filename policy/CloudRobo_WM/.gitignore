@@ -1,14 +1,6 @@
 __pycache__/
 *.py[cod]
-**/.venv/
+.venv/
 checkpoints/
-outputs/
-*.part
-*.pt
-*.safetensors
-*.npy
-*.npz
-*.log
-*.prof
-.cache/
-.env
+weights/
+*.partial

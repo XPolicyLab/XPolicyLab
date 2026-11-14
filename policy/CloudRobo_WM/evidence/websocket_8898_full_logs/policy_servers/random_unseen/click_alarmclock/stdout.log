@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100000, "instruction": "Press the alarm-clock with large numbers's top center button.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100001, "instruction": "Tap the center top button of the blue alarm clock", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100003, "instruction": "Click the top button of the alarm clock with smooth finish", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100003, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100004, "instruction": "Click the center top button of the blue alarm clock", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100005, "instruction": "Click the top button of the alarm-clock with beige screen", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100005, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100006, "instruction": "Press the top button on the blue alarm clock", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100007, "instruction": "Click the top button of the alarm-clock for bedside table", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100009, "instruction": "Press the top button on the alarm-clock with beige screen", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100011, "instruction": "Click the central top button on the alarm-clock with beige screen.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100011, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100012, "instruction": "Click the top button of the blue alarm clock", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100012, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100013, "instruction": "Click the center top button of the alarm clock with smooth finish", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100014, "instruction": "Click the central top button on the alarm-clock with large numbers.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100015, "instruction": "Press the alarm-clock for bedside table's center top button", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100016, "instruction": "Press the compact alarm clock's center top button", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100017, "instruction": "Click the top button of the blue alarm clock", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100017, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100018, "instruction": "Click the top button of the alarm-clock with large numbers", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100018, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100019, "instruction": "Click the top button of the alarm-clock for bedside table", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100019, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100020, "instruction": "Press the top button on the alarm-clock with beige screen", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100021, "instruction": "Press the alarm clock with smooth finish's center top button", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100022, "instruction": "Press the top button on the compact alarm clock", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100022, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100023, "instruction": "Press the top button on the alarm-clock with large numbers", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100024, "instruction": "Press the alarm-clock with beige screen's top center button.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100025, "instruction": "Press the blue alarm clock's center top button", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100026, "instruction": "Click the central top button on the compact alarm clock.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100027, "instruction": "Press the alarm clock with smooth finish's center top button", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100028, "instruction": "Tap the center top button of the alarm-clock with large numbers", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100028, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100029, "instruction": "Click the central top button on the alarm-clock with large numbers.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100030, "instruction": "Click the central top button on the alarm-clock for bedside table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100031, "instruction": "Tap the center top button of the blue alarm clock", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100031, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100032, "instruction": "Click the top button of the alarm-clock with beige screen", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100034, "instruction": "Press the top center of the compact alarm clock.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100034, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100036, "instruction": "Press the alarm clock with smooth finish's top center button.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100036, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100037, "instruction": "Click the center top button of the alarm clock with smooth finish", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100038, "instruction": "Press the top center of the blue alarm clock.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100040, "instruction": "Click the central top button on the alarm clock with smooth finish.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100040, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100041, "instruction": "Press the top button on the blue alarm clock", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100042, "instruction": "Tap the center top button of the alarm-clock for bedside table", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100043, "instruction": "Press the compact alarm clock's top center button.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100043, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100047, "instruction": "Tap the center top button of the alarm-clock with large numbers", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100048, "instruction": "Click the center top button of the alarm-clock with large numbers", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100049, "instruction": "Click the central top button on the alarm-clock with beige screen.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100049, "success": false}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100051, "instruction": "Use the right arm to click the compact alarm clock's top center button.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100052, "instruction": "Click the top button of the alarm clock with smooth finish", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100054, "instruction": "Click the top button of the alarm-clock with large numbers", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100056, "instruction": "Click the central top button on the alarm clock with smooth finish.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100057, "instruction": "Press the top button on the blue alarm clock", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100058, "instruction": "Press the compact alarm clock's top center button.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100059, "instruction": "Press the top center of the alarm-clock with beige screen.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100060, "instruction": "Use the left arm to click the blue alarm clock's top center button.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100062, "instruction": "Tap the center top button of the alarm-clock with beige screen", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100064, "instruction": "Press the alarm clock with smooth finish's center top button", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100065, "instruction": "Use the right arm to click the alarm clock with smooth finish's top center button.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100066, "instruction": "Tap the center top button of the alarm-clock with beige screen", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100067, "instruction": "Click the central top button on the blue alarm clock.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100068, "instruction": "Click the top button of the blue alarm clock", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100069, "instruction": "Press the top center of the compact alarm clock.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100069, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100071, "instruction": "Click the central top button on the alarm-clock with large numbers.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100071, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100072, "instruction": "Press the alarm-clock with beige screen's top center button.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100074, "instruction": "Press the top center of the alarm-clock with large numbers.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100074, "success": false}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100076, "instruction": "Use the right arm to click the blue alarm clock's top center button.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100077, "instruction": "Press the top button on the alarm-clock with large numbers", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100077, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100080, "instruction": "Press the top button on the alarm-clock with large numbers", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100080, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100081, "instruction": "Press the alarm-clock with large numbers's top center button.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100081, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100082, "instruction": "Use the right arm to click the alarm-clock for bedside table's top center button.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100082, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100083, "instruction": "Press the blue alarm clock's center top button", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100084, "instruction": "Tap the center top button of the blue alarm clock", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100084, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100085, "instruction": "Tap the center top button of the alarm-clock for bedside table", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100085, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100086, "instruction": "Click the center top button of the alarm clock with smooth finish", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100086, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100087, "instruction": "Click the center top button of the alarm-clock with large numbers", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100089, "instruction": "Tap the center top button of the alarm clock with smooth finish", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100090, "instruction": "Click the top button of the alarm-clock for bedside table", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100092, "instruction": "Press the top button on the alarm-clock with large numbers", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100094, "instruction": "Use the left arm to click the alarm-clock with beige screen's top center button.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100096, "instruction": "Click the top button of the alarm-clock with beige screen", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100098, "instruction": "Click the top button of the alarm-clock with large numbers", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100099, "instruction": "Click the center top button of the alarm-clock with large numbers", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100100, "instruction": "Click the central top button on the alarm-clock with beige screen.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100100, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100101, "instruction": "Click the top button of the alarm-clock for bedside table", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100102, "instruction": "Press the compact alarm clock's top center button.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100102, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100103, "instruction": "Click the top button of the alarm-clock with beige screen", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100103, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100104, "instruction": "Press the alarm-clock for bedside table's center top button", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100104, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100105, "instruction": "Press the compact alarm clock's center top button", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100105, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100107, "instruction": "Click the center top button of the blue alarm clock", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100107, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100108, "instruction": "Click the top button of the alarm-clock for bedside table", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100108, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100109, "instruction": "Click the center top button of the alarm clock with smooth finish", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100109, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100110, "instruction": "Press the top button on the alarm clock with smooth finish", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100110, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100111, "instruction": "Press the top center of the alarm-clock for bedside table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100111, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100112, "instruction": "Use the left arm to click the alarm clock with smooth finish's top center button.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100112, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100113, "instruction": "Use the left arm to click the alarm-clock for bedside table's top center button.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100113, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100114, "instruction": "Click the top button of the alarm-clock for bedside table", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100114, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100115, "instruction": "Press the top button on the alarm-clock with beige screen", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100115, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100117, "instruction": "Press the blue alarm clock's top center button.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100117, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100118, "instruction": "Press the top center of the blue alarm clock.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100118, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100119, "instruction": "Tap the center top button of the alarm-clock for bedside table", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100119, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100121, "instruction": "Click the top button of the blue alarm clock", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100121, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100123, "instruction": "Click the center top button of the alarm-clock with large numbers", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100123, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100124, "instruction": "Press the top center of the alarm clock with smooth finish.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100124, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100125, "instruction": "Press the alarm-clock with large numbers's center top button", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100125, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100126, "instruction": "Click the top button of the alarm-clock with large numbers", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100126, "success": true}
+{"event": "case_prepared", "task_name": "click_alarmclock", "seed": 100128, "instruction": "Tap the center top button of the alarm-clock for bedside table", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "click_alarmclock", "seed": 100128, "success": true}

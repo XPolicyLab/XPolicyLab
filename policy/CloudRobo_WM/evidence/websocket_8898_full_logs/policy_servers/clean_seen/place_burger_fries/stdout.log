@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100000, "instruction": "Move the hand-sized hamburg and the crispy fries in hand-sized pouch with dual arms to the tray for holding objects.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100001, "instruction": "Grab the green top hamburg box and the McDonald's fries bag, use both arms to set on the smooth plastic tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100003, "instruction": "Take the yellow and brown patterned hamburg and the Open-top red box filled with fries with both arms and set on the smooth texture green tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100003, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100004, "instruction": "Pick up the smooth orange and white hamburg and the French fries in red packaging, then put them on the tray with smooth plastic surface", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100005, "instruction": "Move the yellow and green hamburg holder and the golden fries in smooth red pouch with dual arms to the rectangular beige tray for objects.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100005, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100006, "instruction": "Place the yellow marked white and orange hamburg and the red fries packet onto the medium bright orange tray using dual arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100007, "instruction": "Set the medium-sized hamburg and the red fries packet on the plastic tray with curved edges using two arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100008, "instruction": "Using both arms, grab the yellow marked white and orange hamburg and the Light yellow fries in red holder for the smooth glossy orange medium tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100009, "instruction": "Grab the orange hamburg with white underside and the thin crispy potato fries, then put them on the flat tray with rounded corners.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100010, "instruction": "Pick up the small hamburg box and the McDonald's logo on red fries box, then put both on the dark green rectangular plastic tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100013, "instruction": "Move the orange hamburg and the Small red box fries inside onto the solid green palm-sized tray with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100014, "instruction": "Place the round, soft bread hamburg and the Golden fries crispy red package container onto the smooth texture green tray using dual arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100015, "instruction": "Place the hamburg with printed illustrations and the Open-top red box filled with fries onto the rectangular green tray after picking them up.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100016, "instruction": "Using both arms, grab the yellow marked white and orange hamburg and the red fries packet for the light beige smooth tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100017, "instruction": "Lift the orange hamburg with white underside and the golden fries in red packaging, position them on the brown tray", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100017, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100018, "instruction": "Pick up the white and yellow printed hamburg holder and the golden fries in smooth red pouch, then put both on the tray with rounded corners.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100018, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100019, "instruction": "Move the medium-sized hamburg and the Open-top red box filled with fries onto the single-piece dark green tray with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100019, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100020, "instruction": "Pick the rectangular hamburg box, the golden fries in smooth red pouch, and place them on the medium-sized plastic tray using both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100021, "instruction": "Pick up the easy-to-hold hamburg and the crispy fries in hand-sized pouch, then put them on the dark green serving tray", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100022, "instruction": "Set the green and yellow hamburg container and the Palm-sized red fries container on the light beige smooth tray using two arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100022, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100023, "instruction": "Pick up the medium-sized yellow hamburg package and the rectangular red fries packet simultaneously, then place them onto the rectangular green tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100024, "instruction": "Move the white wrapper enclosing golden hamburg and the red container with yellow fries to the smooth texture green tray using both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100025, "instruction": "Move the smooth yellow hamburg packaging and the crispy fries in hand-sized pouch onto the tray with rounded rectangular shape with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100026, "instruction": "Move the white lid with yellow bottom hamburg box and the Small red box fries inside with dual arms to the plastic tray for holding items.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100027, "instruction": "Using both arms, grab the rounded hamburg with painted details and the Potato fries packaged in red carton for the tray for serving items.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100028, "instruction": "Grab the white hamburg with creased wrapper and the Palm-sized red fries container, use both arms to set on the medium-sized plastic tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100028, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100029, "instruction": "Grab the white and yellow printed hamburg holder and the Open-top red box filled with fries simultaneously, then set both onto the smooth light beige plastic tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100030, "instruction": "Pick the white lid with yellow bottom hamburg box and the red fries packet, and set them on the smooth glossy orange medium tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100031, "instruction": "Use dual arms to place the soft hamburg with smooth wrapper and the Small red box fries inside onto the beige tray", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100031, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100032, "instruction": "Grab the rectangular hamburg container with smooth finish and the Red fries box simultaneously, then set them on the smooth texture green tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100033, "instruction": "Grab the brownish round hamburg and the McDonald's logo on red fries box simultaneously, then set them on the rectangular plastic tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100033, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100034, "instruction": "Pick up the soft brown bread hamburg and the French fries in red packaging simultaneously, then place them on the single-piece dark green tray", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100034, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100035, "instruction": "Grab the hamburg with white patches and the French fries in red packaging simultaneously, then set both onto the smooth glossy orange medium tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100036, "instruction": "Set the yellow and green hamburg holder and the bright red fries holder on the smooth plastic tray using two arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100036, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100037, "instruction": "Grab the small soft hamburg in paper with one arm and the Palm-sized red fries container with the other for the bright orange tray for serving.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100038, "instruction": "Move the yellow and brown patterned hamburg and the Light yellow fries in red holder to the beige tray with both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100039, "instruction": "Grab the rectangular hamburg box and the Potato fries packaged in red carton simultaneously, then set them on the tray with slightly raised edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100039, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100040, "instruction": "Pick the hamburg wrapped in white paper and the red fries packet at the same time, then place them on the flat brown tray with raised edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100040, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100041, "instruction": "Grab the orange hamburg and the Open-top red box filled with fries and position them on the flat tray with rounded corners.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100042, "instruction": "Grab the small hamburg box and the rectangular red fries packet simultaneously, then set them on the flat brown tray with raised edges", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100043, "instruction": "Using dual arms, move the foldable hamburg cardboard box and the Golden fries crispy red package container onto the smooth glossy orange medium tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100043, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100044, "instruction": "Pick up the yellow bottom hamburg box and the Small red box fries inside, then put them on the orange tray", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100045, "instruction": "Grab the foldable hamburg cardboard box and the small red fries packet simultaneously, then set them on the orange tray with smooth surface.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100045, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100046, "instruction": "Lift the hamburg with yellow and brown marks and the Handheld fries pack bright red color and position them on the smooth plastic tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100046, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100047, "instruction": "Grab the hamburg with yellow and brown marks and the McDonald's fries bag simultaneously, then set both onto the bright orange tray with glossy finish.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100048, "instruction": "Place both the rectangular hamburg box and the Potato fries packaged in red carton on the smooth rectangular tray after grabbing them with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100049, "instruction": "Pick the decorative rounded hamburg and the Palm-sized red fries container at the same time, then place them on the plastic tray with shiny texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100050, "instruction": "Position the hamburg with printed illustrations and the Small red box fries inside on the beige tray with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100050, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100051, "instruction": "Use dual arms to move the small rounded hamburg and the Small red box fries inside onto the flat brown tray with raised edges", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100052, "instruction": "Lift the light brown hamburg and the Potato fries packaged in red carton with separate arms and place them on the medium bright orange tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100053, "instruction": "Lift the hamburg with smooth paper wrapping and the Rectangular red carton holding fries and position them on the smooth plastic tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100053, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100054, "instruction": "Use dual arms to grab the small rounded hamburg and the crispy fries in hand-sized pouch and set them on the medium-sized plastic tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100055, "instruction": "With two arms, pick the smooth hamburg and the Potato fries packaged in red carton for the rectangular plastic tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100055, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100056, "instruction": "Lift the hamburg with crumpled edges and the Light yellow fries in red holder with separate arms and place them on the dark rectangular serving tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100057, "instruction": "Move the rectangular hamburg with rounded edges and the Bright red box with fries inside to the flat tray with smooth surface with both arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100058, "instruction": "Using both arms, grab the white part with orange edges hamburg and the Golden fries sticks in red carton for the medium plastic tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100059, "instruction": "Position the hamburg with yellow mark and the crispy fries in hand-sized pouch on the bright orange tray with glossy finish with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100060, "instruction": "Use dual arms to move the medium, squishy hamburg and the Light yellow fries in red holder onto the medium plastic tray", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100061, "instruction": "Take the hamburg with smooth paper wrapping and the small red fries packet to the smooth glossy orange medium tray and set them there.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100062, "instruction": "Using dual arms, move the easy-to-carry hamburg box and the bright red fries holder onto the orange tray with smooth surface.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100063, "instruction": "Use dual arms to move the white lid with yellow bottom hamburg box and the Rectangular red carton holding fries onto the plastic tray with curved edges", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100064, "instruction": "Place the small rounded hamburg and the Bright red box with fries inside on the flat brown tray with raised edges after picking them up.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100065, "instruction": "Grab the hand-sized orange hamburg and the red fries packet and position them on the bright orange tray with glossy finish.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100066, "instruction": "Take the smooth white hamburg packaging and the Bright red box with fries inside together, then place them onto the plastic tray for carrying items.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100067, "instruction": "Grab the medium-sized hamburg and the Small red box fries inside simultaneously, then set them on the smooth light beige plastic tray", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100068, "instruction": "Using dual arms, lift the white hamburg and the red container with yellow fries and drop them on the plastic tray with shiny texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100069, "instruction": "Set the rounded hamburg with painted details and the small red fries packet down on the smooth texture green tray after picking them.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100069, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100070, "instruction": "Place the smooth orange and white hamburg and the red box with golden sticks together onto the tray with smooth plastic surface.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100071, "instruction": "Pick the medium, squishy hamburg and the red fries packet at the same time, then place them on the brown tray with rim.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100071, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100072, "instruction": "Using dual arms, lift the yellow box for hamburg and the Rectangular red carton holding fries and drop them on the rectangular plastic tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100073, "instruction": "Place the smooth hamburg box and the golden fries in red packaging onto the flat tray with smooth surface using dual arms", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100074, "instruction": "Pick up the white part with orange edges hamburg and the red fries packet, then put both on the orange tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100075, "instruction": "Grab the brownish round hamburg and the red container with yellow fries, then put them on the medium beige tray with flat base.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100076, "instruction": "Take the brownish round hamburg and the Palm-sized red fries container with both arms and set on the flat brown tray with raised edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100077, "instruction": "With dual arms, move the smooth orange and white hamburg and the Bright red box with fries inside onto the plastic tray with shiny texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100077, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100078, "instruction": "Pick up the easy-to-carry hamburg box and the Handheld fries pack bright red color, then put both on the medium-sized dark brown tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100079, "instruction": "Grab the round hamburg and the Bright red box with fries inside simultaneously, then set them on the plastic tray for carrying items", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100080, "instruction": "Place both the white and yellow printed hamburg holder and the thin crispy potato fries on the dark rectangular serving tray after grabbing them with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100080, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100081, "instruction": "Lift the hamburg with white patches and the golden fries in smooth red pouch, position them on the bright orange tray for serving", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100081, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100082, "instruction": "Grab the brownish round hamburg and the Handheld fries pack bright red color simultaneously, then set them on the tray with smooth plastic surface", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100082, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100083, "instruction": "Pick the white wrapper enclosing golden hamburg and the Potato fries packaged in red carton, and set them on the plastic tray with curved edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100084, "instruction": "Move the orange hamburg with white underside and the thin crispy potato fries to the smooth rectangular tray using both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100084, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100085, "instruction": "With dual arms, move the smooth orange and white hamburg and the golden fries in smooth red pouch onto the flat brown tray with raised edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100085, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100086, "instruction": "Grab the white lid with yellow bottom hamburg box and the crispy fries in hand-sized pouch simultaneously, then set them on the medium-sized dark brown tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100086, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100087, "instruction": "Position the smooth hamburg box and the red fries packet on the flat tray with rounded corners with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100088, "instruction": "Use both arms to move the medium-sized box with hamburg design and the Potato fries packaged in red carton to the flat green rectangular tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100089, "instruction": "Lift the foldable hamburg cardboard box and the golden fries in red packaging with separate arms and place them on the smooth light beige plastic tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100090, "instruction": "Lift the yellow marked white and orange hamburg and the Open-top red box filled with fries, placing them neatly on the light beige smooth tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100091, "instruction": "Move the smooth orange and white hamburg and the Golden fries crispy red package container with dual arms to the plastic tray for carrying items.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100091, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100092, "instruction": "Using both arms, grab the easy-to-carry hamburg box and the bright red fries holder for the rectangular plastic tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100093, "instruction": "Position the soft hamburg with smooth wrapper and the Light yellow fries in red holder on the flat tray with rounded corners with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100094, "instruction": "Grab the smooth white hamburg packaging and the rectangular red fries packet simultaneously, then set them on the smooth texture green tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100095, "instruction": "Position the soft brown bread hamburg and the Rectangular red carton holding fries on the smooth texture green tray with both arms.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100095, "success": false}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100096, "instruction": "With dual arms, move the yellow box for hamburg and the small red fries packet onto the solid green palm-sized tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100097, "instruction": "Using both arms, set the decorative rounded hamburg and the small red fries packet onto the brown tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100097, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100098, "instruction": "Lift the smooth white hamburg packaging and the Light yellow fries in red holder and position them on the plastic tray with curved edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100099, "instruction": "Grab the smooth orange and white hamburg and the Palm-sized red fries container and position them on the medium beige tray with flat base.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100100, "instruction": "Grab the white hamburg with yellow and brown stains and the Open-top red box filled with fries and position them on the orange tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100100, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100101, "instruction": "Lift the brownish round hamburg and the Potato fries packaged in red carton and position them on the dark rectangular serving tray.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "place_burger_fries", "seed": 100102, "instruction": "Pick the hamburg wrapped in white paper and the Bright red box with fries inside, and set them on the tray for holding objects.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_burger_fries", "seed": 100102, "success": true}

@@ -1,17 +1,6 @@
 {
-  "tokenizer_max_len": 128,
-  "proprio_dim": 96,
-  "dino_dim": 768,
-  "dino_model_name": "vit_base_patch16_dinov3.lvd1689m",
-  "dino_pixel_unshuffle": 2,
-  "dino_pred_x0": true,
-  "dino_cam_patches": null,
-  "dino_cam_regions": null,
-  "dino_temporal_stride": 1,
-  "dino_pool_mode": "avg",
-  "composite_layout": "tshape_robotwin_384x320_uniform",
-  "condition_count": 256,
   "video_dit_config": {
+    "has_image_input": false,
     "patch_size": [
       1,
       2,
@@ -26,7 +15,15 @@
     "num_heads": 24,
     "attn_head_dim": 128,
     "num_layers": 30,
-    "eps": 1e-06
+    "eps": 1e-06,
+    "seperated_timestep": true,
+    "require_clip_embedding": false,
+    "require_vae_embedding": false,
+    "fuse_vae_embedding_in_latents": true,
+    "video_attention_mask_mode": "first_frame_causal",
+    "action_conditioned": false,
+    "action_dim": 90,
+    "action_group_causal_mask_mode": "group_diagonal"
   },
   "action_dit_config": {
     "action_dim": 90,
@@ -39,42 +36,80 @@
     "freq_dim": 256,
     "eps": 1e-06
   },
-  "video_infer_shift": 6.0,
-  "action_infer_shift": 1.0,
-  "dino_infer_shift": 6.0,
-  "pointmap_infer_shift": 6.0,
-  "timestep_scale": 1000,
-  "hbridge_enabled": true,
-  "hbridge_bottom_ratio": 0.25,
-  "hbridge_top_ratio": 0.25,
-  "observation_ablation": "pointmap_zero_latent",
-  "pointmap_encoding": {
-    "version": 2,
-    "calibrated_intrinsics": true,
-    "intrinsics_policy": "full_K_per_example",
-    "mode": "axiswise_linear_rational",
+  "hbridge": {
+    "enabled": true,
+    "bottom_ratio": 0.25,
+    "top_ratio": 0.25
+  },
+  "tokenizer_max_len": 128,
+  "dino_model_name": "vit_base_patch16_dinov3.lvd1689m",
+  "pointmap_contraction": {
+    "enabled": true,
     "alpha": 0.8,
-    "norm_bounds": {
-      "x": [
-        -0.5,
-        0.5
-      ],
-      "y": [
-        -0.5,
-        0.5
-      ],
-      "z": [
-        0.0,
-        1.5
-      ]
-    },
-    "coordinate_frame": "local_camera",
-    "units": "meters",
-    "depth_validity": "finite_positive",
-    "invalid_fill": [
+    "calibrated_intrinsics": true
+  },
+  "pointmap_norm_bounds": {
+    "x": [
+      -0.5,
+      0.5
+    ],
+    "y": [
+      -0.5,
+      0.5
+    ],
+    "z": [
       0.0,
-      0.0,
-      -1.0
+      1.5
     ]
+  },
+  "pointmap_max_depth_m": 2.0,
+  "proprio_dim": 96,
+  "flex_joint": {
+    "enabled": true,
+    "cross_modal_predict_video": true,
+    "cross_modal_predict_dino": true,
+    "cross_modal_predict_pointmap": true
+  },
+  "composite_layout": "tshape_robotwin_384x320_uniform",
+  "dino_dim": 768,
+  "dino_cam_patches": null,
+  "dino_cam_regions": null,
+  "dino_temporal_stride": 1,
+  "dino_stride_keep_far": true,
+  "dino_pred_x0": true,
+  "dino_pool_mode": "avg",
+  "dino_pixel_unshuffle": 2,
+  "pointmap_depth_vis_mode": "turbo",
+  "video_scheduler": {
+    "infer_shift": 6.0,
+    "num_train_timesteps": 1000
+  },
+  "action_scheduler": {
+    "infer_shift": 1.0,
+    "num_train_timesteps": 1000
+  },
+  "dino_scheduler": {
+    "infer_shift": 6.0,
+    "num_train_timesteps": 1000
+  },
+  "pointmap_scheduler": {
+    "infer_shift": 6.0,
+    "num_train_timesteps": 1000
+  },
+  "condition_count": 256,
+  "dino_inference_batch_size": 27,
+  "history": {
+    "mode": "gated",
+    "rope": "slots",
+    "sampling": "episode_anchor_recent_split_v3",
+    "offsets": [
+      "episode_first",
+      -20,
+      -16,
+      -12,
+      -8,
+      -4
+    ],
+    "visibility": "observed_clean_anchors_v3"
   }
 }

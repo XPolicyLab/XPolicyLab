@@ -1,1 +1,1 @@
-"""CR-WM adapter for the official XPolicyLab interface."""
+"""CloudRobo-WM 2.0 adapter for the standard policy interface."""

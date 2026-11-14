@@ -1,0 +1,16 @@
+{
+  "files": {
+    "evaluation_10000.json": {
+      "bytes": 1916,
+      "sha256": "d4e522a5988089d81be52425a3a48466488677c0280ffeeda55c03913a583b58"
+    },
+    "inputs/clean_seen.jsonl": {
+      "bytes": 2784373,
+      "sha256": "b00c2fd599bb5e1dd4490f253b1f6b783ee007e658108ac16edc65e24fdb5dca"
+    },
+    "inputs/random_unseen.jsonl": {
+      "bytes": 2830278,
+      "sha256": "3a4e0d9897656efcbda08dcef70e23263cb7adc6ce8492de9da2c41afc8915bb"
+    }
+  }
+}

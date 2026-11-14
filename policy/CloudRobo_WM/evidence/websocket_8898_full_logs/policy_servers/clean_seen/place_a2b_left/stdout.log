@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100000, "instruction": "Shift the rounded rectangular blue soap bar leftward to the side of the palm-sized blue toycar", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100000, "success": false}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100001, "instruction": "Grab the bread with soft texture using the right arm and move left of the gray mouse", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100003, "instruction": "Position the metal bell with plastic parts to the left of the dark ergonomic mouse for computer navigation.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100003, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100004, "instruction": "Set the palm-sized box for playing cards directly to the left of the black tea-box", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100005, "instruction": "Shift the red stapler leftward to the side of the brown smooth woodenblock", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100005, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100007, "instruction": "Grab the plastic mouse with smooth finish with the left arm and shift it left of the small solid gray cleaning soap.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100008, "instruction": "Use the left arm and place the small plastic rubikscube left of the mouse for cursor control.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100009, "instruction": "Place the tea-box with top lid directly to the left of the coffee-box with cup image on top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100010, "instruction": "Move the medium coffee-box for storage to the left of the playingcards storage box.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100012, "instruction": "Shift the compact blue stapler leftward to the side of the rubikscube with red blue green tiles", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100012, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100013, "instruction": "With the right arm, move the Nescafe coffee-box with shiny surface to the left side of the mini car toy.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100014, "instruction": "Move the phone with digital display to the left side of the smooth coffee-box", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100015, "instruction": "Put the small puzzle cube to the left of the gold-decorated beige tea box", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100015, "success": false}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100016, "instruction": "Use the left arm and place the phone with smooth back panel left of the playful green toycar.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100017, "instruction": "Place the solid rectangular soap exactly to the left of the red cardboard tea-box", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100017, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100018, "instruction": "Move the small plastic rubikscube to the left of the blue toycar with yellow roof accents.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100018, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100019, "instruction": "With the right arm, move the medium rectangular coffee-box to the left side of the doughy and soft bread.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100019, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100020, "instruction": "Use the left arm to set the white and black colored bell left of the colorful cube", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100021, "instruction": "Set the tea-box with bold white writing directly to the left of the bell with metallic top and plastic base", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100022, "instruction": "Grab the solid yellow soap bar with the right arm and shift it left of the soft loaf bread.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100022, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100023, "instruction": "Use the right arm to position the golden brown bread left of the smooth cube with twisting blocks", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100024, "instruction": "Using the right arm, move the box of playingcards left of the palm-sized tea container.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100025, "instruction": "With the left arm, move the colorful rubikscube for twisting and solving to the left side of the palm-sized playingcards carton.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100026, "instruction": "Shift the mouse with scroll wheel in center leftward to the side of the tea-box with top lid", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100027, "instruction": "Use the left arm and place the glossy blue toycar left of the bell with protruding knob.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100028, "instruction": "Grab the small cuboid tea box using the left arm and move left of the white dome bell", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100028, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100029, "instruction": "Place the plastic rubikscube with six colored sides left of the gold-decorated beige tea box using the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100030, "instruction": "Position the rectangular coffee-box with smooth texture carefully to the left of the modern design stapler.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100032, "instruction": "Drop the stapler with silver staple tray on the left side of the plastic mouse", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100033, "instruction": "Drop the brown bread loaf on the left side of the blue dome-shaped bell", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100033, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100034, "instruction": "Using the right arm, put the smooth tea-box on left of the small plastic rubikscube", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100034, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100035, "instruction": "Place the rubikscube with rotating faces left of the compact office stapler using the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100036, "instruction": "Grab the red box for coffee sachets with the right arm and shift it left of the oval-shaped mouse for computer use.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100036, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100037, "instruction": "With the right arm, set the rectangular tea-box on the left of the colorful rubikscube for twisting and solving.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100038, "instruction": "Set the black stapler with curved top carefully on the left of the palm-sized box for playing cards", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100039, "instruction": "Drop the bread with golden crust on the left side of the phone for calls and apps", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100039, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100040, "instruction": "Drop the plastic stapler with metal top to the left of the blue and white playingcards packaging", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100040, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100043, "instruction": "Place the medium rectangular coffee-box with handle carefully to the yellow and red playingcards box's left", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100043, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100045, "instruction": "Drop the slanted soap with smooth surface on the left side of the lightweight phone", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100045, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100046, "instruction": "Set the stapler for fastening papers on the left side of the solid yellow soap bar.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100046, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100047, "instruction": "Place the hand-sized soap left of the toycar with smiling face design using the left arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100049, "instruction": "Drop the small lightweight blue stapler to the left of the cube tea box with embossed designs", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100050, "instruction": "Using the left arm, set the phone with buttons and screen to the left of the card box with golden designs.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100050, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100051, "instruction": "Using the left arm, place the rectangular phone on the left of the cube tea box with embossed designs", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100052, "instruction": "Move the blue stapler for paper fastening to the left of the small mouse with smooth surface.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100054, "instruction": "With the right arm, place the tea box left of the small playingcards pack", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100056, "instruction": "Move the bright blue smooth soap bar to the left of the white stapler with rounded design.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100057, "instruction": "Set the playingcards pack with blue top carefully on the left of the palm-sized rectangular soap", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100058, "instruction": "Use the left arm and place the box of playingcards left of the coffee-box with angled top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100059, "instruction": "Using the right arm, set the smooth soap with grainy spots to the left of the silver-edged phone.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100060, "instruction": "Using the left arm, place the smooth cube with golden leaf designs on the left of the toycar made of plastic material", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100062, "instruction": "Place the multi-colored cube carefully to the ergonomic mouse's left", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100063, "instruction": "Using the left arm, place the rubikscube with bright primary colors on the left of the toycar with rounded compact shape", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100064, "instruction": "With the left arm, position the bell with protruding knob left of the compact oval-shaped mouse.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100065, "instruction": "Stick the multicolored puzzle cube on the left of the bread with rounded edges", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100066, "instruction": "Shift the box for coffee storage and position it left of the computer mouse.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100067, "instruction": "Place the small office stapler to rest left of the shiny green toycar using the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100068, "instruction": "Use the left arm to put the compact blue bar of soap left of the white body stapler with accents", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100070, "instruction": "Put the colorful cube on the left side of the curved black stapler", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100071, "instruction": "Drop the light beige tea-box to the left of the miniature teal vehicle toy", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100071, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100072, "instruction": "Use the left arm to put the smooth dark gray computer mouse left of the small dark cleaning soap", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100073, "instruction": "Move the coffee-box with sachets to the left side of the glossy rectangular playingcards box", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100074, "instruction": "Move the golden loaf with soft crust to the left of the slanted soap with smooth surface.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100076, "instruction": "Position the mouse for cursor control to the left of the rubikscube made of square tiles.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100077, "instruction": "Move the kids' toycar in bright blue to the left of the smooth rubikscube with black frame edges", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100077, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100078, "instruction": "Move the smooth cardboard coffee-box to the left of the hand-sized bread block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100080, "instruction": "Place the yellow soap left of the soft square bread using the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100080, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100081, "instruction": "Place the small playingcards pack exactly to the left of the colorful rubikscube for twisting and solving", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100081, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100082, "instruction": "Place the toycar with smiling face design to rest left of the rectangular bread loaf with fluffy texture using the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100082, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100083, "instruction": "Position the dark soap bar carefully to the left of the small car toy.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100084, "instruction": "Using the left arm, move the stapler with silver inner plates left of the smooth black phone.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100084, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100085, "instruction": "Move the white and black colored bell to the left of the glossy rectangular playingcards box", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100085, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100086, "instruction": "Drop the yellow box for tea on the left side of the blue and white playingcards packaging", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100086, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100087, "instruction": "Using the left arm, set the metal bell with plastic parts to the left of the small box with golden patterns.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100088, "instruction": "Grab the golden baked bread using the left arm and place left of the toycar with transparent windshield.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100089, "instruction": "Move the soft medium bread to the left of the smooth light brown woodenblock.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100090, "instruction": "Place the dark gray mouse on the left of the medium-sized rectangular bread.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100091, "instruction": "Shift the gray rectangular soap with angled edges leftward to the side of the red stapler", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100091, "success": false}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100092, "instruction": "Use the right arm and place the play car in teal and white left of the cardboard tea box with logo.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100093, "instruction": "Using the right arm, set the golden brown loaf-shaped bread to the left of the phone with printed back design.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100094, "instruction": "Drop the compact teal toycar on the left side of the medium-sized coffee-box", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100095, "instruction": "Using the left arm, set the brown phone with gray details to the left of the plastic stapler with metal on base.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100097, "instruction": "Grab the blue toycar using the right arm and place it left of the dark ergonomic mouse for computer navigation.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100097, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100098, "instruction": "Set the dark gray palm-sized mouse on the left side of the light brown coffee-box with printed text.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100100, "instruction": "Stick the rectangle-shaped cards box on the left of the glossy bright tea-box", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100100, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100102, "instruction": "Position the colorful rubikscube carefully to the left of the coffee-box with flat top.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100102, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100103, "instruction": "Shift the beige tea-box with handle leftward to the side of the golden bread with crusty surface", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100103, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100104, "instruction": "Grab the oval-shaped mouse with the right arm and shift it left of the lightweight red stapler.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100104, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100105, "instruction": "Shift the mouse for cursor control leftward to the side of the card box with golden designs", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100105, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100106, "instruction": "With the left arm, set the solid rectangular soap on the left of the red box for coffee sachets.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100106, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100107, "instruction": "Use the left arm to position the plastic stapler with metallic interior left of the gray mouse", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100107, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100108, "instruction": "Set the bell with metallic top and plastic base directly to the left of the round-topped loaf of bread", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100108, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100109, "instruction": "Position the small rectangular tea-box to the left of the rectangular soap with rounded edges", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100109, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100110, "instruction": "Place the golden brown loaf directly to the left of the soap bar with curved edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100110, "success": false}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100111, "instruction": "With the left arm, position the rectangle-shaped cards box left of the tea-box with rectangular edges", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100111, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100112, "instruction": "Use the left arm to move the blue playingcards box to the smooth woodenblock's left", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100112, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100113, "instruction": "Move the rubikscube to the left side of the golden baked bread", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100113, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100114, "instruction": "Use the right arm to put the plastic stapler with silver mechanism left of the multicolored puzzle cube", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100114, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100115, "instruction": "Use the right arm, move the black-bordered rubikscube left of the rectangular playingcards case", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100115, "success": true}
+{"event": "case_prepared", "task_name": "place_a2b_left", "seed": 100116, "instruction": "Move the compact phone to the left side of the wireless dark gray computer mouse", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_a2b_left", "seed": 100116, "success": true}

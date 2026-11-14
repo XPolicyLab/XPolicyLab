@@ -1,5 +1,5 @@
 {
-  "format": "crwm.joint14.normalization.v1",
+  "format": "cloudrobo_wm.joint14.normalization.v1",
   "stats_key": "robotwin_aloha_joint14_cleanonly_v1",
   "source_statistics_sha256": "48f930c2487a2808e517598d6eca3a1a6bad6ed283d0fa98a59a9c25aa122608",
   "state": {

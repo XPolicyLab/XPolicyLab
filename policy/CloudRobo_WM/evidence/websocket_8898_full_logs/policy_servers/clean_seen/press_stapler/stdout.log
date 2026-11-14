@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100000, "instruction": "Use one arm to press the compact bright blue stapler.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100002, "instruction": "Apply one arm the left arm to press the small handheld stapler firmly.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100003, "instruction": "Apply pressure to the small lightweight blue stapler firmly", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100003, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100004, "instruction": "Press the stapler the small handheld stapler using an arm the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100005, "instruction": "Use one arm to press the manual stapler with black base.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100005, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100006, "instruction": "Firmly push the small black stapler with metal core using the right arm to operate it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100007, "instruction": "Use one arm the left arm to press the blue stapler.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100009, "instruction": "Push down on the manual blue stapler to staple papers.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100010, "instruction": "Lower the compact bright blue stapler using an arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100011, "instruction": "Press the red stapler for binding papers until it works", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100011, "success": false}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100012, "instruction": "Use one arm to press the simple stapler.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100012, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100013, "instruction": "Apply pressure to the stapler with black top section using one arm the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100014, "instruction": "Firmly push the blue rectangular stapler with curves using the right arm to operate it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100014, "success": false}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100015, "instruction": "Push down on the stapler the handheld stapler.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100016, "instruction": "Use an arm to press the red top black bottom stapler", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100017, "instruction": "Apply pressure on the white body stapler with accents until it works.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100017, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100018, "instruction": "Lower the bright blue smooth stapler using an arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100018, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100019, "instruction": "Apply pressure to the blue stapler with curved design using one arm the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100019, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100020, "instruction": "Apply pressure to the handheld black stapler with the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100021, "instruction": "Press the stapler the metal and plastic stapler using an arm the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100023, "instruction": "Push down on the blue rectangular stapler with curves firmly.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100024, "instruction": "Push the plastic stapler with silver mechanism down completely", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100025, "instruction": "Apply pressure to the manual blue stapler using one arm the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100025, "success": false}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100026, "instruction": "Use one arm to press the black stapler with shiny interior.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100026, "success": false}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100027, "instruction": "Use an arm to press the stapler with white metallic components", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100028, "instruction": "Firmly push down on the handheld red stapler.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100028, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100029, "instruction": "Press on the stapler with red top using the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100030, "instruction": "Press the stapler with silver staple tray downward using your arm the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100031, "instruction": "Firmly press the metallic stapler with blue cover using an arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100031, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100033, "instruction": "Push the stapler the red stapler with black base to operate it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100033, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100034, "instruction": "Press on the stapler with black top section to activate it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100034, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100035, "instruction": "Press on the red stapler using the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100036, "instruction": "Use one arm the right arm to press the blue stapler.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100036, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100037, "instruction": "Apply force to the small red stapler with the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100038, "instruction": "Use your the left arm to press the stapler the red stapler.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100039, "instruction": "Push the stapler the handheld stapler to operate it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100039, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100041, "instruction": "Operate the red plastic stapler with smooth top by pressing it with the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100042, "instruction": "Push the stapler the metallic stapler with red body to activate it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100042, "success": false}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100043, "instruction": "Apply pressure to the small red stapler with the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100043, "success": false}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100044, "instruction": "Press the stapler the black stapler for joining pages using an arm the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100045, "instruction": "Push the stapler the compact red stapler with silver accents to operate it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100045, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100046, "instruction": "Push down firmly on the modern design stapler to complete.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100046, "success": false}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100047, "instruction": "Press on the handheld black stapler using the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100048, "instruction": "Press down on the stapler the handheld blue and silver stapler firmly.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100048, "success": false}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100049, "instruction": "Engage the stapler in bright red color by using the left arm to press it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100049, "success": false}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100050, "instruction": "Firmly press down on the office stapler with plastic and metal parts to staple.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100050, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100051, "instruction": "Apply enough force to the smooth plastic stapler to press it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100052, "instruction": "Place pressure on the handheld black stapler to staple.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100053, "instruction": "Push down firmly on the black smooth-textured stapler to complete.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100053, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100054, "instruction": "Simply press the stapler the black stapler with shiny interior downward.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100055, "instruction": "Use your arm the left arm to push the small office stapler down.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100055, "success": false}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100056, "instruction": "Place pressure on the small office stapler to staple.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100057, "instruction": "Use your the left arm to press the stapler the small red stapler.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100058, "instruction": "Use an arm to press the blue stapler with curved design", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100059, "instruction": "Firmly press down on the handheld black stapler to staple.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100060, "instruction": "Apply enough force to the small stapler to press it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100061, "instruction": "Press the compact red stapler with silver accents firmly to staple", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100061, "success": false}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100062, "instruction": "Apply pressure to the black smooth-textured stapler with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100063, "instruction": "Apply enough force to the stapler with white metallic components to press it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100064, "instruction": "Press the stapler with rounded edges until it works", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100065, "instruction": "Operate the stapler with silver inner plates by pressing it with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100066, "instruction": "Press the blue plastic stapler with silver metal to staple the sheets together.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100067, "instruction": "Push the stapler the red stapler with black base to activate it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100068, "instruction": "Push down forcefully on the stapler the stapler with rectangular silver mechanism.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100069, "instruction": "Push the top of the blue stapler with curved design down", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100069, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100070, "instruction": "Press the compact stapler with smooth surface to complete the task.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100071, "instruction": "Engage the manual blue stapler by using the right arm to press it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100071, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100072, "instruction": "Push down forcefully on the stapler the compact black stapler.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100073, "instruction": "Firmly push the stapler with metallic staple slot using the left arm to operate it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100074, "instruction": "Lower the black smooth-textured stapler using an arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100074, "success": false}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100075, "instruction": "Push down on the office stapler with plastic and metal parts to staple papers.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100076, "instruction": "Apply pressure to the modern design stapler firmly", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100076, "success": false}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100077, "instruction": "Push the black stapler with rectangular base down firmly.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100077, "success": false}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100078, "instruction": "Lower the compact blue stapler using an arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100079, "instruction": "Push the stapler the blue stapler with shiny silver parts to activate it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100080, "instruction": "Press down on the stapler the handheld stapler firmly.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100080, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100081, "instruction": "Apply pressure on the black stapler with shiny interior until it works.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100081, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100082, "instruction": "Push the stapler the red stapler with black base to activate it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100082, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100083, "instruction": "Press the blue stapler with white accents downward using your arm the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100084, "instruction": "Push the compact office stapler down completely", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100084, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100085, "instruction": "Push the white stapler with rounded design down firmly.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100085, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100086, "instruction": "Push the stapler the stapler with orange top lever to operate it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100086, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100087, "instruction": "Firmly press down on the red plastic stapler with smooth top to staple.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100088, "instruction": "Push the handy blue stapler with metal parts using one arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100089, "instruction": "Place pressure on the compact stapler with smooth surface to staple.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100089, "success": false}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100092, "instruction": "Use an arm to press the black smooth-textured stapler", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100093, "instruction": "Firmly press down on the red top black bottom stapler to staple.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100094, "instruction": "Push the stapler the blue stapler for paper fastening to operate it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100095, "instruction": "Firmly press down on the simple stapler to staple.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100096, "instruction": "Push the blue stapler with silver staple tray down firmly.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100096, "success": false}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100097, "instruction": "Apply one arm the right arm to press the handheld stapler firmly.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100097, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100098, "instruction": "Push down firmly on the blue stapler with silver staple tray to complete.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100099, "instruction": "Operate the stapler with metallic staple slot by pressing it with the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100100, "instruction": "Operate the red stapler by pressing it with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100100, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100101, "instruction": "Push down firmly on the paper stapler with silver tray to complete.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100101, "success": false}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100102, "instruction": "Press the handheld stapler downward using your arm the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100102, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100103, "instruction": "Use one arm to press the red stapler.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100103, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100104, "instruction": "Use one arm the right arm to press the curved black stapler.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100104, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100105, "instruction": "Use one arm to press the stapler with orange top lever.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100105, "success": true}
+{"event": "case_prepared", "task_name": "press_stapler", "seed": 100106, "instruction": "Apply force to the black stapler with shiny interior with the left arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "press_stapler", "seed": 100106, "success": true}

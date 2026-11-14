@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100000, "instruction": "Use the left arm to grab red block, set it on the left, follow with the right arm for green block, and end with the left arm for blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100001, "instruction": "Using the right arm, the left arm, and the right arm, arrange red block, green block, and blue block sequentially from left to right in a single row.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100002, "instruction": "red block, then green block, and finally blue block should be placed in a row from left to right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100003, "instruction": "Start with red block, followed by green block and blue block, placing them in order left to right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100003, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100004, "instruction": "Using the left arm, the right arm, and the right arm, set red block, green block, and blue block from left to right in the sequence red, green, blue.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100005, "instruction": "Use the right arm to grab red block, set it on the left, follow with the left arm for green block, and end with the left arm for blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100005, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100006, "instruction": "First, grab red block, then green block, then blue block with the right arm, the right arm, and the left arm, and place them in order left to right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100007, "instruction": "Position red block, green block, and blue block in a left-to-right sequence, forming a row.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100008, "instruction": "Begin by placing red block on the left, then add green block to the right, and finish with blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100009, "instruction": "First, place red block, then green block beside it, and finally blue block next to green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100010, "instruction": "Grab red block with the right arm, place it leftmost, then green block using the left arm, followed by blue block with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100011, "instruction": "Grab red block using the right arm, green block with the left arm, and blue block with the right arm, aligning them consecutively in a row.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100011, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100012, "instruction": "Use the right arm to grab red block, set it on the left, follow with the right arm for green block, and end with the right arm for blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100012, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100013, "instruction": "Using the right arm, the left arm, and the left arm, align red block, green block, and blue block in a row from left to right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100014, "instruction": "First, grab red block, then green block, then blue block with the right arm, the left arm, and the right arm, and place them in order left to right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100015, "instruction": "Use the right arm to place red block on the left, then use the right arm for green block beside red block, and finally the left arm for blue block next to green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100016, "instruction": "Begin by placing red block on the left, then add green block to the right, and finish with blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100017, "instruction": "Using the right arm, the right arm, and the left arm, arrange red block, green block, and blue block from left to right in the given order.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100017, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100018, "instruction": "Grab red block with the left arm, place it leftmost, then green block using the right arm, followed by blue block with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100018, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100019, "instruction": "Using the left arm, the right arm, and the left arm, align red block, green block, and blue block in a row from left to right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100019, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100020, "instruction": "Grab red block, position it on the left. Next, grab green block to place beside red block, then grab blue block and set it to the right of green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100021, "instruction": "Using the left arm, the left arm, and the right arm, set red block, green block, and blue block from left to right in the sequence red, green, blue.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100022, "instruction": "Position red block, green block, and blue block in a left-to-right sequence, forming a row.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100022, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100023, "instruction": "First, place red block on the far left, then green block in the middle, and finish with blue block on the right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100024, "instruction": "Position red block, green block, and blue block from left to right in the specified sequence.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100025, "instruction": "Using the left arm, the right arm, and the left arm, align red block, green block, and blue block in a row from left to right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100026, "instruction": "Use the left arm to grab red block, set it on the left, follow with the right arm for green block, and end with the right arm for blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100027, "instruction": "Begin by placing red block on the left, then add green block to the right, and finish with blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100028, "instruction": "Using the left arm, the right arm, and the left arm, arrange red block, green block, and blue block sequentially from left to right in a single row.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100028, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100029, "instruction": "Position red block first, followed by green block, and end with blue block in a row from left to right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100030, "instruction": "With the right arm, the left arm, and the right arm, arrange red block, green block, and blue block sequentially in a horizontal row.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100031, "instruction": "Place red block to the left, green block in the middle, and blue block on the right in a linear fashion.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100031, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100032, "instruction": "First, use the right arm to grab red block and place it on the left. Then grab green block with the left arm and position it next to red block, followed by grabbing blue block with the left arm and placing it next to green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100033, "instruction": "First, use the left arm to grab red block and place it on the left. Then grab green block with the right arm and position it next to red block, followed by grabbing blue block with the left arm and placing it next to green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100033, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100034, "instruction": "With the left arm, the right arm, and the left arm, place red block, green block, and blue block sequentially from left to right as red, green, blue.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100034, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100035, "instruction": "Position red block first, followed by green block, and end with blue block in a row from left to right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100036, "instruction": "Position red block, green block, and blue block in a left-to-right sequence, forming a row.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100036, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100037, "instruction": "Arrange red block, green block, and blue block in sequence from leftmost to rightmost positions.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100038, "instruction": "Arrange red block, green block, and blue block from left to right using the left arm, the right arm, and the right arm in the order red, green, blue.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100039, "instruction": "First, use the left arm to grab red block and place it on the left. Then grab green block with the right arm and position it next to red block, followed by grabbing blue block with the left arm and placing it next to green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100039, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100040, "instruction": "Use the left arm for red block to set it leftmost, continue with the right arm to position green block next to red block, and finish by placing blue block using the left arm to the right of green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100040, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100041, "instruction": "Move red block with the left arm to the far left, green block with the left arm just beside red block, and finally blue block with the left arm next to green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100042, "instruction": "Position red block, green block, and blue block on a surface from left to right in the order red, green, blue.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100043, "instruction": "Grab red block, set it on the leftmost side, add green block to its right, and complete with blue block on the far right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100043, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100044, "instruction": "Using the right arm, the left arm, and the left arm, set red block, green block, and blue block from left to right in the sequence red, green, blue.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100045, "instruction": "First, use the left arm to grab red block and place it on the left. Then grab green block with the left arm and position it next to red block, followed by grabbing blue block with the right arm and placing it next to green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100045, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100046, "instruction": "Start with red block on the left, add green block next to it, and then place blue block on the right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100046, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100047, "instruction": "Position red block first, followed by green block, and end with blue block in a row from left to right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100048, "instruction": "Position red block in the first spot, then set green block to the right of red block, and finish by placing blue block to the right of green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100049, "instruction": "Use the right arm for red block to set it leftmost, continue with the left arm to position green block next to red block, and finish by placing blue block using the right arm to the right of green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100050, "instruction": "Place red block first, set green block beside it, and complete the row by positioning blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100050, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100051, "instruction": "Put red block first, green block next, and blue block last in a straight line from left to right, using the left arm, the left arm, and the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100052, "instruction": "Grab and place red block first, followed by green block, and finish with blue block in a row.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100053, "instruction": "Start with red block on the left, add green block next to it, and then place blue block on the right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100053, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100054, "instruction": "Place red block first on the far left, green block next to it, and blue block last on the far right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100055, "instruction": "Pick up red block, green block, and blue block in sequence and position them in a left-to-right row.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100055, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100056, "instruction": "Grab and place red block first, followed by green block, and finish with blue block in a row.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100057, "instruction": "Arrange red block, green block, and blue block from left to right using the left arm, the right arm, and the left arm in the order red, green, blue.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100058, "instruction": "Begin by placing red block on the left, then add green block to the right, and finish with blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100059, "instruction": "Place red block first, set green block beside it, and complete the row by positioning blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100060, "instruction": "Put red block first, green block next, and blue block last in a straight line from left to right, using the right arm, the left arm, and the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100061, "instruction": "Pick up red block, green block, and blue block sequentially and place them in a row from left to right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100062, "instruction": "Grab red block, set it on the leftmost side, add green block to its right, and complete with blue block on the far right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100062, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100063, "instruction": "Put red block first, green block next, and blue block last in a straight line from left to right, using the left arm, the right arm, and the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100063, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100064, "instruction": "Grab red block using the right arm, green block with the left arm, and blue block with the left arm, aligning them consecutively in a row.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100065, "instruction": "Move red block with the right arm to the far left, green block with the left arm just beside red block, and finally blue block with the right arm next to green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100066, "instruction": "Line up the objects in the order red block, green block, and blue block, starting from the left.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100067, "instruction": "Position red block, green block, and blue block on a surface from left to right in the order red, green, blue.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100068, "instruction": "Start by grabbing red block, place it on the leftmost side. Next, position green block beside red block, and finally set blue block to the right of green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100069, "instruction": "Use the right arm for red block, then the right arm for green block, and the left arm for blue block, arranging them left to right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100069, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100070, "instruction": "Arrange red block, green block, and blue block in a row using the right arm, the right arm, and the left arm, keeping the left-to-right order.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100071, "instruction": "Use the right arm for red block to set it leftmost, continue with the left arm to position green block next to red block, and finish by placing blue block using the left arm to the right of green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100071, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100072, "instruction": "Start by grabbing red block, place it on the leftmost side. Next, position green block beside red block, and finally set blue block to the right of green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100073, "instruction": "First, grab red block, then green block, then blue block with the left arm, the right arm, and the right arm, and place them in order left to right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100074, "instruction": "Grab red block with the right arm, place it leftmost, then green block using the left arm, followed by blue block with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100075, "instruction": "First, place red block, then green block beside it, and finally blue block next to green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100076, "instruction": "Start with red block, followed by green block and blue block, placing them in order left to right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100077, "instruction": "Grab red block, place it on the leftmost spot, add green block to the middle, and set blue block last.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100077, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100078, "instruction": "Grab red block with the left arm, place it leftmost, then green block using the right arm, followed by blue block with the left arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100079, "instruction": "Position red block, green block, and blue block on a surface from left to right in the order red, green, blue.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100080, "instruction": "Position red block in the first spot, then set green block to the right of red block, and finish by placing blue block to the right of green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100080, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100081, "instruction": "Using the right arm, the right arm, and the left arm, arrange red block, green block, and blue block from left to right in the given order.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100081, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100082, "instruction": "Position red block, green block, and blue block on a surface from left to right in the order red, green, blue.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100082, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100083, "instruction": "With the left arm, the right arm, and the left arm, arrange red block, green block, and blue block sequentially in a horizontal row.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100084, "instruction": "Position red block, green block, and blue block from left to right in the specified sequence.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100084, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100085, "instruction": "Grab red block, place it on the leftmost spot, add green block to the middle, and set blue block last.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100085, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100086, "instruction": "First, use the right arm to grab red block and place it on the left. Then grab green block with the right arm and position it next to red block, followed by grabbing blue block with the left arm and placing it next to green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100086, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100087, "instruction": "Place red block first, set green block beside it, and complete the row by positioning blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100088, "instruction": "Set red block, green block, and blue block side by side in the order of red block, green block, then blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100089, "instruction": "Grab and place red block first, followed by green block, and finish with blue block in a row.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100090, "instruction": "Use the left arm to grab red block and position it on the left, then the right arm for green block, and the left arm for blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100091, "instruction": "Use the right arm to grab red block, set it on the left, follow with the left arm for green block, and end with the right arm for blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100091, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100092, "instruction": "Begin by placing red block on the left, then add green block to the right, and finish with blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100093, "instruction": "Place red block first, set green block beside it, and complete the row by positioning blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100094, "instruction": "First, use the right arm to grab red block and place it on the left. Then grab green block with the left arm and position it next to red block, followed by grabbing blue block with the left arm and placing it next to green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100095, "instruction": "Place red block first, set green block beside it, and complete the row by positioning blue block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100096, "instruction": "Grab red block, place it on the leftmost spot, add green block to the middle, and set blue block last.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100097, "instruction": "red block, then green block, and finally blue block should be placed in a row from left to right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100097, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100098, "instruction": "Start with red block on the left, add green block next to it, and then place blue block on the right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100098, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_rgb", "seed": 100099, "instruction": "Move red block with the left arm to the far left, green block with the right arm just beside red block, and finally blue block with the right arm next to green block.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_rgb", "seed": 100099, "success": true}

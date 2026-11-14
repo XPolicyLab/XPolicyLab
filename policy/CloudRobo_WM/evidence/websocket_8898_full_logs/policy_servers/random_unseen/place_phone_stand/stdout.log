@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100009, "instruction": "Set the phone with rounded edges on the angled brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100010, "instruction": "Set the palm-sized phone with glossy finish on the adjustable phone holder.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100012, "instruction": "Set the phone with rounded edges on the L-shaped smooth brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100012, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100013, "instruction": "Set the phone with rounded edges on the L-shaped smooth brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100014, "instruction": "Set the phone with rounded edges on the adjustable phone holder.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100015, "instruction": "Set the modern phone on the dark green phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100017, "instruction": "Set the phone with rounded edges on the angled brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100017, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100020, "instruction": "Set the rectangular phone on the brown angled plastic phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100020, "success": false}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100021, "instruction": "Set the phone with rounded edges on the silver arm phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100022, "instruction": "Set the palm-sized phone with glossy finish on the silver arm phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100022, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100023, "instruction": "Set the phone with rounded edges on the angled brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100024, "instruction": "Set the white-sided phone on the angled brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100025, "instruction": "Set the phone with flat black screen on the silver arm phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100026, "instruction": "Set the phone with rounded edges on the adjustable phone holder.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100027, "instruction": "Set the rectangular silver phone with rounded edges on the dark green phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100029, "instruction": "Set the phone with rounded edges on the brown angled plastic phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100030, "instruction": "Set the phone with shiny black back on the silver arm phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100030, "success": false}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100031, "instruction": "Set the phone with rounded edges on the angled brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100031, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100032, "instruction": "Set the smartphone with black display on the dark green phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100035, "instruction": "Set the rectangular silver phone with rounded edges on the angled brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100036, "instruction": "Set the rectangular phone on the dark green phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100036, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100037, "instruction": "Set the rectangular phone on the dark green phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100038, "instruction": "Set the phone with shiny black back on the dark green phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100038, "success": false}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100041, "instruction": "Set the white-sided phone on the L-shaped smooth brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100042, "instruction": "Set the phone with rounded edges on the L-shaped smooth brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100044, "instruction": "Set the phone with rounded edges on the L-shaped smooth brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100046, "instruction": "Set the modern phone on the silver arm phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100046, "success": false}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100047, "instruction": "Set the white-sided phone on the adjustable phone holder.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100048, "instruction": "Set the phone with shiny black back on the dark green phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100049, "instruction": "Set the handheld phone with silver frame on the adjustable phone holder.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100050, "instruction": "Set the rectangular phone with curved edges on the dark green phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100050, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100051, "instruction": "Set the rectangular phone with curved edges on the L-shaped smooth brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100052, "instruction": "Set the palm-sized phone with glossy finish on the L-shaped smooth brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100052, "success": false}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100056, "instruction": "Set the rectangular phone with curved edges on the angled brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100056, "success": false}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100057, "instruction": "Set the white-sided phone on the adjustable phone holder.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100059, "instruction": "Set the white-sided phone on the angled brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100060, "instruction": "Set the modern phone on the brown angled plastic phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100063, "instruction": "Set the phone with rounded edges on the L-shaped smooth brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100064, "instruction": "Set the phone with rounded edges on the L-shaped smooth brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100064, "success": false}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100065, "instruction": "Set the phone with rounded edges on the angled brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100067, "instruction": "Set the handheld phone with silver frame on the L-shaped smooth brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100068, "instruction": "Set the phone with rounded edges on the dark green phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100070, "instruction": "Set the smartphone with black display on the adjustable phone holder.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100071, "instruction": "Set the phone with shiny black back on the brown angled plastic phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100071, "success": false}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100073, "instruction": "Set the rectangular phone with curved edges on the adjustable phone holder.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100074, "instruction": "Set the rectangular phone with curved edges on the dark green phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100075, "instruction": "Set the smartphone with black display on the angled brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100076, "instruction": "Set the rectangular silver phone with rounded edges on the dark green phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100077, "instruction": "Set the phone with rounded edges on the angled brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100077, "success": false}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100078, "instruction": "Set the modern phone on the brown angled plastic phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100083, "instruction": "Set the phone with rounded edges on the angled brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100086, "instruction": "Set the rectangular phone on the dark green phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100086, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100087, "instruction": "Set the phone with flat black screen on the silver arm phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100088, "instruction": "Set the palm-sized phone with glossy finish on the silver arm phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100089, "instruction": "Set the handheld phone with silver frame on the dark green phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100090, "instruction": "Set the phone with rounded edges on the angled brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100091, "instruction": "Set the phone with rounded edges on the silver arm phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100091, "success": false}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100092, "instruction": "Set the phone with flat black screen on the dark green phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100094, "instruction": "Set the rectangular phone with curved edges on the silver arm phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100095, "instruction": "Set the handheld phone with silver frame on the L-shaped smooth brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100097, "instruction": "Set the phone with shiny black back on the dark green phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100097, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100098, "instruction": "Set the rectangular silver phone with rounded edges on the angled brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100100, "instruction": "Set the white-sided phone on the dark green phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100100, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100102, "instruction": "Set the rectangular silver phone with rounded edges on the dark green phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100102, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100103, "instruction": "Set the modern phone on the angled brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100103, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100106, "instruction": "Set the phone with flat black screen on the adjustable phone holder.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100106, "success": false}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100107, "instruction": "Set the white-sided phone on the dark green phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100107, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100110, "instruction": "Set the rectangular phone with curved edges on the dark green phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100110, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100111, "instruction": "Set the phone with rounded edges on the brown angled plastic phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100111, "success": false}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100112, "instruction": "Set the palm-sized phone with glossy finish on the silver arm phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100112, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100113, "instruction": "Set the rectangular silver phone with rounded edges on the angled brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100113, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100115, "instruction": "Set the phone with rounded edges on the adjustable phone holder.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100115, "success": false}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100118, "instruction": "Set the white-sided phone on the adjustable phone holder.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100118, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100120, "instruction": "Set the phone with shiny black back on the brown angled plastic phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100120, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100121, "instruction": "Set the phone with rounded edges on the brown angled plastic phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100121, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100122, "instruction": "Set the rectangular phone with curved edges on the dark green phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100122, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100124, "instruction": "Set the white-sided phone on the L-shaped smooth brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100124, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100125, "instruction": "Set the rectangular silver phone with rounded edges on the brown angled plastic phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100125, "success": false}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100126, "instruction": "Set the rectangular silver phone with rounded edges on the L-shaped smooth brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100126, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100127, "instruction": "Set the rectangular phone with curved edges on the silver arm phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100127, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100129, "instruction": "Set the palm-sized phone with glossy finish on the angled brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100129, "success": false}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100132, "instruction": "Set the phone with flat black screen on the brown angled plastic phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100132, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100133, "instruction": "Set the white-sided phone on the angled brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100133, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100134, "instruction": "Set the rectangular phone with curved edges on the dark green phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100134, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100135, "instruction": "Set the rectangular silver phone with rounded edges on the L-shaped smooth brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100135, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100136, "instruction": "Set the rectangular phone with curved edges on the brown angled plastic phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100136, "success": false}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100138, "instruction": "Set the phone with rounded edges on the silver arm phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100138, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100139, "instruction": "Set the modern phone on the silver arm phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100139, "success": false}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100140, "instruction": "Set the phone with flat black screen on the silver arm phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100140, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100141, "instruction": "Set the rectangular phone on the L-shaped smooth brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100141, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100143, "instruction": "Set the white-sided phone on the L-shaped smooth brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100143, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100145, "instruction": "Set the rectangular silver phone with rounded edges on the brown angled plastic phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100145, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100146, "instruction": "Set the rectangular phone with curved edges on the brown angled plastic phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100146, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100148, "instruction": "Set the phone with flat black screen on the angled brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100148, "success": false}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100149, "instruction": "Set the smartphone with black display on the silver arm phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100149, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100151, "instruction": "Set the phone with rounded edges on the adjustable phone holder.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100151, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100154, "instruction": "Set the phone with shiny black back on the L-shaped smooth brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100154, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100157, "instruction": "Set the rectangular phone with curved edges on the adjustable phone holder.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100157, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100159, "instruction": "Set the phone with rounded edges on the angled brown phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100159, "success": true}
+{"event": "case_prepared", "task_name": "place_phone_stand", "seed": 100160, "instruction": "Set the rectangular phone on the brown angled plastic phonestand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_phone_stand", "seed": 100160, "success": true}

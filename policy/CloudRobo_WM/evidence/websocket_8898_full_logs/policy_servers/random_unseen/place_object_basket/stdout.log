@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100000, "instruction": "Place the gray base toycar in the basket with rounded edges and move it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100002, "instruction": "Use one arm to grab the hard black box for card deck, place it in the yellow basket with open slots.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100003, "instruction": "Move the compact toycar with shiny black tires to the yellow basket with open slots, then shift the yellow basket with open slots.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100003, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100007, "instruction": "Grab the compact toycar with shiny black tires and put it into the yellow rectangular basket with dual grips.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100009, "instruction": "Pick up the rectangular playingcards pack and drop in the yellow basket with open slots.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100010, "instruction": "Pick up the tiny pink car with four wheels and drop in the yellow rectangular basket with dual grips.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100012, "instruction": "Pick up the rectangular playingcards pack, place it in the medium basket with smooth texture, move the medium basket with smooth texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100012, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100013, "instruction": "Pick up the gold text on playing cards box, place it in the medium-sized basket with perforated texture, move the medium-sized basket with perforated texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100014, "instruction": "Grab the small packet of playingcards and place into the yellow basket with open slots.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100018, "instruction": "Grab the bright green toycar and put it in the yellow rectangular basket with dual grips.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100018, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100021, "instruction": "Move the bright green toycar to the yellow basket with open slots, then shift the yellow basket with open slots.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100022, "instruction": "Place the gold text on playing cards box in the yellow rectangular basket with dual grips and move it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100022, "success": false}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100023, "instruction": "Pick up the bright green toycar, place it in the basket with rounded edges, move the basket with rounded edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100025, "instruction": "Move the rectangular red playingcards holder to the medium basket with smooth texture, then shift the medium basket with smooth texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100026, "instruction": "Pick up the small packet of playingcards, place it in the medium-sized basket with perforated texture, move the medium-sized basket with perforated texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100026, "success": false}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100028, "instruction": "Grab the black box with smooth surface and put it in the medium basket with smooth texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100028, "success": false}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100029, "instruction": "Grab the blue toycar, put it in the yellow rectangular basket with dual grips, move the yellow rectangular basket with dual grips.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100031, "instruction": "Grab the gold text on playing cards box and put it into the medium basket with smooth texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100031, "success": false}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100032, "instruction": "Move the playingcards with red packaging to the oval basket with medium storage space, then shift the oval basket with medium storage space.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100036, "instruction": "Grab the playingcards with red packaging and put it in the basket with rounded edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100036, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100038, "instruction": "Pick up the plastic teal car with wheels and drop in the yellow rectangular basket with dual grips.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100038, "success": false}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100040, "instruction": "Place the bright green toycar in the basket with rounded edges and move it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100040, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100042, "instruction": "Grab the playingcards with red packaging and put it into the medium basket with smooth texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100043, "instruction": "Grab the blue toycar and put it in the yellow rectangular basket with dual grips.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100043, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100044, "instruction": "Pick up the rectangular playingcards case with patterns and drop in the basket with rounded edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100044, "success": false}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100047, "instruction": "Grab the hard black box for card deck and put it in the basket with rounded edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100048, "instruction": "Pick up the rectangular red playingcards holder, place it in the yellow basket with open slots, move the yellow basket with open slots.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100049, "instruction": "Pick up the tiny pink car with four wheels and drop in the yellow rectangular basket with dual grips.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100049, "success": false}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100050, "instruction": "Move the small packet of playingcards to the medium basket with smooth texture, then shift the medium basket with smooth texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100050, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100052, "instruction": "Pick up the bright green toycar, place it in the yellow basket with open slots, move the yellow basket with open slots.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100053, "instruction": "Grab the gray base toycar, put it in the yellow rectangular basket with dual grips, move the yellow rectangular basket with dual grips.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100053, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100054, "instruction": "Use one arm to grab the small packet of playingcards, place it in the oval basket with medium storage space.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100054, "success": false}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100055, "instruction": "Grab the small packet of playingcards and place into the basket with rounded edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100055, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100056, "instruction": "Pick up the black box with smooth surface and drop in the medium basket with smooth texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100059, "instruction": "Place the gray base toycar in the oval basket with medium storage space and move it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100060, "instruction": "Grab the blue toycar with yellow buttons, put it in the yellow rectangular basket with dual grips, move the yellow rectangular basket with dual grips.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100061, "instruction": "Move the gold text on playing cards box to the medium basket with smooth texture, then shift the medium basket with smooth texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100062, "instruction": "Grab the rectangular playingcards case with patterns and put it in the yellow rectangular basket with dual grips.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100064, "instruction": "Grab the toycar with rounded body and put it in the yellow basket with open slots.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100065, "instruction": "Pick up the compact toycar with rotating wheels and drop in the medium-sized basket with perforated texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100066, "instruction": "Pick up the tiny pink car with four wheels and drop in the medium basket with smooth texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100069, "instruction": "Pick up the black box with smooth surface, place it in the yellow rectangular basket with dual grips, move the yellow rectangular basket with dual grips.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100069, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100072, "instruction": "Grab the blue toycar with yellow buttons, put it in the medium-sized basket with perforated texture, move the medium-sized basket with perforated texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100074, "instruction": "Pick up the playable toycar with rolling wheels, place it in the oval basket with medium storage space, move the oval basket with medium storage space.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100074, "success": false}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100077, "instruction": "Grab the plastic toycar and put it into the medium basket with smooth texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100077, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100078, "instruction": "Move the blue toycar to the yellow rectangular basket with dual grips, then shift the yellow rectangular basket with dual grips.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100081, "instruction": "Grab the pink toycar with white bumper, put it in the yellow rectangular basket with dual grips, move the yellow rectangular basket with dual grips.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100081, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100082, "instruction": "Grab the plastic teal car with wheels and put it in the yellow rectangular basket with dual grips.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100082, "success": false}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100085, "instruction": "Use one arm to grab the gray base toycar, place it in the medium-sized basket with perforated texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100085, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100086, "instruction": "Place the small box for playingcards in the medium basket with smooth texture and move it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100086, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100087, "instruction": "Move the pink toycar with white bumper to the medium basket with smooth texture, then shift the medium basket with smooth texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100087, "success": false}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100088, "instruction": "Grab the toycar with orange wheels and put it into the medium-sized basket with perforated texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100089, "instruction": "Use one arm to grab the black box with smooth surface, place it in the yellow basket with open slots.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100089, "success": false}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100090, "instruction": "Use one arm to grab the compact toycar with rotating wheels, place it in the basket with rounded edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100092, "instruction": "Grab the rectangular red playingcards holder, put it in the oval basket with medium storage space, move the oval basket with medium storage space.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100092, "success": false}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100093, "instruction": "Grab the black box with smooth surface and place into the yellow rectangular basket with dual grips.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100095, "instruction": "Grab the toycar with rounded edges and put it in the yellow basket with open slots.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100098, "instruction": "Pick up the bright green toycar, place it in the yellow basket with open slots, move the yellow basket with open slots.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100101, "instruction": "Grab the black box with smooth surface, put it in the basket with rounded edges, move the basket with rounded edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100102, "instruction": "Grab the toycar with rounded edges, put it in the yellow rectangular basket with dual grips, move the yellow rectangular basket with dual grips.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100102, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100105, "instruction": "Grab the toycar with rounded body and put it in the medium-sized basket with perforated texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100105, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100106, "instruction": "Move the black box with smooth surface to the oval basket with medium storage space, then shift the oval basket with medium storage space.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100106, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100113, "instruction": "Place the gold text on playing cards box in the medium-sized basket with perforated texture and move it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100113, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100115, "instruction": "Use one arm to grab the gray base toycar, place it in the medium-sized basket with perforated texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100115, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100116, "instruction": "Grab the small packet of playingcards and put it in the oval basket with medium storage space.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100116, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100119, "instruction": "Move the plastic toycar with four spinning wheels to the yellow rectangular basket with dual grips, then shift the yellow rectangular basket with dual grips.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100119, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100121, "instruction": "Pick up the toycar with orange wheels, place it in the yellow rectangular basket with dual grips, move the yellow rectangular basket with dual grips.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100121, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100122, "instruction": "Use one arm to grab the plastic toycar, place it in the basket with rounded edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100122, "success": false}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100123, "instruction": "Use one arm to grab the playable toycar with rolling wheels, place it in the medium-sized basket with perforated texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100123, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100124, "instruction": "Pick up the playable toycar with rolling wheels, place it in the medium basket with smooth texture, move the medium basket with smooth texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100124, "success": false}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100126, "instruction": "Grab the blue toycar and put it into the yellow basket with open slots.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100126, "success": false}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100128, "instruction": "Grab the small box for playingcards and put it in the basket with rounded edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100128, "success": false}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100129, "instruction": "Place the small box for playingcards in the yellow basket with open slots and move it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100129, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100131, "instruction": "Grab the gold text on playing cards box and put it into the medium-sized basket with perforated texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100131, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100132, "instruction": "Move the rectangular red playingcards holder to the basket with rounded edges, then shift the basket with rounded edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100132, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100135, "instruction": "Pick up the rectangular playingcards pack and drop in the yellow rectangular basket with dual grips.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100135, "success": false}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100136, "instruction": "Use one arm to grab the small packet of playingcards, place it in the basket with rounded edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100136, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100137, "instruction": "Pick up the hard black box for card deck, place it in the basket with rounded edges, move the basket with rounded edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100137, "success": false}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100138, "instruction": "Pick up the toycar with rounded edges, place it in the yellow rectangular basket with dual grips, move the yellow rectangular basket with dual grips.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100138, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100142, "instruction": "Grab the compact toycar with rotating wheels and put it in the oval basket with medium storage space.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100142, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100143, "instruction": "Grab the rectangular red playingcards holder and put it into the basket with rounded edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100143, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100145, "instruction": "Pick up the rectangular red playingcards holder and drop in the medium-sized basket with perforated texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100145, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100146, "instruction": "Grab the gray base toycar and put it into the oval basket with medium storage space.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100146, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100147, "instruction": "Grab the toycar with rounded body and place into the medium-sized basket with perforated texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100147, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100148, "instruction": "Grab the black box with smooth surface and put it in the oval basket with medium storage space.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100148, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100150, "instruction": "Pick up the hard black box for card deck, place it in the medium-sized basket with perforated texture, move the medium-sized basket with perforated texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100150, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100151, "instruction": "Pick up the tiny pink car with four wheels and drop in the oval basket with medium storage space.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100151, "success": false}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100152, "instruction": "Pick up the small box for playingcards and drop in the medium basket with smooth texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100152, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100154, "instruction": "Grab the plastic teal car with wheels and put it into the yellow basket with open slots.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100154, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100158, "instruction": "Grab the hard black box for card deck and put it into the yellow rectangular basket with dual grips.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100158, "success": false}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100159, "instruction": "Grab the small box for playingcards and put it in the medium-sized basket with perforated texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100159, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100161, "instruction": "Pick up the playable toycar with rolling wheels and drop in the medium-sized basket with perforated texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100161, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100162, "instruction": "Grab the toycar with orange wheels, put it in the medium-sized basket with perforated texture, move the medium-sized basket with perforated texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100162, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100163, "instruction": "Grab the small packet of playingcards and put it into the yellow basket with open slots.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100163, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100164, "instruction": "Pick up the playingcards with red packaging, place it in the yellow rectangular basket with dual grips, move the yellow rectangular basket with dual grips.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100164, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100165, "instruction": "Place the small box for playingcards in the medium basket with smooth texture and move it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100165, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100166, "instruction": "Place the hard black box for card deck in the yellow basket with open slots and move it.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100166, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100169, "instruction": "Grab the pink toycar with white bumper and put it in the yellow rectangular basket with dual grips.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100169, "success": false}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100171, "instruction": "Move the playingcards with red packaging to the medium-sized basket with perforated texture, then shift the medium-sized basket with perforated texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100171, "success": true}
+{"event": "case_prepared", "task_name": "place_object_basket", "seed": 100172, "instruction": "Move the rectangular red playingcards holder to the basket with rounded edges, then shift the basket with rounded edges.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_basket", "seed": 100172, "success": false}

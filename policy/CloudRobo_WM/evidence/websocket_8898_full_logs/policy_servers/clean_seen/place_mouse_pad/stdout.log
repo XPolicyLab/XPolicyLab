@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100000, "instruction": "Take the plastic mouse with smooth finish and put it on the Cyan mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100000, "success": false}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100001, "instruction": "Pick the gray mouse with smooth surface with the right arm and move it to the Black mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100002, "instruction": "Use the left arm to grab the oval-shaped mouse and place it on the Black colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100002, "success": false}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100003, "instruction": "Pick up the rounded top mouse with glossy logo with the right arm and place it on the Cyan mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100003, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100004, "instruction": "Grab the oval-shaped mouse and place it firmly on the Green mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100005, "instruction": "Take the mouse with buttons and wheel and put it on the Magenta mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100005, "success": false}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100006, "instruction": "Grab the mouse with two buttons and wheel with the right arm and lay it onto the Black colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100007, "instruction": "Use the left arm to lift the gray mouse and set it on the Green mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100008, "instruction": "Take hold of the mouse with sleek design and place it on the Black mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100008, "success": false}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100009, "instruction": "Grab the dark gray mouse and position it onto the Green mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100010, "instruction": "Hold the plastic mouse with smooth finish and transfer it to the Red mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100011, "instruction": "Use the right arm to grab the dark mouse with logo on top and set it on the Green mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100011, "success": false}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100012, "instruction": "Take the computer mouse and put it on the Blue mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100012, "success": false}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100013, "instruction": "Pick the mouse with scroll wheel in center and place it on the Black colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100013, "success": false}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100014, "instruction": "Grab the mouse with buttons and wheel with the right arm and lay it onto the Gray colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100015, "instruction": "Lift the small mouse with smooth surface and place it onto Gray mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100016, "instruction": "Take hold of the dark gray palm-sized mouse and place it on the Green mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100017, "instruction": "Lift the gray mouse with smooth surface and set it down on the Yellow mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100017, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100018, "instruction": "Hold the small mouse with smooth surface and transfer it to the Green mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100018, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100019, "instruction": "Pick the compact oval-shaped mouse and place it on the Yellow colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100019, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100020, "instruction": "With the left arm, grab the rounded gray mouse and position it on Blue mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100021, "instruction": "Grab the mouse with curved ergonomic shape and place it firmly on the Blue mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100022, "instruction": "Use the left arm to lift the small mouse with smooth surface and set it on the Blue mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100022, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100023, "instruction": "Lift the oval-shaped mouse for computer use using the right arm and drop it on the Green colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100024, "instruction": "Grip the mouse with two buttons and a scroll wheel and move it onto the Yellow mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100025, "instruction": "Pick the dark gray mouse and place it on the Cyan colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100026, "instruction": "Take the dark mouse with logo on top and put it on the Black mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100027, "instruction": "Take hold of the dark ergonomic mouse for computer navigation and place it on the Green mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100028, "instruction": "Pick the small computer mouse with the left arm and move it to the Gray mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100028, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100029, "instruction": "Use the left arm to grab the dark gray mouse and drop it on the Magenta colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100030, "instruction": "Position the smooth plastic mouse on the Cyan mat by picking it up.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100031, "instruction": "Take the mouse with scroll wheel and place it on the Cyan colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100031, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100032, "instruction": "Take the small mouse with smooth surface and put it onto Black mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100033, "instruction": "Take the mouse with scroll wheel and put it onto Black mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100033, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100034, "instruction": "Grip the mouse with scroll wheel in center using the left arm and move it to the Red mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100034, "success": false}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100035, "instruction": "Use the right arm to grab the dark gray mouse and drop it on the Red colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100036, "instruction": "Use the right arm to lift the gray mouse and set it on the Red mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100036, "success": false}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100037, "instruction": "Using the right arm, grab the small mouse with smooth surface and set it on the Gray mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100038, "instruction": "Hold the plastic mouse and carefully place it on the Blue mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100039, "instruction": "Take the gray mouse and put it onto Magenta mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100039, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100040, "instruction": "Grab the gray mouse with smooth surface and drop it on Cyan mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100040, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100041, "instruction": "Lift the wireless dark gray computer mouse and stick it on Gray mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100041, "success": false}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100042, "instruction": "Take the mouse for cursor control and adjust it to rest on the Magenta mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100043, "instruction": "Take the rounded gray mouse and place it onto the Yellow mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100043, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100044, "instruction": "Grab the mouse with sleek design and place it firmly on the Black mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100045, "instruction": "Take the gray mouse with smooth surface and put it onto Cyan mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100045, "success": false}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100046, "instruction": "Slide the rounded gray mouse onto the Blue mat gently.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100046, "success": false}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100047, "instruction": "Use the right arm to grab the rounded gray mouse and drop it on the Red colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100048, "instruction": "With the right arm, pick up the dark gray palm-sized mouse and lay it on Magenta mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100048, "success": false}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100049, "instruction": "Grab the mouse with sleek design and drop it on Gray mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100050, "instruction": "Lift the dark gray mouse with smooth texture and put it down onto the Black mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100050, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100051, "instruction": "Use the left arm to pick the mouse with curved top up and set it on the Red colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100052, "instruction": "Grab the rounded gray mouse using the right arm and place it on the Red mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100053, "instruction": "Slide the small computer mouse onto the Magenta mat gently.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100053, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100054, "instruction": "With the right arm, take the dark mouse with logo on top and set it on Green mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100055, "instruction": "Take hold of the ergonomic mouse with the left arm and drop it on the Yellow mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100055, "success": false}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100056, "instruction": "Grab the ergonomic mouse using the left arm and place it on the Gray mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100057, "instruction": "Hold the rounded gray mouse and carefully place it on the Red mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100057, "success": false}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100058, "instruction": "Take hold of the oval-shaped mouse for computer use and place it on the Gray mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100059, "instruction": "Lift the rounded gray mouse and put it down onto the Red mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100060, "instruction": "Use the right arm to pick the computer mouse up and set it on the Black colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100061, "instruction": "Pick up the gray mouse with smooth surface with the left arm and move it to the Blue mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100062, "instruction": "Take the small computer mouse and place it onto the Green mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100063, "instruction": "Use the left arm to pick the dark ergonomic mouse for computer navigation up and set it on the Red colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100064, "instruction": "Use the right arm to grab the mouse with sleek design and set it on the Yellow mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100065, "instruction": "Lift the compact oval-shaped mouse and stick it on Green mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100066, "instruction": "Lift the dark gray mouse with smooth texture using the right arm and stick it on the Red mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100067, "instruction": "Take the mouse with scroll wheel and adjust it to rest on the Black mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100068, "instruction": "Using the right arm, pick the dark ergonomic mouse for computer navigation and position it on Yellow colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100069, "instruction": "Lift the oval-shaped mouse for computer use and position it on the Black mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100069, "success": false}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100070, "instruction": "Grab the smooth dark gray computer mouse and move it onto the Red mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100071, "instruction": "Grab the dark gray mouse and drop it on Red mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100071, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100072, "instruction": "Using the left arm, pick the ergonomic mouse and position it on Cyan colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100073, "instruction": "Grab the smooth dark gray computer mouse with the left arm and lay it onto the Magenta colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100074, "instruction": "Hold the small computer mouse and transfer it to the Black mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100075, "instruction": "Grab the dark gray mouse with smooth texture and position it onto the Black mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100076, "instruction": "Pick up the oval-shaped mouse with the left arm and place it on the Green mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100077, "instruction": "Lift the gray mouse with smooth surface with the right arm and place it on the Black mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100077, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100078, "instruction": "Hold the plastic mouse with smooth finish and transfer it to the Blue mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100079, "instruction": "Take the wireless dark gray computer mouse and adjust it to rest on the Cyan mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100080, "instruction": "With the right arm, pick up the gray mouse and lay it on Gray mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100080, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100081, "instruction": "Lift the dark mouse with logo on top and set it down on the Magenta mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100081, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100082, "instruction": "Take the mouse with scroll wheel and adjust it to rest on the Gray mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100082, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100083, "instruction": "Position the small computer mouse on the Gray mat by picking it up.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100084, "instruction": "Grip the mouse with curved top and move it onto the Blue mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100084, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100085, "instruction": "Lift the mouse with two buttons and wheel with the left arm and place it on the Gray mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100085, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100086, "instruction": "Take the compact oval-shaped mouse and put it onto Red mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100086, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100087, "instruction": "Lift the wireless dark gray computer mouse and put it down onto the Blue mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100088, "instruction": "Take the mouse with ergonomic design and place it on the Blue mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100089, "instruction": "Grab the smooth dark gray computer mouse using the left arm and place it on the Black mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100089, "success": false}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100090, "instruction": "Lift the dark gray mouse with smooth texture using the right arm and move it to the Yellow mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100091, "instruction": "Take the dark gray mouse with smooth texture and put it on the Cyan mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100091, "success": false}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100092, "instruction": "Take hold of the small computer mouse and place it on the Red mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100093, "instruction": "Lift the dark gray palm-sized mouse and put it down onto the Gray mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100093, "success": false}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100094, "instruction": "Take the mouse with scroll wheel in center and put it onto Magenta mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100095, "instruction": "Lift the computer mouse and put it down onto the Red mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100096, "instruction": "Lift the dark mouse with slight textured sides with the left arm and place it on the Magenta mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100097, "instruction": "Use the right arm to grab the dark gray mouse and place it on the Magenta colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100097, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100098, "instruction": "Slide the dark mouse with slight textured sides onto the Blue mat gently.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "place_mouse_pad", "seed": 100099, "instruction": "Lift the dark mouse with logo on top and stick it on Magenta mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_mouse_pad", "seed": 100099, "success": true}

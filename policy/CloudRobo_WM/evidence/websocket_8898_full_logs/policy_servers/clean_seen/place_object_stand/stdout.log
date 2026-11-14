@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100000, "instruction": "Use the right arm to move the mouse with two buttons and a scroll wheel onto the displaystand with smooth finish.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100001, "instruction": "Place the red stapler with black base precisely on the displaystand frame.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100002, "instruction": "Place the toycar made from smooth plastic on the plastic black displaystand for display after grabbing it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100003, "instruction": "Set the stapler with white metallic components on the plastic displaystand with hollow interior using the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100003, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100004, "instruction": "Pick up the oval-shaped mouse for computer use and drop it on the rectangular displaystand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100005, "instruction": "Use the left arm to move the red stapler onto the rectangular brown stand for items.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100005, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100006, "instruction": "Carefully place the lightweight white remotecontrol onto the black displaystand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100007, "instruction": "Lift the glossy blue toycar and position it on the displaystand with smooth finish", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100008, "instruction": "Position the smooth blue bell on the smooth textured black displaystand with the left arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100009, "instruction": "Select the left arm, grab the stapler for stapling paper, and move it to the displaystand with angled sides", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100010, "instruction": "Lift the modern design stapler and position on the hollow black displaystand", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100011, "instruction": "Move the small rectangular remotecontrol using the right arm and place on the hollow black displaystand", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100011, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100012, "instruction": "Use the right arm to move the compact blue stapler onto the shiny black rectangular displaystand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100012, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100013, "instruction": "Put the simple hand bell with black stand on the metal displaystand after picking it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100014, "instruction": "Carefully place the blue toycar with white windows onto the plastic displaystand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100015, "instruction": "Pick up the smooth blue bell and set it on the rectangular displaystand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100015, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100016, "instruction": "Position the green car-shaped toycar on the displaystand for holding items with the left arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100017, "instruction": "Pick the black stapler with curved top with the left arm and place on the black stand for display purposes.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100017, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100018, "instruction": "Lift the plastic remotecontrol and position on the black shiny displaystand with smooth texture", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100018, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100020, "instruction": "Place the handy blue stapler with metal parts precisely on top of the matte black displaystand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100021, "instruction": "Pick up the metal bell with plastic parts and drop it on the lightweight black rectangular displaystand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100022, "instruction": "Lift the flat-topped bell and position it on the black displaystand", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100022, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100023, "instruction": "Move the toycar with black wheels to the rectangular brown stand for items using the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100023, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100024, "instruction": "Grab and put the dark gray mouse on the black rectangular frame", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100025, "instruction": "Put the gray mouse with smooth surface on the displaystand with angled support after picking it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100026, "instruction": "Use the left arm to move the handheld blue and silver stapler onto the displaystand for holding items.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100027, "instruction": "Position the plastic and metal bell on the plastic black rectangular displaystand with the left arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100029, "instruction": "Use the left arm to position the rubikscube with red blue green tiles on the simple black displaystand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100030, "instruction": "With the left arm, pick the rubikscube with yellow and orange squares and position it on the angled displaystand", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100031, "instruction": "Grab the miniature bright green toycar and set it onto the plastic displaystand with hollow interior.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100031, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100032, "instruction": "Use the right arm to grab the bell with brown base and place on the plastic displaystand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100033, "instruction": "Use the right arm to grab the compact remotecontrol and place on the hollow black plastic displaystand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100033, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100034, "instruction": "Transfer the plastic toycar to the angled black displaystand securely with the right arm.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100034, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100035, "instruction": "Use the left arm to position the oval-shaped mouse for computer use on the plastic matte displaystand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100036, "instruction": "Lift the multicolored puzzle cube and position it on the metallic brown displaystand with cutout", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100036, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100037, "instruction": "Grab the rubikscube with the right arm and move to the sturdy black rectangular displaystand", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100038, "instruction": "Move the flat-topped bell to the metallic brown displaystand with cutout and set it there.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100039, "instruction": "Use the left arm to grab the toycar with black tires and place on the shiny black rectangular displaystand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100039, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100040, "instruction": "Pick the compact oval-shaped mouse and place it carefully onto the medium smooth black displaystand for displays.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100040, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100041, "instruction": "Pick up the remotecontrol for electronics using the left arm and set it on the smooth black rectangular displaystand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100042, "instruction": "Lift the remotecontrol with smooth surface with the left arm and position on the rectangular displaystand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100043, "instruction": "Position the metal bell with plastic parts on the compact black displaystand frame.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100043, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100044, "instruction": "Pick up the rubikscube with smooth square tiles and drop it on the rectangular displaystand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100045, "instruction": "Use the left arm to grab the remotecontrol with smooth surface and place on the medium black displaystand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100045, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100046, "instruction": "Use the right arm to lift the rubikscube plastic and smooth and set it on the plastic matte displaystand", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100046, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100047, "instruction": "Use the left arm to position the ergonomic mouse on the black displaystand for showcasing things.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100048, "instruction": "Locate the dark gray mouse, pick it up, and place on the displaystand frame.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100049, "instruction": "Pick the smooth rubikscube with black frame edges and place it carefully onto the medium black plastic displaystand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100050, "instruction": "Set the plastic stapler with silver mechanism on the black stand for display purposes after moving it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100050, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100051, "instruction": "Use the left arm to lift the plastic rubikscube and set on the medium black angled displaystand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100052, "instruction": "Pick up the mouse with scroll wheel in center with the right arm and set it on the angled displaystand", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100053, "instruction": "Use the left arm to lift the rubikscube with orange sides and set it on the medium-sized rectangular displaystand", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100053, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100054, "instruction": "Bring the blue stapler to the smooth black displaystand and set it in place.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100055, "instruction": "Move the smooth plastic mouse to the displaystand with angled sides and release it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100055, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100056, "instruction": "Pick up the plastic rubikscube with six colored sides with the left arm and set it on the plastic black displaystand for display", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100057, "instruction": "Move the remotecontrol with numeric keypad to the smooth textured black displaystand and set it there.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100058, "instruction": "Position the mini car toy on the smooth black hollow displaystand with the right arm", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100059, "instruction": "Set the bell shaped like half-circle dome on the black smooth stand after moving it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100060, "instruction": "Use the left arm to lift the colorful rubikscube for twisting and solving and set on the compact black displaystand frame.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100061, "instruction": "Take the dark gray mouse and set it on the black displaystand for showcasing things", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100062, "instruction": "Position the smooth remotecontrol on the rectangular displaystand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100063, "instruction": "Use the right arm to lift the rounded teal car toy and set on the smooth textured black displaystand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100064, "instruction": "Move the blue stapler with black handle area using the left arm and place on the medium black angled displaystand", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100065, "instruction": "Pick up the stapler with silver staple tray using the left arm and set it on the displaystand with smooth finish.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100066, "instruction": "Grab the remotecontrol with buttons using the right arm and place it on the black smooth stand", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100066, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100067, "instruction": "Lift the small stapler with the left arm and position on the medium black displaystand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100068, "instruction": "Take the bell with black flat base with the right arm and put it on the brown displaystand with rectangular opening.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100068, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100069, "instruction": "Pick the blue dome-shaped bell up and place on the rectangular plastic displaystand", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100069, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100070, "instruction": "Grab the multi-colored cube with the right arm and place on the plastic displaystand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100071, "instruction": "Pick the compact glossy blue toycar and place it carefully onto the medium black plastic displaystand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100071, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100072, "instruction": "Take the multi-sided rubikscube with rotating pieces with the left arm and put it on the hollow black displaystand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100073, "instruction": "Carefully place the hand-sized rolling toycar onto the black shiny displaystand with smooth texture.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100074, "instruction": "Lift the compact bell with round base and position on the displaystand with angled support", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100075, "instruction": "Select the right arm, grab the small toycar, and move it to the rectangular displaystand", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100077, "instruction": "Move the flat rectangular remotecontrol onto the displaystand with angled support.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100077, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100079, "instruction": "Lift the ergonomic mouse with the right arm and position on the metal displaystand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100080, "instruction": "Locate the rubikscube, pick it up, and place on the black displaystand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100080, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100081, "instruction": "Pick the handheld gray remotecontrol with the left arm and place on the black displaystand for showcasing things.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100081, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100082, "instruction": "Lift the compact bell with round base with the left arm and position on the plastic displaystand with hollow interior.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100082, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100083, "instruction": "With the left arm, pick the rubikscube and position it on the plastic displaystand", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100084, "instruction": "Grab and put the small plastic green toycar on the angled displaystand", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100084, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100086, "instruction": "Use the right arm to grab the plastic rubikscube and place on the medium smooth black displaystand for displays.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100086, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100087, "instruction": "Set the toycar with white roof and teal body on the displaystand for holding items after moving it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100087, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100088, "instruction": "Grab the plastic rubikscube and set it on the plastic displaystand with hollow interior", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100089, "instruction": "Pick up the small puzzle cube with the right arm and set it on the smooth black rectangular displaystand", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100090, "instruction": "Pick the plastic mouse and position it on the rectangular brown stand for items", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100091, "instruction": "Use the left arm to move the gray mouse with smooth surface onto the metal displaystand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100091, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100093, "instruction": "Set the small teal plastic car with windows on the compact black displaystand frame after moving it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100094, "instruction": "Use the right arm to grab the black tapered remotecontrol and place on the black smooth stand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100095, "instruction": "Set the red stapler with black base on the shiny black rectangular displaystand after moving it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100096, "instruction": "Move the rubikscube showing red and white squares onto the medium displaystand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100097, "instruction": "Place the blue stapler on the plastic black displaystand for display after grabbing it", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100097, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100098, "instruction": "Use the right arm to lift the mouse with scroll wheel in center and set it on the medium-sized rectangular displaystand", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100099, "instruction": "Pick up the remotecontrol with circular navigation pad using the right arm and set it on the brown displaystand with rectangular opening.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100100, "instruction": "Pick up the plastic and metal bell using the left arm and set it on the simple black displaystand.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100100, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100101, "instruction": "Use the left arm to lift the multicolored puzzle cube and set it on the angled black smooth displaystand", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100102, "instruction": "With the left arm, pick the small office stapler and position it on the angled displaystand", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100102, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100103, "instruction": "Use the left arm to move the toycar with shiny plastic finish onto the medium smooth black displaystand for displays.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100103, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100104, "instruction": "Lift the modern design stapler and position it on the displaystand for holding items", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100104, "success": true}
+{"event": "case_prepared", "task_name": "place_object_stand", "seed": 100105, "instruction": "Use the left arm to move the black stapler with smooth finish onto the black stand for display purposes.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_object_stand", "seed": 100105, "success": true}

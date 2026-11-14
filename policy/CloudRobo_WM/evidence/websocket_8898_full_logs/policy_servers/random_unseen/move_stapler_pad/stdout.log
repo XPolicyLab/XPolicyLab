@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100000, "instruction": "Move the stapler with white loading section to the Yellow mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100000, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100001, "instruction": "Use the left arm to move the black stapler to Green mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100002, "instruction": "Use the right arm to move the white stapler to the Green mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100003, "instruction": "Grab the white stapler with metal tray and set it on Yellow mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100003, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100004, "instruction": "Move the shiny red plastic stapler to the Gray mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100005, "instruction": "Use the left arm to move the small hand-sized stapler to Magenta mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100005, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100006, "instruction": "Place the black stapler on the Green colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100007, "instruction": "Grab the red stapler with silver chamber and set it on Green mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100008, "instruction": "Place the small hand-sized stapler on the Red mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100012, "instruction": "Use the left arm to move the white stapler to the Green mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100012, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100013, "instruction": "Move the metal and plastic stapler to the Yellow mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100014, "instruction": "Use the left arm to move the stapler with white loading section to the Green mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100016, "instruction": "Move the compact stapler to the Magenta colored mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100016, "success": false}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100017, "instruction": "Grab the white stapler and set it on Blue mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100017, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100018, "instruction": "Grab the stapler with white loading section and set it on Gray mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100018, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100020, "instruction": "Place the red plastic stapler on the Magenta colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100020, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100021, "instruction": "Move the stapler with smooth plastic body to the Gray colored mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100022, "instruction": "Move the stapler with smooth plastic body to the Gray colored mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100022, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100023, "instruction": "Place the paper stapler with curved handle on the Magenta colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100023, "success": false}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100024, "instruction": "Move the small hand-sized stapler to the Green mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100025, "instruction": "Move the white stapler to the Yellow colored mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100025, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100026, "instruction": "Place the stapler with silver metal top on the Gray mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100027, "instruction": "Move the stapler with smooth plastic body to the Cyan colored mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100029, "instruction": "Place the paper stapler with curved handle on the Cyan mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100029, "success": false}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100030, "instruction": "Use the right arm to move the small hand-sized stapler to the Cyan mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100031, "instruction": "Use the left arm to move the white stapler to Cyan mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100031, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100033, "instruction": "Use the left arm to move the compact stapler to Blue mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100033, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100034, "instruction": "Grab the palm-sized black stapler and set it on Cyan mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100034, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100035, "instruction": "Move the compact stapler to the Red mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100036, "instruction": "Use the left arm to move the compact stapler to Black mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100036, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100037, "instruction": "Move the white stapler with metal tray to the Green mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100037, "success": false}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100038, "instruction": "Use the left arm to move the shiny red plastic stapler to Gray mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100040, "instruction": "Place the metal and plastic stapler on the Gray mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100040, "success": false}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100041, "instruction": "Use the right arm to move the stapler with silver metal top to Yellow mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100042, "instruction": "Use the right arm to move the red stapler with silver chamber to Black mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100042, "success": false}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100043, "instruction": "Move the blue and white stapler to the Magenta mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100043, "success": false}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100044, "instruction": "Use the right arm to move the black stapler to the Magenta mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100045, "instruction": "Move the white stapler to the Magenta mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100045, "success": false}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100046, "instruction": "Move the paper stapler with curved handle to the Red mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100046, "success": false}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100047, "instruction": "Use the left arm to move the rectangular stapler with curved corners to Yellow mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100048, "instruction": "Move the small hand-sized stapler to the Green mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100048, "success": false}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100049, "instruction": "Place the red plastic stapler on the Gray mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100050, "instruction": "Move the hand-size bright blue stapler to the Black mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100050, "success": false}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100051, "instruction": "Move the stapler with smooth plastic body to the Black mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100052, "instruction": "Use the left arm to move the white stapler with metal tray to the Black mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100052, "success": false}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100053, "instruction": "Use the right arm to move the rectangular stapler with curved corners to the Gray mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100053, "success": false}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100055, "instruction": "Place the white stapler on the Black mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100055, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100057, "instruction": "Grab the stapler with smooth plastic body and set it on Red mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100058, "instruction": "Move the palm-sized black stapler to the Green mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100059, "instruction": "Use the left arm to move the plastic stapler to Blue mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100059, "success": false}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100060, "instruction": "Place the small hand-sized stapler on the Gray colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100060, "success": false}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100061, "instruction": "Move the blue stapler with smooth finish to the Green mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100062, "instruction": "Use the right arm to move the stapler with white loading section to Blue mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100063, "instruction": "Place the blue stapler with smooth finish on the Cyan mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100063, "success": false}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100064, "instruction": "Move the stapler with smooth plastic body to the Green colored mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100064, "success": false}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100065, "instruction": "Place the white stapler with metal tray on the Red colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100066, "instruction": "Move the blue stapler with smooth finish to the Gray mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100066, "success": false}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100067, "instruction": "Place the white stapler on the Yellow mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100068, "instruction": "Place the stapler with silver metal top on the Gray colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100068, "success": false}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100069, "instruction": "Use the left arm to move the stapler with silver metal top to Black mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100069, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100070, "instruction": "Use the left arm to move the red plastic stapler to Blue mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100071, "instruction": "Place the small stapler with simple design on the Gray mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100071, "success": false}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100072, "instruction": "Move the blue and white stapler to the Gray mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100072, "success": false}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100073, "instruction": "Move the paper stapler with curved handle to the Blue mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100074, "instruction": "Use the left arm to move the paper stapler with curved handle to Green mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100075, "instruction": "Use the left arm to move the blue and white stapler to Red mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100076, "instruction": "Place the black stapler on the Cyan colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100077, "instruction": "Place the rectangular stapler with curved corners on the Red colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100077, "success": false}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100078, "instruction": "Place the black stapler on the Green mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100078, "success": false}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100079, "instruction": "Place the white stapler on the Green mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100080, "instruction": "Place the rectangular stapler with curved corners on the Black colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100080, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100081, "instruction": "Move the stapler with white loading section to the Green mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100081, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100082, "instruction": "Place the blue stapler for holding papers on the Green colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100082, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100083, "instruction": "Use the left arm to move the shiny red plastic stapler to the Cyan mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100084, "instruction": "Move the palm-sized black stapler to the Gray mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100084, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100085, "instruction": "Move the rectangular stapler with curved corners to the Magenta mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100085, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100086, "instruction": "Move the paper stapler with curved handle to the Red mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100086, "success": false}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100087, "instruction": "Move the paper stapler with curved handle to the Blue mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100087, "success": false}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100088, "instruction": "Place the black stapler on the Gray colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100089, "instruction": "Use the right arm to move the paper stapler with curved handle to Gray mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100090, "instruction": "Use the right arm to move the blue stapler with smooth finish to the Black mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100090, "success": false}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100091, "instruction": "Move the metal and plastic stapler to the Black mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100091, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100092, "instruction": "Move the paper stapler with curved handle to the Yellow colored mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100094, "instruction": "Place the plastic stapler on the Blue colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100094, "success": false}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100095, "instruction": "Use the right arm to move the red stapler with silver chamber to the Cyan mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100096, "instruction": "Grab the small hand-sized stapler and set it on Magenta mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100097, "instruction": "Place the white stapler on the Yellow colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100097, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100099, "instruction": "Move the paper stapler with curved handle to the Blue mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100101, "instruction": "Use the right arm to move the blue stapler for holding papers to the Magenta mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100102, "instruction": "Move the stapler with silver metal top to the Green mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100102, "success": false}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100103, "instruction": "Use the right arm to move the red plastic stapler to the Blue mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100103, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100104, "instruction": "Grab the red plastic stapler and set it on Green mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100104, "success": false}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100105, "instruction": "Use the right arm to move the palm-sized black stapler to Red mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100105, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100107, "instruction": "Move the white stapler to the Blue mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100107, "success": false}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100109, "instruction": "Use the left arm to move the compact stapler to Blue mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100109, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100110, "instruction": "Use the left arm to move the black stapler to Magenta mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100110, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100111, "instruction": "Use the right arm to move the hand-size bright blue stapler to Red mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100111, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100112, "instruction": "Place the metal and plastic stapler on the Magenta colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100112, "success": true}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100113, "instruction": "Move the red stapler with silver chamber to the Yellow mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100113, "success": false}
+{"event": "case_prepared", "task_name": "move_stapler_pad", "seed": 100115, "instruction": "Place the blue and white stapler on the Gray colored mat.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "move_stapler_pad", "seed": 100115, "success": false}

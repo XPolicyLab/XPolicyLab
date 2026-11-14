@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100002, "instruction": "Move large block, medium block, and small block to the center, ordering largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100003, "instruction": "Place large block, medium block, and small block at the table center, largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100003, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100004, "instruction": "Move large block, medium block, and small block to the center table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100004, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100005, "instruction": "Arrange large block, medium block, and small block from largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100005, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100006, "instruction": "Arrange large block, medium block, and small block from largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100007, "instruction": "Place large block, medium block, and small block at the table center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100007, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100009, "instruction": "Move large block, medium block, and small block to the center, ordering largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100010, "instruction": "Move large block, medium block, and small block to the center, arrange left to right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100011, "instruction": "Place large block, medium block, and small block in order at the table's center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100011, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100012, "instruction": "Take large block, medium block, and small block to the table center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100012, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100013, "instruction": "Arrange large block, medium block, and small block from largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100013, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100014, "instruction": "Move large block, medium block, and small block to the center, arrange left to right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100016, "instruction": "Move large block, medium block, and small block to the table center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100016, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100018, "instruction": "Move large block, medium block, and small block to the center, ordering largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100018, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100019, "instruction": "Place large block, medium block, and small block at the table center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100019, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100020, "instruction": "Move large block, medium block, and small block to the center, arrange left to right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100020, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100021, "instruction": "Arrange large block, medium block, and small block from largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100022, "instruction": "Place large block, medium block, and small block in order at the table's center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100022, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100023, "instruction": "Take large block, medium block, and small block to the table center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100023, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100024, "instruction": "Place large block, medium block, and small block at the table center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100024, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100025, "instruction": "Take large block, medium block, and small block to the table center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100025, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100026, "instruction": "Place large block, medium block, and small block in order at the table's center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100027, "instruction": "Place large block, medium block, and small block in order at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100027, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100032, "instruction": "Place large block, medium block, and small block at the table center, largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100033, "instruction": "Move large block, medium block, and small block to the center, ordering largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100033, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100034, "instruction": "Move large block, medium block, and small block to the center, arrange left to right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100034, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100036, "instruction": "Move large block, medium block, and small block to the center, ordering largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100036, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100037, "instruction": "Move large block, medium block, and small block to the center, arrange left to right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100038, "instruction": "Place large block, medium block, and small block in order at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100038, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100039, "instruction": "Place large block, medium block, and small block in order at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100039, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100040, "instruction": "Place large block, medium block, and small block in order at the table's center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100040, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100041, "instruction": "Place large block, medium block, and small block in order at the table's center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100042, "instruction": "Place large block, medium block, and small block at the table center, largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100042, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100043, "instruction": "Take large block, medium block, and small block to the table center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100043, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100045, "instruction": "Move large block, medium block, and small block to the center, arrange left to right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100045, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100046, "instruction": "Move large block, medium block, and small block to the table center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100046, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100047, "instruction": "Take large block, medium block, and small block to the table center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100047, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100049, "instruction": "Take large block, medium block, and small block to the table center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100050, "instruction": "Arrange large block, medium block, and small block from largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100050, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100051, "instruction": "Place large block, medium block, and small block at the table center, largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100052, "instruction": "Place large block, medium block, and small block in order at the table's center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100052, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100053, "instruction": "Place large block, medium block, and small block in order at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100053, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100054, "instruction": "Place large block, medium block, and small block in order at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100054, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100055, "instruction": "Take large block, medium block, and small block to the table center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100055, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100056, "instruction": "Place large block, medium block, and small block in order at the table's center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100057, "instruction": "Place large block, medium block, and small block at the table center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100057, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100059, "instruction": "Place large block, medium block, and small block at the table center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100059, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100060, "instruction": "Move large block, medium block, and small block to the center table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100061, "instruction": "Place large block, medium block, and small block at the table center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100062, "instruction": "Place large block, medium block, and small block in order at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100062, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100063, "instruction": "Move large block, medium block, and small block to the center, ordering largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100063, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100064, "instruction": "Arrange large block, medium block, and small block from largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100065, "instruction": "Place large block, medium block, and small block at the table center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100066, "instruction": "Take large block, medium block, and small block to the table center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100066, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100069, "instruction": "Move large block, medium block, and small block to the center, ordering largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100069, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100070, "instruction": "Arrange large block, medium block, and small block from largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100071, "instruction": "Move large block, medium block, and small block to the center table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100071, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100072, "instruction": "Place large block, medium block, and small block at the table center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100072, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100073, "instruction": "Move large block, medium block, and small block to the center, ordering largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100073, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100074, "instruction": "Place large block, medium block, and small block at the table center, largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100075, "instruction": "Place large block, medium block, and small block at the table center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100076, "instruction": "Move large block, medium block, and small block to the center, ordering largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100077, "instruction": "Place large block, medium block, and small block at the table center, largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100077, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100078, "instruction": "Place large block, medium block, and small block at the table center, largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100079, "instruction": "Move large block, medium block, and small block to the center table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100080, "instruction": "Move large block, medium block, and small block to the center table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100080, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100081, "instruction": "Move large block, medium block, and small block to the center, ordering largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100081, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100082, "instruction": "Place large block, medium block, and small block in order at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100082, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100083, "instruction": "Move large block, medium block, and small block to the table center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100083, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100084, "instruction": "Place large block, medium block, and small block at the table center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100084, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100085, "instruction": "Arrange large block, medium block, and small block from largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100085, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100086, "instruction": "Arrange large block, medium block, and small block from largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100086, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100087, "instruction": "Place large block, medium block, and small block at the table center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100087, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100088, "instruction": "Arrange large block, medium block, and small block from largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100089, "instruction": "Move large block, medium block, and small block to the center table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100089, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100090, "instruction": "Place large block, medium block, and small block in order at the table's center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100090, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100091, "instruction": "Place large block, medium block, and small block at the table center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100091, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100092, "instruction": "Place large block, medium block, and small block in order at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100092, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100093, "instruction": "Move large block, medium block, and small block to the table center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100093, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100094, "instruction": "Place large block, medium block, and small block in order at the table's center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100095, "instruction": "Move large block, medium block, and small block to the center, arrange left to right.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100095, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100096, "instruction": "Move large block, medium block, and small block to the center table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100097, "instruction": "Move large block, medium block, and small block to the center table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100097, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100099, "instruction": "Move large block, medium block, and small block to the center table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100099, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100100, "instruction": "Move large block, medium block, and small block to the center table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100100, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100101, "instruction": "Move large block, medium block, and small block to the center, ordering largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100102, "instruction": "Arrange large block, medium block, and small block from largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100102, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100103, "instruction": "Move large block, medium block, and small block to the center table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100103, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100104, "instruction": "Arrange large block, medium block, and small block from largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100104, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100105, "instruction": "Place large block, medium block, and small block in order at the table's center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100105, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100106, "instruction": "Place large block, medium block, and small block at the table center, largest to smallest.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100106, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100107, "instruction": "Place large block, medium block, and small block in order at the table's center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100107, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100108, "instruction": "Move large block, medium block, and small block to the center table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100108, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100109, "instruction": "Move large block, medium block, and small block to the table center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100109, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100112, "instruction": "Move large block, medium block, and small block to the center table.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100112, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100113, "instruction": "Move large block, medium block, and small block to the table center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100113, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100114, "instruction": "Place large block, medium block, and small block in order at the center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100114, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100115, "instruction": "Take large block, medium block, and small block to the table center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100115, "success": false}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100116, "instruction": "Take large block, medium block, and small block to the table center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100116, "success": true}
+{"event": "case_prepared", "task_name": "blocks_ranking_size", "seed": 100117, "instruction": "Place large block, medium block, and small block in order at the table's center.", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "blocks_ranking_size", "seed": 100117, "success": true}

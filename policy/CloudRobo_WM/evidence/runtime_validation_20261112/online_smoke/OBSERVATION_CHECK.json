@@ -1,0 +1,16 @@
+{
+  "counters": {
+    "rgb_color_reads": 1256,
+    "position_reads": 0,
+    "depth_api_attempts": 0,
+    "pointcloud_api_attempts": 0,
+    "depth_sensor_api_attempts": 0
+  },
+  "native_activity_completed": {
+    "get_obs": 314,
+    "take_action": 313,
+    "close_env": 2
+  },
+  "observed_zero_depth_api_attempts": true,
+  "observed_robot_geometry_validated": true
+}

@@ -1,0 +1,200 @@
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100001, "instruction": "Use the left arm to lift the white shoe and drop it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100001, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100002, "instruction": "Grab the shoe with ribbed sole from the table and place it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100002, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100004, "instruction": "Grab the casual brown shoe from the table and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100004, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100005, "instruction": "Grab the black shoe with white midsole from the table and place it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100005, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100006, "instruction": "Pick up the shoe with rubber bottom from the table and place it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100006, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100008, "instruction": "Use the right arm to grab the black shoe with white midsole from the table and place it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100008, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100009, "instruction": "Pick up the shoe with black stripes from the table and place it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100009, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100010, "instruction": "Pick up the shoe model with ribbed sole from the table and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100010, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100012, "instruction": "Grab the shoe with ribbed sole from the table and place it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100012, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100013, "instruction": "Grab the smooth white shoe with laces from the table and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100013, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100014, "instruction": "Use the right arm to grab the walking shoe with grip sole from the table and place it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100014, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100015, "instruction": "Pick up the black shoe with curved white sole from the table and set it down on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100015, "success": false}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100016, "instruction": "Pick up the black-striped white shoe from the table and set it down on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100016, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100017, "instruction": "Grab the black shoe with white midsole and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100017, "success": false}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100018, "instruction": "Grab the smooth white shoe with laces and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100018, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100019, "instruction": "Grab the running shoe with laces and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100019, "success": false}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100021, "instruction": "Pick up the brown footwear with smooth texture from the table and set it down on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100021, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100022, "instruction": "Pick up the white shoe with tongue logo from the table and place it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100022, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100024, "instruction": "Pick up the white shoe from the table and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100024, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100026, "instruction": "Use the left arm to grab the brown shoe with sturdy sole from the table and place it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100026, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100027, "instruction": "Pick up the brown shoe with green red stripes from the table and set it down on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100027, "success": false}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100028, "instruction": "Use the left arm to lift the brown footwear with smooth texture and drop it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100028, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100029, "instruction": "Use the left arm to grab the shoe with padded collar and tongue from the table and place it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100029, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100030, "instruction": "Use the right arm to grab the brown shoe with sturdy sole from the table and place it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100030, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100031, "instruction": "Use the left arm to lift the white shoe and drop it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100031, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100032, "instruction": "Grab the green shoe from the table and place it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100032, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100033, "instruction": "Use the right arm to lift the shoe with striped design and drop it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100033, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100034, "instruction": "Pick up the black shoe with curved white sole from the table and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100034, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100035, "instruction": "Grab the shoe with rubber bottom from the table and place it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100035, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100037, "instruction": "Grab the white leather shoe with gum sole from the table and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100037, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100038, "instruction": "Pick up the shoe with rubber bottom from the table and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100038, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100040, "instruction": "Use the right arm to grab the rounded white shoe from the table and place it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100040, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100041, "instruction": "Pick up the casual brown shoe from the table and place it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100041, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100042, "instruction": "Use the left arm to lift the white shoe with tongue logo and drop it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100042, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100043, "instruction": "Pick up the shoe model with ribbed sole from the table and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100043, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100044, "instruction": "Grab the white shoe from the table and place it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100044, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100045, "instruction": "Grab the smooth plastic shoe from the table and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100045, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100047, "instruction": "Use the left arm to lift the beige-soled walking sneaker and drop it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100047, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100048, "instruction": "Grab the red sneaker medium sized from the table and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100048, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100049, "instruction": "Use the left arm to grab the shoe with adjustable laces from the table and place it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100049, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100051, "instruction": "Grab the brown shoe with sturdy sole off the table and drop it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100051, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100053, "instruction": "Grab the white leather shoe with gum sole from the table and place it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100053, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100056, "instruction": "Use the right arm to grab the walking shoe with grip sole from the table and place it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100056, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100058, "instruction": "Pick up the medium adult shoe from the table and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100058, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100059, "instruction": "Pick up the shoe with adjustable laces from the table and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100059, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100060, "instruction": "Grab the shoe with rubber bottom off the table and drop it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100060, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100061, "instruction": "Use the left arm to grab the white leather shoe with gum sole from the table and place it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100061, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100064, "instruction": "Pick up the shoe with padded collar and tongue from the table and set it down on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100064, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100065, "instruction": "Grab the rounded white shoe off the table and drop it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100065, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100067, "instruction": "Use the left arm to grab the black shoe with white midsole from the table and place it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100067, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100070, "instruction": "Use the left arm to lift the shoe with black stripes and drop it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100070, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100071, "instruction": "Use the right arm to grab the brown footwear with smooth texture from the table and place it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100071, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100072, "instruction": "Pick up the shoe with adjustable laces from the table and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100072, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100074, "instruction": "Pick up the beige-soled walking sneaker from the table and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100074, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100075, "instruction": "Pick up the shoe with adjustable laces from the table and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100075, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100076, "instruction": "Grab the red shoe off the table and drop it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100076, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100078, "instruction": "Grab the smooth white shoe with laces and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100078, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100079, "instruction": "Use the left arm to grab the smooth plastic shoe from the table and place it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100079, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100080, "instruction": "Pick up the walking shoe with grip sole from the table and place it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100080, "success": false}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100082, "instruction": "Grab the brown shoe with sturdy sole off the table and drop it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100082, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100084, "instruction": "Use the left arm to lift the shoe with ribbed sole and drop it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100084, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100085, "instruction": "Use the left arm to lift the black-striped white shoe and drop it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100085, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100086, "instruction": "Grab the brown shoe with green red stripes from the table and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100086, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100088, "instruction": "Pick up the red shoe from the table and place it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100088, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100089, "instruction": "Use the right arm to lift the brown footwear with smooth texture and drop it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100089, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100090, "instruction": "Grab the white shoe with tongue logo from the table and place it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100090, "success": false}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100093, "instruction": "Grab the walking shoe with grip sole and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100093, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100094, "instruction": "Grab the casual brown shoe off the table and drop it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100094, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100096, "instruction": "Grab the black shoe with white midsole and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100096, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100097, "instruction": "Pick up the medium adult shoe from the table and set it down on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100097, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100098, "instruction": "Grab the beige-soled walking sneaker and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100098, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100101, "instruction": "Grab the black-striped white shoe from the table and place it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100101, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100102, "instruction": "Pick up the synthetic shoe upper from the table and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100102, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100104, "instruction": "Pick up the brown shoe with sturdy sole from the table and set it down on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100104, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100105, "instruction": "Pick up the medium adult shoe from the table and set it down on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100105, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100106, "instruction": "Pick up the white shoe with tongue logo from the table and place it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100106, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100107, "instruction": "Grab the smooth plastic shoe from the table and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100107, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100108, "instruction": "Grab the medium adult shoe and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100108, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100109, "instruction": "Grab the beige-soled walking sneaker from the table and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100109, "success": false}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100110, "instruction": "Pick up the shoe with black stripe design from the table and place it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100110, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100111, "instruction": "Pick up the brown shoe with sturdy sole from the table and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100111, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100112, "instruction": "Grab the smooth white shoe with laces off the table and drop it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100112, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100114, "instruction": "Grab the brown shoe with sturdy sole from the table and place it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100114, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100115, "instruction": "Pick up the smooth plastic shoe from the table and place it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100115, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100116, "instruction": "Grab the green shoe from the table and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100116, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100117, "instruction": "Pick up the shoe with ribbed sole from the table and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100117, "success": false}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100118, "instruction": "Pick up the smooth plastic shoe from the table and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100118, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100119, "instruction": "Use the right arm to lift the shoe model with ribbed sole and drop it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100119, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100121, "instruction": "Grab the casual brown shoe and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100121, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100122, "instruction": "Pick up the synthetic shoe upper from the table and set it down on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100122, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100123, "instruction": "Grab the shoe with padded collar and tongue from the table and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100123, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100124, "instruction": "Pick up the rounded white shoe from the table and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100124, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100125, "instruction": "Pick up the beige-soled walking sneaker from the table and set it down on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100125, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100126, "instruction": "Grab the red sneaker medium sized and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100126, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100129, "instruction": "Grab the shoe with padded collar and tongue and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100129, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100130, "instruction": "Pick up the black-accented white shoe from the table and set it down on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100130, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100131, "instruction": "Pick up the walking shoe with grip sole from the table and set it down on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100131, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100132, "instruction": "Pick up the black shoe with white midsole from the table and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100132, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100134, "instruction": "Grab the black-accented white shoe and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100134, "success": true}
+{"event": "case_prepared", "task_name": "place_shoe", "seed": 100135, "instruction": "Grab the shoe with black stripe design and set it on the mat", "action_type": "joint"}
+{"event": "trial_ended", "task_name": "place_shoe", "seed": 100135, "success": false}

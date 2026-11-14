@@ -1,0 +1,13 @@
+# Install the selected PyTorch, torch_npu and DeepSpeed 0.19.0 runtime first.
+numpy
+av
+pyarrow
+Pillow
+einops
+safetensors
+scipy
+timm
+omegaconf
+rich
+opencv-python-headless
+tqdm
