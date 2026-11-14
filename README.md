@@ -155,6 +155,14 @@ policy/<POLICY>/
 
 The policy server decodes camera colors before `update_obs` / `update_obs_batch`, so `obs["vision"][<camera>]["color"]` always arrives as an image array — `model.py` never decodes.
 
+RoboDojo also supplies the official task Description and public Scoring as a
+string at `obs["extra_info"]["detailed_instruction"]`. The existing
+`obs["instruction"]` supplies the instance-specific goal. Both fields pass
+unchanged through single and batch observation RPCs; no extra request is needed.
+The field is available to adapters through the existing observation interface;
+the interface does not change policy prompts or behavior. Older environments may
+omit the field. It contains public conditions, not reward code.
+
 The default policy-server protocol is websocket (`protocol: ws` in `deploy.yml`); `legacy_tcp` exists only for adapters that have not migrated yet. The transport handles reconnects, retries, keepalive, and long model-loading cold starts for you — a normal adapter never touches it.
 
 <details>
@@ -352,6 +360,8 @@ All pose values use `[x, y, z, qw, qx, qy, qz]`. Images are RGB end to end — `
 Observation Data Format
 ├── data_format_version                        string, optional
 ├── instruction / instructions                 string or list[str]
+├── extra_info/                                optional task metadata
+│   └── detailed_instruction                   string: official Description + public Scoring
 ├── env_idx                                    int, optional for batched eval
 ├── additional_info/
 │   └── frequency                              int, optional

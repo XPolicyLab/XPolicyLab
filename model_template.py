@@ -47,6 +47,12 @@ class ModelTemplate:
         The policy server decodes camera colors before calling this, so
         obs["vision"][<camera>]["color"] is always an image array.
         策略服务端已完成图像解码，此处拿到的 color 一定是图像数组。
+
+        Official task Description + public Scoring, when supplied, is the
+        string obs["extra_info"]["detailed_instruction"]. It is forwarded
+        unchanged, separately from the instance-specific obs["instruction"].
+        可选的详细任务描述与公开评分文本位于 extra_info.detailed_instruction，
+        原样传递；instruction 仍提供当前实例的目标。
         """
         raise NotImplementedError(
             self._error_msg("update_obs() must be implemented by the user.")
@@ -59,6 +65,8 @@ class ModelTemplate:
 
         Same decoding guarantee as update_obs().
         与 update_obs() 一样，图像已由服务端解码。
+        Each item preserves the same extra_info.detailed_instruction field.
+        每个观测均保留相同的 extra_info.detailed_instruction 字段。
         """
         raise NotImplementedError(
             self._error_msg("update_obs_batch() must be implemented by the user.")

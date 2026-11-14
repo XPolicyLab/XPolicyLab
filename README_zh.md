@@ -158,6 +158,12 @@ policy/<POLICY>/
 
 策略 server 在 `update_obs` / `update_obs_batch` 之前已解码相机颜色，因此 `obs["vision"][<camera>]["color"]` 始终是图像数组 —— `model.py` 从不解码。
 
+RoboDojo 还通过 `obs["extra_info"]["detailed_instruction"]` 提供字符串形式的官方
+Description 和公开 Scoring。现有 `obs["instruction"]` 继续提供当前实例的目标。
+两个字段均通过单个和批量观测 RPC 原样传递，无需额外请求。适配器可通过现有观测
+接口读取该字段；接口不修改 policy 的提示词或行为。旧环境可能不提供此字段。
+该字段提供公开评分条件，不包含打分代码。
+
 默认策略 server 协议是 websocket（`deploy.yml` 中 `protocol: ws`）；`legacy_tcp` 仅留给尚未迁移的 adapter。传输层替你处理重连、重试、keepalive 与模型加载冷启动 —— 正常 adapter 不必碰它。
 
 <details>
@@ -355,6 +361,8 @@ Legacy 数据永不迁移 —— JPEG 无法无损换通道 —— 因此两种�
 Observation Data Format
 ├── data_format_version                        string, optional
 ├── instruction / instructions                 string or list[str]
+├── extra_info/                                optional task metadata
+│   └── detailed_instruction                   string: official Description + public Scoring
 ├── env_idx                                    int, optional for batched eval
 ├── additional_info/
 │   └── frequency                              int, optional
