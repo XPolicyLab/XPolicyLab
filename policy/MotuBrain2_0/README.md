@@ -79,7 +79,7 @@ require a separate port.
 ## Model Assets
 
 The published checkpoint uses normal BF16 weights with four CM denoising steps. The download script pins
-public Hugging Face revision `9939da9ccd7f9db9d62f1a56e2bcb9b3893cd0fe`.
+public Hugging Face revision `26c53046384721b21ef2b6d39b47b339cbc4bba8`.
 
 The repository contains only three inference assets at its root:
 
@@ -93,7 +93,7 @@ bash download_checkpoint.sh /path/to/checkpoints/motubrain
 
 Pass that directory as the checkpoint bundle to `eval.sh`.
 
-[Checkpoint](https://huggingface.co/Motubrain/MotuBrain2.0-Robodojo/resolve/9939da9ccd7f9db9d62f1a56e2bcb9b3893cd0fe/step-5000.safetensors), [configuration](https://huggingface.co/Motubrain/MotuBrain2.0-Robodojo/resolve/9939da9ccd7f9db9d62f1a56e2bcb9b3893cd0fe/config.yaml), [action statistics](https://huggingface.co/Motubrain/MotuBrain2.0-Robodojo/resolve/9939da9ccd7f9db9d62f1a56e2bcb9b3893cd0fe/action_stats.json).
+[Checkpoint](https://huggingface.co/Motubrain/MotuBrain2.0-Robodojo/resolve/26c53046384721b21ef2b6d39b47b339cbc4bba8/step-5000.safetensors), [configuration](https://huggingface.co/Motubrain/MotuBrain2.0-Robodojo/resolve/26c53046384721b21ef2b6d39b47b339cbc4bba8/config.yaml), [action statistics](https://huggingface.co/Motubrain/MotuBrain2.0-Robodojo/resolve/26c53046384721b21ef2b6d39b47b339cbc4bba8/action_stats.json).
 
 Downloads use the HF CLI directly. Frozen encoders remain separate upstream
 assets. The embodied Chinese prompt, action mask, 32-action horizon and four-step

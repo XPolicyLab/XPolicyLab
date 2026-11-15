@@ -44,7 +44,7 @@ The commands use Git directly and do not install the DA3 web/demo stack.
 
 The selected bundle contains the published MotuBrain2.0 checkpoint,
 normal BF16 weights with four CM denoising steps, published at immutable HF
-revision `9939da9ccd7f9db9d62f1a56e2bcb9b3893cd0fe`.
+revision `26c53046384721b21ef2b6d39b47b339cbc4bba8`.
 
 ```text
 checkpoints/motubrain/
@@ -58,7 +58,7 @@ run `bash download_checkpoint.sh /path/to/checkpoints/motubrain`.
 It calls `hf download` at the pinned revision; all three files are at the bundle root.
 The loader checks that local files exist; use matching configuration and statistics.
 
-[Checkpoint](https://huggingface.co/Motubrain/MotuBrain2.0-Robodojo/resolve/9939da9ccd7f9db9d62f1a56e2bcb9b3893cd0fe/step-5000.safetensors), [configuration](https://huggingface.co/Motubrain/MotuBrain2.0-Robodojo/resolve/9939da9ccd7f9db9d62f1a56e2bcb9b3893cd0fe/config.yaml), [action statistics](https://huggingface.co/Motubrain/MotuBrain2.0-Robodojo/resolve/9939da9ccd7f9db9d62f1a56e2bcb9b3893cd0fe/action_stats.json).
+[Checkpoint](https://huggingface.co/Motubrain/MotuBrain2.0-Robodojo/resolve/26c53046384721b21ef2b6d39b47b339cbc4bba8/step-5000.safetensors), [configuration](https://huggingface.co/Motubrain/MotuBrain2.0-Robodojo/resolve/26c53046384721b21ef2b6d39b47b339cbc4bba8/config.yaml), [action statistics](https://huggingface.co/Motubrain/MotuBrain2.0-Robodojo/resolve/26c53046384721b21ef2b6d39b47b339cbc4bba8/action_stats.json).
 
 Frozen encoders are downloaded separately under their upstream terms:
 
