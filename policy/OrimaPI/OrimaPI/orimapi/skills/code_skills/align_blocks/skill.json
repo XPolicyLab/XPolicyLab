@@ -1,0 +1,50 @@
+{
+  "schema": "orimapi.code-controller-skill/v1",
+  "skill_id": "align_blocks",
+  "supported_tasks": [
+    "align_blocks"
+  ],
+  "experience": "experience.json",
+  "task_spec": {
+    "task": "align_blocks",
+    "budget": 200,
+    "requirements": "Use the ruler to push three cubes into a straight parallel row; never lift cubes; return both arms home."
+  },
+  "sources": {
+    "controller": "controller.py",
+    "perception": "ruler_perception.py",
+    "motion": "ruler_motion.py",
+    "feedback": "feedback.py",
+    "baseline_program": "program.py",
+    "baseline_sandbox": "sandbox.py",
+    "baseline_geometry": "geometry.py",
+    "baseline___init__": "__init__.py",
+    "baseline_sandbox_worker": "sandbox_worker.py",
+    "baseline_motion": "motion.py",
+    "baseline_controller": "base_controller.py",
+    "baseline_generator": "generator.py",
+    "baseline_perception": "perception.py",
+    "common_geometry": "../common/geometry.py",
+    "public_collision": "../../code_tools/collision.py",
+    "public_fingers": "../../code_tools/finger_model.py"
+  },
+  "tool_limits": {
+    "history_size": 8
+  },
+  "qualification": {
+    "published": true,
+    "mode": "user_authorized_eight_trial_acceptance",
+    "standard_qualified": false,
+    "tested_seeds": [
+      0,
+      1,
+      2
+    ],
+    "validation_batch": "align-blocks-random8-20261029T213112-c001",
+    "scored_episodes": 8,
+    "successful_episodes": 8,
+    "mean_score_percent": 100.0,
+    "llm_model": "gpt-6-astra",
+    "scope": "Eight distinct original layouts sampled across three seed pools. Interrupted runs were retried with unchanged frozen inputs; not the full official benchmark."
+  }
+}

@@ -1,0 +1,46 @@
+[
+  {
+    "kind": "architecture",
+    "lesson": "GPT plans semantic phases, identities and recovery. Local measured composite tools execute fine operations. Never count commanded motion as native success."
+  },
+  {
+    "kind": "observed_local_baseline",
+    "outcomes": [
+      {
+        "seed": 0,
+        "score_native": 0.0,
+        "success": false,
+        "status": "completed"
+      },
+      {
+        "seed": 1,
+        "score_native": 0.0,
+        "success": false,
+        "status": "completed"
+      },
+      {
+        "seed": 2,
+        "score_native": 0.0,
+        "success": false,
+        "status": "completed"
+      }
+    ],
+    "lesson": "The moving object leaves a stale grasp point before closure. Native TCP lift does not establish object capture. Never perform unrelated motion between measured velocity and timed_pick.",
+    "scope": "Historical OLD tool-loop skill, not evidence about this new candidate."
+  },
+  {
+    "kind": "reference_informed_hypothesis",
+    "lesson": [
+      "Read the displayed reference image in the current RGB, record the semantic target and distinguish it from conveyor distractors. This is not the remember-first-object task.",
+      "Pick and lift basket with the non-intercepting hand by >8cm; keep it raised through final containment rather than putting it back down to home.",
+      "Identify the matching live conveyor object and a support feature on the belt. intercept measures current shape and three-frame optical flow locally, then invokes a timestamped timed_pick without GPT between tracking and closing.",
+      "Inspect actual retention on fresh wrist/head RGB; after capture use place(mode=inside) with fresh basket support feature measured at its CURRENT lifted height.",
+      "Inspect target inside raised basket. Finish preserving basket grip; the task does not require home."
+    ],
+    "scope": "External aggregates have native successes; transfer timing must be reproduced, not inferred from static grasp macros."
+  },
+  {
+    "kind": "known_limitations",
+    "lesson": "No measured finger-stop/force sensor or automatic object retention/containment certificate. Attachment transforms assume no slip. Three-feature docking and support placement are implemented but unvalidated in native tasks. No new arbitrary tabletop spacing, residual-error, protected-step or retry-count gates."
+  }
+]

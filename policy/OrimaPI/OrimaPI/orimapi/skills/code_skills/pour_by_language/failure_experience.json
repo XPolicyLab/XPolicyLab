@@ -1,0 +1,177 @@
+{
+  "frozen_lessons": [
+    {
+      "strategy": "UNVALIDATED hypothesis: execute three sequential, measured pour-and-return cycles in the exact live instruction order, choosing the working arm from current reach and clearance rather than fixed colors or seed geometry. Use the automatically supplied RGB, frame IDs, robot state and calibration. Maintain a mapping ledger; do not start a later pour while the previous required transfer remains unresolved.\n\nBefore grasping each bottle, establish sufficient current geometry for its grasp region, outlet, body extent, destination interior and upright return support. Prefer economical current two-view measurements where supported; calibrated RGB-derived depth is a conditional alternative for identifiable material points, not simulator depth. A precise circular fit is optional only if other accepted measurements establish the outlet and receiving clearance with adequate uncertainty margins. Never replace a rejected rim with guessed geometry. Complete body envelopes require complete visible outlines and table-supported applicability; they do not establish an axis or contact.\n\nUse checked approach, closure, fresh engagement review, attachment capture and a small vertical retention lift. Continue immediately to transport and pouring when these gates pass. Move the outlet above the measured receiving interior, accounting conservatively for the entire bottle and possible stream displacement. Incrementally tilt about a measured tool-local outlet-related pivot, compensating position as needed to keep the outlet/stream over the bowl. Review retention, stream landing and clearance after each increment. Drain at a supported sufficiently downward orientation using short observed waits; restore upright only after visible drainage has essentially ceased and remaining-liquid evidence is consistent with emptying. No-flow alone is not proof of emptiness.\n\nReturn each bottle upright to freshly confirmed support, release, inspect independent stability, and withdraw. Repeat for all three mappings, then home both empty arms and seek complete native success. Local planning checks only the requested motion; manually review the intended cycle and escape corridor, but do not claim whole-cycle certification.\n\nProtect 120 of the 800 native actions for current-payload recovery, release, withdrawal and final homing, increasing that reserve if live path costs require it. Budget all three cycles using actual consumed actions and reported trajectory expansion, not nominal step counts or research wall time. At most 16 non-motion calls per observation; target no more than 10. Allow one evidence-changing perception correction and one checked viewpoint improvement for an unresolved feature, and one genuinely revised motion alternative after diagnostics. Stop unproductive retries rather than repeat unsupported fits, IK targets or stale pixels. No reset, physics changes, controller imports or safety relaxation.",
+      "stages": [
+        {
+          "name": "Read live order and establish the action ledger",
+          "tools": [
+            "public_camera_calibration",
+            "inspect_region"
+          ],
+          "observation_gate": "From automatically delivered current observations, parse all three ordered bottle-color to bowl-color pairs and identify distinct objects. Check public arm/gripper state, camera identities and the 800-action allowance. Allocate a minimum 120-action cleanup reserve and estimate room for all three cycles.",
+          "stop_or_recover": "Resolve a color or instruction ambiguity with a focused current crop, not an assumed order. If still ambiguous, do not pour. Record unknowns and preserve a safe state; no reset or external instruction API is needed."
+        },
+        {
+          "name": "Measure the next complete pour setup before contact",
+          "tools": [
+            "inspect_region",
+            "mark_points",
+            "estimate_depth",
+            "calibrate_depth",
+            "locate_points",
+            "fit_rim",
+            "estimate_body_envelope"
+          ],
+          "observation_gate": "For the next mapping, localize supported grasp features, outlet, bottle extent, receiving opening and clear return support. Use current RGB-derived metric depth only with calibration and visual consistency checks. Fit a rim only when both views resolve the same physical boundary; estimate a body envelope only from complete qualifying outlines. Outlet and stream-placement uncertainty must fit comfortably inside the receiving interior.",
+          "stop_or_recover": "Do not reproduce the recorded inner/outer-rim confusion or apply table-constrained fits to a lifted bottle. Permit one clearly corrected selection; otherwise improve the view once. Alternative measurements must independently support clearance. If they cannot, stop before pickup."
+        },
+        {
+          "name": "Improve visibility economically and stage a reachable grasp",
+          "tools": [
+            "plan_camera_pointing",
+            "plan_pose",
+            "preview_grasp_pose",
+            "execute_plan",
+            "public_motion_failure_diagnostics"
+          ],
+          "observation_gate": "Choose an arm and clear staging corridor consistent with the intended upright transfer, tilt sweep and return. If necessary, aim an empty-hand wrist camera at a currently located target, execute the checked plan and review fresh RGB. Treat preview_grasp_pose only as a finger-limit preview. All IK, continuity, table and collision checks remain enabled.",
+          "stop_or_recover": "After a rejected motion, inspect diagnostics and permit one materially different safe orientation or staging route. Do not retry unchanged IK or assume a camera plan guarantees visibility. If no safe approach and escape corridor is supported, stop."
+        },
+        {
+          "name": "Close and test physical retention before transport",
+          "tools": [
+            "run_recipe",
+            "inspect_region",
+            "capture_attachment",
+            "plan_relative_pose",
+            "execute_plan",
+            "verify_attachment",
+            "gripper"
+          ],
+          "observation_gate": "Run approach_close only from clear staging with a current visible target and cleanup reserve. Inspect fresh RGB after closure for actual engagement. Capture visible bottle material points, execute a checked approximately 2 cm lift where clear, and verify stable bottle-to-tool relation and visible support separation before lateral transport.",
+          "stop_or_recover": "Closure completion and attachment estimates alone are insufficient. For slip or ambiguous engagement, lower onto confirmed support and release safely. Allow at most one regrasp based on changed evidence and budget. A successful retention test must continue into the full pour cycle."
+        },
+        {
+          "name": "Transport the retained bottle above the specified bowl",
+          "tools": [
+            "plan_pose",
+            "execute_plan",
+            "verify_attachment",
+            "inspect_region",
+            "mark_points",
+            "locate_points"
+          ],
+          "observation_gate": "Reconfirm destination identity and current geometry. Transport upright through visible clear space using separately checked motions. Account for bottle extent beyond robot collision envelopes. At arrival, reobserve outlet position relative to the bowl interior and verify retention; use public calibrated TCP coordinates without adding a wrist offset twice.",
+          "stop_or_recover": "Do not use old table-supported bottle measurements as current held-object observations. On slip, uncertain outlet placement or blocked clearance, stop translation and execute a checked return to support if safe. One revised route is allowed only with new evidence and sufficient recovery budget."
+        },
+        {
+          "name": "Tilt, drain and restore upright",
+          "tools": [
+            "plan_relative_pose",
+            "plan_pose",
+            "execute_plan",
+            "verify_attachment",
+            "inspect_region",
+            "wait"
+          ],
+          "observation_gate": "Start with a checked small tilt over the intended bowl, then use roughly 10–15 degree increments adapted to clearance and observed flow. Derive any local pivot from accepted outlet measurements and public tool transforms. Continue toward a sufficiently downward outlet orientation while keeping the stream inside the bowl and bottle clear. Use 8-action observed drain waits, extending only while evidence supports continued drainage and the full-task budget permits. Restore upright after essentially complete emptying evidence.",
+          "stop_or_recover": "On stream missing the bowl, slip, collision risk or loss of observability, pause further tilt and recover upright through checked increments. No-flow with visibly remaining liquid requires a supported orientation adjustment, not a completion claim. If drainage remains ambiguous after one evidence-changing adjustment, safely restore and report the required transfer unresolved."
+        },
+        {
+          "name": "Set down upright, release, and repeat in order",
+          "tools": [
+            "plan_pose",
+            "execute_plan",
+            "gripper",
+            "inspect_region",
+            "plan_relative_pose",
+            "run_sequence"
+          ],
+          "observation_gate": "Freshly confirm clear stable support, lower the upright bottle and inspect apparent support contact before opening. After release, observe independent upright stability and separated fingers, then withdraw along a clear checked corridor. Update the transfer ledger only from the observed pour evidence. Repeat measurement through release for mappings two and three in live order.",
+          "stop_or_recover": "If release destabilizes the bottle, attempt only a reachable, checked stabilization or replacement within reserve. Do not drag an uncertainly released bottle. Recompute remaining-cycle costs after each bottle; stop on an actual budget or safety failure, not merely because a pickup probe succeeded."
+        },
+        {
+          "name": "Withdraw, home and verify the complete native outcome",
+          "tools": [
+            "plan_relative_pose",
+            "execute_plan",
+            "home",
+            "inspect_region",
+            "finish"
+          ],
+          "observation_gate": "Confirm all bottles released upright and both hands empty. A low wrist must first withdraw from nearby objects and, when needed, move upward through checked clear space. Home both arms with normal checks. Review fresh RGB, public home state and the delivered native outcome for completion of all three ordered pours and restoration.",
+          "stop_or_recover": "Never invoke release-and-home while carrying an unsupported bottle. If homing is rejected, use diagnostics and one checked clearance correction within reserve. Call finish with the actual status; safe cleanup, successful TCP motion, partial transfer or an unknown native outcome is not task success."
+        }
+      ],
+      "capability_gaps": [
+        "No liquid-volume or flow sensor is exposed; RGB can support drainage decisions but cannot certify essentially complete liquid transfer by itself.",
+        "No force/tactile sensing or measured jaw-contact interface is exposed; finger preview and RGB attachment checks do not certify physical or rotational retention.",
+        "No advertised whole grasp-transfer-tilt-return path feasibility tool or liquid-stream predictor exists. Local plans preflight only requested motions, and run_sequence plans stages when reached.",
+        "No directly exposed external ReferenceC pouring controller or ReferenceA complete-cycle preview is available locally.",
+        "The local geometric tools do not provide an unrestricted, guaranteed held-bottle mouth reconstruction; unsupported or ambiguous RGB geometry remains a live stop condition."
+      ],
+      "first_experiment": "Run one complete native attempt under the existing 800-action limit, without reset or a shorter wall-clock deadline. Read the delivered instruction and establish its three ordered mappings. Before first contact, measure the first source outlet, grasp region, destination interior and return support; test whether accepted current point/rim evidence can avoid the earlier repeated-fit dead end without weakening uncertainty checks. Allow one corrected measurement and one checked empty-hand viewpoint improvement per unresolved feature, with at most 16 non-motion calls per observation.\n\nReserve at least 120 actions for recovery/release/withdrawal/home, adjusted upward for live path costs. Perform guarded closure and an approximately 2 cm retention lift. If retention and geometry pass, explicitly continue to upright transport, incremental tilt, observed drainage, upright restoration, supported release and withdrawal. Then perform the same complete cycle for the second and third mappings in the instructed order, and home both arms. Reallocate the remaining non-reserved actions using actual consumption; do not impose a pickup-only endpoint or a fixed per-bottle deadline.\n\nThis experiment tests whether economical pre-contact geometry plus fresh attachment/stream feedback enables all three pours while preserving recoverability. Log measurement rejections, changed hypotheses, consumed actions, slip/stream observations, release stability and the delivered native result. Early stopping is permitted only for actual unresolved observation, reachability, safety or budget gates. The retention probe, any individual pour and safe homing are partial evidence only; only complete native success qualifies.",
+      "scope": "Reference-informed, not yet native-qualified. Use only local advertised tools."
+    },
+    {
+      "scope": "Task-local reviewed public evidence and explicitly unverified hypotheses. Not scene coordinates, runtime capabilities, native success, or authority to override task, geometry, motion, budget, or reference requirements. Source paths are provenance only; do not read files during control.",
+      "findings": [
+        {
+          "id": "live-ordered-pairs-and-upright-transfer-triggers",
+          "kind": "observation",
+          "finding": "This task gives three ordered source/destination color+ordinal pairs in the live instruction and has only800 native actions for all three pours. Native fluid checks are triggered on bottle-upright rising edges; merely remaining tilted does not complete a transfer. Home-triggered checks also detect wrong-order states, but do not establish mandatory homing after each pair. baseline reports0%/progress0; baseline has an exact tilt/semantic-transfer contract but unformalized geometry and no independently established comparable rate; baseline shares the recipe. No native local success or exception evidence is established.",
+          "limitations": "Do not read or infer internal category labels, color order, liquid state or source/destination poses. The95% public checker parameter is not a visual volume measurement or permission to spill. Recipes/contracts do not expose automatic transfer macros. Rim centers are not material tracks; model depth, attachment checks and motion completion do not certify retention or flow.",
+          "next_experiment": "Bind all three ordered pairs from current instruction and RGB, budget all stages within800, then for each pair establish current grasp/mouth/opening geometry, execute checked pickup and short-lift retention review, align the mouth and tilt incrementally with actual flow/retention observations. Restore that bottle upright so the native transition check can evaluate it; support, release and verify separation before continuing in order. Reobserve shifted targets or slip; do not reuse old pixels or a guessed pivot. Avoid unnecessary intermediate home and overly high transit costs, while retaining supported recovery/final-home reserves. Continue all three complete pours if gates pass, then home. No reset, scoring/physics change or invented volume/flow sensor."
+        },
+        {
+          "id": "rim-failure-is-view-support-and-model-domain-not-tool-absence",
+          "kind": "negative_result",
+          "finding": "The previous native pour attempt had two distinct rim failures. Before grasp, the numerical circle fit passed but current-RGB support failed; an archived-video diagnostic gives67.2% support in the close wrist view and100% in the opposite view under the unchanged80% rule. The close lip appears low contrast. After the short-lift command, the held-side view sees a large but nearly edge-on mouth; original fit calls reproduce radius-upper-bound rejection, not a valid mouth measurement. Its low camera height tightly restricts the allowed rim plane. Reclicking the same pair or increasing radius/tilt bounds is not a justified fix.",
+          "limitations": "Images are lossy native-video decodes, not original query RGB, so coverage is diagnostic only. Rejected optimizer values are not real object dimensions/poses, and exact lip height/retention were not independently measured. No camera calibration, radius/orientation/coverage/uncertainty or RGB-support guard was changed. Do not copy archived pixels, bottle color identity or world coordinates into a new seed.",
+          "next_experiment": "Before a fit, inspect actual lip contrast and current public camera geometry; distinguish outer lip from inner opening consistently in both views. Improve one specifically inadequate view rather than repeating large but grazing held-wrist views. For an upright held source consider the higher head plus independently positioned free wrist only if current resolution, baseline, whole-boundary visibility and uncertainty gates can pass; the holding wrist need not be one of the two fitted views. Do not assume the candidate pair will succeed. Obtain a valid current source-mouth estimate and destination opening before a checked complete pour sequence; if genuinely unavailable, record that precise view/model limitation and recover support safely. Preserve original bounds, actual-flow/upright-return requirements and all three ordered transfers."
+        },
+        {
+          "id": "baseline-actual-controller-reviewed-not-a-drop-in",
+          "kind": "observation",
+          "finding": "Selected actual baseline pour-controller sources are now inspected, not merely its contract. The pinned32-byte entrypoint delegates through a batch adapter to an RGB/state/instruction episode controller. It separates complete SAM3 instance grounding from later appearance tracking, uses staged grasp/retention visual checks, and can re-register a held silhouette/axis with multistart-consistency gates before rechecking future tilt targets. It also relies on fixed bottle/CAD/spout geometry and camera assumptions; it is not a demonstrated template-free solution to our current outlet-localization failures.",
+          "limitations": "No external controller was executed, imported or installed, no native performance rate was established, and the release harness itself is evaluation_ready=false/qualification=null. Entrypoint/memory hashes match the pinned contract; selected core blobs match the retrieved tree, but whole7GBarchive hashes were not verified. Numerical object/layout constants were omitted from inspection and not copied. SAM3, foreign IK and CAD registration are NOT our advertised local tools.",
+          "next_experiment": "Adapt only observation discipline using existing local tools: obtain an explicitly reviewed complete object proposal when necessary, treat color as identity evidence rather than a whole-body or mouth estimate, and use current calibrated geometry for source/destination selection. After checked closure/lift, reobserve actual retained-object appearance and axis; if evidence shifts or becomes partial, obtain fresh supported measurements before transport/tilt. Any changed measured target or attachment requires replanning with the unchanged local IK, collision, continuity and evidence guards. Do not substitute foreign CAD constants, a mask top row or body centroid for a measured outlet. Continue all three ordered pour/upright-return/support cycles when gates pass, then final home. No uninstalled registration or missing sensor is assumed."
+        },
+        {
+          "id": "plan-a-useful-pair-not-only-a-larger-single-view",
+          "kind": "hypothesis",
+          "finding": "Earlier head+one-wrist fits had small residuals but inadmissible center/radius and angular uncertainty. The next native candidate genuinely completed BOTH empty-wrist viewing moves; its new fit improved center/radius uncertainty to4.31mm, below its4.64mm limit, but angular uncertainty0.1528rad still exceeded0.15. From public calibration, the selected left/right image-ray downward elevations were about24.6/9.5degrees and selected extents42x23/14x17pixels. Thus the pair changed and partially improved conditioning, but the right view remained grazing/small and the original rejection was correct. These are diagnostic ray/fit quantities, not true object poses or success.",
+          "limitations": "These are conditional fits to archived model-selected boundaries, not independently established physical correspondences, actual object size or current-seed accuracy. Extents alone do not prove the cause or guarantee another camera pair. The original2px noise model, geometric/domain/visibility gates, native budgets and motion guards remain unchanged. No new image inspection or foreign CAD prior was used.",
+          "next_experiment": "Design the initial paired-view setup around current camera ORIGINS and observed boundary quality, not just two camera names or target centering. While hands are empty, assess a small checked clear-space translation of the limiting wrist to improve actual elevation and original-pixel sampling if reach/clearance permit; rigid wrist-camera offsets mean aiming can move the camera but does not guarantee useful incidence. Reobserve both frames and explicitly reselect the same physical boundary after movement. Do not reclick an unchanged frame until numbers barely pass, round0.1528 to0.15, loosen uncertainty, import old coordinates or assume a view optimizer exists. Treat any extra move as a bounded evidence-changing setup hypothesis with full-task/cleanup reserves; stop if unjustified. Obtain accepted geometry/retention before all three ordered complete pour cycles."
+        }
+      ]
+    },
+    {
+      "diagnosis": "Keep approach_close and all regressions unchanged: the latest attempt failed before contact, outside this composition. Retain the reviewed first experiment: attempt all three ordered pour-and-return cycles within 800 native actions when evidence and safety gates pass.\n\nGeometry: the two-empty-wrist setup did not solve the limiting view. Policy review described a small, oblique lip; outline extraction returned no candidates and manual fit_rim rejected uncertainty. These visual descriptions are not independently verified. Two wrist cameras alone are not a quality criterion. Specific change: replace automatic upward, table-directed aiming with one quality-directed viewing hypothesis that addresses distance and incidence of the limiting view, using current RGB/calibration and checked free space. A table patch remains only a viewing reference. Do not repeat the same pair or count camera pointing as improved measurement.\n\nRecognition: no mapping error is established. Tracking: TCP verification passed, but no object tracking was demonstrated. Grasp retention and flow were untested. Planning: the selected view motion completed; one rejected twist did not invalidate all routes. The pointing tool selected low kinematic cost, not best visibility. Budget: a nominal six-step motion consumed 35 actions; cleanup completed at action 69, so exhaustion was not the blocker. API: uncertainty rejection is not an infrastructure exception, and requires_integration did not install a localizer. Official zero is an outcome, not a scene observation.\n\nReviewed replays support pair-conditioning, contrast and model-domain hypotheses, not current poses or guaranteed recovery. Foreign controller review contributes observation discipline only; its CAD/SAM3 registration is unavailable locally. The riskiest assumption remains obtaining adequate outlet geometry economically and maintaining rotational-retention/flow evidence. No guaranteed outlet localizer, contact/volume sensor or whole-cycle planner is exposed.",
+      "lesson": "When a checked paired-view move leaves one lip small or grazing and fitting rejects uncertainty, change view geometry rather than reclicking. In the next full native attempt, bind all three live color+ordinal mappings. Reserve >=120/800 actions for payload recovery, release, withdrawal and final home; increase for actual expanded paths. Limit non-motion calls to 16 per observation, target <=10, obey the live effective allowance and retain planning/execution calls.\n\nBefore first contact, assess existing pairs. For the single paired-view improvement, preserve the useful view and choose a bounded translation/attitude hypothesis for the limiting empty wrist that plausibly improves range and incidence, not merely image centering. Derive directions from current calibration and visible free-space evidence, never archived shifts. Use a currently supported target; a visible table patch is only an aiming reference. Any upright localization requires actually visible symmetric support points and a justified vertical axis, and is not outlet/contact authority. If no supported viewing move exists, do not invent one. Check hand sweep and motion guards, execute separately, then inspect both fresh originals. This recovery is unverified.\n\nRequire the same real lip, adequate original resolution, contrast and broad distinct sampling in both views before fitting. Allow one evidence-changing selection correction; preserve all uncertainty/domain/edge bounds and calibration. Independently supported point geometry may replace a circle fit, not its evidence requirements. Masks and centers are not outlets. Establish grasp, outlet, body clearance, destination interior and return support before pickup.\n\nFrom clear staging run approach_close, inspect fresh engagement, capture localized non-collinear material features and perform a checked approximately 2 cm lift. Verify visible support separation and retention; closure or TCP convergence is insufficient. Reobserve held appearance, axis and outlet; lost or rebound tracks require fresh evidence and replanning. Do not apply table-supported models after lifting.\n\nIf gates pass, continue the COMPLETE task: upright transport, fresh mouth alignment, checked roughly 10–15 degree tilts about a supported TCP-local outlet pivot, and short observed drain waits. Check bottle sweep, rotational retention and stream landing throughout. No-flow alone is not emptying. Restore upright after evidence supports essentially complete drainage; upright transition permits native evaluation, not a success claim. Support, release, inspect independent stability and separation, then withdraw and repeat all mappings in order without unnecessary intermediate home.\n\nOn slip or flow ambiguity allow one evidence-based recovery; on motion rejection inspect diagnostics before one revised route. Stop only for actual unresolved evidence, safety, reachability or budget gates. Finally home both empty arms, with checked upward withdrawal if needed. No reset or guard relaxation; only complete native success qualifies.",
+      "verified_recovery": false,
+      "scope": "Hypothesis from public evidence; validate with native trials."
+    },
+    {
+      "diagnosis": "Keep approach_close, its interface and both regressions unchanged: the latest failure occurred before contact, not inside the recipe. Preserve the reviewed first experiment's complete three-pour goal, but change the measurement decision rather than repeat another upward/inward wrist correction.\n\nGeometry is the demonstrated blocker. Both current-pair rim attempts rejected uncertainty, including after a genuinely executed viewing correction. Policy descriptions of improved coverage are not independently verified measurements. Earlier reviewed replay showed partial conditioning improvement but still failed angular uncertainty; separate archived low-contrast and held-mouth domain failures must not be conflated with this trial. None authorizes altered calibration or relaxed bounds.\n\nNext experiment: explicitly compare existing camera pairs and test identifiable outlet material-point correspondences before committing to circular fitting. Use one stereo proposal/guided review only where real features exist. Accepted point geometry may replace a circle only if it independently supports outlet placement and receiving clearance. Otherwise use one quality-directed pair replacement, potentially head plus repositioned wrist, rather than automatically preserving the previous wrist pair. This implements the reference's alternative-measurement branch; it does not guarantee an outlet localizer.\n\nRecognition: no mapping error established. Tracking: TCP verification passed, not object tracking. Retention and flow: untested in this trial. Planning: the viewing correction completed; endpoint preflight did not certify scene clearance. Budget: nominal six-step motion consumed 17 actions and cleanup ended at 76; exhaustion was not the blocker. API: no exception established; requires_integration left the requested localizer unavailable. Official zero establishes failure, not scene geometry.\n\nRiskiest assumption: current RGB contains enough independent outlet evidence for economical geometry and later retention/flow review. No guaranteed outlet reconstruction, contact/volume sensor or whole-cycle planner exists. Reviewed foreign controller sources supply observation discipline, not installed SAM3/CAD registration or native success.",
+      "lesson": "When a rim remains uncertainty-rejected after a real view correction, do not repeat the same measurement route. This recovery is unverified. Start the next full native attempt by binding all three live color+ordinal mappings. Reserve at least 120/800 actions for payload recovery, release, withdrawal and final home, increasing for expanded path costs. Target <=10 non-motion calls per observation, never exceed 16 or the live effective allowance; retain planning/execution calls.\n\nBefore contact, compare current originals and read-only calibration across available pairs. Separate identity from geometry. Where distinctive outlet material features exist, use one stereo_candidates or stereo_guides review, then mark_points and checked triangulation. Epipolar agreement, silhouette tangencies and rim centers are not material correspondence. Accept an alternative only if independent current evidence establishes outlet extent/location, grasp, bottle sweep, receiving interior and return support with adequate margins. Sparse points or table-scaled depth alone do not establish an opening.\n\nIf circular fitting remains necessary, select one pair for actual contrast, resolution, baseline and non-grazing boundary support. Replace a limiting view rather than automatically repeating two wrists. One bounded empty-hand translation/attitude hypothesis may improve the pair; derive it from current calibration and visible free space, not archived shifts. Check and execute separately, reobserve both originals and reselect the same physical lip. Permit one evidence-changing selection correction, not threshold-seeking reclicks. Preserve every uncertainty, RGB-support and model-domain guard. If still unsupported, recover safely; requesting a localizer does not install it.\n\nFrom clear staging run approach_close with the cleanup reserve. Inspect fresh engagement, capture 3..8 localized non-collinear material features, then make a checked approximately 2 cm lift. Require visible support separation and consistent retention before transport. Closure and TCP convergence are insufficient. Reobserve held axis/outlet; lost or rebound tracks require fresh measurements and replanning. Do not apply table-supported models after lifting or fit a tilted mouth outside the tool domain.\n\nIf gates pass, continue ALL three cycles in order: transport upright, remeasure mouth alignment, tilt through checked roughly 10–15 degree increments about a supported TCP-local outlet pivot, and review bottle sweep, rotational retention and stream landing. Use short observed drain waits, extending while drainage evidence and budget support them. No-flow alone is not emptiness. After evidence supports essentially complete transfer, restore upright; this permits native transition evaluation, not a success claim. Support, release, inspect independent stability and finger separation, then withdraw and repeat without unnecessary intermediate home.\n\nOn slip or flow ambiguity allow one evidence-based recovery; on motion rejection inspect diagnostics before one revised route. Stop only for actual unresolved evidence, safety, reachability or budget gates. Finally home both empty arms, using checked upward withdrawal first if needed. Keep fingertip, collision, IK and continuity checks enabled; no resets or physics changes. Only complete native success qualifies.",
+      "verified_recovery": false,
+      "scope": "Hypothesis from public evidence; validate with native trials."
+    }
+  ],
+  "controller_failures": [
+    {
+      "seed": 0,
+      "failures": []
+    }
+  ],
+  "limitation": "Visual/tool estimates and repeated LLM execution remain fallible; tests are not proof of physical retention.",
+  "terminal_failures": [
+    {
+      "seed": 0,
+      "failures": []
+    }
+  ],
+  "publication_warning": "Published by explicit user request regardless of success. Formal availability is not native task qualification or benchmark reliability."
+}

@@ -1,0 +1,12 @@
+{
+  "task": "hang_mugs_random",
+  "baseline_formal": "orimapi/skills/code_skills/hang_mugs_random",
+  "baseline_manifest_sha256": "993585711ba5a7d9c376699c26f50e3dc0a6a894ecdb607e27c18a31607d7ffe",
+  "runtime": "Own rewritten stage controller/geometry/composites over existing formal local providers",
+  "native_motion_provider": "fill_pen_holder c008 simulation adapter",
+  "geometry_provider": "formal classify_objects_by_language pinned RGB operations and fill_pen_holder mask refinement",
+  "conveyor_provider": "formal match_and_pick_from_conveyor local three-frame RGB tracker",
+  "not_implemented_from_external_interfaces": true,
+  "ordinary_random_algorithm_shared": true,
+  "frozen_experience_is_not_online_learning_across_seeds": true
+}

@@ -1,0 +1,85 @@
+{
+  "schema": "orimapi.code-controller-skill/v1",
+  "skill_id": "stack_bowls_random",
+  "supported_tasks": [
+    "stack_bowls_random"
+  ],
+  "task_spec": {
+    "task": "stack_bowls_random",
+    "budget": 800,
+    "requirements": "c006 geometry/feedback with bowl-up free heading during carrying; relaxed intermediate target error and observed gripper collision envelopes. Cartesian line first, cuRobo graph second. Local changed-action recovery, no repeated same-goal visual-query loop, no future-transfer or remaining-budget rejection. Native800 and strict Astra remain; User-authorized formal c008 publication; eight-scene development sample."
+  },
+  "experience": "experience.json",
+  "sources": {
+    "controller": "controller.py",
+    "vision": "../stack_bowls/runtime/c002-20261028/vision.py",
+    "shared_baseline_motion": "../make_kong/baseline_motion.py",
+    "shared_hand_clearance": "../make_kong/hand_clearance.py",
+    "shared_hand_bounds": "../make_kong/hand_bounds.json",
+    "native": "../stack_bowls/runtime/c002-20261028/native.py",
+    "legacy_controller": "../stack_bowls/baseline_controller.py",
+    "native_client": "../classify_objects_by_language/adapter.py",
+    "native_worker": "../classify_objects_by_language/ik_worker.py",
+    "parent_controller": "../stack_bowls/runtime/c007-20261028/controller.py",
+    "grandparent_controller": "../stack_bowls/runtime/c004-20261028/controller.py",
+    "c002_controller": "../stack_bowls/runtime/c002-20261028/controller.py",
+    "c003_controller": "../stack_bowls/runtime/c003-20261028/controller.py",
+    "c005_controller": "../stack_bowls/runtime/c005-20261028/controller.py",
+    "c006_controller": "../stack_bowls/runtime/c006-20261028/controller.py",
+    "c008_controller": "../stack_bowls/runtime/c008-20261028/controller.py",
+    "c009_controller": "../stack_bowls/runtime/c009-20261029/controller.py",
+    "baseline_vision": "../stack_bowls/vision.py",
+    "published_publication": "../stack_bowls/runtime/c010-20261029/publication.json",
+    "published_validation": "../stack_bowls/runtime/c010-20261029/validation.json",
+    "ordinary_controller": "../stack_bowls/c010_controller.py",
+    "random_staging": "staging.py",
+    "random_shape_estimate": "approach_vision.py",
+    "random_vision": "vision.py",
+    "generator": "../align_blocks/generator.py",
+    "regions": "../../code_tools/regions.py",
+    "common_geometry": "../common/geometry.py",
+    "tool_controller": "../../code_tools/controller.py",
+    "feedback_parent": "runtime/c001-feedback-20261029/controller.py",
+    "direct_random_adapter": "runtime/c002-direct-feedback-20261029/controller.py",
+    "reuse_nonrandom_parent": "runtime/c005-reuse-nonrandom-20261029/controller.py",
+    "baseline_controller": "runtime/c006-carry-clearance-20261029/controller.py",
+    "trajectory_client": "planner.py",
+    "trajectory_motion": "motion.py",
+    "trajectory_worker": "worker.py",
+    "shared_motion": "../../code_tools/motion.py",
+    "base_motion": "../play_tic_tac_toe/motion.py",
+    "upright_tools": "upright.py",
+    "adaptive_clearance": "clearance.py",
+    "publication_record": "publication.json",
+    "publication_validation": "validation.json",
+    "usage_readme": "README.md",
+    "experience_summary": "EXPERIENCE_SUMMARY.md"
+  },
+  "retry_policy": {
+    "stop": "Native task completion, native episode end, or explicit user interruption only. No retry-count, model-call or planning-wall-clock stop.",
+    "failures": "Continue with changed candidates/views; retain held hypotheses and checked continuation.",
+    "post_release": "Use the inherited nonrandom stack/support ledger. Failed held remeasurement keeps the previous offset and checked carry/lower. Missing current receiving geometry keeps the previously confirmed destination; no forced observe/return solely for failed remeasurement. Positive placement feedback still uses the inherited nonrandom recovery."
+  },
+  "tool_limits": {
+    "history_size": 8
+  },
+  "qualification": {
+    "published": true,
+    "formal_promotion": true,
+    "mode": "user_authorized_c008_eight_scene_publication",
+    "standard_qualified": false,
+    "tested_seeds": [
+      0,
+      1,
+      2
+    ],
+    "scored_episodes": 8,
+    "successful_episodes": 6,
+    "mean_score_percent": 76.875,
+    "model_requests": 90,
+    "llm_model": "gpt-6-astra",
+    "require_model_match": true,
+    "validation_batch": "stack-bowls-clutter-random8-20261029-c008",
+    "scope": "Same eight preselected random-task development scenes; not the full official quota."
+  }
+}

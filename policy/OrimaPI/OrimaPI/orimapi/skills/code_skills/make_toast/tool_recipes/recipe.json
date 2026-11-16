@@ -1,0 +1,202 @@
+{
+  "schema": "orimapi.tool-recipe/v1",
+  "name": "approach_close",
+  "interface": "Approach a currently localized visual target using supplied TCP axes and offset, then close and return needs_visual_review. Call only from an already clear staging pose; the straight path does not avoid scene obstacles. The target must remain visible. Inspect current RGB after closure before any lift. Arguments: arm, target, offset in world meters, approach and closing world directions, reserve_actions. Contract-tested only; no native task qualification.",
+  "arguments_example": {
+    "arm": "left",
+    "target": "CURRENT_TARGET_ID",
+    "offset": [
+      0,
+      0,
+      0
+    ],
+    "approach": [
+      0,
+      1,
+      0
+    ],
+    "closing": [
+      -1,
+      0,
+      0
+    ],
+    "reserve_actions": 40
+  },
+  "source": "def build_plan(scene):\n    a = scene['arguments']\n    return {'stages': [{'tool': 'plan_pose', 'arguments': {'arm': a['arm'], 'constraints': [{'kind': 'point', 'local': [0, 0, 0], 'target': a['target'], 'offset': a['offset']}, {'kind': 'axis', 'local': [1, 0, 0], 'direction': a['approach']}, {'kind': 'axis', 'local': [0, 1, 0], 'direction': a['closing']}]}}, {'tool': 'gripper', 'arguments': {'arm': a['arm'], 'value': 0, 'steps': 24}}], 'reserve_actions': a['reserve_actions']}\n",
+  "tests": [
+    {
+      "name": "side_approach_returns_before_lift",
+      "scene": {
+        "arguments": {
+          "arm": "left",
+          "target": "feature_a",
+          "offset": [
+            0,
+            0,
+            0
+          ],
+          "approach": [
+            0,
+            1,
+            0
+          ],
+          "closing": [
+            -1,
+            0,
+            0
+          ],
+          "reserve_actions": 40
+        },
+        "state": {}
+      },
+      "expected": {
+        "stages": [
+          {
+            "tool": "plan_pose",
+            "arguments": {
+              "arm": "left",
+              "constraints": [
+                {
+                  "kind": "point",
+                  "local": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "target": "feature_a",
+                  "offset": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "kind": "axis",
+                  "local": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "direction": [
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                {
+                  "kind": "axis",
+                  "local": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "direction": [
+                    -1,
+                    0,
+                    0
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "tool": "gripper",
+            "arguments": {
+              "arm": "left",
+              "value": 0,
+              "steps": 24
+            }
+          }
+        ],
+        "reserve_actions": 40
+      }
+    },
+    {
+      "name": "different_arm_and_observed_target",
+      "scene": {
+        "arguments": {
+          "arm": "right",
+          "target": "feature_b",
+          "offset": [
+            0,
+            0,
+            0.01
+          ],
+          "approach": [
+            0,
+            0,
+            -1
+          ],
+          "closing": [
+            0,
+            1,
+            0
+          ],
+          "reserve_actions": 25
+        },
+        "state": {}
+      },
+      "expected": {
+        "stages": [
+          {
+            "tool": "plan_pose",
+            "arguments": {
+              "arm": "right",
+              "constraints": [
+                {
+                  "kind": "point",
+                  "local": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "target": "feature_b",
+                  "offset": [
+                    0,
+                    0,
+                    0.01
+                  ]
+                },
+                {
+                  "kind": "axis",
+                  "local": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "direction": [
+                    0,
+                    0,
+                    -1
+                  ]
+                },
+                {
+                  "kind": "axis",
+                  "local": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "direction": [
+                    0,
+                    1,
+                    0
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "tool": "gripper",
+            "arguments": {
+              "arm": "right",
+              "value": 0,
+              "steps": 24
+            }
+          }
+        ],
+        "reserve_actions": 25
+      }
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "schema": "orimapi.code-controller-skill/v1",
+  "skill_id": "classify_objects",
+  "supported_tasks": [
+    "classify_objects"
+  ],
+  "experience": "experience.json",
+  "task_spec": {
+    "task": "classify_objects",
+    "min_grasp_height": 0.016,
+    "budget": 1100,
+    "requirements": "Sort all loose objects by category into three baskets. Aim near each assigned basket centre with natural overlap and partial overhang allowed; do not enforce complete silhouette containment or exact orientation. Distinguish basket floor and rim heights for projection. After release and withdrawal proceed directly to the next item; return both arms home at final completion. Public basket size prior: 0.252 x 0.168 x 0.077 metres. Native evaluation remains authoritative.",
+    "roles": [
+      "item",
+      "basket"
+    ],
+    "candidate_guidance": "c004: vertical tabletop pickup with staged clearance near basket rims, rim-safe placement offset and height for elongated/off-center items, resilient grasp pixel fallback, proximity-guarded recovery, and analytical 6-DOF IK."
+  },
+  "tool_limits": {
+    "history_size": 24
+  },
+  "sources": {
+    "controller": "controller.py",
+    "motion": "c002_motion.py",
+    "planning": "planning.py",
+    "initial_prompt": "initial_prompt.md",
+    "review_prompt": "review_prompt.md",
+    "common_geometry": "../common/geometry.py",
+    "generator": "../align_blocks/generator.py",
+    "base_perception": "perception.py",
+    "base_sandbox": "sandbox.py",
+    "pure_admission": "../align_blocks/sandbox.py",
+    "pure_worker": "../align_blocks/sandbox_worker.py"
+  },
+  "qualification": {
+    "mode": "research_only",
+    "published": false,
+    "candidate": "c004-fast8-20261108",
+    "native_result": "not_run"
+  }
+}

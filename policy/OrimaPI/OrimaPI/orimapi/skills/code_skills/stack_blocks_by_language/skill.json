@@ -1,0 +1,62 @@
+{
+  "schema": "orimapi.code-controller-skill/v1",
+  "skill_id": "stack_blocks_by_language",
+  "supported_tasks": [
+    "stack_blocks_by_language"
+  ],
+  "task_spec": {
+    "task": "stack_blocks_by_language",
+    "budget": 400,
+    "requirements": "Stack the three currently visible colored cubes in the exact bottom-to-top color order specified by the current instruction. Use current RGB geometry and public robot state/calibration only. Retain each cube before transporting, lower and release on the observed stack, then return both arms to their original joints within400 native actions."
+  },
+  "tool_limits": {
+    "max_calls": 24,
+    "max_tools_per_turn": 8,
+    "history_size": 8
+  },
+  "experience": "experience.json",
+  "sources": {
+    "controller": "controller.py",
+    "vision": "vision.py",
+    "shared_make_kong_baseline_motion": "../make_kong/baseline_motion.py",
+    "shared_make_kong_hand_clearance": "../make_kong/hand_clearance.py",
+    "shared_make_kong_hand_bounds": "../make_kong/hand_bounds.json"
+  },
+  "qualification": {
+    "successful_seed_sets": [
+      0,
+      2
+    ],
+    "admission": {
+      "required_successes": 2,
+      "mode": "two_distinct_seeds",
+      "authorization_sha256": "bb1717624a6ee3ad1e38bcdedf39a3856d8736fd8f1ae6ab1951e3a0b9a1e30e",
+      "elapsed_research_seconds": 2837.9337680000003,
+      "idle_time_excluded": true,
+      "limitations": ""
+    },
+    "tested_seed_sets": [
+      0,
+      2
+    ],
+    "scope": "One first native layout per seed set; engineering admission, not full benchmark reliability",
+    "results": [
+      {
+        "seed": 0,
+        "success": true,
+        "score": 1.0,
+        "layout_sha256": "03aa18bd083b56acb34f383611255f50fd33aec3df07fef40c52f60f710f04a8",
+        "run_id": "20261022T172605-tool-episode-b74bcc0532b2"
+      },
+      {
+        "seed": 2,
+        "success": true,
+        "score": 1.0,
+        "layout_sha256": "38fab165e4dce6580f4e3f9b31a9de6f3aa5ecfbf3daf59975ccaae7e40c5251",
+        "run_id": "20261022T172627-tool-episode-092398201ec0"
+      }
+    ],
+    "llm_model": "gpt-6-astra",
+    "reasoning_effort": null
+  }
+}

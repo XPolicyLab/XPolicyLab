@@ -1,0 +1,31 @@
+{
+  "implementation": "Independent task geometry, trajectory, controller and cuRobo protocol; no baseline task code or vendor manipulation provider imported",
+  "reused_project_infrastructure": [
+    "orimapi.skills.code_skills.common.geometry.RobotGeometry/Camera/rgb",
+    "orimapi.skills.code_tools.collision.RobotClearance",
+    "orimapi.skills.code_skills.align_blocks.generator.Generator",
+    "installed official RoboDojo cuRobo planner"
+  ],
+  "independent_algorithms": [
+    "OpenCV normal-gradient sampling with advisory edge support",
+    "SciPy robust projected-circle conic residual least squares",
+    "Own lip-frame rigid pouring path with sampled source envelope",
+    "Own public-state cuRobo Cartesian/free route bridge",
+    "Own persistent phase/held-state recovery loop"
+  ],
+  "external_task_implementation_imported": false,
+  "native_score_untested": true,
+  "parent_candidate_bundle_sha256": "0c7000d643d3137de7d43bc1a411fa2d8c5987fc248935490332b7af772abae5",
+  "parent_native_scores": [
+    0,
+    100
+  ],
+  "changes": [
+    "Park empty observation arms before acquisition and on observed cross-arm route failure",
+    "Search both signed discharge directions perpendicular to finger-closing direction",
+    "Measured zero-progress on a repeated actuator target raises recoverable feedback, not an episode stop or length+N tracking timeout",
+    "A rejected pour waypoint reverses its real executed prefix and changes direction instead of restarting the identical axis",
+    "Empty observer parking is advisory; failed parking must not block acquisition search",
+    "Use the initially observed actual TCP pose for empty-arm home, not an FK substitute"
+  ]
+}

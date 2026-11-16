@@ -1,0 +1,49 @@
+{
+  "parent_formal_skill": "orimapi/skills/code_skills/stack_blocks",
+  "parent_bundle_sha256": "d3eeef670aa1c5bf4e075033e8c612ad284f8dd15bfdec35848e8836ed6f9fb0",
+  "ordinary_scores": [
+    100,
+    100
+  ],
+  "ordinary_success_is_not_random_qualification": true,
+  "copied_tool_hashes": {
+    "tool_documentation.md": "a24e8512d7a21310098b7e22bc02cc36e8e47b4e899293b351849b5ca922742e",
+    "adapter.py": "0d38d346cfd93dccd7198d7b6546db00d6df6b1ef5167b98865f808845ac007f",
+    "ik_worker.py": "92a27a877166ed808aeae0e6fff202fa9725c0bfc7dc333d6cffb2608574beba",
+    "primitives/plane_localize/tool.py": "a15264d1d0abf438b2dda542ce58b93a35e6ed7bc2fb4d4146c026073e034fea",
+    "primitives/plane_localize/interface.md": "a6c1c5ba6f5d3f0d0e20d1f6dfac49b3064d636f15c9042786017522806d139e",
+    "primitives/plane_localize/__pycache__/tool.cpython-311.pyc": "5959c1a86483da426afbfdd1879020043feecb5e0e1eede0a983d4d50a756658",
+    "primitives/stereo_localize/tool.py": "fc9818549d363712ff6b5824b2948ba1cbf3cc9ebbf0a4e7d352767d380d7a3c",
+    "primitives/stereo_localize/interface.md": "1cff040e515e7a44ee8adf537f891c706180d789f046622c3d800a737192dbe3",
+    "primitives/stereo_localize/__pycache__/tool.cpython-311.pyc": "bb554811a5bc9bda63a1c15fbdaf6165875e944b686a2e3c56596f1571a179e9",
+    "primitives/prism_localize/tool.py": "32f112040f863934cd04e60f226d56c5d9015c5ceadbb88abc04c779291397ae",
+    "primitives/prism_localize/interface.md": "bb965dc2f4a37c6540bdfe4aee3342821b20e7c36e8d0a535d6853a649949520",
+    "primitives/prism_localize/__pycache__/tool.cpython-311.pyc": "84efc995878a122d45966500cca7d20b62432478683b257f34343362af788d76",
+    "primitives/top_place/tool.py": "c6f646af359a3cf9e07eb09596943d9f477d05c90dc08322469cd852c156a59d",
+    "primitives/top_place/interface.md": "65a4bd6d2f76a0d6320e0b0029b900aa35f622e2ae186eddb3beec4abc2f917d",
+    "primitives/top_place/__pycache__/tool.cpython-311.pyc": "1ee6a0dcb81a94f00b10f59341847627743128f4d424aa9abfb82c85467be8af",
+    "primitives/top_pick/tool.py": "a0679307ba6ad5e65d2275fce9914343e189eb6e3b606af2c69685006be628c1",
+    "primitives/top_pick/interface.md": "06c88ca3479a88814ce80a24316d5a38fda5e5f0e32979027d935b8f581a96ec",
+    "primitives/top_pick/__pycache__/tool.cpython-311.pyc": "636e3fcd6c24c603e0595eed2ceada0092adb7e0b2cdb573e3659bb20403d070",
+    "primitives/support/geometry.py": "4dc75130689d8c6b57d17f4515247e14a6d6b4d8de29b26e30ff8a7609080482",
+    "primitives/support/__init__.py": "600728cfdc32ae06b3c2617a1d5dd9ee2c7552c4df1c3b4be01add3c3a15eb80",
+    "primitives/support/motion.py": "f9301b582382eeca1087ac341cff56aa541ff8c198e21d351516c793175923ab",
+    "primitives/support/core.py": "77ea307d88efa8a040bf930babf9bd6e5c4ca023085bd044a472720a633a4951",
+    "primitives/support/__pycache__/motion.cpython-311.pyc": "625a47f1be5c314936aaf6dac83f1144b8f476915d0f3770d4840a0c8409fef2",
+    "primitives/support/__pycache__/core.cpython-311.pyc": "4234d2b5aebb7d51636bc0744d745d18693c338b4b97c9fa0d807b1f6c982064",
+    "primitives/support/__pycache__/geometry.cpython-311.pyc": "a7e5530bd75592f223e72b76a27d4826a81050be822ccf8d7e96fbecc3958478",
+    "primitives/support/__pycache__/__init__.cpython-311.pyc": "c3407804a5abb77c119518033d553aa758a1a3fb2219f069c5b49d39434c25bb",
+    "primitives/settled_pick/tool.py": "46e6b7f7e54af690a544ddf42411aba541b64812376d5507a327134d3cf2365e",
+    "primitives/settled_pick/interface.md": "41e23882a32ccc32e49599978ff97023c15282125f1b86bd55205d2f388085a2",
+    "primitives/settled_pick/__pycache__/tool.cpython-311.pyc": "a5b5046e439f6130cb2d144655130368a706294d159659cd7344006220847c85",
+    "primitives/table_plane/tool.py": "7bc30fb191d304433a4db46c6d3cd671fc03608a61ff430050a7104d458cbff4",
+    "primitives/table_plane/interface.md": "d7d9ca4b481d4272c8d1205b3274f3d1b911a95c9ce3a70e1b2ad023275bcba5",
+    "primitives/table_plane/__pycache__/tool.cpython-311.pyc": "e752dff5f2ef473be48ad323d5e6cd9cd2f5bd5ac03b45843908108b6208d385"
+  },
+  "changes": [
+    "Task identity/trace to stack_blocks_random",
+    "Current-random-scene instructions and explicit ordinary success/failure lessons",
+    "Remove inherited fixed100-action pickup-reserve rejection, not native550 limit"
+  ],
+  "inherited_tool_checks": "Original successful primitive arrival/geometry/joint/self/cross-arm contracts are unchanged; no new gates or retry limits added."
+}

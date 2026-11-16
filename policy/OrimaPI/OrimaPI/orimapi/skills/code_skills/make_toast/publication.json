@@ -1,0 +1,34 @@
+{
+  "authorization": "2026-10-24 用户明确要求：现在不论是否达到成功标准都将已经实现的skill合入到正式的skill中",
+  "campaign": "20261023",
+  "candidate": "orimapi/skills/code_skill_rsi/make_toast/studies/20261023-automatic/candidate-005/candidate.json",
+  "candidate_sha256": "0fd6b85c0c54797c29bbba8e6d7a2ef5b48b6fdd11d8cf35d37ac88b8b875d8d",
+  "candidate_file_sha256": "dc85efb05edfefa45a87356a347ad229c98cc8ba1ac6bc4ace17b9cfbc1086cd",
+  "evidence_snapshot_sha256": "750b7091a05b22b89d4c6b37dcf12748acbaea63fb60648679cab4fa6260df8f",
+  "attempt_files_at_capture": {
+    "orimapi/skills/code_skill_rsi/make_toast/studies/20261023-automatic/candidate-005/attempts/000-seed-0.json": "db9dbf457689805fd78f72d44a4e5456e71a6b50285195f9154af9e370b67e10"
+  },
+  "evidence_captured_at": "2026-10-24T07:18:56.878395+00:00",
+  "tool_snapshot_source": "runs/20261024T010912-rsi-3d60e022c02e/code_tools/e259705bb72c71df310d20eefa450852428202f45718ddddd5c34e1ed719dc5a",
+  "mode": "user_authorized_unqualified",
+  "scope": "Published by explicit user request regardless of success. Formal availability is not native task qualification or benchmark reliability.",
+  "selection": "Latest existing frozen candidate; not a highest-score claim.",
+  "outcomes": [
+    {
+      "seed": 0,
+      "attempt_status": "returned",
+      "scored": false,
+      "success": null,
+      "score": null,
+      "run": "/root/code/OrimaPI/runs/20261024T012037-rsi-3eeacb870c94",
+      "error": "RuntimeError: RoboDojo evaluation timed out after 368.63539013802074 seconds",
+      "started_at": "2026-10-24T01:20:37.919360+00:00",
+      "ended_at": "2026-10-24T01:26:57.446432+00:00",
+      "official_result": null,
+      "controller_failures": [],
+      "terminal_failures": []
+    }
+  ],
+  "standard_qualified": false,
+  "exception_qualified": false
+}

@@ -1,0 +1,11 @@
+# The tasks of RoboDojo's Open capability dimension. They run with the generic setup: the tools listed in
+# enabled_tools.txt (the same for every task), the manual interface/INTERFACE_open.md, no task notes and nothing under
+# tasks/. Every other task runs with its own tools in tasks/<task>/.
+align_blocks
+classify_objects_by_language
+general_pickup
+pick_from_conveyor_by_image
+pour_by_language
+solve_equation
+stack_blocks_by_language
+store_tools_in_toolbox

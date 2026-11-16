@@ -1,0 +1,26 @@
+{
+  "task": "play_Xylophone",
+  "scope": "Historical evidence, never current object pose or native reward stage.",
+  "records": [
+    {
+      "version": "legacy_formal",
+      "status": "failure",
+      "lesson": "Repeated GPT-selected fine boundaries and unsupported requests did not produce grasp/strikes. Use local complete operations, not per-waypoint GPT control or finish after perception rejection."
+    },
+    {
+      "version": "c003/c007",
+      "status": "failure",
+      "lesson": "Eight ordered stroke motions did not establish native success. A single uncertain sphere fit must not overwrite attachment. Check current key geometry and improve source identity/observability."
+    },
+    {
+      "version": "c008",
+      "seed": 2,
+      "native_score": 0,
+      "native_actions": 500,
+      "status": "failure",
+      "observed_issue": "First full motion sequence did not end natively; retry ran to native budget. Largest applied sphere correction about50mm after final-key lift.",
+      "uncertainty": "Actual slip versus visual association/depth error and exact unaccepted key/lift remain unresolved.",
+      "response": "Preserve measured radius and stable geometry, reobserve/restore grip based on current evidence, continue meaningful action. Do not hard-stop at a displacement threshold or invent hidden-state coordinates."
+    }
+  ]
+}

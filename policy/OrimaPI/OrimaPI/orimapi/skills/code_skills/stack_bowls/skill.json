@@ -1,0 +1,80 @@
+{
+  "schema": "orimapi.code-controller-skill/v1",
+  "skill_id": "stack_bowls",
+  "supported_tasks": [
+    "stack_bowls"
+  ],
+  "task_spec": {
+    "task": "stack_bowls",
+    "budget": 800,
+    "requirements": "Ordinary c017 plus evidence-only placement repair: tolerate a nested upper bowl appearing tilted; no angle-measurement prerequisite. Continue remaining bowls using retained geometry on uncertainty. Repair only positively observed not-nested, overturned, slipped or unstable-bottom failures. Finish release, withdrawal and home, then let native termination evaluate the stack. Preserve c017 empty-arm yielding, carry +50mm, contact departure, free heading, line then graph, and native800; User-authorized formal c018 publication; development-sample qualification only."
+  },
+  "experience": "experience.json",
+  "sources": {
+    "controller": "controller.py",
+    "vision": "runtime/c002-20261028/vision.py",
+    "shared_baseline_motion": "../make_kong/baseline_motion.py",
+    "shared_hand_clearance": "../make_kong/hand_clearance.py",
+    "shared_hand_bounds": "../make_kong/hand_bounds.json",
+    "native": "runtime/c002-20261028/native.py",
+    "legacy_controller": "baseline_controller.py",
+    "native_client": "../classify_objects_by_language/adapter.py",
+    "native_worker": "../classify_objects_by_language/ik_worker.py",
+    "parent_controller": "runtime/c007-20261028/controller.py",
+    "grandparent_controller": "runtime/c004-20261028/controller.py",
+    "c002_controller": "runtime/c002-20261028/controller.py",
+    "c003_controller": "runtime/c003-20261028/controller.py",
+    "c005_controller": "runtime/c005-20261028/controller.py",
+    "c006_controller": "runtime/c006-20261028/controller.py",
+    "c008_controller": "runtime/c008-20261028/controller.py",
+    "c009_controller": "runtime/c009-20261029/controller.py",
+    "baseline_vision": "vision.py",
+    "published_publication": "runtime/c010-20261029/publication.json",
+    "published_validation": "runtime/c010-20261029/validation.json",
+    "ordinary_controller": "c010_controller.py",
+    "trajectory_client": "planner.py",
+    "trajectory_motion": "motion.py",
+    "trajectory_worker": "worker.py",
+    "upright_tools": "upright.py",
+    "adaptive_clearance": "clearance.py",
+    "common_geometry": "../common/geometry.py",
+    "tool_controller": "../../code_tools/controller.py",
+    "shared_motion": "../../code_tools/motion.py",
+    "base_motion": "../play_tic_tac_toe/motion.py",
+    "generator": "../align_blocks/generator.py",
+    "regions": "../../code_tools/regions.py",
+    "feedback": "feedback.py",
+    "empty_arm_yield": "yielding.py",
+    "publication_record": "publication.json",
+    "publication_validation": "validation.json",
+    "usage_readme": "README.md",
+    "experience_summary": "EXPERIENCE_SUMMARY.md"
+  },
+  "retry_policy": {
+    "stop": "Native task completion, native episode end, or explicit user interruption only. No retry-count, model-call or planning-wall-clock stop.",
+    "failures": "Continue with changed candidates/views; retain held hypotheses and checked continuation.",
+    "post_release": "Ordinary c017 plus evidence-only placement repair: tolerate a nested upper bowl appearing tilted; no angle-measurement prerequisite. Continue remaining bowls using retained geometry on uncertainty. Repair only positively observed not-nested, overturned, slipped or unstable-bottom failures. Finish release, withdrawal and home, then let native termination evaluate the stack. Preserve c017 empty-arm yielding, carry +50mm, contact departure, free heading, line then graph, and native800; User-authorized formal c018 publication; development-sample qualification only."
+  },
+  "tool_limits": {
+    "history_size": 8
+  },
+  "qualification": {
+    "published": true,
+    "formal_promotion": true,
+    "mode": "user_authorized_c018_eight_layout_publication",
+    "standard_qualified": false,
+    "tested_seeds": [
+      0,
+      1,
+      2
+    ],
+    "scored_episodes": 8,
+    "successful_episodes": 6,
+    "mean_score_percent": 78.75,
+    "model_requests": 110,
+    "llm_model": "gpt-6-astra",
+    "require_model_match": true,
+    "validation_batch": "stack-bowls-random8-20261029-c018",
+    "scope": "Eight ordinary-task development layouts; not full official qualification."
+  }
+}

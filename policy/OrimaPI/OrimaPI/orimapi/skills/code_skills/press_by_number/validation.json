@@ -1,0 +1,146 @@
+{
+  "schema": "orimapi.press-by-number-validation/v1",
+  "tested_candidate_bundle_sha256": "2855ca776696da6df2fe71ee3e9d1a8b893beab829381f55efd466a118fa41f3",
+  "runtime_hashes": {
+    "tool_documentation.md": "11a37568ac79ec12d22afaa615b9790afec9330879deb6c2adf248e06c8eec0b",
+    "program_prompt.md": "591fcd30346c2ad9be2f75b7a4377a98b0314c69c8bcb0e2123e6f4210a92e91",
+    "adapter.py": "c1771aaf0d5467a5e25f851349fce20708fa0437ea40611aa0c61df76180a9ba",
+    "ik_worker.py": "92a27a877166ed808aeae0e6fff202fa9725c0bfc7dc333d6cffb2608574beba",
+    "failure_experience.json": "5cab6511b9dea8afde879fbc0e4a6f63d4c3842397d651e90045f29f81e40011",
+    "controller.py": "f7fe1ce386eaa16db8927d7ba8ea4618615afd785c735e9f38f7c5795da5d20e",
+    "public_hand.py": "db8b6ad8993b08460b09ad520304b36ec62b6b5481a6c5f731a5717f4336a715",
+    "experience.json": "14c0602f23fb33892a8e60ddbcfa7d5c709700a71bddba4e5fc8756a56254d4f",
+    "primitives/surface_press/tool.py": "a2d8d2649d2481187c5fb1d0a82954381e88f342656e7148249192d90136ed92",
+    "primitives/surface_press/rim_geometry.py": "1e6b2c06c7d433ee97e4b14a686b33dfc9349ec7306ddf3924f60328dad4e3bd",
+    "primitives/surface_press/interface.md": "85da4707ca29640009b967fc6e9ac9212200a57c1fafec19be149dfa6cdded01",
+    "primitives/support/geometry.py": "4dc75130689d8c6b57d17f4515247e14a6d6b4d8de29b26e30ff8a7609080482",
+    "primitives/support/__init__.py": "600728cfdc32ae06b3c2617a1d5dd9ee2c7552c4df1c3b4be01add3c3a15eb80",
+    "primitives/support/motion.py": "cebe3d0d2caa4b4e018cc601c4bedf05c70b9c668bac60cc21196c2383df1497",
+    "primitives/support/core.py": "0a8e6c03bd545f58de8e42b32383427e59b015d20fcf8409edfdda4eae9bb372",
+    "primitives/table_plane/tool.py": "cd257aec7f4ba01e239f88892f4243f6ab182dc1857354fc152fb930583fcb12",
+    "primitives/table_plane/interface.md": "d7d9ca4b481d4272c8d1205b3274f3d1b911a95c9ce3a70e1b2ad023275bcba5"
+  },
+  "tested_candidate_file_hashes": {
+    "tool_documentation.md": "11a37568ac79ec12d22afaa615b9790afec9330879deb6c2adf248e06c8eec0b",
+    "program_prompt.md": "591fcd30346c2ad9be2f75b7a4377a98b0314c69c8bcb0e2123e6f4210a92e91",
+    "NOTICE.md": "5ac32b00eab0c3873dc4b69911b589c4310d02e6872cc6d0e80da537a1f721bf",
+    "adapter.py": "c1771aaf0d5467a5e25f851349fce20708fa0437ea40611aa0c61df76180a9ba",
+    "ik_worker.py": "92a27a877166ed808aeae0e6fff202fa9725c0bfc7dc333d6cffb2608574beba",
+    "skill.json": "74f0c936e1d700c2d91925c5c6adc27152cb21ca0d6feb650c02497c3bd19304",
+    "failure_experience.json": "5cab6511b9dea8afde879fbc0e4a6f63d4c3842397d651e90045f29f81e40011",
+    "controller.py": "f7fe1ce386eaa16db8927d7ba8ea4618615afd785c735e9f38f7c5795da5d20e",
+    "public_hand.py": "db8b6ad8993b08460b09ad520304b36ec62b6b5481a6c5f731a5717f4336a715",
+    "experience.json": "14c0602f23fb33892a8e60ddbcfa7d5c709700a71bddba4e5fc8756a56254d4f",
+    "primitives/surface_press/tool.py": "a2d8d2649d2481187c5fb1d0a82954381e88f342656e7148249192d90136ed92",
+    "primitives/surface_press/rim_geometry.py": "1e6b2c06c7d433ee97e4b14a686b33dfc9349ec7306ddf3924f60328dad4e3bd",
+    "primitives/surface_press/interface.md": "85da4707ca29640009b967fc6e9ac9212200a57c1fafec19be149dfa6cdded01",
+    "primitives/support/geometry.py": "4dc75130689d8c6b57d17f4515247e14a6d6b4d8de29b26e30ff8a7609080482",
+    "primitives/support/__init__.py": "600728cfdc32ae06b3c2617a1d5dd9ee2c7552c4df1c3b4be01add3c3a15eb80",
+    "primitives/support/motion.py": "cebe3d0d2caa4b4e018cc601c4bedf05c70b9c668bac60cc21196c2383df1497",
+    "primitives/support/core.py": "0a8e6c03bd545f58de8e42b32383427e59b015d20fcf8409edfdda4eae9bb372",
+    "primitives/table_plane/tool.py": "cd257aec7f4ba01e239f88892f4243f6ab182dc1857354fc152fb930583fcb12",
+    "primitives/table_plane/interface.md": "d7d9ca4b481d4272c8d1205b3274f3d1b911a95c9ce3a70e1b2ad023275bcba5"
+  },
+  "qualification": {
+    "published": true,
+    "mode": "user_authorized_two_seed_acceptance",
+    "successful_seeds": [
+      0,
+      1
+    ],
+    "tested_seeds": [
+      0,
+      1
+    ],
+    "untested_seeds": [
+      2
+    ],
+    "standard_qualified": false,
+    "scope": "Same frozen candidate passed one native episode on each of seeds0/1. Seed2 and full benchmark not tested."
+  },
+  "native_actions": [
+    496,
+    526
+  ],
+  "llm_tool_calls": [
+    12,
+    13
+  ],
+  "outcomes": [
+    {
+      "seed": 0,
+      "success": true,
+      "score": 100,
+      "elapsed_s": 210.51794746000087,
+      "artifact_root": "runs/press-by-number-counted-c002-20261026/RoboDojo/press_by_number/orimapi_smoke_a1ca5ab447974dce95ec9feddbec1fc6/arx_x5/0_ckpt_name=policy-library,action_type=joint/attempt-001",
+      "artifacts": [
+        {
+          "path": "_result.json",
+          "sha256": "117b7aac5c033705b64fc53e97b00912e1fec4f50cff9869aee75b750b3529a6"
+        },
+        {
+          "path": "episode_0000000_cam_head_success.mp4",
+          "sha256": "2acec94e74d24e9f0b4644be973bbac3681d42cbb1649cc0698f37c706092db2",
+          "frames": 497
+        },
+        {
+          "path": "episode_0000000_cam_left_wrist_success.mp4",
+          "sha256": "b01dd2f1430288c2d42185ba50399aa1b86fde0d959a5884c9b0aa2ccc307764",
+          "frames": 497
+        },
+        {
+          "path": "episode_0000000_cam_right_wrist_success.mp4",
+          "sha256": "6dd4e5e683167480b212c6864a0044ee2304b962a250d7322f11730853557e8f",
+          "frames": 497
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "success": true,
+      "score": 100,
+      "elapsed_s": 225.6616071530152,
+      "artifact_root": "runs/press-by-number-counted-c002-20261026/RoboDojo/press_by_number/orimapi_smoke_a1ca5ab447974dce95ec9feddbec1fc6/arx_x5/1_ckpt_name=policy-library,action_type=joint/attempt-001",
+      "artifacts": [
+        {
+          "path": "_result.json",
+          "sha256": "117b7aac5c033705b64fc53e97b00912e1fec4f50cff9869aee75b750b3529a6"
+        },
+        {
+          "path": "episode_0000000_cam_head_success.mp4",
+          "sha256": "aa1dc6810ce739e73fc2bd0ec6d9ccde2853ff071da0111c99b8b481aaf10a9a",
+          "frames": 527
+        },
+        {
+          "path": "episode_0000000_cam_left_wrist_success.mp4",
+          "sha256": "8aec6cb538de3b68350aca1fbc1067ce1fcffdf0dc01a4a7a7532684bf490297",
+          "frames": 527
+        },
+        {
+          "path": "episode_0000000_cam_right_wrist_success.mp4",
+          "sha256": "723d21bdf0ffdf52893f4d84ee610dd0b5f69b31901538ed4afb8510906acff8",
+          "frames": 527
+        }
+      ]
+    }
+  ],
+  "run": "runs/press-by-number-counted-c002-20261026",
+  "raw_and_archived_artifacts_verified": true,
+  "publication_metadata_only_changes": [
+    "skill.json qualification and added files",
+    "__init__.py package marker",
+    "NOTICE validation status",
+    "publication/validation/resources/provenance/human report"
+  ],
+  "initial_experience_content_unchanged": true,
+  "deployment_compatibility": {
+    "scope": "Physical GPU placement and relocated/symlinked runtime discovery only; task policy, planning and collision logic are unchanged. Current dependency fingerprints are refreshed; original candidate evidence remains historical.",
+    "previous_fingerprints": {
+      "runtime_hashes": {
+        "adapter.py": "e986a14ff072d30df332214abe9fda8a85451735f764506dd098973f3bf3d759"
+      }
+    },
+    "native_task_retested_after_change": false,
+    "historical_candidate_hashes_and_outcomes_preserved": true
+  }
+}

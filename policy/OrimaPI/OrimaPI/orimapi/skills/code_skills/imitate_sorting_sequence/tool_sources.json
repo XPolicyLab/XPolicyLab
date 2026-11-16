@@ -1,0 +1,76 @@
+{
+  "schema": "orimapi.local-task-tools/v1",
+  "files": {
+    "controller.py": {
+      "original_sha256": "5332571d1fca3adcecaa906c367db20a42e2cf18a67d350994da013db4836e05",
+      "local_sha256": "9cda3b11946e410c5a535dc98ac063905a276b06593f053a90de3db6b45af006"
+    },
+    "episode_api.py": {
+      "original_sha256": "feae40fa0f2463eabfcb27dd1df130b81eca3a1ecc617203624b2609951032dc",
+      "local_sha256": "4a5c49a895d07edd17b841b4e0fe3577aa3cda698e1c2eed9f14887ff975b5bb"
+    },
+    "artifact_images.py": {
+      "original_sha256": "13a0132f229e6e4104d00454530d337dff4bed12a1813d4dc5a5644d5cd41bd3",
+      "local_sha256": "46df2fff097036b598978809bd8d434ccb0087d8d9bda1488bfcffe5fd4f9aac"
+    },
+    "run.py": {
+      "original_sha256": "49fa1defa2483d226b58c3c19c3821b9a5622d1702fe8147fe9fa13b88012b9c",
+      "local_sha256": "5e625cf7192a427e2fc71099b7a793e83f8b2407d5f6c8595197bfb95b9a6a67"
+    },
+    "primitives/core.py": {
+      "original_sha256": "3962aa660509ed7a949b3df64f6a028fe1fb40d2ce644f0f15ed7cd978f7b61f",
+      "local_sha256": "c4605c6e861ab593e83f1cf644050e4b134ac231d5cb6145ef0caa715e55556c"
+    },
+    "primitives/geometry.py": {
+      "original_sha256": "4dc75130689d8c6b57d17f4515247e14a6d6b4d8de29b26e30ff8a7609080482",
+      "local_sha256": "9f99b7eb00746284dda4abca0657bdcddc69340e9bcc171dd5455ec2db14e919"
+    },
+    "primitives/motion.py": {
+      "original_sha256": "53e38bc43331d86a5909a69810129411cb5d8700d9c920f672c6fe8a7fcdbf7f",
+      "local_sha256": "1cbdc974e450495e31b10364c946a205e595536707502baa34ea7ee361ac23f1"
+    },
+    "tools/rgb_watch/tool.py": {
+      "original_sha256": "d77bf410812498e166958de4a9545c0d6e4099e76fe48f200895f6047e2ee3d3",
+      "local_sha256": "d90914b1b64cfb4bfeead9a2572c063ed332098ec2ed9e338925cb82211d4277"
+    },
+    "tools/rgb_transfer/tool.py": {
+      "original_sha256": "d5ca72e82bf2cc554d6fc970f824a50ed504c4a1734caa058842e699e6cd9f24",
+      "local_sha256": "039fce505628fc7bb1065202f306e32f63f97f8101c63c36d0f45522d77e9a20"
+    },
+    "tools/vision_checks/tool.py": {
+      "original_sha256": "7010a8bb415f441405ff7647050fd2a5544a9d38c4f89364e33b3f836030736a",
+      "local_sha256": "e03f991fb076ab344affea1e25bc99fdacc08bc2004f962234335cc2a572cbdb"
+    },
+    "tools/table_plane/tool.py": {
+      "original_sha256": "7bc30fb191d304433a4db46c6d3cd671fc03608a61ff430050a7104d458cbff4",
+      "local_sha256": "9dcdb5c1ad3ffea9883ab8258465a4ac181752017a66ca8c3d6cfc1a7a1f10d9"
+    }
+  },
+  "scope": "Self-contained local runtime, helpers and RGB tools.",
+  "runtime_files_sha256": {
+    "NOTICE.md": "5ac32b00eab0c3873dc4b69911b589c4310d02e6872cc6d0e80da537a1f721bf",
+    "RESEARCH_SUMMARY.md": "32a4df147b2ea167dfd329145cf4107317177f5bedc2c051d302152f85c3410a",
+    "__init__.py": "548797f16c707373f34c06c41e6556164654856a65fa5cfe47e08294ff0ab958",
+    "artifact_images.py": "46df2fff097036b598978809bd8d434ccb0087d8d9bda1488bfcffe5fd4f9aac",
+    "controller.py": "9cda3b11946e410c5a535dc98ac063905a276b06593f053a90de3db6b45af006",
+    "episode_api.py": "4a5c49a895d07edd17b841b4e0fe3577aa3cda698e1c2eed9f14887ff975b5bb",
+    "experience.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "primitives/__init__.py": "3dacd7735b60845bdaec4411b9808da2e2b992c431b69ab65fea660b80c2b7b7",
+    "primitives/collision.py": "e7fdc90e091f8de07bc5039e65853cea3ae933157fa036b636cb94a048339280",
+    "primitives/core.py": "c4605c6e861ab593e83f1cf644050e4b134ac231d5cb6145ef0caa715e55556c",
+    "primitives/geometry.py": "9f99b7eb00746284dda4abca0657bdcddc69340e9bcc171dd5455ec2db14e919",
+    "primitives/motion.py": "1cbdc974e450495e31b10364c946a205e595536707502baa34ea7ee361ac23f1",
+    "program_prompt.md": "684a95e86c6bddb75acb0927a235c0383b8ca63adb3765816533c4431ccef11d",
+    "recovery.py": "bb05f37dee1f82d92e3e46763c20865b936bf8cb552f5fffb46319d27ea4f92f",
+    "run.py": "5e625cf7192a427e2fc71099b7a793e83f8b2407d5f6c8595197bfb95b9a6a67",
+    "task_notes.md": "e29bf015dfcafcbb78f2c821494ef1989cd6256b96ee0c1a551bf10978b3615d",
+    "task_recipe.md": "be26ff704e4dab7baec30aee02565fc6a22445ff72a025c19feb2f5d0b1f0e96",
+    "tool_documentation.md": "95fcd5205562e5e048a8a12b9aa4aea70d0b00af815bc5518f34b24fc120f2ff",
+    "toolkit.py": "464c5419fef9cf0e236e64ad573a4ea63fcbf3be7ecf83fd93d9606fa7263557",
+    "tools/__init__.py": "0bd13779e46e37d6c63a39b176e4d2c1482807e054924136b22317e1bebb7b50",
+    "tools/rgb_transfer/tool.py": "039fce505628fc7bb1065202f306e32f63f97f8101c63c36d0f45522d77e9a20",
+    "tools/rgb_watch/tool.py": "d90914b1b64cfb4bfeead9a2572c063ed332098ec2ed9e338925cb82211d4277",
+    "tools/table_plane/tool.py": "9dcdb5c1ad3ffea9883ab8258465a4ac181752017a66ca8c3d6cfc1a7a1f10d9",
+    "tools/vision_checks/tool.py": "e03f991fb076ab344affea1e25bc99fdacc08bc2004f962234335cc2a572cbdb"
+  }
+}

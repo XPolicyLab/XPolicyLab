@@ -1,0 +1,22 @@
+[
+  {
+    "type": "observed_success",
+    "lesson": "A full two-group press/blue-confirm/home sequence can succeed. That run used90 tool calls for372 actions, including52 run_sequence calls; model iteration count is not task progress."
+  },
+  {
+    "type": "observed_failure",
+    "lesson": "An uncertain first contact/release left count unresolved. Recorded-phase RGB comparison was requested but unavailable; policy stopped pressing at171 and finished after home198. Provide real before/down/up evidence instead of a missing capability."
+  },
+  {
+    "type": "observed_failure",
+    "lesson": "Model believed both red groups, both blue confirmations and home were complete; native score remained0. Exact missed/extra/insufficient-release cycle not determined. Do not equate visual narrative or TCP motion with official activation."
+  },
+  {
+    "type": "external_method",
+    "lesson": "Own the whole A*na/C/B*nb/C/home sequence. First continuous descent establishes contact endpoint; repeated down substeps before release are not extra cycles. Never replay after uncertain possible actuation."
+  },
+  {
+    "type": "observed_failure",
+    "lesson": "Full sequence advanced to A9/C/B3 but stopped at641 actions for insufficient remaining time. First press began at294; observation preparation and repeated home/orient consumed42% before contact. Reuse safe poses only after full route preflight and avoid duplicate stable waits. Candidate001 seed0 still succeeded100 with629 actions; no native budget or guard changes."
+  }
+]

@@ -1,0 +1,7 @@
+# Match the formal SAM tool manifests; independent of RoboDojo's simulator stack.
+torch==2.7.1
+transformers==4.53.2
+safetensors==0.8.0
+numpy==1.26.4
+opencv-python-headless==4.11.0.86
+pillow==11.2.1

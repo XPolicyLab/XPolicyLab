@@ -1,0 +1,42 @@
+{
+  "schema": "orimapi.code-skill/v1",
+  "skill_id": "play_tic_tac_toe",
+  "supported_tasks": [
+    "play_tic_tac_toe"
+  ],
+  "task_spec": {
+    "task": "play_tic_tac_toe",
+    "budget": 1100,
+    "min_grasp_height": 0.016,
+    "max_replans": 10,
+    "reuse_turn_program": true,
+    "pose_guidance": "A vertical gripper can be unreachable for the observed far row. The existing pick_place tool supports source_tilt_x/y and target_tilt_x/y within +/-0.52 radians. Numerical checks on development RGB-derived points admitted same-side far-row targets with target_tilt_x around0.35 and source/target jaw yaw pi/2. This keeps the closing axis horizontal during world-X tilt. It is an unverified contact hypothesis, not an instruction to use old coordinates. Preserve source/target offsets, centering, all pieces, turn order, existing waits and safe table clearance.",
+    "roles": [
+      "piece",
+      "pad",
+      "opponent",
+      "obstacle"
+    ],
+    "requirements": "Play first and fill all nine cells with the opponent, not necessarily win. Place five player pieces into distinct observed empty cells, alternating with four autonomous opponent placements. Never touch opponent pieces or the support arm. Return BOTH controlled arms to initial home after every own move to allow the opponent to act. Observe the new board after the opponent settles; never predict its move from seed or trajectory assets. Center every piece within15mm of its cell center and rest it on the board, within20mm above the board plane. Release and home after the last move. Use only camera images, observed robot state and public calibration; all board/piece positions must be measured from current images.",
+    "planning_guidance": "Use piece for PLAYER tokens only and pad for all nine cell centers. Pad status unplaced means visibly empty; in_target means occupied by either player; uncertain means unavailable. Give cells stable row/column IDs. Include opponent tokens as opponent, never as pickable pieces. A new turn normally plans only ONE pickup and placement, home(keep=true), wait for the support arm, then replan from current RGB. On the first turn the board should be empty; before later moves require alternating counts. The default available tools include measured RGB color proposals, wrist views, calibrated pixel projection, IK-qualified pick_place, home, wait and current-image replan. Any additional perception/model/planning tool may be requested through capability_requests; it is not silently available. This is not a closed catalogue. Never report task success yourself."
+  },
+  "program": "program.py",
+  "experience": "experience.json",
+  "prompts": {
+    "plan": "prompts/plan.md",
+    "generate": "prompts/generate.md"
+  },
+  "sources": {
+    "controller": "controller.py",
+    "engine": "engine.py",
+    "motion": "motion.py",
+    "perception": "perception.py",
+    "sandbox": "sandbox.py",
+    "handoff": "handoff.py",
+    "inspection_prompt": "prompts/inspect.md",
+    "common_geometry": "../common/geometry.py",
+    "generator": "../align_blocks/generator.py",
+    "pure_admission": "../align_blocks/sandbox.py",
+    "pure_worker": "../align_blocks/sandbox_worker.py"
+  }
+}

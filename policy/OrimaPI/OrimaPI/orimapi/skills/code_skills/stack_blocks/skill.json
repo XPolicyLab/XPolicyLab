@@ -1,0 +1,70 @@
+{
+  "schema": "orimapi.code-controller-skill/v1",
+  "skill_id": "stack_blocks",
+  "supported_tasks": [
+    "stack_blocks"
+  ],
+  "task_spec": {
+    "task": "stack_blocks",
+    "budget": 550,
+    "requirements": "Stack three distinct textured blocks in a stable released pile, then both arms home. Current RGB/public robot geometry only; two-transfer plan, retention and placement review; native verdict only."
+  },
+  "tool_limits": {
+    "max_calls": 110,
+    "max_tools_per_turn": 16,
+    "history_size": 24,
+    "require_cartesian_completion": true
+  },
+  "experience": "experience.json",
+  "sources": {
+    "file_001": "NOTICE.md",
+    "file_002": "adapter.py",
+    "controller": "controller.py",
+    "file_005": "failure_experience.json",
+    "file_006": "ik_worker.py",
+    "file_009": "primitives/plane_localize/interface.md",
+    "file_010": "primitives/plane_localize/tool.py",
+    "file_012": "primitives/prism_localize/interface.md",
+    "file_013": "primitives/prism_localize/tool.py",
+    "file_015": "primitives/settled_pick/interface.md",
+    "file_016": "primitives/settled_pick/tool.py",
+    "file_018": "primitives/stereo_localize/interface.md",
+    "file_019": "primitives/stereo_localize/tool.py",
+    "file_021": "primitives/support/__init__.py",
+    "file_022": "primitives/support/core.py",
+    "file_023": "primitives/support/geometry.py",
+    "file_024": "primitives/support/motion.py",
+    "file_026": "primitives/table_plane/interface.md",
+    "file_027": "primitives/table_plane/tool.py",
+    "file_029": "primitives/top_pick/interface.md",
+    "file_030": "primitives/top_pick/tool.py",
+    "file_032": "primitives/top_place/interface.md",
+    "file_033": "primitives/top_place/tool.py",
+    "file_034": "program_prompt.md",
+    "file_035": "tool_documentation.md",
+    "published___init___py": "__init__.py",
+    "published_validation_json": "validation.json",
+    "published_publication_json": "publication.json",
+    "published_resources_json": "resources.json",
+    "published_source_provenance_json": "source_provenance.json",
+    "published_RESEARCH_SUMMARY_md": "RESEARCH_SUMMARY.md"
+  },
+  "qualification": {
+    "published": true,
+    "mode": "user_authorized_two_seed_acceptance",
+    "successful_seeds": [
+      0,
+      1
+    ],
+    "tested_seeds": [
+      0,
+      1
+    ],
+    "untested_seeds": [
+      2
+    ],
+    "standard_qualified": false,
+    "random_variant_tested": false,
+    "scope": "Same frozen candidate passed one ordinary stack_blocks episode on seeds0/1; seed2 and stack_blocks_random are untested."
+  }
+}

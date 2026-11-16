@@ -1,0 +1,30 @@
+{
+  "authorization": "用户明确要求：make_toast_random优化减少GPT调用，改为GPT规划本地工具执行，然后合入正式skill",
+  "published_at": "2026-10-26T19:28:58.733648+00:00",
+  "candidate": "orimapi/skills/code_skill_rsi/make_toast_random/candidates/candidate-003-local-workflow",
+  "candidate_bundle_sha256": "0793653f3955077fc87a9f6275b3e8758fb64c29ac4b384ce2c694c6665dd9a3",
+  "previous_formal_archive": "orimapi/skills/code_skill_rsi/make_toast_random/publication/previous-formal-20261026T192858Z",
+  "qualification": {
+    "published": true,
+    "mode": "user_authorized_unqualified",
+    "standard_qualified": false,
+    "tested_seeds": [
+      0,
+      1,
+      2
+    ],
+    "successful_seeds": [],
+    "untested_seeds": [],
+    "scope": "User requested formal integration; one development episode per scored seed, not official quota; no independent generalization claim"
+  },
+  "runtime_and_llm_experience_byte_identical": true,
+  "changes_at_publication": [
+    "Manifest dependency paths rebased",
+    "Publication and validation/summary added",
+    "Only make_toast_random default config entry updated; ordinary make_toast unchanged"
+  ],
+  "native_evidence": "runs/make-toast-random-local-workflow-c003-20261027",
+  "native_validation_status": "pending",
+  "predecessor_native_evidence": "runs/make-toast-random-local-workflow-c002-20261027",
+  "candidate001_incomplete_evidence": "runs/make-toast-random-local-workflow-c001-20261027"
+}

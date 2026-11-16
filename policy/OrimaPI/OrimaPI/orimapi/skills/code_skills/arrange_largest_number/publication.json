@@ -1,0 +1,67 @@
+{
+  "schema": "orimapi.code-skill-publication/v1",
+  "status": "published",
+  "published_at": "2026-10-27T18:53:57.437457+00:00",
+  "authorization": "User explicitly requested: \u4e0b\u9762\u5408\u5165\u5230\u6b63\u5f0f\u7684skill",
+  "candidate": "orimapi/skills/code_skill_rsi/arrange_largest_number/c001-20261028",
+  "previous_formal_backup": "orimapi/skills/code_skill_rsi/arrange_largest_number/c001-20261028/publication/backup-20261027T185357Z",
+  "qualification": {
+    "published": true,
+    "mode": "user_authorized_eight_trial_acceptance",
+    "standard_qualified": false,
+    "tested_seeds": [
+      0,
+      1,
+      2
+    ],
+    "successful_seeds": [
+      0
+    ],
+    "llm_model": "gpt-6-astra",
+    "validation_batch": "arrange-largest-number-random8-20261028-c001-r1",
+    "scored_episodes": 8,
+    "successful_episodes": 2,
+    "mean_score_percent": 42.5,
+    "equal_seed_mean_score_percent": 30.666666666666668,
+    "seed_results": [
+      {
+        "seed": 0,
+        "episodes": 5,
+        "mean_score_percent": 57.0,
+        "successes": 2
+      },
+      {
+        "seed": 1,
+        "episodes": 1,
+        "mean_score_percent": 15.0,
+        "successes": 0
+      },
+      {
+        "seed": 2,
+        "episodes": 2,
+        "mean_score_percent": 20.0,
+        "successes": 0
+      }
+    ],
+    "scope": "Eight distinct layouts sampled from 90 original normal-task layouts. User-authorized small-sample publication; not the official 25 normal plus 25 random episodes per seed. arrange_largest_number_random is untested and unsupported."
+  },
+  "tested_candidate_bundle_sha256": "b5a1b3de218c67bb72442b91a5bf93c3826c6da39feb896a3de33f28f8858da8",
+  "runtime_hashes": {
+    "experience": "a44038df13bfe2d2ec1a1e1a90031ed2dc879753b0d981a522ae5b625c94d4ab",
+    "source_controller": "9f24423dc99e230db3f462460a2ca926e3cf0bafdca88bbf37e4c703c0d2cd86",
+    "source_vision": "91a19ef9199a4a4c4111389ba2ac774d9c059d403a65f67d9920c728e9aa47da",
+    "source_shared_make_kong_baseline_motion": "79abd687e22cb81a94ebb5fcc6b5419934c459125645227d664046f3950097cb",
+    "source_shared_make_kong_hand_clearance": "088592a790fde9051c007a635fcc6edec1c51a29c21f367163303e87c32784e9",
+    "source_shared_make_kong_hand_bounds": "6ecea3347942113699f1993b189fa4ad555912aa69906d43dd3a29beaed426ca",
+    "source_planning": "de00c8e92845a19b23dff5b9e10fe84084a1e0e23d1140df04e80634e18f0d80",
+    "source_shared_native_adapter": "ee10e45379ad2c8020e9dc5c2ec8f8739bd96f79bcea3b69a8bd729b02fe5dc7",
+    "source_shared_native_worker": "92a27a877166ed808aeae0e6fff202fa9725c0bfc7dc333d6cffb2608574beba",
+    "source_shared_public_geometry": "9e204a79b46e863b93e7278e6200f44b432ba69f3bb62892ff17ef6510473d52",
+    "source_shared_checked_motion": "3ef712be1b81180ea6d7db9034d53bd6d38999f51ab38f8eee431a071e4de9e8",
+    "source_shared_robot_collision": "c34b0c51b0a3da35329b876812643bd1eae51fb498b3ffd7f3ce982c59fe625f",
+    "source_shared_motion_base": "7680d16d16496f4eeebc9fff9190c7b0422582c7f5251d198d38169a0295e8fc"
+  },
+  "tested_runtime_inputs_unchanged": true,
+  "scope": "Controller, vision, planning, injected experience and declared runtime dependencies match all eight tested frozen bundles byte-for-byte. Manifest relative paths and qualification plus publication/validation metadata changed. No new simulation launched.",
+  "review": "runs/arrange-largest-number-random8-20261028-c001-r1/analysis/review.md"
+}

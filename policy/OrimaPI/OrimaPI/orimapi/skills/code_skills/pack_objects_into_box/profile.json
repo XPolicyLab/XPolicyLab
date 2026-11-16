@@ -1,0 +1,38 @@
+{
+  "title": "装箱：四物体匹配槽位—识别正面—持物定向—放入箱底",
+  "target_count": 4,
+  "operations": [
+    "pick",
+    "place",
+    "dock",
+    "transfer",
+    "inspect",
+    "measure_feature",
+    "view",
+    "home",
+    "wait"
+  ],
+  "phases": [
+    "Identify exactly four target objects and intended box positions. Identify each front/back semantically; do not infer front from a symmetric silhouette axis.",
+    "Pick one object using local current silhouette/explicit multiview geometry.",
+    "On fresh held-object RGB, place(mode=inside, front_left=true) with current front/back material features and destination support at the actual visible box bottom. Choose normalized slot within locally measured box axes; no copied world coordinates.",
+    "Inspect object containment, front direction, and whether box tipped or shifted. Remeasure a moved box instead of using its old rim as the support.",
+    "Repeat for four distinct targets, withdraw and home."
+  ],
+  "failure_lesson": "Reference releases left objects outside or with unverified facing; centering over the rim is not placing on the box bottom. Opposite arm/posture sometimes recovered motion.",
+  "required_features": {
+    "place": [
+      "held.front",
+      "held.back",
+      "destination.support (actual interior bottom)"
+    ]
+  },
+  "reference_success_scope": "External ordinary/random aggregates include successes, but shared recipes alone are not executable controllers.",
+  "task": "pack_objects_into_box",
+  "family": "pack_objects_into_box",
+  "budget": 1300,
+  "random": false,
+  "pickup_lift_m": 0.06,
+  "travel_lift_m": 0.06,
+  "final_home": true
+}

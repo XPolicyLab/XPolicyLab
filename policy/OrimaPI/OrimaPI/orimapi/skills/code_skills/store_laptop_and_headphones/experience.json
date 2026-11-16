@@ -1,0 +1,178 @@
+[
+  {
+    "strategy": "UNVALIDATED hypothesis: perform a sequential, measurement-gated complete storage attempt with the advertised native pose, gripper and verification tools. Hang the headphones first, close the supported laptop, grasp the closed body, rotate it upright with clearance, seat it in the rack, release and home both arms. Select arms from current reachability and visibility; keep the unused arm clear, using it for laptop stabilization only if separately measured and checked.\n\nStart from automatically delivered RGB, frame identities and public calibration/state. Measure material features and contact boundaries rather than headphone centroids or hollow silhouettes. Prefer a lateral headband segment or rigid junction that leaves the central supporting bridge free, but accept it only when opposing contacts, finger access and table clearance are visible. Use one stereo proposal pass and, if necessary, one guided correspondence review. Reject ambiguous or epipolar-inconsistent identities. RGB-model depth may supplement geometry only with its calibration and uncertainty checks; it must not override contradictory stereo. Obtain at most two purposeful, checked viewing changes when necessary, favoring a translated view with sufficient image margin over repeated wrist rotations. Refresh all image selections after motion.\n\nPreview finger limits but do not interpret the preview as contact measurement. From a clear staging pose, use approach_close only when its straight approach is visibly unobstructed; otherwise use individually checked poses and gripper closure. Inspect immediately after closure, capture attachment evidence on the same material, perform a small clearance-safe lift, and verify attachment plus visible whole-object co-motion before transport. Headphone articulation requires inspection beyond a tracked earcup. Seat the bridge onto the stand while keeping the grasp away from the cradle; inspect support before opening and stability after withdrawal.\n\nMeasure the laptop's current lid, base, hinge direction and support. Close it by short checked contact motions following the observed lid motion toward the base, reobserving after every contact increment. Do not infer closure from TCP motion. Grasp an accessible edge across the closed body only when thickness, opposing contacts and finger clearance are supported by current evidence. Verify retention after a small lift and again after upright rotation. Measure the rack opening and insertion direction; require clearance for both laptop and fingers, including an uncertainty margin. Insert incrementally without force-search or blind pushing, then release only at an observed supported seating pose.\n\nReview the entire intended route geometrically before pickup, including object swept volume, insertion, release and withdrawal. Local planners check only the requested motion from the current state, not the complete future cycle; execute and replan each segment with collision, clearance, IK and joint-continuity checks enabled. TCP local zero is the grasp center; do not add a wrist offset again.\n\nUse the full 800-action allowance, tracking actual expanded motion costs rather than nominal steps. Preserve at least 140 actions for supported release, checked withdrawal and both-arm homing; increase this reserve if current route estimates require it. Permit one materially changed recovery per failed manipulation stage, and no repeated identical rejected IK, silhouette or stalled-motion requests. At each observation, count all non-motion tool/model calls and stay within 16; if unresolved, obtain a justified new view or stop safely rather than loop. No reset, hidden geometry, source pixels or physics changes are used.",
+    "stages": [
+      {
+        "name": "Measure the scene and establish safe routes",
+        "tools": [
+          "inspect_region",
+          "stereo_candidates",
+          "stereo_guides",
+          "mark_points",
+          "locate_points",
+          "estimate_depth",
+          "calibrate_depth",
+          "plan_pose",
+          "plan_relative_pose",
+          "execute_plan"
+        ],
+        "observation_gate": "Use delivered current frames and calibration to identify headphones, supporting cradle, laptop lid/base and rack. Establish grasp surfaces, support heights, rack opening and visible swept-volume clearance. Accept only geometrically checked localization with uncertainty small enough for the intended clearance. Use current original-image coordinates, not crop coordinates. Review a plausible complete route without claiming full-cycle preflight.",
+        "stop_or_recover": "Allow one proposal pass and one guided review per candidate region, with at most two purposeful checked viewing changes for unresolved geometry. Never force rejected matches or replay rejected silhouettes. Stay within 16 non-motion tool/model calls per observation. If essential geometry remains ambiguous, retain the action reserve and proceed to safe termination."
+      },
+      {
+        "name": "Acquire and verify the headphones",
+        "tools": [
+          "plan_pose",
+          "preview_grasp_pose",
+          "execute_plan",
+          "run_recipe",
+          "gripper",
+          "capture_attachment",
+          "plan_relative_pose",
+          "verify_attachment",
+          "inspect_region"
+        ],
+        "observation_gate": "Select an accessible off-center grasp leaving the supporting bridge clear. Check opposing material surfaces, finger travel, table clearance and approach orientation. Invoke approach_close only from a clear staging pose. After closure, inspect contact before a small checked lift; verify attachment and whole-headphone motion before transport. Previewed jaw limits are not measured contact.",
+        "stop_or_recover": "If the grasp misses, catches the table, moves only an articulated component or slips, stop transport. Return to a measured support before opening when feasible. Permit one newly measured grasp alternative if the complete task and final reserve remain affordable; otherwise recover safely."
+      },
+      {
+        "name": "Hang and release the headphones",
+        "tools": [
+          "plan_pose",
+          "plan_relative_pose",
+          "execute_plan",
+          "verify_attachment",
+          "inspect_region",
+          "mark_points",
+          "locate_points",
+          "verify",
+          "gripper",
+          "wait"
+        ],
+        "observation_gate": "Transport through visible clearance while retaining attachment evidence. Reobserve the cradle and bridge before final lowering. Align the bridge over the support, lower in checked increments, and inspect apparent support before opening. After release and withdrawal, confirm the headband remains on the stand with hands clear and no falling or sliding.",
+        "stop_or_recover": "Do not open over an uncertain or missed cradle. If still securely held, retreat to a clear pose and permit one remeasured placement correction. If released unstably, reacquire only with newly established contact geometry and sufficient budget. Headphone placement alone is not success."
+      },
+      {
+        "name": "Close the laptop on its support",
+        "tools": [
+          "inspect_region",
+          "mark_points",
+          "locate_points",
+          "plan_pose",
+          "plan_relative_pose",
+          "execute_plan",
+          "gripper"
+        ],
+        "observation_gate": "Measure current lid/base geometry and hinge direction. Require a stable base and a reachable lid contact region clear of the hinge pinch zone. Use short checked contact motions toward closure, inspecting lid motion and base stability after each increment. A second arm may stabilize only at a separately measured, collision-safe contact. Confirm the lid is closed against the base, not merely lower than before.",
+        "stop_or_recover": "Stop on unexpected translation, support loss, lack of lid motion, occlusion or motion rejection. Withdraw and remeasure before one changed contact approach. Do not push through unexplained resistance, infer a hidden hinge position or repeat an ineffective arc. If closure remains uncertain, do not lift the laptop."
+      },
+      {
+        "name": "Grasp and lift the closed laptop",
+        "tools": [
+          "inspect_region",
+          "mark_points",
+          "locate_points",
+          "plan_pose",
+          "preview_grasp_pose",
+          "execute_plan",
+          "gripper",
+          "capture_attachment",
+          "plan_relative_pose",
+          "verify_attachment"
+        ],
+        "observation_gate": "Measure a closed-body edge with visible thickness, sufficient opposing contact area and finger access. Check that the grasp can retain both halves and leave room for rack insertion and withdrawal. Close, inspect, capture evidence and make a small checked lift. Require lid/base co-motion, stable relative grasp geometry and clearance from the original stand before proceeding.",
+        "stop_or_recover": "A lid-only grasp, visible opening, sliding or ambiguous attachment blocks transport. Lower onto the measured original support and release when safe. Allow one changed grasp only if the remaining upright insertion and homing costs fit; do not mistake closure or lift command completion for retention."
+      },
+      {
+        "name": "Rotate upright and insert into the rack",
+        "tools": [
+          "plan_pose",
+          "plan_relative_pose",
+          "execute_plan",
+          "verify_attachment",
+          "inspect_region",
+          "mark_points",
+          "locate_points",
+          "verify"
+        ],
+        "observation_gate": "Rotate in checked increments within a measured clear volume, using a pivot consistent with the verified grasp rather than an assumed object center. Reobserve retention and closed-laptop geometry after rotation. Refresh rack measurements and align the lower edge with the slot. Require visible clearance exceeding localization uncertainty for the laptop and fingers. Insert incrementally while inspecting rack-relative motion and support.",
+        "stop_or_recover": "Stop on slip, lid opening, rack displacement, unexplained tracking error or uncertain entry. While securely held, withdraw along the newly checked entry path and permit one alignment correction. No blind insertion, force search or guard relaxation is allowed. Use a measured safe support if completion is no longer feasible."
+      },
+      {
+        "name": "Release and verify stable laptop storage",
+        "tools": [
+          "inspect_region",
+          "mark_points",
+          "locate_points",
+          "verify",
+          "gripper",
+          "plan_relative_pose",
+          "execute_plan",
+          "wait"
+        ],
+        "observation_gate": "Before opening, require the closed laptop to be upright and visibly seated within the rack, with support geometry consistent with stable release. Open, reobserve, withdraw without catching the laptop, and inspect after a short settling interval. Verify persistent seating, continued closure and headphones still supported. Proximity checks supplement but do not certify seating.",
+        "stop_or_recover": "If support is uncertain before release, remain closed and retreat or realign within budget. After release, do not chase a falling object; regrasp only if a safe measured contact is available. Preserve release/withdrawal/home reserves and report incomplete storage when verification fails."
+      },
+      {
+        "name": "Withdraw, home both arms and finish",
+        "tools": [
+          "plan_relative_pose",
+          "plan_pose",
+          "execute_plan",
+          "public_motion_failure_diagnostics",
+          "home",
+          "inspect_region",
+          "finish"
+        ],
+        "observation_gate": "Require empty hands or safe supported release before homing. A low wrist first takes a checked withdrawal, upward only when overhead clearance exists. Check fresh robot state and RGB after withdrawal, then request guarded home. Confirm both arms home and both stored objects stable. Only the native success signal establishes complete task success.",
+        "stop_or_recover": "If home rejects for self-clearance, do not repeat it unchanged. Inspect public diagnostics and choose one short, newly checked staging change from the measured state. Do not assume upward withdrawal alone guarantees home clearance. After a tracking failure, reobserve rather than retry the stale target. If no safe route remains, hold safely and finish without claiming success."
+      }
+    ],
+    "capability_gaps": [
+      "No whole-cycle planner certifies grasp, payload transport, upright rotation, insertion, release and homing together; local pose checks remain stage-specific.",
+      "No force/tactile sensing or actual jaw-contact measurement is exposed. RGB co-motion and attachment estimates provide evidence but not physical proof of retention or seating.",
+      "No integrated multiview headphone engagement localizer or useful-view optimizer is advertised. The previously requested localizer still requires integration; existing tools may leave some live geometries unresolved.",
+      "No hinge-aware contact controller or force-guided rack insertion controller is exposed. The candidate must use measured, bounded native pose increments and stop on ambiguous contact."
+    ],
+    "first_experiment": "Run one native episode targeting the complete goal under the existing 800-action limit, with no reset or physics changes. Freeze the strategy above before execution. The initial test is whether current calibrated RGB plus at most two purposeful view changes can establish a safe off-bridge headphone grasp without the failed silhouette/matching loop. If geometry passes, approach, close, inspect and perform a small checked retention lift. This probe is only the beginning: if retained and within budget, continue immediately to hanging and releasing the headphones, closing the laptop, grasping its closed body, rotating upright, inserting and releasing into the rack, withdrawing and homing both arms.\n\nTrack actual native actions after every motion; nominal steps may expand substantially. Maintain at least 140 actions for supported release, withdrawal and home, increasing the reserve when live planner reports warrant it. Before each irreversible transition, check that the observed route and remaining budget support both completion and safe termination. Limit each observation to 16 non-motion tool/model calls and each failed manipulation stage to one materially changed recovery. No separate short wall-clock cutoff is imposed.\n\nRecord localization acceptance/rejection, contact observations, lift and rotation attachment evidence, lid closure, rack entry, post-release stability, planner failures, actual action costs and final home state. The experiment tests whether economical acquisition and explicit retention/seating gates overcome the previously recorded perception and motion failures while completing the entire task. Stop early only for actual unresolved geometry, unsafe/unreachable motion, failed retention or insufficient action reserve. Pickup, headphone placement, laptop closure or safe homing alone are partial progress, never native task success. Preserve any absent native outcome as unknown.",
+    "scope": "Reference-informed, not yet native-qualified. Use only local advertised tools."
+  },
+  {
+    "scope": "Task-local reviewed public evidence and explicitly unverified hypotheses. Not scene coordinates, runtime capabilities, native success, or authority to override task, geometry, motion, budget, or reference requirements. Source paths are provenance only; do not read files during control.",
+    "findings": [
+      {
+        "id": "articulated-closure-is-not-rack-storage",
+        "kind": "observation",
+        "finding": "The native task requires hanging the headphones, closing the laptop and placing it into the vertical stand, within800 actions and final home. Public reference notes report headphone subcycles and laptop closure without complete storage, including slip during placement. Closing the lid does not establish a retained closed-body grasp or rack seating. Headphone support must concern the headband bridge, not just an earcup near the stand. baseline and baseline share the same recipe; baseline supplies no exact same-task contract here. No local native success is established.",
+        "limitations": "This is an offline requirements/reference review, not instance geometry or independent reproduction. The lid articulates relative to the base. An observed face does not establish closed-body thickness, hinge geometry, engagement, support or clearance. External arc-push/edge-grip/transfer macros and depth-based evidence are not local tools. Standard-task reference outcomes must not be assigned to the random variant. No comparable three-reference rate evidence supports an admission exception.",
+        "next_experiment": "Attempt the complete headphones-to-stand, lid-close, laptop-to-rack cycle when live gates pass. Budget all stages and final home within800 actions. Measure the current headband/cradle, verify retention and supported release, then observe laptop lid/base/hinge and support. Use only available checked short motions with fresh material-motion checks; moving the wrist does not prove lid closure. Reacquire the closed body and grasp geometry after articulation. Verify retention again after lift and each upright turn; align observed body and rack opening, establish support before release and recheck seating. Record missing essential geometry/capabilities instead of claiming an external macro exists. Preserve native guards and bounded recovery."
+      },
+      {
+        "id": "inspect-nominal-finger-placement-not-surface-point-only",
+        "kind": "hypothesis",
+        "finding": "A localized headphone seam or junction is not a measured grasp center. The integrated preview_grasp_pose tool can display pinned public finger-limit models at a fresh planned TCP pose on current original RGB, aiding visual critique of the approach/span. Two archived projection examples validate display behavior only; there is no demonstrated grasp or task improvement. The closed/open limit models assume empty space, not the actual finger positions when contact obstructs closure.",
+        "limitations": "This does not provide the requested full headphone-object localizer, measured jaw gap, contact, occlusion, collision clearance or retention proof. Image overlap can occur at different depths; the full hand/wrist is not drawn. A current wrist-camera projection is not its future image after moving. Do not transfer base-task results or archived coordinates to random layouts. Required originals and all physical/geometry guards remain authoritative.",
+        "next_experiment": "From fresh genuine object geometry, form a bounded non-actuating pose hypothesis, then optionally inspect its nominal finger projection in the fixed head view and one useful second current view. Critique whether the approach/span targets actual solid earcup or band material, while retaining depth and identity uncertainty. Adjust a hypothesis only from current evidence; never mark synthetic lines as observed material or treat the model as measured grip. If existing gates support contact, attempt the grasp and verify real retention before completing headphones-to-stand, lid closure, laptop-to-rack and home. The preview is an aid, not permission to bypass a missing essential measurement or stop at a planned partial probe."
+      },
+      {
+        "id": "view-coverage-before-descriptor-escalation",
+        "kind": "hypothesis",
+        "finding": "In candidate-011/seed0, inspected archived wrist RGB clips the headphone earcups/junctions, and the other wrist does not show the headphones. The ordinary same-ROI SIFT pass returned no correspondence proposals. An offline bounded affine-view SIFT prototype increased extracted features to116/125 but still returned zero proposals; its controls had3 passes and1 pixel-localization failure. It was NOT installed. More descriptors alone have not resolved this actual acquisition case. Native candidate-011 completed with official failure/score0.",
+        "limitations": "Archived video/state frame alignment is provisional, and these are not live measurements or random-layout outcomes. A silhouette, repeated dimple, or low epipolar residual does not identify a material point or grasp center. The prototype is not a runtime capability; neither is a full engagement localizer or view optimizer. Nominal finger projection is not a future wrist-camera image. No guard, action reserve or observation gate is relaxed.",
+        "next_experiment": "Within the existing purposeful-view allowance, prefer a checked empty-hand staging/pointing hypothesis that centers the intended material section AND its adjacent boundaries away from the wrist-image edge, rather than another similar backward/upward translation. Do not repeat the previously rejected viewing route. If the head view cannot see the same feature, consider a different current camera pair only when fresh RGB actually shows shared material and valid calibration/baseline; the other wrist may itself need a safely planned view. Reject ambiguous matches. If contact/retention gates pass, continue full headphone hanging, laptop closure, upright rack storage and home; do not stop at pickup. Preserve bounded recovery and all guards."
+      }
+    ]
+  },
+  {
+    "diagnosis": "Retain the reviewed complete-cycle strategy and identical approach_close recipe; no recipe defect is demonstrated. The latest official failure/score zero is an outcome, not scene evidence.\n\nRecognition reached band/junction candidates, but geometry remained unresolved. Stereo returned no proposals; the guided corner was rejected by the policy as a different material boundary. Clipping and finger occlusion are policy visual descriptions, not independently verified observations. No grasp was established, so retention, lid closure and rack seating remain untested.\n\nThe revised second viewing motion completed with TCP verification, taking 16 actions for six nominal steps; home completed in 20. Thus this excerpt shows neither tracking failure nor collision rejection. Successful motion did not establish useful coverage. Acquisition flow, not action exhaustion, blocked progress. No API exception appears; requires_integration confirms the localizer remains unavailable.\n\nChange the first experiment from another same-wrist pointing adjustment to a coverage-qualified camera/feature selection. Before spending either view, identify which opposing boundary is missing and whether a robot finger or the object itself occludes it. Prefer a different empty-wrist viewpoint when the current camera cannot expose shared material and adjacent boundaries; require a checked staging and return route. Do not automatically repeat the head/right-wrist pair after it exposes different faces. Run matching only after current RGB confirms candidate shared material with image margin. This departs from the reference's translation preference because the latest pointing/translation completed without resolving engagement.\n\nReviewed affine diagnostics support avoiding descriptor escalation, not calibration changes or archived control coordinates. Nominal preview remains a display aid. The riskiest assumption is that existing RGB tools can resolve engagement within two useful views; no engagement localizer, useful-view optimizer, force controller or whole-cycle planner is available. Passing acquisition and retention gates must lead to the complete native attempt.",
+    "lesson": "Unvalidated next experiment: attempt headphones-to-stand, laptop-close-to-rack and both-arm home within 800 actions.\n\nWhen matching is empty and boundaries remain clipped or finger-occluded despite a completed view motion, change viewpoint selection, not descriptors. Inspect all current cameras first. Name the missing boundary and occluder; use a checked alternate empty-wrist view when warranted, with a return corridor. Do not repeat a same-camera route merely because TCP verification passed. Allow two acquisition views total, one proposal and one guided review per candidate, and 16 non-motion calls per observation. Match only visibly shared material with image margin; reject different faces and ambiguous corners. This coverage recovery is unverified. Use exact fresh frame IDs; never transfer archived pixels or modify calibration.\n\nRequire off-bridge opposing material contacts, grasp-center uncertainty and finger/table clearance. Optional preview critiques nominal fingers, not contact. Use approach_close only from clear staging on an unobstructed path. Inspect closure, capture valid attachment features, make a small checked lift, and require attachment consistency plus whole-headphone co-motion before transport.\n\nIf gates pass, continue immediately: seat the headband bridge on the stand, release and verify stability. Observe lid/base/hinge and close through short checked contacts, reobserving each increment. Remeasure the closed body; grasp both halves and verify retention after lift and each upright turn. Refresh rack geometry, require uncertainty-aware body/finger clearance, insert incrementally, establish support, release and verify stable upright closed seating. Withdraw and home both empty arms.\n\nKeep all fingertip, collision, clearance, IK and continuity guards. Count expanded actions; reserve at least 140 for release, withdrawal and home, increasing for live costs. Permit one changed recovery per failed stage. Lost tracks require fresh evidence; slip requires safe supported lowering. A low wrist may need checked upward withdrawal before home. Stop safely only on unresolved gates, unsafe motion or insufficient reserve. Only complete native success qualifies.",
+    "verified_recovery": false,
+    "scope": "Hypothesis from public evidence; validate with native trials."
+  },
+  {
+    "diagnosis": "Retain the reviewed complete-cycle plan and identical approach_close recipe; the excerpt establishes no recipe defect. The official failure/score zero is an outcome, not a scene observation.\n\nRecognition identified candidate band material, but geometry failed: stereo returned no proposals and the policy rejected guided corners as a different boundary. Policy descriptions suggest the lateral view exposed the wrist-side termination while increasing hand occlusion in the head view; these visual claims are not independently verified. No grasp was established, so retention, laptop closure and rack insertion remain untested.\n\nThe lateral motion passed TCP verification, using seven actions for six nominal steps; home completed in twenty. This excerpt shows neither tracking failure nor collision rejection. Endpoint IK and TCP convergence do not certify scene clearance. Acquisition flow, not action exhaustion, blocked progress. No API exception appears; requires_integration means the requested localizer is still unavailable.\n\nChange the first experiment to preserve complementary visibility: select a head-visible material region first, then choose an empty-wrist staging hypothesis that exposes its adjacent contact boundaries without placing the hand across the head-camera sightline. Consider the other wrist as the first viewing choice when current coverage supports that choice, rather than spending both views improving only the same wrist image. Accept a viewing change only after inspecting both resulting originals. This refines the reference's translation preference because the latest lateral translation completed without resolving shared geometry.\n\nReviewed affine diagnostics support coverage before descriptor escalation, not calibration changes or archived control coordinates. Finger preview validates nominal display only. The riskiest assumption remains that existing RGB tools can resolve engagement within two views. No integrated engagement localizer, view optimizer, force controller or whole-cycle planner is available. Passing geometry and retention gates must lead to the complete native attempt.",
+    "lesson": "Unvalidated experiment: attempt the complete storage cycle within 800 actions. When a view exposes a headphone boundary but blocks its partner camera, optimize shared visibility, not wrist coverage alone. From current RGB choose a head-visible off-bridge material region; plan a complementary empty-wrist view with a clear hand/head-camera sightline and checked return corridor. Consider the alternate wrist before repeating the occluding route. Inspect both new originals before matching. This recovery is a hypothesis, not a visibility guarantee.\n\nAllow two purposeful acquisition views, one stereo proposal and one guided review per candidate, and 16 non-motion calls per observation. Use exact fresh frame IDs. Reject different boundaries, guessed hidden surfaces and stale pixels; do not alter calibration from archived diagnostics.\n\nRequire opposing material contacts, uncertainty-aware finger/table clearance and a clear approach. Optional finger preview is not measured contact. Use approach_close only from clear staging, with reserve_actions at least 140, increased for live recovery/home costs. Inspect closure, capture valid attachment features, make a small checked lift, and require attachment consistency plus whole-headphone co-motion before transport.\n\nIf gates pass, hang the bridge on the stand, release and verify stable support. Measure laptop lid/base/hinge; close through short checked contacts with reobservation after each. Remeasure the closed body, grasp both halves and verify retention after lift and each upright turn. Refresh rack geometry; require body/finger clearance, insert incrementally, establish support, release and verify persistent closed upright seating. Withdraw and home both empty arms.\n\nKeep all native fingertip, collision, clearance, IK and continuity checks. Count expanded actions and budget the remaining cycle before irreversible transitions. Permit one materially changed recovery per failed stage. Lost tracks require fresh evidence; slip blocks transport and calls for safe supported lowering. Motion rejection requires diagnostics, not unchanged retries. A low wrist may need checked upward withdrawal before home. Stop only for unresolved gates, unsafe motion or insufficient reserve. Only complete native success qualifies.",
+    "verified_recovery": false,
+    "scope": "Hypothesis from public evidence; validate with native trials."
+  }
+]

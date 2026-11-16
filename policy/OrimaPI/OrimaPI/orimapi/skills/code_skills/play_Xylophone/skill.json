@@ -1,0 +1,54 @@
+{
+  "schema": "orimapi.code-controller-skill/v1",
+  "skill_id": "play_Xylophone",
+  "supported_tasks": [
+    "play_Xylophone"
+  ],
+  "task_spec": {
+    "task": "play_Xylophone",
+    "budget": 500,
+    "requirements": "Pick up the mallet with one hand; strike8 keys left-to-right with >=25mm intervening mallet lifts. Native verdict authoritative. Current RGB/public robot calibration/state only. GPT plans/coarsely identifies; local complete tools measure and execute. No fixed reserve, maximum views/retries, tracking-step timeout, finish-on-fit-failure or extra home prerequisite."
+  },
+  "tool_limits": {
+    "max_calls": 100,
+    "max_tools_per_turn": 16,
+    "history_size": 24
+  },
+  "experience": "experience.json",
+  "sources": {
+    "controller": "controller.py",
+    "vision": "vision.py",
+    "operations": "operations.py",
+    "motion": "motion.py",
+    "native_worker": "native_worker.py",
+    "prompts": "prompts.json",
+    "project_geometry": "../common/geometry.py",
+    "project_collision": "../../code_tools/collision.py",
+    "project_generator": "../align_blocks/generator.py",
+    "provenance": "source_provenance.json",
+    "package_initializer": "__init__.py",
+    "failure_experience": "failure_experience.json",
+    "publication": "publication.json",
+    "validation": "validation.json",
+    "research_summary": "RESEARCH_SUMMARY.md",
+    "tool_documentation": "tool_documentation.md"
+  },
+  "qualification": {
+    "published": true,
+    "mode": "user_authorized_unqualified",
+    "tested_seeds": [
+      0,
+      1,
+      2
+    ],
+    "successful_seeds": [
+      0,
+      1
+    ],
+    "untested_seeds": [],
+    "episodes_per_seed": 1,
+    "three_seed_mean": 66.66666666666667,
+    "standard_qualified": false,
+    "scope": "Same frozen c008 native development evidence:100/100/0, one episode per seed. Publication is formal availability, not full benchmark or reliability qualification. Published experience summary changed; no new native retest."
+  }
+}

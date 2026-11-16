@@ -1,0 +1,54 @@
+{
+  "schema": "orimapi.code-controller-skill/v1",
+  "skill_id": "push_T",
+  "supported_tasks": [
+    "push_T"
+  ],
+  "task_spec": {
+    "task": "push_T",
+    "budget": 600,
+    "requirements": "Push and rotate the T on the table to the current gray target within native tolerances, then return both arms home. Never lift the block; native600 actions. RGB/public robot inputs only."
+  },
+  "tool_limits": {
+    "max_calls": 24,
+    "max_tools_per_turn": 8,
+    "history_size": 8
+  },
+  "experience": "experience.json",
+  "sources": {
+    "controller": "controller.py",
+    "vision": "vision.py",
+    "shared_make_kong_baseline_motion": "../make_kong/baseline_motion.py",
+    "shared_make_kong_hand_clearance": "../make_kong/hand_clearance.py",
+    "shared_make_kong_hand_bounds": "../make_kong/hand_bounds.json"
+  },
+  "qualification": {
+    "successful_seed_sets": [
+      0,
+      1
+    ],
+    "tested_seed_sets": [
+      0,
+      1
+    ],
+    "scope": "One first native layout per seed set; engineering admission, not full benchmark reliability",
+    "results": [
+      {
+        "seed": 0,
+        "success": true,
+        "score": 1.0,
+        "layout_sha256": "5d6c4c37b2715479cb6a16f6d1200c5de740f1fbbaa216640b3b8828295f0b07",
+        "run_id": "20261021T181157-tool-episode-36c06057f212"
+      },
+      {
+        "seed": 1,
+        "success": true,
+        "score": 1.0,
+        "layout_sha256": "f3e13e45b3d040ea029b3835d02160b2cf662ace9dc5898ba102ff5dac335127",
+        "run_id": "20261021T180724-tool-episode-abc6d1374353"
+      }
+    ],
+    "llm_model": "gpt-6-astra",
+    "reasoning_effort": null
+  }
+}

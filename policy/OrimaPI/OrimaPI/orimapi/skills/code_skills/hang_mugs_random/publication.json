@@ -1,0 +1,33 @@
+{
+  "authorization": "用户明确要求：OK总结成正式的skill先合入",
+  "published_at": "2026-10-26T18:32:59.642514+00:00",
+  "qualification": {
+    "published": true,
+    "mode": "user_authorized_unqualified",
+    "standard_qualified": false,
+    "tested_seeds": [],
+    "successful_seeds": [],
+    "untested_seeds": [
+      0,
+      1,
+      2
+    ],
+    "scope": "User-authorized availability; no new native episodes or score. Historical baseline results are not this version results."
+  },
+  "source_candidates": {
+    "hang_mugs_random": "9359ac196abc87c01caed8fa330d7bd67d9b68e17fcdb4ac114bcbbc51bee577"
+  },
+  "previous_formal_archive": "orimapi/skills/code_skill_rsi/planned_local_v1/publication/previous-formal-20261026T183259Z/hang_mugs_random",
+  "shared_formal_library": "orimapi/skills/code_skills/common/planned_local_v1",
+  "changes_at_publication": [
+    "Controller import moved from research to formal shared package",
+    "Shared conveyor resource path relocated",
+    "Runtime-only manifest dependencies rebased; research build helpers and framework files omitted",
+    "Publication, validation, workflow and experience summary added"
+  ],
+  "algorithm_preserved_except_resource_relocation": true,
+  "model_prompts_byte_identical": true,
+  "profile_and_experience_byte_identical": true,
+  "sweep_random_alias_preserved": false,
+  "evidence_scope": "CPU/interface preflight only, no native simulations or new scores. Published availability is not benchmark qualification."
+}

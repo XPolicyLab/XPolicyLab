@@ -1,0 +1,152 @@
+{
+  "files": [
+    {
+      "path": "vendor/runtime_support/__init__.py",
+      "sha256": "325eaa11ae2bda1e35e0a87c5642eba8aa7b757f1abe70084150904d858f44e4"
+    },
+    {
+      "path": "vendor/runtime_support/server/__init__.py",
+      "sha256": "ca1345ef1344acaf8e5742c2d82686ce1a6a8e3331923abf024f40e1cf5eb06a"
+    },
+    {
+      "path": "vendor/runtime_support/server/core.py",
+      "sha256": "0342c859a2eaa59b29d44d642ebed22730273e114f8b5d03c219bd5e4649e5f9"
+    },
+    {
+      "path": "vendor/runtime_support/server/geometry.py",
+      "sha256": "4dc75130689d8c6b57d17f4515247e14a6d6b4d8de29b26e30ff8a7609080482"
+    },
+    {
+      "path": "vendor/runtime_support/server/motion.py",
+      "sha256": "e519bccfdcc42417004155907b84441f726e9589e98507d2b0e34f3ca7ee73da"
+    },
+    {
+      "path": "vendor/interface/EpisodeAPI.md",
+      "sha256": "100a0ff3c32141b92fa6ab5662fdc949d5e54cf1e0c47a4cae510b80baa5b82d"
+    },
+    {
+      "path": "vendor/interface/INTERFACE_open.md",
+      "sha256": "b34b4cc98fdafd127426fe8fd6873e0e6c8fca0e76fe4482219f1508a14a9428"
+    },
+    {
+      "path": "vendor/library/README.md",
+      "sha256": "fe168a2660dc7c806075cf3d5fc6b2d7fb28db11b25bd230be4ef94c0f881d3a"
+    },
+    {
+      "path": "vendor/library/boundary_candidates/interface.md",
+      "sha256": "a5ad1039944d310ec5f87fa202aed63345b79be7cb58ed78c10f6c072afda2e3"
+    },
+    {
+      "path": "vendor/library/boundary_candidates/tool.py",
+      "sha256": "dd4e254e14745d9c74cfdd6f92d7b9ffb635f934d4a2cc0bb185b7ba151872b1"
+    },
+    {
+      "path": "vendor/library/bounded_rotate/interface.md",
+      "sha256": "d7fc3df58b210ab691a2820ad246a6499bfd700d4405f9eaa0aa73b3c801242b"
+    },
+    {
+      "path": "vendor/library/bounded_rotate/rotation_steps.py",
+      "sha256": "d15d4ea5be59ce75ab76b4ea1129f0f1ab3c72692bfddd0efd52074b6fa55e61"
+    },
+    {
+      "path": "vendor/library/bounded_rotate/tool.py",
+      "sha256": "7f16883ee7c0d9271d3ea65f68cb93b2147003a84a42b0e57834fcad242fbb1a"
+    },
+    {
+      "path": "vendor/library/guarded_grasp/interface.md",
+      "sha256": "9e6cf9428adcd567dbb4d9f0371d2ed3ca32e5e7a7a39f50a5f65a44e14bcc6b"
+    },
+    {
+      "path": "vendor/library/guarded_grasp/tool.py",
+      "sha256": "a6778a5c515dd46f722be5a03a848434aa913532cee4e11210b8d8ae61e09ea1"
+    },
+    {
+      "path": "vendor/library/guarded_press/interface.md",
+      "sha256": "e64251b7e7cb0d95fb454054dd3fcf41f45382585e54a6da06d517de3a2e2b51"
+    },
+    {
+      "path": "vendor/library/guarded_press/tool.py",
+      "sha256": "35a32b0d58c034410c483f71fca82b86e2f0f941cf11987bd53a8086a4870d6f"
+    },
+    {
+      "path": "vendor/library/rgb_point/auto_surface.py",
+      "sha256": "4e378d17f1e9b38fec4180f6f1ef6baa88dcc87bed37530ff98ad9bc41ec5e11"
+    },
+    {
+      "path": "vendor/library/rgb_point/interface.md",
+      "sha256": "129a862f04adeaa06d025f56fc7549a7af216dfc9c7a3d635f41344ce15fa141"
+    },
+    {
+      "path": "vendor/library/rgb_point/silhouette.py",
+      "sha256": "439fe49cd5e89adcbec303c77f9bc5814d85f1a48519d02507df4f91c82ba362"
+    },
+    {
+      "path": "vendor/library/rgb_point/tool.py",
+      "sha256": "8f7fcf3a643d3be824c79045d85f24dfdbda7deb2b3878638074a34f5ffe8f81"
+    },
+    {
+      "path": "vendor/library/rgb_quad/interface.md",
+      "sha256": "f13ad0ff6b6b9c58f7fa14c0d71bab11a82ae25358daea84ae3c068fe03f8cb5"
+    },
+    {
+      "path": "vendor/library/rgb_quad/rgb_measure.py",
+      "sha256": "13b6e6ad7129c49f3c261a75703bf2b7ef122a48ea53275ccc4b391a8f1b1421"
+    },
+    {
+      "path": "vendor/library/rgb_quad/tool.py",
+      "sha256": "a18754e7b772acbaaa96fa9e54d829823099f9ae604b3b3fe17d22fef9352bf1"
+    },
+    {
+      "path": "vendor/library/rim_geometry/interface.md",
+      "sha256": "6c156238e4ab38054e13be4655c0a0f5f6c072d28163c5bf8b730f80239e81ff"
+    },
+    {
+      "path": "vendor/library/rim_geometry/tool.py",
+      "sha256": "3381078be4c0e163d10ad5415188f1d8d8df6373197cfeb5025c4dfaf794aedf"
+    },
+    {
+      "path": "vendor/library/timed_pick/interface.md",
+      "sha256": "c6d13b560463a06fd3d8ad01abc08cfbbd0c17e56b2788cbe498e1ba2a7b6429"
+    },
+    {
+      "path": "vendor/library/timed_pick/tool.py",
+      "sha256": "b498fdf2fe7291986e7326418fbfef63c2cee26ccc33e1b7384619d103dac08d"
+    },
+    {
+      "path": "vendor/profiles/open/enabled_tools.txt",
+      "sha256": "4422e408ac79ef4fb806a4eaa688a078cc296a925a228ca783b505fed96dd470"
+    },
+    {
+      "path": "vendor/profiles/open/tasks.txt",
+      "sha256": "f6942446182fa76e7026369d8bd5f985c90fed6c13841fff3d7ea6a8202a07d1"
+    },
+    {
+      "path": "vendor/recipes/classify_objects_by_language.md",
+      "sha256": "3530200227ed6e177bc17d5f6c91da02f49f587953e22b890d3fe53c7a43b11e"
+    },
+    {
+      "path": "vendor/tasks/pour_liquid_into_cup/tools/region_geometry/interface.md",
+      "sha256": "6194d602b3ad7f09f1b11ef261fb552f86e67d6f5f2c696fab1c8bae06b68cf3"
+    },
+    {
+      "path": "vendor/tasks/pour_liquid_into_cup/tools/region_geometry/tool.py",
+      "sha256": "279f4c5f25170a7e22b1344e4f9db197f8fbb11273e17ba7ee3da36daa1f6b0a"
+    },
+    {
+      "path": "vendor/tools/scene/interface.md",
+      "sha256": "d9f84ae7b62a063f44b9ec59381d40234efad59cb305253ff98c07b1acb4f944"
+    },
+    {
+      "path": "vendor/tools/scene/tool.py",
+      "sha256": "3a584a994f44405513eab756b40707febad72f97aee962ed4afc20a55287a484"
+    },
+    {
+      "path": "vendor/tools/table_plane/interface.md",
+      "sha256": "d7d9ca4b481d4272c8d1205b3274f3d1b911a95c9ce3a70e1b2ad023275bcba5"
+    },
+    {
+      "path": "vendor/tools/table_plane/tool.py",
+      "sha256": "cd257aec7f4ba01e239f88892f4243f6ab182dc1857354fc152fb930583fcb12"
+    }
+  ]
+}

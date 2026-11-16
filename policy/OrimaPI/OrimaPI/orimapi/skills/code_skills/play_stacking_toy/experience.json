@@ -1,0 +1,46 @@
+[
+  {
+    "kind": "architecture",
+    "lesson": "GPT plans semantic phases, identities and recovery. Local measured composite tools execute fine operations. Never count commanded motion as native success."
+  },
+  {
+    "kind": "observed_local_baseline",
+    "outcomes": [
+      {
+        "seed": 0,
+        "score_native": 0.0,
+        "success": false,
+        "status": "completed"
+      },
+      {
+        "seed": 1,
+        "score_native": 0.0,
+        "success": false,
+        "status": "completed"
+      },
+      {
+        "seed": 2,
+        "score_native": 0.0,
+        "success": false,
+        "status": "completed"
+      }
+    ],
+    "lesson": "Four groups do not mean four pieces. Many completed releases remained off pegs; star orientation/seating and current stack height are specific failures in reference notes.",
+    "scope": "Historical OLD tool-loop skill, not evidence about this new candidate."
+  },
+  {
+    "kind": "reference_informed_hypothesis",
+    "lesson": [
+      "Identify all ten pieces and map them to matching peg groups of counts 4,3,2,1; plan group order based on access and target orientation.",
+      "Pick one piece with an edge/body grasp leaving the matching hole(s) available.",
+      "On fresh RGB measure three non-collinear directed piece/peg frame features; dock aligns and seats onto the CURRENT group stack support, not the original board height.",
+      "Inspect actual seated support and increment only a visually supported group member; star or multi-hole parts need correct phase/polarity, not just center alignment.",
+      "Complete all ten pieces, release and home both empty arms."
+    ],
+    "scope": "External native aggregate has successes; no all-ten success can be inferred from returned release flags."
+  },
+  {
+    "kind": "known_limitations",
+    "lesson": "No measured finger-stop/force sensor or automatic object retention/containment certificate. Attachment transforms assume no slip. Three-feature docking and support placement are implemented but unvalidated in native tasks. No new arbitrary tabletop spacing, residual-error, protected-step or retry-count gates."
+  }
+]

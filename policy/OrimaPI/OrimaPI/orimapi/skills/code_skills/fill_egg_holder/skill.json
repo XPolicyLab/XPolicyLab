@@ -1,0 +1,64 @@
+{
+  "schema": "orimapi.code-controller-skill/v1",
+  "skill_id": "fill_egg_holder",
+  "supported_tasks": [
+    "fill_egg_holder"
+  ],
+  "task_spec": {
+    "task": "fill_egg_holder",
+    "budget": 700,
+    "requirements": "Move all four visible eggs from their basket into separate recesses of the egg holder, allow them to settle below the rim, then close the hinged lid and return both arms home. Four placed eggs alone are not task success: the lid must also be closed. Locate the visible holder recesses, lid, hinge and accessible lid edge from RGB. Keep eggs intact and avoid the holder walls. Do not assume a remembered tray layout or lid angle.\nResearch guidance (not successful prior): Public asset priors: an egg is about 0.041 x 0.042 x 0.058 m; the four-compartment holder body is about 0.090 m wide, with the open lid extending to about 0.126 m above its base. These are priors, not scene poses. Inspect actual rim, egg and lid features in all three RGB views. The holder lid is hinged, not a freely movable rigid object: guide its visible edge along the hinge arc, rather than teleporting its center into the closed position. Reserve time for lid closure and final home after all four eggs."
+  },
+  "tool_limits": {
+    "max_calls": 24,
+    "max_tools_per_turn": 16,
+    "history_size": 12
+  },
+  "experience": "experience.json",
+  "sources": {
+    "frozen_knowledge": "frozen_knowledge.json",
+    "tool_documentation": "tool_documentation.md",
+    "program_worker": "program_worker.py",
+    "program_prompt": "program_prompt.md",
+    "arrival_motion": "arrival_motion.py",
+    "hand_clearance": "hand_clearance.py",
+    "hand_bounds": "hand_bounds.json",
+    "visual": "visual.py",
+    "validation": "validation.json",
+    "failure_experience": "failure_experience.json",
+    "vision_geometry": "vision_geometry.py",
+    "RESEARCH_SUMMARY": "RESEARCH_SUMMARY.md",
+    "controller": "controller.py",
+    "public_hand": "public_hand.py",
+    "absolute_pose": "absolute_pose.py",
+    "vision_resources": "vision_resources.json",
+    "stereo_band": "stereo_band.py",
+    "experience": "experience.json",
+    "generator": "generator.py",
+    "task_geometry": "task_geometry.py",
+    "successful_code_examples": "successful_code_examples.json",
+    "view_geometry": "view_geometry.py",
+    "program_session": "program_session.py"
+  },
+  "qualification": {
+    "task": "fill_egg_holder",
+    "mode": "user_authorized_research_fallback",
+    "summary": {
+      "recorded_seeds": [
+        0,
+        1,
+        2
+      ],
+      "successful_seeds": [],
+      "all_three_official_results": true,
+      "scores": [
+        0.25,
+        0.1,
+        0.1
+      ],
+      "mean_official_score": 0.15,
+      "standard_qualified": false
+    },
+    "scope": "Unchanged highest-mean audited research implementation with explicit failure limits; not a successful task policy or full benchmark qualification."
+  }
+}

@@ -1,0 +1,181 @@
+[
+  {
+    "official_result_available": false,
+    "score": null,
+    "runtime_error": "RuntimeError: RoboDojo evaluation timed out after 368.4603472580202 seconds",
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "pour_liquid_into_cup",
+        "seed": 2,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 129,
+        "time": "2026-10-23T04:27:25.813639+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "pour_liquid_into_cup",
+        "episode_id": "23f74bdcf0ba44be9aa52f4b094161c4",
+        "step": 21,
+        "kind": "policy",
+        "error": "NameError: name 'math' is not defined"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "pour_liquid_into_cup",
+        "seed": 1,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 84,
+        "time": "2026-10-23T04:22:20.396962+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "pour_liquid_into_cup",
+        "episode_id": "8cea364505594209863f16b7d34d1036",
+        "step": 17,
+        "kind": "policy",
+        "error": "NameError: name 'math' is not defined"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "pour_liquid_into_cup",
+        "seed": 0,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 185,
+        "time": "2026-10-23T04:19:27.426959+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "pour_liquid_into_cup",
+        "episode_id": "bd5005f553324f25bcaa0edb14db614b",
+        "step": 38,
+        "kind": "policy",
+        "error": "NameError: name 'math' is not defined"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "pour_liquid_into_cup",
+        "seed": 0,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 1022,
+        "time": "2026-10-20T17:49:59.981537+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "pour_liquid_into_cup",
+        "episode_id": "e14a8d6f43c7453982878e08a69ba8da",
+        "step": 235,
+        "kind": "policy",
+        "error": "RuntimeError: Code tool model-call budget exhausted"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "type": "curated_failure_lesson",
+    "lesson": "All selected RSI3 episodes failed with zero native score. Completed restoration trajectories, small TCP errors and finish calls did not establish successful liquid transfer or actual bottle restoration.",
+    "scope": "observed_failure",
+    "curated_source_sha256": "e0d1392a33cecd3ff2c43145ab6f2db009fad2b15843f5f49447064a00d36a32"
+  },
+  {
+    "type": "curated_failure_lesson",
+    "lesson": "The retained RGB review and controller record report a mouth-anchor discrepancy before further tilt and later substantial spill. These support an unresolved discharge-alignment problem in that case, not confirmed grasp loss or a universal spill mechanism across all seeds.",
+    "scope": "observed_failure",
+    "curated_source_sha256": "e0d1392a33cecd3ff2c43145ab6f2db009fad2b15843f5f49447064a00d36a32"
+  },
+  {
+    "type": "curated_failure_lesson",
+    "lesson": "A short first-discharge review and bounded stream-to-cup correction may reduce spill. Re-measure a mouth pivot that visibly disagrees with the bottle instead of tilting farther on the same assumption. This is a post-RSI3 hypothesis, not a successful repair; retain separate bottle-retention, tilt, stream-containment and upright-restoration checks.",
+    "scope": "hypothesis_unverified",
+    "curated_source_sha256": "e0d1392a33cecd3ff2c43145ab6f2db009fad2b15843f5f49447064a00d36a32"
+  }
+]

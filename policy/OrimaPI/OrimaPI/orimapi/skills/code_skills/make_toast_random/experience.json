@@ -1,0 +1,22 @@
+[
+  {
+    "kind": "observed_old_local_failure",
+    "lesson": "Old make_toast_random seed0/1/2 each1episode scored0. GPT calls46/32/28;106 total requests,84 same-native-step additions. Measurement/plan/execute were fragmented across requests. Same step alone does not prove useless information."
+  },
+  {
+    "kind": "external_success_method",
+    "lesson": "A reviewed complete toast run recovered down-grasp failure via horizontal side grasp_pose, recovered carry via separated actual moves, then used forward lever approach, released each slice and homed. One complete successful cycle was observed, not reliable universal success. Local implementation rewrites this as complete operations using CURRENT geometry."
+  },
+  {
+    "kind": "external_failure",
+    "lesson": "Repeated match_patch/refine_pairs/edge-point methods had no successful recovery in reviewed traces. Slipping bread and apparent insertion/press did not establish seating or task success. Use explicit multiview material points and actual held/release ledger, not TCP movement as proof."
+  },
+  {
+    "kind": "local_workflow_hypothesis",
+    "lesson": "Four normal semantic requests: one executable plan, two carry reviews and one combined placement review. All fine geometry, grasp, upright transfer, insertion, lever stroke and home execute locally. Extra geometry/recovery requests only after actual failure or a changed view; no lower max_calls trick. No native score for this version yet."
+  },
+  {
+    "kind": "observed_local_candidate001_design_failure",
+    "lesson": "C001 initially rejected three observation routes before motion; a later opposite-arm oblique view DID execute (30/26 observation steps). Missing material geometry remained unresolved and repeated model exchanges continued. Both jobs were interrupted and seed2 unlaunched, so no native scores. Do not infer that every view is unreachable. C003 exhausts actual local observation alternatives before another GPT request, with the same guarded-line fallback and deferred lever grounding. Low calls after early geometry failure are not successful task efficiency."
+  }
+]

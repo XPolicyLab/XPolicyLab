@@ -1,0 +1,52 @@
+{
+  "authorization": "2026-10-24 用户明确要求：现在不论是否达到成功标准都将已经实现的skill合入到正式的skill中",
+  "campaign": "20261023",
+  "candidate": "orimapi/skills/code_skill_rsi/pour_by_language/studies/20261023-automatic/candidate-006/candidate.json",
+  "candidate_sha256": "560e6dd62b7cf43ee9834864e1495463b8b59ff83c8b19c1b1fe3e3ef6ddc672",
+  "candidate_file_sha256": "2917b3741da14532d805a2d8579326d51d0daba5cde5c924a67eaa5d656eca79",
+  "evidence_snapshot_sha256": "59a876886dfc58e38349a07c1b2713dffe39d07b2cdaa6319574c7ab000f43af",
+  "attempt_files_at_capture": {
+    "orimapi/skills/code_skill_rsi/pour_by_language/studies/20261023-automatic/candidate-006/attempts/000-seed-0.json": "38e9ad75317074e4279d1bc80c1aa2632f252bc00e2090a1fea0f2699ffd8ffe"
+  },
+  "evidence_captured_at": "2026-10-24T07:18:56.878395+00:00",
+  "tool_snapshot_source": "runs/20261024T045408-rsi-f4bcbf7aed35/code_tools/6d6e0151e4c0955a3ffccadc7b29db82470c898b201c5b9d07fbc944e3530b45",
+  "mode": "user_authorized_unqualified",
+  "scope": "Published by explicit user request regardless of success. Formal availability is not native task qualification or benchmark reliability.",
+  "selection": "Latest existing frozen candidate; not a highest-score claim.",
+  "outcomes": [
+    {
+      "seed": 0,
+      "attempt_status": "returned",
+      "scored": true,
+      "success": false,
+      "score": 0.0,
+      "run": "/root/code/OrimaPI/runs/20261024T054738-rsi-5e5a11d7176d",
+      "error": null,
+      "started_at": "2026-10-24T05:47:38.980103+00:00",
+      "ended_at": "2026-10-24T05:53:54.723912+00:00",
+      "official_result": {
+        "episodes": [
+          {
+            "layout_id": 0,
+            "success": false,
+            "score": 0.0,
+            "artifact": "native/RoboDojo/pour_by_language/orimapi_3214277b2eb04202aea37e5a6fbeb636/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_3214277b2eb04202aea37e5a6fbeb636/_result.json"
+          }
+        ],
+        "episode_count": 1,
+        "success_rate": 0.0,
+        "mean_score": 0.0,
+        "artifacts": [
+          {
+            "path": "native/RoboDojo/pour_by_language/orimapi_3214277b2eb04202aea37e5a6fbeb636/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_3214277b2eb04202aea37e5a6fbeb636/_result.json",
+            "sha256": "99b780f4e1842dfa81b413ccd2e5302e5827cc349fea4edf978e1bd847986ed3"
+          }
+        ]
+      },
+      "controller_failures": [],
+      "terminal_failures": []
+    }
+  ],
+  "standard_qualified": false,
+  "exception_qualified": false
+}

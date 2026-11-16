@@ -1,0 +1,348 @@
+[
+  {
+    "official_result_available": true,
+    "score": 0.15,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "insert_key",
+        "seed": 2,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 751,
+        "time": "2026-10-23T09:52:52.375837+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "insert_key",
+        "episode_id": "d042f48cc411453fa940587e6d20633f",
+        "step": 177,
+        "kind": "policy",
+        "error": "RuntimeError: Too many non-motion program iterations"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.15,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.15,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "insert_key",
+        "seed": 0,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 809,
+        "time": "2026-10-23T09:41:35.553328+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "insert_key",
+        "episode_id": "d279a771e4ad40b2b652c240b83caa52",
+        "step": 184,
+        "kind": "policy",
+        "error": "RuntimeError: Too many non-motion program iterations"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.15,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.15,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.15,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.15,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "insert_key",
+        "seed": 0,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 417,
+        "time": "2026-10-22T10:41:29.682905+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "insert_key",
+        "episode_id": "73d20606a5734ae089ee849dd9ce7f46",
+        "step": 124,
+        "kind": "policy",
+        "error": "ValueError: Bow/contact axis lacks current visible shaft-end support"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "insert_key",
+        "seed": 1,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 14,
+        "time": "2026-10-22T10:39:08.313510+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "insert_key",
+        "episode_id": "3d4b7d975967445083fd79b000be0ffc",
+        "step": 0,
+        "kind": "policy",
+        "error": "ValueError: Too few current circular-rim points"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.15,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "insert_key",
+        "seed": 0,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 893,
+        "time": "2026-10-22T09:51:09.130115+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "insert_key",
+        "episode_id": "228d069630c34bcb88117ea9ada2c72a",
+        "step": 211,
+        "kind": "policy",
+        "error": "RuntimeError: Motion failed to reach target within bounded stage budget"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.15,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "insert_key",
+        "seed": 0,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 481,
+        "time": "2026-10-22T09:27:12.715899+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "insert_key",
+        "episode_id": "72d53b4b86e147869534a541d9c99328",
+        "step": 146,
+        "kind": "policy",
+        "error": "ValueError: Current RGB does not confirm source key retention"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.15,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "insert_key",
+        "seed": 0,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 591,
+        "time": "2026-10-22T09:09:22.687032+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "insert_key",
+        "episode_id": "2fb40610cd254757ac25036b8e1b62fb",
+        "step": 122,
+        "kind": "policy",
+        "error": "ValueError: No full checked source reorientation: ['Arm-link origin below table clearance', 'Arm-link origin below table clearance', 'Arm-link origin below table clearance', 'Arm-link origin below table clearance', 'Arm-link origin below table clearance', 'Arm-link origin below table clearance', 'Arm-link origin below table clearance', 'Arm-link origin below table clearance', 'Arm-link origin below table clearance', 'Arm-link origin below table clearance', 'Arm-link origin below table clearance', 'Arm-link origin below table clearance']"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.15,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "insert_key",
+        "seed": 0,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 615,
+        "time": "2026-10-22T08:56:37.724430+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "insert_key",
+        "episode_id": "a42707afedab422798f2fdfef38571d6",
+        "step": 130,
+        "kind": "policy",
+        "error": "ValueError: No full checked source reorientation: ['Arm-link origin below table clearance', 'Arm-link origin below table clearance', 'Arm-link origin below table clearance', 'Arm-link origin below table clearance', 'Public finger envelopes: other-arm clearance -0.0203 m', 'Public finger envelopes: other-arm clearance -0.0189 m', 'Public finger envelopes: other-arm clearance -0.0229 m', 'Public finger envelopes: other-arm clearance -0.0229 m', 'Public collision model: other-arm clearance -0.0716 m', 'Public collision model: other-arm clearance -0.0723 m', 'Public collision model: other-arm clearance -0.0645 m', 'Public collision model: other-arm clearance -0.0639 m']"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.15,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "insert_key",
+        "seed": 0,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 434,
+        "time": "2026-10-22T08:44:16.135306+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "insert_key",
+        "episode_id": "79e44d04f014418fb26c6abfc69d3c52",
+        "step": 130,
+        "kind": "policy",
+        "error": "ValueError: No full checked source reorientation: ['No accurate IK solution', 'No accurate IK solution', 'Arm-link origin below table clearance', 'Arm-link origin below table clearance', 'Arm-link origin below table clearance', 'Arm-link origin below table clearance', 'Public finger envelopes: other-arm clearance -0.0221 m', 'Public finger envelopes: other-arm clearance -0.0223 m', 'Public collision model: other-arm clearance -0.0718 m', 'Public collision model: other-arm clearance -0.0725 m', 'Public collision model: other-arm clearance -0.0630 m', 'Public collision model: other-arm clearance -0.0629 m']"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.15,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "insert_key",
+        "seed": 0,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 552,
+        "time": "2026-10-22T08:07:31.320438+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "insert_key",
+        "episode_id": "14d0b7ade15741779f42971370d3b18c",
+        "step": 168,
+        "kind": "policy",
+        "error": "ValueError: Current RGB does not confirm source key retention"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.15,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "insert_key",
+        "seed": 0,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 431,
+        "time": "2026-10-22T07:28:19.106529+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "insert_key",
+        "episode_id": "89741405e26b4ebc9e1065f3bd5dbfcb",
+        "step": 130,
+        "kind": "policy",
+        "error": "ValueError: No checked measured-bow handoff: ['Public finger envelopes: other-arm clearance -0.0027 m', 'Public collision model: self clearance -0.0115 m', 'Public finger envelopes: other-arm clearance -0.0062 m', 'Public collision model: self clearance -0.0214 m', 'Arm-link origin below table clearance', 'Discontinuous IK branch: adjacent joint jump 3.0365rad', 'Public finger envelopes: other-arm clearance -0.0016 m', 'Discontinuous IK branch: adjacent joint jump 3.1191rad', 'Arm-link origin below table clearance', 'Arm-link origin below table clearance', 'Public collision model: self clearance -0.0006 m', 'Arm-link origin below table clearance', 'No accurate IK solution', 'Public collision model: self clearance -0.0170 m', 'Public collision model: other-arm clearance -0.0563 m', 'Public collision model: self clearance -0.0003 m', 'No accurate IK solution', 'Public collision model: self clearance -0.0113 m', 'No accurate IK solution', 'Public collision model: self clearance -0.0113 m', 'No accurate IK solution', 'Public collision model: self clearance -0.0352 m', 'No accurate IK solution', 'Public collision model: other-arm clearance -0.0099 m']"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.15,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "insert_key",
+        "seed": 0,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 428,
+        "time": "2026-10-22T07:10:25.657302+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "insert_key",
+        "episode_id": "2d0bab75a14c4ff69b4963a128f840e2",
+        "step": 129,
+        "kind": "policy",
+        "error": "ValueError: No checked measured-bow handoff: ['Arm-link origin below table clearance', 'Arm-link origin below table clearance', 'Arm-link origin below table clearance', 'Public finger envelopes: other-arm clearance -0.0011 m', 'No accurate IK solution', 'Public collision model: self clearance -0.0156 m', 'No accurate IK solution', 'No accurate IK solution']"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.15,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "insert_key",
+        "seed": 0,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 425,
+        "time": "2026-10-22T07:01:00.476264+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "insert_key",
+        "episode_id": "ed90dde8be3a46d9b4f266bbe05ee32a",
+        "step": 128,
+        "kind": "policy",
+        "error": "ValueError: No checked measured-bow handoff: ['Arm-link origin below table clearance', 'Arm-link origin below table clearance', 'No accurate IK solution', 'No accurate IK solution']"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "type": "curated_failure_lesson",
+    "lesson": "RSI6 seeds 0 and 2 ended with Too many non-motion program iterations at native actions 184 and 177. Repeated point reconstruction and projections at unchanged robot steps did not establish a usable handover contact. Preserve this failure instead of treating accurate TCP tracking or low reprojection error as proof of transfer.",
+    "scope": "observed_failure",
+    "curated_source_sha256": "d84882bf8b80e4e355a0c799d76ca0bbf62ce0d01c6eb65ac7763f6692ac2f64"
+  },
+  {
+    "type": "curated_failure_lesson",
+    "lesson": "RSI6 seed 1 had no recorded controller exception but called finish at action 258 without a demonstrated completed insertion or turn. Its six-step camera motion request consumed 30 native actions. A nominal requested duration is not the actual cost; reserve actions for transfer, alignment, insertion and turning.",
+    "scope": "observed_failure",
+    "curated_source_sha256": "d84882bf8b80e4e355a0c799d76ca0bbf62ce0d01c6eb65ac7763f6692ac2f64"
+  },
+  {
+    "type": "curated_failure_lesson",
+    "lesson": "All three RSI6 native outcomes were false with score 0.15. The partial score does not establish completed handoff, insertion depth, final rotation or reliable retention, and these records do not determine a definitive miss-versus-slip mechanism. No successful full-task code example exists for this candidate.",
+    "scope": "observed_failure",
+    "curated_source_sha256": "d84882bf8b80e4e355a0c799d76ca0bbf62ce0d01c6eb65ac7763f6692ac2f64"
+  },
+  {
+    "type": "curated_failure_lesson",
+    "lesson": "A bounded handover-evidence phase with cached same-frame measurements and at most one justified empty-wrist viewpoint change may prevent inspection deadlock. This is an unverified recovery hypothesis from the post-RSI6 review, not an implemented improvement in the published RSI6 runtime. Do not move merely to reset an iteration guard or release the donor without fresh receiver-support evidence.",
+    "scope": "hypothesis_unverified",
+    "curated_source_sha256": "d84882bf8b80e4e355a0c799d76ca0bbf62ce0d01c6eb65ac7763f6692ac2f64"
+  }
+]

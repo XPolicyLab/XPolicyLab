@@ -1,0 +1,49 @@
+{
+  "status": "published",
+  "published_at": "2026-10-25T15:09:29.488378+00:00",
+  "authorization": "User requested self-contained swap_blocks sub-skill with success/failure experience; run one task and replace formal only if it succeeds.",
+  "mode": "user_authorized_single_episode_acceptance",
+  "tested_candidate_sha256": "787fbee1d80357ac89ad5432976d4921b70d234ba0123716175fd82906efed81",
+  "runtime_hashes": {
+    "tool_documentation.md": "53e08b78153a969d1c4fbcc04f58b0c8c910431bea7bf2f620d13966b69109e9",
+    "program_prompt.md": "4407d499e7757f1f8b641d842703f20a22e3ceb7d901086290514cbe4b681bd6",
+    "NOTICE.md": "5ac32b00eab0c3873dc4b69911b589c4310d02e6872cc6d0e80da537a1f721bf",
+    "adapter.py": "2cf4776175183bf6398bff148980eb657e689eae3c4bfee0fd6c7d2669d77c70",
+    "ik_worker.py": "92a27a877166ed808aeae0e6fff202fa9725c0bfc7dc333d6cffb2608574beba",
+    "__init__.py": "c2b4e394b1775d676e98586ba053695131ced5ea2ffca30bef4374d5a4d68136",
+    "failure_experience.json": "30a81ab4b88531ccf35d7450cc7af524e5936856bb852085bd8aa1f6fad998dd",
+    "RESEARCH_SUMMARY.md": "4f4060c52466da59661f5086f43ea2290c86a4e35bcdedb2bf8f0ce9a8b121d8",
+    "controller.py": "cc9db5ce32b6f33955e4df1ba670db1c2628e52320c7e0a66e1ad7a8bf4dacf5",
+    "source_provenance.json": "64e86fc42a6ebbcedf51f751ade4b75ede9bb1cde0210c69f1c22d5dfc35cb73",
+    "experience.json": "c95e06607bdec12f66aac9e6262b204cce5d9ace5112c1cd63427d91bf75ec4f",
+    "resources.json": "a09c9bd0e2b3fb4bf7ad0b150a589d6b61084d7fbd6081bd43da119729ad2488",
+    "primitives/press_surface/tool.py": "6fdbc43d72bd4d4f2ffb96af6e1d2bbb4466194e5b5b69e08c927babf519665d",
+    "primitives/press_surface/interface.md": "a5c71552e9edb46d0c70ecb68a98d31bbf62d5914d2b0fb75c137f1ccab84ab3",
+    "primitives/surface_patch/tool.py": "918f4d6e72ec8815f2a059c93ed290280e5647da43ed8c4e5396e3df876f06dc",
+    "primitives/surface_patch/interface.md": "e245a87b20512002014e8ad11e52ca43dd2ff499ab217e21ce5a2ce5848bdb2e",
+    "primitives/support/geometry.py": "4dc75130689d8c6b57d17f4515247e14a6d6b4d8de29b26e30ff8a7609080482",
+    "primitives/support/__init__.py": "600728cfdc32ae06b3c2617a1d5dd9ee2c7552c4df1c3b4be01add3c3a15eb80",
+    "primitives/support/motion.py": "cebe3d0d2caa4b4e018cc601c4bedf05c70b9c668bac60cc21196c2383df1497",
+    "primitives/support/core.py": "0a8e6c03bd545f58de8e42b32383427e59b015d20fcf8409edfdda4eae9bb372",
+    "primitives/table_plane/tool.py": "cd257aec7f4ba01e239f88892f4243f6ab182dc1857354fc152fb930583fcb12",
+    "primitives/table_plane/interface.md": "d7d9ca4b481d4272c8d1205b3274f3d1b911a95c9ce3a70e1b2ad023275bcba5",
+    "primitives/cartesian_actions/tool.py": "ee8624c1d0facb058265adf444f8f2839c68fc8e27976448c836d784ab2ad557",
+    "primitives/cartesian_actions/interface.md": "4a4921c41daccaf51c5287d1249a3a372ca0f0dba19a204d6823a77910253876",
+    "primitives/rgb_point/tool.py": "50c4485c558c0f27de8f556a7f8f50b07531fae9ff5209ce444f669768c347c3",
+    "primitives/rgb_point/silhouette.py": "439fe49cd5e89adcbec303c77f9bc5814d85f1a48519d02507df4f91c82ba362",
+    "primitives/rgb_point/auto_surface.py": "4e378d17f1e9b38fec4180f6f1ef6baa88dcc87bed37530ff98ad9bc41ec5e11",
+    "primitives/rgb_point/interface.md": "9faf09cb80a227d59416e54f499b59408c1b789e75e38bfd8a58d3d63e1744c8"
+  },
+  "qualification": "seed0 native success after packaging; three-seed validation not complete",
+  "previous_formal_backup": "orimapi/skills/code_skill_rsi/swap_blocks/baseline/formal-before-self-contained",
+  "deployment_compatibility": {
+    "scope": "Physical GPU placement and relocated/symlinked runtime discovery only; task policy, planning and collision logic are unchanged. Current dependency fingerprints are refreshed; original candidate evidence remains historical.",
+    "previous_fingerprints": {
+      "runtime_hashes": {
+        "adapter.py": "b13c9b89ce9ee91f340c31056c8ed01fc3e5c8619d969925a9632fd7741adfee"
+      }
+    },
+    "native_task_retested_after_change": false,
+    "historical_candidate_hashes_and_outcomes_preserved": true
+  }
+}
