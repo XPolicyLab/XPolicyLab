@@ -1,0 +1,3 @@
+# https://github.com/openai/codex/releases/tag/rust-v0.159.2
+9e2d29a713b94478b240dec2f10e11324cd05fad76dc43e7c639bdf8a1337a6b  codex-package-x86_64-unknown-linux-musl.tar.gz
+05a524a463cadf7e3e22c7f923539c0d0b74c3e78b1f5f1fab52e50e6fb3312f  codex-package-aarch64-unknown-linux-musl.tar.gz

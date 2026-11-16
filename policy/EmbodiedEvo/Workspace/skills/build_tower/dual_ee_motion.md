@@ -1,0 +1,6 @@
+# Concurrent motion in separate arm corridors
+`dual_ee_motion.py` defines `move_both(left_pose, right_pose, left_grip, right_grip, max_steps, speed, settle)` using two absolute world poses and normalized gripper commands. It interpolates both targets, measures both pose errors, stops after the requested stable observations, and returns a stop flag for episode end or either arm failing its pose tolerance. Always bound max_steps by the live remaining native budget.
+
+Use only when both paths and held objects have separate clear corridors. Do not bring both hands into the same narrow tower position: inter-arm contact was observed in 000039. This helper has no collision detection; lack of tracking is a stop signal, not a diagnosis. Holding an inactive arm can be expressed by passing its observed pose and command.
+
+Evidence: 000053 reached separate left and right approach poses in 15 native steps with each position error under 0.12 mm. That supports simultaneous independent approaches, not arbitrary bimanual assembly. Concurrent pickups in 000068 and 000081 lifted both final pieces, but the green grasp proved unreliable during some later transfers. Inspect object capture and stability separately from endpoint convergence. Tested only in this scene.

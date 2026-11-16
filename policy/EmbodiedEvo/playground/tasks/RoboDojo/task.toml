@@ -1,0 +1,40 @@
+# Generic benchmark definition; concrete environment selected at launch.
+[task]
+protocol = "workspace-session-v1"
+name = "embodiedevo/robodojo"
+description = "Solve the official task obtained through get_instruction()."
+
+# Benchmark-specific agent-facing instruction and knowledge source.
+# The orchestrator creates a fresh runtime workspace for every episode.
+[workspace]
+source = "Workspace"
+
+[simulator]
+backend = "robodojo"
+interpreter = ".venv-robodojo"
+api_surface = "RoboDojoLowLevelApi"
+env_task = "stack_bowls" # Override with --env-task; does not modify this file.
+
+[agent]
+preset = "codex"
+model = "gpt-6-astra"
+reasoning_effort = "xhigh"
+timeout_sec = 0 # Unlimited Playground session; execution slots remain bounded.
+isolation = "docker"
+image = "embodiedevo-agent:xpolicy"
+network = "filtered"
+cpus = 4
+memory_mb = 8192
+
+[playground]
+seed = 0
+budget = 100
+submission_timeout_sec = 1200
+feedback_fps = 25
+expose_success_feedback = true
+
+[test]
+scenes = 25
+budget = 100
+generation_timeout_sec = 0 # Unlimited Test agent session; execution slots remain bounded.
+submission_timeout_sec = 1200

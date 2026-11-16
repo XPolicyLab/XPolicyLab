@@ -1,0 +1,9 @@
+# Handle insertion with explicit visual gates
+
+Include `ee_servo.py` before `handle_insertion.py`. This helper does not locate a mug or peg automatically. Provide scene-dependent absolute poses derived from current images and pass the live action budget. Maintain the grasp orientation between the aligned and inserted poses. Their translation should follow the peg axis into the rack; use a slow step such as 2-3 mm per native action.
+
+`insert_handle` uses measured EE feedback, stops on contact/reach stall or action exhaustion, and returns `needs_visual_thread_check` on pose attainment. This is not a hanging-success signal. Inspect at most two current camera frames and establish that the full handle thickness passed the peg tip. A tip appearing inside the hole silhouette in a single view is insufficient.
+
+`release_and_retreat` requires an explicit visual confirmation input. It opens at the current measured pose, then retreats along a caller-specified clear path. Inspect again to ensure the mug is suspended after withdrawal, and distinguish this from resting on the table. Stop the enclosing program on any `episode_end` result. The controller cannot infer scene success from gripper commands or EE coordinates.
+
+Evidence: the component procedure successfully hung the large mug in 000042-000043 and again in 000078-000080. A different rim grasp and insertion direction hung the small mug in 000074-000076. The factored insertion wrapper was executed in 000099 (31 actions, `needs_visual_thread_check`); the release wrapper executed in 000100 (30 actions, `retreat_reached_check_support`). The final head and right-wrist images show the mug suspended, and both arms returned to origin with joint errors below 3e-11. White-mug insertion remains unvalidated. Transfer to other scenes is untested.

@@ -1,0 +1,8 @@
+## Preserve the gripper action, not its observed state
+Signature: After a zero-command lengthwise grasp, the observed left gripper state was about 0.5584 during later carrying (000044), despite no explicit request to open. Helpers had been copying `state['left_ee_joint_state']` into future actions. With an object obstructing closure, that value can differ substantially from the desired closing command.
+Instead: Preserve `observation['action']['left_ee_joint_state']` and its right counterpart, or pass an explicit zero during loaded carrying. Do not infer the requested gripping force from the measured/normalized state. The primitive documentation describes this state as a command, but the observed behavior warrants using the action field for command persistence.
+Evidence: 000041-000044, plus earlier pinches that slipped after a helper read the state. Helpers ee_stage and ee_translate were corrected immediately after 000044. Some earlier suspected geometry/acceleration failures may be explained by this unintended relaxation.
+Status: observed state/command mismatch; corrected controllers need further retention tests.
+
+### Correction: action feedback is also measured in this environment
+000045 printed both `state` and `action`: they were identical, including left grip approximately 0.556 after explicit command zero and right grip approximately 0.812 after explicit command one. Thus copying the action field is also insufficient. The helpers now maintain `grip_targets` in persistent Python state and update it only on explicit grip arguments. Initialise both grips explicitly at the start of each attempt and after resets. The observed jaw positions remain useful for contact diagnostics, but must not silently replace commanded targets.

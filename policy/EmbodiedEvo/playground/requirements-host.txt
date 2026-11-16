@@ -1,0 +1,12 @@
+# Host orchestration dependencies validated on Linux with Python 3.12.7.
+# Keep these separate from the upstream simulator environment.
+cloudpickle==3.1.2
+farama-notifications==0.0.6
+gymnasium==1.4.0
+imageio==2.38.0
+imageio-ffmpeg==0.6.0
+numpy==2.5.3
+pillow==12.3.0
+psutil==7.2.2
+pyyaml==6.0.3
+typing-extensions==4.16.0

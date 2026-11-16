@@ -57,8 +57,16 @@ class PolicyServerConfig:
     port: int = 19000
     ws_ping_interval_s: float | None = 20.0
     ws_ping_timeout_s: float | None = 20.0
+    max_message_bytes: int | None = None
+    max_receive_queue: int = 16
+    max_pending_responses: int = _MAX_INFLIGHT_RESPONSES
 
     def __post_init__(self) -> None:
+        for key in ("max_receive_queue", "max_pending_responses"):
+            if type(getattr(self, key)) is not int or getattr(self, key) <= 0:
+                raise ValueError(f"{key} must be a positive integer")
+        if self.max_message_bytes is not None and (type(self.max_message_bytes) is not int or self.max_message_bytes <= 0):
+            raise ValueError("max_message_bytes must be null or a positive integer")
         self.ws_ping_interval_s = normalize_ws_ping(
             self.ws_ping_interval_s, field_name="ws_ping_interval_s"
         )
@@ -101,7 +109,8 @@ class PolicyServer:
             self._handle_connection,
             self.config.host,
             self.config.port,
-            max_size=None,
+            max_size=self.config.max_message_bytes,
+            max_queue=self.config.max_receive_queue,
             # An observation frame is multi-MB of camera pixels (or already
             # JPEG-compressed buffers). Deflating that on every step costs
             # real CPU on the event loop thread for almost no size win, and
@@ -205,7 +214,7 @@ class PolicyServer:
                         websocket, send_lock, bytes(raw), exc
                     )
                     continue
-                if len(pending) >= _MAX_INFLIGHT_RESPONSES:
+                if len(pending) >= self.config.max_pending_responses:
                     # Backpressure: process inline instead of queuing yet
                     # another task for an overwhelmed connection.
                     await respond(frame)
