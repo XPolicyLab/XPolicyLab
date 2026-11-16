@@ -1,0 +1,11 @@
+# Local downloads, virtual environment, converted datasets, and evaluation outputs.
+__pycache__/
+OpenHumanWAM/
+env/
+assets/
+hf_release/
+checkpoints/
+data/
+eval_result/
+workspace/
+runtime/
