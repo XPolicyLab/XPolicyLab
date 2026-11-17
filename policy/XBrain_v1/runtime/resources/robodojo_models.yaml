@@ -1,0 +1,43 @@
+# Logical resource contract for the three RoboDojo real-robot targets.
+# Concrete paths are supplied by environment variables at deployment time.
+common:
+  action_horizon: 50
+  state_dim: 14
+  action_dim: 14
+  model_state_dim: 32
+  model_action_dim: 32
+  observation_memory_size: 1
+  state_input_mode: proprio_anchor
+  vlm_type: paligemma2
+  fast_token_vocab_mode: tail
+  fast_token_tail_skip_tokens: 128
+  image_size: [224, 224]
+  image_keys:
+    - observation.images.cam_high
+    - observation.images.cam_left_wrist
+    - observation.images.cam_right_wrist
+  training_delta_mask: [true, true, true, true, true, true, false, true, true, true, true, true, true, false]
+  policy_output_arm_action_mode: absolute
+  gripper_action_mode: absolute
+  executor_applies_joint_delta: false
+
+robots:
+  piper_x:
+    embodiment_id: 6
+    control_frequency_hz: 25
+    checkpoint_env: XBRAIN_PIPERX_CHECKPOINT_PATH
+    norm_env: XBRAIN_PIPERX_NORM_STATS_PATH
+  piper:
+    embodiment_id: 6
+    control_frequency_hz: 30
+    checkpoint_env: XBRAIN_PIPER_CHECKPOINT_PATH
+    norm_env: XBRAIN_PIPER_NORM_STATS_PATH
+  arx_x5:
+    embodiment_id: 0
+    control_frequency_hz: 30
+    checkpoint_env: XBRAIN_ARX_X5_CHECKPOINT_PATH
+    norm_env: XBRAIN_ARX_X5_NORM_STATS_PATH
+
+shared:
+  tokenizer_env: XBRAIN_TOKENIZER_PATH
+  fast_tokenizer_env: XBRAIN_FAST_TOKENIZER_PATH

@@ -1,0 +1,101 @@
+{
+  "release_name": "XBrain-v1",
+  "release_version": "0.1.0",
+  "release_date": "2026-09-20",
+  "runtime": {
+    "distribution": "xbrain-v1-inference-runtime",
+    "version": "0.1.0",
+    "python_source_tree_sha256": "5fbc503e207ba9f588c9898a53c22af750f3ac0c923cb77e148c4754614cb7f3"
+  },
+  "shared_resources": {
+    "tokenizer": {
+      "logical_resource": "paligemma2-3b-pt-224",
+      "environment_variable": "XBRAIN_TOKENIZER_PATH",
+      "required_files": [
+        "config.json",
+        "model.safetensors.index.json",
+        "tokenizer.json",
+        "tokenizer_config.json",
+        "preprocessor_config.json"
+      ]
+    },
+    "fast_tokenizer": {
+      "logical_resource": "physical-intelligence-fast",
+      "environment_variable": "XBRAIN_FAST_TOKENIZER_PATH",
+      "required_files": [
+        "processor_config.json",
+        "special_tokens_map.json",
+        "tokenizer.json",
+        "tokenizer_config.json"
+      ]
+    }
+  },
+  "contract": {
+    "external_state_dim": 14,
+    "external_action_dim": 14,
+    "model_state_dim": 32,
+    "model_action_dim": 32,
+    "action_horizon": 50,
+    "observation_memory_size": 1,
+    "state_input_mode": "proprio_anchor",
+    "vlm_type": "paligemma2",
+    "fast_token_vocab_mode": "tail",
+    "fast_token_tail_skip_tokens": 128,
+    "image_size": [224, 224],
+    "image_keys": [
+      "observation.images.cam_high",
+      "observation.images.cam_left_wrist",
+      "observation.images.cam_right_wrist"
+    ],
+    "training_delta_mask": [true, true, true, true, true, true, false, true, true, true, true, true, true, false],
+    "policy_output_arm_action_mode": "absolute",
+    "gripper_action_mode": "absolute",
+    "executor_applies_joint_delta": false
+  },
+  "robots": {
+    "piper_x": {
+      "embodiment_id": 6,
+      "control_frequency_hz": 25,
+      "checkpoint_environment_variable": "XBRAIN_PIPERX_CHECKPOINT_PATH",
+      "norm_environment_variable": "XBRAIN_PIPERX_NORM_STATS_PATH",
+      "norm_filename": "robodojo_piperx_0902.json",
+      "checkpoint_config_sha256": "467dec6159bda274e738eda3e9b1dfa00eaa6a9c5674058a3887b143b66129b7",
+      "inference_config_sha256": "d07de258647c75d80f1b4f8ade0b5c999742e9b1703006c674caa3a8b525e427",
+      "norm_sha256": "d12fe6995b37d4d151717d32eb0afd66c5acf35bd17fd80df5391c62b99a0bd4",
+      "weights_filename": "diffusion_pytorch_model.bin",
+      "weights_size_bytes": 14116796975,
+      "weights_sha256": "63b3e19b40c5804849c7c7cce48da6012228007e942add894b623912494e0075"
+    },
+    "piper": {
+      "embodiment_id": 6,
+      "control_frequency_hz": 30,
+      "checkpoint_environment_variable": "XBRAIN_PIPER_CHECKPOINT_PATH",
+      "norm_environment_variable": "XBRAIN_PIPER_NORM_STATS_PATH",
+      "norm_filename": "robodojo_piper_0903.json",
+      "checkpoint_config_sha256": "467dec6159bda274e738eda3e9b1dfa00eaa6a9c5674058a3887b143b66129b7",
+      "inference_config_sha256": "f83c640e06add17fa4123817c93ae87bc560c0b7b7362597feb0a889e76c15ae",
+      "norm_sha256": "fff39c244b16e312b8335c470a699de0998a5727695852e9208fb1d4699339fa",
+      "weights_filename": "diffusion_pytorch_model.bin",
+      "weights_size_bytes": 14116796975,
+      "weights_sha256": "61854ef67b3475b8f6411bf563109bd7011e9203bcfab96479241b0a5658a121"
+    },
+    "arx_x5": {
+      "embodiment_id": 0,
+      "control_frequency_hz": 30,
+      "checkpoint_environment_variable": "XBRAIN_ARX_X5_CHECKPOINT_PATH",
+      "norm_environment_variable": "XBRAIN_ARX_X5_NORM_STATS_PATH",
+      "norm_filename": "robodojo_arx5_0903.json",
+      "checkpoint_config_sha256": "467dec6159bda274e738eda3e9b1dfa00eaa6a9c5674058a3887b143b66129b7",
+      "inference_config_sha256": "a95b1f97649f9530227fd2e3979315ed612717ccc2f6c4dbc823bbdcd86f005b",
+      "norm_sha256": "9a023b12cee24d8383c968600329f4dafb213cfca02269b2979eb6e5ca089283",
+      "weights_filename": "diffusion_pytorch_model.bin",
+      "weights_size_bytes": 14116796975,
+      "weights_sha256": "90aa8ff790478ef882f0f53ac402b1b0869928a7f8f3c5f99bbe968f9774f246"
+    }
+  },
+  "validation": {
+    "resource_check": "python tests/validate_model_resources.py",
+    "inference_check": "python tests/test_checkpoint_inference.py",
+    "standard_policy_interface": "reset -> update_obs -> get_action"
+  }
+}
