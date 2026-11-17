@@ -1,6 +1,6 @@
 # Adapter validation
 
-Status: **Technical qualification passed: 15 CPU tests, both real-checkpoint debug transports, four valid native simulator episodes, and all eight exact replay/backend checks. [PR #234](https://github.com/XPolicyLab/XPolicyLab/pull/234) is open. The checkpoint is public and ungated; no evaluator credential handoff is required. The technical report and training/pruning/export code are planned for November 20, 2026. Full official benchmark verification remains pending.**
+Status: **Technical qualification passed: 15 CPU tests, both real-checkpoint debug transports, four valid native simulator episodes, and all eight exact replay/backend checks. [PR #234](https://github.com/XPolicyLab/XPolicyLab/pull/234) is open. The checkpoint is public and ungated; no evaluator credential handoff is required. The technical report remains planned for November 20, 2026. Full official benchmark verification remains pending.**
 
 | Check | Evidence and scope |
 |---|---|
@@ -37,7 +37,7 @@ audit. CPU checks used Python 3.12.7 / PyTorch 2.11.0+cpu with existing test
 dependencies; they do not replace the earlier fresh Python 3.10.21 / CUDA 13.0
 installation and GPU qualification. Inference code and settings are unchanged.
 
-That audit used private authentication; the checkpoint is now public, as verified
+That audit used authenticated access; the checkpoint is now public, as verified
 below. A complete fresh-machine simulator/assets installation, different
 GPU types, and a full five-suite packaged-adapter run have not been qualified by
 this audit.

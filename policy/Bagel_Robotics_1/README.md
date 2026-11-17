@@ -2,7 +2,7 @@
 
 **Contributor:** Bagel Labs | **Paper:** Technical report in preparation | **arXiv:** Not yet available | **Original code:** [Bagel-Robotics-1 implementation](https://github.com/bageldotcom/Bagel-Robotics-1)
 
-Bagel-Robotics-1 combines mask-based structured pruning, recovery training and task-critical data selection to produce a compact WAM with nonuniform FFN widths and cross-attention head counts. Its inference pipeline predicts 32 actions, executes 16 before replanning, and applies 90/10 temporal ensembling. VPP2 is the validation base.
+Bagel-Robotics-1 combines mask-based structured pruning, recovery training and task-critical data selection to produce a compact WAM with nonuniform FFN widths and cross-attention head counts. Its inference pipeline predicts 32 actions, executes 16 before replanning, and applies 90/10 temporal ensembling. VPP2 is used only as the base model for validation; the training and inference recipe is specific to Bagel-Robotics-1.
 
 Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](https://github.com/XPolicyLab/XPolicyLab/blob/main/README.md). Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
 
