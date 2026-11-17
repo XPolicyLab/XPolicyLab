@@ -1,0 +1,637 @@
+{
+ "schema": "auriga-xpl-arx-x5-static-v1",
+ "description": "Static robot values the Auriga worker reads from the simulator, frozen from the same dumps.",
+ "values": {
+  "control_hz": 25.0,
+  "physics_dt_s": 0.004,
+  "native_physics_steps_per_action": 10,
+  "arm_joint_names": {
+   "left": [
+    "joint1",
+    "joint2",
+    "joint3",
+    "joint4",
+    "joint5",
+    "joint6"
+   ],
+   "right": [
+    "joint1",
+    "joint2",
+    "joint3",
+    "joint4",
+    "joint5",
+    "joint6"
+   ]
+  },
+  "arm_joint_limits_rad": {
+   "left": [
+    [
+     -9.999999046325684,
+     9.999999046325684
+    ],
+    [
+     -9.999999046325684,
+     9.999999046325684
+    ],
+    [
+     -9.999999046325684,
+     9.999999046325684
+    ],
+    [
+     -9.999999046325684,
+     9.999999046325684
+    ],
+    [
+     -9.999999046325684,
+     9.999999046325684
+    ],
+    [
+     -3.1399998664855957,
+     3.1399998664855957
+    ]
+   ],
+   "right": [
+    [
+     -9.999999046325684,
+     9.999999046325684
+    ],
+    [
+     -9.999999046325684,
+     9.999999046325684
+    ],
+    [
+     -9.999999046325684,
+     9.999999046325684
+    ],
+    [
+     -9.999999046325684,
+     9.999999046325684
+    ],
+    [
+     -9.999999046325684,
+     9.999999046325684
+    ],
+    [
+     -3.1399998664855957,
+     3.1399998664855957
+    ]
+   ]
+  },
+  "arm_velocity_limit_rad_s": {
+   "left": [
+    5.000000074505806,
+    5.000000074505806,
+    5.000000074505806,
+    5.000000074505806,
+    5.000000074505806,
+    5.000000074505806
+   ],
+   "right": [
+    5.000000074505806,
+    5.000000074505806,
+    5.000000074505806,
+    5.000000074505806,
+    5.000000074505806,
+    5.000000074505806
+   ]
+  },
+  "arm_velocity_step_limits_rad": {
+   "left": [
+    0.20000000298023224,
+    0.20000000298023224,
+    0.20000000298023224,
+    0.20000000298023224,
+    0.20000000298023224,
+    0.20000000298023224
+   ],
+   "right": [
+    0.20000000298023224,
+    0.20000000298023224,
+    0.20000000298023224,
+    0.20000000298023224,
+    0.20000000298023224,
+    0.20000000298023224
+   ]
+  },
+  "arm_max_step_rad": {
+   "left": [
+    0.05000000074505806,
+    0.05000000074505806,
+    0.05000000074505806,
+    0.05000000074505806,
+    0.05000000074505806,
+    0.05000000074505806
+   ],
+   "right": [
+    0.05000000074505806,
+    0.05000000074505806,
+    0.05000000074505806,
+    0.05000000074505806,
+    0.05000000074505806,
+    0.05000000074505806
+   ]
+  },
+  "gripper_joint_names": [
+   "joint7",
+   "joint8"
+  ],
+  "gripper_joint_limits_m": [
+   [
+    0.0,
+    0.04399999976158142
+   ],
+   [
+    0.0,
+    0.04399999976158142
+   ]
+  ],
+  "gripper_scale": [
+   -0.01,
+   0.044
+  ],
+  "gripper_move": {
+   "base": "joint7",
+   "sign": 1.0,
+   "mimic": [
+    "joint8",
+    1.0,
+    0.0
+   ]
+  },
+  "gripper_max_step": 0.25,
+  "eef_gripper_dwell_step": 0.18,
+  "motion_duration_limit_s": 10,
+  "robot_base": {
+   "x5:left_arm:target": {
+    "position_m": [
+     -0.30000001192092896,
+     -0.44999998807907104,
+     0.7649999856948853
+    ],
+    "quaternion_wxyz": [
+     0.7070000171661377,
+     0.0,
+     0.0,
+     0.7072135210037231
+    ]
+   },
+   "x5:right_arm:target": {
+    "position_m": [
+     0.30000001192092896,
+     -0.44999998807907104,
+     0.7649999856948853
+    ],
+    "quaternion_wxyz": [
+     0.7070000171661377,
+     0.0,
+     0.0,
+     0.7072135210037231
+    ]
+   }
+  },
+  "joint_stiffness": [
+   4400.0,
+   4400.0,
+   4400.0,
+   4400.0,
+   4400.0,
+   4400.0,
+   2300.0,
+   2300.0
+  ],
+  "joint_damping": [
+   40.0,
+   40.0,
+   40.0,
+   40.0,
+   40.0,
+   40.0,
+   100.0,
+   100.0
+  ],
+  "joint_effort_limits": [
+   100.0,
+   100.0,
+   100.0,
+   100.0,
+   100.0,
+   100.0,
+   100.0,
+   100.0
+  ]
+ },
+ "native_step_limit_by_task": {
+  "align_blocks": 200,
+  "arrange_largest_number": 1050,
+  "arrange_largest_number_random": 1050,
+  "build_tower": 1050,
+  "classify_objects": 1100,
+  "classify_objects_by_language": 1100,
+  "cover_blocks": 800,
+  "deposit_coin": 300,
+  "fasten_screws": 1900,
+  "fill_egg_holder": 700,
+  "fill_pen_holder": 1100,
+  "fold_clothes": 500,
+  "fold_clothes_random": 500,
+  "general_pickup": 200,
+  "hang_mugs": 800,
+  "hang_mugs_random": 800,
+  "imitate_sorting_sequence": 1600,
+  "insert_key": 300,
+  "insert_tubes": 500,
+  "make_kong": 600,
+  "make_toast": 1400,
+  "make_toast_random": 1400,
+  "match_and_pick_from_conveyor": 700,
+  "organize_table": 1000,
+  "pack_objects_into_box": 1300,
+  "pack_objects_into_box_random": 1300,
+  "pick_from_conveyor_by_image": 700,
+  "play_stacking_toy": 1200,
+  "play_tic_tac_toe": 1100,
+  "play_Xylophone": 500,
+  "plug_in_charger": 400,
+  "pour_balls_into_vase": 600,
+  "pour_by_language": 800,
+  "pour_liquid_into_cup": 400,
+  "pour_liquid_into_cup_random": 400,
+  "press_by_number": 700,
+  "push_T": 600,
+  "push_T_random": 600,
+  "put_bottles_into_dustbin": 700,
+  "solve_equation": 300,
+  "sort_nesting_dolls_by_size": 1050,
+  "sort_nesting_dolls_by_size_random": 1050,
+  "stack_blocks": 550,
+  "stack_blocks_by_language": 400,
+  "stack_blocks_random": 550,
+  "stack_bowls": 800,
+  "stack_bowls_random": 800,
+  "store_laptop_and_headphones": 800,
+  "store_laptop_and_headphones_random": 800,
+  "store_tools_in_toolbox": 900,
+  "swap_blocks": 700,
+  "swap_T": 400,
+  "sweep_blocks": 1000,
+  "sweep_blocks_random": 1000
+ },
+ "native_step_limit_dump_check": {
+  "fill_egg_holder": {
+   "dumped": 700,
+   "source": 700
+  },
+  "fold_clothes_random": {
+   "dumped": 500,
+   "source": 500
+  },
+  "hang_mugs_random": {
+   "dumped": 800,
+   "source": 800
+  },
+  "imitate_sorting_sequence": {
+   "dumped": 1600,
+   "source": 1600
+  },
+  "match_and_pick_from_conveyor": {
+   "dumped": 700,
+   "source": 700
+  },
+  "press_by_number": {
+   "dumped": 700,
+   "source": 700
+  },
+  "push_T_random": {
+   "dumped": 600,
+   "source": 600
+  },
+  "stack_bowls_random": {
+   "dumped": 800,
+   "source": 800
+  },
+  "stack_bowls": {
+   "dumped": 800,
+   "source": 800
+  },
+  "store_laptop_and_headphones_random": {
+   "dumped": 800,
+   "source": 800
+  }
+ },
+ "sources": {
+  "control_hz": "RoboDojo env_cfg/arx_x5.yml observation.collect_freq (25); worker: obs_manager.collect_freq",
+  "physics_dt_s": "RoboDojo env_cfg/sim/sim_config.yml dt (0.004), decimation 1; worker: env.dt",
+  "native_physics_steps_per_action": "RoboDojo env/observation_manager/obs_manager.py:44 collect_interval = 1/(dt*collect_freq) = 10",
+  "arm_joint_limits_rad": "X5A.urdf <limit> (joint1-5 +-10, joint6 +-3.14), float32 in the sim; worker: asset.data.soft_joint_pos_limits",
+  "arm_velocity_limit_rad_s": "RoboDojo env/robot_manager/robot_config/x5.py:41 velocity_limit_sim=5.0 (URDF says 1000); worker: asset.data.joint_vel_limits",
+  "arm_velocity_step_limits_rad": "velocity limit / control_hz (robot_worker.py:126)",
+  "arm_max_step_rad": "min(velocity / control_hz, 0.05) (robot_worker.py:125; 0.05 is an Auriga constant)",
+  "gripper": "Assets/Robots/x5/robot_config.yml gripper_scale / gripper_move; URDF joint7/joint8 limits [0, 0.044]",
+  "gripper_max_step": "min(1, 0.2 * native ticks, 0.25) (robot_worker.py:129, Auriga constant)",
+  "eef_gripper_dwell_step": "min(gripper_max_step, 0.18) (robot_worker.py:130, Auriga constant)",
+  "robot_base": "RoboDojo env_cfg/robot/dual_x5.yml default_root_pos / default_root_rot",
+  "native_step_limit_by_task": "RoboDojo task/RoboDojo/tasks/<task>.py self.step_lim (local copy 726e9aa); worker: env.step_lim",
+  "joint_stiffness/damping/effort": "RoboDojo env/robot_manager/robot_config/x5.py actuator cfg"
+ },
+ "capabilities_reference": {
+  "note": "worker capabilities() from the reference dump (motion_safety_guard and trajectory_preview on, resampled mode); action_budget.native_step_limit is per task, see native_step_limit_by_task",
+  "value": {
+   "backend": "robodojo_curobo",
+   "data_origin": "robodojo_runtime",
+   "world_kind": "observed",
+   "motion_execution_mode": "resampled",
+   "action_speed": {
+    "available": true,
+    "speed_scale": {
+     "min": 0.25,
+     "max": 2.0,
+     "default": 1.0
+    },
+    "gripper_speed_scale": {
+     "min": 0.25,
+     "max": 1.0,
+     "default": 1.0
+    },
+    "waypoint_speed_scales": {
+     "available": true,
+     "min": 0.25,
+     "max": 2.0,
+     "semantics": "one resolved scale per waypoint, overriding top-level speed_scale; omitted list inherits top-level for all segments"
+    },
+    "semantics": "resampled joint-command spacing; top-level speed_scale supplies the default, with optional per-waypoint overrides; no physical speed guarantee",
+    "resampling": "scale 1 preserves legacy sampling; other scales preserve significant turns within 0.001 rad per joint and bound adjacent command deltas by scaled nominal and native velocity limits",
+    "gripper": "scale below 1 ramps from measured opening then retains legacy final-goal dwell; during_motion scales the synchronized ramp limit; direct after_motion jaws compile from fresh measured opening after successful arrival, within the shared request cap; exact cached previews keep their rows and reject gripper_start_state_changed if the old first jaw step exceeds the bound",
+    "accounting": "25 Hz native actions and physics ticks unchanged; slower commands consume more native steps within the same 10 s request cap"
+   },
+   "frame_id": "env_origin",
+   "tcp_config_id": "arx-x5-link6-v1",
+   "robot_model_id": "arx-x5",
+   "observation_profile": "rgb_proprio_calibrated_v1",
+   "observation_profiles": [
+    "rgb_proprio_calibrated_v1"
+   ],
+   "modes": [
+    "absolute"
+   ],
+   "path_kinds": [
+    "backend_free",
+    "hold"
+   ],
+   "max_waypoints": 8,
+   "max_simultaneous_arms": 2,
+   "dual_arm": true,
+   "standalone_gripper": true,
+   "arm_queue": {
+    "available": true,
+    "max_stages_per_arm": 8,
+    "checkpoint": "stops_whole_request"
+   },
+   "motion_cost_preview": {
+    "available": true,
+    "max_candidates": 3,
+    "max_waypoints": 1
+   },
+   "motion_safety_guard": {
+    "enabled": true,
+    "policy": "joint-travel-admission-v1",
+    "scope": "resampled segments before dispatch; no wrapping or automatic replanning"
+   },
+   "trajectory_preview": {
+    "available": true,
+    "scope": "single-segment candidate joint/FK timeline; robot-model near-approach only; no task-object truth"
+   },
+   "action_budget": {
+    "native_step_limit": 800,
+    "source": "native_task_configuration"
+   },
+   "dual_arm_progression": {
+    "available": true,
+    "modes": [
+     "paired",
+     "independent"
+    ],
+    "default": "paired"
+   },
+   "dual_arm_semantics": "paired default checks both endpoints at each waypoint barrier; independent advances each arm after its own measured arrival and starts its own after_motion jaw, with final held-endpoint recheck; both initial plans precede dispatch; one merged row per native step, one shared 10 s cap; no joint collision or held-object constraint guarantee",
+   "waypoint_semantics": "sequential native plans with endpoint verification; no blending or linear Cartesian guarantee",
+   "waypoint_failure_semantics": "prior waypoints may already have executed when a later plan fails; receipt retains partial motion",
+   "reset": true,
+   "native_evaluator": "privileged IPC only; never actor observation",
+   "observer_video": true,
+   "gripper_phases": [
+    "after_motion",
+    "during_motion"
+   ],
+   "gripper_after_motion": true,
+   "orientation_modes": [
+    "backend_free"
+   ],
+   "gripper_semantics": {
+    "goal_normalized": "0=closed, 1=open; latched through subsequent moves",
+    "contact_feedback": "unavailable",
+    "during_motion": "linear ramp from latched goal (measured opening for gripper_speed_scale below 1) over start_fraction..end_fraction of final segment native steps; uniformly subdivide motion if needed for command rate limits; command completion does not prove measured opening or grasp"
+   },
+   "tool_geometry": {
+    "source": "pinned ARX X5 URDF gripping-face geometry, not task object state",
+    "link6_to_grasp_center_local_m": [
+     0.1501,
+     0,
+     0
+    ],
+    "grasp_center_reference": "distal_15_mm_flat_pad_center",
+    "contact_selection": {
+     "default_reference": "pad_center",
+     "regions": {
+      "pad_center": {
+       "contact_region": "pad_center",
+       "contact_depth_m": 0.0,
+       "offset_m": 0.1501
+      },
+      "finger_middle": {
+       "contact_region": "finger_middle",
+       "contact_depth_m": 0.0275,
+       "offset_m": 0.12260000000000001
+      },
+      "fingertip": {
+       "contact_region": "fingertip",
+       "contact_depth_m": -0.0075,
+       "offset_m": 0.15760000000000002
+      }
+     },
+     "contact_depth_m": {
+      "min": -0.0075,
+      "max": 0.0625,
+      "positive_direction": "from distal pad toward palm along local -x"
+     },
+     "inner_face_axial_span_from_link6_m": [
+      0.08757,
+      0.15757
+     ],
+     "distal_flat_pad_axial_span_from_link6_m": [
+      0.14257,
+      0.15757
+     ],
+     "inner_shank_slope_deg": 8.735,
+     "semantics": "grasp_position_m targets the selected cross-section between fingers; omitted selection uses the distal 15 mm pad center. finger_middle is the nominal midpoint of the exposed inner face, on its sloped portion. References do not certify clearance, contact or retention.",
+     "observation_reference": "robot_state.arms[arm].grasp_pose always remains pad_center; receipt.grasp_contact_feedback reports the selected reference from the terminal measured link6 pose."
+    },
+    "approach_axis_local": [
+     1,
+     0,
+     0
+    ],
+    "jaw_opening_axis_local": [
+     0,
+     1,
+     0
+    ],
+    "conversion": "p_grasp = p_link6 + R(quaternion_xyzw) @ offset. robot_action stages use kind='move' with a unique id and arm. position_m plus quaternion_xyzw targets link6; alternatively grasp_position_m plus angles_deg targets the selected grasp section. Both pose forms use the same public move stage; no separate EE tool or manual grasp offset is needed."
+   },
+   "limits_profile": "robodojo-native-v1",
+   "native_control_hz": 25.0,
+   "bounded_wait": {
+    "max_native_steps": 50,
+    "native_control_hz": 25.0,
+    "semantics": "hold both measured arm joint positions and last gripper goals; each step consumes one native action, not wall-clock sleep"
+   },
+   "physics_dt_s": 0.004,
+   "native_physics_steps_per_action": 10,
+   "arm_max_step_rad": {
+    "left": [
+     0.05000000074505806,
+     0.05000000074505806,
+     0.05000000074505806,
+     0.05000000074505806,
+     0.05000000074505806,
+     0.05000000074505806
+    ],
+    "right": [
+     0.05000000074505806,
+     0.05000000074505806,
+     0.05000000074505806,
+     0.05000000074505806,
+     0.05000000074505806,
+     0.05000000074505806
+    ]
+   },
+   "arm_joint_limits_rad": {
+    "left": [
+     [
+      -9.999999046325684,
+      9.999999046325684
+     ],
+     [
+      -9.999999046325684,
+      9.999999046325684
+     ],
+     [
+      -9.999999046325684,
+      9.999999046325684
+     ],
+     [
+      -9.999999046325684,
+      9.999999046325684
+     ],
+     [
+      -9.999999046325684,
+      9.999999046325684
+     ],
+     [
+      -3.1399998664855957,
+      3.1399998664855957
+     ]
+    ],
+    "right": [
+     [
+      -9.999999046325684,
+      9.999999046325684
+     ],
+     [
+      -9.999999046325684,
+      9.999999046325684
+     ],
+     [
+      -9.999999046325684,
+      9.999999046325684
+     ],
+     [
+      -9.999999046325684,
+      9.999999046325684
+     ],
+     [
+      -9.999999046325684,
+      9.999999046325684
+     ],
+     [
+      -3.1399998664855957,
+      3.1399998664855957
+     ]
+    ]
+   },
+   "arm_joint_names": {
+    "left": [
+     "joint1",
+     "joint2",
+     "joint3",
+     "joint4",
+     "joint5",
+     "joint6"
+    ],
+    "right": [
+     "joint1",
+     "joint2",
+     "joint3",
+     "joint4",
+     "joint5",
+     "joint6"
+    ]
+   },
+   "gripper_max_step": 0.25,
+   "motion_duration_limit_s": 10,
+   "eef_gripper_dwell_step": 0.18,
+   "joint_prefix": {
+    "max_actions": 50,
+    "dimension": 14,
+    "timing": "one official native action per row"
+   },
+   "clock_policy": "physics advances only in the worker's bounded execution; paused during agent reasoning",
+   "cancellation": "checked before dispatch and between native actions; native planning is not interruptible",
+   "collision_scope": "native robot self-collision and configured static planner table; no task-object or other-arm collision proof",
+   "motion_preview": {
+    "available": true,
+    "max_waypoints": 1,
+    "execution_reference": "preview_plan_id",
+    "semantics": "read-only native planning; exact cached resampled plan, single use, rejected after state changes; cached after_motion jaw rows are never rebased and can stop with gripper_start_state_changed after arm motion"
+   },
+   "unified_action": {
+    "available": true,
+    "modes": [
+     "preview",
+     "execute",
+     "inspect",
+     "direct"
+    ],
+    "max_stages": 32,
+    "max_stages_per_arm": 16,
+    "max_native_steps": 250,
+    "checkpoint_resume": "validate current measured state then retain exact cached suffix; never replan",
+    "planning": "complete stage graph, future starts from prior commanded endpoints without physics"
+   },
+   "versions": {
+    "adapter_source_sha256": "58ff908e809a23380e93d4b0991fb0855d62b5418a0d25efaee6ca082d94be94",
+    "robodojo_commit": "c5daf7206cdb622dfdcf9801a02a85189fb1b1a5",
+    "robodojo_local_diff_sha256": "6fae53fd79fa47424e084ac09abe7c9a51216896088ba039b80123f25cd90c78",
+    "isaaclab_local_diff_sha256": "9d4d384362d1693d88757b67cc236076d9ad34fbd3448342cf940cd22c11baf9",
+    "submodules": "",
+    "python": "3.11.16 (main, Aug 27 2026, 14:44:21) [GCC 14.3.0]",
+    "packages": {
+     "isaacsim": "5.1.0.0",
+     "isaaclab": "0.54.3",
+     "torch": "2.7.0+cu128"
+    },
+    "robot_config_sha256": "9de4f63b84c0f730623c09af7a2d530d84973981397280b6e4b626b50ba6f1c9",
+    "curobo_config_sha256": "d746b52f3a8bafbcb329e521312b0f2153e9c86f5e3a5b480a4e5a197392fe08"
+   }
+  }
+ }
+}
