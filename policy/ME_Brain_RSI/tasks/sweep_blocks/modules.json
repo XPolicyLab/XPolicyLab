@@ -1,0 +1,72 @@
+{
+  "coap": {
+    "file": "capabilities/control/build_tower_package.py",
+    "resource": "resources/sweep_blocks/coap/__init__.py",
+    "package": true,
+    "sha256": "a3945a9de48558032d6555be82ab8a99426d3608757d858d2f59fee2ceb73f54",
+    "resource_identity": true
+  },
+  "coap.contracts": {
+    "file": "capabilities/observation/build_tower_contracts.py",
+    "resource": "resources/sweep_blocks/coap/contracts.py",
+    "package": false,
+    "sha256": "4bf9c1cbeaeb0424994cc2e3b5038f7a6872fb66b8c906e29ad88282d8e3a7f2",
+    "resource_identity": true
+  },
+  "coap.geometry": {
+    "file": "capabilities/geometry/build_tower_geometry.py",
+    "resource": "resources/sweep_blocks/coap/geometry.py",
+    "package": false,
+    "sha256": "0c0058ada555f9e54a94c90a307623f3681400a11e18fd9a6b1036eab2f29855",
+    "resource_identity": true
+  },
+  "coap.kinematics": {
+    "file": "capabilities/motion/build_tower_kinematics.py",
+    "resource": "resources/sweep_blocks/coap/kinematics.py",
+    "package": false,
+    "sha256": "8ff82c820ea5e61db913e16b46cdfdee3576abb0106789b9a2da94d2b197ebf7",
+    "resource_identity": true
+  },
+  "coap.policy": {
+    "file": "capabilities/control/sweep_blocks_coap_policy.py",
+    "resource": "resources/sweep_blocks/coap/policy.py",
+    "package": false,
+    "sha256": "73123d8d929da323b147dc52a209e97b9b9d688a541ab054d5b984cb41f781ee",
+    "resource_identity": true
+  },
+  "coap.vision": {
+    "file": "capabilities/perception/sweep_blocks_coap_vision.py",
+    "resource": "resources/sweep_blocks/coap/vision.py",
+    "package": false,
+    "sha256": "1b535ccd49abd98b1aecaeffb71121a9b00302a4d9521a1e29c2fd61116623e2",
+    "resource_identity": true
+  },
+  "coap.wristcam": {
+    "file": "capabilities/observation/build_tower_wristcam.py",
+    "resource": "resources/sweep_blocks/coap/wristcam.py",
+    "package": false,
+    "sha256": "5ed8b1dee23c2887bc735312a8e316b9fc62e9bee505ed372a7163898bbd3f5c",
+    "resource_identity": true
+  },
+  "adapter": {
+    "file": "capabilities/control/build_tower_adapter_package.py",
+    "resource": "resources/sweep_blocks/coap/adapter/__init__.py",
+    "package": true,
+    "sha256": "a096d4d8cc35a6447231c03ba3cf17a39979dd6aa1b80f07a8069557d57427ab",
+    "resource_identity": true
+  },
+  "adapter.model": {
+    "file": "capabilities/control/sweep_blocks_adapter_model.py",
+    "resource": "resources/sweep_blocks/coap/adapter/model.py",
+    "package": false,
+    "sha256": "24168bead8d7e447897a93c9bdddef9722a4a160a3950c81a7fbb31324ed4aab",
+    "resource_identity": true
+  },
+  "adapter.deploy": {
+    "file": "capabilities/control/build_tower_deploy.py",
+    "resource": "resources/sweep_blocks/coap/adapter/deploy.py",
+    "package": false,
+    "sha256": "2c62301410de73fed4212197402ccddcaf2f3d17e5a3f7c74ad668645f4f0eb2",
+    "resource_identity": true
+  }
+}

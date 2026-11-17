@@ -1,0 +1,587 @@
+{
+  "language_sources_checked": 99,
+  "chocolate_sources_patched": 24,
+  "original_observations_unchanged": true,
+  "ordinary_task_unchanged": true,
+  "other_categories_unchanged": true,
+  "contact_height_and_yaw_unchanged": true,
+  "basket_identity_and_instruction_mapping_unchanged": true,
+  "patches": [
+    {
+      "episode": "candidate-classify-20261023-baseline_classify_objects_by_language_s0_595d6b3d",
+      "bbox": [
+        200,
+        226,
+        31,
+        29
+      ],
+      "pixel": [
+        218.0,
+        243.0
+      ],
+      "prior_position": [
+        -0.21169572880389018,
+        -0.11639007363521792,
+        0.777
+      ],
+      "new_position": [
+        -0.21575898655444467,
+        -0.11075456641132575,
+        0.777
+      ],
+      "xy_shift_mm": 6.947589885563336
+    },
+    {
+      "episode": "candidate-classify-20261023-baseline_classify_objects_by_language_s0_595d6b3d",
+      "bbox": [
+        425,
+        225,
+        43,
+        32
+      ],
+      "pixel": [
+        446.0,
+        240.0
+      ],
+      "prior_position": [
+        0.2630784821719959,
+        -0.10920050975220502,
+        0.777
+      ],
+      "new_position": [
+        0.26812797319257164,
+        -0.10342700706030877,
+        0.777
+      ],
+      "xy_shift_mm": 7.670116876567664
+    },
+    {
+      "episode": "candidate-classify-20261023-baseline_classify_objects_by_language_s0_595d6b3d",
+      "bbox": [
+        507,
+        222,
+        21,
+        39
+      ],
+      "pixel": [
+        520.0,
+        234.0
+      ],
+      "prior_position": [
+        0.42266644090326266,
+        -0.09455891474622985,
+        0.777
+      ],
+      "new_position": [
+        0.43077904053672256,
+        -0.08850438335940125,
+        0.777
+      ],
+      "xy_shift_mm": 10.12282683477823
+    },
+    {
+      "episode": "candidate-classify-20261023-baseline_classify_objects_by_language_s0_80c8a212",
+      "bbox": [
+        356,
+        250,
+        16,
+        7
+      ],
+      "pixel": [
+        362.0,
+        252.99999999999997
+      ],
+      "prior_position": [
+        0.08546651346219913,
+        -0.1397468663809332,
+        0.777
+      ],
+      "new_position": [
+        0.0871069455823949,
+        -0.13455966611953069,
+        0.777
+      ],
+      "xy_shift_mm": 5.440410287180948
+    },
+    {
+      "episode": "candidate-classify-20261023-baseline_classify_objects_by_language_s0_80c8a212",
+      "bbox": [
+        400,
+        235,
+        54,
+        36
+      ],
+      "pixel": [
+        423.0,
+        249.99999999999997
+      ],
+      "prior_position": [
+        0.21083164612488242,
+        -0.13283618113936857,
+        0.777
+      ],
+      "new_position": [
+        0.21487831879522565,
+        -0.1275163381669956,
+        0.777
+      ],
+      "xy_shift_mm": 6.68403238708558
+    },
+    {
+      "episode": "candidate-classify-20261023-baseline_classify_objects_by_language_s0_80c8a212",
+      "bbox": [
+        445,
+        224,
+        52,
+        20
+      ],
+      "pixel": [
+        461.0,
+        236.99999999999997
+      ],
+      "prior_position": [
+        0.29617776213340835,
+        -0.10192398589281332,
+        0.777
+      ],
+      "new_position": [
+        0.30186255603232215,
+        -0.09601081863547761,
+        0.777
+      ],
+      "xy_shift_mm": 8.202586707030571
+    },
+    {
+      "episode": "candidate-classify-20261023-baseline_classify_objects_by_language_s0_9e9150f0",
+      "bbox": [
+        359,
+        230,
+        30,
+        30
+      ],
+      "pixel": [
+        373.0,
+        245.0
+      ],
+      "prior_position": [
+        0.10956231015700751,
+        -0.12113557187714569,
+        0.777
+      ],
+      "new_position": [
+        0.11166523357652781,
+        -0.11559114907248436,
+        0.777
+      ],
+      "xy_shift_mm": 5.929832303296238
+    },
+    {
+      "episode": "candidate-classify-20261023-baseline_classify_objects_by_language_s0_9e9150f0",
+      "bbox": [
+        438,
+        253,
+        35,
+        36
+      ],
+      "pixel": [
+        456.0,
+        270.0
+      ],
+      "prior_position": [
+        0.26785609638969893,
+        -0.17742703446750277,
+        0.777
+      ],
+      "new_position": [
+        0.27299728825898295,
+        -0.1729630620004683,
+        0.777
+      ],
+      "xy_shift_mm": 6.80873732958131
+    },
+    {
+      "episode": "candidate-classify-20261023-baseline_classify_objects_by_language_s1_3f585b7a",
+      "bbox": [
+        297,
+        234,
+        33,
+        36
+      ],
+      "pixel": [
+        313.0,
+        251.99999999999997
+      ],
+      "prior_position": [
+        -0.01427229120193371,
+        -0.1374523194689678,
+        0.777
+      ],
+      "new_position": [
+        -0.014546231532105183,
+        -0.132221078000042,
+        0.777
+      ],
+      "xy_shift_mm": 5.2384091679347895
+    },
+    {
+      "episode": "candidate-classify-20261023-baseline_classify_objects_by_language_s1_3f585b7a",
+      "bbox": [
+        509,
+        256,
+        36,
+        34
+      ],
+      "pixel": [
+        532.0,
+        262.0
+      ],
+      "prior_position": [
+        0.4239510135003624,
+        -0.16000146351530195,
+        0.777
+      ],
+      "new_position": [
+        0.4320882690377974,
+        -0.155203027114444,
+        0.777
+      ],
+      "xy_shift_mm": 9.446688286092384
+    },
+    {
+      "episode": "candidate-classify-20261023-baseline_classify_objects_by_language_s1_97074087",
+      "bbox": [
+        112,
+        259,
+        24,
+        30
+      ],
+      "pixel": [
+        129.00000000000003,
+        273.0
+      ],
+      "prior_position": [
+        -0.37405917581933434,
+        -0.18382652517755257,
+        0.777
+      ],
+      "new_position": [
+        -0.38123881451068425,
+        -0.17948538362625802,
+        0.777
+      ],
+      "xy_shift_mm": 8.390037050377357
+    },
+    {
+      "episode": "candidate-classify-20261023-baseline_classify_objects_by_language_s1_97074087",
+      "bbox": [
+        133,
+        223,
+        47,
+        17
+      ],
+      "pixel": [
+        156.0,
+        230.99999999999997
+      ],
+      "prior_position": [
+        -0.34870817892406836,
+        -0.08710367013349868,
+        0.777
+      ],
+      "new_position": [
+        -0.35540123418172803,
+        -0.08090604384047556,
+        0.777
+      ],
+      "xy_shift_mm": 9.121817820481686
+    },
+    {
+      "episode": "candidate-classify-20261023-baseline_classify_objects_by_language_s2_500c1a96",
+      "bbox": [
+        158,
+        245,
+        36,
+        10
+      ],
+      "pixel": [
+        171.0,
+        253.99999999999997
+      ],
+      "prior_position": [
+        -0.3026116621747335,
+        -0.14203246874054098,
+        0.777
+      ],
+      "new_position": [
+        -0.3084199474372044,
+        -0.13688913800619434,
+        0.777
+      ],
+      "xy_shift_mm": 7.758223297450998
+    },
+    {
+      "episode": "candidate-classify-20261023-baseline_classify_objects_by_language_s2_500c1a96",
+      "bbox": [
+        411,
+        271,
+        56,
+        22
+      ],
+      "pixel": [
+        434.0,
+        281.0
+      ],
+      "prior_position": [
+        0.2199532569520604,
+        -0.20054424583162056,
+        0.777
+      ],
+      "new_position": [
+        0.22417500852503658,
+        -0.19652398183606626,
+        0.777
+      ],
+      "xy_shift_mm": 5.82972631757934
+    },
+    {
+      "episode": "candidate-classify-20261023-baseline_classify_objects_by_language_s2_5ead9e17",
+      "bbox": [
+        251,
+        267,
+        18,
+        7
+      ],
+      "pixel": [
+        258.0,
+        268.0
+      ],
+      "prior_position": [
+        -0.12257423339243695,
+        -0.17312023446366928,
+        0.777
+      ],
+      "new_position": [
+        -0.12492690581839544,
+        -0.16857359788907558,
+        0.777
+      ],
+      "xy_shift_mm": 5.119274527244904
+    },
+    {
+      "episode": "candidate-classify-20261023-baseline_classify_objects_by_language_s2_5ead9e17",
+      "bbox": [
+        326,
+        228,
+        43,
+        16
+      ],
+      "pixel": [
+        348.0,
+        235.0
+      ],
+      "prior_position": [
+        0.05905353231031299,
+        -0.09702387661793449,
+        0.777
+      ],
+      "new_position": [
+        0.06018699742183531,
+        -0.09101665735916159,
+        0.777
+      ],
+      "xy_shift_mm": 6.113217351118013
+    },
+    {
+      "episode": "candidate-classify-20261023-baseline_classify_objects_by_language_s2_5ead9e17",
+      "bbox": [
+        462,
+        269,
+        13,
+        13
+      ],
+      "pixel": [
+        468.0,
+        276.0
+      ],
+      "prior_position": [
+        0.28822177377725855,
+        -0.19015425397325927,
+        0.777
+      ],
+      "new_position": [
+        0.2937538615656896,
+        -0.18593456594971342,
+        0.777
+      ],
+      "xy_shift_mm": 6.957712434052189
+    },
+    {
+      "episode": "candidate-classify-20261023-baseline_classify_objects_by_language_s2_5ead9e17",
+      "bbox": [
+        472,
+        224,
+        52,
+        16
+      ],
+      "pixel": [
+        496.0,
+        231.99999999999997
+      ],
+      "prior_position": [
+        0.3734613391564472,
+        -0.0895988729618511,
+        0.777
+      ],
+      "new_position": [
+        0.3806295030558032,
+        -0.08344913923751035,
+        0.777
+      ],
+      "xy_shift_mm": 9.444670379019284
+    },
+    {
+      "episode": "candidate-classify-20261023-baseline_classify_objects_by_language_s2_c8c6a77e",
+      "bbox": [
+        256,
+        278,
+        31,
+        41
+      ],
+      "pixel": [
+        279.0,
+        311.0
+      ],
+      "prior_position": [
+        -0.0749429621285934,
+        -0.2590567094827223,
+        0.777
+      ],
+      "new_position": [
+        -0.07638140669919981,
+        -0.2561595254036958,
+        0.777
+      ],
+      "xy_shift_mm": 3.2346249195960426
+    },
+    {
+      "episode": "candidate-classify-20261023-baseline_classify_objects_by_language_s2_c8c6a77e",
+      "bbox": [
+        495,
+        247,
+        43,
+        10
+      ],
+      "pixel": [
+        504.0,
+        247.0
+      ],
+      "prior_position": [
+        0.378864016369917,
+        -0.12584356076157505,
+        0.777
+      ],
+      "new_position": [
+        0.3861358784883415,
+        -0.12038950242686436,
+        0.777
+      ],
+      "xy_shift_mm": 9.089924696487014
+    },
+    {
+      "episode": "candidate-classify-20261023-baseline_classify_objects_by_language_s2_ccde1fbf",
+      "bbox": [
+        340,
+        284,
+        14,
+        9
+      ],
+      "pixel": [
+        346.0,
+        288.0
+      ],
+      "prior_position": [
+        0.049522886122097105,
+        -0.2147711619379525,
+        0.777
+      ],
+      "new_position": [
+        0.05047342136436385,
+        -0.2110239673494295,
+        0.777
+      ],
+      "xy_shift_mm": 3.865874355310488
+    },
+    {
+      "episode": "candidate-classify-20261023-baseline_classify_objects_by_language_s2_ccde1fbf",
+      "bbox": [
+        399,
+        266,
+        35,
+        37
+      ],
+      "pixel": [
+        411.0,
+        289.0
+      ],
+      "prior_position": [
+        0.17301384036451992,
+        -0.21677391146849811,
+        0.777
+      ],
+      "new_position": [
+        0.17633464344253375,
+        -0.2130651573700048,
+        0.777
+      ],
+      "xy_shift_mm": 4.978211530864976
+    },
+    {
+      "episode": "candidate-classify-20261023-baseline_classify_objects_by_language_s2_ccde1fbf",
+      "bbox": [
+        419,
+        226,
+        45,
+        10
+      ],
+      "pixel": [
+        457.0,
+        232.99999999999997
+      ],
+      "prior_position": [
+        0.29011490854391364,
+        -0.09208393393021569,
+        0.777
+      ],
+      "new_position": [
+        0.2956833328921653,
+        -0.08598189811313728,
+        0.777
+      ],
+      "xy_shift_mm": 8.260883175248866
+    },
+    {
+      "episode": "candidate-classify-20261023-baseline_classify_objects_by_language_s2_ccde1fbf",
+      "bbox": [
+        500,
+        253,
+        26,
+        28
+      ],
+      "pixel": [
+        508.0,
+        266.0
+      ],
+      "prior_position": [
+        0.3730924566336072,
+        -0.16878062450774575,
+        0.777
+      ],
+      "new_position": [
+        0.3802535402542139,
+        -0.16415069407603258,
+        0.777
+      ],
+      "xy_shift_mm": 8.527448294995704
+    }
+  ]
+}

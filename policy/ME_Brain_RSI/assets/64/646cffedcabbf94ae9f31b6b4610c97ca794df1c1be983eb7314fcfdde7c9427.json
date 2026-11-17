@@ -1,0 +1,44 @@
+{
+  "schema": "physicalrsi.skill-program-memory/v1",
+  "programs": {
+    "EpisodeModel.configure": {
+      "steps": [
+        {
+          "operation": "solve_equation.vision.symbol_and_target",
+          "revision": "0475103135d686d0f1129c93def701563c65e5438c08163908d6a4390b38ca63"
+        },
+        {
+          "operation": "solve_equation.geometry.grasp_frame",
+          "revision": "0475103135d686d0f1129c93def701563c65e5438c08163908d6a4390b38ca63"
+        },
+        {
+          "operation": "solve_equation.motion.qualify_and_bind",
+          "revision": "0475103135d686d0f1129c93def701563c65e5438c08163908d6a4390b38ca63"
+        }
+      ]
+    }
+  },
+  "bindings": {
+    "EpisodeModel.configure": [
+      {
+        "operation": "solve_equation.vision.symbol_and_target",
+        "method": "_memory_configure_0",
+        "input": "solve_equation.EpisodeModel.configure.0",
+        "output": "solve_equation.EpisodeModel.configure.1"
+      },
+      {
+        "operation": "solve_equation.geometry.grasp_frame",
+        "method": "_memory_configure_1",
+        "input": "solve_equation.EpisodeModel.configure.1",
+        "output": "solve_equation.EpisodeModel.configure.2"
+      },
+      {
+        "operation": "solve_equation.motion.qualify_and_bind",
+        "method": "_memory_configure_2",
+        "input": "solve_equation.EpisodeModel.configure.2",
+        "output": "solve_equation.EpisodeModel.configure.3"
+      }
+    ]
+  },
+  "revision": "0475103135d686d0f1129c93def701563c65e5438c08163908d6a4390b38ca63"
+}

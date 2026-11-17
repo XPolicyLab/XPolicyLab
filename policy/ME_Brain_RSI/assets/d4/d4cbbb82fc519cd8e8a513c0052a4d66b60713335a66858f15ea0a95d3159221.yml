@@ -1,0 +1,12 @@
+policy_name: COAPSeven
+protocol: ws
+host: localhost
+port: null
+bench_name: RoboDojo
+task_name: null
+ckpt_name: code
+env_cfg_type: arx_x5
+seed: null
+action_type: ee
+gpu_id: null
+eval_batch: false

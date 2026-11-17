@@ -1,0 +1,17 @@
+{
+  "url": "https://huggingface.co/api/models/facebook/dinov2-small/tree/ed25f3a31f01632728cabb09d1542f84ab7b0056",
+  "entries": [
+    {
+      "type": "file",
+      "oid": "e13b8fec08e8dd9ac531165e7c8c0ec7d467952a",
+      "size": 88249960,
+      "lfs": {
+        "oid": "ae1e99fcefd534ed978cdeb8326f08030c96e28b7a81ffcbc98a857c84d14be1",
+        "size": 88249960,
+        "pointerSize": 133
+      },
+      "xetHash": "58591664a535b604df1061ec047ff77f564b950071c0f9045f4bb6bbea71c30f",
+      "path": "model.safetensors"
+    }
+  ]
+}

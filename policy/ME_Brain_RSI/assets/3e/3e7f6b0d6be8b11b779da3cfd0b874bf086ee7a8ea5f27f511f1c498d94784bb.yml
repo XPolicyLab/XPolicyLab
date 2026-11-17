@@ -1,0 +1,10 @@
+policy_name: insert_key
+protocol: ws
+host: 127.0.0.1
+port: 19161
+task_name: insert_key
+env_cfg_type: arx_x5
+bench_name: RoboDojo
+action_type: ee
+ckpt_name: 10c32f46cfe54ee9e603242bccfd4fcce73303b8897b65b14af66552e9354ef3
+eval_batch: true

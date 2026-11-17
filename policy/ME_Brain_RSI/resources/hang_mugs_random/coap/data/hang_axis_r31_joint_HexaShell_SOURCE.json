@@ -1,0 +1,13 @@
+{
+  "project": "HexaFuture/HexaShell",
+  "commit": "d1a2a24dc4c528a652b359fd689398530ef941d8",
+  "license": "Apache-2.0",
+  "source": "https://github.com/HexaFuture/HexaShell/tree/d1a2a24dc4c528a652b359fd689398530ef941d8/tasks/hang_mugs/tools",
+  "adapted_methods": [
+    "opposite-handle rim pinch",
+    "rim RGB fitting",
+    "cup-to-hand rigid transform",
+    "axial handle threading"
+  ],
+  "runtime": "Independent fixed-duration COAP policies; original guarded executor and external agent server are not used"
+}

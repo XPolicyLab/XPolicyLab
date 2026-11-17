@@ -1,0 +1,98 @@
+{
+  "coap.tasks.toast_random": {
+    "file": "capabilities/control/toast_random_for_make_toast_random.py",
+    "resource": "resources/make_toast_random/coap/tasks/toast_random.py",
+    "package": false,
+    "sha256": "68cdd0cb073598e6df1edd7c27aa34f9a916fe8cd93d301afdeb70e61e695d87"
+  },
+  "coap.tasks.toast_vision": {
+    "file": "capabilities/perception/toast_vision_for_make_toast_random.py",
+    "resource": "resources/make_toast_random/coap/tasks/toast_vision.py",
+    "package": false,
+    "sha256": "caa032129b1caf4c48944f6de70272ef068c7e45c74eb1149405eb7a944201a7"
+  },
+  "coap.tasks.containers_vision": {
+    "file": "capabilities/perception/containers_vision_for_pack_objects_into_box_random.py",
+    "resource": "resources/make_toast_random/coap/tasks/containers_vision.py",
+    "package": false,
+    "sha256": "438808bab18af2d34fc783b43fabb23841de2a6fcb4816dbc8a6913277c53f8c"
+  },
+  "coap.tasks": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/make_toast_random/coap/tasks/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "coap": {
+    "file": "capabilities/control/robot.py",
+    "resource": "resources/make_toast_random/coap/__init__.py",
+    "package": true,
+    "sha256": "0d5ab17fdb679b7515310cbf23a56079be09c65016ddcc46a3e1a7c44a05926e"
+  },
+  "coap.tasks.toast_conveyor_vision": {
+    "file": "capabilities/perception/toast_conveyor_vision_for_make_toast_random.py",
+    "resource": "resources/make_toast_random/coap/tasks/toast_conveyor_vision.py",
+    "package": false,
+    "sha256": "7b2df839ff87cc34eebb594118d9b00a0b6576f2186954cdf3f19d1815c3be64"
+  },
+  "coap.motion": {
+    "file": "capabilities/motion/motion_for_pack_objects_into_box.py",
+    "resource": "resources/make_toast_random/coap/motion.py",
+    "package": false,
+    "sha256": "67a279ee5f05f10a39e4e4a7a2db6885437e5b45c74c0b210f01c71e8ef3a2d9"
+  },
+  "coap.robot_collision": {
+    "file": "capabilities/motion/robot_collision.py",
+    "resource": "resources/make_toast_random/coap/robot_collision.py",
+    "package": false,
+    "sha256": "179d4a220b38a8bfb0d360d0d724bd7da1a5882af0e996a0d834e27ebb05257a"
+  },
+  "coap.executor": {
+    "file": "capabilities/control/executor_for_pack_objects_into_box.py",
+    "resource": "resources/make_toast_random/coap/executor.py",
+    "package": false,
+    "sha256": "a660ebccd6b2a779370681122ef66da82ef9ee8f26732ca9da32ecba9717877c"
+  },
+  "coap.dual": {
+    "file": "capabilities/control/dual.py",
+    "resource": "resources/make_toast_random/coap/dual.py",
+    "package": false,
+    "sha256": "f776f786654efba26ded2e378e86bc30aa39e022c8055297c81f0f02c498e480"
+  },
+  "coap.kinematics": {
+    "file": "capabilities/motion/kinematics_for_pack_objects_into_box.py",
+    "resource": "resources/make_toast_random/coap/kinematics.py",
+    "package": false,
+    "sha256": "3b22a8f022cdad5a92e302f4054917bee6b450a0baeb03e7673b874a349ba002"
+  },
+  "coap.policy": {
+    "file": "capabilities/control/policy_for_make_toast.py",
+    "resource": "resources/make_toast_random/coap/policy.py",
+    "package": false,
+    "sha256": "90aed152721b1e6a1af1514e4d688345ce0fa619f757a891e8462e5004eebf10"
+  },
+  "model": {
+    "file": "capabilities/control/model_for_pack_objects_into_box_random.py",
+    "resource": "resources/make_toast_random/model.py",
+    "package": false,
+    "sha256": "e0359b2d52f69bd615c1267cba4860f8cb117dbd256f3f572579e148acd53542"
+  },
+  "coap.evidence": {
+    "file": "capabilities/observation/evidence.py",
+    "resource": "resources/make_toast_random/coap/evidence.py",
+    "package": false,
+    "sha256": "c7ffd03aeec0986c62469e5823493a4fb2ed12ff759ee718f1914469c2039da7"
+  },
+  "coap.context": {
+    "file": "capabilities/control/context_for_pack_objects_into_box.py",
+    "resource": "resources/make_toast_random/coap/context.py",
+    "package": false,
+    "sha256": "ff095e227e3f78dec6daed8724fa6f3ae85b2f45a1c2bb413186d905d595840f"
+  },
+  "coap.perception": {
+    "file": "capabilities/perception/perception_for_pack_objects_into_box.py",
+    "resource": "resources/make_toast_random/coap/perception.py",
+    "package": false,
+    "sha256": "1f67abb7a89cc94b94a2d7f53e7dd8560ce40f3b954228660c4e7a3255137f93"
+  }
+}

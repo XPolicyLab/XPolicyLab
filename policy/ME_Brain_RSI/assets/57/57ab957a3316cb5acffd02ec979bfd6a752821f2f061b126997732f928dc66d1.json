@@ -1,0 +1,172 @@
+{
+  "0": {
+    "body_center_local": [
+      -0.015,
+      0.0001,
+      -0.0373
+    ],
+    "floor_local_z": -0.03733799606561661,
+    "rim_z": 0.03733799606561661,
+    "rim_radius": 0.05564734277304309,
+    "thread_local": [
+      0.05290216586737066,
+      0.0,
+      0.014779314847366372
+    ],
+    "source_sha256": "2cc169f5c8e93e8ed373500cf4b48814fdcf535e38cfb18f020603e32455eef0",
+    "derivation": "Public native visual triangles and native Y=0 aperture contour"
+  },
+  "1": {
+    "body_center_local": [
+      -0.0135,
+      0.0,
+      -0.0343
+    ],
+    "floor_local_z": -0.034290000796318054,
+    "rim_z": 0.03429000452160835,
+    "rim_radius": 0.045617887611392974,
+    "thread_local": [
+      0.045697907096927746,
+      0.0,
+      -0.0014749803676185305
+    ],
+    "source_sha256": "a1f285e2de5397833de86a986102dd7e85c613b5307dbe2286f014712ffb40c0",
+    "derivation": "Public native visual triangles and native Y=0 aperture contour"
+  },
+  "2": {
+    "body_center_local": [
+      -0.0127,
+      0.0,
+      -0.0343
+    ],
+    "floor_local_z": -0.03429000452160835,
+    "rim_z": 0.034290000796318054,
+    "rim_radius": 0.037684922498414666,
+    "thread_local": [
+      0.03215401724718583,
+      0.0,
+      0.0007020995550954248
+    ],
+    "source_sha256": "d1e9be0d3630e0cbe6c011defd474e270b8ec828be7b169f038ad3cd4b86b1ee",
+    "derivation": "Public native visual triangles and native Y=0 aperture contour"
+  },
+  "3": {
+    "body_center_local": [
+      -0.0088,
+      0.0,
+      -0.0343
+    ],
+    "floor_local_z": -0.034289997071027756,
+    "rim_z": 0.034289997071027756,
+    "rim_radius": 0.043408929734128535,
+    "thread_local": [
+      0.03575935233387111,
+      0.0,
+      0.0028572651620470666
+    ],
+    "source_sha256": "3c7c793b922c681cdeaab8267e33400fd93e9c999baab59108c9520f16c5cb0a",
+    "derivation": "Public native visual triangles and native Y=0 aperture contour"
+  },
+  "4": {
+    "body_center_local": [
+      -0.0136,
+      0.0,
+      -0.0381
+    ],
+    "floor_local_z": -0.038100000470876694,
+    "rim_z": 0.03810000419616699,
+    "rim_radius": 0.03183719123637925,
+    "thread_local": [
+      0.028325373914855515,
+      0.0,
+      9.73429848134333e-06
+    ],
+    "source_sha256": "b04c5a6e35a697018cbd488a6fcf72e0cd7523ac00004f3e564e0e5d4aa836a3",
+    "derivation": "Public native visual triangles and native Y=0 aperture contour"
+  },
+  "5": {
+    "body_center_local": [
+      -0.013,
+      0.0002,
+      -0.0343
+    ],
+    "floor_local_z": -0.034290000796318054,
+    "rim_z": 0.03429000452160835,
+    "rim_radius": 0.027024994140897526,
+    "thread_local": [
+      0.03385819512863675,
+      0.0,
+      4.4873278927723185e-05
+    ],
+    "source_sha256": "af8164c080fa8413e1a42821a909381c6ef22050a1eaa8bfc0b92b037bef5d0f",
+    "derivation": "Public native visual triangles and native Y=0 aperture contour"
+  },
+  "6": {
+    "body_center_local": [
+      -0.0143,
+      -0.0,
+      -0.0343
+    ],
+    "floor_local_z": -0.03429000452160835,
+    "rim_z": 0.034290000796318054,
+    "rim_radius": 0.03885940136125036,
+    "thread_local": [
+      0.031060210350536927,
+      0.0,
+      0.009366820252098597
+    ],
+    "source_sha256": "ea3b6613741a9b8ef2c32f970fe69c93d16fee576180d0a92790eb3684ca8378",
+    "derivation": "Public native visual triangles and native Y=0 aperture contour"
+  },
+  "7": {
+    "body_center_local": [
+      -0.0219,
+      0.0001,
+      -0.0343
+    ],
+    "floor_local_z": -0.034290000796318054,
+    "rim_z": 0.034290000796318054,
+    "rim_radius": 0.03532020602555026,
+    "thread_local": [
+      0.023786373852263044,
+      0.0,
+      9.831267012959678e-05
+    ],
+    "source_sha256": "56c4ccd99056761ac5bc1017294d216fbc7d28c69db39561d3252912fb20ec1c",
+    "derivation": "Public native visual triangles and native Y=0 aperture contour"
+  },
+  "8": {
+    "body_center_local": [
+      -0.0147,
+      0.0001,
+      -0.0343
+    ],
+    "floor_local_z": -0.034289997071027756,
+    "rim_z": 0.034290000796318054,
+    "rim_radius": 0.04514585678001866,
+    "thread_local": [
+      0.037676328329814754,
+      0.0,
+      0.004423909690804891
+    ],
+    "source_sha256": "b03015142a220d1a15c87477f49be911aada48f68617428837075a5026833580",
+    "derivation": "Public native visual triangles and native Y=0 aperture contour"
+  },
+  "9": {
+    "body_center_local": [
+      -0.0113,
+      0.0001,
+      -0.0381
+    ],
+    "floor_local_z": -0.038100000470876694,
+    "rim_z": 0.03810000419616699,
+    "rim_radius": 0.029341246100813047,
+    "thread_local": [
+      0.02511833331830566,
+      0.0,
+      0.006999850199875632
+    ],
+    "source_sha256": "8e5b30b8908d9de36ce1251478180d749bd1d99093a8a852376624904ece8660",
+    "derivation": "Public native visual triangles and native Y=0 aperture contour"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "schema": "physicalrsi.skill-worker/v1",
+  "name": "fasten_screws",
+  "implementation": {
+    "module": "rdj_v1_fasten_screws.model",
+    "class": "Model",
+    "source": "{assets}/implementations/rdj_v1_fasten_screws/770a6c1b7de4b67b/rdj_v1_fasten_screws/model.py",
+    "sha256": "e9f5934437e891614e140a6c78b8b5bda3136e23779551aa068a90a54ed55a3f",
+    "implementation_revision": "screws_rgb_r16_20261028"
+  },
+  "environment": {
+    "OMP_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "RDJ_OUTPUT_DIR": "{output}",
+    "RDJ_V1_OUTPUT": "{output}/runtime",
+    "RDJ_CONFIG": "fasten_screws",
+    "RDJ_SEED": "2",
+    "SCREWS_TRACE_DIR": "{output}/screws"
+  },
+  "model_config": {
+    "ckpt_name": "e9f5934437e891614e140a6c78b8b5bda3136e23779551aa068a90a54ed55a3f",
+    "policy_name": "rdj_rgb",
+    "protocol": "ws",
+    "task_name": "fasten_screws",
+    "env_cfg_type": "arx_x5",
+    "action_type": "joint",
+    "eval_batch": true,
+    "seed": 2,
+    "bench_name": "RoboDojo"
+  },
+  "external_services": [],
+  "directories": [],
+  "transport": {
+    "batch_wire": true,
+    "isolated_environments": 1,
+    "allowed_methods": [
+      "get_action",
+      "get_action_batch",
+      "reset",
+      "update_obs",
+      "update_obs_batch"
+    ],
+    "compatibility": "",
+    "diagnostic_environment": {}
+  },
+  "pythonpath": [
+    "{assets}/implementations/rdj_v1_fasten_screws/770a6c1b7de4b67b",
+    "{assets}/dependencies/curobo/9077c9afff1c3fda/curobo",
+    "{assets}",
+    "{xpolicylab_parent}",
+    "{xpolicylab}"
+  ],
+  "services": []
+}

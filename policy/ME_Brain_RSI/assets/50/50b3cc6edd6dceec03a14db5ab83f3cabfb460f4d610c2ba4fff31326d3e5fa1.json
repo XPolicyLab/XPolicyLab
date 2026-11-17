@@ -1,0 +1,73 @@
+{
+  "model": "facebook/dinov2-small",
+  "metadata_api": "https://huggingface.co/api/models/facebook/dinov2-small",
+  "revision": "ed25f3a31f01632728cabb09d1542f84ab7b0056",
+  "official_model_card": "https://huggingface.co/facebook/dinov2-small",
+  "license": "apache-2.0",
+  "files": [
+    {
+      "filename": "config.json",
+      "url": "https://huggingface.co/facebook/dinov2-small/resolve/ed25f3a31f01632728cabb09d1542f84ab7b0056/config.json?download=true",
+      "revision": "ed25f3a31f01632728cabb09d1542f84ab7b0056",
+      "bytes": 547,
+      "sha256": "1809f83e3bdb1609a501a610ad4a742f4fd8ae44d72ca4aa0df52d1f2ac8628d",
+      "download_seconds": 0.9489896249724552,
+      "headers": {
+        "Content-Length": "547",
+        "ETag": "\"5664b325e6258d3960fad8c4c1cff958f3cc2272\"",
+        "X-Repo-Commit": "ed25f3a31f01632728cabb09d1542f84ab7b0056"
+      },
+      "final_url_host": "huggingface.co"
+    },
+    {
+      "filename": "preprocessor_config.json",
+      "url": "https://huggingface.co/facebook/dinov2-small/resolve/ed25f3a31f01632728cabb09d1542f84ab7b0056/preprocessor_config.json?download=true",
+      "revision": "ed25f3a31f01632728cabb09d1542f84ab7b0056",
+      "bytes": 436,
+      "sha256": "14e780d86fa1861f8751f868d7f45425b5feb55c38ca26f152ca5097ab30f828",
+      "download_seconds": 0.9516748330788687,
+      "headers": {
+        "Content-Length": "436",
+        "ETag": "\"ff5b47c2edcd1d3556d63c01a65d93b58b9efce1\"",
+        "X-Repo-Commit": "ed25f3a31f01632728cabb09d1542f84ab7b0056"
+      },
+      "final_url_host": "huggingface.co"
+    },
+    {
+      "filename": "model.safetensors",
+      "url": "https://huggingface.co/facebook/dinov2-small/resolve/ed25f3a31f01632728cabb09d1542f84ab7b0056/model.safetensors?download=true",
+      "revision": "ed25f3a31f01632728cabb09d1542f84ab7b0056",
+      "bytes": 88249960,
+      "sha256": "ae1e99fcefd534ed978cdeb8326f08030c96e28b7a81ffcbc98a857c84d14be1",
+      "download_seconds": 16.98427920904942,
+      "headers": {
+        "etag": "\"58591664a535b604df1061ec047ff77f564b950071c0f9045f4bb6bbea71c30f\"",
+        "content-length": "88249960"
+      },
+      "final_url_host": "us.aws.cdn.hf.co"
+    },
+    {
+      "filename": "README.md",
+      "url": "https://huggingface.co/facebook/dinov2-small/resolve/ed25f3a31f01632728cabb09d1542f84ab7b0056/README.md?download=true",
+      "revision": "ed25f3a31f01632728cabb09d1542f84ab7b0056",
+      "bytes": 3033,
+      "sha256": "4c20dca454a8e5c670e8de5c7e6040f512aeca5438516f7623eedc4e3b00599c",
+      "download_seconds": 0.9513030420057476,
+      "headers": {
+        "Content-Length": "3033",
+        "ETag": "\"6b3380957df44ed203ec1d5102e1245accbbbba9\"",
+        "X-Repo-Commit": "ed25f3a31f01632728cabb09d1542f84ab7b0056"
+      },
+      "final_url_host": "huggingface.co"
+    }
+  ],
+  "no_dataset_or_package_install": true,
+  "trust_remote_code": false,
+  "official_lfs_sha256_verified": true,
+  "official_lfs_metadata_url": "https://huggingface.co/api/models/facebook/dinov2-small/tree/ed25f3a31f01632728cabb09d1542f84ab7b0056",
+  "license_text": {
+    "url": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+    "bytes": 11358,
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  }
+}

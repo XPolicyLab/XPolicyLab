@@ -1,0 +1,100 @@
+{
+  "coap": {
+    "file": "capabilities/control/robot.py",
+    "resource": "resources/organize_table/coap/__init__.py",
+    "package": true,
+    "sha256": "0d5ab17fdb679b7515310cbf23a56079be09c65016ddcc46a3e1a7c44a05926e",
+    "resource_identity": true
+  },
+  "coap.context": {
+    "file": "capabilities/control/organize_table_coap_context.py",
+    "resource": "resources/organize_table/coap/context.py",
+    "package": false,
+    "sha256": "cf9925285991dc5962711a0b439525f66a032bfd2ec61bc3edc0ec39ef011297",
+    "resource_identity": true
+  },
+  "coap.evidence": {
+    "file": "capabilities/observation/evidence.py",
+    "resource": "resources/organize_table/coap/evidence.py",
+    "package": false,
+    "sha256": "c7ffd03aeec0986c62469e5823493a4fb2ed12ff759ee718f1914469c2039da7",
+    "resource_identity": true
+  },
+  "coap.kinematics": {
+    "file": "capabilities/motion/kinematics_for_pack_objects_into_box.py",
+    "resource": "resources/organize_table/coap/kinematics.py",
+    "package": false,
+    "sha256": "3b22a8f022cdad5a92e302f4054917bee6b450a0baeb03e7673b874a349ba002",
+    "resource_identity": true
+  },
+  "coap.motion": {
+    "file": "capabilities/motion/organize_table_coap_motion.py",
+    "resource": "resources/organize_table/coap/motion.py",
+    "package": false,
+    "sha256": "02ee891557e4f2fd5c4f43ed1d5fca99b30aae4b9666d2ab401ad6e0b31635c5",
+    "resource_identity": true
+  },
+  "coap.perception": {
+    "file": "capabilities/perception/perception_for_pack_objects_into_box.py",
+    "resource": "resources/organize_table/coap/perception.py",
+    "package": false,
+    "sha256": "1f67abb7a89cc94b94a2d7f53e7dd8560ce40f3b954228660c4e7a3255137f93",
+    "resource_identity": true
+  },
+  "coap.robot_collision": {
+    "file": "capabilities/motion/robot_collision.py",
+    "resource": "resources/organize_table/coap/robot_collision.py",
+    "package": false,
+    "sha256": "179d4a220b38a8bfb0d360d0d724bd7da1a5882af0e996a0d834e27ebb05257a",
+    "resource_identity": true
+  },
+  "coap.tasks": {
+    "file": "capabilities/control/deposit_coin_package.py",
+    "resource": "resources/organize_table/coap/tasks/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "resource_identity": true
+  },
+  "coap.tasks.organize": {
+    "file": "capabilities/control/organize_table_coap_tasks_organize.py",
+    "resource": "resources/organize_table/coap/tasks/organize.py",
+    "package": false,
+    "sha256": "1a10d6565f998f4434483df74d05a1ee32d7df5e22e9ab4146683567d42daf5e",
+    "resource_identity": true
+  },
+  "coap.tasks.organize_vision": {
+    "file": "capabilities/perception/organize_table_coap_tasks_organize_vision.py",
+    "resource": "resources/organize_table/coap/tasks/organize_vision.py",
+    "package": false,
+    "sha256": "3bbfd4feff2a6de22bdd5f8b6cb87c610402637ea8b28b2f4ee82146b7c62b8d",
+    "resource_identity": true
+  },
+  "coap.tasks.containers_vision": {
+    "file": "capabilities/perception/containers_vision_for_pack_objects_into_box.py",
+    "resource": "resources/organize_table/coap/tasks/containers_vision.py",
+    "package": false,
+    "sha256": "e04949d14ae4f5a2338fa1d911e47229df964f8234320d755b4572c2ce32db7c",
+    "resource_identity": true
+  },
+  "model": {
+    "file": "capabilities/control/organize_table_model.py",
+    "resource": "resources/organize_table/model.py",
+    "package": false,
+    "sha256": "091aeb7c0ad168f26bb8dcdfa023689012162014f816b15a3a777b2aa3ebb6d3",
+    "resource_identity": true
+  },
+  "deploy": {
+    "file": "capabilities/control/organize_table_deploy.py",
+    "resource": "resources/organize_table/deploy.py",
+    "package": false,
+    "sha256": "da78a1dc600413732791b1f6cca4450893b6e3be4bd61d489623d1cd59978565",
+    "resource_identity": true
+  },
+  "coap.policy": {
+    "file": "capabilities/control/organize_table_coap_policy.py",
+    "resource": "resources/organize_table/coap/policy.py",
+    "package": false,
+    "sha256": "d695388a6917384ce5ee5ffb224c9d40aedcbfbf04cb6cc7a49d391ec51a4977",
+    "resource_identity": true
+  }
+}

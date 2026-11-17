@@ -1,0 +1,35 @@
+policy_name: ME_Brain_RSI
+protocol: ws
+host: localhost
+bench_name: null
+task_name: null
+ckpt_name: null
+gpu_id: null
+env_cfg_type: null
+seed: null
+eval_batch: true
+
+model_path: model_assets/vla_checkpoint
+asset_id: arx_x5_sim
+tokenizer_path: null
+num_inference_steps: 10
+history_mode: head_history
+max_token_len: 400
+focus_vlwa_source: null
+policy_uv_env_path: source
+
+result_dir: ./results/focus_vlwa/
+obs_transform_pipeline: xspark-v1.0
+action_type: auto
+port: 6000
+
+# auto: selected scripted tasks; remaining tasks retain the existing VLA path.
+me_brain_backend: auto
+strategy_evidence_dir: null
+robot_static_path: null
+nesting_assets_root: null
+stack_assets_root: null
+equation_assets_root: null
+perception_assets_root: null
+coin_assets_root: null
+screws_assets_root: null

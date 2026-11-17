@@ -1,0 +1,42 @@
+# Preserve the pinned upstream byte identities across checkouts.
+capabilities/**/deposit_coin_*.py -text
+resources/deposit_coin/coap/vendor/code-skills/** -text
+
+# Keep original upstream formatting without relaxing checks on adapter code.
+capabilities/control/deposit_coin_controller.py whitespace=-blank-at-eof
+resources/deposit_coin/coap/vendor/code-skills/implementations/rdj_v1_deposit_coin/12fa351b9c54f64f/rdj_v1_deposit_coin/controller.py whitespace=-blank-at-eof
+resources/deposit_coin/coap/vendor/code-skills/implementations/rdj_v1_deposit_coin/12fa351b9c54f64f/rdj_v1_deposit_coin/assets/x5/X5A.urdf whitespace=cr-at-eol,-blank-at-eol
+resources/deposit_coin/coap/vendor/code-skills/implementations/rdj_v1_deposit_coin/12fa351b9c54f64f/rdj_v1_deposit_coin/assets/x5/robot_config.yml whitespace=-blank-at-eol
+
+# Preserve byte identities of the frozen screws sources and robot resources.
+capabilities/**/fasten_screws_*.py -text
+resources/fasten_screws/coap/vendor/code-skills/** -text
+resources/fasten_screws/coap/vendor/code-skills/implementations/rdj_v1_fasten_screws/770a6c1b7de4b67b/rdj_v1_fasten_screws/assets/x5/X5A.urdf whitespace=cr-at-eol,-blank-at-eol
+resources/fasten_screws/coap/vendor/code-skills/implementations/rdj_v1_fasten_screws/770a6c1b7de4b67b/rdj_v1_fasten_screws/assets/x5/robot_config.yml whitespace=-blank-at-eol
+
+# Preserve original EOF formatting in the selected task sources.
+capabilities/control/imitate_sorting_sequence_coap_tasks_sorting_tri80_r07_render.py whitespace=-blank-at-eof
+resources/imitate_sorting_sequence/coap/tasks/sorting_tri80_r07_render.py whitespace=-blank-at-eof
+capabilities/perception/classify_objects_by_language_coap_tasks_classify_r05_grounded_clip.py whitespace=-blank-at-eof
+resources/classify_objects_by_language/coap/tasks/classify_r05_grounded_clip.py whitespace=-blank-at-eof
+
+# Preserve the selected egg and mug source byte identities.
+capabilities/control/fill_egg_holder_coap_tasks_egg_budget_r02_empty_only_empty.py whitespace=-blank-at-eof
+capabilities/geometry/hang_mugs_coap_tasks_hang_candidate_g_cad.py whitespace=-blank-at-eof
+capabilities/geometry/hang_mugs_coap_tasks_hang_candidate_h_cad.py whitespace=-blank-at-eof
+capabilities/motion/hang_mugs_coap_tasks_hang_candidate_motion.py whitespace=-blank-at-eof
+capabilities/motion/hang_mugs_coap_tasks_hang_std_sem_r44_rank_motion.py whitespace=-blank-at-eof
+capabilities/perception/fill_egg_holder_coap_tasks_egg_grasp_lookahead_r19_full_chain_pick_base_measure.py whitespace=-blank-at-eof
+resources/fill_egg_holder/coap/tasks/egg_budget_r02_empty_only_empty.py whitespace=-blank-at-eof
+resources/fill_egg_holder/coap/tasks/egg_grasp_lookahead_r19_full_chain_pick_base_measure.py whitespace=-blank-at-eof
+resources/hang_mugs/coap/tasks/hang_candidate_g_cad.py whitespace=-blank-at-eof
+resources/hang_mugs/coap/tasks/hang_candidate_h_cad.py whitespace=-blank-at-eof
+resources/hang_mugs/coap/tasks/hang_candidate_motion.py whitespace=-blank-at-eof
+resources/hang_mugs/coap/tasks/hang_std_sem_r44_rank_motion.py whitespace=-blank-at-eof
+resources/hang_mugs_random/coap/tasks/hang_candidate_g_cad.py whitespace=-blank-at-eof
+resources/hang_mugs_random/coap/tasks/hang_candidate_h_cad.py whitespace=-blank-at-eof
+resources/hang_mugs_random/coap/tasks/hang_candidate_motion.py whitespace=-blank-at-eof
+
+# Preserve the frozen sweep model EOF and public robot resource formatting.
+capabilities/control/sweep_blocks_random_model.py -text whitespace=-blank-at-eof
+assets/10/10c76daa3eae501199335a2a53c5c629fba93611faf2cd2a46ac2dd566535057.urdf -text whitespace=-blank-at-eol

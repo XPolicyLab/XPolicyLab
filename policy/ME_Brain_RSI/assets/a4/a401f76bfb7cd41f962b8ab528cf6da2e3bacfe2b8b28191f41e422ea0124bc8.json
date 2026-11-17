@@ -1,0 +1,46 @@
+{
+  "public_static_only": true,
+  "runtime_state_read": false,
+  "files": [
+    {
+      "path": "../../../Assets/Object/RoboDojo/Rigid/chocolate_bar/00000/metadata.json",
+      "sha256": "108a1c2eeae2d06f0c297466d086d376f8a5112b4019bcfe0d07c4e5c3736492"
+    },
+    {
+      "path": "../../../Assets/Object/RoboDojo/Rigid/chocolate_bar/00000/description.json",
+      "sha256": "b6e0bc77227ae126109b266d12c87d2bac8e32fa6d2253abe74395be62709be8"
+    },
+    {
+      "path": "../../../Assets/Object/RoboDojo/Rigid/chocolate_bar/00001/metadata.json",
+      "sha256": "e518a0c0a2c80c1e0f75b2225cf47a0fe89290a236f9b2ce5a35192789f8e046"
+    },
+    {
+      "path": "../../../Assets/Object/RoboDojo/Rigid/chocolate_bar/00001/description.json",
+      "sha256": "c5f6c775a5f4b423471786740ffba4d7dc123b315f4adc023246c302e9ca78fc"
+    },
+    {
+      "path": "../../../Assets/Object/RoboDojo/Rigid/chocolate_bar/00002/metadata.json",
+      "sha256": "36864f3d3bdfb9595f28fca5b0f3bdd89286eeb424f43b87885a508f6664ab9e"
+    },
+    {
+      "path": "../../../Assets/Object/RoboDojo/Rigid/chocolate_bar/00002/description.json",
+      "sha256": "55ca07f34dec8bf192bb6d9615d6cbfdad3df9f470f6fcd25a9b255c05672bd8"
+    },
+    {
+      "path": "../../../Assets/Object/RoboDojo/Rigid/chocolate_bar/00003/metadata.json",
+      "sha256": "1c856a38be9b713acd8f9bb4e9a813233a1811051fd57846851905b4c9fd28be"
+    },
+    {
+      "path": "../../../Assets/Object/RoboDojo/Rigid/chocolate_bar/00003/description.json",
+      "sha256": "ffbaa516ba8c014b2cc6bfc0d34a6ac61a8690842266d3e771213cc9dc8a8eca"
+    },
+    {
+      "path": "../../../Assets/Object/RoboDojo/Rigid/chocolate_bar/00004/metadata.json",
+      "sha256": "013687ccb058eae0d046e1692272ae0cd3f14109be4718ebaca244f33ac9a50a"
+    },
+    {
+      "path": "../../../Assets/Object/RoboDojo/Rigid/chocolate_bar/00004/description.json",
+      "sha256": "374af15a026c453231320fda23a3fc78c498023c93bd991cdb0f7fb5e6307b1d"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "package": "rdj_v1_fasten_screws",
+  "revision": "screws_rgb_r16_20261028",
+  "task": "fasten_screws",
+  "inputs": "head/wrist RGB, public camera calibration, proprioception only",
+  "reused_from_coin_package": {
+    "public_camera_calibration.json": "459dc09f5ad6d80d9dbe20141d8c94a8e5a8a052a472f8ad9c4aefc129d87eb4",
+    "robot_geometry.npz": "3127fcea180619e3c10947e362de6229053473b8ed97b273cb385b45d6871382",
+    "camera_colliders.json": "621e243d5b6a5de45e9c856e761df477d61ac6f7cbe2b0cb2d331cdff37d690b",
+    "ik.py": "f707bd349c5d849e21f2370de0d364f9a751ba245bbbf9c366b4ff20dd97bd96",
+    "joint_action.py": "2e292a97c910778504427e6d0d5a61b9d8b35984a70a2b54919f3207aec823a1",
+    "trace_io.py": "01047861ac38c92b0366d8595ed48608efe002fce20d3dc3aad104a9a463a6db",
+    "camera_binding.py": "7da7b20cd5085317206b2a7d1f67b8119bbebfa5fa765f60b83139d0e783406d",
+    "robot_occlusion.py": "ea0ac4466301a2ca03affb39516e803b9b9d5c0f52ee154becf1632ba85b2244",
+    "geometry.py": "b7081be26ca27f3ba6de5e38cafb5560e06a7acfcfbceb51812297cb8b9e9689"
+  },
+  "changes_to_reused": "log prefixes/docstrings only"
+}

@@ -1,0 +1,625 @@
+{
+  "coap": {
+    "file": "capabilities/control/robot.py",
+    "resource": "resources/hang_mugs/coap/__init__.py",
+    "package": true,
+    "sha256": "0d5ab17fdb679b7515310cbf23a56079be09c65016ddcc46a3e1a7c44a05926e",
+    "resource_identity": true
+  },
+  "coap.context": {
+    "file": "capabilities/control/hang_mugs_context.py",
+    "resource": "resources/hang_mugs/coap/__init__.py",
+    "package": false,
+    "sha256": "797bf047dfe56cf5ef6be61e838bf46ef26719abd97d54698155669901cb776b",
+    "resource_identity": false
+  },
+  "coap.debug_thresholds": {
+    "file": "capabilities/control/debug_thresholds.py",
+    "resource": "resources/hang_mugs/coap/debug_thresholds.py",
+    "package": false,
+    "sha256": "aa9c1c978dead20c132eec86382a3ef20a30c25b001d53ddf3b419eb548a67b0",
+    "resource_identity": true
+  },
+  "coap.kinematics": {
+    "file": "capabilities/motion/kinematics.py",
+    "resource": "resources/hang_mugs/coap/kinematics.py",
+    "package": false,
+    "sha256": "442c04e65419032e154c228ffabc0f578e5539b4964ea193b8c026a8dcc76d3f",
+    "resource_identity": true
+  },
+  "coap.manipulation": {
+    "file": "capabilities/control/manipulation.py",
+    "resource": "resources/hang_mugs/coap/manipulation.py",
+    "package": false,
+    "sha256": "d4720b66e4935684c68b60fe6d31e27aae41c8177044060338b2df4c77e5a18b",
+    "resource_identity": true
+  },
+  "coap.measurement": {
+    "file": "capabilities/control/measurement.py",
+    "resource": "resources/hang_mugs/coap/measurement.py",
+    "package": false,
+    "sha256": "7eb45a2115cb25deef10c6e99e6d950fb101a2724436dbefda26b402866a20c3",
+    "resource_identity": true
+  },
+  "coap.motion": {
+    "file": "capabilities/motion/hang_mugs_motion.py",
+    "resource": "resources/hang_mugs/coap/__init__.py",
+    "package": false,
+    "sha256": "936b161c1e5a1f371ce2552c25c305043c28c1611c6255893ad6092318749cff",
+    "resource_identity": false
+  },
+  "coap.perception": {
+    "file": "capabilities/perception/hang_mugs_perception.py",
+    "resource": "resources/hang_mugs/coap/__init__.py",
+    "package": false,
+    "sha256": "16340fa62714948ef9550d433e852db36e81a0b1d4ef01194d10d31e18cfbeb7",
+    "resource_identity": false
+  },
+  "coap.public_mesh": {
+    "file": "capabilities/geometry/public_mesh_for_imitate_sorting_sequence.py",
+    "resource": "resources/hang_mugs/coap/public_mesh.py",
+    "package": false,
+    "sha256": "dc43e2e4032ec4612a4cbcfdcc95b5ec30e59c0d610665d4cd27de8ace4e34c1",
+    "resource_identity": true
+  },
+  "coap.report": {
+    "file": "capabilities/control/imitate_sorting_sequence_coap_report.py",
+    "resource": "resources/hang_mugs/coap/report.py",
+    "package": false,
+    "sha256": "47090f44e5e643f9c36e5b55b5f42c5d659648f7f625de5f49e3d95bb6961d22",
+    "resource_identity": true
+  },
+  "coap.robot_motion_geometry": {
+    "file": "capabilities/motion/robot_motion_geometry.py",
+    "resource": "resources/hang_mugs/coap/robot_motion_geometry.py",
+    "package": false,
+    "sha256": "d9fabbcc8bef9eff8a66108122eb61361e8dc104a44edf1f45353a50ba831d4c",
+    "resource_identity": true
+  },
+  "coap.tasks": {
+    "file": "capabilities/control/tasks.py",
+    "resource": "resources/hang_mugs/coap/tasks/__init__.py",
+    "package": true,
+    "sha256": "5d5d455874ce30ed67d2dacda03ae4e3e89bc9ccf68cc29d42e81643186e7444",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_carry": {
+    "file": "capabilities/control/egg_carry_for_fold_clothes.py",
+    "resource": "resources/hang_mugs/coap/tasks/egg_carry.py",
+    "package": false,
+    "sha256": "c2e6c398000dfc76432c13d4c7d4de07ec5c04aa16682757940c934bf15bcea1",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_geometry": {
+    "file": "capabilities/geometry/egg_geometry.py",
+    "resource": "resources/hang_mugs/coap/tasks/egg_geometry.py",
+    "package": false,
+    "sha256": "f4805dc3307bee552e48edbfbb78d73a9f5dce70fe71e900a6483bfbc230b6db",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_initial": {
+    "file": "capabilities/control/egg_initial.py",
+    "resource": "resources/hang_mugs/coap/tasks/egg_initial.py",
+    "package": false,
+    "sha256": "9da27976020255b7fdbee452a389e3940ec0d97a32a5482a65f768159f9849c9",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_lid": {
+    "file": "capabilities/control/egg_lid_for_fold_clothes.py",
+    "resource": "resources/hang_mugs/coap/tasks/egg_lid.py",
+    "package": false,
+    "sha256": "4a556e23dceefad5ec8421849a6c10a68ddbb8f5313806e47fe156ab3ef7ab35",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_model_fit": {
+    "file": "capabilities/control/egg_model_fit_for_fold_clothes.py",
+    "resource": "resources/hang_mugs/coap/tasks/egg_model_fit.py",
+    "package": false,
+    "sha256": "58a8caa189e1b77f2fbb416ccd3649128df12999d312eef8caa3433c597f91f6",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_motion": {
+    "file": "capabilities/motion/egg_motion_for_fold_clothes.py",
+    "resource": "resources/hang_mugs/coap/tasks/egg_motion.py",
+    "package": false,
+    "sha256": "a5a44daebfbd02b28bf0d8df7c5fdd4c423e828760d6f90b487b767dd9f05543",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_policy": {
+    "file": "capabilities/control/egg_policy_for_fold_clothes.py",
+    "resource": "resources/hang_mugs/coap/tasks/egg_policy.py",
+    "package": false,
+    "sha256": "59cbdfbd289e6d177d0c08b58e5306bfc6b73247e9196554f8d1cba99c1eeb81",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_single_arm": {
+    "file": "capabilities/control/egg_single_arm_for_fold_clothes.py",
+    "resource": "resources/hang_mugs/coap/tasks/egg_single_arm.py",
+    "package": false,
+    "sha256": "31d728518aa7ca9a1fdccf20aaacecda8fe8071441c78b5bcb5720f669674fa7",
+    "resource_identity": true
+  },
+  "coap.tasks.egg_source": {
+    "file": "capabilities/control/egg_source_for_fold_clothes.py",
+    "resource": "resources/hang_mugs/coap/tasks/egg_source.py",
+    "package": false,
+    "sha256": "8609d7062c55c2122878dc9792ce2072675aa8f70468eb573f55f1f8a459db11",
+    "resource_identity": true
+  },
+  "coap.tasks.finite_ik": {
+    "file": "capabilities/motion/finite_ik_for_imitate_sorting_sequence.py",
+    "resource": "resources/hang_mugs/coap/tasks/finite_ik.py",
+    "package": false,
+    "sha256": "b6c70bf4c726d580c7628b372a672a443245d2d034640ae14b6ac7beae219941",
+    "resource_identity": true
+  },
+  "coap.tasks.garment": {
+    "file": "capabilities/control/garment_for_fold_clothes.py",
+    "resource": "resources/hang_mugs/coap/tasks/garment.py",
+    "package": false,
+    "sha256": "fd1685427cac9a1472529a83d9c1721ff3af814b2303cfaa81051640f3cda940",
+    "resource_identity": true
+  },
+  "coap.tasks.garment_contact": {
+    "file": "capabilities/control/garment_contact_for_imitate_sorting_sequence.py",
+    "resource": "resources/hang_mugs/coap/tasks/garment_contact.py",
+    "package": false,
+    "sha256": "5076be430569c49a885df6fafbbcb8aa6aff0091a5376f5285d431f9de491345",
+    "resource_identity": true
+  },
+  "coap.tasks.garment_schedule": {
+    "file": "capabilities/control/garment_schedule_for_fold_clothes.py",
+    "resource": "resources/hang_mugs/coap/tasks/garment_schedule.py",
+    "package": false,
+    "sha256": "12c05d2e64b49304cb44990beee11a88ee44e1f48abac3ea551db4980cd82114",
+    "resource_identity": true
+  },
+  "coap.tasks.hang_candidate_ag_prefix": {
+    "file": "capabilities/control/hang_candidate_ag_prefix.py",
+    "resource": "resources/hang_mugs/coap/tasks/hang_candidate_ag_prefix.py",
+    "package": false,
+    "sha256": "25991bffdf5eb8cc4f26763b2c100316be7eac449d9aaf52ad6c65d8487c63fc",
+    "resource_identity": true
+  },
+  "coap.tasks.hang_candidate_an_aperture": {
+    "file": "capabilities/control/hang_candidate_an_aperture.py",
+    "resource": "resources/hang_mugs/coap/tasks/hang_candidate_an_aperture.py",
+    "package": false,
+    "sha256": "9ce89c34f660b50a57d491ed96b2d7d27ced537feeed1049c512be51c27fe26c",
+    "resource_identity": true
+  },
+  "coap.tasks.hang_candidate_an_loop": {
+    "file": "capabilities/control/hang_candidate_an_loop.py",
+    "resource": "resources/hang_mugs/coap/tasks/hang_candidate_an_loop.py",
+    "package": false,
+    "sha256": "ca78fd6339d31d062e0bb696076eb683de66af7174476eb7589ec106b8083d7f",
+    "resource_identity": true
+  },
+  "coap.tasks.hang_candidate_d": {
+    "file": "capabilities/control/hang_candidate_d.py",
+    "resource": "resources/hang_mugs/coap/tasks/hang_candidate_d.py",
+    "package": false,
+    "sha256": "4878d17f8027afae1db167ec9caea9c1846afdfa65b8fb835a2be8a775576e21",
+    "resource_identity": true
+  },
+  "coap.tasks.hang_candidate_d_sources": {
+    "file": "capabilities/control/hang_candidate_d_sources.py",
+    "resource": "resources/hang_mugs/coap/tasks/hang_candidate_d_sources.py",
+    "package": false,
+    "sha256": "a0fb8fae2b9c2cbfcda62bf7f18e52e469799ff2007fafac8f5f7aa79a6b0ea8",
+    "resource_identity": true
+  },
+  "coap.tasks.hang_candidate_g_cad": {
+    "file": "capabilities/geometry/hang_mugs_peg_geometry.py",
+    "resource": "resources/hang_mugs/coap/tasks/__init__.py",
+    "package": false,
+    "sha256": "8f17c1ca43bbb731514f858841f1e634bd46cd74cd4844eacb86729e70658c52",
+    "resource_identity": false
+  },
+  "coap.tasks.hang_candidate_g_sources": {
+    "file": "capabilities/control/hang_mugs_geometric_sources.py",
+    "resource": "resources/hang_mugs/coap/tasks/__init__.py",
+    "package": false,
+    "sha256": "1003886c624bb18499809ba036c56d80a123d351e6ff2335608c0b1397f4d9e9",
+    "resource_identity": false
+  },
+  "coap.tasks.hang_candidate_h": {
+    "file": "capabilities/control/hang_candidate_h.py",
+    "resource": "resources/hang_mugs/coap/tasks/hang_candidate_h.py",
+    "package": false,
+    "sha256": "15f1889fa57f09d29ba9f9ff9a282828a8b90e65691a61ad3d8bd03215d539c8",
+    "resource_identity": true
+  },
+  "coap.tasks.hang_candidate_h_cad": {
+    "file": "capabilities/geometry/hang_mugs_contact_geometry.py",
+    "resource": "resources/hang_mugs/coap/tasks/__init__.py",
+    "package": false,
+    "sha256": "e717d3c0599a7705453193e9699a5e8978ae4f1fefd6a27a5abcdedcbc9a9da9",
+    "resource_identity": false
+  },
+  "coap.tasks.hang_candidate_h_sources": {
+    "file": "capabilities/control/hang_mugs_ranked_geometry_sources.py",
+    "resource": "resources/hang_mugs/coap/tasks/__init__.py",
+    "package": false,
+    "sha256": "751b4479f5439eb06c56443bd7445418b38307e4e661ab7df15d1d0dad781c69",
+    "resource_identity": false
+  },
+  "coap.tasks.hang_candidate_motion": {
+    "file": "capabilities/motion/hang_mugs_coap_tasks_hang_candidate_motion.py",
+    "resource": "resources/hang_mugs/coap/tasks/hang_candidate_motion.py",
+    "package": false,
+    "sha256": "e2c1ef76c07163b2a8631f29970cce4b4e4648ae20d954a197194b95e03bd4db",
+    "resource_identity": true
+  },
+  "coap.tasks.hang_candidate_s": {
+    "file": "capabilities/control/hang_candidate_s.py",
+    "resource": "resources/hang_mugs/coap/tasks/hang_candidate_s.py",
+    "package": false,
+    "sha256": "a44a580e6642716d1b48ec76f43a67b17c251d92605f399371e5a18d913dc59e",
+    "resource_identity": true
+  },
+  "coap.tasks.hang_candidate_s_sources": {
+    "file": "capabilities/control/hang_mugs_semantic_sources.py",
+    "resource": "resources/hang_mugs/coap/tasks/__init__.py",
+    "package": false,
+    "sha256": "db5c2fdc63b4d6d062a17260cb93f1cfe1f2214c6b8dcf9e0dc36a992442f078",
+    "resource_identity": false
+  },
+  "coap.tasks.hang_candidate_v": {
+    "file": "capabilities/control/hang_candidate_v.py",
+    "resource": "resources/hang_mugs/coap/tasks/hang_candidate_v.py",
+    "package": false,
+    "sha256": "dfd537dca8c40fb6f9becd17159c05d90265b1c3adce27a671e7fc871ce39a9e",
+    "resource_identity": true
+  },
+  "coap.tasks.hang_candidate_v_aperture": {
+    "file": "capabilities/control/hang_candidate_v_aperture.py",
+    "resource": "resources/hang_mugs/coap/tasks/hang_candidate_v_aperture.py",
+    "package": false,
+    "sha256": "c6df2045c2e111695b1cea04e453cd933c13855b42188ac5226b1c9804e85c15",
+    "resource_identity": true
+  },
+  "coap.tasks.hang_empty_rack_projection": {
+    "file": "capabilities/control/hang_mugs_empty_rack_projection.py",
+    "resource": "resources/hang_mugs/coap/tasks/__init__.py",
+    "package": false,
+    "sha256": "bb6fda97dbf651c3e8fad98e459bb53627655f8b9d2c361bed8efc68b7236f28",
+    "resource_identity": false
+  },
+  "coap.tasks.hang_route_r02_standard": {
+    "file": "capabilities/control/hang_route_standard.py",
+    "resource": "resources/hang_mugs/coap/tasks/__init__.py",
+    "package": false,
+    "sha256": "9dac76e96a76c8fb11487c76bebc81e0ca37a2f37c02dd5c4076ee5e8af8efd8",
+    "resource_identity": false
+  },
+  "coap.tasks.hang_route_r02_standard_score": {
+    "file": "capabilities/control/hang_route_standard_score.py",
+    "resource": "resources/hang_mugs/coap/tasks/__init__.py",
+    "package": false,
+    "sha256": "387eb22857df34f704672c10e97096fe6fe4429dbd3ba1a11780668f95059ede",
+    "resource_identity": false
+  },
+  "coap.tasks.hang_std_sem_r44_rank": {
+    "file": "capabilities/control/hang_mugs_coap_tasks_hang_std_sem_r44_rank.py",
+    "resource": "resources/hang_mugs/coap/tasks/hang_std_sem_r44_rank.py",
+    "package": false,
+    "sha256": "b9bd778b0c36ea7679da019800ee5d017a6fd55a3519a0c4b32e52126e4b7bfc",
+    "resource_identity": true
+  },
+  "coap.tasks.hang_std_sem_r44_rank_identity": {
+    "file": "capabilities/control/hang_mugs_coap_tasks_hang_std_sem_r44_rank_identity.py",
+    "resource": "resources/hang_mugs/coap/tasks/hang_std_sem_r44_rank_identity.py",
+    "package": false,
+    "sha256": "c26da7392530e87f5aefcc80df370bc97c958b0c1d7ac846a49ce8b1e029ed79",
+    "resource_identity": true
+  },
+  "coap.tasks.hang_std_sem_r44_rank_model": {
+    "file": "capabilities/perception/hang_mugs_coap_tasks_hang_std_sem_r44_rank_model.py",
+    "resource": "resources/hang_mugs/coap/tasks/hang_std_sem_r44_rank_model.py",
+    "package": false,
+    "sha256": "e007341b062007f9fa9df06309caf1500be324c90009a251b087245351bcd29e",
+    "resource_identity": true
+  },
+  "coap.tasks.hang_std_sem_r44_rank_motion": {
+    "file": "capabilities/motion/hang_mugs_coap_tasks_hang_std_sem_r44_rank_motion.py",
+    "resource": "resources/hang_mugs/coap/tasks/hang_std_sem_r44_rank_motion.py",
+    "package": false,
+    "sha256": "7d60eac8edc9fa7c1eb839b0613e18a29672b86623353727bbf152e5a730d7bf",
+    "resource_identity": true
+  },
+  "coap.tasks.hang_std_sem_r44_rank_semantic": {
+    "file": "capabilities/perception/hang_mugs_coap_tasks_hang_std_sem_r44_rank_semantic.py",
+    "resource": "resources/hang_mugs/coap/tasks/hang_std_sem_r44_rank_semantic.py",
+    "package": false,
+    "sha256": "a9800349132f8a96c4b9d97f3b078ba7398e8b8426801ed23c88630bb1fd44fb",
+    "resource_identity": true
+  },
+  "coap.tasks.hang_std_sem_r44_rank_sources": {
+    "file": "capabilities/perception/hang_mugs_coap_tasks_hang_std_sem_r44_rank_sources.py",
+    "resource": "resources/hang_mugs/coap/tasks/__init__.py",
+    "package": false,
+    "sha256": "7a2288a2c825896b34e5cc2e8a572ae880bfbc31f30a67b293272b84642e2b74",
+    "resource_identity": false
+  },
+  "coap.tasks.key_aperture": {
+    "file": "capabilities/control/key_aperture.py",
+    "resource": "resources/hang_mugs/coap/tasks/key_aperture.py",
+    "package": false,
+    "sha256": "9701edb53d6fed5fe97ec8d781ddf0ed3081b093c657e9102a854c17b2ffe3e4",
+    "resource_identity": true
+  },
+  "coap.tasks.key_aperture_stereo": {
+    "file": "capabilities/control/key_aperture_stereo.py",
+    "resource": "resources/hang_mugs/coap/tasks/key_aperture_stereo.py",
+    "package": false,
+    "sha256": "8927937d273133d4f8e3d3714e413a824d8b19964fd6a52a247a6d58badedbf2",
+    "resource_identity": true
+  },
+  "coap.tasks.key_collision": {
+    "file": "capabilities/motion/key_collision.py",
+    "resource": "resources/hang_mugs/coap/tasks/key_collision.py",
+    "package": false,
+    "sha256": "87bc7f049e00423e56771557dc40b06b02a38ac21e1d88001c83e84398b31aa9",
+    "resource_identity": true
+  },
+  "coap.tasks.key_handoff": {
+    "file": "capabilities/control/key_handoff.py",
+    "resource": "resources/hang_mugs/coap/tasks/key_handoff.py",
+    "package": false,
+    "sha256": "21aefdac1ee911a573a2938546fb113177242b09701a1db0fc9ff916c36c811d",
+    "resource_identity": true
+  },
+  "coap.tasks.key_visual": {
+    "file": "capabilities/control/key_visual.py",
+    "resource": "resources/hang_mugs/coap/tasks/key_visual.py",
+    "package": false,
+    "sha256": "6ea8230c10fd45e7f54a23b9a4fb9a17e82395b7e0748f58677f54724b0366f5",
+    "resource_identity": true
+  },
+  "coap.tasks.long_horizon": {
+    "file": "capabilities/control/long_horizon_for_fold_clothes.py",
+    "resource": "resources/hang_mugs/coap/tasks/long_horizon.py",
+    "package": false,
+    "sha256": "9bfa4d2f707f8ad915a625935539f9bc4af73d80d74fde9e7522dbc0da15125c",
+    "resource_identity": true
+  },
+  "coap.tasks.memory": {
+    "file": "capabilities/planning/memory.py",
+    "resource": "resources/hang_mugs/coap/tasks/memory.py",
+    "package": false,
+    "sha256": "6cb87fca653ada855a47603bb2979d9cba01638a679006476a6d5ee005fdc60b",
+    "resource_identity": true
+  },
+  "coap.tasks.memory_approach": {
+    "file": "capabilities/planning/memory_approach.py",
+    "resource": "resources/hang_mugs/coap/tasks/memory_approach.py",
+    "package": false,
+    "sha256": "3649463b799926fa945b2b09437f7cbb64224d55e3a80c0d900eabaf7296e2e5",
+    "resource_identity": true
+  },
+  "coap.tasks.memory_geometry": {
+    "file": "capabilities/geometry/memory_geometry.py",
+    "resource": "resources/hang_mugs/coap/tasks/memory_geometry.py",
+    "package": false,
+    "sha256": "987b4846760ae7246150d6374f53f257c3a0293c60205a346941394b85464041",
+    "resource_identity": true
+  },
+  "coap.tasks.memory_identity": {
+    "file": "capabilities/planning/memory_identity.py",
+    "resource": "resources/hang_mugs/coap/tasks/memory_identity.py",
+    "package": false,
+    "sha256": "c077616f31e236701ed7af79460f9c3d0b24ab0c37be4a37c81bdf6d6cecd3ad",
+    "resource_identity": true
+  },
+  "coap.tasks.memory_initial": {
+    "file": "capabilities/planning/memory_initial.py",
+    "resource": "resources/hang_mugs/coap/tasks/memory_initial.py",
+    "package": false,
+    "sha256": "7e34b40b2af7fb627fd6c094981686fb4aa6a1cf2e9a3d4c972d4ec9422a69ba",
+    "resource_identity": true
+  },
+  "coap.tasks.memory_motion": {
+    "file": "capabilities/motion/memory_motion.py",
+    "resource": "resources/hang_mugs/coap/tasks/memory_motion.py",
+    "package": false,
+    "sha256": "e01c31a87606ca2bed84d0c88aa6a0d47c25c8043c170d128034bb3002ec62eb",
+    "resource_identity": true
+  },
+  "coap.tasks.memory_protocol": {
+    "file": "capabilities/planning/memory_protocol.py",
+    "resource": "resources/hang_mugs/coap/tasks/memory_protocol.py",
+    "package": false,
+    "sha256": "998ef2f811be3a218ac32245b650cf70bca935df0cae2b93061c90d63bcb5651",
+    "resource_identity": true
+  },
+  "coap.tasks.memory_queue": {
+    "file": "capabilities/planning/memory_queue.py",
+    "resource": "resources/hang_mugs/coap/tasks/memory_queue.py",
+    "package": false,
+    "sha256": "517a6341078e20c0ab09c724572c2a498a0519e7cc0d4d0191a0eaa2579c777e",
+    "resource_identity": true
+  },
+  "coap.tasks.memory_routes": {
+    "file": "capabilities/planning/memory_routes.py",
+    "resource": "resources/hang_mugs/coap/tasks/memory_routes.py",
+    "package": false,
+    "sha256": "d2b6aa48f06258d6f629291741c8163edf398f737c46445471ad1a9273434274",
+    "resource_identity": true
+  },
+  "coap.tasks.memory_semantics": {
+    "file": "capabilities/perception/memory_semantics.py",
+    "resource": "resources/hang_mugs/coap/tasks/memory_semantics.py",
+    "package": false,
+    "sha256": "928d8d2636faa08431141a2b0799b49a739d279a57f9211ce2645a23fb82acdf",
+    "resource_identity": true
+  },
+  "coap.tasks.memory_sequence": {
+    "file": "capabilities/planning/memory_sequence.py",
+    "resource": "resources/hang_mugs/coap/tasks/memory_sequence.py",
+    "package": false,
+    "sha256": "41bbbf5636491d7da08ff7f1fa4193e28cf79f6d3e88a0596f098e1a5531401c",
+    "resource_identity": true
+  },
+  "coap.tasks.memory_timing": {
+    "file": "capabilities/planning/memory_timing.py",
+    "resource": "resources/hang_mugs/coap/tasks/memory_timing.py",
+    "package": false,
+    "sha256": "1915db9209814b6c701c9db5218db989db4cc2006484372d462cebb8a0c8c289",
+    "resource_identity": true
+  },
+  "coap.tasks.memory_toy": {
+    "file": "capabilities/planning/memory_toy.py",
+    "resource": "resources/hang_mugs/coap/tasks/memory_toy.py",
+    "package": false,
+    "sha256": "3d3c2b9dc59173cf4865badbb24b43667d392d65fcefdb2f9760dc085c3d1966",
+    "resource_identity": true
+  },
+  "coap.tasks.memory_unchecked": {
+    "file": "capabilities/planning/memory_unchecked.py",
+    "resource": "resources/hang_mugs/coap/tasks/memory_unchecked.py",
+    "package": false,
+    "sha256": "145ff9ec6df5a0e9aa1bfe4480db646abc6adc8825115a36c3de9053cbd52acb",
+    "resource_identity": true
+  },
+  "coap.tasks.mesh_kinematics": {
+    "file": "capabilities/motion/mesh_kinematics_for_imitate_sorting_sequence.py",
+    "resource": "resources/hang_mugs/coap/tasks/mesh_kinematics.py",
+    "package": false,
+    "sha256": "ee18f724e4171ce07efa790296c7e550d5b431d7065417e0cec0ca7b31750193",
+    "resource_identity": true
+  },
+  "coap.tasks.mug_cad": {
+    "file": "capabilities/control/mug_cad.py",
+    "resource": "resources/hang_mugs/coap/tasks/mug_cad.py",
+    "package": false,
+    "sha256": "75702f52bba875f9d5dc0bdba3449906fb8f4d89f0deaa7150aa12caf63e3377",
+    "resource_identity": true
+  },
+  "coap.tasks.mug_held": {
+    "file": "capabilities/control/mug_held.py",
+    "resource": "resources/hang_mugs/coap/tasks/mug_held.py",
+    "package": false,
+    "sha256": "f34f5fcf98ffe420891926505e9a095da2b5177f517fedcccc4e9583d3e8a844",
+    "resource_identity": true
+  },
+  "coap.tasks.mug_motion": {
+    "file": "capabilities/motion/mug_motion.py",
+    "resource": "resources/hang_mugs/coap/tasks/mug_motion.py",
+    "package": false,
+    "sha256": "824ba61851d515a437a6b5ad755514ee28023d1d9b7e37291c5a8d466645e499",
+    "resource_identity": true
+  },
+  "coap.tasks.mug_observation": {
+    "file": "capabilities/control/mug_observation.py",
+    "resource": "resources/hang_mugs/coap/tasks/mug_observation.py",
+    "package": false,
+    "sha256": "c0e4ba43b757bb2ac22218cb906bc0a0f2d52b34875b0621147bf56359d118c0",
+    "resource_identity": true
+  },
+  "coap.tasks.mug_photometry": {
+    "file": "capabilities/control/mug_photometry.py",
+    "resource": "resources/hang_mugs/coap/tasks/mug_photometry.py",
+    "package": false,
+    "sha256": "f5a317dd514cd18a82281a61bc0b0e841a27ab6a894d60289bf6f48547a1177e",
+    "resource_identity": true
+  },
+  "coap.tasks.mug_registration": {
+    "file": "capabilities/control/mug_registration.py",
+    "resource": "resources/hang_mugs/coap/tasks/mug_registration.py",
+    "package": false,
+    "sha256": "c72db90d5b6e3ecda7f045cdc7b0f5074ad98efa8e65cd0906ae0dba3b84f0df",
+    "resource_identity": true
+  },
+  "coap.tasks.mug_scene": {
+    "file": "capabilities/control/mug_scene.py",
+    "resource": "resources/hang_mugs/coap/tasks/mug_scene.py",
+    "package": false,
+    "sha256": "21dd4372fc172c5a63dab865b6eca6d3b92dc94f3e0ee8b4defb5523b91c002c",
+    "resource_identity": true
+  },
+  "coap.tasks.mug_wall": {
+    "file": "capabilities/control/mug_wall.py",
+    "resource": "resources/hang_mugs/coap/tasks/mug_wall.py",
+    "package": false,
+    "sha256": "e31afff84f80a49e68b9bdbe306852f843945b695e97b91c4a1778ddbb38bff4",
+    "resource_identity": true
+  },
+  "coap.tasks.open_motion": {
+    "file": "capabilities/motion/open_motion.py",
+    "resource": "resources/hang_mugs/coap/tasks/open_motion.py",
+    "package": false,
+    "sha256": "08f730dba5c050e0f1c3a2172153217d18993c85fa29433c67aac825af83febe",
+    "resource_identity": true
+  },
+  "coap.tasks.pen_holder_support": {
+    "file": "capabilities/control/pen_holder_support_for_fold_clothes.py",
+    "resource": "resources/hang_mugs/coap/tasks/pen_holder_support.py",
+    "package": false,
+    "sha256": "f6c114267c343ad239d31bce964439200a8b62c676d746914f40ef68ad6d09e4",
+    "resource_identity": true
+  },
+  "coap.tasks.pen_holder_visibility": {
+    "file": "capabilities/control/pen_holder_visibility_for_fold_clothes.py",
+    "resource": "resources/hang_mugs/coap/tasks/pen_holder_visibility.py",
+    "package": false,
+    "sha256": "56be8d99efdf3ac214e6e33978cdd7f359aedfc788f7a7cf63fcc2f01a481a5d",
+    "resource_identity": true
+  },
+  "coap.tasks.precision": {
+    "file": "capabilities/control/imitate_sorting_sequence_coap_tasks_precision.py",
+    "resource": "resources/hang_mugs/coap/tasks/precision.py",
+    "package": false,
+    "sha256": "69a607606d439468cbf37909e5392093ffc81c5111f323d7e23add0f89849f1f",
+    "resource_identity": true
+  },
+  "coap.tasks.precision_geometry": {
+    "file": "capabilities/geometry/precision_geometry.py",
+    "resource": "resources/hang_mugs/coap/tasks/precision_geometry.py",
+    "package": false,
+    "sha256": "e65b1a875032d7b8ef94a3c50e83510de07195f8fd282363e98a51e05e9e35f8",
+    "resource_identity": true
+  },
+  "coap.tasks.precision_planning": {
+    "file": "capabilities/planning/precision_planning.py",
+    "resource": "resources/hang_mugs/coap/tasks/precision_planning.py",
+    "package": false,
+    "sha256": "bae18aa4063ef13cfab86ec04d6aec8dc3f7632455a32a77547c9853cf17eae1",
+    "resource_identity": true
+  },
+  "coap.visibility": {
+    "file": "capabilities/control/visibility.py",
+    "resource": "resources/hang_mugs/coap/visibility.py",
+    "package": false,
+    "sha256": "7a81173b85ce4c6ad88b14b60df57e5f9bcc42282dc258e03f290ade1af4cf0f",
+    "resource_identity": true
+  },
+  "coap.world": {
+    "file": "capabilities/planning/world.py",
+    "resource": "resources/hang_mugs/coap/world.py",
+    "package": false,
+    "sha256": "df1fb658d828db286d0bde2ea64b1a83d0e6f2adda3ed88d54c34722cda95b4c",
+    "resource_identity": true
+  },
+  "model": {
+    "file": "capabilities/control/model_for_imitate_sorting_sequence.py",
+    "resource": "resources/hang_mugs/model.py",
+    "package": false,
+    "sha256": "cfbd21dcd3e33a9133b5e607e6d07de7f5732478e2969e79e0d5cdc5cc340692",
+    "resource_identity": true
+  },
+  "deploy": {
+    "file": "capabilities/control/deploy_for_imitate_sorting_sequence.py",
+    "resource": "resources/hang_mugs/deploy.py",
+    "package": false,
+    "sha256": "fc406ba88b4201502a41b1eb3c7e829122b720235dd767ba22f098163ec47000",
+    "resource_identity": true
+  },
+  "coap.policy": {
+    "file": "capabilities/control/hang_mugs_coap_policy.py",
+    "resource": "resources/hang_mugs/coap/policy.py",
+    "package": false,
+    "sha256": "850fa454bdeec09ce34791279c4d443e62f2d7b2a1e4dad3867636cfc6d280fa",
+    "resource_identity": true
+  }
+}
