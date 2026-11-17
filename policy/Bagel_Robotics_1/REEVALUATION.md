@@ -2,8 +2,9 @@
 
 Use the [README quickstart](README.md#installation) to install Python 3.10 policy
 dependencies, download and verify the pinned files, and pass both
-debug checks. The standalone inference runtime is included; the private research
-training repository is not needed. Install RoboDojo and its assets separately.
+debug checks. The standalone inference runtime is included. The public
+[training repository](https://github.com/bageldotcom/Bagel-Robotics-1) is optional for
+model reevaluation. Install RoboDojo and its assets separately.
 
 The only policy checkpoint is `cp1000`, from
 [bageldotcom/Bagel-Robotics-1](https://huggingface.co/bageldotcom/Bagel-Robotics-1),
@@ -24,8 +25,8 @@ two recorded observation sequences. The full five-suite research score table has
 not been rerun end to end through this packaged adapter.
 
 The commands below start a fresh official evaluation using supplied original
-layouts. They do not recreate the research run's three replacement scenes or one
-repaired Memory variant. Compare episode selection and seed coverage before
+layouts. They do not recreate the research run's historical scene substitutions or repaired
+Memory variant. Compare episode selection and seed coverage before
 comparing score totals; retain startup failures for committee review. The public
 comparison receipts describe the tested scope, but the original research runner
 and raw comparison fixtures are not included in this PR. They are not required to
@@ -130,8 +131,8 @@ episodes or combined with the two-episode smoke results.
 The default reevaluation uses original supplied layouts. If a scene fails before
 any robot action, preserve its startup error and retry history; do not silently
 replace the scene or score an infrastructure failure as a policy failure. Seek
-the committee's handling decision. The historical research run used three
-labeled replacements and one repaired Memory variant, described in
+the committee's handling decision. The historical research run includes 28 later replacement layouts, one repaired
+Memory variant and four earlier Seed-1 Precision substitutions, described in
 [EVALUATION_RESULTS.md](EVALUATION_RESULTS.md); those exceptions are not activated
 by these commands. Official verification and acceptance remain with RoboDojo.
 

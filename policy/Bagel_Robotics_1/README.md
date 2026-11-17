@@ -1,6 +1,6 @@
 # Bagel-Robotics-1
 
-**Contributor:** Bagel Labs | **Paper:** Technical report in preparation | **arXiv:** Not yet available | **Original code:** [Bagel-Robotics-1 implementation](.)
+**Contributor:** Bagel Labs | **Paper:** Technical report in preparation | **arXiv:** Not yet available | **Original code:** [Bagel-Robotics-1 implementation](https://github.com/bageldotcom/Bagel-Robotics-1)
 
 Bagel-Robotics-1 combines mask-based structured pruning, recovery training and task-critical data selection to produce a compact WAM with nonuniform FFN widths and cross-attention head counts. Its inference pipeline predicts 32 actions, executes 16 before replanning, and applies 90/10 temporal ensembling. VPP2 is the validation base; reused components in `runtime/` are credited in the [source notices](THIRD_PARTY_NOTICES.md).
 
@@ -36,11 +36,11 @@ Allow approximately **45.7 GB** for checkpoint and encoder assets, plus cache an
 
 ## Data Processing
 
-Inference receives decoded RGB observations from XPolicyLab. No conversion is required, so `process_data.sh` is omitted for this eval-only submission. Recovery training uses selected important task segments from the RoboDojo EE16 dataset rather than the complete dataset; the selection recipe will accompany the technical report.
+Inference receives decoded RGB observations from XPolicyLab. No conversion is required, so `process_data.sh` is omitted from this eval-only adapter. Training uses selected segments from the RoboDojo EE16 LeRobot v3.0 dataset. The public [data preparation guide](https://github.com/bageldotcom/Bagel-Robotics-1/blob/main/docs/DATA.md) provides the pinned dataset, conversion instructions and exact selection manifests.
 
 ## Training
 
-This submission is **eval-only**; `train.sh` is omitted. The technical report and training, pruning and export code are planned for **November 20, 2026**. Maintainer agreement on the eval-only submission is requested.
+This XPolicyLab adapter remains **eval-only**; `train.sh` is omitted. Dataset selection, mask learning, physical pruning and recovery code are publicly available in [Bagel-Robotics-1](https://github.com/bageldotcom/Bagel-Robotics-1). Follow the [training guide](https://github.com/bageldotcom/Bagel-Robotics-1/blob/main/docs/TRAINING.md) for configurations, required inputs and commands. The technical report remains planned for **November 20, 2026**. Maintainer agreement on the eval-only adapter is requested.
 
 ## Evaluation
 
