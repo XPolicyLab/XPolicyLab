@@ -125,7 +125,7 @@
     {
       "source": "models/wan21_14b/vpp2.py",
       "source_sha256": "8c419af905a8ffa93d77c827a283b7aeff744f3a461c390783eef8a333c31756",
-      "packaged_sha256": "41e8632ad7898bf3a63cf7c874179adae609583ceb1b4dadf2b4c22669865323"
+      "packaged_sha256": "a1df6528f7f9536b2ff4ad3913fa718d40dfb1061dc35e9fa0e28e2e1fa3bf96"
     },
     {
       "source": "models/wan21_14b/wan21.py",
@@ -188,7 +188,8 @@
     "Recorded deterministic backend controls applied at startup",
     "Remove unreachable adapter branches for unsupported action spaces; preserve EE16 math",
     "Restore evaluated processor, image transform and action/state merger dependencies under the isolated namespace",
-    "Recursively map serialized Hydra targets to bagel_cp1000; preserve tensor keys and all non-target configuration values"
+    "Recursively map serialized Hydra targets to bagel_cp1000; preserve tensor keys and all non-target configuration values",
+    "Consolidate explanatory notices into LICENSE; update the license reference comment without changing executable code"
   ],
   "adapter_files": [
     {

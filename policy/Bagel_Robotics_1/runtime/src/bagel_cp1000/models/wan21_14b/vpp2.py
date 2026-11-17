@@ -1,4 +1,4 @@
-# See LICENSE and THIRD_PARTY_NOTICES.md for retained source notices.
+# See LICENSE for retained source notices.
 from contextlib import contextmanager, nullcontext
 import os
 from pathlib import Path
