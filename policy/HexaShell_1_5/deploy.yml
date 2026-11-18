@@ -29,9 +29,9 @@ api_base: https://api.openai.com/v1
 api_key_file: ~/.config/hexashell/api-key
 ca_file: ""
 model: gpt-6-astra
-reasoning_effort: high
+reasoning_effort: xhigh
 thinking_display: summarized
-max_tokens: 8192
+max_tokens: 32000
 stream: true
 # only for a self-hosted model on vLLM: send each reply's reasoning back with it in the history.
 # Keep it off for gpt-6-astra.

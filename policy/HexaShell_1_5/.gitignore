@@ -1,7 +1,5 @@
 # machine settings (config.env.example), per-episode records, SAM3 service logs
 config.env
-# the system prompt and the task notes, sent to the evaluators separately (README, private.sha256)
-prompts/robodojo/
 results/
 logs/
 __pycache__/
