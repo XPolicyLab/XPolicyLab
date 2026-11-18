@@ -37,7 +37,7 @@ bash eval.sh RoboDojo stack_bowls \
 
 The final four arguments select the policy GPU, simulator GPU, policy environment and simulator environment. Replace `/path/to/policy-env` and `RoboDojo` with your environment paths or names. Use `BENCH_ROOT` if the benchmark workspace is elsewhere; the shared robot metadata must remain beside this XPolicyLab checkout.
 
-`deploy.yml` links to `deploy_robodojo.yml`. Keep the supplied settings and custom client, which records observations at every control step for visual memory. For a protocol smoke test without simulation, set `EVAL_ENV_TYPE=debug` and use the policy environment for both environment arguments; add `DEBUG_OBS_ENCODED=1` to check encoded images.
+`deploy.yml` is the deployment configuration. Keep the supplied settings and custom client, which records observations at every control step for visual memory. For a protocol smoke test without simulation, set `EVAL_ENV_TYPE=debug` and use the policy environment for both environment arguments; add `DEBUG_OBS_ENCODED=1` to check encoded images.
 
 ## Model Assets
 

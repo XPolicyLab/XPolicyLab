@@ -70,7 +70,7 @@ class RoboDojoLeRobotModel(RoboDojoModel):
         if memory_enabled != self._expected_history_memory:
             raise ValueError(
                 "Checkpoint History memory does not match the deployment; "
-                "select deploy_robodojo_lerobot_mem.yml for History checkpoints"
+                "select deploy.yml for History checkpoints"
             )
         if self.model_cfg.get("history_memory", False) != self._expected_history_memory:
             raise ValueError("Deployment history_memory must match the selected adapter")
@@ -139,7 +139,7 @@ class RoboDojoLeRobotModel(RoboDojoModel):
             if self.model_cfg.get(key) != expected:
                 raise ValueError(
                     f"LeRobot deployment requires {key}={expected!r}; "
-                    "select deploy_robodojo.yml"
+                    "select deploy.yml"
                 )
         if tuple(self.model_cfg.get("diffusion_concat_view_order", ())) != (0, 1, 2):
             raise ValueError("LeRobot native camera order must be [head,left,right] / [0,1,2]")

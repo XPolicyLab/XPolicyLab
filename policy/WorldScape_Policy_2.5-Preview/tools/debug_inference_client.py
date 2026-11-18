@@ -60,7 +60,7 @@ class InferenceDebugEnv(TestEnv):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--config_path", type=Path, default=POLICY_DIR / "deploy_robodojo.yml")
+    parser.add_argument("--config_path", type=Path, default=POLICY_DIR / "deploy.yml")
     parser.add_argument("--bench_name", default="RoboDojo")
     parser.add_argument("--task_name", default="sort_nesting_dolls_by_size")
     parser.add_argument("--env_cfg_type", default="arx_x5")
