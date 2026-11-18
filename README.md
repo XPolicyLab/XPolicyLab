@@ -163,12 +163,12 @@ The field is available to adapters through the existing observation interface;
 the interface does not change policy prompts or behavior. Older environments may
 omit the field. It contains public conditions, not reward code.
 
-The default policy-server protocol is websocket (`protocol: ws` in `deploy.yml`); `legacy_tcp` exists only for adapters that have not migrated yet. The transport handles reconnects, retries, keepalive, and long model-loading cold starts for you — a normal adapter never touches it.
+The default policy-server protocol is websocket (`protocol: ws` in `deploy.yml`); `legacy_tcp` exists only for adapters that have not migrated yet. The transport handles reconnects, retries, keepalive, and long model-loading cold starts for you — a normal adapter never touches it. Each independent evaluation uses its own server process.
 
 <details>
 <summary>Transport details and timeout tuning (only if evaluation hangs or drops)</summary>
 
-- **Retries are safe**: each request carries a `request_id` that the client reuses across reconnects, and the server answers duplicates from a cache instead of running a non-idempotent call twice. A `timeout` error is the exception — the server may still be running the call, so treat it as fatal for that trial rather than retrying.
+- **Retries**: the client resends the original request after reconnecting, and the server reuses its cached response when available. A `timeout` is fatal for that trial because the call may still be running.
 - **Server restarts abort the run**: if a reconnect lands on a different server process, the client raises `ServerRestartedError`, because the fresh server lost the model state.
 - **Cold start**: the server loads the model before opening its port, so an early client just retries (default budget 15 min). `eval.sh` also gates the client behind `wait_for_policy_server.sh`.
 - **Errors**: the client only sees `str(exc)`; the full traceback of a model failure is logged on the *policy server* side, so look there first.
@@ -223,6 +223,8 @@ demo_env/
 ```
 
 The same script pulls the full exports — `hdf5`, `lerobot_v3.0`, `lerobot_v2.1`, and `real` (real-world HDF5) — each into its own `../data/` folder. The two LeRobot exports come from the [official converters](#official-lerobot-conversion), so you can regenerate them for your own task subset or resolution.
+
+Before running `eval.sh`, prepare Conda environments with the required dependencies and benchmark metadata (`<env_cfg_type>.yml`, `robot/_robot_info.json`, and `sim/<sim>.yml`) under `../env_cfg/`. Data downloads do not include this metadata. The example below uses `base` for both processes.
 
 With this setup, you can test data conversion, model loading, training scripts, and debug-mode evaluation before connecting to a simulator-backed benchmark.
 
@@ -285,7 +287,7 @@ When you run `eval.sh`, you are mostly answering: **which benchmark family**, **
 | `eval_env_conda_env`           | Conda env for the simulator / robot client                                       | your eval-side env                                                       |
 
 
-**How `ckpt_name` resolves.** Usually you pass the short nickname used during training, such as `cotrain`, and XPolicyLab combines it with the other args into `checkpoints/RoboDojo-cotrain-arx_x5-joint-0/`. You can also pass the full folder name, or a path — relative paths resolve from the policy directory, absolute paths work too. Some adapters honor explicit keys in `deploy.yml` (`checkpoint_path`, `model_path`, ...). When in doubt, check the policy README.
+**How `ckpt_name` resolves.** Usually you pass the short nickname used during training, such as `cotrain`, and XPolicyLab combines it with the other args into `checkpoints/RoboDojo-cotrain-arx_x5-joint-0/`. You can also pass the full folder name, or a path — relative paths resolve from the policy directory, absolute paths work too. Some adapters honor explicit keys in `deploy.yml` (`checkpoint_path`, `model_path`, ...). Explicit paths do not fall back to another checkpoint. When in doubt, check the policy README.
 
 **A concrete eval example:**
 

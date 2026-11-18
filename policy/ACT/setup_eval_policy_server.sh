@@ -26,8 +26,8 @@ action_dim=$(
     PYTHONPATH="${XPL_ROOT}" python -c "
 import sys
 from XPolicyLab.utils.process_data import get_action_dim
-print(get_action_dim(sys.argv[1]))
-" "${env_cfg_type}"
+print(get_action_dim(sys.argv[1], sys.argv[2]))
+" "${env_cfg_type}" "${action_type}"
 )
 export ACT_ACTION_DIM="${action_dim}"
 

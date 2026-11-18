@@ -140,7 +140,7 @@ def _validate_state_config(action_type: str, robot_action_dim_info: dict) -> tup
 
 def _state_keys(action_type: str, num_arms: int) -> tuple[list[str], list[str]]:
     if num_arms == 1:
-        arm_keys = ["joint_state"] if action_type == "joint" else ["ee_pose"]
+        arm_keys = ["arm_joint_state"] if action_type == "joint" else ["ee_pose"]
         return arm_keys, ["ee_joint_state"]
     if action_type == "joint":
         arm_keys = ["left_arm_joint_state", "right_arm_joint_state"]

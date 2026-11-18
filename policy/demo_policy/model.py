@@ -10,7 +10,7 @@ class Model(ModelTemplate):
         self.action_type = model_cfg["action_type"]
         self.env_cfg_type = model_cfg["env_cfg_type"]
 
-        self.action_dim = get_action_dim(self.env_cfg_type) # get the total dim of the action
+        self.action_dim = get_action_dim(self.env_cfg_type, self.action_type) # get the total dim of the action
 
         # Get robot action dimension metadata
         # Example:
