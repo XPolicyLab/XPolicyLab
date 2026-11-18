@@ -15,6 +15,16 @@ env_gpu_id="${11}"
 policy_server_ip="${12:-localhost}"
 protocol="${13:-ws}"
 
+# Per-run action_type is supplied by eval.sh in additional_info, not the
+# template deploy.yml (whose action_type may be null).
+action_type=joint
+IFS=',' read -r -a overrides <<< "${additional_info}"
+for entry in "${overrides[@]}"; do
+    if [[ "${entry}" == action_type=* ]]; then
+        action_type="${entry#action_type=}"
+    fi
+done
+
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda deactivate || true
 conda activate "${eval_env_conda_env}"
@@ -29,6 +39,7 @@ python "${root_dir}/XPolicyLab/utils/debug_env_client.py" \
     --bench_name "${bench_name}" \
     --task_name "${task_name}" \
     --env_cfg_type "${env_cfg_type}" \
+    --action_type "${action_type}" \
     --policy_name "${policy_name}" \
     --protocol "${protocol}" \
     --host "${policy_server_ip}" \

@@ -66,7 +66,13 @@ A new robot must be registered in **both** robot-info files, or training and eva
 
 Two entry points share the name `get_action_dim`, and they do **not** read the same file. Runtime and conversion code imports `get_action_dim` (or `get_robot_action_dim_info`) from `XPolicyLab.utils.process_data`. The training path — `train.sh`, or a Python training entry it invokes — uses `utils/get_action_dim.sh` instead: it delivers the value as a shell variable, runs on stdlib `json` alone (importing the Python module pulls in numpy, cv2, h5py and yaml), and works in a standalone checkout that has no outer `env_cfg/` tree.
 
-Two more shared entry points, so adapters do not re-derive them: the importable root in `policy/<POLICY>/model.py` is the parent of this checkout, `Path(__file__).resolve().parent.parents[2]` (equivalently `Path(__file__).resolve().parents[3]`; counted from the policy directory, `parents[1]` or `parents[3]` is a bug), and checkpoint directories resolve through `XPolicyLab.utils.checkpoint_resolver` (`resolve_checkpoint_root`, or `build_run_dir_name` / `candidate_checkpoint_roots` when the adapter adds its own naming layer).
+Use `get_action_dim(env_cfg_type, action_type="joint")` or `bash utils/get_action_dim.sh <workspace_root> <env_cfg_type> <action_type>`; both default to joint dimensions. Pass `ee` explicitly for end-effector actions: each arm uses a 7-value pose plus its gripper width.
+
+XPolicyLab single-arm outputs use `arm_joint_state` / `ee_joint_state` (plural for datasets). The shared input boundary accepts legacy `joint_state(s)`; supplying both forms is an error. Use `get_robot_state_schema` or `unpack_robot_state` for actions. Debug requires every field for the selected action type, finite real numbers and exact shapes; empty or partial actions do not count as successful steps.
+
+Each WebSocket process serves one `evaluation_id` and one active connection. Independent evaluations need unique IDs and separate processes. Reconnects retain the original ID and may wait for the old connection to close; disconnected evaluations retain model ownership. Batching remains supported within an evaluation. Retry IDs are bound to request content/context, and cached replies are immutable wire snapshots (256-response window).
+
+Two more shared entry points, so adapters do not re-derive them: the importable root in `policy/<POLICY>/model.py` is the parent of this checkout, `Path(__file__).resolve().parent.parents[2]` (equivalently `Path(__file__).resolve().parents[3]`; counted from the policy directory, `parents[1]` or `parents[3]` is a bug), and checkpoint directories resolve through `XPolicyLab.utils.checkpoint_resolver` (`resolve_checkpoint_root`, or `build_run_dir_name` / `candidate_checkpoint_roots` when the adapter adds its own naming layer). Explicit checkpoint paths are exclusive: a missing path must not select another run. `must_exist=False` returns the selected missing path for the adapter to validate, without fallback.
 
 `model.py` never decodes images. The policy server decodes every observation it forwards, so `obs["vision"][<camera>]["color"]` is always a plain image array. This holds for `update_obs` / `update_obs_batch` and for any custom RPC a policy exposes that carries an observation, so an adapter with its own deploy loop still must not decode.
 
@@ -154,7 +160,7 @@ export EVAL_ENV_TYPE=debug
 bash eval.sh RoboDojo stack_bowls <ckpt_name> arx_x5 joint 0 0 0 <policy_env> base
 ```
 
-The run must reach `[MAIN] eval finished` with no tracebacks. The debug client sends plain image arrays by default; re-run with `DEBUG_OBS_ENCODED=1` to make it send encoded camera colors instead — a JPEG buffer, raw bytes, and a plain array across the three cameras — which exercises the server-side decode path that real environment clients rely on. For a quick smoke test, `policy/demo_policy` accepts placeholder env names such as `base`.
+The run must reach `[MAIN] eval finished` with no tracebacks. The debug client sends plain image arrays by default; re-run with `DEBUG_OBS_ENCODED=1` to make it send encoded camera colors instead — JPEG byte buffers and NumPy byte arrays across the three cameras — which exercises the server-side decode path that real environment clients rely on. The shell launchers require Conda and installed dependencies in both named environments; `base` is not a placeholder environment. Real adapter checks also need their benchmark metadata and weights.
 
 **3. Simulator evaluation** — recommended for every PR and required before a leaderboard entry is published: run the same `eval.sh` with `EVAL_ENV_TYPE=sim` (or unset) inside a RoboDojo / RoboTwin workspace and record task success rates.
 

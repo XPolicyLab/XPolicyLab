@@ -164,12 +164,12 @@ Description 和公开 Scoring。现有 `obs["instruction"]` 继续提供当前�
 接口读取该字段；接口不修改 policy 的提示词或行为。旧环境可能不提供此字段。
 该字段提供公开评分条件，不包含打分代码。
 
-默认策略 server 协议是 websocket（`deploy.yml` 中 `protocol: ws`）；`legacy_tcp` 仅留给尚未迁移的 adapter。传输层替你处理重连、重试、keepalive 与模型加载冷启动 —— 正常 adapter 不必碰它。
+默认策略 server 协议是 websocket（`deploy.yml` 中 `protocol: ws`）；`legacy_tcp` 仅留给尚未迁移的 adapter。传输层替你处理重连、重试、keepalive 与模型加载冷启动 —— 正常 adapter 不必碰它。每次独立评测使用独立的 server 进程。
 
 <details>
 <summary>传输细节与超时调参（仅在评测卡住或断连时需要）</summary>
 
-- **重试是安全的**：每个请求带 `request_id`，client 在重连后复用；server 用缓存回答重复请求，而不会把非幂等调用跑两遍。`timeout` 错误是例外 —— server 可能仍在执行该调用，对该 trial 应视为致命错误，不要重试。
+- **重试**：client 在重连后重发原请求，server 在响应仍有缓存时复用该响应。`timeout` 应视为该 trial 的致命错误，因为调用可能仍在执行。
 - **Server 重启会中止本次 run**：若重连落到不同 server 进程，client 抛出 `ServerRestartedError`，因为新 server 已丢失模型状态。
 - **冷启动**：server 在打开端口前先加载模型，过早连上的 client 会重试（默认预算 15 分钟）。`eval.sh` 也会通过 `wait_for_policy_server.sh` 卡住 client。
 - **错误**：client 只看到 `str(exc)`；模型失败的完整 traceback 记在 *policy server* 一侧，先查那里。
@@ -224,6 +224,8 @@ demo_env/
 ```
 
 同一脚本可拉取完整导出 —— `hdf5`、`lerobot_v3.0`、`lerobot_v2.1` 与 `real`（真机 HDF5）—— 各自进独立的 `../data/` 目录。两套 LeRobot 导出由[官方转换器](#官方-lerobot-转换)生成，你也可以按自己的任务子集或分辨率重新生成。
+
+运行 `eval.sh` 前，需准备已安装依赖的 Conda 环境，并将 benchmark 元数据（`<env_cfg_type>.yml`、`robot/_robot_info.json`、`sim/<sim>.yml`）放在 `../env_cfg/`。数据下载不包含这些元数据。下面的示例中，两个进程都使用 `base` 环境。
 
 有了这套布局，就可以在接入仿真 backed benchmark 之前，先测数据转换、模型加载、训练脚本与 debug 模式评测。
 
@@ -286,7 +288,7 @@ bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <
 | `eval_env_conda_env`           | 仿真 / 机器人 client 的 conda 环境   | 你的评测侧环境                                                           |
 
 
-**`ckpt_name` 如何解析。** 通常传训练时用的短昵称，例如 `cotrain`，XPolicyLab 会与其它参数拼成 `checkpoints/RoboDojo-cotrain-arx_x5-joint-0/`。也可以传完整目录名或路径 —— 相对路径相对策略目录解析，绝对路径亦可。部分 adapter 会认 `deploy.yml` 里的显式键（`checkpoint_path`、`model_path` 等）。不确定时查该策略 README。
+**`ckpt_name` 如何解析。** 通常传训练时用的短昵称，例如 `cotrain`，XPolicyLab 会与其它参数拼成 `checkpoints/RoboDojo-cotrain-arx_x5-joint-0/`。也可以传完整目录名或路径 —— 相对路径相对策略目录解析，绝对路径亦可。部分 adapter 会认 `deploy.yml` 里的显式键（`checkpoint_path`、`model_path` 等）。显式路径不会回退到其它 checkpoint。不确定时查该策略 README。
 
 **一个具体的评测例子：**
 

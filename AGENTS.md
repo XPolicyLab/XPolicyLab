@@ -90,6 +90,13 @@ code imports the Python one; the training path — `train.sh`, or a Python train
 uses `utils/get_action_dim.sh`, which delivers the value as a shell variable, runs on stdlib `json`
 alone, and works in a standalone checkout that has no outer `env_cfg/` tree.
 
+Both accept an optional `action_type` (`joint` by default). Pass `ee` explicitly for end-effector
+actions: each arm uses a 7-value pose plus its gripper width, independent of its joint count.
+
+XPolicyLab single-arm outputs use `arm_joint_state` / `ee_joint_state` (plural for datasets).
+Shared input helpers accept the legacy `joint_state(s)` alias, but reject both names together.
+Use `get_robot_state_schema` or `unpack_robot_state` to generate action fields consistently.
+
 ## deploy.yml
 
 `policy_name` must equal the directory name. Keep the full key set from
