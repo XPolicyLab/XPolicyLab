@@ -13,9 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Minimal numpy/scipy helpers for Hy-VLA RoboTwin evaluation.
+"""Minimal numpy/scipy helpers for Era0 RoboTwin evaluation.
 
-Only the helpers actually consumed by ``policy_wrapper.HyVLAPolicyWrapper``
+Only the helpers actually consumed by ``policy_wrapper.Era0PolicyWrapper``
 live here:
 
 * ``get_norm_data``                    -- load action/state mean/std from a pickle.
@@ -43,7 +43,7 @@ from scipy.spatial.transform import Rotation as R
 # ---------------------------------------------------------------------------
 def get_norm_data(pkl_path: str) -> dict[str, np.ndarray]:
     """Load (qpos_mean, qpos_std, act_mean, act_std [, act_mean_abs,
-    act_std_abs]) from a unified Hy-VLA norm-stats pickle.
+    act_std_abs]) from a unified Era0 norm-stats pickle.
 
     The pickle is the single artifact produced by
     ``scripts/compute_norm_robotwin.py``:

@@ -18,6 +18,7 @@ BENCH = POLICY.parents[2]
 # No training checkout on PYTHONPATH, even when invoked from a different cwd.
 sys.path.insert(0, str(BENCH))
 from XPolicyLab.policy.Era0_Preview.checkpoint import resolve_assets
+from XPolicyLab.policy.Era0_Preview.asset_compat import adapter_path
 from XPolicyLab.policy.Era0_Preview.native_protocol import native_counts, default_tasks
 from XPolicyLab.policy.Era0_Preview.sdk_compat import describe as execution_spec, validate as validate_sdk
 
@@ -111,7 +112,7 @@ def main():
         sdk_revision=revision(args.robodojo_root), xpolicylab_revision=revision(POLICY.parents[1]),
         task_count_config_sha256=fingerprint(args.robodojo_root/'task/RoboDojo/config/_task.yml'),
         source_manifest_sha256=fingerprint(Path(__file__).parent/'source_manifest.json'),
-        adapter_sha256=fingerprint(assets['model']/'hy_xvla_adapter.json'),
+        adapter_sha256=fingerprint(adapter_path(assets['model'])),
         qwen_history_time_rope=assets['config'].get('qwen_history_time_rope'),
         history=[9,1,1], history_interval=40, execute_slots=[1,10], denoise_steps=10,
         gpu_ids=gpus, checkpoint_name=args.checkpoint_name,

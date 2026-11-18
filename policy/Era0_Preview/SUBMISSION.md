@@ -15,14 +15,14 @@ The unmodified official SDK summary is included as [EVALUATION_RESULTS.md](EVALU
 
 | Item | Current result |
 | --- | --- |
-| Overview Score | **38.36 ± 0.55** |
-| Overview SR | **33.11 ± 0.27%** |
+| Overview Score | **43.00 ± 0.68** |
+| Overview SR | **37.61 ± 0.88%** |
 | Complete task–seed cells | **123/126** |
-| Saved episodes | **6,265/6,300** |
-| SDK media inventory | **159 complete result directories, zero mismatches** |
+| Saved episodes | **6,255/6,300** |
+| SDK media inventory | **159 directories checked; separate camera videos missing** |
 
-The intended evaluation uses all SDK default tasks, seeds 0/1/2 and native episode counts. The current result is incomplete: `make_toast_random` lacks 5, 20 and 10 episodes for seeds 0, 1 and 2. Incomplete cells are excluded. These are local test results, not official leaderboard scores.
+The intended evaluation uses all SDK default tasks, seeds 0/1/2 and native episode counts. The current result is incomplete: `make_toast_random` lacks 15 episodes for each of seeds 0, 1 and 2. Incomplete cells are excluded. These are local test results, not official leaderboard scores.
 
 Installation and launch instructions are in [README.md](README.md). Current validation is recorded in [PREPARATION_CHECKS.md](PREPARATION_CHECKS.md); earlier-release transport and simulator checks remain explicitly labelled historical in their respective reports.
 
-Matching model files and download instructions are supplied. A complete native result remains pending. No additional artifact-release commitment is implied.
+A complete native result remains pending. No additional artifact-release commitment is implied.

@@ -20,7 +20,7 @@ Model repository: [roboterax/Era0-5B-Preview-RoboDojo](https://huggingface.co/ro
 
 `bash download_checkpoint.sh` downloads the matching model assets to `checkpoints/era0-preview/`. The exact model revision and file checksums are pinned in `checkpoint_release.json`.
 
-Keep `model.safetensors`, `config.json`, `hy_xvla_adapter.json`, processor/tokenizer files and `norm_stats.pkl` together. Set the directory before evaluation:
+Keep `model.safetensors`, `config.json`, the adapter metadata file, processor/tokenizer files and `norm_stats.pkl` together. Set the directory before evaluation:
 
 ```bash
 export ERA0_CHECKPOINT_PATH="$(pwd)/checkpoints/era0-preview"
@@ -60,6 +60,8 @@ For a small diagnostic run, add `--seeds 0 --eval-num 2 --num-envs 2 --tasks-fil
 
 ## Local results
 
-The [official SDK summary](EVALUATION_RESULTS.md) reports **Score 38.36 ± 0.55** and **SR 33.11 ± 0.27%**, with **123/126** task–seed cells complete and **6,265/6,300** episodes saved. The remaining 35 episodes belong to `make_toast_random`: 5, 20 and 10 episodes for seeds 0, 1 and 2, respectively. Incomplete cells are excluded from the scores. The SDK video inventory check passed for all 159 complete result directories.
+The [official SDK summary](EVALUATION_RESULTS.md) reports **Score 43.00 ± 0.68** and **SR 37.61 ± 0.88%**, with **123/126** task–seed cells complete and **6,255/6,300** episodes saved.
 
 These are partial local results, not official leaderboard scores. See the [RoboDojo leaderboard](https://robodojo-benchmark.com/LeaderBoard) for official results. Current validation evidence: [checks](PREPARATION_CHECKS.md).
+
+Third-party attribution: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

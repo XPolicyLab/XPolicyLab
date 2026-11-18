@@ -81,9 +81,9 @@ def rotate_subspace(value, cos, sin, start, dimensions):
 
 def _forward(self, hidden_states, position_embeddings, attention_mask,
              past_key_values=None, **kwargs):
-    temporal = kwargs.pop("xvla_time_rope", None)
+    temporal = kwargs.pop("era0_time_rope", None)
     if temporal is None:
-        return self._xvla_native_forward(hidden_states=hidden_states,
+        return self._era0_native_forward(hidden_states=hidden_states,
             position_embeddings=position_embeddings, attention_mask=attention_mask,
             past_key_values=past_key_values, **kwargs)
     if past_key_values is not None:
@@ -123,6 +123,6 @@ def install(model, spec):
         attn = layer.self_attn
         if int(attn.head_dim * factor) + spec["dim"] > attn.head_dim:
             raise ValueError("Time RoPE does not fit outside native spatial RoPE")
-        if not hasattr(attn, "_xvla_native_forward"):
-            attn._xvla_native_forward = attn.forward
+        if not hasattr(attn, "_era0_native_forward"):
+            attn._era0_native_forward = attn.forward
             attn.forward = MethodType(_forward, attn)

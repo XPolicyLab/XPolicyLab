@@ -29,20 +29,30 @@ from .architecture_contract import (
     resolve_architecture_path,
 )
 from .configuration_florence2 import Florence2Config
+from ...asset_compat import normalize_metadata
 from transformers.configuration_utils import PretrainedConfig
 
 
-class XVLAConfig(PretrainedConfig):
+class Era0Config(PretrainedConfig):
     """
-    Configuration class for the **XVLA (Extended Vision-Language-Action)** model.
+    Configuration class for the **Era0 (Extended Vision-Language-Action)** model.
 
-    This configuration defines all submodules of XVLA in a single place:
+    This configuration defines all submodules of Era0 in a single place:
       - The visual-language backbone (Florence2)
       - The temporal/action transformer
       - The action/proprio setup
     """
 
-    model_type = "xvla"
+    model_type = "era0"
+
+    @classmethod
+    def get_config_dict(cls, pretrained_model_name_or_path, **kwargs):
+        config, kwargs = super().get_config_dict(pretrained_model_name_or_path, **kwargs)
+        return normalize_metadata(config), kwargs
+
+    @classmethod
+    def from_dict(cls, config_dict, **kwargs):
+        return super().from_dict(normalize_metadata(config_dict), **kwargs)
 
     def __init__(
         # === Florence backbone ===
@@ -75,7 +85,7 @@ class XVLAConfig(PretrainedConfig):
         qwen_far_aux: dict | None = None,
         qwen_history_time_rope: dict | None = None,
         # ``spacetime_mem_v1`` stride: wrap every ``qwen_spacetime_stride``-th
-        # vision block with the MEM patch. Default 4 matches the Hy-VLA
+        # vision block with the MEM patch. Default 4 matches the Era0
         # original and the Florence DaViT port; ignored under ``off`` /
         # ``fixed_sinusoidal_v1``.
         qwen_spacetime_stride: int = 4,
@@ -107,7 +117,7 @@ class XVLAConfig(PretrainedConfig):
         #
         # ``qwen_native_video_history_views`` names *raw camera* view indices,
         # i.e. the pre-``_reorder_visual_features`` order the dataset emits
-        # (head=0, left_wrist=1, right_wrist=2 for Hy-VLA). The reorder helper
+        # (head=0, left_wrist=1, right_wrist=2 for Era0). The reorder helper
         # rotates the first *valid* view into slot 0 as a packing
         # normalization, not a semantic identity, so it must not be used to
         # interpret this option. When a named view is masked out for a sample
@@ -135,14 +145,14 @@ class XVLAConfig(PretrainedConfig):
         len_soft_prompts: int = 32,
         dim_time: int = 32,
         # Flow-matching timestep embedding conditioning. The defaults reproduce
-        # the original X-VLA parameterization bit-exactly, which is badly
+        # the original Era0 parameterization bit-exactly, which is badly
         # conditioned for t in [0.001, 1] (see models/transformer.py's
         # ``timestep_embedding`` docstring). Set max_period=10000 with
         # input_scale=1000 for the standard, well-conditioned variant.
         time_embedding_max_period: int = 100,
         time_embedding_input_scale: float = 1.0,
         # Flow-matching timestep sampling distribution. The default reproduces
-        # the original X-VLA / Hy-VLA / pi0.5 recipe (shifted Beta(1.5, 1.0)
+        # the original Era0 / Era0 / pi0.5 recipe (shifted Beta(1.5, 1.0)
         # over [0.001, 1.000]). ``logit_normal`` swaps in the Logit-Normal
         # schedule proposed by FACT (arXiv 2608.01402); the location m biases
         # sampling toward low t (precision regime) while s controls the mass
@@ -216,7 +226,7 @@ class XVLAConfig(PretrainedConfig):
         num_actions: int = 30,
         action_mode: str = "ee6d",
         action_loss_mode: str = "regression",
-        action_loss_profile: str = "hy_normalized_mse",
+        action_loss_profile: str = "era0_normalized_mse",
         ee6d_regression_normalization: bool = False,
         action_norm_stats_filename: str = "",
         action_norm_stats_sha256: str = "",
@@ -563,12 +573,12 @@ class XVLAConfig(PretrainedConfig):
                 f"{self.matched_dual_stream_route}."
             )
         if is_vlm_fast_action_bridge_version(self.architecture_version):
-            # Hy-Embodied only implements the prefix-KV member of this family.
+            # Era0 only implements the prefix-KV member of this family.
             # The FAST-in-expert `matched_dual_stream_v1` bridge is not ported,
             # so refuse it loudly instead of silently building a different net.
             if self.num_kv_heads is None:
                 raise ValueError(
-                    "Hy-Embodied supports vlm_fast_action_bridge only through "
+                    "Era0 supports vlm_fast_action_bridge only through "
                     "the prefix_kv expert; the checkpoint must declare "
                     "num_kv_heads and attn_head_dim."
                 )

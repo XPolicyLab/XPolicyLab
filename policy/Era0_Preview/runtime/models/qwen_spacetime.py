@@ -1,9 +1,9 @@
 # ------------------------------------------------------------------------------
 # MEM-style space-time attention for the Qwen3.5 native vision tower.
 #
-# Port of the Hy-Embodied MEM recipe
-# (`Hy-Embodied-0.5-VLA/hy_vla/space_time_attention.py`) onto the
-# `Qwen3_5VisionModel` used by the X-VLA `qwen3_5` backend. Design goals,
+# Port of the Era0 MEM recipe
+# (`Era0/era0/space_time_attention.py`) onto the
+# `Qwen3_5VisionModel` used by the Era0 `qwen3_5` backend. Design goals,
 # in priority order:
 #
 #   * ZERO new parameters. Every wrapped submodule is adopted BY REFERENCE
@@ -38,7 +38,7 @@
 #     overflow (see `models/spacetime_davit.py` header).
 #
 # Frame-slot convention (matches the RoboDojo history handler and
-# `hy_vla/space_time_attention.py`): within a `(batch, view)` group the
+# `era0/space_time_attention.py`): within a `(batch, view)` group the
 # frames are laid out with slot K-1 as the CURRENT frame and slot 0 the
 # oldest. e(t) is indexed by slot, so at K=1 the single (current) frame
 # receives e(0)=0 -> strict identity.
@@ -69,7 +69,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-# Base of the sinusoidal e(t) table. Chosen to match the Hy-VLA and
+# Base of the sinusoidal e(t) table. Chosen to match the Era0 and
 # `spacetime_davit.py` defaults so the temporal frequency spectrum lines
 # up across all backends.
 QWEN_SPACETIME_TIME_EMBED_BASE = 100.0
@@ -135,24 +135,24 @@ def set_time_context(
     vision model raises.
     """
     context = _TimeContext(group_sizes=group_sizes, tokens_per_frame=tokens_per_frame)
-    previous = getattr(visual, "_hy_spacetime_context", None)
-    visual._hy_spacetime_context = context
+    previous = getattr(visual, "_era0_spacetime_context", None)
+    visual._era0_spacetime_context = context
     try:
         yield context
     finally:
         if previous is None:
-            if hasattr(visual, "_hy_spacetime_context"):
-                delattr(visual, "_hy_spacetime_context")
+            if hasattr(visual, "_era0_spacetime_context"):
+                delattr(visual, "_era0_spacetime_context")
         else:
-            visual._hy_spacetime_context = previous
+            visual._era0_spacetime_context = previous
 
 
 def _resolve_time_context(module: nn.Module) -> _TimeContext | None:
     """Walk up the wrapped-block chain to fetch the current context."""
-    parent = getattr(module, "_hy_visual_parent", None)
+    parent = getattr(module, "_era0_visual_parent", None)
     if parent is None:
         return None
-    return getattr(parent, "_hy_spacetime_context", None)
+    return getattr(parent, "_era0_spacetime_context", None)
 
 
 # ---------------------------------------------------------------------------
@@ -169,7 +169,7 @@ def _build_time_pe(
 ) -> torch.Tensor:
     """Return `(num_frames, dim)` sinusoidal e(t) with e(0)=0.
 
-    Uses the same construction as `hy_vla/space_time_attention.py` and
+    Uses the same construction as `era0/space_time_attention.py` and
     `models/spacetime_davit.py`: even dims sin(t*f), odd dims cos(t*f)-1.
     The `-1` pins e(0) to exactly zero so the K=1 branch stays a strict
     identity to the unpatched block.
@@ -230,7 +230,7 @@ class SpaceTimeVisionBlock(nn.Module):
         # Registered as a non-persistent, non-parameter attribute; not
         # stored via `add_module` so it does not appear in `state_dict()`
         # or `named_children()`.
-        object.__setattr__(self, "_hy_visual_parent", parent_visual)
+        object.__setattr__(self, "_era0_visual_parent", parent_visual)
 
         # Cache the block hidden dim once so the fixed sinusoidal table
         # can be rebuilt on-device inside `forward`. The attribute lookup
@@ -238,7 +238,7 @@ class SpaceTimeVisionBlock(nn.Module):
         # `state_dict()`.
         head_dim = int(self.attn.head_dim)
         num_heads = int(self.attn.num_heads)
-        object.__setattr__(self, "_hy_hidden_dim", int(head_dim * num_heads))
+        object.__setattr__(self, "_era0_hidden_dim", int(head_dim * num_heads))
 
     # ------------------------------------------------------------------
     # Helpers
@@ -282,7 +282,7 @@ class SpaceTimeVisionBlock(nn.Module):
                 **kwargs,
             )
 
-        # Bounded-perturbation MEM path. Structure mirrors the Hy-VLA
+        # Bounded-perturbation MEM path. Structure mirrors the Era0
         # SpaceTimeBlock closely:
         #   1. norm1(x) + e(t) as the attention-branch input;
         #   2. compute Q/K/V from the same qkv linear as the base attn;
@@ -313,16 +313,16 @@ class SpaceTimeVisionBlock(nn.Module):
         #     byte-for-byte identical to a K=1-only encode on the
         #     attention-branch input.
         #   * K>1 groups get a monotone e(0)..e(K-1) tail with e(0)
-        #     pinned to zero, matching the Hy-VLA/Florence MEM recipe.
+        #     pinned to zero, matching the Era0/Florence MEM recipe.
         max_frames = int(group_sizes.max().item())
         pe_table = _build_time_pe(
             max_frames,
-            self._hy_hidden_dim,
+            self._era0_hidden_dim,
             device=hidden_states.device,
             dtype=hidden_states.dtype,
         )  # (max_K, D)
 
-        frame_time_pe = pe_table.new_zeros(int(group_sizes.sum().item()), self._hy_hidden_dim)
+        frame_time_pe = pe_table.new_zeros(int(group_sizes.sum().item()), self._era0_hidden_dim)
         cursor = 0
         for k_val in group_sizes.tolist():
             k = int(k_val)
@@ -334,7 +334,7 @@ class SpaceTimeVisionBlock(nn.Module):
         time_pe = frame_time_pe.repeat_interleave(tokens_per_frame, dim=0)  # (seq_len, D)
         # Hy parity: add e(t) BEFORE the LayerNorm, so norm1 sees
         # (x + pe). This keeps the K=1 identity strict when pe[0]=0
-        # and matches both `hy_vla/space_time_attention.py` and
+        # and matches both `era0/space_time_attention.py` and
         # `models/spacetime_davit.py` layer semantics. The residual
         # stream still adds the un-embedded `hidden_states` further
         # down, exactly like the base block does.
@@ -566,7 +566,7 @@ def apply_spacetime_patch(
     else (e.g. `SpaceTimeVisionBlock` from a previous call) is skipped.
 
     Layer selection follows the Florence port
-    (`models/spacetime_davit.py:281`) and the Hy-VLA original:
+    (`models/spacetime_davit.py:281`) and the Era0 original:
     `blocks[stride-1::stride]`, so the last block is always wrapped.
     The last-block guarantee is important because it forces the mixed
     representation to reach the merger, i.e. the tokens the LLM
@@ -579,7 +579,7 @@ def apply_spacetime_patch(
         wrapped. The instance is modified in-place; the return value is
         the same object for chaining convenience.
     stride:
-        Interval between wrapped blocks. Default 4 mirrors the Hy-VLA
+        Interval between wrapped blocks. Default 4 mirrors the Era0
         MEM recipe, which wraps every fourth block. Must be >= 1.
     """
     if stride < 1:
@@ -602,7 +602,7 @@ def apply_spacetime_patch(
     # Record the stride on the model for later introspection; not
     # serialized because `Qwen3_5VisionModel.state_dict` walks children,
     # not arbitrary attributes.
-    visual._hy_spacetime_stride = int(stride)
+    visual._era0_spacetime_stride = int(stride)
     return visual
 
 
@@ -649,7 +649,7 @@ def encode_with_current_frame_only(
     Rationale
     ---------
     The RoboDojo per-view history handler emits frames oldest-first
-    (`hy_vla/data/robodojo_dataset.py:721-745`), and the caller in
+    (`era0/data/robodojo_dataset.py:721-745`), and the caller in
     `Qwen35Backend._encode_valid_views` compacts wrist padding before
     calling us so `group_sizes` faithfully describes the number of real
     frames per (batch, view) group. Returning only the current frame's

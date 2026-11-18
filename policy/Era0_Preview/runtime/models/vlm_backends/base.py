@@ -9,12 +9,12 @@ import torch
 import torch.nn as nn
 
 if TYPE_CHECKING:
-    from ..configuration_xvla import XVLAConfig
-    from ..modeling_xvla import XVLA
+    from ..configuration_era0 import Era0Config
+    from ..modeling_era0 import Era0
 
 
 class VLMBackend(ABC):
-    """A stateless adapter around the registered ``XVLA.vlm`` module."""
+    """A stateless adapter around the registered ``Era0.vlm`` module."""
 
     name: str
     handles_expert_detach: bool = False
@@ -22,20 +22,20 @@ class VLMBackend(ABC):
     policy_contract: str = "legacy_v1"
 
     @abstractmethod
-    def build_model(self, config: "XVLAConfig") -> nn.Module:
+    def build_model(self, config: "Era0Config") -> nn.Module:
         """Construct the module registered under the legacy ``vlm.*`` prefix."""
 
     @abstractmethod
     def native_hidden_size(self, model: nn.Module) -> int:
-        """Return the backbone hidden size before the XVLA output adapter."""
+        """Return the backbone hidden size before the Era0 output adapter."""
 
-    def output_hidden_size(self, config: "XVLAConfig", model: nn.Module) -> int:
+    def output_hidden_size(self, config: "Era0Config", model: nn.Module) -> int:
         configured = int(getattr(config, "vlm_projection_dim", 0) or 0)
         return configured or self.native_hidden_size(model)
 
     def build_output_adapter(
         self,
-        config: "XVLAConfig",
+        config: "Era0Config",
         model: nn.Module,
     ) -> nn.Module:
         native_dim = self.native_hidden_size(model)
@@ -48,7 +48,7 @@ class VLMBackend(ABC):
 
     def build_policy_modules(
         self,
-        config: "XVLAConfig",
+        config: "Era0Config",
         *,
         model: nn.Module,
         output_dim: int,
@@ -58,7 +58,7 @@ class VLMBackend(ABC):
 
     def build_geometry_adapter(
         self,
-        config: "XVLAConfig",
+        config: "Era0Config",
         model: nn.Module,
     ) -> nn.Module:
         """Project backend-native action geometry into the policy width."""
@@ -66,7 +66,7 @@ class VLMBackend(ABC):
 
     def precompute_policy_visual(
         self,
-        owner: "XVLA",
+        owner: "Era0",
         pixel_values: torch.Tensor,
         image_mask: torch.Tensor | None,
     ) -> Any:
@@ -80,7 +80,7 @@ class VLMBackend(ABC):
     @abstractmethod
     def encode_image(
         self,
-        owner: "XVLA",
+        owner: "Era0",
         pixel_values: torch.Tensor,
         *,
         frame_mask: torch.Tensor | None = None,
@@ -90,7 +90,7 @@ class VLMBackend(ABC):
     @abstractmethod
     def forward_policy(
         self,
-        owner: "XVLA",
+        owner: "Era0",
         *,
         input_ids: torch.LongTensor,
         pixel_values: torch.FloatTensor,
@@ -98,15 +98,15 @@ class VLMBackend(ABC):
         attention_mask: torch.Tensor | None,
         precomputed_features: Any,
     ) -> Dict[str, torch.Tensor]:
-        """Return the semantic and auxiliary token streams consumed by XVLA."""
+        """Return the semantic and auxiliary token streams consumed by Era0."""
 
 
 
 
-    def validate_runtime(self, config: "XVLAConfig") -> None:
+    def validate_runtime(self, config: "Era0Config") -> None:
         """Validate backend-specific config before heavy model use."""
 
-    def describe(self, config: "XVLAConfig", model: nn.Module) -> Dict[str, Any]:
+    def describe(self, config: "Era0Config", model: nn.Module) -> Dict[str, Any]:
         return {
             "name": self.name,
             "native_hidden_size": self.native_hidden_size(model),

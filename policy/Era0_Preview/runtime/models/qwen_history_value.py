@@ -8,7 +8,7 @@ Time is encoded as a RELATIVE rotation on the temporal branch's Q/K, over the
 host model's own rotary width and in history-slot units. See
 `docs/history_probe_separability_2026-10-20.md` section 10 for the measurement
 that chose this over the additive frame code of
-`models/qwen_spacetime.py` / `hy_vla/space_time_attention.py` and over the
+`models/qwen_spacetime.py` / `era0/space_time_attention.py` and over the
 native mRoPE temporal section.
 """
 

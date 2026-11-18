@@ -1,205 +1,65 @@
 {
-  "source_revision": "8e459d37a42d220a66f1d3441fb1436436128154",
-  "note": "Evaluation-only runtime with namespaced imports, checkpoint-compatible model structure, observation/action transforms, and audited SDK execution profiles. Auxiliary supervision modules and policy loss entry points are excluded.",
-  "files": {
-    "runtime/models/__init__.py": {
-      "source": "models/__init__.py",
-      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "packaged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-    },
-    "runtime/models/action_conditioning.py": {
-      "source": "models/action_conditioning.py",
-      "source_sha256": "17aa912d6831634f60f0dea02ec73af4a28420a85c7c3fb97a96638e4b52c035",
-      "packaged_sha256": "17aa912d6831634f60f0dea02ec73af4a28420a85c7c3fb97a96638e4b52c035"
-    },
-    "runtime/models/action_hub.py": {
-      "source": "models/action_hub.py",
-      "source_sha256": "9fb0ea22d95d0334fb1ffe9d9ae58a3494232bef1ad89ef03c817be5fb0a497d",
-      "packaged_sha256": "6805efa0c7782a87c028c8bc327c6bb3c79a7ec89c73526969b344e258090c2f"
-    },
-    "runtime/models/action_norm_routing.py": {
-      "source": "models/action_norm_routing.py",
-      "source_sha256": "70538217109ebfe88d3043bf18a25b5892f0886dacc8c8450d3ffa31219ce145",
-      "packaged_sha256": "70538217109ebfe88d3043bf18a25b5892f0886dacc8c8450d3ffa31219ce145"
-    },
-    "runtime/models/architecture_contract.py": {
-      "source": "models/architecture_contract.py",
-      "source_sha256": "51cebd488542635335555436aa8b640d359d8a4e48ebb9e82664e3bc12be6b4e",
-      "packaged_sha256": "51cebd488542635335555436aa8b640d359d8a4e48ebb9e82664e3bc12be6b4e"
-    },
-    "runtime/models/configuration_florence2.py": {
-      "source": "models/configuration_florence2.py",
-      "source_sha256": "8f0539cffe6a91375cad8e337cb7443848529936650d98f7d245e14c4b0d47e4",
-      "packaged_sha256": "eaf041ba845c1d5e43e91f719e3c79f0266471bcea57e85fae2926e7a02fd1ff"
-    },
-    "runtime/models/configuration_xvla.py": {
-      "source": "models/configuration_xvla.py",
-      "source_sha256": "f711783cfe3c048348860a2a2c6a62025e2290840b6458e80b5653237c9e0769",
-      "packaged_sha256": "39b06afc1191b2bfee85e6c9b35abf240537a2d3e1f1d63f6ef9982521d62d3a"
-    },
-    "runtime/models/image_preprocessing.py": {
-      "source": "models/image_preprocessing.py",
-      "source_sha256": "6f94e2166968d42a75dadded50990164683d86164f0dcf8ef7f5a2c792d6ce94",
-      "packaged_sha256": "6f94e2166968d42a75dadded50990164683d86164f0dcf8ef7f5a2c792d6ce94"
-    },
-    "runtime/models/inference_batcher.py": {
-      "source": "models/inference_batcher.py",
-      "source_sha256": "c2a0ea8c60ce5669d16eba59d748e32b4d1f55a1f1c02160942f3d604257f903",
-      "packaged_sha256": "c2a0ea8c60ce5669d16eba59d748e32b4d1f55a1f1c02160942f3d604257f903"
-    },
-    "runtime/models/modeling_xvla.py": {
-      "source": "models/modeling_xvla.py",
-      "source_sha256": "4a5db77ab5ea89f61d2202075ba9ce8c6e1b3aa8fdc8c8d2b9df660db66cec05",
-      "packaged_sha256": "3a2a8a34defbd48d9a257765f30f5db73b87e6e7159b75b786a1f3848440d057"
-    },
-    "runtime/models/processing_xvla.py": {
-      "source": "models/processing_xvla.py",
-      "source_sha256": "e549c825a33b80ba40e01c15c555b3f20d57c01798153f0b51c30abdae1e2521",
-      "packaged_sha256": "e549c825a33b80ba40e01c15c555b3f20d57c01798153f0b51c30abdae1e2521"
-    },
-    "runtime/models/qwen_fixed_vision.py": {
-      "source": "models/qwen_fixed_vision.py",
-      "source_sha256": "35bdebe4b207114b4ff3813ac031d3d0c0fc00608ce0d7149cbc6c805f960aa3",
-      "packaged_sha256": "35bdebe4b207114b4ff3813ac031d3d0c0fc00608ce0d7149cbc6c805f960aa3"
-    },
-    "runtime/models/qwen_history_time_rope.py": {
-      "source": "models/qwen_history_time_rope.py",
-      "source_sha256": "e4f76ddc5c9499f807391461f2178d15f73ac1e7eb725c0375333ddc412c18d2",
-      "packaged_sha256": "e4f76ddc5c9499f807391461f2178d15f73ac1e7eb725c0375333ddc412c18d2"
-    },
-    "runtime/models/qwen_history_value.py": {
-      "source": "models/qwen_history_value.py",
-      "source_sha256": "182b1d1769c0800ef0dcd2a6b4bab1208b44556e8c734524ed6036c707987628",
-      "packaged_sha256": "acb2652475cf3cd5a3a78932851ace7ab8226428ea183b12eb21fecd5a63c724"
-    },
-    "runtime/models/qwen_image_attention.py": {
-      "source": "models/qwen_image_attention.py",
-      "source_sha256": "01dbdfd75d81426f9ec8d70b5557892fb893a6a20944cef0e7c2b6aaa9db04e6",
-      "packaged_sha256": "01dbdfd75d81426f9ec8d70b5557892fb893a6a20944cef0e7c2b6aaa9db04e6"
-    },
-    "runtime/models/qwen_spacetime.py": {
-      "source": "models/qwen_spacetime.py",
-      "source_sha256": "86299a0a7323134086b68dfc9e8e09f9cfa6fcf2108567898133aa0c1b7f8c9a",
-      "packaged_sha256": "86299a0a7323134086b68dfc9e8e09f9cfa6fcf2108567898133aa0c1b7f8c9a"
-    },
-    "runtime/models/transformer.py": {
-      "source": "models/transformer.py",
-      "source_sha256": "0637b29ebaf54b924c90368fb8aeab880f7c0f0a2df4d3685ecb153d76b5b1cd",
-      "packaged_sha256": "0637b29ebaf54b924c90368fb8aeab880f7c0f0a2df4d3685ecb153d76b5b1cd"
-    },
-    "runtime/models/vlm_backends/__init__.py": {
-      "source": "models/vlm_backends/__init__.py",
-      "source_sha256": "6f13d2313beede108dcf4730f74bf808c4da9fea783b642adc517971914a244a",
-      "packaged_sha256": "6f13d2313beede108dcf4730f74bf808c4da9fea783b642adc517971914a244a"
-    },
-    "runtime/models/vlm_backends/base.py": {
-      "source": "models/vlm_backends/base.py",
-      "source_sha256": "7b32252cca73135a404f3764d35ac4ef86a77ed3a0853c8d5118c41f708e8583",
-      "packaged_sha256": "85a78838a353841e617609dc8a28281e2a14ade02e108d419464e848de9f0f0a"
-    },
-    "runtime/models/vlm_backends/qwen3_5.py": {
-      "source": "models/vlm_backends/qwen3_5.py",
-      "source_sha256": "123cfa1b19ec5b3fdb68774bcf37395d9ac36b2a2457a531efbf7c35c94e3159",
-      "packaged_sha256": "fa1560f773b4cc29915e384ae5bf53ebb28a453fae14eac973ad93201f105d6a"
-    },
-    "runtime/models/vlm_backends/registry.py": {
-      "source": "models/vlm_backends/registry.py",
-      "source_sha256": "be3f8f47c69a96a35c39e2bc96331ce70ebe400b4d0eb470cec889af638cac79",
-      "packaged_sha256": "98f5e65ccd96f07e93ccf30f44cdcb96d840f15e5eec19f2ec1dec8871e65679"
-    },
-    "runtime/models/vlm_lora.py": {
-      "source": "models/vlm_lora.py",
-      "source_sha256": "ec7d3063ccc49c9c4b09b7f37eb922a91c2b1618397aa5816720d536d3ceb2b9",
-      "packaged_sha256": "ec7d3063ccc49c9c4b09b7f37eb922a91c2b1618397aa5816720d536d3ceb2b9"
-    },
-    "runtime/hy_vla/modeling_xvla_adapter.py": {
-      "source": "hy_vla/modeling_xvla_adapter.py",
-      "source_sha256": "287a8239225da7aac2433da62abf0b19595279f5d26f3b5d8cc4525cfce72cb8",
-      "packaged_sha256": "fbc0984a8b1cf871281e78c5ff2fb456b576ac25df8cfb1f733692d50238188c"
-    },
-    "runtime/hy_vla/utils/transform_utils.py": {
-      "source": "hy_vla/utils/transform_utils.py",
-      "source_sha256": "59b22974052e39249e8ef019d57204a6c863e926f03d3357d31cfe5d1926636d",
-      "packaged_sha256": "59b22974052e39249e8ef019d57204a6c863e926f03d3357d31cfe5d1926636d"
-    },
-    "runtime/robotwin_eval/transforms.py": {
-      "source": "robotwin_eval/transforms.py",
-      "source_sha256": "efccc16b8d655aa3f4843494963a4ee06e2aa238561d0dc0e66b8777b7d88181",
-      "packaged_sha256": "efccc16b8d655aa3f4843494963a4ee06e2aa238561d0dc0e66b8777b7d88181"
-    },
-    "runtime/robodojo_eval/gripper_control.py": {
-      "source": "robodojo_eval/gripper_control.py",
-      "source_sha256": "d6515bc87aec15cd47928720a15047d0f937b2f93fca29697ec900bb6330171b",
-      "packaged_sha256": "d6515bc87aec15cd47928720a15047d0f937b2f93fca29697ec900bb6330171b"
-    },
-    "deploy.py": {
-      "source": "XPolicyLab/policy/Hy_XVLA_RoboDojo/deploy.py",
-      "source_sha256": "38821ae07832f700b0a87d4cb21ed5d213c11b97410a764612dd9660bff0a3c0",
-      "packaged_sha256": "38821ae07832f700b0a87d4cb21ed5d213c11b97410a764612dd9660bff0a3c0"
-    },
-    "simulator_entry.py": {
-      "source": "robodojo_eval/simulator_entry.py",
-      "source_sha256": "4ef39bda5f4a7cc3cb690057a3b0ac325f4dbe57eb7062c48f3d49e93ad15517",
-      "packaged_sha256": "a1633416e2eafc1af33f37a9be728cf960c5f9c21540f7612413e7e8cd200272"
-    },
-    "native_protocol.py": {
-      "source": "robodojo_eval/native_protocol.py",
-      "source_sha256": "5e590b604a1135d6fed8b32e5d009858eebcd8b922f9af4343e165ba762dbcce",
-      "packaged_sha256": "001bf92480b19b93a8aa739a948eee489a57ab497af47b11361806e9f047d094"
-    }
-  },
   "model_name": "Era0-Preview",
+  "note": "Evaluation-only Era0 runtime. File hashes cover the packaged sources; third-party notices are retained. Existing model tensors are unchanged.",
   "packaged_files": {
     ".gitignore": "781b1801fe2fd470a9744f4acb8792ffd9cd677baaacd0cd42c7e3426f81cb55",
-    "README.md": "58f8bf01eb03bf5a0bd669c3c5f35a0f70532c5b0e2422ca851c8c0a80fbe5ae",
+    "DEBUG_VERIFICATION.md": "0da3c51d1bbb32c6bd11750afe1569edf574c9ce3f6863abf8a667e5414a839e",
+    "EVALUATION_RESULTS.md": "64b0b570b201102f6f43016fa5ef381ec36228380e59f8fca9a2c415333d1d0c",
+    "PREPARATION_CHECKS.md": "ae477887684b72efee9502546b5ab4bbc78a3ef6c2f2d39a14244e9c1624f40d",
+    "README.md": "2ab3837eafb979402a1161d4d9b995d74c2b47b1f7dde4643d7551b2e9232024",
     "SDK_COMPATIBILITY.md": "b7ba5c8accff988d03d44c76b135d698a624c69db81b6d094dc9287791d4fb36",
-    "SUBMISSION.md": "a449911f08b9ac619058be5e0065773882cd2a6c81f6c2855674cf5f7058c678",
+    "SIMULATOR_SMOKE_TEST.md": "fab9f82be46ebe3c728717656584064e1b3fbd891af9106a91d3610985621afb",
+    "SUBMISSION.md": "60e52be3c282906285e07c401bef01c4c6ab7cb726b63c41351e76b1677cabb6",
+    "THIRD_PARTY_NOTICES.md": "e8d8755f3cef1b64986bd96a7b85d2c92bc3835a0d096ecf8e03e42a8cf1c4b0",
     "__init__.py": "daf518f1abe58b40b45e4c1e625514982fd4a427efcbc0857e971d47c5eb0c66",
-    "checkpoint.py": "8e1d81a886d86f0ea6ff398e488555869172212384cc1aa09faadaa2f05e7847",
-    "checkpoint_release.json": "844ec03ba9cda669de7d36aadeb809caa587042deda35f7eb90694ad3540291b",
-    "common.sh": "c583beca9a4d0c96dbe12bbb45edfbbb36c2bcc069d5ce0791d003ba387bde61",
+    "asset_compat.py": "863c06f499a656117a688a8994ce308f3a32d67ef0e3a9d7e159abcdc6bed76a",
+    "checkpoint.py": "bef448d9bd2437036c89c7416d1ed5b5a491b390f18e4d0f4656f5c59ab2b7f6",
+    "checkpoint_release.json": "f380ab300dcebbaa03bc51379674ccfb220205dc8dc6ba1599ddb84043a86460",
+    "checkpoint_release_previous.json": "844ec03ba9cda669de7d36aadeb809caa587042deda35f7eb90694ad3540291b",
+    "checkpoint_release_published.json": "9e60d47d48cee1bdf135f138657234a28cf4916d3c0b7b5bad2cf6be06d111fc",
+    "common.sh": "ad2c06e3fff62d3e32c7b59f1a651aa0c1b0140a976cde24728d032c7e6723e9",
     "deploy.py": "38821ae07832f700b0a87d4cb21ed5d213c11b97410a764612dd9660bff0a3c0",
     "deploy.yml": "cb1b0d1813af0d033b25c5a3cf95582e03d294c3506cd687055a5be9183a5f2b",
-    "download_checkpoint.sh": "698619478fe10dc68d8a29ee837ca44a4c5e28f630ada376734e7d645f0b1dc6",
+    "download_checkpoint.sh": "daddd82d6ce9ac5c2bf849c2c75d08548293ced824dd9441d4b59147e9e941ee",
     "eval.sh": "b6ca89052497515556dcf9b359e192bcb23e30762ecf89000094c8a3efd3308e",
     "eval_three_seeds.sh": "fcf7484a215affae2fd931e72aabc8386329e41732ed993705367be2691e123f",
-    "evaluate.py": "8610792d8d17bccc5b03835b948575f2c927c5a1f7fb0fe9d8634ff6a9c41f9d",
+    "evaluate.py": "048dec7585e7f484183b628e874461ff11f7a3013c90e660a198b2259bc6da7b",
     "install.sh": "3894306a5f3e469d24f2de8fee829b7130cfba57c5a443a9cc39d17619f62541",
-    "model.py": "fe32349f71465b213a68bcf2b87fa9cedd065422a9e9ca9de0d8babdd73cac8e",
+    "model.py": "bdca0729df029fcccc4efda2bfcb1849992d20e7a00162d01173cd2059d4a2df",
     "native_protocol.py": "001bf92480b19b93a8aa739a948eee489a57ab497af47b11361806e9f047d094",
     "requirements.txt": "655e929b83602da9ef1aa8a4dc8e2202990b6d8b747fd394d26dec9dfc7aba90",
     "runtime/__init__.py": "daf518f1abe58b40b45e4c1e625514982fd4a427efcbc0857e971d47c5eb0c66",
-    "runtime/hy_vla/__init__.py": "daf518f1abe58b40b45e4c1e625514982fd4a427efcbc0857e971d47c5eb0c66",
-    "runtime/hy_vla/modeling_xvla_adapter.py": "fbc0984a8b1cf871281e78c5ff2fb456b576ac25df8cfb1f733692d50238188c",
-    "runtime/hy_vla/utils/__init__.py": "daf518f1abe58b40b45e4c1e625514982fd4a427efcbc0857e971d47c5eb0c66",
-    "runtime/hy_vla/utils/transform_utils.py": "59b22974052e39249e8ef019d57204a6c863e926f03d3357d31cfe5d1926636d",
+    "runtime/era0/__init__.py": "daf518f1abe58b40b45e4c1e625514982fd4a427efcbc0857e971d47c5eb0c66",
+    "runtime/era0/modeling_era0_adapter.py": "b6f499f8bb63059fc1406b76bd751cd454a1308f8c72eb3869c9f0b641c3ecfa",
+    "runtime/era0/utils/__init__.py": "daf518f1abe58b40b45e4c1e625514982fd4a427efcbc0857e971d47c5eb0c66",
+    "runtime/era0/utils/transform_utils.py": "e73a20d68cb3099f5fed016b499afc647367619a839a49b8521344319d496029",
     "runtime/models/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "runtime/models/action_conditioning.py": "17aa912d6831634f60f0dea02ec73af4a28420a85c7c3fb97a96638e4b52c035",
-    "runtime/models/action_hub.py": "6805efa0c7782a87c028c8bc327c6bb3c79a7ec89c73526969b344e258090c2f",
+    "runtime/models/action_conditioning.py": "7a9ca228e2b70c63fb0640ef069166ab251f543cd748720cf4235917a10a1045",
+    "runtime/models/action_hub.py": "f36fad3833b40ae8fea25ca25aff06bc6671a6aeccd3cece106df252943b18ee",
     "runtime/models/action_norm_routing.py": "70538217109ebfe88d3043bf18a25b5892f0886dacc8c8450d3ffa31219ce145",
-    "runtime/models/architecture_contract.py": "51cebd488542635335555436aa8b640d359d8a4e48ebb9e82664e3bc12be6b4e",
+    "runtime/models/architecture_contract.py": "2227ada3fc701b26a61cb863cf349da1431f26172202d9b6fcf2ecb0aeb4f7c1",
+    "runtime/models/configuration_era0.py": "cb15ae6d7f304122f447e2b97af10b48770cd681f89f5fbee62209faf1ccab27",
     "runtime/models/configuration_florence2.py": "eaf041ba845c1d5e43e91f719e3c79f0266471bcea57e85fae2926e7a02fd1ff",
-    "runtime/models/configuration_xvla.py": "39b06afc1191b2bfee85e6c9b35abf240537a2d3e1f1d63f6ef9982521d62d3a",
     "runtime/models/image_preprocessing.py": "6f94e2166968d42a75dadded50990164683d86164f0dcf8ef7f5a2c792d6ce94",
     "runtime/models/inference_batcher.py": "c2a0ea8c60ce5669d16eba59d748e32b4d1f55a1f1c02160942f3d604257f903",
-    "runtime/models/modeling_xvla.py": "3a2a8a34defbd48d9a257765f30f5db73b87e6e7159b75b786a1f3848440d057",
-    "runtime/models/processing_xvla.py": "e549c825a33b80ba40e01c15c555b3f20d57c01798153f0b51c30abdae1e2521",
-    "runtime/models/qwen_fixed_vision.py": "35bdebe4b207114b4ff3813ac031d3d0c0fc00608ce0d7149cbc6c805f960aa3",
-    "runtime/models/qwen_history_time_rope.py": "e4f76ddc5c9499f807391461f2178d15f73ac1e7eb725c0375333ddc412c18d2",
-    "runtime/models/qwen_history_value.py": "acb2652475cf3cd5a3a78932851ace7ab8226428ea183b12eb21fecd5a63c724",
+    "runtime/models/modeling_era0.py": "ac12166602fa888a9a02a05f512241a3d5f004351fe57c39751a291a628ea2e1",
+    "runtime/models/processing_era0.py": "d81773c8355954eea6854da8bcbe46d31af6821493dbbcdcd2ff6c81bbfa9516",
+    "runtime/models/qwen_fixed_vision.py": "3fad3f00306d85a88ff6f7674ae7a623218379f9b4f3a9cc7019ca75334cfd60",
+    "runtime/models/qwen_history_time_rope.py": "ef113988c58a5675edc2222b9de7be207de2a921b02abb4ed4dd6ba1fc93e216",
+    "runtime/models/qwen_history_value.py": "c600f082b12d6813e3c9311c55223d9f83789c450f67eadc46297555f7600163",
     "runtime/models/qwen_image_attention.py": "01dbdfd75d81426f9ec8d70b5557892fb893a6a20944cef0e7c2b6aaa9db04e6",
-    "runtime/models/qwen_spacetime.py": "86299a0a7323134086b68dfc9e8e09f9cfa6fcf2108567898133aa0c1b7f8c9a",
-    "runtime/models/transformer.py": "0637b29ebaf54b924c90368fb8aeab880f7c0f0a2df4d3685ecb153d76b5b1cd",
-    "runtime/models/vlm_backends/__init__.py": "6f13d2313beede108dcf4730f74bf808c4da9fea783b642adc517971914a244a",
-    "runtime/models/vlm_backends/base.py": "85a78838a353841e617609dc8a28281e2a14ade02e108d419464e848de9f0f0a",
-    "runtime/models/vlm_backends/qwen3_5.py": "fa1560f773b4cc29915e384ae5bf53ebb28a453fae14eac973ad93201f105d6a",
+    "runtime/models/qwen_spacetime.py": "06435fbfcfdd0360574c4621978a5ad403731dd9e6cf0856f717cf5f8cfaebf8",
+    "runtime/models/transformer.py": "5c58bb726b755d85538090b30ce79aef3163d43075bc3d73f4d7f9ebc7d0fbb6",
+    "runtime/models/vlm_backends/__init__.py": "81dd5db8c6c2db645686182aed2a7a59eb599b7bf54d33df913cdbe500f38e63",
+    "runtime/models/vlm_backends/base.py": "88a5d04e072333acd42c37e7971841ba5f470d9bf772b06181d8285cf51b50ca",
+    "runtime/models/vlm_backends/qwen3_5.py": "629e16abb82257bac147b15e34b0d4c578dc810fc71d3448b6437f8fe85c9fb7",
     "runtime/models/vlm_backends/registry.py": "98f5e65ccd96f07e93ccf30f44cdcb96d840f15e5eec19f2ec1dec8871e65679",
-    "runtime/models/vlm_lora.py": "ec7d3063ccc49c9c4b09b7f37eb922a91c2b1618397aa5816720d536d3ceb2b9",
+    "runtime/models/vlm_lora.py": "88495499280c03bf2bc5d64393c84b34746449a59f01ff2faeb95c4b42186075",
     "runtime/robodojo_eval/__init__.py": "daf518f1abe58b40b45e4c1e625514982fd4a427efcbc0857e971d47c5eb0c66",
     "runtime/robodojo_eval/gripper_control.py": "d6515bc87aec15cd47928720a15047d0f937b2f93fca29697ec900bb6330171b",
-    "runtime/robodojo_eval/io.py": "6a4b590767cc78075f1146295dfc98be43e6bcc36400640c34e1b868aa128be4",
+    "runtime/robodojo_eval/io.py": "b138f96e6c124b5f9c730f8bac54a0b19f1f4f3bab5af29d3a595e47c207ee4e",
     "runtime/robotwin_eval/__init__.py": "daf518f1abe58b40b45e4c1e625514982fd4a427efcbc0857e971d47c5eb0c66",
-    "runtime/robotwin_eval/transforms.py": "efccc16b8d655aa3f4843494963a4ee06e2aa238561d0dc0e66b8777b7d88181",
+    "runtime/robotwin_eval/transforms.py": "e94d62d1a98035ed170c82310cfd783e724053894c9aa096be038e1ce4b442d7",
     "sdk_compat.py": "c05f4a52e15617f81762823a1ab6b41d69a7013ae2fd4daf2af752ac0d4e1581",
     "sdk_sources/LICENSE.RoboDojo": "4f2b6958d25115c1bc461044e022889852d9e3a9bb854ab581c416514b9984a0",
     "sdk_sources/audit_patches/src/eval_client/eval_env.py.patch": "0cefda1a38371faca16f84d048a521c4fe792f109dbbbd2b91cf4705b627e068",
@@ -217,10 +77,7 @@
     "sdk_sources/official/utils/pipeline_utils.py": "d5d8da29e6ca84ab04323a2f79130f930572785b4399634e06a42834ed4087ae",
     "setup_eval_env_client.sh": "da1192ba33d40bb122e59f40828c69c2f6f8dd6fbf6c04f0e2edbfc58830db44",
     "setup_eval_policy_server.sh": "9beec4ca705b51e91f0500fa929f1ff1f94748c6ae80324d54c4b48b474029df",
-    "simulator_entry.py": "a1633416e2eafc1af33f37a9be728cf960c5f9c21540f7612413e7e8cd200272",
-    "EVALUATION_RESULTS.md": "a1d70d1e82a6f8c34c6baae2ba6626cf5e69d0ca284c9cfca664007628737740",
-    "DEBUG_VERIFICATION.md": "8e8056ab25ff24ae70c5fdd4e8df87b02117252fcd271bf8b8f521d8f7825c5a",
-    "SIMULATOR_SMOKE_TEST.md": "fab9f82be46ebe3c728717656584064e1b3fbd891af9106a91d3610985621afb"
+    "simulator_entry.py": "a1633416e2eafc1af33f37a9be728cf960c5f9c21540f7612413e7e8cd200272"
   },
   "sdk_compatibility": {
     "official_revision": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
@@ -279,43 +136,14 @@
     "model_name": "Era0-Preview",
     "repo_id": "roboterax/Era0-5B-Preview-RoboDojo",
     "url": "https://huggingface.co/roboterax/Era0-5B-Preview-RoboDojo",
-    "revision": "bd9e66380a13b8d8688f65c86d16e1a950fd27e6",
+    "revision": "959969bad7681e1a041b34b017998a6f73b6008e",
     "release_state": "published",
     "layout": "flat",
     "norm_filename": "norm_stats.pkl",
     "norm_sha256": "f0d1a21fc63e778ef5d75799073a719470b507f96f3822a905b4195ed755b285",
     "weights_filename": "model.safetensors",
     "weights_size_bytes": 11885672542,
-    "weights_sha256": "949b913f0dd935ca94ab2ae989a7a91b8f84d82ddbb448641e300761da11927b",
-    "revision_url": "https://huggingface.co/roboterax/Era0-5B-Preview-RoboDojo/tree/bd9e66380a13b8d8688f65c86d16e1a950fd27e6"
-  },
-  "prepared_policy_files": {
-    ".gitignore": "781b1801fe2fd470a9744f4acb8792ffd9cd677baaacd0cd42c7e3426f81cb55",
-    "DEBUG_VERIFICATION.md": "8e8056ab25ff24ae70c5fdd4e8df87b02117252fcd271bf8b8f521d8f7825c5a",
-    "EVALUATION_RESULTS.md": "a1d70d1e82a6f8c34c6baae2ba6626cf5e69d0ca284c9cfca664007628737740",
-    "PREPARATION_CHECKS.md": "8cc167470a12f9ff5a9ab188115f0a0810ee8736868873838640f414e6e4d9b6",
-    "README.md": "58f8bf01eb03bf5a0bd669c3c5f35a0f70532c5b0e2422ca851c8c0a80fbe5ae",
-    "SDK_COMPATIBILITY.md": "b7ba5c8accff988d03d44c76b135d698a624c69db81b6d094dc9287791d4fb36",
-    "SIMULATOR_SMOKE_TEST.md": "fab9f82be46ebe3c728717656584064e1b3fbd891af9106a91d3610985621afb",
-    "SUBMISSION.md": "a449911f08b9ac619058be5e0065773882cd2a6c81f6c2855674cf5f7058c678",
-    "__init__.py": "daf518f1abe58b40b45e4c1e625514982fd4a427efcbc0857e971d47c5eb0c66",
-    "checkpoint.py": "8e1d81a886d86f0ea6ff398e488555869172212384cc1aa09faadaa2f05e7847",
-    "checkpoint_release.json": "844ec03ba9cda669de7d36aadeb809caa587042deda35f7eb90694ad3540291b",
-    "checkpoint_release_published.json": "9e60d47d48cee1bdf135f138657234a28cf4916d3c0b7b5bad2cf6be06d111fc",
-    "common.sh": "c583beca9a4d0c96dbe12bbb45edfbbb36c2bcc069d5ce0791d003ba387bde61",
-    "deploy.py": "38821ae07832f700b0a87d4cb21ed5d213c11b97410a764612dd9660bff0a3c0",
-    "deploy.yml": "cb1b0d1813af0d033b25c5a3cf95582e03d294c3506cd687055a5be9183a5f2b",
-    "download_checkpoint.sh": "698619478fe10dc68d8a29ee837ca44a4c5e28f630ada376734e7d645f0b1dc6",
-    "eval.sh": "b6ca89052497515556dcf9b359e192bcb23e30762ecf89000094c8a3efd3308e",
-    "eval_three_seeds.sh": "fcf7484a215affae2fd931e72aabc8386329e41732ed993705367be2691e123f",
-    "evaluate.py": "8610792d8d17bccc5b03835b948575f2c927c5a1f7fb0fe9d8634ff6a9c41f9d",
-    "install.sh": "3894306a5f3e469d24f2de8fee829b7130cfba57c5a443a9cc39d17619f62541",
-    "model.py": "fe32349f71465b213a68bcf2b87fa9cedd065422a9e9ca9de0d8babdd73cac8e",
-    "native_protocol.py": "001bf92480b19b93a8aa739a948eee489a57ab497af47b11361806e9f047d094",
-    "requirements.txt": "655e929b83602da9ef1aa8a4dc8e2202990b6d8b747fd394d26dec9dfc7aba90",
-    "sdk_compat.py": "c05f4a52e15617f81762823a1ab6b41d69a7013ae2fd4daf2af752ac0d4e1581",
-    "setup_eval_env_client.sh": "da1192ba33d40bb122e59f40828c69c2f6f8dd6fbf6c04f0e2edbfc58830db44",
-    "setup_eval_policy_server.sh": "9beec4ca705b51e91f0500fa929f1ff1f94748c6ae80324d54c4b48b474029df",
-    "simulator_entry.py": "a1633416e2eafc1af33f37a9be728cf960c5f9c21540f7612413e7e8cd200272"
+    "weights_sha256": "e67ae66741f5b2ed2464aa1cfd26874b9cdfe1702dfdac7097e8ec688a63e36f",
+    "revision_url": "https://huggingface.co/roboterax/Era0-5B-Preview-RoboDojo/tree/959969bad7681e1a041b34b017998a6f73b6008e"
   }
 }

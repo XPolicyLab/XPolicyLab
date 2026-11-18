@@ -589,7 +589,7 @@ def timestep_embedding(
     Notes
     -----
     The defaults (``max_period=100``, ``input_scale=1.0``) reproduce the
-    original X-VLA parameterization and are kept so existing checkpoints stay
+    original Era0 parameterization and are kept so existing checkpoints stay
     bit-exact. They are, however, badly conditioned for flow matching, where
     ``t`` lives in ``[0.001, 1.0]``: every sinusoid argument ``t * freq`` then
     stays below 1.0, so ``cos`` and ``sin`` never leave their monotone region

@@ -2,6 +2,7 @@
 from pathlib import Path
 import json
 from XPolicyLab.utils.checkpoint_resolver import resolve_checkpoint_root
+from .asset_compat import adapter_path, read_metadata
 
 POLICY_DIR = Path(__file__).resolve().parent
 
@@ -15,14 +16,14 @@ def resolve_assets(cfg):
         (v for v in (root/'norm_stats.pkl', model/'norm_stats.pkl', model.parent/'norm_stats.pkl', model.parent.parent/'norm_stats.pkl') if v.is_file()),
         root/'norm_stats.pkl')
     if not norm.is_absolute(): norm = POLICY_DIR / norm
-    required = [model/'hy_xvla_adapter.json', norm, model/'tokenizer_config.json']
+    required = [adapter_path(model), norm, model/'tokenizer_config.json']
     for v in required:
         if not v.is_file(): raise FileNotFoundError(f"Required model asset: {v}")
     if not any((model/name).is_file() for name in ('processor_config.json','preprocessor_config.json')):
         raise FileNotFoundError(f'Missing image processor configuration under {model}')
     if not any(model.glob('*.safetensors')):
         raise FileNotFoundError(f"No safetensors weights under {model}")
-    spec = json.loads((model/'config.json').read_text())
+    spec = read_metadata(model/'config.json')
     expected = dict(vlm_backend='qwen3_5', architecture_version='vlm_fast_action_bridge',
         qwen_temporal_embedding='vlm_history_current_v1',
         qwen_image_attention_mode='bidirectional_image_blocks_current_only',
@@ -35,7 +36,7 @@ def resolve_assets(cfg):
     if (time is None or any(time[k] != v for k,v in expected_time.items())
             or phase(time) != 1.0):
         raise ValueError('This adapter revision requires the prepared 9/1/1 assets with completed 1.0-radian time RoPE; use the earlier adapter for earlier assets')
-    adapter = json.loads((model/'hy_xvla_adapter.json').read_text())
+    adapter = read_metadata(adapter_path(model))
     for key,value in dict(domain_id=16,action_representation='relative_chunk_ee_RT',
                           action_normalization='zscore',action_loss_mode='flow_matching').items():
         if adapter.get(key) != value: raise ValueError(f'Adapter {key}: {adapter.get(key)!r} != {value!r}')

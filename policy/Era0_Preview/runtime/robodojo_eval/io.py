@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""RoboDojo entry point for Hy-VLA evaluation.
+"""RoboDojo entry point for Era0 evaluation.
 
 This module mirrors ``robotwin_eval.deploy_policy`` but accepts RoboDojo-style
 observations:
@@ -84,7 +84,7 @@ def _pad_state(state: np.ndarray, max_state_dim: int = 32) -> np.ndarray:
 
 
 def encode_obs(observation: dict[str, Any], instruction: str | None = None) -> dict[str, Any]:
-    """Pack a RoboDojo observation into the Hy-VLA batch format."""
+    """Pack a RoboDojo observation into the Era0 batch format."""
     head = _extract_image(observation, CAM_HEAD)
     left = _extract_image(observation, CAM_LEFT)
     right = _extract_image(observation, CAM_RIGHT)
@@ -118,7 +118,7 @@ def encode_obs(observation: dict[str, Any], instruction: str | None = None) -> d
     }
 
 
-from ..hy_vla.utils.transform_utils import convert_frame_robo_to_umi, convert_PosQuat2PosRotationMatrix_batch
+from ..era0.utils.transform_utils import convert_frame_robo_to_umi, convert_PosQuat2PosRotationMatrix_batch
 
 L_POS, L_QUAT, L_GRIP = slice(0, 3), slice(3, 7), 7
 R_POS, R_QUAT, R_GRIP = slice(8, 11), slice(11, 15), 15
@@ -143,7 +143,7 @@ def _convert_pose_robo_dojo(
     umi_coord_frame: bool,
     umi_gripper_space: bool,
 ) -> np.ndarray:
-    """Encode a 16-d RoboDojo EE state into normalized Hy-VLA state space."""
+    """Encode a 16-d RoboDojo EE state into normalized Era0 state space."""
     e = eepose16_wxyz.copy()
     e[3:7] = eepose16_wxyz[[4, 5, 6, 3]]
     e[11:15] = eepose16_wxyz[[12, 13, 14, 11]]

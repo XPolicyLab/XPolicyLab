@@ -1,4 +1,4 @@
-"""Qwen3.5-VL backend for the canonical XVLA image/text contract."""
+"""Qwen3.5-VL backend for the canonical Era0 image/text contract."""
 
 from __future__ import annotations
 
@@ -85,7 +85,7 @@ QWEN_TEMPORAL_EMBEDDING_CONTRACT = "fixed_sinusoidal_v1"
 QWEN_TEMPORAL_EMBEDDING_SPACETIME = "spacetime_mem_v1"
 QWEN_TEMPORAL_EMBEDDING_BASE = 10000.0
 # Default stride used when `qwen_temporal_embedding=spacetime_mem_v1` is
-# selected without an explicit `qwen_spacetime_stride`. Matches the Hy-VLA
+# selected without an explicit `qwen_spacetime_stride`. Matches the Era0
 # MEM recipe and the Florence DaViT port.
 QWEN_SPACETIME_DEFAULT_STRIDE = 4
 
@@ -426,7 +426,7 @@ def validate_qwen_processor_contract(processor) -> None:
     )
     if actual_mean != _IMAGENET_MEAN or actual_std != _IMAGENET_STD:
         raise ValueError(
-            "Qwen XVLA uses canonical ImageNet-normalized tensors and "
+            "Qwen Era0 uses canonical ImageNet-normalized tensors and "
             "converts them to Qwen normalization inside the backend. "
             f"Expected mean/std={_IMAGENET_MEAN}/{_IMAGENET_STD}, got "
             f"{actual_mean}/{actual_std}."
@@ -472,7 +472,7 @@ def _rotate_half(x: torch.Tensor) -> torch.Tensor:
     return torch.cat((-second, first), dim=-1)
 
 class _PolicyOutputAdapter(nn.Sequential):
-    """Project native Qwen BF16 states into XVLA's FP32 policy contract."""
+    """Project native Qwen BF16 states into Era0's FP32 policy contract."""
 
     def forward(self, inputs: torch.Tensor) -> torch.Tensor:
         parameter = next(self.parameters(), None)
@@ -527,7 +527,7 @@ def _require_qwen35_classes():
         raise RuntimeError(
             "Qwen3.5 backend requires transformers>=5.2.0; "
             f"found {'.'.join(map(str, installed)) or 'missing'}. "
-            "Use the dedicated Qwen XVLA environment; the legacy Florence "
+            "Use the dedicated Qwen Era0 environment; the legacy Florence "
             "environment intentionally remains on transformers 4.x."
         )
     try:
@@ -680,7 +680,7 @@ def _install_causal_conv1d_fallback(model: nn.Module) -> int:
 
 def _resolve_attention_implementation(config=None, *, requested=None) -> str:
     requested = str(
-        (os.environ.get("XVLA_QWEN_ATTN_IMPLEMENTATION", "auto")
+        (os.environ.get("ERA0_QWEN_ATTN_IMPLEMENTATION", "auto")
          if requested is None else requested) or "auto"
     ).strip().lower()
     if config is not None:
@@ -688,7 +688,7 @@ def _resolve_attention_implementation(config=None, *, requested=None) -> str:
 
         if image_attention_mode(config) != CAUSAL:
             if requested not in {"auto", "sdpa"}:
-                raise ValueError("bidirectional_image_blocks requires XVLA_QWEN_ATTN_IMPLEMENTATION=sdpa or auto.")
+                raise ValueError("bidirectional_image_blocks requires ERA0_QWEN_ATTN_IMPLEMENTATION=sdpa or auto.")
             return "sdpa"
     aliases = {
         "fa2": "flash_attention_2",
@@ -715,7 +715,7 @@ def _resolve_attention_implementation(config=None, *, requested=None) -> str:
         )
     if requested not in aliases:
         raise ValueError(
-            "XVLA_QWEN_ATTN_IMPLEMENTATION must be auto, "
+            "ERA0_QWEN_ATTN_IMPLEMENTATION must be auto, "
             "flash_attention_2, flash_attention_3, sdpa, or eager; "
             f"got {requested!r}."
         )
@@ -723,7 +723,7 @@ def _resolve_attention_implementation(config=None, *, requested=None) -> str:
     if resolved == "flash_attention_3" and not _flash_attn_3_supported():
         major = _cuda_capability_major()
         raise RuntimeError(
-            "XVLA_QWEN_ATTN_IMPLEMENTATION=flash_attention_3 was requested but "
+            "ERA0_QWEN_ATTN_IMPLEMENTATION=flash_attention_3 was requested but "
             "FA3 cannot run here: the installed flash_attn_3 wheel only carries "
             "sm_90a cubins (no PTX), so it needs a Hopper device (compute "
             f"capability 9.x); this device reports major={major}. Failing loudly "
@@ -797,7 +797,7 @@ class Qwen35Backend(VLMBackend):
             ):
                 raise ValueError(f"{self._temporal_embedding_mode(owner)} cannot be combined with P3/history bank.")
             visual = getattr(getattr(owner.vlm, "model", None), "visual", None)
-            if getattr(visual, "_hy_spacetime_stride", None) is not None:
+            if getattr(visual, "_era0_spacetime_stride", None) is not None:
                 raise ValueError(f"{self._temporal_embedding_mode(owner)} requires an unpatched vision tower.")
             return tuple(range(pixel_values.shape[1] if pixel_values.dim() >= 5 else 1))
         return self._native_video_history_views(owner)
@@ -808,7 +808,7 @@ class Qwen35Backend(VLMBackend):
         Qwen native multi-frame ``image_grid_thw`` path (T > 1).
 
         The returned indices are in the dataset's *pre*-reorder view order
-        (head=0, left_wrist=1, right_wrist=2 for Hy-VLA), matching how
+        (head=0, left_wrist=1, right_wrist=2 for Era0), matching how
         ``_encode_valid_views`` keys ``keep_per_frame_views`` off
         ``flat_slot % num_views``. They are NOT post-
         ``_reorder_visual_features`` indices: that helper rotates the first
@@ -998,7 +998,7 @@ class Qwen35Backend(VLMBackend):
         delayed projection path. RoPE is finalized after forward in both cases.
         """
         handles = []
-        reuse = os.environ.get("XVLA_G05_REUSE_PREFIX_PROJECTIONS", "0") == "1"
+        reuse = os.environ.get("ERA0_G05_REUSE_PREFIX_PROJECTIONS", "0") == "1"
 
         def _make_hook(index: int, attn: nn.Module):
             def _hook(_module, args, kwargs):
@@ -1050,7 +1050,7 @@ class Qwen35Backend(VLMBackend):
         layers = self._language_layers(owner.vlm)
         language = owner.vlm.model.language_model
         layer = layers[-1]
-        if (os.environ.get("XVLA_G05_TERMINAL_PREFIX_ONLY", "0") != "1"
+        if (os.environ.get("ERA0_G05_TERMINAL_PREFIX_ONLY", "0") != "1"
                 or getattr(layer, "block_type", None) != "full_attention"
                 or float(layer.self_attn.attention_dropout) != 0
                 or getattr(language, "gradient_checkpointing", False)
@@ -1163,7 +1163,7 @@ class Qwen35Backend(VLMBackend):
             from ..qwen_history_time_rope import coefficients
             values = coefficients(packed["history_time_offsets"], time_spec)
             if values is not None:
-                time_kwargs["xvla_time_rope"] = (*values, time_spec["dim"])
+                time_kwargs["era0_time_rope"] = (*values, time_spec["dim"])
         history_value = packed.get("history_value")
         if history_value is not None and history_value["history"].shape[1] > 0:
             from XPolicyLab.policy.Era0_Preview.runtime.models.qwen_history_value import forward_history_value
@@ -1344,7 +1344,7 @@ class Qwen35Backend(VLMBackend):
         if not isinstance(getattr(config, "vlm_config", None), dict):
             raise ValueError(
                 "Qwen3.5 backend requires a serialized Qwen config in "
-                "XVLAConfig.vlm_config."
+                "Era0Config.vlm_config."
             )
         requested_context = str(
             getattr(config, "action_context_mode", "auto") or "auto"
@@ -1386,7 +1386,7 @@ class Qwen35Backend(VLMBackend):
         # Image-block visibility belongs to the language decoder. The vision
         # encoder attends independently within each image and can keep its
         # native varlen FlashAttention path instead of a Python loop per image.
-        vision_attention = os.environ.get("XVLA_QWEN_VISION_ATTN_IMPLEMENTATION")
+        vision_attention = os.environ.get("ERA0_QWEN_VISION_ATTN_IMPLEMENTATION")
         if vision_attention:
             qwen_config.vision_config.dtype = model_dtype
             qwen_config.vision_config._attn_implementation = (
@@ -1395,7 +1395,7 @@ class Qwen35Backend(VLMBackend):
         model = Qwen3_5ForConditionalGeneration(qwen_config).to(model_dtype)
         from ..qwen_history_time_rope import install as install_time_rope
         install_time_rope(model, getattr(config, "qwen_history_time_rope", None))
-        if os.environ.get("XVLA_QWEN_FIXED_IMAGE_VISION", "0") == "1":
+        if os.environ.get("ERA0_QWEN_FIXED_IMAGE_VISION", "0") == "1":
             from ..qwen_fixed_vision import install_fixed_image_vision
 
             count = install_fixed_image_vision(model.model.visual)
@@ -1429,7 +1429,7 @@ class Qwen35Backend(VLMBackend):
 
     @staticmethod
     def _canonical_to_qwen_pixels(images: torch.Tensor) -> torch.Tensor:
-        """Convert shared XVLA pixels to the Qwen-native visual distribution."""
+        """Convert shared Era0 pixels to the Qwen-native visual distribution."""
         if images.dim() != 4 or images.shape[1] != 3:
             raise ValueError(
                 "Qwen3.5 expects canonical images [N,3,H,W], got "
@@ -1455,7 +1455,7 @@ class Qwen35Backend(VLMBackend):
         factor = patch_size * merge_size
         if height % factor or width % factor:
             raise ValueError(
-                "Canonical XVLA image size must be divisible by Qwen "
+                "Canonical Era0 image size must be divisible by Qwen "
                 f"patch_size*merge_size={factor}, got {height}x{width}."
             )
         grid_h, grid_w = height // patch_size, width // patch_size
@@ -1507,7 +1507,7 @@ class Qwen35Backend(VLMBackend):
         vision_parameter = next(owner.vlm.model.visual.parameters())
         patches = patches.to(dtype=vision_parameter.dtype)
         vision = owner.vlm.model.visual
-        if getattr(vision, "_xvla_fixed_image_geometry", False):
+        if getattr(vision, "_era0_fixed_image_geometry", False):
             from ..qwen_fixed_vision import fixed_image_geometry
 
             grid_h = actual_image_size[0] // int(vision_cfg.patch_size)
@@ -1518,7 +1518,7 @@ class Qwen35Backend(VLMBackend):
             )
             outputs = vision(
                 patches, grid_thw=grids, return_dict=True,
-                xvla_fixed_image_tokens=grid_h * grid_w, **geometry,
+                era0_fixed_image_tokens=grid_h * grid_w, **geometry,
             )
         else:
             outputs = owner.vlm.model.get_image_features(
@@ -1596,7 +1596,7 @@ class Qwen35Backend(VLMBackend):
 
         visual = owner.vlm.model.visual
         stride = self._spacetime_stride(owner)
-        if getattr(visual, "_hy_spacetime_stride", None) == stride:
+        if getattr(visual, "_era0_spacetime_stride", None) == stride:
             return
         apply_spacetime_patch(visual, stride=stride)
 
@@ -2373,7 +2373,7 @@ class Qwen35Backend(VLMBackend):
                 f"Qwen semantic layer hooks did not run for layers {missing}."
             )
         # The public final state includes Qwen's terminal normalization and is
-        # exactly the representation used by the previous XVLA-Qwen contract.
+        # exactly the representation used by the previous Era0-Qwen contract.
         return [captured[index] for index in indices[:-1]] + [
             outputs.last_hidden_state
         ]
@@ -2419,7 +2419,7 @@ class Qwen35Backend(VLMBackend):
             history_mask = slots < (counts[:, :1] - 1)
             # Temporal offsets are in HISTORY-SLOT units, signed, 0 at the
             # current frame. One unit equals dataset.img_history_interval
-            # dataset steps (train_xvla.py asserts the config match), so a
+            # dataset steps (train_era0.py asserts the config match), so a
             # masked-out slot still shows up as a gap of 2 and the metric
             # spacing is preserved up to that fixed scale. Feeding raw step
             # counts (40 per slot) instead would push the frame code far out

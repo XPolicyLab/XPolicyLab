@@ -11,7 +11,7 @@ def should_reapply_preprocessed_condition_masks(vlm_backend: str) -> bool:
     """Keep Florence's legacy mask timing unless a run explicitly opts in."""
     raw = str(
         os.environ.get(
-            "XVLA_REAPPLY_PREPROCESSED_CONDITION_MASKS",
+            "ERA0_REAPPLY_PREPROCESSED_CONDITION_MASKS",
             "auto",
         )
     ).strip().lower()
@@ -22,7 +22,7 @@ def should_reapply_preprocessed_condition_masks(vlm_backend: str) -> bool:
     if raw in {"0", "false", "no", "off"}:
         return False
     raise ValueError(
-        "XVLA_REAPPLY_PREPROCESSED_CONDITION_MASKS must be auto, 0, or 1; "
+        "ERA0_REAPPLY_PREPROCESSED_CONDITION_MASKS must be auto, 0, or 1; "
         f"got {raw!r}."
     )
 

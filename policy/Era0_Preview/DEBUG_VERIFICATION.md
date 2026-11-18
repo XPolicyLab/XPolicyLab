@@ -12,7 +12,7 @@ Verified on 2026-11-04 using the released model assets and the standard XPolicyL
 
 ## Current debug command
 
-From `policy/Era0_Preview`, after installing the policy environment and selecting matching prepared model assets. This checks the current adapter; it does not reproduce the earlier observation-delay experiment:
+From `policy/Era0_Preview`, after installing the policy environment and setting `ERA0_CHECKPOINT_PATH`:
 
 ```bash
 EVAL_ENV_TYPE=debug DEBUG_OBS_ENCODED=0 \

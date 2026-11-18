@@ -28,7 +28,7 @@ if dry_run:
 from huggingface_hub import snapshot_download
 snapshot_download(repo_id=repo, local_dir=destination, revision=revision,
                   ignore_patterns=['*.tar.gz', '*.tgz', '*.zip'])
-if repo == release['repo_id'] and revision == release['revision']:
+if release.get('release_state') == 'published' and repo == release['repo_id'] and revision == release['revision']:
     norm = destination/release['norm_filename']
     if hashlib.sha256(norm.read_bytes()).hexdigest() != release['norm_sha256']:
         raise RuntimeError('Published normalization SHA256 mismatch')

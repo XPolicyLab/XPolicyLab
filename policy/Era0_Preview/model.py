@@ -9,11 +9,11 @@ from typing import Any
 import numpy as np
 import torch
 
-from .runtime.hy_vla.modeling_xvla_adapter import HyXVLA
+from .runtime.era0.modeling_era0_adapter import Era0Policy
 from .runtime.robodojo_eval.io import encode_obs
 from .runtime.robodojo_eval.gripper_control import GripperCloseHold
 from .runtime.robodojo_eval.io import _convert_pose_robo_dojo, action_chunk_to_robodojo_dicts
-from .runtime.hy_vla.utils.transform_utils import convert_frame_robo_to_umi, convert_frame_umi_to_robo
+from .runtime.era0.utils.transform_utils import convert_frame_robo_to_umi, convert_frame_umi_to_robo
 from .runtime.robotwin_eval.transforms import (
     get_norm_data,
     pos_rotation_matrix_to_pos_quat,
@@ -144,8 +144,8 @@ class Model(ModelTemplate):
         cfg.update(ckpt_path=str(assets["model"]), norm_path=str(assets["norm"]))
         self.ckpt_path = str(cfg["ckpt_path"])
         if not Path(self.ckpt_path).is_dir():
-            raise FileNotFoundError(f"X-VLA checkpoint directory not found: {self.ckpt_path}")
-        norm_path = cfg.get("norm_path") or os.environ.get("HY_VLA_NORM_PATH")
+            raise FileNotFoundError(f"Era0 checkpoint directory not found: {self.ckpt_path}")
+        norm_path = cfg.get("norm_path") or os.environ.get("ERA0_NORM_PATH")
         if not norm_path or not Path(norm_path).is_file():
             raise FileNotFoundError(f"Normalization file not found: {norm_path!r}")
         expected_action_representation = _normalize_action_representation(
@@ -157,7 +157,7 @@ class Model(ModelTemplate):
         expected_action_loss_mode = _normalize_action_loss_mode(cfg.get("action_loss_mode"))
         if _bool_config(cfg.get("with_absolute", False), "with_absolute"):
             raise ValueError(
-                "Hy_XVLA_RoboDojo supports exclusive relative or absolute "
+                "Era0_Preview supports exclusive relative or absolute "
                 "25-token checkpoints; legacy rel+abs with_absolute=true is not supported."
             )
         self.blend_mode = str(cfg.get("blend_mode", "rel_only"))
@@ -205,7 +205,7 @@ class Model(ModelTemplate):
                 f"{self.img_history_interval} % {history_step_span} != 0"
             )
         self.norm_data = get_norm_data(str(norm_path))
-        self.policy = HyXVLA.from_pretrained(
+        self.policy = Era0Policy.from_pretrained(
             self.ckpt_path,
             local_files_only=True,
             inference_steps=self.inference_steps,
@@ -218,7 +218,7 @@ class Model(ModelTemplate):
             self.policy.action_normalization
         )
         self.action_loss_mode = _normalize_action_loss_mode(
-            getattr(self.policy.xvla, "action_loss_mode", getattr(self.policy.config, "action_loss_mode", ""))
+            getattr(self.policy.era0, "action_loss_mode", getattr(self.policy.config, "action_loss_mode", ""))
         )
         if (
             expected_action_representation is not None
@@ -246,13 +246,13 @@ class Model(ModelTemplate):
             )
         if self.action_representation not in ("relative_chunk_ee_RT", "absolute_chunk_ee_RT"):
             raise ValueError(
-                "Hy_XVLA_RoboDojo evaluation supports relative_chunk_ee_RT "
+                "Era0_Preview evaluation supports relative_chunk_ee_RT "
                 "or absolute_chunk_ee_RT checkpoints; this checkpoint uses "
                 f"{self.action_representation!r}."
             )
         if self.action_normalization not in ("zscore", "none"):
             raise ValueError(
-                "Hy_XVLA_RoboDojo evaluation supports zscore or none action "
+                "Era0_Preview evaluation supports zscore or none action "
                 f"normalization; this checkpoint uses {self.action_normalization!r}."
             )
         if self.action_normalization == "none" and self.action_representation != "absolute_chunk_ee_RT":
@@ -272,7 +272,7 @@ class Model(ModelTemplate):
         self.policy.to(torch.bfloat16).cuda().eval()
         # The model adapter owns the network itself; observation encoding,
         # coordinate conversion, and optional per-view history mirror the
-        # Hy-VLA RoboDojo training contract.
+        # Era0 RoboDojo training contract.
         self.use_video_encoder = True
         self._obs_by_env: dict[int, dict[str, Any]] = {}
         self._top_by_env: dict[int, list[np.ndarray]] = {}
@@ -288,7 +288,7 @@ class Model(ModelTemplate):
         self._left_by_env.clear()
         self._right_by_env.clear()
         self._latest_env_idx_list = [0]
-        return "X-VLA RoboDojo adapter reset"
+        return "Era0 RoboDojo adapter reset"
 
     def update_obs(self, obs: dict[str, Any]):
         self.update_obs_batch([obs])
@@ -382,7 +382,7 @@ class Model(ModelTemplate):
             umi_gripper_space=self.umi_gripper_space,
         )
         # RoboDojo training normalizes the 20-d PosRotMat state then pads it
-        # to config.state_dim=32. HyXVLA consumes this padded representation.
+        # to config.state_dim=32. Era0Policy consumes this padded representation.
         net_state = _pad_network_state(net_state, state_dim=32)
         net_batch = dict(batch)
         net_batch["observation.state"] = net_state

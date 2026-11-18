@@ -40,7 +40,7 @@ from .action_conditioning import (
 )
 from .transformer import SoftPromptedTransformer
 from .action_hub import build_action_space
-from .configuration_xvla import XVLAConfig
+from .configuration_era0 import Era0Config
 from .vlm_backends import build_vlm_backend
 
 try:
@@ -84,8 +84,8 @@ if ConversionOps is not None:
             return _ReshapeToModelParameter()
 
 
-    _xvla_conversions = list(
-        get_checkpoint_conversion_mapping("XVLA") or []
+    _era0_conversions = list(
+        get_checkpoint_conversion_mapping("Era0") or []
     )
     _raw_gate_pattern = (
         r"transformer\.context_cross_attn\.(\d+)\.raw_gate"
@@ -93,9 +93,9 @@ if ConversionOps is not None:
     _raw_gate_target = r"transformer.context_cross_attn.\1.raw_gate"
     if not any(
         _raw_gate_pattern in conversion.source_patterns
-        for conversion in _xvla_conversions
+        for conversion in _era0_conversions
     ):
-        _xvla_conversions.append(
+        _era0_conversions.append(
             WeightConverter(
                 source_patterns=_raw_gate_pattern,
                 target_patterns=_raw_gate_target,
@@ -103,10 +103,10 @@ if ConversionOps is not None:
             )
         )
         register_checkpoint_conversion_mapping(
-            "XVLA",
-            _xvla_conversions,
+            "Era0",
+            _era0_conversions,
             overwrite=bool(
-                get_checkpoint_conversion_mapping("XVLA")
+                get_checkpoint_conversion_mapping("Era0")
             ),
         )
 
@@ -180,20 +180,20 @@ def _normalize_dorsal_history_valid_mask(
     return torch.from_numpy(padded)
 
 
-class XVLA(PreTrainedModel):
+class Era0(PreTrainedModel):
     """
-    XVLA: HuggingFace-compatible Vision-Language-Action policy.
+    Era0: HuggingFace-compatible Vision-Language-Action policy.
 
     Components:
       • Qwen3.5 visual language backbone
       • SoftPromptedTransformer (temporal/action head)
       • Action space (pre/post-processing)
     """
-    config_class = XVLAConfig
-    base_model_prefix = "xvla"
+    config_class = Era0Config
+    base_model_prefix = "era0"
     supports_gradient_checkpointing = False
 
-    def __init__(self, config: XVLAConfig, *args, **kwargs):
+    def __init__(self, config: Era0Config, *args, **kwargs):
         super().__init__(config, *args, **kwargs)
 
         if config.vlm_backend != "qwen3_5":
@@ -241,14 +241,14 @@ class XVLA(PreTrainedModel):
             self.action_space.configure_target_mode(target_mode)
         if hasattr(self.action_space, "configure_loss_profile"):
             action_loss_profile = str(
-                getattr(config, "action_loss_profile", "hy_normalized_mse")
+                getattr(config, "action_loss_profile", "era0_normalized_mse")
             )
             # A native CrossEmb model historically used its physical-coordinate
             # weighted loss. The Hy adapter attests its normalized RoboDojo
             # contract explicitly; only that contract opts into uniform MSE.
             if (
                 self.action_mode == "cross_emb"
-                and not str(getattr(config, "hy_action_contract", "")).strip()
+                and not str(getattr(config, "era0_action_contract", "")).strip()
             ):
                 action_loss_profile = "cross_emb_native"
             self.action_space.configure_loss_profile(
@@ -370,7 +370,7 @@ class XVLA(PreTrainedModel):
 
         # Transformers 5 requires the top-level composite model to expose the
         # tied-weight mapping collected from child PreTrainedModel instances.
-        # Calling post_init() here would reinitialize existing XVLA modules, so
+        # Calling post_init() here would reinitialize existing Era0 modules, so
         # collect only the static mapping needed by from_pretrained().
         if hasattr(self, "get_expanded_tied_weights_keys"):
             self.all_tied_weights_keys = self.get_expanded_tied_weights_keys(
@@ -386,7 +386,7 @@ class XVLA(PreTrainedModel):
     # config alone: from_pretrained would construct 1-row buffers and the
     # strict shape check would reject the checkpoint (this is exactly what
     # broke every resume from a multi-bank PT checkpoint). The count is now
-    # serialized in XVLAConfig; for checkpoints written before that field
+    # serialized in Era0Config; for checkpoints written before that field
     # existed we probe the safetensors header, which is O(header) and needs no
     # weight load.
     _NORM_BANK_PROBE_KEY = "action_space._bank_mean"

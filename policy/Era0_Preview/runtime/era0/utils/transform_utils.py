@@ -23,7 +23,7 @@ Conventions:
   left_gripper(1), right_xyz(3), right_rot6d(6), right_gripper(1)]``, where
   ``rot6d`` is the first two rows of the rotation matrix flattened
   ``[r00, r01, r02, r10, r11, r12]``.
-* Dual-arm relative-action 20-d layout used by Hy-VLA's RT-relative target:
+* Dual-arm relative-action 20-d layout used by Era0's RT-relative target:
   ``[left_dxyz(3), left_relRot6d(6), left_gripper(1), right_dxyz(3),
   right_relRot6d(6), right_gripper(1)]``, with deltas computed against
   the chunk's t=0 frame in each arm's wrist frame.

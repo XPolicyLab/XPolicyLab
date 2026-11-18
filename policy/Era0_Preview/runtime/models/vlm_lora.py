@@ -1,4 +1,4 @@
-"""Opt-in language LoRA; keep XVLA's native module and checkpoint namespace."""
+"""Opt-in language LoRA; keep Era0's native module and checkpoint namespace."""
 import math
 from numbers import Integral
 
@@ -48,7 +48,7 @@ def resolve_spec(spec):
 def install_vlm_lora(model, spec):
     """Freeze VLM, adapt language-layer Linear modules; leave expert untouched.
 
-    Install after vanilla weight loading for a new experiment, or inside XVLA
+    Install after vanilla weight loading for a new experiment, or inside Era0
     construction when restoring a complete LoRA checkpoint. No wrapper
     replaces the VLM, preserving Qwen hooks, language/vision access and APIs.
     """
@@ -75,6 +75,6 @@ def install_vlm_lora(model, spec):
         parent_name, leaf = name.rsplit(".", 1)
         parent = model.vlm.get_submodule(parent_name)
         setattr(parent, leaf, LoRALinear(getattr(parent, leaf), spec))
-    # Save full base + adapters in XVLA's normal checkpoint; no external
+    # Save full base + adapters in Era0's normal checkpoint; no external
     # adapter package or base checkpoint is needed for inference.
     model.config.vlm_lora = spec

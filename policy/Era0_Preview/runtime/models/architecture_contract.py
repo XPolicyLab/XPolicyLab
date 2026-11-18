@@ -1,12 +1,12 @@
-"""Resolved architecture-path contract for X-VLA checkpoints.
+"""Resolved architecture-path contract for Era0 checkpoints.
 
-Ported from the x-vla training repository so Hy-Embodied can load and
+Architecture helpers allow Era0 to load and
 fine-tune checkpoints written by the ``vlm_fast_action_bridge`` (G0.5
 prefix-KV) pretraining path. The legacy fused-MHA Florence/Qwen families
 remain the default: a checkpoint that omits every field below resolves to
 ``legacy`` and is byte-for-byte unchanged.
 
-This module is deliberately dependency-free so ``XVLAConfig`` can import it
+This module is deliberately dependency-free so ``Era0Config`` can import it
 without pulling in torch.
 """
 
@@ -16,7 +16,7 @@ from typing import Any, Mapping
 
 
 # VLA action-path language token cap shared by every wide contract. Florence
-# keeps the narrower 50 (``processing_xvla.DEFAULT_ACTION_LANGUAGE_MAX_LENGTH``)
+# keeps the narrower 50 (``processing_era0.DEFAULT_ACTION_LANGUAGE_MAX_LENGTH``)
 # because its checkpoints are baked at that value.
 WIDE_ACTION_LANGUAGE_MAX_LENGTH = 128
 
@@ -32,11 +32,11 @@ ARCHITECTURE_PATH_ALIASES = {
 }
 
 # action Q reads frozen VLM K/V (was conditioned_reader)
-VLM_KV_READER_VERSION = "xvla_vlm_kv_reader_v1"
+VLM_KV_READER_VERSION = "era0_vlm_kv_reader_v1"
 VLM_KV_READER_VERSIONS = frozenset(
     {
         VLM_KV_READER_VERSION,
-        "xvla_conditioned_reader_v1",
+        "era0_conditioned_reader_v1",
     }
 )
 # prefix / FAST / action bridge; Qwen uses native prefix KV
@@ -44,14 +44,14 @@ VLM_FAST_ACTION_BRIDGE_VERSION = "vlm_fast_action_bridge"
 VLM_FAST_ACTION_BRIDGE_VERSIONS = frozenset(
     {
         VLM_FAST_ACTION_BRIDGE_VERSION,
-        "xvla_vlm_fast_action_bridge_v1",
-        "xvla_matched_dual_stream_v1",
+        "era0_vlm_fast_action_bridge_v1",
+        "era0_matched_dual_stream_v1",
     }
 )
 ARCHITECTURE_VERSION_ALIASES = {
-    "xvla_conditioned_reader_v1": VLM_KV_READER_VERSION,
-    "xvla_vlm_fast_action_bridge_v1": VLM_FAST_ACTION_BRIDGE_VERSION,
-    "xvla_matched_dual_stream_v1": VLM_FAST_ACTION_BRIDGE_VERSION,
+    "era0_conditioned_reader_v1": VLM_KV_READER_VERSION,
+    "era0_vlm_fast_action_bridge_v1": VLM_FAST_ACTION_BRIDGE_VERSION,
+    "era0_matched_dual_stream_v1": VLM_FAST_ACTION_BRIDGE_VERSION,
 }
 LEGACY_ARCHITECTURE_VERSION = "legacy_cross_emb_v5"
 ALLOWED_ARCHITECTURE_VERSIONS = frozenset(

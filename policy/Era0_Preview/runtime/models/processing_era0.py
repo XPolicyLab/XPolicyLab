@@ -62,9 +62,9 @@ def apply_action_language_max_length(processor, config_or_dict) -> int:
     return cap
 
 
-class XVLAProcessor(ProcessorMixin):
+class Era0Processor(ProcessorMixin):
     """
-    XVLAProcessor: Unified multimodal processor for XVLA models.
+    Era0Processor: Unified multimodal processor for Era0 models.
 
     Handles:
       - Multi-view image inputs (e.g., from multiple cameras).
@@ -74,7 +74,7 @@ class XVLAProcessor(ProcessorMixin):
     This processor combines an image processor and a tokenizer under a single interface
     so that users can call it directly like:
 
-        >>> processor = XVLAProcessor.from_pretrained("path/to/xvla")
+        >>> processor = Era0Processor.from_pretrained("path/to/era0")
         >>> inputs = processor(images=batch_images, language_instruction=batch_texts)
 
     It is fully compatible with the Hugging Face AutoProcessor API.
@@ -163,7 +163,7 @@ class XVLAProcessor(ProcessorMixin):
         image_pad_rgb: List[int] | tuple[int, int, int] = QWEN_POLICY_PAD_RGB,
     ):
         """
-        Initialize XVLAProcessor.
+        Initialize Era0Processor.
 
         Parameters
         ----------
@@ -178,7 +178,7 @@ class XVLAProcessor(ProcessorMixin):
             without the caller having to pass ``--num-views`` explicitly.
 
             Background: ``num_views`` controls how many slots
-            ``XVLAProcessor.__call__`` pads the image batch to.  A checkpoint
+            ``Era0Processor.__call__`` pads the image batch to.  A checkpoint
             trained with ``--num_views 1`` expects a single-slot tensor; loading
             it with the default ``num_views=3`` injects 2×N extra
             ``aux_visual_proj(0)`` bias tokens the model never saw during
@@ -195,7 +195,7 @@ class XVLAProcessor(ProcessorMixin):
             -- the latter belongs to the image processor.
         main_camera_only : bool or None, default None
             Whether the checkpoint was trained with only the primary camera
-            decoded (``XVLA_MAIN_CAMERA_ONLY=1``).  Persisted alongside
+            decoded (``ERA0_MAIN_CAMERA_ONLY=1``).  Persisted alongside
             ``num_views`` so the deploy side can auto-detect how many REAL
             cameras to feed.
 

@@ -1,4 +1,4 @@
-"""X-VLA implementation behind the established Hy-VLA batch contract."""
+"""Era0 implementation behind the established Era0 batch contract."""
 
 from __future__ import annotations
 
@@ -10,14 +10,16 @@ from collections import deque
 from pathlib import Path
 from typing import Any
 
+from ...asset_compat import adapter_path, read_metadata
+
 import torch
 import torch.nn.functional as F
 from torch import Tensor, nn
 
-from XPolicyLab.policy.Era0_Preview.runtime.models.configuration_xvla import XVLAConfig
+from XPolicyLab.policy.Era0_Preview.runtime.models.configuration_era0 import Era0Config
 from XPolicyLab.policy.Era0_Preview.runtime.models.architecture_contract import is_vlm_fast_action_bridge_version
-from XPolicyLab.policy.Era0_Preview.runtime.models.modeling_xvla import XVLA
-from XPolicyLab.policy.Era0_Preview.runtime.models.processing_xvla import XVLAProcessor, apply_action_language_max_length
+from XPolicyLab.policy.Era0_Preview.runtime.models.modeling_era0 import Era0
+from XPolicyLab.policy.Era0_Preview.runtime.models.processing_era0 import Era0Processor, apply_action_language_max_length
 
 
 _IMAGE_KEYS = (
@@ -29,19 +31,19 @@ _IMAGE_HISTORY_MASK_KEY = "observation.images.history_mask"
 _IMAGE_HISTORY_SIZE_KEY = "observation.images.history_size"
 _STATE_KEY = "observation.state"
 _ACTION_KEY = "action"
-_ADAPTER_MANIFEST = "hy_xvla_adapter.json"
+_ADAPTER_MANIFEST = "era0_adapter.json"
 _EE6D_ACTION_DIM = 20
-_HY_ACTION_DIM = 32
+_ERA0_ACTION_DIM = 32
 _CROSS_EMB_EE_INDICES = tuple(range(0, 10)) + tuple(range(30, 40))
-_FLORENCE_XVLA_POLICY_IMAGE_SIZE = (224, 224)
-_HY_ROBODOJO_ACTION_CONTRACT = (
-    "hy_robodojo_ee6d20_rt_relative_rows_zscore_flow_matching_v1"
+_FLORENCE_ERA0_POLICY_IMAGE_SIZE = (224, 224)
+_ERA0_ROBODOJO_ACTION_CONTRACT = (
+    "era0_robodojo_ee6d20_rt_relative_rows_zscore_flow_matching_v1"
 )
 _CROSS_EMB_ACTION_TRANSFER_MODES = frozenset(
     {"auto", "reset", "copy_compatible", "preserve", "pretrained"}
 )
 _ACTION_LOSS_PROFILES = frozenset(
-    {"hy_normalized_mse", "official_ee6d_regression"}
+    {"era0_normalized_mse", "official_ee6d_regression"}
 )
 _ACTION_LOSS_COMPONENTS = (
     "position_loss",
@@ -60,7 +62,7 @@ _QWEN_TIMESTAMP_MAX_RELATIVE_SLOT = 0
 _logger = logging.getLogger(__name__)
 
 
-def _install_qwen_timestamp_tokens(config: XVLAConfig, tokenizer) -> None:
+def _install_qwen_timestamp_tokens(config: Era0Config, tokenizer) -> None:
     """Cache camera-qualified relative-time text ids for multimodal packing.
 
     The backend packs timestamps immediately before each image block. Keeping
@@ -86,10 +88,10 @@ def _install_qwen_timestamp_tokens(config: XVLAConfig, tokenizer) -> None:
 
 
 def _is_raw_qwen35_checkpoint(source: str) -> bool:
-    """Return whether ``source`` is a native Qwen3.5 (not XVLA) directory."""
+    """Return whether ``source`` is a native Qwen3.5 (not Era0) directory."""
     config_path = Path(source) / "config.json"
     try:
-        payload = json.loads(config_path.read_text(encoding="utf-8"))
+        payload = read_metadata(config_path)
     except (OSError, TypeError, ValueError):
         return False
     return str(payload.get("model_type", "")).strip().lower() == "qwen3_5"
@@ -99,7 +101,7 @@ def _is_raw_dm05_checkpoint(source: str) -> bool:
     """Return whether ``source`` is a native DM0.5 checkpoint directory."""
     config_path = Path(source) / "config.json"
     try:
-        payload = json.loads(config_path.read_text(encoding="utf-8"))
+        payload = read_metadata(config_path)
     except (OSError, TypeError, ValueError):
         return False
     return str(payload.get("model_type", "")).strip().lower() in {"dm05", "dm0.5", "dm_05"}
@@ -157,12 +159,12 @@ def _normalize_cross_emb_action_transfer(value: Any) -> str:
 
 
 def _normalize_action_loss_profile(value: Any) -> str:
-    normalized = str(value or "hy_normalized_mse").strip().lower()
+    normalized = str(value or "era0_normalized_mse").strip().lower()
     aliases = {
-        "": "hy_normalized_mse",
-        "default": "hy_normalized_mse",
-        "hy": "hy_normalized_mse",
-        "hy_normalized_mse": "hy_normalized_mse",
+        "": "era0_normalized_mse",
+        "default": "era0_normalized_mse",
+        "hy": "era0_normalized_mse",
+        "era0_normalized_mse": "era0_normalized_mse",
         "official": "official_ee6d_regression",
         "official_ee6d_regression": "official_ee6d_regression",
     }
@@ -201,7 +203,7 @@ def _validate_action_loss_profile_contract(
 
 
 def _log_from_pretrained_summary(
-    policy: "HyXVLA",
+    policy: "Era0Policy",
     *,
     source: str,
     branch: str,
@@ -210,7 +212,7 @@ def _log_from_pretrained_summary(
     action_shape_mismatch: bool | None = None,
 ) -> None:
     """Emit one compact, post-load contract summary for reproducibility."""
-    model = policy.xvla
+    model = policy.era0
     config = model.config
     action_space = getattr(model, "action_space", None)
     norm_enabled = getattr(action_space, "_norm_enabled", None)
@@ -248,7 +250,7 @@ def _log_from_pretrained_summary(
         "loss=(mode=%s profile=%s) qwen_temporal=%s qwen_spacetime_stride=%s "
         "transfer=%s shape_mismatch=%s "
         "norm=(class=%s dim=%s enabled=%s mode=%s clip=%s banks=%s) "
-        "modules=(xvla=%s vlm=%s dtype=%s) params=(trainable=%d total=%d "
+        "modules=(era0=%s vlm=%s dtype=%s) params=(trainable=%d total=%d "
         "vlm=%d/%d expert=%d/%d)",
         branch,
         source,
@@ -285,8 +287,8 @@ def _log_from_pretrained_summary(
     )
 
 
-class HyXVLA(nn.Module):
-    """Expose X-VLA through the existing Hy-VLA model API.
+class Era0Policy(nn.Module):
+    """Expose Era0 through the existing Era0 model API.
 
     The data pipeline emits 32-wide state/action tensors. Historical RoboDojo
     EEF runs use the first 20 channels; the dedicated DM05 joint source uses
@@ -295,18 +297,18 @@ class HyXVLA(nn.Module):
     CrossEmb-preserve path expands the historical 20-D EEF layout only.
     """
 
-    name = "xvla"
+    name = "era0"
 
     def __init__(
         self,
-        xvla: XVLA,
-        processor: XVLAProcessor,
+        era0: Era0,
+        processor: Era0Processor,
         *,
         inference_steps: int = 10,
         domain_id: int = 0,
         action_normalization: str = "zscore",
         action_representation: str = "relative_chunk_ee_RT",
-        action_loss_profile: str = "hy_normalized_mse",
+        action_loss_profile: str = "era0_normalized_mse",
         random_init_action_head: bool = False,
         cross_emb_action_transfer: str = "not_applicable",
         detach_vlm_to_expert: bool = False,
@@ -318,9 +320,9 @@ class HyXVLA(nn.Module):
         action_expert_block_parameter_count: int | None = None,
     ):
         super().__init__()
-        self.xvla = xvla
+        self.era0 = era0
         self.processor = processor
-        self.config = xvla.config
+        self.config = era0.config
         _install_qwen_timestamp_tokens(self.config, processor.tokenizer)
         self.inference_steps = int(inference_steps)
         self.domain_id = int(domain_id)
@@ -342,7 +344,7 @@ class HyXVLA(nn.Module):
         # loss and the noised action condition. Evaluation keeps that behavior
         # unless an explicit diagnostic opts in to unmasked tail noise.
         self.preserve_padding_noise_inference = False
-        self._action_queue: deque[Tensor] = deque([], maxlen=int(xvla.num_actions))
+        self._action_queue: deque[Tensor] = deque([], maxlen=int(era0.num_actions))
         self.register_buffer(
             "_image_mean",
             torch.tensor((0.485, 0.456, 0.406), dtype=torch.float32).view(1, 1, 1, 3, 1, 1),
@@ -396,7 +398,7 @@ class HyXVLA(nn.Module):
         beta_b: float | None = None,
         logit_normal_m: float | None = None,
         logit_normal_s: float | None = None,
-    ) -> "HyXVLA":
+    ) -> "Era0Policy":
         source = str(pretrained_name_or_path)
         _logger.info(
             "[from_pretrained] start source=%s requested=(loss_mode=%s "
@@ -413,9 +415,9 @@ class HyXVLA(nn.Module):
             action_expert_depth,
         )
         manifest: dict[str, Any] = {}
-        manifest_path = Path(source) / _ADAPTER_MANIFEST
+        manifest_path = adapter_path(source)
         if manifest_path.is_file():
-            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest = read_metadata(manifest_path)
         if action_normalization is None:
             action_normalization = str(manifest.get("action_normalization", "zscore"))
         if action_representation is None:
@@ -436,7 +438,7 @@ class HyXVLA(nn.Module):
         )
         if action_normalization not in {"zscore", "none"}:
             raise ValueError(
-                "HyXVLA action_normalization must be zscore or none, got "
+                "Era0Policy action_normalization must be zscore or none, got "
                 f"{action_normalization!r}"
             )
         reset_action_head = (
@@ -472,7 +474,7 @@ class HyXVLA(nn.Module):
         if _is_raw_qwen35_checkpoint(source) and requested_cross_emb_transfer == "pretrained":
             raise ValueError(
                 "cross_emb_action_transfer=pretrained requires a complete "
-                "X-VLA checkpoint with pretrained action-policy weights; "
+                "Era0 checkpoint with pretrained action-policy weights; "
                 f"{source!r} is a native Qwen3.5 VLM-only checkpoint. "
                 "Set PRETRAIN to the pretraining pipeline's ckpt-<step> "
                 "model directory (for example ckpt-50000)."
@@ -538,7 +540,7 @@ class HyXVLA(nn.Module):
             )
         if _is_raw_qwen35_checkpoint(source) or _is_raw_dm05_checkpoint(source):
             raise ValueError("Evaluation requires a complete Era0-Preview policy checkpoint.")
-        source_cfg = XVLAConfig.from_pretrained(source, local_files_only=local_files_only)
+        source_cfg = Era0Config.from_pretrained(source, local_files_only=local_files_only)
         source_has_far_aux = bool(getattr(source_cfg, "qwen_far_aux", None)
                                   and source_cfg.qwen_far_aux.get("enabled", False))
         if qwen_temporal_embedding is not None:
@@ -591,7 +593,7 @@ class HyXVLA(nn.Module):
         source_cfg_payload: dict[str, Any] = {}
         source_cfg_path = Path(source) / "config.json"
         if source_cfg_path.is_file():
-            source_cfg_payload = json.loads(source_cfg_path.read_text(encoding="utf-8"))
+            source_cfg_payload = read_metadata(source_cfg_path)
         requested_action_loss_profile = _normalize_action_loss_profile(
             action_loss_profile
             if action_loss_profile is not None
@@ -599,7 +601,7 @@ class HyXVLA(nn.Module):
                 "action_loss_profile",
                 source_cfg_payload.get(
                     "action_loss_profile",
-                    getattr(source_cfg, "action_loss_profile", "hy_normalized_mse"),
+                    getattr(source_cfg, "action_loss_profile", "era0_normalized_mse"),
                 ),
             )
         )
@@ -642,7 +644,7 @@ class HyXVLA(nn.Module):
             # SFT setting before validating the auxiliary configuration.
             target_cfg_dict["ki_detach_vlm_to_expert"] = _coerce_bool(
                 detach_vlm_to_expert, name="detach_vlm_to_expert")
-        target_cfg = XVLAConfig.from_dict(target_cfg_dict)
+        target_cfg = Era0Config.from_dict(target_cfg_dict)
         source_action_expert_depth = int(getattr(source_cfg, "depth", 0) or 0)
         target_cfg.depth = cls._resolve_action_expert_depth(
             source_depth=source_action_expert_depth,
@@ -687,7 +689,7 @@ class HyXVLA(nn.Module):
             )
         else:
             target_cfg.action_mode = "ee6d_padded"
-            target_cfg.max_action_dim = _HY_ACTION_DIM
+            target_cfg.max_action_dim = _ERA0_ACTION_DIM
             target_cfg.real_action_dim = _EE6D_ACTION_DIM
         target_cfg.keep_gripper_proprio = True
         target_cfg.ee6d_regression_normalization = False
@@ -704,7 +706,7 @@ class HyXVLA(nn.Module):
             if keep_vlm_decoder is not None
             else bool(getattr(source_cfg, "keep_vlm_decoder", False))
         )
-        # Hy-VLA's action training objective is flow matching.  The padded
+        # Era0's action training objective is flow matching.  The padded
         # action space owns its fp32, first-20-dimension scalar reduction so
         # the public Hy batch/data contract remains unchanged.
         target_cfg.action_loss_mode = (
@@ -734,8 +736,8 @@ class HyXVLA(nn.Module):
             action_representation=action_representation,
         )
         target_cfg.action_loss_profile = requested_action_loss_profile
-        target_cfg.hy_action_contract = (
-            _HY_ROBODOJO_ACTION_CONTRACT
+        target_cfg.era0_action_contract = (
+            _ERA0_ROBODOJO_ACTION_CONTRACT
             if (
                 str(target_cfg.action_loss_mode).strip().lower()
                 == "flow_matching"
@@ -791,7 +793,7 @@ class HyXVLA(nn.Module):
                 )
             target_cfg.logit_normal_s = s_value
         if reset_action_head:
-            target_cfg.action_initialization_contract = "hy_random_action_io_v1"
+            target_cfg.action_initialization_contract = "era0_random_action_io_v1"
 
         effective_cross_emb_transfer = "not_applicable"
         if source_action_mode == "cross_emb":
@@ -806,7 +808,7 @@ class HyXVLA(nn.Module):
                 effective_cross_emb_transfer = "reset"
             if effective_cross_emb_transfer == "reset":
                 target_cfg.action_initialization_contract = (
-                    "hy_cross_emb_incompatible_action_io_reset_v2"
+                    "era0_cross_emb_incompatible_action_io_reset_v2"
                 )
         action_shape_mismatch = (
             target_cfg.num_actions != source_cfg.num_actions
@@ -830,17 +832,17 @@ class HyXVLA(nn.Module):
             action_shape_mismatch,
         )
 
-        xvla = XVLA.from_pretrained(
+        era0 = Era0.from_pretrained(
             source,
             config=target_cfg,
             ignore_mismatched_sizes=action_shape_mismatch,
             local_files_only=local_files_only,
         )
-        cls._reinit_history_memory_after_pretrained(xvla, source=source)
-        if getattr(xvla, "far_aux_head", None) is not None and not source_has_far_aux:
+        cls._reinit_history_memory_after_pretrained(era0, source=source)
+        if getattr(era0, "far_aux_head", None) is not None and not source_has_far_aux:
             # Missing modules loaded by HF may have been constructed on meta.
             # Reset only a fresh head; restored auxiliary weights stay intact.
-            for module in xvla.far_aux_head.modules():
+            for module in era0.far_aux_head.modules():
                 if isinstance(module, (nn.Linear, nn.LayerNorm)):
                     module.reset_parameters()
         if source_action_mode == "cross_emb" and not preserve_cross_emb:
@@ -848,9 +850,9 @@ class HyXVLA(nn.Module):
             # normalization-buffer layouts. Same-shaped source flags can still
             # be restored while the 20-D statistics are skipped, accidentally
             # enabling invalid normalization for already z-scored RoboDojo data.
-            cls._reset_converted_ee6d_action_space(xvla)
+            cls._reset_converted_ee6d_action_space(era0)
         if preserve_cross_emb:
-            action_space = xvla.action_space
+            action_space = era0.action_space
             # RoboDojo already supplies dataset-side z-score actions/proprio.
             # The mixed11 CrossEmb buffers describe a different raw-action
             # distribution; applying them here would normalize (and possibly
@@ -881,21 +883,21 @@ class HyXVLA(nn.Module):
                 action_space._norm_mode(),
                 int(getattr(action_space, "_bank_low", torch.empty(1)).shape[0]),
             )
-        if len(xvla.transformer.blocks) != int(target_cfg.depth):
+        if len(era0.transformer.blocks) != int(target_cfg.depth):
             raise RuntimeError(
                 "Loaded action expert depth does not match requested architecture: "
-                f"expected {target_cfg.depth}, got {len(xvla.transformer.blocks)}."
+                f"expected {target_cfg.depth}, got {len(era0.transformer.blocks)}."
             )
         action_expert_parameter_count = sum(
-            parameter.numel() for parameter in xvla.transformer.parameters()
+            parameter.numel() for parameter in era0.transformer.parameters()
         )
         action_expert_block_parameter_count = sum(
-            parameter.numel() for parameter in xvla.transformer.blocks.parameters()
+            parameter.numel() for parameter in era0.transformer.blocks.parameters()
         )
         _logger.info(
             "[from_pretrained] action_expert depth=%d source_depth=%d "
             "params=%d block_params=%d",
-            len(xvla.transformer.blocks),
+            len(era0.transformer.blocks),
             source_action_expert_depth,
             action_expert_parameter_count,
             action_expert_block_parameter_count,
@@ -909,23 +911,23 @@ class HyXVLA(nn.Module):
         position_source_steps = int(source_cfg.num_actions)
         if policy_init_source:
             reference_cfg = cls._load_reference_action_policy(
-                xvla,
+                era0,
                 policy_init_source,
             )
             effective_cross_emb_transfer = "reference_policy"
             position_source_steps = int(reference_cfg.num_actions)
             target_cfg.action_initialization_contract = (
-                "hy_reference_action_policy_v1"
+                "era0_reference_action_policy_v1"
             )
         elif reset_action_head:
-            cls._random_init_action_io_modules(xvla, seed=action_io_init_seed)
+            cls._random_init_action_io_modules(era0, seed=action_io_init_seed)
         elif source_action_mode == "cross_emb":
             if effective_cross_emb_transfer == "reset":
-                cls._random_init_action_io_modules(xvla, seed=action_io_init_seed)
+                cls._random_init_action_io_modules(era0, seed=action_io_init_seed)
             elif effective_cross_emb_transfer not in {"preserve", "pretrained"}:
-                cls._warm_start_cross_emb_padded_action_modules(xvla, source)
+                cls._warm_start_cross_emb_padded_action_modules(era0, source)
         elif source_cfg.max_action_dim < target_cfg.max_action_dim:
-            cls._warm_start_padded_action_modules(xvla, source)
+            cls._warm_start_padded_action_modules(era0, source)
         if (
             source_action_mode == "cross_emb"
             and not policy_init_source
@@ -933,16 +935,16 @@ class HyXVLA(nn.Module):
         ):
             prompt_source_domain = int(cross_emb_prompt_source_domain)
             cls._copy_domain_soft_prompt(
-                xvla,
+                era0,
                 source_domain=prompt_source_domain,
                 target_domain=domain_id,
             )
         if target_cfg.num_actions != position_source_steps:
-            # X-VLA's learned position table is laid out as
+            # Era0's learned position table is laid out as
             # [action tokens][vision/text/aux tokens].  Loading a shorter
             # action chunk succeeds shape-wise, but would otherwise make the
             # visual prefix read positions trained for action tokens.
-            pos_emb = xvla.transformer.pos_emb
+            pos_emb = era0.transformer.pos_emb
             source_steps = position_source_steps
             target_steps = int(target_cfg.num_actions)
             original = pos_emb.data.clone()
@@ -951,10 +953,10 @@ class HyXVLA(nn.Module):
                 :, source_steps : source_steps + usable
             ]
             pos_emb.data[:, target_steps + usable :] = 0.0
-        processor = XVLAProcessor.from_pretrained(source, local_files_only=local_files_only)
+        processor = Era0Processor.from_pretrained(source, local_files_only=local_files_only)
         apply_action_language_max_length(processor, target_cfg)
         policy = cls(
-            xvla,
+            era0,
             processor,
             inference_steps=inference_steps,
             domain_id=domain_id,
@@ -977,7 +979,7 @@ class HyXVLA(nn.Module):
         _log_from_pretrained_summary(
             policy,
             source=source,
-            branch="xvla_checkpoint",
+            branch="era0_checkpoint",
             source_action_mode=source_action_mode,
             source_action_dim=source_action_dim,
             action_shape_mismatch=action_shape_mismatch,
@@ -1036,16 +1038,16 @@ class HyXVLA(nn.Module):
         attestation for this exact RoboDojo target representation.
         """
         source_contract = str(
-            source_cfg_payload.get("hy_action_contract", "")
+            source_cfg_payload.get("era0_action_contract", "")
         ).strip()
-        compatible = source_contract == _HY_ROBODOJO_ACTION_CONTRACT
+        compatible = source_contract == _ERA0_ROBODOJO_ACTION_CONTRACT
         if requested == "reset":
             return "reset"
         if requested == "copy_compatible":
             if not compatible:
                 raise ValueError(
                     "cross_emb_action_transfer=copy_compatible requires "
-                    f"config.json hy_action_contract={_HY_ROBODOJO_ACTION_CONTRACT!r}; "
+                    f"config.json era0_action_contract={_ERA0_ROBODOJO_ACTION_CONTRACT!r}; "
                     f"got {source_contract or '<missing>'!r}. Use reset for "
                     "mixed CrossEmb checkpoints without an explicit conversion."
                 )
@@ -1069,18 +1071,18 @@ class HyXVLA(nn.Module):
     @classmethod
     def _random_init_action_io_modules(
         cls,
-        xvla: XVLA,
+        era0: Era0,
         *,
         seed: int | None = None,
     ) -> None:
         """Reset only action I/O while preserving the learned policy backbone."""
         def reset() -> None:
             cls._random_init_domain_linear(
-                xvla.transformer.action_encoder,
+                era0.transformer.action_encoder,
                 name="action_encoder",
             )
             cls._random_init_domain_linear(
-                xvla.transformer.action_decoder,
+                era0.transformer.action_decoder,
                 name="action_decoder",
             )
 
@@ -1091,8 +1093,8 @@ class HyXVLA(nn.Module):
         cuda_devices = sorted({
             parameter.device.index
             for module in (
-                xvla.transformer.action_encoder,
-                xvla.transformer.action_decoder,
+                era0.transformer.action_encoder,
+                era0.transformer.action_decoder,
             )
             for parameter in module.parameters()
             if parameter.device.type == "cuda" and parameter.device.index is not None
@@ -1103,16 +1105,16 @@ class HyXVLA(nn.Module):
 
     @staticmethod
     def _reinit_history_memory_after_pretrained(
-        xvla: XVLA, *, source: str
+        era0: Era0, *, source: str
     ) -> None:
         """Restore deterministic init for the opt-in history memory branch.
 
-        Root cause: ``XVLA.from_pretrained`` delegates missing-key allocation
+        Root cause: ``Era0.from_pretrained`` delegates missing-key allocation
         to Hugging Face, which reserves uninitialized storage for parameters
         absent from the source checkpoint and then relies on
         ``_init_weights`` to overwrite it. ``ReadOnlyContextCrossAttention``
         keeps ``raw_gate`` as a bespoke ``nn.Parameter`` that the default
-        HF rule does not touch, so on a fresh Qwen X-VLA start the new
+        HF rule does not touch, so on a fresh Qwen Era0 start the new
         ``history_memory_cross_attn.*.raw_gate`` can materialize with
         garbage (observed |raw_gate| ~ 4e30, driving ``tanh`` to +/-1 and
         blowing the memory branch open before optimization begins). The
@@ -1125,7 +1127,7 @@ class HyXVLA(nn.Module):
         and finite storage everywhere. Any deviation stops training with a
         precise diagnostic rather than silently poisoning the run.
         """
-        transformer = getattr(xvla, "transformer", None)
+        transformer = getattr(era0, "transformer", None)
         if transformer is None:
             return
         if not bool(getattr(transformer, "history_memory_enabled", False)):
@@ -1185,11 +1187,11 @@ class HyXVLA(nn.Module):
         )
 
     @staticmethod
-    def _reset_converted_ee6d_action_space(xvla: XVLA) -> None:
+    def _reset_converted_ee6d_action_space(era0: Era0) -> None:
         """Clear source-only norm state after CrossEmb -> EE6D conversion."""
-        action_space = getattr(xvla, "action_space", None)
+        action_space = getattr(era0, "action_space", None)
         if action_space is None:
-            raise RuntimeError("Converted XVLA checkpoint has no action space")
+            raise RuntimeError("Converted Era0 checkpoint has no action space")
         defaults = {
             "_norm_enabled": 0,
             "_norm_mode_id": 0,
@@ -1209,13 +1211,13 @@ class HyXVLA(nn.Module):
 
     @staticmethod
     def _copy_domain_soft_prompt(
-        xvla: XVLA,
+        era0: Era0,
         *,
         source_domain: int,
         target_domain: int,
     ) -> None:
         """Initialize a downstream domain from a compatible learned embodiment prompt."""
-        prompt_hub = xvla.transformer.soft_prompt_hub
+        prompt_hub = era0.transformer.soft_prompt_hub
         if not isinstance(prompt_hub, nn.Embedding):
             raise TypeError(
                 "CrossEmb prompt transfer requires transformer.soft_prompt_hub "
@@ -1238,9 +1240,9 @@ class HyXVLA(nn.Module):
     @classmethod
     def _load_reference_action_policy(
         cls,
-        xvla: XVLA,
+        era0: Era0,
         reference_source: str,
-    ) -> XVLAConfig:
+    ) -> Era0Config:
         """Diagnostic ablation replacing the policy while retaining the VLM."""
         reference = Path(reference_source)
         checkpoint = reference / "model.safetensors"
@@ -1249,13 +1251,13 @@ class HyXVLA(nn.Module):
                 "Reference action policy requires a local model.safetensors: "
                 f"{checkpoint}"
             )
-        reference_cfg = XVLAConfig.from_pretrained(
+        reference_cfg = Era0Config.from_pretrained(
             str(reference),
             local_files_only=True,
         )
         from safetensors import safe_open
 
-        target_state = xvla.transformer.state_dict()
+        target_state = era0.transformer.state_dict()
         replacement: dict[str, Tensor] = {}
         skipped_action_io = {
             "action_encoder.fc.weight",
@@ -1282,7 +1284,7 @@ class HyXVLA(nn.Module):
                     )
                 replacement[target_key] = source_value
 
-        incompatible = xvla.transformer.load_state_dict(
+        incompatible = era0.transformer.load_state_dict(
             replacement,
             strict=False,
         )
@@ -1307,16 +1309,16 @@ class HyXVLA(nn.Module):
                 "an ee6d 20-D checkpoint; got "
                 f"mode={reference_action_mode!r}, dim={reference_action_dim}."
             )
-        cls._warm_start_padded_action_modules(xvla, str(reference))
+        cls._warm_start_padded_action_modules(era0, str(reference))
         return reference_cfg
 
     @staticmethod
-    def _warm_start_padded_action_modules(xvla: XVLA, source: str) -> None:
+    def _warm_start_padded_action_modules(era0: Era0, source: str) -> None:
         """Expand the 20-D action modules while retaining all pretrained rows."""
         checkpoint = Path(source) / "model.safetensors"
         if not checkpoint.is_file():
             raise FileNotFoundError(
-                "32-D Hy-XVLA initialization requires the local X-VLA "
+                "32-D Era0 initialization requires the local Era0 "
                 f"safetensors checkpoint at {checkpoint}."
             )
         from safetensors import safe_open
@@ -1326,11 +1328,11 @@ class HyXVLA(nn.Module):
             decoder_bias = state.get_tensor("transformer.action_decoder.bias.weight")
             encoder_fc = state.get_tensor("transformer.action_encoder.fc.weight")
 
-        target_decoder_fc = xvla.transformer.action_decoder.fc.weight
-        target_decoder_bias = xvla.transformer.action_decoder.bias.weight
-        target_encoder_fc = xvla.transformer.action_encoder.fc.weight
+        target_decoder_fc = era0.transformer.action_decoder.fc.weight
+        target_decoder_bias = era0.transformer.action_decoder.bias.weight
+        target_encoder_fc = era0.transformer.action_encoder.fc.weight
         num_domains = target_decoder_fc.shape[0]
-        hidden_size = xvla.transformer.hidden_size
+        hidden_size = era0.transformer.hidden_size
         source_action_dim = decoder_bias.shape[1]
         target_action_dim = target_decoder_bias.shape[1]
         source_encoder_inputs = encoder_fc.shape[1] // hidden_size
@@ -1340,12 +1342,12 @@ class HyXVLA(nn.Module):
             decoder_fc.shape[0] != num_domains
             or encoder_fc.shape[0] != num_domains
             or source_action_dim != _EE6D_ACTION_DIM
-            or target_action_dim != _HY_ACTION_DIM
-            or source_encoder_inputs != _EE6D_ACTION_DIM * 2 + xvla.transformer.dim_time
-            or target_encoder_inputs != _HY_ACTION_DIM * 2 + xvla.transformer.dim_time
+            or target_action_dim != _ERA0_ACTION_DIM
+            or source_encoder_inputs != _EE6D_ACTION_DIM * 2 + era0.transformer.dim_time
+            or target_encoder_inputs != _ERA0_ACTION_DIM * 2 + era0.transformer.dim_time
         ):
             raise ValueError(
-                "Unexpected action-head layout while expanding X-VLA checkpoint: "
+                "Unexpected action-head layout while expanding Era0 checkpoint: "
                 f"decoder={tuple(decoder_fc.shape)}, encoder={tuple(encoder_fc.shape)}, "
                 f"target_decoder={tuple(target_decoder_fc.shape)}, "
                 f"target_encoder={tuple(target_encoder_fc.shape)}."
@@ -1373,17 +1375,17 @@ class HyXVLA(nn.Module):
             target_encoder[:, target_proprio_start:target_proprio_start + source_action_dim].copy_(
                 source_encoder[:, source_proprio_start:source_proprio_start + source_action_dim]
             )
-            target_encoder[:, target_time_start:target_time_start + xvla.transformer.dim_time].copy_(
-                source_encoder[:, source_time_start:source_time_start + xvla.transformer.dim_time]
+            target_encoder[:, target_time_start:target_time_start + era0.transformer.dim_time].copy_(
+                source_encoder[:, source_time_start:source_time_start + era0.transformer.dim_time]
             )
 
     @staticmethod
-    def _warm_start_cross_emb_padded_action_modules(xvla: XVLA, source: str) -> None:
+    def _warm_start_cross_emb_padded_action_modules(era0: Era0, source: str) -> None:
         """Map cross_emb64 EE slots onto Hy's padded 32-D EE6D contract."""
         checkpoint = Path(source) / "model.safetensors"
         if not checkpoint.is_file():
             raise FileNotFoundError(
-                "cross_emb -> ee6d_padded initialization requires the local X-VLA "
+                "cross_emb -> ee6d_padded initialization requires the local Era0 "
                 f"safetensors checkpoint at {checkpoint}."
             )
         from safetensors import safe_open
@@ -1393,11 +1395,11 @@ class HyXVLA(nn.Module):
             decoder_bias = state.get_tensor("transformer.action_decoder.bias.weight")
             encoder_fc = state.get_tensor("transformer.action_encoder.fc.weight")
 
-        target_decoder_fc = xvla.transformer.action_decoder.fc.weight
-        target_decoder_bias = xvla.transformer.action_decoder.bias.weight
-        target_encoder_fc = xvla.transformer.action_encoder.fc.weight
+        target_decoder_fc = era0.transformer.action_decoder.fc.weight
+        target_decoder_bias = era0.transformer.action_decoder.bias.weight
+        target_encoder_fc = era0.transformer.action_encoder.fc.weight
         num_domains = target_decoder_fc.shape[0]
-        hidden_size = xvla.transformer.hidden_size
+        hidden_size = era0.transformer.hidden_size
         source_action_dim = decoder_bias.shape[1]
         target_action_dim = target_decoder_bias.shape[1]
         source_encoder_inputs = encoder_fc.shape[1] // hidden_size
@@ -1408,12 +1410,12 @@ class HyXVLA(nn.Module):
             decoder_fc.shape[0] != num_domains
             or encoder_fc.shape[0] != num_domains
             or source_action_dim < max(_CROSS_EMB_EE_INDICES) + 1
-            or target_action_dim != _HY_ACTION_DIM
-            or source_encoder_inputs != source_action_dim * 2 + xvla.transformer.dim_time
-            or target_encoder_inputs != _HY_ACTION_DIM * 2 + xvla.transformer.dim_time
+            or target_action_dim != _ERA0_ACTION_DIM
+            or source_encoder_inputs != source_action_dim * 2 + era0.transformer.dim_time
+            or target_encoder_inputs != _ERA0_ACTION_DIM * 2 + era0.transformer.dim_time
         ):
             raise ValueError(
-                "Unexpected cross_emb action-head layout while adapting Qwen X-VLA checkpoint: "
+                "Unexpected cross_emb action-head layout while adapting Qwen Era0 checkpoint: "
                 f"decoder={tuple(decoder_fc.shape)}, encoder={tuple(encoder_fc.shape)}, "
                 f"target_decoder={tuple(target_decoder_fc.shape)}, "
                 f"target_encoder={tuple(target_encoder_fc.shape)}."
@@ -1436,16 +1438,16 @@ class HyXVLA(nn.Module):
             target_encoder = target_encoder_fc.view(num_domains, target_encoder_inputs, hidden_size)
             source_proprio_start = source_action_dim
             source_time_start = source_proprio_start + source_action_dim
-            target_proprio_start = _HY_ACTION_DIM
-            target_time_start = target_proprio_start + _HY_ACTION_DIM
+            target_proprio_start = _ERA0_ACTION_DIM
+            target_time_start = target_proprio_start + _ERA0_ACTION_DIM
             target_encoder[:, :_EE6D_ACTION_DIM].copy_(
                 source_encoder[:, _CROSS_EMB_EE_INDICES]
             )
             target_encoder[:, target_proprio_start:target_proprio_start + _EE6D_ACTION_DIM].copy_(
                 source_encoder[:, [source_proprio_start + i for i in _CROSS_EMB_EE_INDICES]]
             )
-            target_encoder[:, target_time_start:target_time_start + xvla.transformer.dim_time].copy_(
-                source_encoder[:, source_time_start:source_time_start + xvla.transformer.dim_time]
+            target_encoder[:, target_time_start:target_time_start + era0.transformer.dim_time].copy_(
+                source_encoder[:, source_time_start:source_time_start + era0.transformer.dim_time]
             )
 
 
@@ -1457,10 +1459,10 @@ class HyXVLA(nn.Module):
         for value in batch.values():
             if isinstance(value, Tensor):
                 return value
-        raise ValueError("HyXVLA batch has no tensor values.")
+        raise ValueError("Era0Policy batch has no tensor values.")
 
-    def _xvla_image_size(self) -> tuple[int, int]:
-        """Return the image size used by the X-VLA action-policy path.
+    def _era0_image_size(self) -> tuple[int, int]:
+        """Return the image size used by the Era0 action-policy path.
 
         Cross-emb Florence-large pretraining serializes Florence's native
         768px processor (577 visual tokens), but its action dataset is always
@@ -1485,32 +1487,32 @@ class HyXVLA(nn.Module):
             height = width = 0
         if height <= 0 or width <= 0:
             raise ValueError(
-                "X-VLA image processor must define a positive target image size, "
+                "Era0 image processor must define a positive target image size, "
                 f"got {size!r}."
             )
         backend = str(getattr(self.config, "vlm_backend", "florence2")).strip().lower()
         if backend == "florence2":
             image_seq_length = getattr(self.processor.image_processor, "image_seq_length", None)
-            transformer = getattr(self.xvla, "transformer", None)
+            transformer = getattr(self.era0, "transformer", None)
             pos_emb = getattr(transformer, "pos_emb", None)
             if (
                 image_seq_length is not None
                 and pos_emb is not None
                 and int(image_seq_length) >= int(pos_emb.shape[1])
             ):
-                return _FLORENCE_XVLA_POLICY_IMAGE_SIZE
+                return _FLORENCE_ERA0_POLICY_IMAGE_SIZE
         return height, width
 
-    def _resize_for_xvla(self, image_input: Tensor) -> Tensor:
-        """Apply X-VLA's square processor resize without changing Hy-VLA batches.
+    def _resize_for_era0(self, image_input: Tensor) -> Tensor:
+        """Apply Era0's square processor resize without changing Era0 batches.
 
-        The shared Hy-VLA loader deliberately uses ``Resize(224)`` and thus
+        The shared Era0 loader deliberately uses ``Resize(224)`` and thus
         preserves the camera aspect ratio.  Its native model pads those tensors
         internally.  Florence instead reshapes the DaViT tokens to a square
-        grid, so the model adapter must apply the X-VLA checkpoint's recorded
+        grid, so the model adapter must apply the Era0 checkpoint's recorded
         ``(height, width)`` resize after the unchanged Hy preprocessing.
         """
-        target_size = self._xvla_image_size()
+        target_size = self._era0_image_size()
         if tuple(image_input.shape[-2:]) == target_size:
             return image_input
         original_shape = image_input.shape
@@ -1524,9 +1526,9 @@ class HyXVLA(nn.Module):
         )
         return resized.to(dtype=image_input.dtype).reshape(*original_shape[:-2], *target_size)
 
-    def _letterbox_for_xvla(self, image_input: Tensor) -> Tensor:
+    def _letterbox_for_era0(self, image_input: Tensor) -> Tensor:
         """Aspect-preserving tensor letterbox for Qwen checkpoints."""
-        target_h, target_w = self._xvla_image_size()
+        target_h, target_w = self._era0_image_size()
         source_h, source_w = map(int, image_input.shape[-2:])
         if (source_h, source_w) == (target_h, target_w):
             return image_input
@@ -1554,11 +1556,11 @@ class HyXVLA(nn.Module):
         canvas[:, :, top:top + resized_h, left:left + resized_w] = resized
         return canvas.reshape(*original_shape[:-2], target_h, target_w)
 
-    def _prepare_pixels_for_xvla(self, image_input: Tensor) -> Tensor:
+    def _prepare_pixels_for_era0(self, image_input: Tensor) -> Tensor:
         resize_mode = str(getattr(self.processor, "image_resize_mode", "stretch")).strip().lower()
         if resize_mode == "letterbox":
-            return self._letterbox_for_xvla(image_input)
-        return self._resize_for_xvla(image_input)
+            return self._letterbox_for_era0(image_input)
+        return self._resize_for_era0(image_input)
 
     def _prepare_per_view_history_pixels(
         self,
@@ -1570,7 +1572,7 @@ class HyXVLA(nn.Module):
         image_hist_size_device: Tensor | None = None,
         history_mask_device: Tensor | None = None,
     ) -> Tensor:
-        target_h, target_w = self._xvla_image_size()
+        target_h, target_w = self._era0_image_size()
         batch_size = int(views[0].shape[0])
         prepared_views: list[Tensor] = []
         for view_idx, image in enumerate(views):
@@ -1613,7 +1615,7 @@ class HyXVLA(nn.Module):
                 if not bool(group_host.any()):
                     continue
                 group = view_valid & (hist_for_view == k_v)
-                resized = self._prepare_pixels_for_xvla(image[group, -k_v:])
+                resized = self._prepare_pixels_for_era0(image[group, -k_v:])
                 view_output[group, -k_v:] = resized
             prepared_views.append(view_output)
         return torch.stack(prepared_views, dim=1)
@@ -1626,7 +1628,7 @@ class HyXVLA(nn.Module):
         batch_size: int | None = None
         for key in _IMAGE_KEYS:
             if key not in batch:
-                raise KeyError(f"HyXVLA requires batch[{key!r}].")
+                raise KeyError(f"Era0Policy requires batch[{key!r}].")
             image = batch[key]
             if image.ndim == 4:
                 image = image.unsqueeze(1)
@@ -1635,7 +1637,7 @@ class HyXVLA(nn.Module):
             if batch_size is None:
                 batch_size = int(image.shape[0])
             elif batch_size != int(image.shape[0]):
-                raise ValueError("All Hy-VLA camera views must have the same batch size.")
+                raise ValueError("All Era0 camera views must have the same batch size.")
             if image.dtype == torch.uint8:
                 # Compact transport keeps CPU-side image tensors in uint8.
                 # Restore the legacy [0, 1] float range before resize and
@@ -1699,7 +1701,7 @@ class HyXVLA(nn.Module):
                     f"{_IMAGE_HISTORY_MASK_KEY!r} and {_IMAGE_HISTORY_SIZE_KEY!r}."
                 )
             image_input = torch.stack(views, dim=1)
-            image_input = self._prepare_pixels_for_xvla(image_input)
+            image_input = self._prepare_pixels_for_era0(image_input)
             image_mask = None
 
         image_mean = self._image_mean.to(device=image_input.device)
@@ -1728,14 +1730,14 @@ class HyXVLA(nn.Module):
         reference = self._first_tensor(batch)
         image_input, image_mask, image_hist_size = self._prepare_images(batch)
         state = batch[_STATE_KEY]
-        if state.ndim != 2 or state.shape[-1] < _HY_ACTION_DIM:
-            raise ValueError(f"{_STATE_KEY} must be [B,>={_HY_ACTION_DIM}], got {tuple(state.shape)}")
+        if state.ndim != 2 or state.shape[-1] < _ERA0_ACTION_DIM:
+            raise ValueError(f"{_STATE_KEY} must be [B,>={_ERA0_ACTION_DIM}], got {tuple(state.shape)}")
         task = batch.get("task")
         if not isinstance(task, (list, tuple)) or len(task) != state.shape[0]:
-            raise ValueError("HyXVLA requires batch['task'] as one instruction per sample.")
-        dm05_native = self.xvla.config.vlm_backend == "dm05"
+            raise ValueError("Era0Policy requires batch['task'] as one instruction per sample.")
+        dm05_native = self.era0.config.vlm_backend == "dm05"
         if dm05_native:
-            dm05_state_dim = int(getattr(self.xvla.config, "dm05_state_dim", _EE6D_ACTION_DIM))
+            dm05_state_dim = int(getattr(self.era0.config, "dm05_state_dim", _EE6D_ACTION_DIM))
             language_inputs = self.processor.encode_dm05_multimodal(
                 list(task),
                 state,
@@ -1752,10 +1754,10 @@ class HyXVLA(nn.Module):
             pad_token_id = int(self.processor.tokenizer.pad_token_id)
             attention_mask = (input_ids != pad_token_id).to(dtype=torch.long)
         pad_token_id = int(self.processor.tokenizer.pad_token_id)
-        action_mode = str(getattr(self.xvla.config, "action_mode", "ee6d_padded")).strip().lower()
+        action_mode = str(getattr(self.era0.config, "action_mode", "ee6d_padded")).strip().lower()
         dm05_native_actions = dm05_native
         if dm05_native_actions:
-            action_dim = int(getattr(self.xvla.config, "max_action_dim", 32) or 32)
+            action_dim = int(getattr(self.era0.config, "max_action_dim", 32) or 32)
             if action_dim != 32:
                 raise ValueError(
                     "DM05 native action head requires max_action_dim=32, "
@@ -1768,11 +1770,11 @@ class HyXVLA(nn.Module):
             proprio_valid_mask = state.new_zeros((state.shape[0], action_dim))
             proprio_valid_mask[:, :dm05_state_dim] = 1.0
             action_valid_mask = state.new_zeros(
-                (state.shape[0], self.xvla.num_actions, action_dim),
+                (state.shape[0], self.era0.num_actions, action_dim),
             )
             action_valid_mask[:, :, :dm05_state_dim] = 1.0
         elif action_mode == "cross_emb":
-            action_dim = int(getattr(self.xvla.config, "max_action_dim", 64) or 64)
+            action_dim = int(getattr(self.era0.config, "max_action_dim", 64) or 64)
             if action_dim < max(_CROSS_EMB_EE_INDICES) + 1:
                 raise ValueError(
                     "CrossEmb action space is too narrow for the canonical EE layout: "
@@ -1789,11 +1791,11 @@ class HyXVLA(nn.Module):
             proprio_valid_mask = state.new_zeros((state.shape[0], action_dim))
             proprio_valid_mask[:, ee_indices] = 1.0
             action_valid_mask = state.new_zeros(
-                (state.shape[0], self.xvla.num_actions, action_dim)
+                (state.shape[0], self.era0.num_actions, action_dim)
             )
             action_valid_mask[:, :, ee_indices] = 1.0
         else:
-            action_dim = _HY_ACTION_DIM
+            action_dim = _ERA0_ACTION_DIM
             proprio = state[:, :action_dim]
             proprio_valid_mask = torch.cat(
                 [
@@ -1805,12 +1807,12 @@ class HyXVLA(nn.Module):
             action_valid_mask = torch.cat(
                 [
                     torch.ones(
-                        (state.shape[0], self.xvla.num_actions, _EE6D_ACTION_DIM),
+                        (state.shape[0], self.era0.num_actions, _EE6D_ACTION_DIM),
                         dtype=state.dtype,
                         device=state.device,
                     ),
                     torch.zeros(
-                        (state.shape[0], self.xvla.num_actions, action_dim - _EE6D_ACTION_DIM),
+                        (state.shape[0], self.era0.num_actions, action_dim - _EE6D_ACTION_DIM),
                         dtype=state.dtype,
                         device=state.device,
                     ),
@@ -1840,16 +1842,16 @@ class HyXVLA(nn.Module):
             result["token_type_ids"] = token_type_ids
         if image_hist_size is not None:
             result["image_hist_size"] = image_hist_size
-        # All three stacks come directly from the Hy-Embodied collator. The
+        # All three stacks come directly from the Era0 collator. The
         # legacy symmetric path omits ``image_hist_size``; opt-in per-view
-        # history forwards it so X-VLA can sparsify short wrist stacks.
+        # history forwards it so Era0 can sparsify short wrist stacks.
         if include_action:
             action = batch.get(_ACTION_KEY)
-            if not isinstance(action, Tensor) or action.ndim != 3 or action.shape[-1] < _HY_ACTION_DIM:
-                raise ValueError(f"{_ACTION_KEY} must be [B,T,>={_HY_ACTION_DIM}], got {getattr(action, 'shape', None)}")
-            if action.shape[1] != self.xvla.num_actions:
+            if not isinstance(action, Tensor) or action.ndim != 3 or action.shape[-1] < _ERA0_ACTION_DIM:
+                raise ValueError(f"{_ACTION_KEY} must be [B,T,>={_ERA0_ACTION_DIM}], got {getattr(action, 'shape', None)}")
+            if action.shape[1] != self.era0.num_actions:
                 raise ValueError(
-                    f"action chunk length {action.shape[1]} does not match X-VLA num_actions {self.xvla.num_actions}."
+                    f"action chunk length {action.shape[1]} does not match Era0 num_actions {self.era0.num_actions}."
                 )
             if action_mode == "cross_emb":
                 action_wide = action.new_zeros(
@@ -1858,7 +1860,7 @@ class HyXVLA(nn.Module):
                 action_wide[:, :, ee_indices] = action[:, :, :_EE6D_ACTION_DIM]
                 result["action"] = action_wide
             else:
-                result["action"] = action[:, :, :_HY_ACTION_DIM]
+                result["action"] = action[:, :, :_ERA0_ACTION_DIM]
         return result
 
 
@@ -1870,7 +1872,7 @@ class HyXVLA(nn.Module):
             # Diagnostic-only override: allow the padding tail to retain its
             # Gaussian sampler state. This intentionally differs from training.
             inputs.pop("action_valid_mask")
-        prediction = self.xvla.generate_actions(
+        prediction = self.era0.generate_actions(
             **inputs,
             steps=self.inference_steps,
             # Keep the Hy flow/regression output in model space here.  The
@@ -1881,7 +1883,7 @@ class HyXVLA(nn.Module):
                 self.action_loss_profile == "official_ee6d_regression"
             ),
         )
-        if str(getattr(self.xvla.config, "action_mode", "")).strip().lower() == "cross_emb":
+        if str(getattr(self.era0.config, "action_mode", "")).strip().lower() == "cross_emb":
             if (
                 self.cross_emb_action_transfer in {"preserve", "pretrained"}
                 and self.action_loss_profile != "official_ee6d_regression"
@@ -1890,8 +1892,8 @@ class HyXVLA(nn.Module):
                 # postprocess is disabled.  Undo only an accidentally active
                 # source norm; do not call ``postprocess`` because it clamps
                 # velocity grippers to [0, 1], while Hy expects z-scored values.
-                if bool(self.xvla.action_space._norm_enabled.item()):
-                    prediction = self.xvla.action_space._denormalize(prediction)
+                if bool(self.era0.action_space._norm_enabled.item()):
+                    prediction = self.era0.action_space._denormalize(prediction)
             ee_indices = torch.tensor(
                 _CROSS_EMB_EE_INDICES, dtype=torch.long, device=prediction.device
             )
@@ -1902,10 +1904,10 @@ class HyXVLA(nn.Module):
             # Keep prediction and GT in the same public space for validation.
             # CrossEmb predictions are gathered to 20-D above; preserve the
             # historical 32-D GT for the ee6d_padded path.
-            if str(getattr(self.xvla.config, "action_mode", "")).strip().lower() == "cross_emb":
+            if str(getattr(self.era0.config, "action_mode", "")).strip().lower() == "cross_emb":
                 result["gt"] = action[:, :, :_EE6D_ACTION_DIM]
             else:
-                result["gt"] = action[:, :, :_HY_ACTION_DIM]
+                result["gt"] = action[:, :, :_ERA0_ACTION_DIM]
         return result
 
     @torch.no_grad()

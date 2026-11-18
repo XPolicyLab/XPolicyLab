@@ -43,11 +43,11 @@ def fixed_image_geometry(vision, count, *, device, height, width):
 
 def _fixed_image_attention(self, hidden_states, cu_seqlens,
                            position_embeddings=None, **kwargs):
-    tokens = kwargs.pop("xvla_fixed_image_tokens", None)
+    tokens = kwargs.pop("era0_fixed_image_tokens", None)
     implementation = self.config._attn_implementation
     if (tokens is None or implementation not in {"sdpa", "flash_attention_2"}
             or (self.training and self.attention_dropout != 0)):
-        return self._xvla_original_forward(
+        return self._era0_original_forward(
             hidden_states, cu_seqlens, position_embeddings=position_embeddings, **kwargs)
     from transformers.models.qwen3_5.modeling_qwen3_5 import (
         ALL_ATTENTION_FUNCTIONS, apply_rotary_pos_emb_vision, eager_attention_forward,
@@ -82,9 +82,9 @@ def install_fixed_image_vision(vision):
     count = 0
     for block in vision.blocks:
         attention = block.attn
-        if not hasattr(attention, "_xvla_original_forward"):
-            attention._xvla_original_forward = attention.forward
+        if not hasattr(attention, "_era0_original_forward"):
+            attention._era0_original_forward = attention.forward
             attention.forward = MethodType(_fixed_image_attention, attention)
             count += 1
-    vision._xvla_fixed_image_geometry = True
+    vision._era0_fixed_image_geometry = True
     return count

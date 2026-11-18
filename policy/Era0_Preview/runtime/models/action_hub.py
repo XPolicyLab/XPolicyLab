@@ -159,7 +159,7 @@ class EE6DActionSpace(BaseActionSpace):
         self.bce = nn.BCEWithLogitsLoss()
         self._target_mode = "action"
         # Gripper loss switch (Path A). Default "bce" preserves the released
-        # X-VLA training contract and the head's logit-output convention: the
+        # Era0 training contract and the head's logit-output convention: the
         # post-processed action still passes through torch.sigmoid at inference
         # (postprocess is unchanged). When set to "mse", the training-time loss
         # applies torch.sigmoid to the raw logits inside compute_loss BEFORE
@@ -167,7 +167,7 @@ class EE6DActionSpace(BaseActionSpace):
         # and every downstream `> 0.5` threshold keep working without any
         # eval-code change. Configured via configure_gripper_loss().
         self._gripper_loss_type = "bce"
-        # Gripper proprio switch. Default False preserves the released X-VLA
+        # Gripper proprio switch. Default False preserves the released Era0
         # contract: preprocess zeroes proprio[..., gripper_idx] so the model
         # cannot condition on the current gripper open-ratio. Set True to feed
         # the live gripper open-ratio (already in [0,1]) into proprio, which is
@@ -182,7 +182,7 @@ class EE6DActionSpace(BaseActionSpace):
         #
         # XYZ_SCALE=500 is calibrated for ABSOLUTE xyz targets. When the data
         # handler switches to anchor-relative xyz (e.g.
-        # XVLA_ROBODOJO_ACTION_DELTA=1), the position MSE shrinks by the target
+        # ERA0_ROBODOJO_ACTION_DELTA=1), the position MSE shrinks by the target
         # variance ratio and the position term loses loss share, silently
         # changing the loss balance alongside the parameterization. Setting this
         # override keeps the two variables separable.
@@ -193,19 +193,19 @@ class EE6DActionSpace(BaseActionSpace):
         # holds ~79.5% of (position + rot6d). Measured target variance ratio
         # abs/delta = 2.18x, so 500 * 2.18 = 1090 preserves that balance IF the
         # error MSE tracks the target variance -- see
-        # scripts/train_xvla_robodojo_sim_delta.sh for the full caveat.
-        _xyz_scale_raw = os.environ.get("XVLA_EE6D_XYZ_SCALE", "").strip()
+        # scripts/train_era0_robodojo_sim_delta.sh for the full caveat.
+        _xyz_scale_raw = os.environ.get("ERA0_EE6D_XYZ_SCALE", "").strip()
         if _xyz_scale_raw:
             try:
                 _xyz_scale = float(_xyz_scale_raw)
             except ValueError as exc:
                 raise ValueError(
-                    f"XVLA_EE6D_XYZ_SCALE must be float-convertible, got {_xyz_scale_raw!r}"
+                    f"ERA0_EE6D_XYZ_SCALE must be float-convertible, got {_xyz_scale_raw!r}"
                 ) from exc
             if not (_xyz_scale > 0.0):
-                raise ValueError(f"XVLA_EE6D_XYZ_SCALE must be > 0, got {_xyz_scale}")
+                raise ValueError(f"ERA0_EE6D_XYZ_SCALE must be > 0, got {_xyz_scale}")
             logger.warning(
-                "[ee6d] XYZ_SCALE overridden by XVLA_EE6D_XYZ_SCALE: %.1f -> %.1f",
+                "[ee6d] XYZ_SCALE overridden by ERA0_EE6D_XYZ_SCALE: %.1f -> %.1f",
                 type(self).XYZ_SCALE, _xyz_scale,
             )
             self.XYZ_SCALE = _xyz_scale
@@ -432,7 +432,7 @@ class EE6DActionSpace(BaseActionSpace):
         velocity-mode (flow): keep action gripper; normalize when load_norm_stats() was called.
 
         Gripper proprio zero-out is gated on ``_keep_gripper_proprio``. Default
-        False preserves the released X-VLA contract (zero gripper proprio);
+        False preserves the released Era0 contract (zero gripper proprio);
         True feeds the live gripper open-ratio to the model.
         """
         proprio_m = proprio.clone()
@@ -476,11 +476,11 @@ class EE6DPaddedActionSpace(EE6DActionSpace):
     """EE6D with a wider model-facing tensor and masked zero-padding tail.
 
     The physical RoboDojo action remains the first 20 EE6D channels.  The
-    remaining channels exist only to preserve Hy-VLA's 32-wide public action
+    remaining channels exist only to preserve Era0's 32-wide public action
     contract; they are never supervised or allowed into diffusion sampling.
     """
 
-    _LOSS_PROFILE_HY_NORMALIZED_MSE = "hy_normalized_mse"
+    _LOSS_PROFILE_ERA0_NORMALIZED_MSE = "era0_normalized_mse"
     _LOSS_PROFILE_OFFICIAL_EE6D_REGRESSION = "official_ee6d_regression"
     _OFFICIAL_GRIPPER_SCALE = 1.0
     _OFFICIAL_XYZ_SCALE = 500.0
@@ -497,25 +497,25 @@ class EE6DPaddedActionSpace(EE6DActionSpace):
         self.real_dim = int(real_dim)
         self.dim_action = int(max_dim)
         self.dim_proprio = int(max_dim)
-        self._loss_profile = self._LOSS_PROFILE_HY_NORMALIZED_MSE
+        self._loss_profile = self._LOSS_PROFILE_ERA0_NORMALIZED_MSE
 
     def configure_target_mode(self, mode: str) -> None:
         super().configure_target_mode(mode)
         self._validate_loss_profile()
 
     def configure_loss_profile(self, profile: str) -> None:
-        normalized = str(profile or self._LOSS_PROFILE_HY_NORMALIZED_MSE).strip().lower()
+        normalized = str(profile or self._LOSS_PROFILE_ERA0_NORMALIZED_MSE).strip().lower()
         aliases = {
-            "": self._LOSS_PROFILE_HY_NORMALIZED_MSE,
-            "default": self._LOSS_PROFILE_HY_NORMALIZED_MSE,
-            "hy": self._LOSS_PROFILE_HY_NORMALIZED_MSE,
-            "hy_normalized_mse": self._LOSS_PROFILE_HY_NORMALIZED_MSE,
+            "": self._LOSS_PROFILE_ERA0_NORMALIZED_MSE,
+            "default": self._LOSS_PROFILE_ERA0_NORMALIZED_MSE,
+            "hy": self._LOSS_PROFILE_ERA0_NORMALIZED_MSE,
+            "era0_normalized_mse": self._LOSS_PROFILE_ERA0_NORMALIZED_MSE,
             "official": self._LOSS_PROFILE_OFFICIAL_EE6D_REGRESSION,
             "official_ee6d_regression": self._LOSS_PROFILE_OFFICIAL_EE6D_REGRESSION,
         }
         normalized = aliases.get(normalized, normalized)
         allowed = {
-            self._LOSS_PROFILE_HY_NORMALIZED_MSE,
+            self._LOSS_PROFILE_ERA0_NORMALIZED_MSE,
             self._LOSS_PROFILE_OFFICIAL_EE6D_REGRESSION,
         }
         if normalized not in allowed:
@@ -646,7 +646,7 @@ class EE6DMobile15ActionSpace(BaseActionSpace):
         [15:20] unused (mask=0)
 
     Handler upstream must emit action of shape [T, 15] (with
-    XVLA_ROBOCASA_ACTION_SPACE=mobile15) which then gets padded to [T, 20] by
+    ERA0_ROBOCASA_ACTION_SPACE=mobile15) which then gets padded to [T, 20] by
     `_pad_or_trim(..., dim=20)` in lerobot_generic.py; the corresponding
     valid_dim [T, 15] is padded to [T, 20] with trailing zeros, so dims
     [15..19] are automatically masked out of the loss. All of dims [0..14] are
@@ -946,7 +946,7 @@ class CrossEmbActionSpace(BaseActionSpace):
     }
     _REGRESSION_LOSSES = {"mse", "smooth_l1", "l1"}
     _GRIPPER_LOSS_TYPES = ("bce", "mse")
-    _LOSS_PROFILE_HY_NORMALIZED_MSE = "hy_normalized_mse"
+    _LOSS_PROFILE_ERA0_NORMALIZED_MSE = "era0_normalized_mse"
     _LOSS_PROFILE_CROSS_EMB_NATIVE = "cross_emb_native"
     _NORM_MODE_TO_ID = {"zscore": 0, "quantile": 1}
     _NORM_ID_TO_MODE = {0: "zscore", 1: "quantile"}
@@ -1010,7 +1010,7 @@ class CrossEmbActionSpace(BaseActionSpace):
         # gripper branch; velocity/FM mode already regresses gripper.
         self._gripper_loss_type = "bce"
         # Native CrossEmb keeps its paper-aligned physical loss by default.
-        # The Hy adapter explicitly selects ``hy_normalized_mse`` when its
+        # The Hy adapter explicitly selects ``era0_normalized_mse`` when its
         # dataset already supplies z-scored actions and flow targets.
         self._loss_profile = self._LOSS_PROFILE_CROSS_EMB_NATIVE
         self._hand_loss_normalization = "global_joint"
@@ -1264,18 +1264,18 @@ class CrossEmbActionSpace(BaseActionSpace):
         self._loss_target_mode = mode_norm
 
     def configure_loss_profile(self, profile: str) -> None:
-        normalized = str(profile or self._LOSS_PROFILE_HY_NORMALIZED_MSE).strip().lower()
+        normalized = str(profile or self._LOSS_PROFILE_ERA0_NORMALIZED_MSE).strip().lower()
         aliases = {
-            "": self._LOSS_PROFILE_HY_NORMALIZED_MSE,
-            "default": self._LOSS_PROFILE_HY_NORMALIZED_MSE,
-            "hy": self._LOSS_PROFILE_HY_NORMALIZED_MSE,
-            "hy_normalized_mse": self._LOSS_PROFILE_HY_NORMALIZED_MSE,
+            "": self._LOSS_PROFILE_ERA0_NORMALIZED_MSE,
+            "default": self._LOSS_PROFILE_ERA0_NORMALIZED_MSE,
+            "hy": self._LOSS_PROFILE_ERA0_NORMALIZED_MSE,
+            "era0_normalized_mse": self._LOSS_PROFILE_ERA0_NORMALIZED_MSE,
             "native": self._LOSS_PROFILE_CROSS_EMB_NATIVE,
             "cross_emb_native": self._LOSS_PROFILE_CROSS_EMB_NATIVE,
         }
         normalized = aliases.get(normalized, normalized)
         allowed = {
-            self._LOSS_PROFILE_HY_NORMALIZED_MSE,
+            self._LOSS_PROFILE_ERA0_NORMALIZED_MSE,
             self._LOSS_PROFILE_CROSS_EMB_NATIVE,
         }
         if normalized not in allowed:
@@ -1766,10 +1766,10 @@ class Delta12ActionSpace(BaseActionSpace):
 
     ⚠️ flow matching 的接法
     ---------------------
-    `models/modeling_xvla.py` 的 `flow_matching` 分支调用的是 `compute_loss`
+    `models/modeling_era0.py` 的 `flow_matching` 分支调用的是 `compute_loss`
     （**不是** `compute_flow_matching_loss` —— 后者自 commit `08e90e7` 起已成死代码）。
     本类的 `compute_loss` 本身就是「归一化空间里的均匀 MSE」，对速度场 target 直接可用，
-    所以 FM 分支无需改动 `modeling_xvla.py` 即可正确工作。
+    所以 FM 分支无需改动 `modeling_era0.py` 即可正确工作。
     `compute_flow_matching_loss` 也提供为同一实现的别名，两条路都对。
     """
 
@@ -1797,7 +1797,7 @@ class Delta12ActionSpace(BaseActionSpace):
     def __init__(self, norm_proprio: bool | None = None):
         super().__init__()
         if norm_proprio is None:
-            norm_proprio = str(os.environ.get("XVLA_DELTA12_NORM_PROPRIO", "0")).strip() == "1"
+            norm_proprio = str(os.environ.get("ERA0_DELTA12_NORM_PROPRIO", "0")).strip() == "1"
         self._norm_proprio_flag = bool(norm_proprio)
         d = self.dim_action
         self.register_buffer("_norm_mean", torch.zeros(d), persistent=True)
@@ -1875,7 +1875,7 @@ class Delta12ActionSpace(BaseActionSpace):
             ok = _load("proprio_mean", "proprio_std", self._pro_mean, self._pro_std, "proprio")
             if not ok:
                 raise ValueError(
-                    f"XVLA_DELTA12_NORM_PROPRIO=1 但 {path} 里没有 proprio_mean/proprio_std"
+                    f"ERA0_DELTA12_NORM_PROPRIO=1 但 {path} 里没有 proprio_mean/proprio_std"
                 )
             self._pro_enabled.fill_(1)
         print(f"[delta12] action norm stats loaded (z-score) from {path}; "
