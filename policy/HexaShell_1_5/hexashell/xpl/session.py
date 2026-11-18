@@ -11,7 +11,6 @@ from typing import Any
 import numpy as np
 
 from ..motion.ik import speed_named
-from ..robot.env_icl import MEMORY_TASKS
 from ..robot.host import RobotHost, describe_verdict
 from ..runtime import card as cards
 from ..runtime.session import Attach, Session
@@ -25,9 +24,6 @@ class RoboDojoSession(Session):
 
     def __init__(self, bridge: Bridge, info: dict[str, Any]):
         super().__init__(info)
-        self.env_icl = cards.base_task(self.info.get("task_name")) not in MEMORY_TASKS
-        if self.env_icl:
-            self.proxy = "hexashell.robot.env_icl"
         self.bridge = bridge
         self.host: RobotHost | None = None
         self.first: Snapshot | None = None
@@ -81,7 +77,7 @@ class RoboDojoSession(Session):
         return self.host.dispatch(name, args, kwargs)
 
     def card(self, settings) -> tuple[str, dict]:
-        return cards.task_card(self.first, with_ladder=settings.ladder, with_skill=settings.skills)
+        return cards.task_card(self.first)
 
     def start_pictures(self) -> list[tuple[str, np.ndarray]]:
         return [(cam, self.first.images[cam]) for cam in CAMERAS if cam in self.first.images]

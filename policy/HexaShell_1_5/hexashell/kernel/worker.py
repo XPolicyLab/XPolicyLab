@@ -113,11 +113,6 @@ class Worker:
         robot = importlib.import_module(proxy).Robot(self._rpc)
         self.ns = {"__name__": "__cell__", "__builtins__": cell_builtins(workspace)}
         self.ns["__builtins__"]["help"] = _help
-        #: Env_ICL (hexashell.robot.env_icl): the scene facts the robot's results carry, plus the model's
-        #: own plan and notes; only a proxy that keeps one has it
-        self.env_icl = getattr(robot, "_env_icl", None)
-        if self.env_icl is not None:
-            self.ns["Env_ICL"] = self.env_icl
         self.ns.update(robot=robot, np=np, math=math, RobotError=RobotError, NotExecuted=NotExecuted,
                        Blocked=Blocked, Dropped=Dropped, NotFound=NotFound)
 
@@ -204,11 +199,7 @@ class Worker:
             signal.setitimer(signal.ITIMER_PROF, 0)
             signal.signal(signal.SIGINT, signal.SIG_IGN)
             sys.stdout, sys.stderr = old_out, old_err
-        out = capture.text()
-        delta = self.env_icl.flush() if self.env_icl is not None else ""
-        if delta:
-            out = (out.rstrip("\n") + "\n" if out.strip() else "") + delta + "\n"
-        return out, error, stopped
+        return capture.text(), error, stopped
 
     def serve(self) -> None:
         signal.signal(signal.SIGINT, signal.SIG_IGN)  # the host interrupts cells, never the loop

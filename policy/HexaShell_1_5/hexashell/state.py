@@ -32,6 +32,9 @@ class Snapshot:
     arms: dict[str, ArmReading]
     images: dict[str, np.ndarray]  # camera name -> RGB uint8 (H, W, 3)
     instruction: str
+    #: RoboDojo's official task text (Description + public Scoring), obs["extra_info"]["detailed_instruction"];
+    #: None from an environment that does not supply it (RoboDojo before 2026-11-14)
+    detailed_instruction: str | None = None
     step: int | None = None
     step_limit: int | None = None
     pictures_behind: int = 0
@@ -77,11 +80,13 @@ def parse_obs(obs: dict[str, Any], seq: int, previous: Snapshot | None = None) -
     if isinstance(instruction, (list, tuple)):
         instruction = instruction[0] if instruction else ""
     behind = int(info.get("pictures_behind", 0) or 0)
+    detailed = (obs.get("extra_info") or {}).get("detailed_instruction")
     snap = Snapshot(
         seq=seq,
         arms=arms,
         images=images,
         instruction=str(instruction),
+        detailed_instruction=str(detailed) if isinstance(detailed, str) and detailed.strip() else None,
         step=_int_or_none(info.get("step")),
         step_limit=_int_or_none(info.get("step_limit")),
         pictures_behind=behind,

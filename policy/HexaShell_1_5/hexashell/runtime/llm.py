@@ -287,9 +287,12 @@ def _lines(chunks: Iterable[bytes]) -> Iterator[str]:
 
 
 def _sse_data(lines: Iterable[str]) -> Iterator[str]:
-    """The data of each server-sent event; comments and other fields are skipped."""
+    """The data of each server-sent event; comments and other fields are skipped.  A byte-order mark
+    opening the stream is dropped, as the event-stream standard says."""
     data: list[str] = []
-    for line in lines:
+    for n, line in enumerate(lines):
+        if n == 0:
+            line = line.removeprefix("\ufeff")
         if not line:
             if data:
                 yield "\n".join(data)

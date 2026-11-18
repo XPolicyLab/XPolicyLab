@@ -1,8 +1,8 @@
 """Messages between the host and the sandboxed worker.
 
 Both ends exchange pickles over a Unix socket pair.  The host only unpickles with
-:class:`HostUnpickler`, which admits plain data, numpy arrays and the result types (RoboDojo's
-and the other benchmarks'): a cell cannot smuggle code into the host through the RPC channel.
+:class:`HostUnpickler`, which admits plain data, numpy arrays and the robot's result types: a
+cell cannot smuggle code into the host through the RPC channel.
 """
 
 from __future__ import annotations
@@ -20,7 +20,7 @@ _ALLOWED = {
     ("numpy._core.multiarray", "_reconstruct"), ("numpy._core.multiarray", "scalar"),
     ("numpy.core.numeric", "_frombuffer"), ("numpy._core.numeric", "_frombuffer"),
 }
-_RESULT_MODULES = ("hexashell.robot.results", "hexashell.benches.results")
+_RESULT_MODULES = ("hexashell.robot.results",)
 
 
 class HostUnpickler(pickle.Unpickler):

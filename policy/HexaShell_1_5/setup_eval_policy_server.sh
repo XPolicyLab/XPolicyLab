@@ -29,13 +29,14 @@ fi
 
 echo "[SERVER] policy=${policy_name}, task=${task_name}, policy_server_port=${policy_server_port}"
 
-# The system prompt (prompts/robodojo/) and the task notes (skills/robodojo/) are not public yet: the
-# contributors send them to the evaluators, to be unpacked into this directory. A missing note would
-# not stop an episode, so the server does not start unless every file is there and matches
-# private.sha256 (EVAL_ENV_TYPE=debug runs no agent and needs none of them).
-if [[ "${EVAL_ENV_TYPE:-}" != "debug" ]] \
-        && ! (cd "${SCRIPT_DIR}" && sha256sum --check --quiet --strict private.sha256); then
-    echo "[SERVER] prompts/robodojo/ and skills/robodojo/ must match private.sha256: unpack the archive" \
+# The system prompt (prompts/robodojo/*.md) is not public yet: the contributors send it to the
+# evaluators, to be unpacked into this directory. The prompt is every .md file there, so the server
+# does not start unless exactly the files listed in private.sha256 are there and match it
+# (EVAL_ENV_TYPE=debug runs no agent and needs none of them).
+if [[ "${EVAL_ENV_TYPE:-}" != "debug" ]] && ! (
+        cd "${SCRIPT_DIR}" && sha256sum --check --quiet --strict private.sha256 \
+        && [[ "$(ls prompts/robodojo/*.md 2>/dev/null | sort)" == "$(awk '{print $2}' private.sha256 | sort)" ]]); then
+    echo "[SERVER] prompts/robodojo/ must hold exactly the files of private.sha256: unpack the archive" \
         "the contributors sent into ${SCRIPT_DIR}" >&2
     exit 1
 fi

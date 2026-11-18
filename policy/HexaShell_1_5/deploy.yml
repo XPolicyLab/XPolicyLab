@@ -3,6 +3,9 @@
 # e.g. HEXASHELL_API_BASE=..., HEXASHELL_MODEL=... (booleans: 1, true, yes or on); config.env is the
 # place for them. Two more are left at their defaults here: request_timeout_s (900) and script (a file
 # of cells run instead of asking the model, for offline tests; hexashell/runtime/script.py).
+# Agent Track rules of 2026-11-14 (robodojo-benchmark.com/leaderboard/protocol): the only task-specific
+# text the model gets is the instruction and RoboDojo's official Description + Scoring
+# (obs["extra_info"]["detailed_instruction"], RoboDojo fbfbbcb or later), verbatim in the task card.
 policy_name: HexaShell_1_5
 protocol: ws
 host: localhost
@@ -33,10 +36,6 @@ stream: true
 # only for a self-hosted model on vLLM: send each reply's reasoning back with it in the history.
 # Keep it off for gpt-6-astra.
 history_reasoning: false
-# whether the task's note is added (skills/robodojo/<task>.md, sent separately; none for the Open tasks)
-skills: true
-# the task's description and scoring table in the task card (prompts/ladders/<task>.md)
-ladder: true
 
 # -- limits of one episode ----------------------------------------------------------------------
 max_turns: 100

@@ -8,8 +8,6 @@ records.  Everything that depends on the benchmark comes from a Session:
 - when the episode is over, and the verdict.
 
 RoboDojo's is :class:`hexashell.xpl.session.RoboDojoSession` (XPolicyLab drives the simulator).
-The other benchmarks run their simulator in a server process of their own; their sessions are
-under :mod:`hexashell.benches`.
 """
 
 from __future__ import annotations
@@ -27,8 +25,6 @@ class Session:
     bench = "robodojo"
     #: Module whose ``Robot`` class the sandboxed worker hands to cells as ``robot``.
     proxy = "hexashell.robot.proxy"
-    #: Whether cells get ``Env_ICL`` (proxy :mod:`hexashell.robot.env_icl`, and its part of the system prompt).
-    env_icl = False
 
     def __init__(self, info: dict[str, Any]):
         #: task_name, eval_seed and the benchmark's other episode facts (records, script paths)

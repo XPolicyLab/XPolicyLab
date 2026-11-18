@@ -75,8 +75,6 @@ class Settings:
     #: Anthropic only: what the thinking blocks show ("summarized" or "omitted")
     thinking_display: str = "summarized"
     max_tokens: int = 8192
-    skills: bool = False
-    ladder: bool = True
     max_turns: int = 100
     budget_s: float = 5400.0
     nudges: int = 3
@@ -182,7 +180,7 @@ class Episode:
         self.t_agent = time.monotonic()
         self.open_s = round(self.t_agent - self.t0, 1)
         self.deadline = self.t_agent + 2 * s.budget_s
-        self.conv = Conversation(cards.system_prompt(session.prompt_folder(), env_icl=session.env_icl),
+        self.conv = Conversation(cards.system_prompt(session.prompt_folder()),
                                  images_max=s.images_max, images_low=s.images_low,
                                  bytes_max=s.images_bytes_max, quality=s.jpeg_quality)
         if s.script:

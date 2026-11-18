@@ -1,10 +1,8 @@
 """What the motion code needs to know about a two-arm table rig: the arms' chains and where they
 stand, the gripper's readings, the table, the length of a step.
 
-:data:`ROBODOJO` is RoboDojo's scene (the constants of :mod:`hexashell.world`).  A benchmark with the
-same kind of arms on another table makes its own rig (RoboTwin: :mod:`hexashell.benches.robotwin.rig`);
-a rig whose table height is measured at the start of an episode is made per episode with
-:meth:`Rig.on_table`.
+:data:`ROBODOJO` is RoboDojo's scene (the constants of :mod:`hexashell.world`); a rig whose table
+height is measured at the start of an episode is made per episode with :meth:`Rig.on_table`.
 """
 
 from __future__ import annotations

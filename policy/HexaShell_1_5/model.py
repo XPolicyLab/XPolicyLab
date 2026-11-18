@@ -1,6 +1,6 @@
 """XPolicyLab entry point of HexaShell-1.5 (runs inside the policy server).
 
-The agent harness (the ``hexashell`` package, its prompts and task notes) lives in this directory, so it
+The agent harness (the ``hexashell`` package and its prompts) lives in this directory, so it
 is put on sys.path here and ``hexashell`` imports resolve wherever the policy server was started from.
 """
 

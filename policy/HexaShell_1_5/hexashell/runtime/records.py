@@ -1,6 +1,6 @@
 """What an episode leaves on disk.
 
-``<result_dir>/<task>_s<seed>_l<layout>-<time>/`` (other benchmarks name the part before the time):
+``<result_dir>/<task>_s<seed>-<time>/`` (``_s<seed>`` only when the seed is known):
 
 * ``result.json``      verdict, costs and settings (written at the end, rewritten if it changes)
 * ``prompt.md``        the system prompt and the task card as sent
