@@ -9,7 +9,6 @@ No model files are included in Git.
 - PASS: image history, valid-mask behavior and saved temporal configuration.
 - PASS: native evaluation launch previews and Python/shell syntax checks.
 - PASS: two-GPU simulator smoke test on `press_by_number` and `stack_bowls`, seed 0, two episodes each. Both completed with 2/2 successes, Score 100 and six camera videos each. This is limited functional evidence.
-- PASS: native SDK camera synchronization and current-observation forwarding.
 - PASS: plain/encoded RGB debug, complete history accumulation over 34 chunks, environment reordering, reset, finite actions and action dimensions.
 
 ## Current native evaluation

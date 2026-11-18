@@ -32,23 +32,8 @@ Both successful logs end with:
 [MAIN] eval finished
 ```
 
-## Historical observation-delay regression (removed functionality)
-
-A separate CPU check exercised the real `Model.update_obs_batch` and `Model.reset` methods, the shared RGB decoder and the image-delay queue. Model construction and inference were omitted in this focused check; the GPU closed loops above loaded the actual weights. Distinct image values were used because the standard debug client's all-black images cannot reveal a temporal offset.
-
-Both plain and encoded input cases passed:
-
-- All three cameras use the preceding observation update; initial updates repeat the first image.
-- State and language remain current.
-- Environment queues stay independent when indices are reordered or temporarily absent.
-- Mutating caller image buffers does not change stored snapshots.
-- Reset clears delayed images and stored observations.
-- Lag 0 uses current images; combining image delay with legacy render delay is rejected.
-
-These historical checks verify the earlier transport and adapter behavior, not simulation success rates. Image-delay queues and camera-render overrides have since been removed.
-
 ## Clean installation verification
 
 On 2026-11-04 the corrected `install.sh` completed in a fresh Python 3.11 environment with system site packages disabled. Both CUDA extensions were built from source using CUDA 12.8 and GCC 11.4. The installer dependency/import checks passed, and FlashAttention and causal convolution matched PyTorch reference computations on an NVIDIA L20.
 
-Using that new environment and the released weights, the unchanged official debug client passed one round of 20 action steps with 10 environments for each of plain and encoded RGB observations. The observation-delay checks above also passed. This verifies the policy environment; the separate RoboDojo/Isaac Sim environment was not reinstalled.
+Using that new environment and the released weights, the unchanged official debug client passed one round of 20 action steps with 10 environments for each of plain and encoded RGB observations. This verifies the policy environment; the separate RoboDojo/Isaac Sim environment was not reinstalled.

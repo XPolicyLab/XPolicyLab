@@ -32,10 +32,6 @@ In the local profile, each arm's IK result is compared with its live measured jo
 
 `ik_guard_config.json` and per-episode `ik_rejections` record guard behavior. Counters reset per episode. This can affect executed actions and scores; the official profile does not install it.
 
-## Image timing
-
-The policy always consumes current observations and uses native SDK rendering. No camera synchronization overrides or image-delay queues are installed. Physics, rewards and layouts are unchanged.
-
 ## Verification limits
 
 CPU tests cover real guard call sites, native save/resume paths, identical SDK video methods, SDK source validation, subprocess scheduling and restart. A separate integration fixture was accepted by the actual SDK summarizer with zero result/video filename mismatches. Fixture video files are placeholders, not simulator output. Real plain/encoded debug loops and full three-seed simulator evaluation remain required before an official submission.

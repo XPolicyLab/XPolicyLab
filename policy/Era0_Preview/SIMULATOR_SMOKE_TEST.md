@@ -9,7 +9,7 @@ Verified on 2026-11-04 with the public Era0-Preview model assets, the packaged a
 
 Both commands exited with status 0 and reached `[MAIN] eval finished`. Each result contains two episode records; all twelve saved camera videos decode and contain multiple nonblank frames. The SDK summary command completed but skipped both short runs, including its media audit, because they do not meet native-count thresholds. A separate check using that same SDK script's record/video inventory helpers verified all four records and twelve camera videos with zero missing or extra episodes.
 
-The run used the official execution profile, SDK rendering and the policy's default image-observation delay. Installed SDK source files were unchanged. A nonfatal Isaac Sim headless property-window callback exception appeared during initialization; both tasks continued to completion.
+The run used the official execution profile and SDK rendering. Installed SDK source files were unchanged. A nonfatal Isaac Sim headless property-window callback exception appeared during initialization; both tasks continued to completion.
 
 ## Reproduce
 
