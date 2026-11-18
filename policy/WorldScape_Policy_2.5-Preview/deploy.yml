@@ -1,0 +1,66 @@
+# Self-contained RoboDojo T5 + VLM inference. See README for the color contract.
+# Runtime architecture, normalization and sampling are restored from the checkpoint.
+# Native observations stay RGB; only this trained VLM consumes a private BGR copy.
+# All condition tokens use raw instructions and the total context length is 512.
+vlm_memory: true
+vlm_conditioning: t5_vlm_concat
+policy_name: WorldScape_Policy_2.5-Preview
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: wsp_2_5_preview_posttrain_robodojo
+env_cfg_type: null
+seed: null
+action_type: joint
+gpu_id: null
+eval_batch: true
+multi_gpu:
+  enabled: false
+  max_envs_per_gpu: null
+  worker_timeout_s: 1200
+checkpoint_path: null
+device: cuda
+inference_precision: bf16
+generation_overrides: null
+input_color_order: rgb
+constrain_action_padding: false
+observation_history_segments: 24
+use_observation_history: false
+use_causal_memory: false
+wam_history_mode: periodic
+short_window_for_non_memory_tasks: false
+reset_independent_blocks: true
+default_instruction: follow the instruction
+t5_prompt_template: null
+request_timeout_s: 1200
+max_connect_attempts: 3600
+connect_retry_delay_s: 1
+max_connect_seconds: 1800
+ws_ping_interval_s: 20
+ws_ping_timeout_s: 1200
+runtime_profile: robodojo
+checkpoint_format: lerobot_v21
+worldscape_root: null
+mode: auto
+action_horizon: 24
+replan_steps: 24
+observation_interval: 1
+diffusion_view_layout: mosaic_T
+diffusion_concat_view_order:
+- 0
+- 1
+- 2
+single_window_reference: latest
+diffusion_concat_height: 384
+diffusion_concat_width: 320
+memory_reset_chunks: 0
+memory_window_chunks: null
+ordinary_window_chunks: null
+validate_checkpoint_artifacts: true
+history_memory: true
+history_capture_mode: dense
+vlm_input_color_order: bgr
+allow_dummy_policy: false
+log_inference: true
