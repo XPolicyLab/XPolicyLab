@@ -1,0 +1,91 @@
+HexaShell
+An agent harness for robot manipulation: RoboDojo's two-arm table tasks, RoboCasa365, LIBERO-PRO,
+RoboTwin 2.0, and a real robot through URAI.
+
+HexaShell's code is its own, but it rests on other projects' files, measurements and ideas:
+
+RoboDojo (MIT License, Copyright (c) 2026 RoboDojo Contributors)
+  - hexashell/assets/X5A.urdf retains the links and joints from RoboDojo's ARX X5 robot description.
+  - hexashell/assets/robot_model.npz holds triangles derived from RoboDojo's ARX X5 meshes
+    (made by bench/build_robot_points.py).
+  - xpolicylab/HexaShell follows the layout of RoboDojo's XPolicyLab policy template.
+  - scripts/patches/robodojo-layout-ids.patch changes RoboDojo's env/seed_manager/seed_manager.py
+    so that ROBODOJO_LAYOUT_IDS selects the layouts of an evaluation (used by scripts/run_one.sh
+    and scripts/batch.sh; RoboDojo's own evaluation runs without it).
+
+RoboProbe (Apache License 2.0)
+  - prompts/ladders/*.md are RoboDojo's task descriptions and scoring tables, copied unchanged
+    from RoboProbe; see prompts/ladders/README.md and prompts/ladders/LICENSE.
+
+PyRUA-Lean (Apache License 2.0, Copyright 2026 PyRUA-Lean Contributors)
+  Several facts about the simulator and several design ideas were first worked out there:
+  - simulator facts: the arm-base poses (re-checked against our own recordings with
+    bench/fit_bases.py), the joint ranges the simulator lets the arms reach, the grasp-point and
+    fingertip offsets along link6, the squeezed-gripper width fit, the wrist-camera mount, the
+    head-camera pose and both focal lengths;
+  - motion constants: at most 0.15 rad per joint per action, up to 8 actions to settle, arrival
+    within 1 cm / 5 degrees, near misses accepted within 2 cm / 8 degrees, lifting before
+    swinging home;
+  - ideas: the model works the robot by writing Python cells against a robot object; objects are
+    measured in 3-D from several RGB cameras as the shape that agrees with all their outlines,
+    with the robot's own pixels left out and measured heights remembered; a bowl's reading from
+    its rim, kept only where it explains the views clearly better; with one camera, the height
+    read from how far the outline's upright sides reach out on the table plane;
+  - prompt advice adopted after comparing our prompt with a port of PyRUA-Lean's: coming down onto
+    an upright object from above for a level side grasp, measuring every object before the arms
+    move, judging a pour by what is left when the container turns back up, homing before a
+    benchmark-driven arm's turn, that a bumped container moves, switching arms or reaching with a
+    tilted or level hand when one arm cannot reach, that the way a task is done can be checked,
+    and measuring a low object from the top grasp's approach pose. The hang_mugs section of
+    agent/api/skills/robodojo.md credits that port for the level body grasp and slide onto the peg.
+
+HexaShell-Preview (HexaShell 1.0; this repository's earlier version, branch v1.0:
+  https://github.com/HexaFuture/HexaShell/tree/v1.0)
+  - ideas carried over: dry-run reachability checks, two-view triangulation with a ray-gap check,
+    ray-plane intersection at a given height, a mesh-based robot mask, support-height
+    detection, and the hover advice for re-measuring from above.
+
+RoboCasa365 and robosuite (MIT License)
+  - hexashell/benches/robocasa runs RoboCasa's kitchens, tasks and success checks unchanged,
+    through robosuite's official controllers; the 50 tasks, their sets and step limits are
+    RoboCasa365's benchmark split.  Both are included only as git submodules
+    (third_party/robocasa, third_party/robosuite) at upstream commits, with the changes to
+    RoboCasa listed in THIRD_PARTY_VERSIONS.md applied by scripts/patch_third_party.py;
+    RoboCasa's assets are not included.
+
+LIBERO and LIBERO-PRO (MIT License)
+  - hexashell/benches/libero runs LIBERO-PRO's suites through LIBERO's own environments,
+    controller and goal checks (the rpent-libero and rpent-liberopro packages); neither is part
+    of this repository;
+  - the step limits of the test (OFFICIAL_STEPS of hexashell/benches/libero/protocol.py) and its
+    10 settling steps are those of LIBERO-PRO's own evaluation.
+
+RoboTwin 2.0 (MIT License, Copyright (c) 2025 Tianxing Chen)
+  - hexashell/assets/robotwin_aloha_arms.urdf holds the joints of the two front arms of RoboTwin's
+    aloha-agilex robot, copied from its assets (embodiments/aloha-agilex/urdf/
+    arx5_description_isaac.urdf; meshes, inertia and the rest of the robot left out);
+  - hexashell/benches/robotwin runs RoboTwin's tasks, controller, ray-traced cameras and success
+    checks unchanged, through the rlinf-robotwin-runtime package (MIT); neither is part of this
+    repository;
+  - STEP_LIMITS of hexashell/benches/robotwin/protocol.py are RoboTwin's step limits
+    (_eval_step_limit.yml), and the test takes its seeds and instructions as RoboTwin's evaluation
+    does (scripts/eval_policy.sh: the first seeds from 100000 its expert solves; for demo_randomized,
+    instructions from the tasks' 'unseen' description templates).
+
+RPent (Apache License 2.0)
+  - hexashell/benches/robotwin/eval_seeds.json is a copy of RPent's RoboTwin evaluation list
+    (robots/robotwin/eval/demo_randomized.json at commit 886b3b2: 50 tasks, five checked seeds
+    each, with their instructions), which gives the task list and a check of the seed scan.
+
+URAI (Apache License 2.0, Copyright 2026 Hexafuture Inc. and the URAI authors,
+  https://github.com/HexaFuture/URAI)
+  - hexashell/real/urai/capsules.py is a copy of the ray-capsule intersection and its pixel windows
+    from URAI's urai/robot/scene.py (Capsule, _capsule_hit, _capsule_window, _camera_rays,
+    _pixel_rays, _window), with public names and without the capsules' colour;
+  - prompts/urai/*.md are the English real-robot prompts of URAI's HexaShell harness, copied
+    unchanged, and the sentences of hexashell/real/urai/texts.py are that harness's English ones;
+  - hexashell/real/urai follows that harness and talks to URAI only over its HTTP interface; URAI
+    itself is not part of this repository.
+
+The bundled SAM3 service wrapper runs Meta's SAM3 using separately installed model code
+and weights. The wrapper derives from HexaShell 1.5's services/sam3_server.py.

@@ -1,0 +1,18 @@
+JoyAI-VL evaluation harness
+Copyright 2026 Joy Future Academy
+
+This distribution packages the HexaShell Preview evaluation harness for JoyAI-VL.
+HexaShell and its authors retain their copyright in the upstream work.
+Upstream: https://github.com/HexaFuture/HexaShell/tree/v1.0
+License: Apache License, Version 2.0
+
+The original attribution notice is preserved in:
+  vendor/robot15/NOTICE
+When this policy is installed separately, that path is vendor/robot15/NOTICE.
+
+
+RoboDojo-derived robot description and mesh data retain the MIT license:
+  Copyright (c) 2026 RoboDojo Contributors
+  See licenses/RoboDojo-LICENSE.
+
+See THIRD_PARTY_NOTICES.md for component locations and external dependencies.

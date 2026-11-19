@@ -1,0 +1,70 @@
+{
+  "description": "Reference environment identities inherited from the source release; current release: JoyAI-VL Agent.",
+  "agent_image": {
+    "image_id": "sha256:56aafb0e3d69f24133a1b16e0a6b0d8d3df5b8c3fc850e0a14ec8462d42f9a25",
+    "archive_sha256": "f7a2c419c78d6a57bdd1dd46155cd5607cb87cbc347a5e2144e52bc30d8a438c",
+    "public_rebuild_tag": "joyai-vl/agent:preview"
+  },
+  "simulator_image": {
+    "platform": "linux/amd64",
+    "registry_digest": "sha256:f4069909a1bc1a27260e6a00882f4b0603b72ea112ef1bb2cea2e1c0c20ca696",
+    "config_digest": "sha256:56f1cf5cb3f85eb3102adec90d86fbae9f251278ef5a69183df599fac2fa7fda",
+    "archive_sha256": "679c3de0787a658c813508f56b1fb730a24c13e2a38c3214512f9a34af24f60b",
+    "redistributed": false
+  },
+  "observed_environment": {
+    "python": "3.11",
+    "isaac_sim": "5.1",
+    "torch": "2.7.0+cu128",
+    "torchvision": "0.22.0+cu128",
+    "numpy": "1.26.0",
+    "scipy": "1.15.3",
+    "pillow": "11.3.0",
+    "PyYAML": "6.0.2",
+    "websockets_base": "12.0",
+    "websockets_policy_overlay": "17.4"
+  },
+  "sam3": {
+    "repository": "https://github.com/facebookresearch/sam3",
+    "checkout_commit_at_packaging": "f1647e8d0c1d280991f4d1b7d974c2704537fe66",
+    "checkout_clean_at_packaging": true,
+    "checkpoint_sha256": "9999e2341ceef5e136daa386eecb55cb414446a00ac2b55eb2dfd2f7c3cf8c9e",
+    "server_sha256": "7ee55899f1d6753f6ef9959ce9e1eba0c6e31e09c62c74eee37d1c6d41f485a1",
+    "cache_images": 24,
+    "weights_included": false
+  },
+  "model": {
+    "public_name": "JoyAI-VL",
+    "api_protocol": "OpenAI-compatible Chat Completions",
+    "request_configuration": "configs/model_api.example.json",
+    "weights_included": false,
+    "credentials_included": false,
+    "private_endpoint_included": false,
+    "serving_model_id": "User-configured endpoint model ID; public label alone does not identify model weights."
+  },
+  "native_policy": {
+    "environment_configuration": "arx_x5",
+    "action_type": "joint",
+    "motion": "v2",
+    "agent_wall_s": 5400,
+    "command_budget": 0,
+    "tools": [
+      "python",
+      "finish"
+    ],
+    "seed": "evaluator supplied",
+    "layouts": "evaluator supplied"
+  },
+  "images": {
+    "encoding": "JPEG",
+    "quality": 90,
+    "max_per_turn": 8,
+    "history_max": 90,
+    "history_keep": 60,
+    "history_bytes": 20000000
+  },
+  "verification": {
+    "variant": "joyai-vl-agent",
+    "public_rebuild_gpu_evaluated": false
+  }
+}
