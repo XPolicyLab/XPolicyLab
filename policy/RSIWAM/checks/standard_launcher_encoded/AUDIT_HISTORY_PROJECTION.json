@@ -1,0 +1,76 @@
+{
+  "derived": true,
+  "scope": "Strict final-audit attempts retained in the local raw source collection. Failure/incompleteness is not relabelled as a pass. No unrelated process identities are published in this projection.",
+  "attempts": [
+    {
+      "source_path": "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/raw/fresh_audit.json",
+      "source_sha256": "429e582e268a53e4b5fca04a530bbfd88d02c144438741f393e0855ac7cee0c7",
+      "checked_at_epoch": 1793596303.2301772,
+      "status": "INCOMPLETE_OR_FAILED",
+      "error_count": 8,
+      "error_classes": [
+        "FD_PERMISSION_ERROR",
+        "PRIVATE_LOCK_PROBE_SKIPPED"
+      ],
+      "private_fd_holder_count": 0,
+      "private_lock_probe_performed": false,
+      "exclusive_private_lock_available": null,
+      "raw_original_preserved_unchanged": true,
+      "process_identity_details_omitted": true
+    },
+    {
+      "source_path": "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/raw/fresh_audit_r2.json",
+      "source_sha256": "35d36d9624e4a17f0b160d43354e077f44f22bd29786b32546ea8b1608fc84b3",
+      "checked_at_epoch": 1793596341.601914,
+      "status": "INCOMPLETE_OR_FAILED",
+      "error_count": 15,
+      "error_classes": [
+        "FD_PERMISSION_ERROR",
+        "PRIVATE_LOCK_PROBE_SKIPPED"
+      ],
+      "private_fd_holder_count": 0,
+      "private_lock_probe_performed": false,
+      "exclusive_private_lock_available": null,
+      "raw_original_preserved_unchanged": true,
+      "process_identity_details_omitted": true
+    },
+    {
+      "source_path": "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/raw/fresh_audit_r3.json",
+      "source_sha256": "0af20469532d4a04c2f04eca95e69c3739b024319db5353c681fe43e4fbfe9c5",
+      "checked_at_epoch": 1793596490.1471205,
+      "status": "INCOMPLETE_OR_FAILED",
+      "error_count": 8,
+      "error_classes": [
+        "FD_PERMISSION_ERROR",
+        "PRIVATE_LOCK_PROBE_SKIPPED"
+      ],
+      "private_fd_holder_count": 0,
+      "private_lock_probe_performed": false,
+      "exclusive_private_lock_available": null,
+      "raw_original_preserved_unchanged": true,
+      "process_identity_details_omitted": true
+    }
+  ],
+  "final_verification_status": "PASS_STANDARD_LITERAL_ENTRY_WITH_OWNER_ARCHIVE_LOCAL_VERIFICATION_AND_ACTUAL_ROOT_SCOPED_CLEANUP",
+  "owner_postcompletion_capture": {
+    "sha256": "f003bac409ef8d454c692b08fa8e34040f530d7171dcd4e93fd192c96549eda4",
+    "collector": "owner",
+    "independent_verifier": "root locally",
+    "verification_record": "source_review/OWNER_CAPTURE_LOCAL_VERIFICATION.json",
+    "errors": [],
+    "exact_lease_released": true,
+    "exclusive_private_lock_available": true,
+    "owned_ids_absent": 338,
+    "public_projection": "OWNER_AUDIT_PROJECTION.json"
+  },
+  "extra_global_scan_results_remain_incomplete": true,
+  "root_actual_scoped_check": {
+    "public_projection": "ROOT_SCOPED_CLEANUP_PROJECTION.json",
+    "source_sha256": "cb8146d1d8ae64feb754e36cea11941e6ee4d558c61b1f772bb201f1e12e9183",
+    "collector": "root remotely",
+    "status": "SCOPED_CLEANUP_CHECKS_COMPLETE",
+    "recorded_identities_absent": 339,
+    "actual_exclusive_private_lock_probe": true,
+    "full_host_fd_scan_performed": false
+  }
+}

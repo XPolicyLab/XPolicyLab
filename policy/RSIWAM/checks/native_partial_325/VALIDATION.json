@@ -1,0 +1,31 @@
+{
+  "status": "PASS_LOCAL_EVIDENCE_AND_AGGREGATION_CHECKS",
+  "original_files_verified": 18,
+  "original_bytes": 125325,
+  "result_originals": 7,
+  "accepted_blocks": 7,
+  "accepted_episodes": 325,
+  "unique_task_seed_ids": true,
+  "first_external_50_counted_once": true,
+  "details_ordinals_contiguous": true,
+  "all_per_episode_fields_present": true,
+  "native_layout_ids_unique_within_block": true,
+  "layout_ids_not_assumed_contiguous": true,
+  "source_sha256_and_bytes_verified": true,
+  "snapshot_pinned_six_result_sha256_verified": true,
+  "first_result_sha256_matches_completion_original": true,
+  "task_seed_candidate_model_seed_identity_checks_pass": true,
+  "summary_offline_recompute_exact_json_match": true,
+  "independent_second_reader": {
+    "source_sha256_checks": "18/18 matched",
+    "episodes": 325,
+    "successes": 137,
+    "score_sum_0_1": 147.5,
+    "mean_score_0_100": 45.38461538461539,
+    "largest_top_level_score_float_difference": 2e-14
+  },
+  "video_bytes_downloaded": 0,
+  "new_gpu_or_simulation_runs": 0,
+  "published_at_collection": false,
+  "publication_note": "Collection validation preceded publication; source originals are unchanged."
+}

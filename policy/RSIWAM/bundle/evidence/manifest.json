@@ -1,0 +1,23 @@
+{
+  "format": "vpp2-robodojo-bundle-v1",
+  "step": 100000,
+  "files": {
+    "video.pt": 32790155854,
+    "dataset_stats.json": 100256,
+    "action.pt": 4057916513
+  },
+  "inference": {
+    "steps": 10,
+    "shift": 1,
+    "horizon": 32,
+    "replan": 24,
+    "history_stride": 25,
+    "seed": 1
+  },
+  "architecture": {
+    "action_parameters": 2028735504,
+    "hidden": 1024,
+    "ffn": 4096,
+    "layers": 40
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "schema": "rsiwam-public-installation-repair-summary-v1",
+  "record_kind": "DERIVED_SUMMARY_NOT_ORIGINAL_INSTALLATION_RECEIPT",
+  "prepared_at_utc": "2026-11-01T15:43:44.122468+00:00",
+  "status": "REAL_ISOLATED_ENV_REPAIR_INSTALL_AND_CPU_CHECKS_PASSED",
+  "evaluated_code_commit": "776c9f3b177427c1078ee31daaa4db93f922008b",
+  "completed_at_utc": "2026-11-01T15:40:19.396758+00:00",
+  "installation_scope": "r5 repair continuation in a newly provisioned isolated environment previously used by r4; not a one-shot installation of this revision from an empty environment.",
+  "original_receipt_status": "REAL_CLEAN_INSTALL_REQUIREMENTS_AND_CPU_IMPORTS_PASS",
+  "original_receipt_sha256": "67c4455b4d7e86b36dd7e2ea615d273c49ea065d20f509edc6e5ae1c02e73326",
+  "original_r4_scope_status": "R4_IMPORT_CHECK_ONLY_NOT_FULL_REQUIREMENTS_ACCEPTANCE",
+  "r4_limitation": "r4 imported successfully but installed NumPy 2.2.6, violating numpy>=1.26,<2; r4 is not accepted as final requirements compliance.",
+  "install_stage_exit_codes": {
+    "git-fetch": 0,
+    "clean-boundary": 0,
+    "pip-check": 0,
+    "git-checkout": 0,
+    "rsiwam-install": 0,
+    "prior-scope": 0,
+    "pip-freeze": 0,
+    "source-identity": 0,
+    "git-bundle-verify": 0,
+    "pip-inspect": 0,
+    "reference-metadata": 0,
+    "installed-metadata": 0,
+    "requirements-check": 0,
+    "active-prefix": 0
+  },
+  "requirements_checked": 27,
+  "requirements_all_satisfied": true,
+  "requirements_file_sha256": "2098e0ae61a82c2025648d57323f9c7ef88aad4d22d87e15eed6ccff91db34f8",
+  "requirements_receipt_sha256": "c3ef28c2b7d69d9c6b93c0e4ebe54d6d41b6c0bff52d74e355424672bd364f73",
+  "python_version": "3.10.22 | packaged by conda-forge | (main, Oct  6 2026, 23:02:24) [GCC 14.4.0]",
+  "final_versions": {
+    "torch": "2.5.1+cu118",
+    "torchvision": "0.20.1+cu118",
+    "numpy": "1.26.4",
+    "opencv-python": "4.11.0.86",
+    "transformers": "4.57.6",
+    "datasets": "3.6.0"
+  },
+  "final_opencv_python_headless": "4.11.0.86",
+  "pip_check": {
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "No broken requirements found.\n"
+  },
+  "candidate": {
+    "action_lora_sha256": "eec21ec2834ef95bffdac7b3df0b48092a215aa67e7bf6952ec1643ab511b361",
+    "candidate_id": "recoverwam_success133_original_parent20261032_lora20261033",
+    "parent_sha256": "861529eb89e4279e4490d6156bf04a335eee410f6c02842d0ac3db2dc90431d3",
+    "step": 400
+  },
+  "configuration": {
+    "action_dim": 16,
+    "evaluation_seed": 7,
+    "model_seed": 1,
+    "robot_dimensions": {
+      "arm_dim": [
+        6,
+        6
+      ],
+      "ee_dim": [
+        1,
+        1
+      ]
+    }
+  },
+  "source_identity": {
+    "policy/RSIWAM/install.sh": "cf230300d9e7f6554ffb9953df26ba8844d0344df458b5058f80c78ccd82000a",
+    "policy/RSIWAM/eval.sh": "daae036dc45b13f90f1b5b5c9e813262d62585aba467534e2402d4933e8dd97c",
+    "policy/RSIWAM/model.py": "427597e2a9140c2393057af21dfa0d9b423cbd4e5200ea620f762833979385d9",
+    "policy/RSIWAM/deploy.yml": "26c01a2c66f9565abf819629eb17e475d9b9d62e49bf501e1c3c83f2d01df726",
+    "policy/RSIWAM/setup_eval_policy_server.sh": "b3d29f5aa8fc0f0a9d324995b42a6ec7159967c0aa0df4a76db3d48f515e7090",
+    "policy/RSIWAM/setup_eval_env_client.sh": "c6fbb992406cf4a9ba31ac3a933082ab79e2f8f673c874c3e48338087d7310c8",
+    "policy/RSIWAM/bundle/runtime/rsiwam_loader.py": "1d564a26f9cf707dafb2182250f7015e08cb2603ad7137729a6231a614adefc4",
+    "policy/RSIWAM/bundle/weights/parent/adapter_final.pt": "861529eb89e4279e4490d6156bf04a335eee410f6c02842d0ac3db2dc90431d3",
+    "policy/RSIWAM/bundle/weights/step000400/adapter.pt": "eec21ec2834ef95bffdac7b3df0b48092a215aa67e7bf6952ec1643ab511b361",
+    "setup_policy_server.py": "de2f4a0d53f17bab7ee653ef8ceace207a0a963930097023d6186197fcf673cb",
+    "utils/debug_env_client.py": "005dab63b8bdc2e2cf0562cbb749326086769796552c1b1d1c2054cedf612805",
+    "utils/run_debug_env_client.sh": "fb20cbf7fc66b2ff88033845d71521e8639ffa98529fbb68156d24a7962d2584"
+  },
+  "install_stderr": "Preserved unchanged. A transient conflict with inherited opencv-python-headless 5 is reported after NumPy is downgraded; the later XPolicyLab pip invocation replaces headless with 4.11.0.86. Final pip check and all 27 declared requirement checks pass.",
+  "selected_original_files": 46,
+  "selected_original_bytes": 56047,
+  "source_collection_index_sha256": "3a9c24ce6a3cd435b45cb9d55326aad05a473fe097a0d230999188ed221ccf10",
+  "source_collection_files_verified_locally": 50,
+  "r5_original_receipt_manifest_entries_verified": 46,
+  "historical_canonical_receipts": "The separate evidence/ directory in the source collection still contains r4 receipts. Only evidence_r5 is selected here; no historical file was overwritten.",
+  "scope": {
+    "real_package_installation_and_resolution": "PASSED_FOR_THIS_REPAIR_CONTINUATION",
+    "all_declared_bundle_requirement_specifiers": "PASSED_27_OF_27",
+    "cpu_import_and_configuration_checks": "PASSED",
+    "one_shot_empty_environment_installation_of_this_revision": "NOT_TESTED",
+    "literal_eval_sh_plain_and_encoded": "NOT_EXECUTED_BY_THIS_INSTALLATION_ATTEMPT",
+    "cuda_initialized": false,
+    "model_constructed": false,
+    "server_started": false,
+    "full_native_episode_output_parity": "NOT_TESTED",
+    "complete_6300_evaluation": "NOT_ESTABLISHED_BY_THIS_EVIDENCE",
+    "organizer_hidden_layout_or_official_leaderboard_result": "NOT_CLAIMED",
+    "torch_wheel_download_sha_verification": "PRIOR_R4_STAGE_NOT_RERUN_HERE; exact local-wheel SHA references are preserved in pip-freeze.stdout.log"
+  }
+}

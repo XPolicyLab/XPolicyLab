@@ -1,0 +1,73 @@
+{
+  "schema": "RSIWAM_PUBLIC_PLAIN_CLEANUP_CLOSURE_V1",
+  "status": "HISTORICAL_PLAIN_ORPHAN_RECONCILED_ENCODED_GPU_VALIDATION_PENDING",
+  "display_name": "RSIWAM",
+  "evaluated_commit": "776c9f3b177427c1078ee31daaa4db93f922008b",
+  "scope": "Independent administrative reconciliation after the historical plain attempt had already failed during cleanup; this is not a successful original owner release.",
+  "plain_loop": {
+    "episodes_finished": 10,
+    "action_steps": 200,
+    "scope": "literal plain debug interface loop; not task benchmark success rate"
+  },
+  "original_plain_cleanup": {
+    "status": "FAILED",
+    "error": [
+      "reservation: Busy('Inherited lifetime FD still held; reservation retained')"
+    ],
+    "historical_overall_status": "FAILED",
+    "original_overall_file_sha256": "fb88c67c84d2bce121fabaf4cf7e9e588ea24feb78e949d03c6384a5e90cf934",
+    "historical_originals_changed": false
+  },
+  "independent_closure": {
+    "receipt_status": "EXACT_PLAIN_ORPHAN_RECONCILED",
+    "receipt_sha256": "b3076e5d7686577089a82bc70f7e05cd2b6c258ac478075edef2071a51324e5e",
+    "read_only_receipt_sha256": "4658248f6c7e90ca40d4e6414cb999ffc8c26fe473b416caef315c49e8cedb6d",
+    "target_owner_id": "RSIWAM:literal-776c9f3:primary:r2:plain",
+    "released_at_unix": 1793594422.088489,
+    "released_at_utc": "2026-11-02T04:40:22.088489+00:00",
+    "changed_fields": [
+      "released_at"
+    ],
+    "original_owner_impersonated": false,
+    "signals_sent": [],
+    "gpu_operations": 0,
+    "non_target_rows_unchanged": true,
+    "database_events_modified": false,
+    "recorded_scope": "target lease, exact historical own identities and lock holders; no claim that every host process was absent"
+  },
+  "independent_source_review": {
+    "path": "source_review/VERIFICATION.json",
+    "sha256": "12c3b1e0eaf839d6c3672f300b346b0fb952dd3e7991f2dd170828f74285c9d7",
+    "checked_at_utc": "2026-11-02T04:41:31.278148+00:00",
+    "result": "PASS_WITHIN_DOCUMENTED_SCOPE",
+    "actual_database_row_matches_receipt_after": true,
+    "standalone_database_query_row_original_included": false,
+    "actual_row_evidence_boundary": "Collector confirmed a read-only SQLite URI mode=ro parameterized exact-row query and in-memory field comparison. Only the verification conclusion was saved; no separate query-output original exists in this frozen source. Receipt.after is the receipt row, not an independently captured database-query file.",
+    "process_evidence_boundary": "The independent review checked historical identity/holder evidence for internal consistency; it did not repeat the process/FD scan."
+  },
+  "encoded_at_source_collection": {
+    "observed_at_utc": "2026-11-02T04:41:31.278148+00:00",
+    "status": "WAITING_RESOURCE",
+    "gpu_pass": false,
+    "guardian_result_present": false,
+    "cpu_preflight_only": true,
+    "not_a_current_live_status_check": true
+  },
+  "two_mode_overall_pass": false,
+  "new_gpu_execution_by_this_preparation": false,
+  "publication_status": "PUBLIC_HISTORICAL_EVIDENCE_SELECTION",
+  "not_claimed": [
+    "retroactive change of the original FAILED status",
+    "encoded literal GPU pass",
+    "plain/encoded overall pass",
+    "standalone actual database-row query original",
+    "clean-install evidence revalidation",
+    "native policy parity",
+    "full benchmark completion or official leaderboard approval"
+  ],
+  "source_snapshot": {
+    "directory": "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_closure_20261102",
+    "collected_at_utc": "2026-11-02T04:41:31.278148+00:00",
+    "sha256_index_sha256": "84a8efb186ecce445e5c2ecaf7dd818869e63ac9ea7b3029382bbc53e61e75bf"
+  }
+}

@@ -1,0 +1,11 @@
+# Install in the standard OR modified-OOD environment, never alongside PRO.
+robosuite==1.4.0
+mujoco==3.3.2
+bddl==1.0.1
+gym==0.25.2
+easydict>=1.9
+cloudpickle>=2.1
+matplotlib>=3.5
+future>=0.18
+termcolor>=2
+PyOpenGL>=3.1

@@ -1,0 +1,59 @@
+{
+  "derived": true,
+  "original_plain_overall_status": "FAILED",
+  "original_plain_failure_preserved": [
+    "reservation: Busy('Inherited lifetime FD still held; reservation retained')"
+  ],
+  "original_plain_full_10x20_loop_counts": {
+    "episode_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "episodes_finished": 10,
+    "action_steps": 200,
+    "eval_finished": true,
+    "traceback": false
+  },
+  "independent_closure_required_and_recorded": true,
+  "plain_reexecuted_for_this_encoded_continuation": false,
+  "original_overall_failure_rewritten": false,
+  "references": [
+    {
+      "kind": "plain_result",
+      "repository_path": "policy/RSIWAM/checks/standard_launcher_plain/plain_r2/literal_attempt_r2/plain/guardian_result.json",
+      "source_remote_path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_attempt_r2/plain/guardian_result.json",
+      "sha256": "d9502d4e398c0ea372377b83ce2d187f1e611b3087ba6d9a30bef0c6428495bb",
+      "already_published_original_matches": true
+    },
+    {
+      "kind": "plain_release_failure",
+      "repository_path": "policy/RSIWAM/checks/standard_launcher_plain/plain_r2/literal_attempt_r2/plain/release_receipt.json",
+      "source_remote_path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_attempt_r2/plain/release_receipt.json",
+      "sha256": "4712a4b03a9db3b09eee7af8562880fb1199c871b619fbd2d88db367f49d6ce9",
+      "already_published_original_matches": true
+    },
+    {
+      "kind": "plain_original_overall_failed",
+      "repository_path": "policy/RSIWAM/checks/standard_launcher_plain/plain_r2/literal_attempt_r2/status.json",
+      "source_remote_path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_attempt_r2/status.json",
+      "sha256": "fb88c67c84d2bce121fabaf4cf7e9e588ea24feb78e949d03c6384a5e90cf934",
+      "already_published_original_matches": true
+    },
+    {
+      "kind": "independent_plain_closure",
+      "repository_path": "policy/RSIWAM/checks/standard_launcher_cleanup/originals/literal_plain_orphan_reconciliation_r1/receipt.json",
+      "source_remote_path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_plain_orphan_reconciliation_r1/receipt.json",
+      "sha256": "b3076e5d7686577089a82bc70f7e05cd2b6c258ac478075edef2071a51324e5e",
+      "already_published_original_matches": true
+    }
+  ],
+  "scope": "Two-mode evidence is a combination of the earlier successful plain debug loop, its separately documented cleanup reconciliation, and the later encoded debug loop; it is not one uninterrupted initially clean two-mode run."
+}

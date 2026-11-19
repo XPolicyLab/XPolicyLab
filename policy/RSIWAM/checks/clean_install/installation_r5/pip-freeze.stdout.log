@@ -1,0 +1,85 @@
+accelerate==1.15.0
+aiohappyeyeballs==2.7.1
+aiohttp==3.14.5
+aiosignal==1.4.0
+annotated-types==0.8.0
+antlr4-python3-runtime==4.9.3
+async-timeout==5.0.1
+attrs==26.1.0
+av==17.1.0
+certifi==2026.10.23
+charset-normalizer==3.5.2
+datasets==3.6.0
+dill==0.3.8
+einops==0.8.2
+filelock==4.1.0
+frozenlist==1.8.0
+fsspec==2025.3.0
+ftfy==6.3.1
+h5py==3.16.0
+hf-xet==1.8.0
+huggingface_hub==0.36.2
+hydra-core==1.3.2
+idna==3.20
+ImageIO==2.38.0
+imageio-ffmpeg==0.7.0
+Jinja2==3.1.6
+jsonlines==4.0.0
+markdown-it-py==4.2.0
+MarkupSafe==3.0.4
+mdurl==0.1.2
+mpmath==1.3.0
+msgpack==1.2.4
+msgpack-numpy==0.4.8
+multidict==7.1.0
+multiprocess==0.70.16
+networkx==3.4.2
+numpy==1.26.4
+nvidia-cublas-cu11 @ file:///run/ti/RSIWAM-standard-launcher-20261101-r1/wheelhouse_r4/nvidia_cublas_cu11-11.11.3.6-py3-none-manylinux1_x86_64.whl#sha256=39fb40e8f486dd8a2ddb8fdeefe1d5b28f5b99df01c87ab3676f057a74a5a6f3
+nvidia-cuda-cupti-cu11 @ file:///run/ti/RSIWAM-standard-launcher-20261101-r1/wheelhouse_r4/nvidia_cuda_cupti_cu11-11.8.87-py3-none-manylinux1_x86_64.whl#sha256=0e50c707df56c75a2c0703dc6b886f3c97a22f37d6f63839f75b7418ba672a8d
+nvidia-cuda-nvrtc-cu11 @ file:///run/ti/RSIWAM-standard-launcher-20261101-r1/wheelhouse_r4/nvidia_cuda_nvrtc_cu11-11.8.89-py3-none-manylinux1_x86_64.whl#sha256=1f27d67b0f72902e9065ae568b4f6268dfe49ba3ed269c9a3da99bb86d1d2008
+nvidia-cuda-runtime-cu11 @ file:///run/ti/RSIWAM-standard-launcher-20261101-r1/wheelhouse_r4/nvidia_cuda_runtime_cu11-11.8.89-py3-none-manylinux1_x86_64.whl#sha256=f587bd726eb2f7612cf77ce38a2c1e65cf23251ff49437f6161ce0d647f64f7c
+nvidia-cudnn-cu11 @ file:///run/ti/RSIWAM-standard-launcher-20261101-r1/wheelhouse_r4/nvidia_cudnn_cu11-9.1.0.70-py3-none-manylinux2014_x86_64.whl#sha256=e6135ac63fe9d5b0b89cfb35c3fc1c1349f2b995becadf2e9dc21bca89d9633d
+nvidia-cufft-cu11 @ file:///run/ti/RSIWAM-standard-launcher-20261101-r1/wheelhouse_r4/nvidia_cufft_cu11-10.9.0.58-py3-none-manylinux1_x86_64.whl#sha256=222f9da70c80384632fd6035e4c3f16762d64ea7a843829cb278f98b3cb7dd81
+nvidia-curand-cu11 @ file:///run/ti/RSIWAM-standard-launcher-20261101-r1/wheelhouse_r4/nvidia_curand_cu11-10.3.0.86-py3-none-manylinux1_x86_64.whl#sha256=ac439548c88580269a1eb6aeb602a5aed32f0dbb20809a31d9ed7d01d77f6bf5
+nvidia-cusolver-cu11 @ file:///run/ti/RSIWAM-standard-launcher-20261101-r1/wheelhouse_r4/nvidia_cusolver_cu11-11.4.1.48-py3-none-manylinux1_x86_64.whl#sha256=ca538f545645b7e6629140786d3127fe067b3d5a085bd794cde5bfe877c8926f
+nvidia-cusparse-cu11 @ file:///run/ti/RSIWAM-standard-launcher-20261101-r1/wheelhouse_r4/nvidia_cusparse_cu11-11.7.5.86-py3-none-manylinux1_x86_64.whl#sha256=4ae709fe78d3f23f60acaba8c54b8ad556cf16ca486e0cc1aa92dca7555d2d2b
+nvidia-nccl-cu11 @ file:///run/ti/RSIWAM-standard-launcher-20261101-r1/wheelhouse_r4/nvidia_nccl_cu11-2.21.5-py3-none-manylinux2014_x86_64.whl#sha256=49d8350629c7888701d1fd200934942671cb5c728f49acc5a0b3a768820bed29
+nvidia-nvtx-cu11 @ file:///run/ti/RSIWAM-standard-launcher-20261101-r1/wheelhouse_r4/nvidia_nvtx_cu11-11.8.86-py3-none-manylinux1_x86_64.whl#sha256=890656d8bd9b4e280231c832e1f0d03459200ba4824ddda3dcb59b1e1989b9f5
+omegaconf==2.3.0
+opencv-python==4.11.0.86
+opencv-python-headless==4.11.0.86
+packaging @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_packaging_1785888127/work
+pandas==2.3.3
+pillow==12.3.0
+propcache==0.5.4
+psutil==7.2.2
+pyarrow==25.0.1
+pydantic==2.14.2
+pydantic_core==2.50.2
+Pygments==2.21.0
+python-dateutil==3.0.0
+pytz==2026.6
+PyYAML==6.0.3
+regex==2026.9.29
+requests==2.34.2
+rich==15.0.0
+-e git+https://github.com/XPolicyLab/XPolicyLab.git@776c9f3b177427c1078ee31daaa4db93f922008b#egg=rsiwam_frozen_runtime&subdirectory=policy/RSIWAM
+safetensors==0.8.0
+six==1.17.0
+sympy==1.13.1
+tokenizers==0.22.2
+torch @ file:///run/ti/RSIWAM-standard-launcher-20261101-r1/torch_nju_r1/torch-2.5.1%2Bcu118-cp310-cp310-linux_x86_64.whl#sha256=eee38239682a01ab02d3790fe194753f7070f07e1741e67fb5c3c3059d3b97b2
+torchvision @ file:///run/ti/RSIWAM-standard-launcher-20261101-r1/wheelhouse_r4/torchvision-0.20.1%2Bcu118-cp310-cp310-linux_x86_64.whl#sha256=2a0b9fee398ed0dba1cee48dee31d80981420393f8b5c7980e273eb85fc6b9cb
+tqdm==4.70.1
+transformers==4.57.6
+triton @ file:///run/ti/RSIWAM-standard-launcher-20261101-r1/wheelhouse_r4/triton-3.1.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl#sha256=6b0dd10a925263abbe9fa37dcde67a5e9b2383fc269fdf59f5657cac38c5d1d8
+typing-inspection==0.4.4
+typing_extensions==4.16.0
+tzdata==2026.6
+urllib3==2.8.0
+wcwidth==0.9.4
+websockets==16.1.1
+-e git+https://github.com/XPolicyLab/XPolicyLab.git@776c9f3b177427c1078ee31daaa4db93f922008b#egg=xpolicylab
+xxhash==4.0.2
+yarl==1.25.1

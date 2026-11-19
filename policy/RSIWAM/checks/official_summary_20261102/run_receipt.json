@@ -1,0 +1,45 @@
+{
+  "schema": "rsiwam-official-summarize-snapshot-v1",
+  "snapshot_root": "/run/ti/RSIWAM-official6300-queue-20261101-r3/report_snapshots/official_summary_20261102T055554.189936Z",
+  "started_at_utc": "2026-11-02T05:55:54.189936+00:00",
+  "command": [
+    "bash",
+    "scripts/robodojo.sh",
+    "summarize"
+  ],
+  "cwd": "/run/ti/RSIWAM-official6300-queue-20261101-r3/report_snapshots/official_summary_20261102T055554.189936Z/official_source",
+  "env_override": {
+    "ROBODOJO_EVAL_ROOT": "/run/ti/RSIWAM-official6300-queue-20261101-r3/report_snapshots/official_summary_20261102T055554.189936Z/eval_result/RoboDojo"
+  },
+  "run_started_unix": 1793598954.7213762,
+  "run_finished_unix": 1793598954.782338,
+  "exit_code": 0,
+  "scripts": [
+    {
+      "source": "/run/ti/RSIWAM-official6300-queue-20261101-r3/RoboDojo/scripts/robodojo.sh",
+      "snapshot": "official_source/scripts/robodojo.sh",
+      "sha256": "7008023f0fd27fc5f8f2adad30b1286a5e6cce432be981b82cf2ffa3498d6ea3"
+    },
+    {
+      "source": "/run/ti/RSIWAM-official6300-queue-20261101-r3/RoboDojo/scripts/internal/summarize_result.py",
+      "snapshot": "official_source/scripts/internal/summarize_result.py",
+      "sha256": "9ec361af587e1788d83d3cf8670e05b817ff252d33c33829a6337dc16ae370d2"
+    }
+  ],
+  "queue_config_source": "/run/ti/RSIWAM-official6300-queue-20261101-r3/preparation/queue.json",
+  "queue_config_sha256": "a8478205d452177fc5dacd4d5408a2799ee1e05e74d188580d6ee0eac12a5632",
+  "queue_status_sha256": "74ccb1ce3b8bc8b88c0cb174a9c3fbaca59c9897b7fc9d988d04d3d1e6b99418",
+  "queue_status_updated_at": 1793598952.6755662,
+  "queue_phase": "running_seed_blocks",
+  "queue_valid_episode_credit": 325,
+  "candidate_id": "recoverwam_success133_original_parent20261032_lora20261033",
+  "xpl_revision": "7e5def6e61435e823f5b346f2b9d2dd5a7a78256",
+  "official_revision": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
+  "snapshot_errors": [],
+  "gpu_processes_started": 0,
+  "source_results_modified": false,
+  "videos_copied": false,
+  "video_inventory_count": 1350,
+  "source_files_present": 13,
+  "planned_native_blocks": 162
+}

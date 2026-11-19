@@ -1,0 +1,205 @@
+output_dir: runs/libero/video
+overwrite: true
+batch_size: 8
+num_workers: 8
+lr_scheduler_type: cosine
+learning_rate: 5.0e-06
+warmup_steps: 200
+num_epochs: 1
+max_steps: 10000
+log_every: 10
+save_every: 2000
+eval_every: 1000
+eval_num_inference_steps: 10
+train_mode: video_only
+train_wan: true
+optimizer_betas:
+- 0.9
+- 0.999
+checkpoint_mode: full
+frozen_video_checkpoint: null
+gradient_accumulation_steps: 1
+mixed_precision: bf16
+seed: 42
+max_grad_norm: 1.0
+weight_decay: 0.01
+resume: null
+resume_ckpt: null
+preflight:
+  enabled: false
+  stage: null
+  expected_steps: 20
+  output_file: ${output_dir}/probe.json
+  memory_headroom_fraction: 0.1
+wandb:
+  enabled: false
+  workspace: null
+  project: recoverwam
+  name: libero_horizontal_video
+  group: null
+  mode: online
+data:
+  train:
+    _target_: recoverwam.datasets.lerobot.robot_video_dataset.RobotVideoDataset
+    dataset_dirs:
+    - data/libero/libero_spatial_no_noops_lerobot
+    - data/libero/libero_object_no_noops_lerobot
+    - data/libero/libero_goal_no_noops_lerobot
+    - data/libero/libero_10_no_noops_lerobot
+    shape_meta:
+      images:
+      - key: image
+        raw_shape:
+        - 3
+        - 512
+        - 512
+        shape:
+        - 3
+        - 224
+        - 224
+      - key: wrist_image
+        raw_shape:
+        - 3
+        - 512
+        - 512
+        shape:
+        - 3
+        - 224
+        - 224
+      action:
+      - key: default
+        raw_shape: 7
+        shape: 7
+      state:
+      - key: default
+        raw_shape: 8
+        shape: 8
+    num_frames: 65
+    action_horizon: 32
+    global_sample_stride: 1
+    action_video_freq_ratio: 4
+    video_size:
+    - 224
+    - 448
+    camera_key: null
+    val_set_proportion: 0.0
+    is_training_set: true
+    pretrained_norm_stats: data/libero/dataset_stats.json
+    skip_padding_as_possible: false
+    concat_multi_camera: horizontal
+    processor:
+      _target_: recoverwam.datasets.lerobot.processors.recoverwam_processor.RecoverWAMProcessor
+      shape_meta:
+        images:
+        - key: image
+          raw_shape:
+          - 3
+          - 512
+          - 512
+          shape:
+          - 3
+          - 224
+          - 224
+        - key: wrist_image
+          raw_shape:
+          - 3
+          - 512
+          - 512
+          shape:
+          - 3
+          - 224
+          - 224
+        action:
+        - key: default
+          raw_shape: 7
+          shape: 7
+        state:
+        - key: default
+          raw_shape: 8
+          shape: 8
+      num_obs_steps: 65
+      num_output_cameras: 2
+      action_output_dim: 7
+      proprio_output_dim: 8
+      delta_action_dim_mask:
+        default:
+        - true
+        - true
+        - true
+        - true
+        - true
+        - true
+        - false
+      action_state_transforms: null
+      use_stepwise_action_norm: false
+      norm_default_mode: min/max
+      norm_exception_mode: null
+      action_state_merger:
+        _target_: recoverwam.datasets.lerobot.transforms.action_state_merger.ConcatLeftAlign
+      train_transforms:
+      - _target_: recoverwam.datasets.lerobot.transforms.image.ToTensor
+      - _target_: torchvision.transforms.Resize
+        size:
+        - 224
+        - 224
+      val_transforms:
+      - _target_: recoverwam.datasets.lerobot.transforms.image.ToTensor
+      - _target_: torchvision.transforms.Resize
+        size:
+        - 224
+        - 224
+    text_embedding_cache_dir: data/libero/text_cache
+    text_embedding_cache_tag: wan21i2v14b480p
+    context_len: 128
+model:
+  _target_: recoverwam.libero.runtime.create_wan21_video_model
+  model_id: weights/Wan2.1-I2V-14B-480P
+  dit_checkpoint_path: weights/libero/robot_video_step028000.pth
+  tokenizer_model_id: ${model.model_id}/google/umt5-xxl
+  tokenizer_max_len: 512
+  load_text_encoder: false
+  load_clip_encoder: true
+  redirect_common_files: false
+  video_dit_config:
+    model_type: i2v
+    patch_size:
+    - 1
+    - 2
+    - 2
+    text_len: 512
+    in_dim: 36
+    dim: 5120
+    hidden_dim: 5120
+    ffn_dim: 13824
+    freq_dim: 256
+    text_dim: 4096
+    out_dim: 16
+    num_heads: 40
+    attn_head_dim: 128
+    num_layers: 40
+    eps: 1.0e-06
+    qk_norm: true
+    cross_attn_norm: true
+    use_gradient_checkpointing: true
+    video_attention_mask_mode: bidirectional
+  video_scheduler:
+    train_shift: 5.0
+    infer_shift: 3.0
+    num_train_timesteps: 1000
+    train_sampling_strategy: beta
+    beta_alpha: 7.0
+    beta_beta: 1.0
+evaluation:
+  kind: video_comparison
+  fixed_indices:
+  - 26538
+  - 86883
+  - 146896
+  - 225573
+  inference_steps:
+  - 1
+  - 10
+  seed: 42
+  fps: 8
+reference_global_batch_size: 64
+lr_min_ratio: 0.01

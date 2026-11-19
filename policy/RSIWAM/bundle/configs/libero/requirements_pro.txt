@@ -1,0 +1,14 @@
+# Install into the isolated PRO environment; the versioned packages use --target.
+mujoco==3.3.2
+bddl==1.0.1
+gym==0.25.2
+easydict>=1.9
+cloudpickle>=2.1
+matplotlib>=3.5
+termcolor>=2
+PyOpenGL>=3.1
+mink==0.0.5
+qpsolvers[quadprog]>=4.3.1
+pynput>=1.7
+scipy>=1.10
+numba>=0.59

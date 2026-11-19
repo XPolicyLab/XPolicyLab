@@ -1,0 +1,253 @@
+{
+  "schema": "rsiwam-public-url-audit-v1",
+  "started_at_utc": "2026-11-01T13:20:11.064025+00:00",
+  "completed_at_utc": "2026-11-01T13:20:13.681965+00:00",
+  "repository": "Haodong082399/VPP2",
+  "revision": "04824ddb3aae11f13db50984ed7d540c3b77dd9f",
+  "limits": {
+    "timeout_seconds_per_request": 20,
+    "parallel_requests": 4,
+    "max_small_body_bytes_per_file": 33554432,
+    "max_body_bytes_total": 201326598,
+    "large_weight_requests": "HEAD only"
+  },
+  "limitations": "HEAD availability is not a weight-byte integrity check; signed redirect URLs are not recorded.",
+  "files": [
+    {
+      "relative_path": "joint2b_s100000/action.pt",
+      "url": "https://huggingface.co/Haodong082399/VPP2/resolve/04824ddb3aae11f13db50984ed7d540c3b77dd9f/checkpoints/joint2b_s100000/action.pt",
+      "expected_sha256": "e3c8bb0e787c6f10e38afc154c75855a0f8b90d747fc5d8767c367d2050e8933",
+      "requests": [
+        {
+          "method": "HEAD",
+          "checked_at_utc": "2026-11-01T13:20:11.861113+00:00",
+          "http_status": 200,
+          "final_host": "us.aws.cdn.hf.co",
+          "content_length": "4057916513"
+        }
+      ],
+      "body_downloaded": false,
+      "remote_sha256_verified": false
+    },
+    {
+      "relative_path": "joint2b_s100000/video.pt",
+      "url": "https://huggingface.co/Haodong082399/VPP2/resolve/04824ddb3aae11f13db50984ed7d540c3b77dd9f/checkpoints/joint2b_s100000/video.pt",
+      "expected_sha256": "89139f7d043e7c9ad9d24f394e442ce23291e06ef63d1aa44eea1594665e08c4",
+      "requests": [
+        {
+          "method": "HEAD",
+          "checked_at_utc": "2026-11-01T13:20:11.842981+00:00",
+          "http_status": 200,
+          "final_host": "us.aws.cdn.hf.co",
+          "content_length": "32790155854"
+        }
+      ],
+      "body_downloaded": false,
+      "remote_sha256_verified": false
+    },
+    {
+      "relative_path": "Wan2.1-I2V-14B-480P/Wan2.1_VAE.pth",
+      "url": "https://huggingface.co/Haodong082399/VPP2/resolve/04824ddb3aae11f13db50984ed7d540c3b77dd9f/checkpoints/Wan2.1-I2V-14B-480P/Wan2.1_VAE.pth",
+      "expected_sha256": "38071ab59bd94681c686fa51d75a1968f64e470262043be31f7a094e442fd981",
+      "requests": [
+        {
+          "method": "HEAD",
+          "checked_at_utc": "2026-11-01T13:20:11.841995+00:00",
+          "http_status": 200,
+          "final_host": "us.aws.cdn.hf.co",
+          "content_length": "507609880"
+        }
+      ],
+      "body_downloaded": false,
+      "remote_sha256_verified": false
+    },
+    {
+      "relative_path": "Wan2.1-I2V-14B-480P/models_clip_open-clip-xlm-roberta-large-vit-huge-14.pth",
+      "url": "https://huggingface.co/Haodong082399/VPP2/resolve/04824ddb3aae11f13db50984ed7d540c3b77dd9f/checkpoints/Wan2.1-I2V-14B-480P/models_clip_open-clip-xlm-roberta-large-vit-huge-14.pth",
+      "expected_sha256": "628c9998b613391f193eb67ff68da9667d75f492911e4eb3decf23460a158c38",
+      "requests": [
+        {
+          "method": "HEAD",
+          "checked_at_utc": "2026-11-01T13:20:11.832262+00:00",
+          "http_status": 200,
+          "final_host": "us.aws.cdn.hf.co",
+          "content_length": "4772359047"
+        }
+      ],
+      "body_downloaded": false,
+      "remote_sha256_verified": false
+    },
+    {
+      "relative_path": "Wan2.1-I2V-14B-480P/models_t5_umt5-xxl-enc-bf16.pth",
+      "url": "https://huggingface.co/Haodong082399/VPP2/resolve/04824ddb3aae11f13db50984ed7d540c3b77dd9f/checkpoints/Wan2.1-I2V-14B-480P/models_t5_umt5-xxl-enc-bf16.pth",
+      "expected_sha256": "7cace0da2b446bbbbc57d031ab6cf163a3d59b366da94e5afe36745b746fd81d",
+      "requests": [
+        {
+          "method": "HEAD",
+          "checked_at_utc": "2026-11-01T13:20:12.552527+00:00",
+          "http_status": 200,
+          "final_host": "us.aws.cdn.hf.co",
+          "content_length": "11361920418"
+        }
+      ],
+      "body_downloaded": false,
+      "remote_sha256_verified": false
+    },
+    {
+      "relative_path": "Wan2.1-I2V-14B-480P/google/umt5-xxl/special_tokens_map.json",
+      "url": "https://huggingface.co/Haodong082399/VPP2/resolve/04824ddb3aae11f13db50984ed7d540c3b77dd9f/checkpoints/Wan2.1-I2V-14B-480P/google/umt5-xxl/special_tokens_map.json",
+      "expected_sha256": "7b8a9f5040adb67b5805abdfd42c1f8d0f3d0e711f10726580eb3789cd0ad61d",
+      "requests": [
+        {
+          "method": "HEAD",
+          "checked_at_utc": "2026-11-01T13:20:12.112361+00:00",
+          "http_status": 200,
+          "final_host": "huggingface.co",
+          "content_length": "6623"
+        },
+        {
+          "method": "GET",
+          "checked_at_utc": "2026-11-01T13:20:12.376028+00:00",
+          "http_status": 200,
+          "final_host": "huggingface.co",
+          "content_length": "6623",
+          "body_bytes_read": 6623,
+          "sha256": "7b8a9f5040adb67b5805abdfd42c1f8d0f3d0e711f10726580eb3789cd0ad61d",
+          "sha256_matches": true
+        }
+      ]
+    },
+    {
+      "relative_path": "Wan2.1-I2V-14B-480P/google/umt5-xxl/spiece.model",
+      "url": "https://huggingface.co/Haodong082399/VPP2/resolve/04824ddb3aae11f13db50984ed7d540c3b77dd9f/checkpoints/Wan2.1-I2V-14B-480P/google/umt5-xxl/spiece.model",
+      "expected_sha256": "e3909a67b780650b35cf529ac782ad2b6b26e6d1f849d3fbb6a872905f452458",
+      "requests": [
+        {
+          "method": "HEAD",
+          "checked_at_utc": "2026-11-01T13:20:12.562046+00:00",
+          "http_status": 200,
+          "final_host": "us.aws.cdn.hf.co",
+          "content_length": "4548313"
+        },
+        {
+          "method": "GET",
+          "checked_at_utc": "2026-11-01T13:20:13.272076+00:00",
+          "http_status": 200,
+          "final_host": "us.aws.cdn.hf.co",
+          "content_length": "4548313",
+          "body_bytes_read": 4548313,
+          "sha256": "e3909a67b780650b35cf529ac782ad2b6b26e6d1f849d3fbb6a872905f452458",
+          "sha256_matches": true
+        }
+      ]
+    },
+    {
+      "relative_path": "Wan2.1-I2V-14B-480P/google/umt5-xxl/tokenizer.json",
+      "url": "https://huggingface.co/Haodong082399/VPP2/resolve/04824ddb3aae11f13db50984ed7d540c3b77dd9f/checkpoints/Wan2.1-I2V-14B-480P/google/umt5-xxl/tokenizer.json",
+      "expected_sha256": "6e197b4d3dbd71da14b4eb255f4fa91c9c1f2068b20a2de2472967ca3d22602b",
+      "requests": [
+        {
+          "method": "HEAD",
+          "checked_at_utc": "2026-11-01T13:20:12.582048+00:00",
+          "http_status": 200,
+          "final_host": "us.aws.cdn.hf.co",
+          "content_length": "16837417"
+        },
+        {
+          "method": "GET",
+          "checked_at_utc": "2026-11-01T13:20:13.301795+00:00",
+          "http_status": 200,
+          "final_host": "us.aws.cdn.hf.co",
+          "content_length": "16837417",
+          "body_bytes_read": 16837417,
+          "sha256": "6e197b4d3dbd71da14b4eb255f4fa91c9c1f2068b20a2de2472967ca3d22602b",
+          "sha256_matches": true
+        }
+      ]
+    },
+    {
+      "relative_path": "Wan2.1-I2V-14B-480P/google/umt5-xxl/tokenizer_config.json",
+      "url": "https://huggingface.co/Haodong082399/VPP2/resolve/04824ddb3aae11f13db50984ed7d540c3b77dd9f/checkpoints/Wan2.1-I2V-14B-480P/google/umt5-xxl/tokenizer_config.json",
+      "expected_sha256": "ed9a3a8b0faa71a70a32847e0435fe036e6e112d4df4edb7bb48a921e344dc05",
+      "requests": [
+        {
+          "method": "HEAD",
+          "checked_at_utc": "2026-11-01T13:20:12.648681+00:00",
+          "http_status": 200,
+          "final_host": "huggingface.co",
+          "content_length": "61728"
+        },
+        {
+          "method": "GET",
+          "checked_at_utc": "2026-11-01T13:20:12.927115+00:00",
+          "http_status": 200,
+          "final_host": "huggingface.co",
+          "content_length": "61728",
+          "body_bytes_read": 61728,
+          "sha256": "ed9a3a8b0faa71a70a32847e0435fe036e6e112d4df4edb7bb48a921e344dc05",
+          "sha256_matches": true
+        }
+      ]
+    },
+    {
+      "relative_path": "joint2b_s100000/manifest.json",
+      "url": "https://huggingface.co/Haodong082399/VPP2/resolve/04824ddb3aae11f13db50984ed7d540c3b77dd9f/checkpoints/joint2b_s100000/manifest.json",
+      "expected_sha256": "ae66dbfc16eb3c75fa89111501412ecb14cd3ab62ce02ff9fc8a457bb3b19aba",
+      "requests": [
+        {
+          "method": "HEAD",
+          "checked_at_utc": "2026-11-01T13:20:12.814080+00:00",
+          "http_status": 200,
+          "final_host": "huggingface.co",
+          "content_length": "417"
+        },
+        {
+          "method": "GET",
+          "checked_at_utc": "2026-11-01T13:20:13.082382+00:00",
+          "http_status": 200,
+          "final_host": "huggingface.co",
+          "content_length": "417",
+          "body_bytes_read": 417,
+          "sha256": "ae66dbfc16eb3c75fa89111501412ecb14cd3ab62ce02ff9fc8a457bb3b19aba",
+          "sha256_matches": true
+        }
+      ],
+      "bundled_metadata": {
+        "relative_path": "evidence/manifest.json",
+        "bytes": 417,
+        "sha256": "ae66dbfc16eb3c75fa89111501412ecb14cd3ab62ce02ff9fc8a457bb3b19aba",
+        "sha256_matches": true
+      }
+    },
+    {
+      "relative_path": "joint2b_s100000/dataset_stats.json",
+      "url": "https://huggingface.co/Haodong082399/VPP2/resolve/04824ddb3aae11f13db50984ed7d540c3b77dd9f/checkpoints/joint2b_s100000/dataset_stats.json",
+      "expected_sha256": "2649d4e3ff3d6d400c9953b7c20c79541474f9c38a8a9916b9caacecd8578f16",
+      "requests": [
+        {
+          "method": "HEAD",
+          "checked_at_utc": "2026-11-01T13:20:13.197019+00:00",
+          "http_status": 200,
+          "final_host": "huggingface.co",
+          "content_length": "100256"
+        },
+        {
+          "method": "GET",
+          "checked_at_utc": "2026-11-01T13:20:13.455830+00:00",
+          "http_status": 200,
+          "final_host": "huggingface.co",
+          "content_length": "100256",
+          "body_bytes_read": 100256,
+          "sha256": "2649d4e3ff3d6d400c9953b7c20c79541474f9c38a8a9916b9caacecd8578f16",
+          "sha256_matches": true
+        }
+      ],
+      "bundled_metadata": {
+        "relative_path": "evidence/dataset_stats.json",
+        "bytes": 100256,
+        "sha256": "2649d4e3ff3d6d400c9953b7c20c79541474f9c38a8a9916b9caacecd8578f16",
+        "sha256_matches": true
+      }
+    }
+  ]
+}

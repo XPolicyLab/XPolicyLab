@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/run/ti/RSIWAM-standard-launcher-20261101-r1/inputs_r5/literal_r2/literal_owner.py", line 104, in <module>
+    if __name__=='__main__':main()
+  File "/run/ti/RSIWAM-standard-launcher-20261101-r1/inputs_r5/literal_r2/literal_owner.py", line 98, in main
+    run_mode(c,config,mode,pool,m,status);write(out/'status.json',status)
+  File "/run/ti/RSIWAM-standard-launcher-20261101-r1/inputs_r5/literal_r2/literal_owner.py", line 84, in run_mode
+    if error:raise error
+RuntimeError: Exact owned cleanup incomplete

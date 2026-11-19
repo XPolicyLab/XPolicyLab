@@ -1,0 +1,167 @@
+{
+  "derived": true,
+  "queue_config_source": {
+    "label": "queue_config",
+    "source_path": "/run/ti/RSIWAM-official6300-queue-20261101-r3/preparation/queue.json",
+    "bytes": 3366182,
+    "sha256": "a8478205d452177fc5dacd4d5408a2799ee1e05e74d188580d6ee0eac12a5632"
+  },
+  "queue_candidate_id": "recoverwam_success133_original_parent20261032_lora20261033",
+  "recorded_xpl_revision": "7e5def6e61435e823f5b346f2b9d2dd5a7a78256",
+  "revision_verification_scope": "Configuration and loaded-constructor identity agree; this collection does not re-audit every remote source-code byte.",
+  "config_projections": [
+    {
+      "source_path": "/share_data/xuzhuoran/lsaac_sim/RSIWAM-official6300-20261101-r1/retry_r2/preparation/block.json",
+      "source_sha256": "06e24a429f377914bbd463043140ac5d7ec4f8a94b2eae38a40884998b520568",
+      "derived_selected_fields": {
+        "candidate_id": "recoverwam_success133_original_parent20261032_lora20261033",
+        "candidate_identity_sha256": "0cff5681ebedfb413130b91bb63feaa0bb223669c2388b6d700486c3e05d212e",
+        "checkpoint": "rsiwam-original32-lora33-step400",
+        "evaluation_seed": 0,
+        "task": "general_pickup",
+        "task_seed_id": "RSIWAM/general_pickup/seed-0",
+        "xpl_revision": "7e5def6e61435e823f5b346f2b9d2dd5a7a78256",
+        "official_revision": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
+        "native_count": 50,
+        "native_cap": 200,
+        "result_path": "/share_data/xuzhuoran/lsaac_sim/RSIWAM-official6300-20261101-r1/RoboDojo/eval_result/RoboDojo/general_pickup/RSIWAM/arx_x5/0_ckpt_name=rsiwam-original32-lora33-step400,action_type=ee/2026-11-01_RSIWAM_general_pickup_seed0_r2/_result.json",
+        "initial_physical_snapshot_available": false,
+        "observation_evidence": "existing_returned_RGB_and_state_exact_arrays_plus_layout_input_hashes"
+      }
+    },
+    {
+      "source_path": "/run/ti/RSIWAM-official6300-queue-20261101-r3/preparation/blocks/align_blocks_seed0.json",
+      "source_sha256": "f1035286898f2a3e6adf9144892e7ce1e8e987bf17dab899f6f0515032afbbee",
+      "derived_selected_fields": {
+        "candidate_id": "recoverwam_success133_original_parent20261032_lora20261033",
+        "candidate_identity_sha256": "0cff5681ebedfb413130b91bb63feaa0bb223669c2388b6d700486c3e05d212e",
+        "checkpoint": "rsiwam-original32-lora33-step400",
+        "evaluation_seed": 0,
+        "task": "align_blocks",
+        "task_seed_id": "RSIWAM/align_blocks/seed-0",
+        "xpl_revision": "7e5def6e61435e823f5b346f2b9d2dd5a7a78256",
+        "official_revision": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
+        "native_count": 50,
+        "native_cap": 200,
+        "result_path": "/run/ti/RSIWAM-official6300-queue-20261101-r3/RoboDojo/eval_result/RoboDojo/align_blocks/RSIWAM/arx_x5/0_ckpt_name=rsiwam-original32-lora33-step400,action_type=ee/2026-11-01_RSIWAM_queue_r3_align_blocks_seed0/_result.json",
+        "initial_physical_snapshot_available": false,
+        "observation_evidence": "existing_returned_RGB_and_state_exact_arrays_plus_layout_input_hashes"
+      }
+    },
+    {
+      "source_path": "/run/ti/RSIWAM-official6300-queue-20261101-r3/preparation/blocks/arrange_largest_number_seed0.json",
+      "source_sha256": "f4b1ec0b092f774935df67acb62581798d1ca7c528313139a1cd7e7810bd5277",
+      "derived_selected_fields": {
+        "candidate_id": "recoverwam_success133_original_parent20261032_lora20261033",
+        "candidate_identity_sha256": "0cff5681ebedfb413130b91bb63feaa0bb223669c2388b6d700486c3e05d212e",
+        "checkpoint": "rsiwam-original32-lora33-step400",
+        "evaluation_seed": 0,
+        "task": "arrange_largest_number",
+        "task_seed_id": "RSIWAM/arrange_largest_number/seed-0",
+        "xpl_revision": "7e5def6e61435e823f5b346f2b9d2dd5a7a78256",
+        "official_revision": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
+        "native_count": 25,
+        "native_cap": 1050,
+        "result_path": "/run/ti/RSIWAM-official6300-queue-20261101-r3/RoboDojo/eval_result/RoboDojo/arrange_largest_number/RSIWAM/arx_x5/0_ckpt_name=rsiwam-original32-lora33-step400,action_type=ee/2026-11-01_RSIWAM_queue_r3_arrange_largest_number_seed0/_result.json",
+        "initial_physical_snapshot_available": false,
+        "observation_evidence": "existing_returned_RGB_and_state_exact_arrays_plus_layout_input_hashes"
+      }
+    },
+    {
+      "source_path": "/run/ti/RSIWAM-official6300-queue-20261101-r3/preparation/blocks/build_tower_seed0.json",
+      "source_sha256": "bd84827b5b063efaa45601115c816c90bad8d153bbf8875c2223b436829f09e3",
+      "derived_selected_fields": {
+        "candidate_id": "recoverwam_success133_original_parent20261032_lora20261033",
+        "candidate_identity_sha256": "0cff5681ebedfb413130b91bb63feaa0bb223669c2388b6d700486c3e05d212e",
+        "checkpoint": "rsiwam-original32-lora33-step400",
+        "evaluation_seed": 0,
+        "task": "build_tower",
+        "task_seed_id": "RSIWAM/build_tower/seed-0",
+        "xpl_revision": "7e5def6e61435e823f5b346f2b9d2dd5a7a78256",
+        "official_revision": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
+        "native_count": 50,
+        "native_cap": 1050,
+        "result_path": "/run/ti/RSIWAM-official6300-queue-20261101-r3/RoboDojo/eval_result/RoboDojo/build_tower/RSIWAM/arx_x5/0_ckpt_name=rsiwam-original32-lora33-step400,action_type=ee/2026-11-01_RSIWAM_queue_r3_build_tower_seed0/_result.json",
+        "initial_physical_snapshot_available": false,
+        "observation_evidence": "existing_returned_RGB_and_state_exact_arrays_plus_layout_input_hashes"
+      }
+    },
+    {
+      "source_path": "/run/ti/RSIWAM-official6300-queue-20261101-r3/preparation/blocks/cover_blocks_seed0.json",
+      "source_sha256": "37ad50f7188e91a29dd1e271adb47005cc3643f29f2f4ce04a774353b50fa37e",
+      "derived_selected_fields": {
+        "candidate_id": "recoverwam_success133_original_parent20261032_lora20261033",
+        "candidate_identity_sha256": "0cff5681ebedfb413130b91bb63feaa0bb223669c2388b6d700486c3e05d212e",
+        "checkpoint": "rsiwam-original32-lora33-step400",
+        "evaluation_seed": 0,
+        "task": "cover_blocks",
+        "task_seed_id": "RSIWAM/cover_blocks/seed-0",
+        "xpl_revision": "7e5def6e61435e823f5b346f2b9d2dd5a7a78256",
+        "official_revision": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
+        "native_count": 50,
+        "native_cap": 800,
+        "result_path": "/run/ti/RSIWAM-official6300-queue-20261101-r3/RoboDojo/eval_result/RoboDojo/cover_blocks/RSIWAM/arx_x5/0_ckpt_name=rsiwam-original32-lora33-step400,action_type=ee/2026-11-01_RSIWAM_queue_r3_cover_blocks_seed0/_result.json",
+        "initial_physical_snapshot_available": false,
+        "observation_evidence": "existing_returned_RGB_and_state_exact_arrays_plus_layout_input_hashes"
+      }
+    },
+    {
+      "source_path": "/run/ti/RSIWAM-official6300-queue-20261101-r3/preparation/blocks/deposit_coin_seed0.json",
+      "source_sha256": "87c8f46438a0f3df05713437a1ab6cb8eaae3251c89a88f64927691f44830ec2",
+      "derived_selected_fields": {
+        "candidate_id": "recoverwam_success133_original_parent20261032_lora20261033",
+        "candidate_identity_sha256": "0cff5681ebedfb413130b91bb63feaa0bb223669c2388b6d700486c3e05d212e",
+        "checkpoint": "rsiwam-original32-lora33-step400",
+        "evaluation_seed": 0,
+        "task": "deposit_coin",
+        "task_seed_id": "RSIWAM/deposit_coin/seed-0",
+        "xpl_revision": "7e5def6e61435e823f5b346f2b9d2dd5a7a78256",
+        "official_revision": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
+        "native_count": 50,
+        "native_cap": 300,
+        "result_path": "/run/ti/RSIWAM-official6300-queue-20261101-r3/RoboDojo/eval_result/RoboDojo/deposit_coin/RSIWAM/arx_x5/0_ckpt_name=rsiwam-original32-lora33-step400,action_type=ee/2026-11-01_RSIWAM_queue_r3_deposit_coin_seed0/_result.json",
+        "initial_physical_snapshot_available": false,
+        "observation_evidence": "existing_returned_RGB_and_state_exact_arrays_plus_layout_input_hashes"
+      }
+    },
+    {
+      "source_path": "/run/ti/RSIWAM-official6300-queue-20261101-r3/preparation/blocks/classify_objects_seed0.json",
+      "source_sha256": "c3b3b4addf7507beae7e68c38f4b0b7276f4512c27a8674a23ec56e8887162d9",
+      "derived_selected_fields": {
+        "candidate_id": "recoverwam_success133_original_parent20261032_lora20261033",
+        "candidate_identity_sha256": "0cff5681ebedfb413130b91bb63feaa0bb223669c2388b6d700486c3e05d212e",
+        "checkpoint": "rsiwam-original32-lora33-step400",
+        "evaluation_seed": 0,
+        "task": "classify_objects",
+        "task_seed_id": "RSIWAM/classify_objects/seed-0",
+        "xpl_revision": "7e5def6e61435e823f5b346f2b9d2dd5a7a78256",
+        "official_revision": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
+        "native_count": 50,
+        "native_cap": 1100,
+        "result_path": "/run/ti/RSIWAM-official6300-queue-20261101-r3/RoboDojo/eval_result/RoboDojo/classify_objects/RSIWAM/arx_x5/0_ckpt_name=rsiwam-original32-lora33-step400,action_type=ee/2026-11-01_RSIWAM_queue_r3_classify_objects_seed0/_result.json",
+        "initial_physical_snapshot_available": false,
+        "observation_evidence": "existing_returned_RGB_and_state_exact_arrays_plus_layout_input_hashes"
+      }
+    }
+  ],
+  "shared_policy_resource_acceptance": {
+    "adapter_sha256": "eec21ec2834ef95bffdac7b3df0b48092a215aa67e7bf6952ec1643ab511b361",
+    "all_parameters_frozen": true,
+    "base_identity": "ae66dbfc16eb3c75fa89111501412ecb14cd3ab62ce02ff9fc8a457bb3b19aba",
+    "candidate_identity_sha256": "0cff5681ebedfb413130b91bb63feaa0bb223669c2388b6d700486c3e05d212e",
+    "checkpoint_sha256": "38b9eaa31383a8a098dc68e568c125d5d22d3bb749742145ac38d7c2a5d3dbb6",
+    "cross_device_bitwise_parity_proven": false,
+    "loader_checks_completed": true,
+    "parameter_tensors": 3335,
+    "parent_sha256": "861529eb89e4279e4490d6156bf04a335eee410f6c02842d0ac3db2dc90431d3",
+    "source_debug_policy": {
+      "index": 2,
+      "uuid": "GPU-3d71f58a-617e-9f0f-50cf-fd797faa7810"
+    },
+    "status": "ACTUAL_CONSTRUCTOR_TARGET_ACCEPTED",
+    "target_policy": {
+      "index": 4,
+      "uuid": "GPU-6565c466-2dd4-d73d-ca78-6a89f615fca9"
+    }
+  }
+}

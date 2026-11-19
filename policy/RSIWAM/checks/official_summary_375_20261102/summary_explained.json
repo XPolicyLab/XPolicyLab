@@ -1,0 +1,255 @@
+{
+  "record_kind": "DERIVED_EXPLANATION_OF_UNMODIFIED_OFFICIAL_OUTPUT",
+  "official_complete_cells": 7,
+  "official_required_cells": 126,
+  "official_complete_campaign": false,
+  "official_progress_percent": 5.555555555555555,
+  "cells": [
+    {
+      "task": "align_blocks",
+      "policy": "RSIWAM",
+      "embodiment": "arx_x5",
+      "seed": 0,
+      "episodes": 50,
+      "sr_percent": 0.0,
+      "score_100": 0.0,
+      "source": "first_50"
+    },
+    {
+      "task": "build_tower",
+      "policy": "RSIWAM",
+      "embodiment": "arx_x5",
+      "seed": 0,
+      "episodes": 50,
+      "sr_percent": 88.0,
+      "score_100": 90.20000000000002,
+      "source": "first_50"
+    },
+    {
+      "task": "classify_objects",
+      "policy": "RSIWAM",
+      "embodiment": "arx_x5",
+      "seed": 0,
+      "episodes": 50,
+      "sr_percent": 46.0,
+      "score_100": 55.499999999999986,
+      "source": "first_50"
+    },
+    {
+      "task": "cover_blocks",
+      "policy": "RSIWAM",
+      "embodiment": "arx_x5",
+      "seed": 0,
+      "episodes": 50,
+      "sr_percent": 100.0,
+      "score_100": 100.0,
+      "source": "first_50"
+    },
+    {
+      "task": "deposit_coin",
+      "policy": "RSIWAM",
+      "embodiment": "arx_x5",
+      "seed": 0,
+      "episodes": 50,
+      "sr_percent": 18.0,
+      "score_100": 23.199999999999996,
+      "source": "first_50"
+    },
+    {
+      "task": "fill_egg_holder",
+      "policy": "RSIWAM",
+      "embodiment": "arx_x5",
+      "seed": 0,
+      "episodes": 50,
+      "sr_percent": 0.0,
+      "score_100": 8.500000000000004,
+      "source": "first_50"
+    },
+    {
+      "task": "general_pickup",
+      "policy": "RSIWAM",
+      "embodiment": "arx_x5",
+      "seed": 0,
+      "episodes": 50,
+      "sr_percent": 20.0,
+      "score_100": 20.0,
+      "source": "first_50"
+    }
+  ],
+  "generalization_halves": [
+    {
+      "task": "arrange_largest_number",
+      "policy": "RSIWAM",
+      "embodiment": "arx_x5",
+      "seed": 0,
+      "standard_entries": 25,
+      "random_entries": 0,
+      "required_each": 25
+    }
+  ],
+  "dimension_summary_mean_population_std": {
+    "Generalization": null,
+    "Precision": [
+      [
+        53.0,
+        0.0
+      ],
+      [
+        56.7,
+        0.0
+      ]
+    ],
+    "Long-Horizon": [
+      [
+        23.0,
+        0.0
+      ],
+      [
+        31.999999999999993,
+        0.0
+      ]
+    ],
+    "Memory": [
+      [
+        100.0,
+        0.0
+      ],
+      [
+        100.0,
+        0.0
+      ]
+    ],
+    "Open": [
+      [
+        10.0,
+        0.0
+      ],
+      [
+        10.0,
+        0.0
+      ]
+    ]
+  },
+  "overall_summary_mean_population_std": [
+    [
+      46.5,
+      0.0
+    ],
+    [
+      49.675,
+      0.0
+    ]
+  ],
+  "score_scale": "0_to_100",
+  "video_checks": [
+    {
+      "task": "align_blocks",
+      "policy": "RSIWAM",
+      "embodiment": "arx_x5",
+      "run": "0_ckpt_name=rsiwam-original32-lora33-step400,action_type=ee",
+      "timestamp": "2026-11-01_RSIWAM_queue_r3_align_blocks_seed0",
+      "result_count": 50,
+      "video_count": 50,
+      "video_file_count": 150,
+      "missing_camera_count": 0,
+      "extra_episode_count": 0,
+      "matches": true
+    },
+    {
+      "task": "arrange_largest_number",
+      "policy": "RSIWAM",
+      "embodiment": "arx_x5",
+      "run": "0_ckpt_name=rsiwam-original32-lora33-step400,action_type=ee",
+      "timestamp": "2026-11-01_RSIWAM_queue_r3_arrange_largest_number_seed0",
+      "result_count": 25,
+      "video_count": 25,
+      "video_file_count": 75,
+      "missing_camera_count": 0,
+      "extra_episode_count": 0,
+      "matches": true
+    },
+    {
+      "task": "build_tower",
+      "policy": "RSIWAM",
+      "embodiment": "arx_x5",
+      "run": "0_ckpt_name=rsiwam-original32-lora33-step400,action_type=ee",
+      "timestamp": "2026-11-01_RSIWAM_queue_r3_build_tower_seed0",
+      "result_count": 50,
+      "video_count": 50,
+      "video_file_count": 150,
+      "missing_camera_count": 0,
+      "extra_episode_count": 0,
+      "matches": true
+    },
+    {
+      "task": "classify_objects",
+      "policy": "RSIWAM",
+      "embodiment": "arx_x5",
+      "run": "0_ckpt_name=rsiwam-original32-lora33-step400,action_type=ee",
+      "timestamp": "2026-11-01_RSIWAM_queue_r3_classify_objects_seed0",
+      "result_count": 50,
+      "video_count": 50,
+      "video_file_count": 150,
+      "missing_camera_count": 0,
+      "extra_episode_count": 0,
+      "matches": true
+    },
+    {
+      "task": "cover_blocks",
+      "policy": "RSIWAM",
+      "embodiment": "arx_x5",
+      "run": "0_ckpt_name=rsiwam-original32-lora33-step400,action_type=ee",
+      "timestamp": "2026-11-01_RSIWAM_queue_r3_cover_blocks_seed0",
+      "result_count": 50,
+      "video_count": 50,
+      "video_file_count": 150,
+      "missing_camera_count": 0,
+      "extra_episode_count": 0,
+      "matches": true
+    },
+    {
+      "task": "deposit_coin",
+      "policy": "RSIWAM",
+      "embodiment": "arx_x5",
+      "run": "0_ckpt_name=rsiwam-original32-lora33-step400,action_type=ee",
+      "timestamp": "2026-11-01_RSIWAM_queue_r3_deposit_coin_seed0",
+      "result_count": 50,
+      "video_count": 50,
+      "video_file_count": 150,
+      "missing_camera_count": 0,
+      "extra_episode_count": 0,
+      "matches": true
+    },
+    {
+      "task": "fill_egg_holder",
+      "policy": "RSIWAM",
+      "embodiment": "arx_x5",
+      "run": "0_ckpt_name=rsiwam-original32-lora33-step400,action_type=ee",
+      "timestamp": "2026-11-01_RSIWAM_queue_r3_fill_egg_holder_seed0",
+      "result_count": 50,
+      "video_count": 50,
+      "video_file_count": 150,
+      "missing_camera_count": 0,
+      "extra_episode_count": 0,
+      "matches": true
+    },
+    {
+      "task": "general_pickup",
+      "policy": "RSIWAM",
+      "embodiment": "arx_x5",
+      "run": "0_ckpt_name=rsiwam-original32-lora33-step400,action_type=ee",
+      "timestamp": "2026-11-01_RSIWAM_general_pickup_seed0_r2",
+      "result_count": 50,
+      "video_count": 50,
+      "video_file_count": 150,
+      "missing_camera_count": 0,
+      "extra_episode_count": 0,
+      "matches": true
+    }
+  ],
+  "video_mismatch_folders": 0,
+  "frozen_accepted_raw_outcomes": 375,
+  "official_included_episode_count": 350,
+  "overall_formula": "Dimension-balanced mean across completed task cells per seed, then mean and population std across available seeds; not pooled episode-weighted SR.",
+  "not_qualified_failed_state_recovery_SR": true
+}

@@ -1,0 +1,14 @@
+{
+  "schema": "rsiwam-public-evidence-preparation-validation-v1",
+  "status": "LOCAL_HASH_SCOPE_AND_LOG_COUNT_REVIEW_PASSED",
+  "source_files_rehashed": 12,
+  "source_bytes_verified": 237324,
+  "selected_original_files_rehashed_after_copy": 8,
+  "counts_recomputed_from_original_stdout_stderr_match_both_receipts": true,
+  "plain_literal_and_guardian_exit_codes_zero": true,
+  "original_overall_failure_and_cleanup_error_preserved": true,
+  "r5_installation_inputs_match_prepared_public_originals": true,
+  "broker_full_config_full_environment_or_unrelated_process_dump_included": false,
+  "credential_pattern_findings": [],
+  "remote_access_gpu_or_new_test_execution_during_preparation": false
+}

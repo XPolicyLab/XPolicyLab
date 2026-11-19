@@ -1,0 +1,2 @@
+Previous HEAD position was cf7e9d0 fix(RSIWAM): preserve selected CUDA packages during installation
+HEAD is now at 776c9f3 fix: preserve RSIWAM dependency bounds during XPolicyLab installation

@@ -1,0 +1,19 @@
+{
+  "status": "EXPLICIT_DIST_INFO_VERIFIED",
+  "reference_root": "/isaac-sim/exts/omni.isaac.ml_archive/pip_prebundle",
+  "python_executable": "/isaac-sim/kit/python/bin/python3",
+  "python_version": "3.10.15 (tags/v3.10.15-dirty:ffee63f, Oct  8 2024, 18:53:10) [GCC 7.3.1 20180303 (Red Hat 7.3.1-5)]",
+  "distributions": {
+    "torch": {
+      "version": "2.5.1+cu118",
+      "metadata_sha256": "4bc32a34864b8318cd463182f694c3ae9620c22b2974585eb4232969606e2419",
+      "metadata_path": "/isaac-sim/exts/omni.isaac.ml_archive/pip_prebundle/torch-2.5.1+cu118.dist-info/METADATA"
+    },
+    "torchvision": {
+      "version": "0.20.1+cu118",
+      "metadata_sha256": "a4ff10fa2c8b6d7c23f489b6eb1008b9552343756f669d31632238d775273c7e",
+      "metadata_path": "/isaac-sim/exts/omni.isaac.ml_archive/pip_prebundle/torchvision-0.20.1+cu118.dist-info/METADATA"
+    }
+  },
+  "tensor_imported": false
+}

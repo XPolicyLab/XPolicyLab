@@ -1,0 +1,16 @@
+{
+  "status": "FAILED",
+  "owner": {
+    "pid": 123977,
+    "starttime": "1549968232",
+    "state": "R",
+    "ppid": 1,
+    "pgrp": 123977,
+    "session": 123977
+  },
+  "modes": {},
+  "config_sha256": "57c70f73d079319156214d700f5e8e8eae50a497ce48e8f6e76eab556b924fa7",
+  "started_at": 1793547651.2023067,
+  "error": "RuntimeError('Exact owned cleanup incomplete')",
+  "finished_at": 1793547953.312688
+}

@@ -1,0 +1,227 @@
+{
+  "status": "PASS",
+  "all_applicable_satisfied": true,
+  "checked_count": 27,
+  "requirements": [
+    {
+      "line": 3,
+      "requirement": "torch>=2.5",
+      "name": "torch",
+      "applicable": true,
+      "installed": "2.5.1+cu118",
+      "satisfied": true
+    },
+    {
+      "line": 4,
+      "requirement": "torchvision>=0.20",
+      "name": "torchvision",
+      "applicable": true,
+      "installed": "0.20.1+cu118",
+      "satisfied": true
+    },
+    {
+      "line": 5,
+      "requirement": "accelerate>=1.0",
+      "name": "accelerate",
+      "applicable": true,
+      "installed": "1.15.0",
+      "satisfied": true
+    },
+    {
+      "line": 6,
+      "requirement": "hydra-core==1.3.2",
+      "name": "hydra-core",
+      "applicable": true,
+      "installed": "1.3.2",
+      "satisfied": true
+    },
+    {
+      "line": 7,
+      "requirement": "omegaconf==2.3.0",
+      "name": "omegaconf",
+      "applicable": true,
+      "installed": "2.3.0",
+      "satisfied": true
+    },
+    {
+      "line": 8,
+      "requirement": "transformers>=4.49,<5",
+      "name": "transformers",
+      "applicable": true,
+      "installed": "4.57.6",
+      "satisfied": true
+    },
+    {
+      "line": 9,
+      "requirement": "safetensors>=0.5",
+      "name": "safetensors",
+      "applicable": true,
+      "installed": "0.8.0",
+      "satisfied": true
+    },
+    {
+      "line": 10,
+      "requirement": "numpy>=1.26,<2",
+      "name": "numpy",
+      "applicable": true,
+      "installed": "1.26.4",
+      "satisfied": true
+    },
+    {
+      "line": 11,
+      "requirement": "pandas>=2.2,<3",
+      "name": "pandas",
+      "applicable": true,
+      "installed": "2.3.3",
+      "satisfied": true
+    },
+    {
+      "line": 12,
+      "requirement": "pyarrow>=17",
+      "name": "pyarrow",
+      "applicable": true,
+      "installed": "25.0.1",
+      "satisfied": true
+    },
+    {
+      "line": 13,
+      "requirement": "av>=14",
+      "name": "av",
+      "applicable": true,
+      "installed": "17.1.0",
+      "satisfied": true
+    },
+    {
+      "line": 14,
+      "requirement": "einops>=0.8",
+      "name": "einops",
+      "applicable": true,
+      "installed": "0.8.2",
+      "satisfied": true
+    },
+    {
+      "line": 15,
+      "requirement": "Pillow>=10",
+      "name": "Pillow",
+      "applicable": true,
+      "installed": "12.3.0",
+      "satisfied": true
+    },
+    {
+      "line": 16,
+      "requirement": "h5py>=3.11",
+      "name": "h5py",
+      "applicable": true,
+      "installed": "3.16.0",
+      "satisfied": true
+    },
+    {
+      "line": 17,
+      "requirement": "rich>=13",
+      "name": "rich",
+      "applicable": true,
+      "installed": "15.0.0",
+      "satisfied": true
+    },
+    {
+      "line": 18,
+      "requirement": "tqdm>=4.66",
+      "name": "tqdm",
+      "applicable": true,
+      "installed": "4.70.1",
+      "satisfied": true
+    },
+    {
+      "line": 19,
+      "requirement": "imageio>=2.36",
+      "name": "imageio",
+      "applicable": true,
+      "installed": "2.38.0",
+      "satisfied": true
+    },
+    {
+      "line": 20,
+      "requirement": "imageio-ffmpeg>=0.5",
+      "name": "imageio-ffmpeg",
+      "applicable": true,
+      "installed": "0.7.0",
+      "satisfied": true
+    },
+    {
+      "line": 21,
+      "requirement": "ftfy>=6.3",
+      "name": "ftfy",
+      "applicable": true,
+      "installed": "6.3.1",
+      "satisfied": true
+    },
+    {
+      "line": 22,
+      "requirement": "regex>=2024.11",
+      "name": "regex",
+      "applicable": true,
+      "installed": "2026.9.29",
+      "satisfied": true
+    },
+    {
+      "line": 23,
+      "requirement": "opencv-python>=4.10",
+      "name": "opencv-python",
+      "applicable": true,
+      "installed": "4.11.0.86",
+      "satisfied": true
+    },
+    {
+      "line": 24,
+      "requirement": "msgpack>=1.0",
+      "name": "msgpack",
+      "applicable": true,
+      "installed": "1.2.4",
+      "satisfied": true
+    },
+    {
+      "line": 25,
+      "requirement": "websockets>=12",
+      "name": "websockets",
+      "applicable": true,
+      "installed": "16.1.1",
+      "satisfied": true
+    },
+    {
+      "line": 26,
+      "requirement": "datasets==3.6.0",
+      "name": "datasets",
+      "applicable": true,
+      "installed": "3.6.0",
+      "satisfied": true
+    },
+    {
+      "line": 27,
+      "requirement": "jsonlines==4.0.0",
+      "name": "jsonlines",
+      "applicable": true,
+      "installed": "4.0.0",
+      "satisfied": true
+    },
+    {
+      "line": 28,
+      "requirement": "PyYAML>=6",
+      "name": "PyYAML",
+      "applicable": true,
+      "installed": "6.0.3",
+      "satisfied": true
+    },
+    {
+      "line": 29,
+      "requirement": "filelock>=3",
+      "name": "filelock",
+      "applicable": true,
+      "installed": "4.1.0",
+      "satisfied": true
+    }
+  ],
+  "violations": [],
+  "requirements_path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt",
+  "requirements_sha256": "2098e0ae61a82c2025648d57323f9c7ef88aad4d22d87e15eed6ccff91db34f8",
+  "python": "/run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/bin/python"
+}

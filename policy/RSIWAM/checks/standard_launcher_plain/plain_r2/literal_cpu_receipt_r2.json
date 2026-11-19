@@ -1,0 +1,26 @@
+{
+  "status": "CPU_PREFLIGHT_PASS",
+  "commit": "776c9f3b177427c1078ee31daaa4db93f922008b",
+  "literal_executed": false,
+  "gpu_execution": false,
+  "resource_sample_readonly": {
+    "index": 6,
+    "uuid": "GPU-6184aa9d-b4ee-a1b8-2f50-faf2dccd7f8f",
+    "name": "NVIDIA A800-SXM4-80GB",
+    "total_mib": 81920,
+    "used_mib": 2,
+    "free_mib": 81226
+  },
+  "base_asset_sizes_verified": 11,
+  "full_base_hashes_rechecked_by_unchanged_Model_at_launch": true,
+  "config": "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_config_r2.json",
+  "config_sha256": "57c70f73d079319156214d700f5e8e8eae50a497ce48e8f6e76eab556b924fa7",
+  "execute_argv": [
+    "/run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/bin/python",
+    "-B",
+    "/run/ti/RSIWAM-standard-launcher-20261101-r1/inputs_r5/literal_r2/literal_owner.py",
+    "--config",
+    "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_config_r2.json",
+    "--execute"
+  ]
+}

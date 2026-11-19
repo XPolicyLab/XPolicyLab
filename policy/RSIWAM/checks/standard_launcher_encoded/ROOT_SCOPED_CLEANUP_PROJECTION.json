@@ -1,0 +1,49 @@
+{
+  "derived": true,
+  "source_collector": "root remotely, after completion",
+  "source_path": "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/raw/scoped_cleanup_audit.json",
+  "source_sha256": "cb8146d1d8ae64feb754e36cea11941e6ee4d558c61b1f772bb201f1e12e9183",
+  "source_bytes": 52814,
+  "process_inventory_omitted": true,
+  "status": "SCOPED_CLEANUP_CHECKS_COMPLETE",
+  "checked_at_epoch": 1793596715.9925067,
+  "scope": "Exact r4 config/CPU, launch, actual released ledger row, known-owned identities, and same-inode exclusive private-lifetime-lock probe only.",
+  "scope_limitations": [
+    "Arbitrary unrelated host processes and their FDs are not enumerated. Previous full-host PermissionError audits remain incomplete and unchanged. This result does not claim full-host FD readability or a full-host FD scan PASS."
+  ],
+  "errors": [],
+  "recorded_identity_count": 339,
+  "actual_identity_present_count": 0,
+  "exact_live_count": 0,
+  "reservation_selected_fields": {
+    "owner_id": "RSIWAM:literal-776c9f3:primary:encoded-gpu1-r4:encoded",
+    "gpu_index": 1,
+    "gpu_uuid": "GPU-269d371f-3c0e-f4b5-7661-63bab0e9a682",
+    "released_at": 1793596203.926253
+  },
+  "private_lock_identity": {
+    "device": 1048692,
+    "inode": 38711193551
+  },
+  "private_lock_identity_matches_owner_capture": true,
+  "exclusive_private_lock_available": true,
+  "probe_requested": true,
+  "private_lock_probe_performed": true,
+  "private_lock_probe_released_immediately": true,
+  "arbitrary_host_fd_scan_performed": false,
+  "database_open_mode": "ro",
+  "database_modified": false,
+  "signals_sent": [],
+  "gpu_operations": 0,
+  "source_sha256_bindings": {
+    "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_encoded_config_gpu1_r4.json": "03579fd25751041fac0632aed11cfa57045fb659c1830fe2d61017d261f16368",
+    "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_encoded_cpu_receipt_gpu1_r4.json": "a1bc0cb1df236743dedb45ed282bac276cdd3e45175ee9e597d2096b2777dc63",
+    "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_encoded_attempt_gpu1_r4/status.json": "a6ba7002ed8358e107427515575d5f4e1e0f3723ed3db20cfe46344246d9ae6c",
+    "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_encoded_attempt_gpu1_r4/encoded/guardian_result.json": "d706231f5c199c228870fc1b15856fb670009ec8ce6c8f68a6838e799865de46",
+    "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_encoded_attempt_gpu1_r4/encoded/release_receipt.json": "1dc72284467a275077e9ff67b1d8ea6c4d61b9fdb24d5a3bc80a48b199ef281e",
+    "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_encoded_attempt_gpu1_r4/encoded/initialization_closed.json": "02c2344cdb885b86f09050b8e02e4411cfcf6d6fc767259489ee9ec6165bf196",
+    "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_encoded_attempt_gpu1_r4/encoded/bind.json": "8cd9c480ad177c399ecc210c189db60b65d3ac5eec7cc3240cc8298f7a98903e",
+    "/run/ti/RSIWAM-standard-launcher-20261101-r1/encoded_gpu1_switch_20261102_r1/launch.json": "c1b7bad67877adc94bbab8278b397b52aef6a4c3e98a83435de2b85b35f95250",
+    "/run/ti/RSIWAM-standard-launcher-20261101-r1/encoded_gpu1_switch_20261102_r1/retirement.json": "57dfcbaba652fb56334bc6813bc04b02e378b6899c60063f67a6e68a5982b26f"
+  }
+}
