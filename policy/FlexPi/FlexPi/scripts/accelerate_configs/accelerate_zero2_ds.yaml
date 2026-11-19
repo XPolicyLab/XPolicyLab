@@ -1,0 +1,18 @@
+compute_environment: LOCAL_MACHINE
+debug: false
+distributed_type: DEEPSPEED
+deepspeed_config:
+  deepspeed_config_file: scripts/ds_configs/ds_zero2_config.json
+  zero3_init_flag: false
+
+# Keep this null when using deepspeed_config_file; precision is controlled by
+# training config (Trainer -> Accelerator(mixed_precision=...)) and DS JSON.
+mixed_precision: null
+
+machine_rank: 0
+main_training_function: main
+num_machines: 1
+num_processes: 1
+rdzv_backend: static
+same_network: true
+use_cpu: false

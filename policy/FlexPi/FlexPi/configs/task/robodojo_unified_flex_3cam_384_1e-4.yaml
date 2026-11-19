@@ -1,0 +1,52 @@
+# @package _global_
+#
+# FlexPi (flex_joint) — RoboDojo 3-cam 384 preset, RGB-only.
+#
+# Mirrors robotwin_unified_flex_3cam_384_1e-4 with two differences:
+#   - /data: robodojo (RoboDojo LeRobot export; no shape_meta.depth)
+#   - model.enable_pointmap: false, required by the depth-free data config
+#
+# The composite layout is reused as-is: it is a geometric slot layout
+# (head on top, two wrists below, 384x320) and is embodiment-agnostic, so
+# any 3-cam dataset can opt into it regardless of the "robotwin" in its name.
+#
+# RoboDojo ships GT depth as a separate export (data/RoboDojo_depth on HF).
+# To train the pointmap stream, add a robodojo_depth data config carrying
+# shape_meta.depth and flip enable_pointmap back to true.
+
+defaults:
+  - override /data: robodojo
+  - override /model: flexpi
+  - _self_
+
+batch_size: 8
+num_workers: 8
+
+model:
+  mot_checkpoint_mixed_attn: false
+  composite_layout: "tshape_robotwin_384x320_uniform"
+  enable_pointmap: false
+  # flex_joint.p_present_* / p_j* keep their 0.5 defaults from
+  # configs/model/flexpi.yaml, which is what train_flexpi_robotwin.sh passes
+  # explicitly — so video and dino still get cross-modality forcing. The
+  # pointmap probabilities are left alone rather than zeroed: with
+  # enable_pointmap=false there is no pointmap stream to drop. Revisit these
+  # together with enable_pointmap if you turn the stream back on.
+
+data:
+  train:
+    concat_multi_camera: ${model.composite_layout}
+  val:
+    concat_multi_camera: ${model.composite_layout}
+
+learning_rate: 1e-4
+num_epochs: 20
+max_steps: null
+log_every: 2
+save_every: 500
+eval_every: 500
+
+gradient_accumulation_steps: 8
+weight_decay: 1e-2
+resume: null
+pretrained_ckpt: null
