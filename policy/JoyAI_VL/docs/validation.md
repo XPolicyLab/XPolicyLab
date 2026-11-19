@@ -1,8 +1,7 @@
 # Adapter validation
 
 These checks cover the XPolicyLab interface, image transport and process startup.
-They use synthetic observations and a local model API fixture. They do not measure
-JoyAI-VL task success rates.
+They use synthetic observations and a local model API fixture.
 
 ## CPU checks
 
@@ -23,9 +22,9 @@ server decodes those through XPolicyLab's shared helper before calling the model
 
 Both observation modes use the official `eval.sh`, policy server, WebSocket
 client and `utils/debug_env_client.py`, with the actual JoyAI-VL adapter, Docker
-agent and SAM3 service. The only model substitute is `tests/mock_model_api.py`,
+agent and SAM3 service. The model endpoint is `tests/mock_model_api.py`,
 which reads the image requests and returns fixed generic observation/wait calls.
-It is a test fixture, outside the agent's runtime mounts and tool registry.
+The fixture runs as a separate test service.
 
 Start SAM3 as described in the installation guide. In the policy directory, start
 the API fixture in another terminal:
@@ -65,9 +64,9 @@ and the official final-verdict callback.
 - Policy/client Python: 3.11; WebSockets: 17.4.
 - Local debug container: Python 3.11.2, NumPy 1.24.2, Pillow 11.3.0.
 - Hardware: NVIDIA GeForce RTX 5090; actual cuRobo planner and SAM3 service.
-- The local container was assembled from the available reference runtime and
-  Pillow. The public Dockerfile separately pins NumPy 1.26.0 and Pillow 11.3.0;
-  rebuilding that recipe is not claimed by this debug check.
+- Container build: the debug image uses the available reference runtime plus
+  Pillow. The public Dockerfile pins NumPy 1.26.0 and Pillow 11.3.0; its build
+  was not exercised in this validation.
 
 ## Results — 2026-11-19
 
@@ -86,6 +85,5 @@ official client's final verdict. All 20 agent processes exit with code 0.
 Local filesystem roots are replaced with placeholders and ANSI colour codes are
 removed from the published logs.
 
-The debug client uses synthetic observations and reports `success_official=false`;
-this is a transport/startup check, with no simulator task score. Simulator
-task-score evaluation for this adapter revision has not been run.
+The synthetic debug client reports `success_official=false` in the logs.
+Simulator task-score evaluation for this revision: not run.

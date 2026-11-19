@@ -1,6 +1,6 @@
 # JoyAI-VL
 
-**Contributor:** Joy Future Academy · Kanghui Tian | **Paper / arXiv:** Not included in this release | **Original code:** [JoyAI-VL evaluation release](https://github.com/tiankanghui/JoyVL-Robodojo-Eval), based on [HexaShell Preview](https://github.com/HexaFuture/HexaShell/tree/v1.0)
+**Contributor:** Joy Future Academy · Kanghui Tian | **Paper / arXiv:** — | **Original code:** [JoyAI-VL evaluation release](https://github.com/tiankanghui/JoyVL-Robodojo-Eval), based on [HexaShell Preview](https://github.com/HexaFuture/HexaShell/tree/v1.0)
 
 This is Joy Future Academy's **JoyAI-VL API-driven Agent adapter**.
 It uses RGB observations, a shared robot API, SAM3 perception, and joint control.
@@ -42,7 +42,7 @@ This eval-only adapter consumes RoboDojo runtime observations directly; it has n
 
 ## Training
 
-Inference uses the JoyAI-VL API. This eval-only adapter provides deployment code; `train.sh` is not included. Training and weight release dates are not announced.
+This eval-only adapter provides deployment code for the JoyAI-VL API. Training and weight release schedule: TBD.
 
 ## Evaluation
 

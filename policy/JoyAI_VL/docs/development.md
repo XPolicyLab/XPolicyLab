@@ -16,9 +16,8 @@ than the skills flag, shared SAM3 service, robot controller and perception geome
 retained their source bytes.
 `metadata/variant_manifest.json` records source hashes and the file-level changes.
 
-The previously evaluated JoyAI-VL release includes task skills; its results are recorded
-with that release. The initial adapter passed 14 CPU checks using synthetic inputs
-and mocked services. Simulator evaluation: not run.
+Evaluation records for the source release, which used task skills, are maintained
+with that release. Current adapter checks are recorded in [validation](validation.md).
 
 ## 2026-11-19 — Image transport and deployment validation
 
@@ -37,7 +36,7 @@ external RoboDojo checkout in the Python import path.
 
 The debug fixture uses synthetic observations and a local fixed-response model API.
 It exercises the real policy server, agent container, SAM3 and the official debug
-client. It is kept under `tests/` and is not used by evaluation deployments.
+client. The fixture is kept under `tests/`.
 After these changes, 22 CPU tests and both ten-episode process checks passed.
 Validation commands, environment versions and results are recorded in
 `docs/validation.md`; per-file hashes are in the variant and release manifests.
