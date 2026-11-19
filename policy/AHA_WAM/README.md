@@ -90,7 +90,7 @@ Environment variables used by the adapter scripts:
 | `AHA_WAM_CHECKPOINT_PATH` | Optional explicit eval checkpoint file; overrides `ckpt_name` lookup. |
 | `AHA_WAM_DATASET_STATS_PATH` | Optional explicit eval dataset stats file. |
 | `AHA_WAM_CKPT_SETTING` | Optional eval run directory override under `checkpoints/`. |
-| `AHA_WAM_ENV_CFG_ROOT` | Optional env config root; defaults to `<repo>/env_cfg`. |
+| `AHA_WAM_ENV_CFG_ROOT` | Optional env config root; defaults to `<workspace>/env_cfg` (the parent of this checkout). |
 | `AHA_WAM_APPTAINER_IMAGE` | Optional Apptainer image for the policy server. |
 | `AHA_WAM_APPTAINER_BINDS` | Optional Apptainer bind arguments when using `AHA_WAM_APPTAINER_IMAGE`. |
 | `AHA_WAM_CHUNKS_PER_VIDEO_PREFILL` | Optional video prefill cadence; official RobotWin-style default is `2`. |

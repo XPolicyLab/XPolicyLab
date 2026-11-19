@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import hashlib
 import importlib
 import inspect
 import logging
@@ -17,6 +18,7 @@ from uuid import uuid4
 import yaml
 from websockets.asyncio.server import Server, ServerConnection, serve
 from websockets.exceptions import ConnectionClosed
+from websockets.protocol import State
 
 from client_server.ws.protocol.codec import decode_envelope, decode_frame, encode_frame
 from client_server.ws.protocol.exceptions import ErrorCode, WsError
@@ -81,16 +83,22 @@ class PolicyServer:
     # refuses to continue if a reconnect lands on a different process (a
     # restarted server lost the model state and this cache).
     _instance_id: str = field(default_factory=lambda: uuid4().hex, init=False)
-    # request_id -> (request type, response frame), for exactly-once semantics
-    # across client reconnect retries (the client reuses the request_id when
-    # retrying). The request type is kept to detect id reuse across types.
-    _response_cache: OrderedDict[str, tuple[MessageType, Frame]] = field(
+    # One process serves one evaluation, even across reconnects. Only one live
+    # connection may issue requests; batching stays within that connection.
+    _evaluation_id: str | None = field(default=None, init=False)
+    _active_connection: ServerConnection | None = field(
+        default=None, init=False, repr=False
+    )
+    # request_id -> (request fingerprint, encoded response), for replay within
+    # the bounded cache window (the client reuses the request_id).
+    # The fingerprint binds the id to its content and trial context.
+    _response_cache: OrderedDict[str, tuple[bytes, bytes]] = field(
         default_factory=OrderedDict, init=False, repr=False
     )
-    # request_id -> (request type, running execution). A retry can arrive while
-    # the original attempt is STILL executing (e.g. long inference on the old
-    # connection); the duplicate awaits the same task instead of running twice.
-    _inflight: dict[str, tuple[MessageType, asyncio.Task[Frame | None]]] = field(
+    # request_id -> (request fingerprint, running execution). A retry can arrive
+    # while the original attempt is STILL executing (e.g. long inference on the
+    # old connection); the duplicate awaits that task instead of running twice.
+    _inflight: dict[str, tuple[bytes, asyncio.Task[Frame | None]]] = field(
         default_factory=dict, init=False, repr=False
     )
 
@@ -122,7 +130,7 @@ class PolicyServer:
         # the server can leave them running; drain them instead of letting the
         # loop tear down pending tasks. Bounded: a model call that hangs must
         # not turn stop() into a hang too.
-        inflight = [task for _type, task in self._inflight.values()]
+        inflight = [task for _fingerprint, task in self._inflight.values()]
         if inflight:
             _done, still_running = await asyncio.wait(
                 inflight, timeout=_SHUTDOWN_DRAIN_TIMEOUT_S
@@ -165,11 +173,9 @@ class PolicyServer:
                 try:
                     data = encode_frame(response)
                 except Exception as exc:
-                    # A result the codec cannot serialize (e.g. a torch tensor
-                    # returned by the model) must fail loudly: without a reply
-                    # the client would stall for its full request timeout. The
-                    # unencodable response was already cached, so overwrite it
-                    # too, or retries would replay the same poisoned entry.
+                    # Defensive fallback: process_frame normally validates the
+                    # response when caching it. Replace the cache entry too so
+                    # a retry gets the same error instead of an invalid result.
                     logger.exception("policy server response is not serializable")
                     response = self._error_reply(
                         frame,
@@ -177,7 +183,7 @@ class PolicyServer:
                         f"response is not msgpack-serializable: {exc}",
                     )
                     self._cache_response(
-                        frame.request_id, frame.message_type, response
+                        frame.request_id, self._request_fingerprint(frame), response
                     )
                     data = encode_frame(response)
                 async with send_lock:
@@ -205,6 +211,29 @@ class PolicyServer:
                         websocket, send_lock, bytes(raw), exc
                     )
                     continue
+                try:
+                    self._validate_evaluation(frame)
+                    if (
+                        self._active_connection not in (None, websocket)
+                        and self._active_connection.state is not State.CLOSED
+                    ):
+                        raise WsError(
+                            ErrorCode.INVALID_FRAME,
+                            "Another connection is serving this evaluation; "
+                            "disconnect it before reconnecting.",
+                            details={"retryable": True},
+                        )
+                    # At the backpressure limit the old handler may still be
+                    # awaiting a model call after its socket has closed. Let a
+                    # reconnect take over without waiting for that call; request
+                    # IDs still deduplicate its in-flight execution.
+                    self._active_connection = websocket
+                except WsError as exc:
+                    response = self._error_reply(frame, exc.code, exc.message, exc.details)
+                    data = encode_frame(response)
+                    async with send_lock:
+                        await websocket.send(data)
+                    continue
                 if len(pending) >= _MAX_INFLIGHT_RESPONSES:
                     # Backpressure: process inline instead of queuing yet
                     # another task for an overwhelmed connection.
@@ -217,6 +246,10 @@ class PolicyServer:
             # Routine for dropped/restarted clients; not a handler failure.
             logger.debug("policy client disconnected")
         finally:
+            if self._active_connection is websocket:
+                # Release the connection before draining old calls so a reconnect
+                # can await their cached/in-flight results without a second run.
+                self._active_connection = None
             if pending:
                 # Let responses finish so their results land in the replay
                 # cache for the client's retry — but bounded, so a hung model
@@ -268,62 +301,82 @@ class PolicyServer:
         except Exception:
             logger.debug("failed to send invalid-frame error reply", exc_info=True)
 
+    def _validate_evaluation(self, frame: Frame) -> None:
+        if not frame.evaluation_id.strip():
+            raise WsError(ErrorCode.INVALID_FRAME, "evaluation_id must not be empty")
+        if self._evaluation_id is None:
+            self._evaluation_id = frame.evaluation_id
+        elif frame.evaluation_id != self._evaluation_id:
+            raise WsError(
+                ErrorCode.INVALID_FRAME,
+                "This server belongs to another evaluation. Start a separate "
+                "server; reconnects must retain the original evaluation_id.",
+            )
+
+    @staticmethod
+    def _request_fingerprint(frame: Frame) -> bytes:
+        request = frame.to_wire_dict()
+        request.pop("sent_at", None)  # A retry has a new transmission time.
+        return hashlib.sha256(encode_frame(request)).digest()
+
     def _cache_response(
-        self, request_id: str, msg_type: MessageType, response: Frame
+        self, request_id: str, fingerprint: bytes, response: Frame
     ) -> None:
         cache = self._response_cache
-        cache[request_id] = (msg_type, response)
+        cache[request_id] = (fingerprint, encode_frame(response))
         cache.move_to_end(request_id)
         while len(cache) > _RESPONSE_CACHE_SIZE:
             cache.popitem(last=False)
 
-    def _reused_id_error(self, frame: Frame, original: MessageType) -> Frame:
+    def _reused_id_error(self, frame: Frame) -> Frame:
         logger.error(
-            "request_id %s reused for %s after %s; refusing to answer",
-            frame.request_id,
-            frame.message_type.value,
-            original.value,
+            "request_id %s reused with different content or context", frame.request_id
         )
         return self._error_reply(
             frame,
             ErrorCode.INVALID_FRAME,
-            f"request_id already used for a {original.value} request; "
-            f"request ids must be unique per request",
+            "request_id already used with different request content or context; "
+            "request ids must be unique per request",
         )
 
     async def process_frame(self, frame: Frame) -> Frame | None:
-        # Exactly-once replay: a client that lost the response to a request
+        try:
+            self._validate_evaluation(frame)
+            fingerprint = self._request_fingerprint(frame)
+        except WsError as exc:
+            return self._error_reply(frame, exc.code, exc.message)
+        # Bounded replay: a client that lost the response to a request
         # (connection dropped mid-flight) retries with the SAME request_id;
         # answer from the cache instead of executing the call a second time.
         cached = self._response_cache.get(frame.request_id)
         if cached is not None:
-            original_type, response = cached
-            if original_type != frame.message_type:
+            original_fingerprint, response = cached
+            if original_fingerprint != fingerprint:
                 # Replaying a mismatched response would be worse than failing.
-                return self._reused_id_error(frame, original_type)
+                return self._reused_id_error(frame)
             self._response_cache.move_to_end(frame.request_id)
             logger.info(
                 "duplicate request %s (%s); replaying cached response",
                 frame.request_id,
                 frame.message_type.value,
             )
-            return response
-        return await self._execute_once(frame)
+            return decode_envelope(response)
+        return await self._execute_once(frame, fingerprint)
 
-    async def _execute_once(self, frame: Frame) -> Frame | None:
+    async def _execute_once(self, frame: Frame, fingerprint: bytes) -> Frame | None:
         entry = self._inflight.get(frame.request_id)
         if entry is not None:
-            original_type, task = entry
-            if original_type != frame.message_type:
-                return self._reused_id_error(frame, original_type)
+            original_fingerprint, task = entry
+            if original_fingerprint != fingerprint:
+                return self._reused_id_error(frame)
             logger.info(
                 "request %s (%s) already in flight; awaiting its result",
                 frame.request_id,
                 frame.message_type.value,
             )
         else:
-            task = asyncio.create_task(self._execute_frame(frame))
-            self._inflight[frame.request_id] = (frame.message_type, task)
+            task = asyncio.create_task(self._execute_frame(frame, fingerprint))
+            self._inflight[frame.request_id] = (fingerprint, task)
             task.add_done_callback(
                 lambda _t, rid=frame.request_id: self._inflight.pop(rid, None)
             )
@@ -331,7 +384,7 @@ class PolicyServer:
         # must not kill the shared execution for the other waiter.
         return await asyncio.shield(task)
 
-    async def _execute_frame(self, frame: Frame) -> Frame | None:
+    async def _execute_frame(self, frame: Frame, fingerprint: bytes) -> Frame | None:
         try:
             response = await self._dispatch_frame(frame)
         except WsError as exc:
@@ -350,7 +403,16 @@ class PolicyServer:
             logger.exception("policy server request failed")
             response = self._error_reply(frame, ErrorCode.INTERNAL, str(exc))
         if response is not None:
-            self._cache_response(frame.request_id, frame.message_type, response)
+            try:
+                self._cache_response(frame.request_id, fingerprint, response)
+            except Exception as exc:
+                logger.exception("policy server response is not serializable")
+                response = self._error_reply(
+                    frame,
+                    ErrorCode.INTERNAL,
+                    f"response is not msgpack-serializable: {exc}",
+                )
+                self._cache_response(frame.request_id, fingerprint, response)
         return response
 
     def _reply(
@@ -395,9 +457,16 @@ class PolicyServer:
             return await result
         return result
 
+    @staticmethod
+    def _snapshot_result(result: Any) -> Any:
+        # Copy through the wire codec while holding the model lock. This handles
+        # nested arrays and tensors before another call reuses their buffers.
+        return decode_frame(encode_frame({"result": result}))["result"]
+
     async def _call_model_method(self, method, *args: Any) -> Any:
         async with self._model_lock:
-            return await self._invoke_method(method, *args)
+            result = await self._invoke_method(method, *args)
+            return self._snapshot_result(result)
 
     async def _dispatch_frame(self, frame: Frame) -> Frame | None:
         if frame.message_type == MessageType.HELLO:
@@ -560,6 +629,7 @@ class PolicyServer:
                             "model must implement update_obs()/get_action() or infer(observation)"
                         )
                     result = await self._invoke_method(infer, observation)
+                result = self._snapshot_result(result)
         except Exception as exc:
             raise WsError(ErrorCode.INFER_FAILED, str(exc)) from exc
 

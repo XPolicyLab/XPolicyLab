@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 bench_name=${1}
 ckpt_name=${2} # run name
@@ -18,7 +19,7 @@ echo -e "\033[33mgpu id (to use): ${gpu_id}\033[0m"
 # Get Action Dimension from env_cfg_type
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
-action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}"); echo -e "\033[33m[INFO] Action dim: ${action_dim}\033[0m"
+action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}" "${action_type}"); echo -e "\033[33m[INFO] Action dim: ${action_dim}\033[0m"
 
 alg_name=robot_dp
 

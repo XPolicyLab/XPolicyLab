@@ -11,6 +11,7 @@ import torch
 from PIL import Image
 
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.utils.process_data import pack_robot_state, unpack_robot_state
 
 
 def _is_none_like(value: Any) -> bool:
@@ -111,8 +112,8 @@ def _get_env_cfg_root(model_cfg: dict[str, Any]) -> Path:
     configured = model_cfg.get("env_cfg_root") or os.environ.get("AHA_WAM_ENV_CFG_ROOT")
     if configured:
         return Path(str(configured)).expanduser().resolve()
-    repo_root = Path(__file__).resolve().parents[2]
-    repo_env_cfg = repo_root / "env_cfg"
+    workspace_root = Path(__file__).resolve().parents[3]
+    repo_env_cfg = workspace_root / "env_cfg"
     if repo_env_cfg.exists():
         return repo_env_cfg
     raise FileNotFoundError(
@@ -128,65 +129,15 @@ def _get_robot_action_dim_info(env_cfg_type: str, env_cfg_root: Path) -> dict:
         return json.load(f)[robot_name]
 
 
-def _validate_state_config(action_type: str, robot_action_dim_info: dict) -> tuple[list[int], list[int]]:
-    if action_type not in {"joint", "ee"}:
-        raise ValueError(f"Unsupported action_type: {action_type!r}.")
-    arm_dims = list(robot_action_dim_info["arm_dim"])
-    ee_dims = list(robot_action_dim_info["ee_dim"])
-    if len(arm_dims) != len(ee_dims) or len(arm_dims) not in {1, 2}:
-        raise ValueError(f"Unsupported robot action dimensions: {robot_action_dim_info}")
-    return arm_dims, ee_dims
-
-
-def _state_keys(action_type: str, num_arms: int) -> tuple[list[str], list[str]]:
-    if num_arms == 1:
-        arm_keys = ["joint_state"] if action_type == "joint" else ["ee_pose"]
-        return arm_keys, ["ee_joint_state"]
-    if action_type == "joint":
-        arm_keys = ["left_arm_joint_state", "right_arm_joint_state"]
-    else:
-        arm_keys = ["left_ee_pose", "right_ee_pose"]
-    return arm_keys, ["left_ee_joint_state", "right_ee_joint_state"]
-
-
 def _pack_robot_state(obs: dict, action_type: str, robot_action_dim_info: dict) -> np.ndarray:
-    arm_dims, ee_dims = _validate_state_config(action_type, robot_action_dim_info)
-    arm_keys, ee_keys = _state_keys(action_type, len(arm_dims))
-    state = obs["state"]
-    parts = []
-    for arm_key, ee_key, arm_dim, ee_dim in zip(arm_keys, ee_keys, arm_dims, ee_dims):
-        arm = np.asarray(state[arm_key])
-        ee = np.asarray(state[ee_key])
-        if arm.shape[-1] != arm_dim or ee.shape[-1] != ee_dim:
-            raise ValueError(
-                f"State shape mismatch for {arm_key}/{ee_key}: "
-                f"got {arm.shape[-1]}/{ee.shape[-1]}, expected {arm_dim}/{ee_dim}."
-            )
-        parts.append(np.concatenate([arm, ee], axis=-1))
-    return np.concatenate(parts, axis=-1)
+    # The shared boundary accepts legacy joint_state as well as arm_joint_state.
+    return pack_robot_state(obs, action_type, robot_action_dim_info)
 
 
 def _unpack_robot_state(actions, action_type: str, robot_action_dim_info: dict) -> list[dict]:
-    arm_dims, ee_dims = _validate_state_config(action_type, robot_action_dim_info)
-    arm_keys, ee_keys = _state_keys(action_type, len(arm_dims))
-    packed = np.asarray(actions)
-    expected_dim = sum(arm_dims) + sum(ee_dims)
-    if packed.shape[-1] != expected_dim:
-        raise ValueError(f"Action dim mismatch: got {packed.shape[-1]}, expected {expected_dim}.")
-    if packed.ndim == 1:
-        packed = packed[None]
-
-    result = []
-    for action in packed:
-        item = {}
-        offset = 0
-        for arm_key, ee_key, arm_dim, ee_dim in zip(arm_keys, ee_keys, arm_dims, ee_dims):
-            item[arm_key] = action[offset : offset + arm_dim]
-            offset += arm_dim
-            item[ee_key] = action[offset : offset + ee_dim]
-            offset += ee_dim
-        result.append(item)
-    return result
+    result = unpack_robot_state(actions, action_type, robot_action_dim_info)
+    # This adapter always returns an action chunk, including for one action.
+    return [result] if isinstance(result, dict) else result
 
 
 class Model(ModelTemplate):

@@ -2,9 +2,11 @@ import argparse
 import json
 import os
 from pathlib import Path
+from uuid import uuid4
 
 import numpy as np
 from client_server.ws import WsModelClient
+from XPolicyLab.utils.debug_env_client import validate_robot_state_dict
 
 
 BATCH_SIZE = 10
@@ -59,47 +61,8 @@ def _load_robot_action_dim_info(env_cfg_type: str, env_cfg_root: str) -> dict:
 
 
 def _validate_robot_state_dict(state_dict: dict, robot_action_dim_info: dict) -> None:
-    arm_dims = robot_action_dim_info["arm_dim"]
-    ee_dims = robot_action_dim_info["ee_dim"]
-    if len(arm_dims) != len(ee_dims):
-        raise ValueError("robot_action_dim_info arm/ee lengths do not match.")
-
-    if len(arm_dims) == 1:
-        expected = {
-            "arm_joint_state": arm_dims[0],
-            "ee_joint_state": ee_dims[0],
-            "ee_pose": 7,
-            "tcp_pose": 7,
-            "delta_ee_pose": 7,
-        }
-    elif len(arm_dims) == 2:
-        expected = {
-            "left_arm_joint_state": arm_dims[0],
-            "left_ee_joint_state": ee_dims[0],
-            "left_ee_pose": 7,
-            "left_tcp_pose": 7,
-            "left_delta_ee_pose": 7,
-            "right_arm_joint_state": arm_dims[1],
-            "right_ee_joint_state": ee_dims[1],
-            "right_ee_pose": 7,
-            "right_tcp_pose": 7,
-            "right_delta_ee_pose": 7,
-        }
-    else:
-        raise ValueError(f"Unsupported arm count: {len(arm_dims)}")
-
-    unexpected_keys = [key for key in state_dict if key not in expected]
-    if unexpected_keys:
-        raise ValueError(f"Unexpected state keys: {unexpected_keys}")
-
-    for key, expected_dim in expected.items():
-        if key not in state_dict:
-            continue
-        value = np.asarray(state_dict[key])
-        if value.ndim != 1 or value.shape[0] != expected_dim:
-            raise ValueError(
-                f"state_dict['{key}'] dim mismatch: expected {expected_dim}, got {value.shape}."
-            )
+    # AHA-WAM supports joint actions only; enforce the same contract as shared debug.
+    validate_robot_state_dict(state_dict, robot_action_dim_info, action_type="joint")
 
 
 class TestEnv:
@@ -112,7 +75,7 @@ class TestEnv:
         )
         self.model_client = WsModelClient(
             url=f"ws://{deploy_cfg['host']}:{deploy_cfg['port']}",
-            evaluation_id="aha-wam-debug-eval",
+            evaluation_id=deploy_cfg.get("evaluation_id") or f"aha-wam-debug-{uuid4().hex}",
             trial_id="aha-wam-debug-trial",
         )
         self.episode_step = 0
@@ -174,16 +137,16 @@ class TestEnv:
 
     def take_action(self, action):
         print(f"[TestEnv] Action Step: {self.episode_step} / {self.episode_step_limit} (step_limit)")
-        self.episode_step += 1
         _validate_robot_state_dict(action, self.robot_action_dim_info)
+        self.episode_step += 1
 
     def take_action_batch(self, action_list, env_idx_list):
         print(f"[TestEnv] Action Step: {self.episode_step} / {self.episode_step_limit} (step_limit)")
-        self.episode_step += 1
-        if len(action_list) != len(env_idx_list):
-            raise ValueError(f"action num != env num: {len(action_list)} != {len(env_idx_list)}")
+        if not action_list or len(action_list) != len(env_idx_list):
+            raise ValueError("A non-empty action batch must match the active environment indices.")
         for action in action_list:
             _validate_robot_state_dict(action, self.robot_action_dim_info)
+        self.episode_step += 1
 
     def is_episode_end(self):
         done = self.episode_step >= self.episode_step_limit
@@ -205,6 +168,7 @@ def main():
     parser.add_argument("--env_cfg_root", required=True)
     parser.add_argument("--host", default="localhost")
     parser.add_argument("--port", type=int, required=True)
+    parser.add_argument("--evaluation_id", help="Retain this ID when reconnecting to an existing evaluation")
     parser.add_argument("--eval_episode_num", type=int, default=1)
     parser.add_argument("--eval_batch", type=_str2bool, default=False)
     args = parser.parse_args()

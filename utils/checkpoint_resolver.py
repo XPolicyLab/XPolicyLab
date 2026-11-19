@@ -3,7 +3,7 @@
 Every adapter resolves the checkpoint (run) directory from the deploy config in
 the same way. Resolution precedence (highest first):
 
-  1. An explicit path key in the deploy config
+  1. The first non-empty explicit path key in the deploy config (exclusive)
      (``model_path`` / ``checkpoint_path`` / ``ckpt_path`` / ``model_dir`` /
      ``pretrained_path``).
   2. ``ckpt_name`` given as a *path* (absolute, or a relative path containing a
@@ -25,9 +25,12 @@ their per-root logic on top.
 
 from __future__ import annotations
 
+import logging
 import os
 from pathlib import Path
 from typing import Any, Optional
+
+logger = logging.getLogger(__name__)
 
 # Deploy-config keys that carry an explicit checkpoint path (highest priority).
 DEFAULT_EXPLICIT_KEYS = (
@@ -122,11 +125,12 @@ def candidate_checkpoint_roots(
             seen.add(key)
             roots.append(candidate)
 
-    # 1. explicit path keys
+    # 1. explicit path keys (the first non-empty path is exclusive)
     for key in explicit_keys:
         value = _clean(model_cfg.get(key))
         if value:
             add(_as_path(value, base_dir))
+            return roots
 
     ckpt_name = _clean(model_cfg.get("ckpt_name"))
     is_path = ckpt_name is not None and ckpt_name_is_path(ckpt_name)
@@ -158,6 +162,7 @@ def resolve_checkpoint_root(
 ) -> Path:
     """Resolve the checkpoint root directory (or file) per the shared precedence.
 
+    Explicit paths produce one exclusive candidate; only named runs can fall back.
     Returns the first existing candidate. When ``must_exist`` is False and no
     candidate exists, returns the highest-priority candidate so callers can raise
     their own error. Raises ``FileNotFoundError`` (listing what was checked) when
@@ -172,6 +177,7 @@ def resolve_checkpoint_root(
     )
     for candidate in candidates:
         if candidate.exists():
+            logger.info("Resolved checkpoint root: %s", candidate)
             return candidate
     if not must_exist and candidates:
         return candidates[0]
