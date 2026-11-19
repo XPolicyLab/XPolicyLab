@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 bench_name=${1}
 ckpt_name=${2} # run name
@@ -16,7 +17,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Get Action Dimension from env_cfg_type
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
-action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}"); echo -e "\033[33m[INFO] Action dim: ${action_dim}\033[0m"
+action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}" "${action_type}"); echo -e "\033[33m[INFO] Action dim: ${action_dim}\033[0m"
 
 export ACT_ACTION_DIM=${action_dim}
 

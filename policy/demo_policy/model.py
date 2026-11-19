@@ -1,6 +1,6 @@
 import numpy as np
 from XPolicyLab.model_template import ModelTemplate
-from XPolicyLab.utils.process_data import get_robot_action_dim_info, get_batch_size, get_action_dim
+from XPolicyLab.utils.process_data import get_robot_action_dim_info, get_batch_size, get_action_dim, get_robot_state_schema
 
 
 class Model(ModelTemplate):
@@ -10,7 +10,7 @@ class Model(ModelTemplate):
         self.action_type = model_cfg["action_type"]
         self.env_cfg_type = model_cfg["env_cfg_type"]
 
-        self.action_dim = get_action_dim(self.env_cfg_type) # get the total dim of the action
+        self.action_dim = get_action_dim(self.env_cfg_type, self.action_type) # get the total dim of the action
 
         # Get robot action dimension metadata
         # Example:
@@ -38,48 +38,15 @@ class Model(ModelTemplate):
         pass
 
     def get_action(self):
-        # Select action keys from the arm count and action type
-        num_arms = len(self.robot_action_dim_info["arm_dim"])
-
-        if num_arms == 1:  # single arm
-            arm_keys = ["arm_joint_state"] if self.action_type == "joint" else ["ee_pose"]
-            ee_keys = ["ee_joint_state"]
-
-        elif num_arms == 2:  # dual arm
-            arm_keys = ["left_arm_joint_state", "right_arm_joint_state"] if self.action_type == "joint" else ["left_ee_pose", "right_ee_pose"]
-            ee_keys = ["left_ee_joint_state", "right_ee_joint_state"]
-
-        else:
-            raise NotImplementedError(f"Unsupported number of arms: {num_arms}")
-
-        steps = 2  # current exampleonlygenerate 2 action, by
+        schema = get_robot_state_schema(self.action_type, self.robot_action_dim_info)
         action_list = []
-
-        for _ in range(steps):
-            action_dict = {}
-
-            for i, (arm_key, ee_key) in enumerate(zip(arm_keys, ee_keys)):
-                # Arm action
-                # joint mode: dimensions are determined by arm_dim
-                # ee mode: defaults to a 7-D pose [x, y, z, qw, qx, qy, qz]
-                if self.action_type == "joint":
-                    action_dict[arm_key] = np.zeros(
-                        self.robot_action_dim_info["arm_dim"][i],
-                        dtype=np.float32,
-                    )
-                else:
-                    action_dict[arm_key] = np.array(
-                        [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0],
-                        dtype=np.float32,
-                    )
-
-                # Gripper / end-effector joint action
-                action_dict[ee_key] = np.zeros(
-                    self.robot_action_dim_info["ee_dim"][i],
-                    dtype=np.float32,
-                )
-
-            action_list.append(action_dict)
+        for _ in range(2):  # Return a two-step action chunk.
+            action = {key: np.zeros(width, dtype=np.float32) for key, width in schema.items()}
+            if self.action_type == "ee":
+                for key in action:
+                    if key.endswith("ee_pose"):
+                        action[key][3] = 1.0  # Identity quaternion [qw, qx, qy, qz].
+            action_list.append(action)
 
         print("[Model] Generated action")
         return action_list

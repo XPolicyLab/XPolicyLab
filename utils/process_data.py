@@ -66,7 +66,7 @@ def _get_state_keys(action_type: str, num_arms: int, source_type: str):
 
     source_type='obs' uses singular keys:
         single-arm:
-            action_type='joint' -> ['joint_state'], ['ee_joint_state']
+            action_type='joint' -> ['arm_joint_state'], ['ee_joint_state']
             action_type='ee'    -> ['ee_pose'], ['ee_joint_state']
         dual-arm:
             action_type='joint' -> ['left_arm_joint_state', 'right_arm_joint_state'],
@@ -76,7 +76,7 @@ def _get_state_keys(action_type: str, num_arms: int, source_type: str):
 
     source_type='dataset' uses plural keys:
         single-arm:
-            action_type='joint' -> ['joint_states'], ['ee_joint_states']
+            action_type='joint' -> ['arm_joint_states'], ['ee_joint_states']
             action_type='ee'    -> ['ee_poses'], ['ee_joint_states']
         dual-arm:
             action_type='joint' -> ['left_arm_joint_states', 'right_arm_joint_states'],
@@ -87,7 +87,7 @@ def _get_state_keys(action_type: str, num_arms: int, source_type: str):
     suffix = "" if source_type == "obs" else "s"
 
     if num_arms == 1:
-        arm_keys = [f"joint_state{suffix}"] if action_type == "joint" else [f"ee_pose{suffix}"]
+        arm_keys = [f"arm_joint_state{suffix}"] if action_type == "joint" else [f"ee_pose{suffix}"]
         ee_keys = [f"ee_joint_state{suffix}"]
     else:
         if action_type == "joint":
@@ -107,6 +107,37 @@ def _get_state_keys(action_type: str, num_arms: int, source_type: str):
         ]
 
     return arm_keys, ee_keys
+
+
+def get_robot_state_schema(action_type: str, robot_action_dim_info: dict, source_type: str = "obs"):
+    """Return required state fields and widths in packing order."""
+    arm_dims, ee_dims, num_arms = _validate_config(action_type, robot_action_dim_info, source_type)
+    arm_keys, ee_keys = _get_state_keys(action_type, num_arms, source_type)
+    schema = {}
+    for arm_key, ee_key, arm_dim, ee_dim in zip(arm_keys, ee_keys, arm_dims, ee_dims):
+        schema[arm_key] = arm_dim
+        schema[ee_key] = ee_dim
+    return schema
+
+
+def normalize_robot_state_keys(state_dict: dict, robot_action_dim_info: dict, source_type: str = "obs"):
+    """Accept legacy single-arm joint_state(s) at the input boundary."""
+    if not isinstance(state_dict, dict):
+        raise TypeError("Robot state/action must be a dictionary.")
+    if len(robot_action_dim_info["arm_dim"]) != 1:
+        return state_dict
+    suffix = "s" if source_type == "dataset" else ""
+    legacy_key = f"joint_state{suffix}"
+    canonical_key = f"arm_joint_state{suffix}"
+    if legacy_key not in state_dict:
+        return state_dict
+    if canonical_key in state_dict:
+        raise ValueError(
+            f"Ambiguous single-arm keys: both {legacy_key!r} and {canonical_key!r} supplied."
+        )
+    normalized = dict(state_dict)
+    normalized[canonical_key] = normalized.pop(legacy_key)
+    return normalized
 
 
 def _ensure_valid_state_array(name: str, value, expected_last_dim: int) -> np.ndarray:
@@ -140,7 +171,7 @@ def pack_robot_state(
     if state_type not in obs:
         raise KeyError(f"Input obs must contain a '{state_type}' field.")
 
-    state_dict = obs[state_type]
+    state_dict = normalize_robot_state_keys(obs[state_type], robot_action_dim_info, source_type)
 
     arm_dims, ee_dims, num_arms = _validate_config(action_type, robot_action_dim_info, source_type)
     arm_keys, ee_keys = _get_state_keys(action_type, num_arms, source_type)
@@ -263,11 +294,10 @@ def get_batch_size(env_cfg_type):
 
     return sim_info['scene']['num_envs']
 
-def get_action_dim(env_cfg_type):
-    env_cfg = load_yaml(os.path.join(os.path.dirname(__file__), "../../env_cfg", f"{env_cfg_type}.yml"))
-    robot_name = env_cfg['config']['robot']
-    robot_action_dim_info = load_json(os.path.join(os.path.dirname(__file__), "../../env_cfg/robot", "_robot_info.json"))[robot_name]
-    return sum(robot_action_dim_info["arm_dim"]) + sum(robot_action_dim_info["ee_dim"])
+def get_action_dim(env_cfg_type, action_type="joint"):
+    """Return the packed action width for the selected robot and action space."""
+    robot_action_dim_info = get_robot_action_dim_info(env_cfg_type)
+    return sum(get_robot_state_schema(action_type, robot_action_dim_info).values())
 
 # Two image bit stream formats exist in XPolicyLab data, and both decode to RGB.
 #

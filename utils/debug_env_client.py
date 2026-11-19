@@ -2,6 +2,7 @@ import argparse
 import os
 import sys
 from pathlib import Path
+from uuid import uuid4
 
 # client_server/ and the XPolicyLab package are both rooted at the checkout;
 # insert it so this script also works when invoked directly by path.
@@ -12,7 +13,10 @@ if str(_XPOLICYLAB_ROOT) not in sys.path:
 import numpy as np
 
 from client_server.tcp.model_client import ModelClient
-from XPolicyLab.utils.process_data import encode_image_bit, get_robot_action_dim_info
+from XPolicyLab.utils.process_data import (
+    encode_image_bit, get_robot_action_dim_info, get_robot_state_schema,
+    normalize_robot_state_keys,
+)
 
 Batch_Size = 10
 
@@ -21,6 +25,7 @@ class TestEnv:
         self.success_num, self.episode_num = 0, 0
         self._stop_check = None
         self.deploy_cfg = deploy_cfg
+        self.action_type = deploy_cfg.get("action_type", "joint")
         self.episode_step_limit = 20
         self.obs_encoded = deploy_cfg.get('obs_encoded', False)
         env_cfg_type = deploy_cfg['env_cfg_type']
@@ -199,15 +204,16 @@ class TestEnv:
 
     def take_action(self, action):
         print(f"[TestEnv] Action Step: {self.episode_step} / {self.episode_step_limit} (step_limit)")
+        validate_robot_state_dict(action, self.robot_action_dim_info, self.action_type)
         self.episode_step += 1
-        validate_robot_state_dict(action, self.robot_action_dim_info)
 
     def take_action_batch(self, action_list, env_idx_list):
         print(f"[TestEnv] Action Step: {self.episode_step} / {self.episode_step_limit} (step_limit)")
-        self.episode_step += 1
-        assert len(action_list) == len(env_idx_list), f"action num != env num: {len(action_list)} != {len(env_idx_list)}"
+        if not action_list or len(action_list) != len(env_idx_list):
+            raise ValueError("A non-empty action batch must match the active environment indices.")
         for action in action_list:
-            validate_robot_state_dict(action, self.robot_action_dim_info)
+            validate_robot_state_dict(action, self.robot_action_dim_info, self.action_type)
+        self.episode_step += 1
 
     def is_episode_end(self):
         if self._stop_check is not None and self._stop_check():
@@ -224,78 +230,34 @@ class TestEnv:
         return list(range(Batch_Size))
 
 
-def validate_robot_state_dict(state_dict: dict, robot_action_dim_info: dict) -> None:
+def validate_robot_state_dict(state_dict: dict, robot_action_dim_info: dict, action_type: str = "joint") -> None:
     """
-    Validate whether the state_dict keys use the correct prefixes and dimensions.
+    Validate complete action fields, dimensions and finite numeric values.
 
     Args:
-        state_dict: e.g. demo_obs["state"]
+        state_dict: Action dictionary for one environment.
         robot_action_dim_info: {
             "arm_dim": [...],
             "ee_dim": [...],
         }
+        action_type: 'joint' or 'ee'.
 
     Raises:
         KeyError: if required keys are missing
-        ValueError: if unexpected keys or wrong dimensions are found
-        TypeError: if values are not array-like
+        ValueError: if unexpected keys, wrong dimensions or non-finite values are found
+        TypeError: if values are not real numeric arrays or sequences
     """
-    arm_dims = robot_action_dim_info["arm_dim"]
-    ee_dims = robot_action_dim_info["ee_dim"]
-
-    if len(arm_dims) != len(ee_dims):
-        raise ValueError(
-            f"robot_action_dim_info mismatch: len(arm_dim)={len(arm_dims)} "
-            f"!= len(ee_dim)={len(ee_dims)}"
-        )
-
-    arm_count = len(arm_dims)
-
-    if arm_count == 1:
-        expected = {
-            "arm_joint_state": arm_dims[0],
-            "ee_joint_state": ee_dims[0],
-            "ee_pose": 7,
-            "tcp_pose": 7,
-            "delta_ee_pose": 7,
-        }
-        forbidden_prefixes = ("left_", "right_")
-
-    elif arm_count == 2:
-        expected = {
-            "left_arm_joint_state": arm_dims[0],
-            "left_ee_joint_state": ee_dims[0],
-            "left_ee_pose": 7,
-            "left_tcp_pose": 7,
-            "left_delta_ee_pose": 7,
-            "right_arm_joint_state": arm_dims[1],
-            "right_ee_joint_state": ee_dims[1],
-            "right_ee_pose": 7,
-            "right_tcp_pose": 7,
-            "right_delta_ee_pose": 7,
-        }
-        forbidden_prefixes = ()
-    else:
-        raise ValueError(f"Unsupported arm count: {arm_count}")
-
-    if forbidden_prefixes:
-        bad_prefixed_keys = [
-            k for k in state_dict.keys()
-            if k.startswith(forbidden_prefixes)
-        ]
-        if bad_prefixed_keys:
-            raise ValueError(
-                f"Single-arm robot should not contain prefixed keys, "
-                f"but got: {bad_prefixed_keys}"
-            )
+    expected = get_robot_state_schema(action_type, robot_action_dim_info)
+    state_dict = normalize_robot_state_keys(state_dict, robot_action_dim_info)
+    missing_keys = [key for key in expected if key not in state_dict]
+    if missing_keys:
+        raise KeyError(f"Missing action keys for {action_type}: {missing_keys}")
     unexpected_keys = [k for k in state_dict if k not in expected]
 
     if unexpected_keys:
         raise ValueError(f"Unexpected state keys: {unexpected_keys}")
 
     for key, expected_dim in expected.items():
-        if not key in state_dict.keys():
-            continue
         value = state_dict[key]
     
         if not isinstance(value, (np.ndarray, list, tuple)):
@@ -304,6 +266,10 @@ def validate_robot_state_dict(state_dict: dict, robot_action_dim_info: dict) -> 
             )
 
         arr = np.asarray(value)
+        if arr.dtype.kind not in "iuf":
+            raise TypeError(f"state_dict['{key}'] must contain real numbers, got {arr.dtype}")
+        if not np.isfinite(arr).all():
+            raise ValueError(f"state_dict['{key}'] contains NaN or infinity")
 
         if arr.ndim != 1:
             raise ValueError(
@@ -330,12 +296,13 @@ if __name__ == "__main__":
     parser.add_argument("--bench_name", required=True, type=str)
     parser.add_argument("--task_name", required=True, type=str)
     parser.add_argument("--env_cfg_type", type=str, required=True)
+    parser.add_argument("--action_type", choices=("joint", "ee"), default="joint")
     parser.add_argument("--policy_name", type=str, required=True, help="XPolicyLab module name for deployment")
     parser.add_argument("--protocol", choices=("legacy_tcp", "ws"), default="ws")
     parser.add_argument("--host", type=str, default="localhost", help="server host")
     parser.add_argument("--port", type=int, required=True, help="server port")
     parser.add_argument("--policy_server_url", type=str)
-    parser.add_argument("--evaluation_id", type=str, default="debug-eval")
+    parser.add_argument("--evaluation_id", type=str, default=f"debug-{uuid4().hex}")
     parser.add_argument("--action_case_id", type=str)
     parser.add_argument("--trial_id", type=str, default="debug-trial")
     parser.add_argument("--repeat_index", type=int)

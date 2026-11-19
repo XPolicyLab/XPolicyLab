@@ -305,6 +305,14 @@ class PolicyEvalClient:
             except Exception as exc:
                 last_err = exc
                 await self._reset_connection_state()
+                if (
+                    isinstance(exc, WsError)
+                    and exc.code == ErrorCode.INVALID_FRAME
+                    and not exc.details.get("retryable")
+                ):
+                    # Evaluation conflicts are permanent; a closing connection
+                    # can still be retried within the normal reconnect budget.
+                    raise
                 out_of_time = (
                     deadline is not None
                     and asyncio.get_running_loop().time() >= deadline

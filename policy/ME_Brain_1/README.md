@@ -69,7 +69,7 @@ bash train.sh RoboDojo frozen arx_x5 joint 0 0,1,2,3 --batch-size 128
 
 ## Evaluation
 
-推理发布包需要 `model.safetensors`、`model_config.json` 和 `assets/arx_x5_sim/norm_stats.json`；不需要训练用的优化器文件。`deploy.yml` 中的 `model_path` 设置默认权重目录，命令行检查点的绝对路径优先。权重下载地址仍须由提交者提供。
+推理发布包需要 `model.safetensors`、`model_config.json` 和 `assets/arx_x5_sim/norm_stats.json`；不需要训练用的优化器文件。`deploy.yml` 中的 `model_path` 默认留空，按 `ckpt_name` 查找权重；也可显式设置权重目录，路径不存在时会报错。命令行检查点的绝对路径优先。权重下载地址仍须由提交者提供。
 
 客户端和服务端使用 `head_history`：20 帧完整头部历史，每帧 16 个视觉令牌；当前三路图像各 256 个视觉令牌。客户端逐控制步采集，按环境独立缓存，并在回合开始时重置。默认文本长度 400，预测 50 步动作、执行前 25 步、去噪 10 步。
 
