@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 # Shared local launch helpers; source from a policy entry script.
 
+wsp_select_bench_root() {
+    # Standard layout: <benchmark>/XPolicyLab. BENCH_ROOT is an explicit override.
+    BENCH_ROOT="$(cd "${BENCH_ROOT:-${XPL_ROOT}/..}" && pwd)" || return
+    export BENCH_ROOT
+}
+
 wsp_select_deploy() {
     local bench_name=$1
     if [[ "${bench_name,,}" != robodojo ]]; then

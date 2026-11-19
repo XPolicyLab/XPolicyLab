@@ -1,8 +1,7 @@
-"""RGB / Z-score inference for the isolated RoboDojo LeRobot training recipe."""
+"""RoboDojo image and action normalization."""
 from __future__ import annotations
 
 from collections.abc import Mapping
-import json
 
 import numpy as np
 import torch
@@ -45,24 +44,6 @@ class RoboDojoLeRobotModel(RoboDojoModel):
         # normalization remains FP32 before the model's typed input transfer.
         with torch.autocast(device_type=self.device.type, dtype=torch.bfloat16):
             return super().get_action_batch(env_idx_list)
-
-    def _validate_checkpoint_provenance(self):
-        provenance = json.loads((self.checkpoint / "provenance.json").read_text())
-        if provenance.get("task") != "robodojo":
-            raise ValueError("LeRobot checkpoint provenance must declare task=robodojo")
-        artifact = json.loads((self.checkpoint / "transform_bundle.json").read_text())
-        metadata = artifact.get("provenance", {})
-        expected = {
-            "source": "robodojo-lerobot-v21",
-            "action_mode": "joint",
-            "relative_action": False,
-            "normalization": "global_zscore",
-            "clip_range": [-5.0, 5.0],
-        }
-        for key, value in expected.items():
-            if metadata.get(key) != value:
-                raise ValueError(f"LeRobot checkpoint requires {key}={value!r}")
-        return provenance
 
     def _validate_checkpoint_contract(self, checkpoint_config):
         memory = getattr(checkpoint_config, "history_memory", None)

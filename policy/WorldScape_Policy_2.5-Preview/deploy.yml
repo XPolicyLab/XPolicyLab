@@ -3,7 +3,7 @@
 # Native observations stay RGB; only this trained VLM consumes a private BGR copy.
 # All condition tokens use raw instructions and the total context length is 512.
 vlm_memory: true
-vlm_conditioning: t5_vlm_concat
+vlm_conditioning: joint_t5_vlm
 policy_name: WorldScape_Policy_2.5-Preview
 protocol: ws
 host: localhost
@@ -30,7 +30,6 @@ observation_history_segments: 24
 use_observation_history: false
 use_causal_memory: false
 wam_history_mode: periodic
-short_window_for_non_memory_tasks: false
 reset_independent_blocks: true
 default_instruction: follow the instruction
 t5_prompt_template: null
@@ -56,9 +55,6 @@ single_window_reference: latest
 diffusion_concat_height: 384
 diffusion_concat_width: 320
 memory_reset_chunks: 0
-memory_window_chunks: null
-ordinary_window_chunks: null
-validate_checkpoint_artifacts: true
 history_memory: true
 history_capture_mode: dense
 vlm_input_color_order: bgr

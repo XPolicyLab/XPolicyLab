@@ -15,7 +15,6 @@ from torch import Tensor, nn
 
 from worldscape_policy.checkpoint import (
     load_checkpoint_state_dict,
-    validate_native_checkpoint_artifacts,
 )
 from worldscape_policy.checkpoint.adapter_rows import (
     select_pretrained_adapter_row,
@@ -83,19 +82,14 @@ def build_wan22_policy_from_checkpoint(
     expected_semantic_grad_clip_norm: float | None = None,
     training: bool = False,
     allow_training_visual_range_override: bool = False,
-    defer_text_cache_restore: bool = False,
     diffusion_model_pretrained_path: str | None = None,
     text_encoder_pretrained_path: str | None = None,
     image_encoder_pretrained_path: str | None = None,
     vae_pretrained_path: str | None = None,
-    vlm_pretrained_path: str | None = None,
-    vlm_cot_prompt: str | None = None,
     vlm_token_dim: int | None = None,
     vlm_context_dim: int | None = None,
-    vlm_attn_implementation: str | None = None,
     tokenizer_path: str | None = None,
     pretrained_action_adapter_index: int | None = None,
-    validate_checkpoint_artifacts: bool = True,
     inference_dtype: torch.dtype | None = None,
     model_config: Mapping[str, Any] | None = None,
     generation_config: Mapping[str, Any] | None = None,
@@ -131,19 +125,15 @@ def build_wan22_policy_from_checkpoint(
         raise ValueError(f"Unsupported initialization mode: {initialization!r}")
     if initialization == "auto":
         initialization = "checkpoint" if directory is not None else "components"
-    if defer_text_cache_restore and (not training or initialization != "components"):
-        raise ValueError("defer_text_cache_restore requires training=True and components initialization")
     if initialization != "components" and directory is None:
         raise ValueError(f"initialization={initialization!r} requires checkpoint_dir")
     is_native_bundle = bool(
         directory is not None
-        and (directory / "checkpoint_manifest.json").is_file()
+        and (directory / "model_config.yaml").is_file()
     )
     if is_native_bundle:
-        if validate_checkpoint_artifacts:
-            validate_native_checkpoint_artifacts(directory)
-        normalization = json.loads((directory / "normalization.json").read_text())
-        checkpoint_range = normalization["visual"]["input_range"]
+        transform = json.loads((directory / "transform_bundle.json").read_text())
+        checkpoint_range = transform["image"]["model_input_range"]
         if (
             visual_input_range != checkpoint_range
             and initialization != "checkpoint_overlay"
@@ -181,7 +171,7 @@ def build_wan22_policy_from_checkpoint(
     else:
         raise ValueError(
             "Native checkpoint loading requires a complete native bundle with "
-            "checkpoint_manifest.json or an explicit model_config"
+            "model_config.yaml or an explicit model_config"
         )
     if vlm_token_dim is not None:
         if int(vlm_token_dim) <= 0:
@@ -238,55 +228,15 @@ def build_wan22_policy_from_checkpoint(
         kernel_config.dynamic_cache_schedule,
     )
 
-    direct_prefix = (mode is InteractionMode.AUTO and native_config.model.condition_router.auto.feature_mode == "direct_prefix")
-    t5_vlm_concat = (mode is InteractionMode.AUTO and native_config.model.condition_router.auto.feature_mode in {"t5_vlm_concat"})
-    vlm_prefix = direct_prefix or t5_vlm_concat
-    resolved_tokenizer_path = tokenizer_path or _resolve_tokenizer_path(
-        directory, action
+    joint_t5_vlm = (mode is InteractionMode.AUTO and
+                    native_config.model.condition_router.auto.feature_mode == "joint_t5_vlm")
+    if not joint_t5_vlm or training:
+        raise ValueError("Preview supports online joint_t5_vlm inference only")
+    t5 = _instantiate(
+        _required_mapping(action, "text_encoder_cfg"),
+        target="worldscape_policy.conditioning.text.t5.T5InstructionEncoder",
+        tokenizer_path=tokenizer_path or _resolve_tokenizer_path(directory, action),
     )
-    t5_config = _required_mapping(action, "text_encoder_cfg")
-    text_feature_cache = t5_config.get("text_feature_cache")
-    cached_wan22 = bool(text_feature_cache)
-    refresh_text_cache = bool(training and t5_config.get("refresh_cache_on_load", False))
-    if defer_text_cache_restore and (
-        not cached_wan22 or native_config.model.wam.plugin != "wan22" or refresh_text_cache
-    ):
-        raise ValueError("defer_text_cache_restore requires Wan2.2 offline T5 without cache refresh")
-    if cached_wan22 and (native_config.model.wam.plugin != "wan22" or
-                        (initialization == "components" and not refresh_text_cache
-                         and not defer_text_cache_restore)):
-        raise ValueError("5B offline T5 requires a native checkpoint or checkpoint_overlay initialization")
-    if not text_feature_cache:
-        t5_config.pop("text_feature_cache", None)
-    t5_overrides: dict[str, Any] = {"tokenizer_path": resolved_tokenizer_path}
-    if text_encoder_pretrained_path is not None:
-        t5_overrides["text_encoder_pretrained_path"] = (
-            text_encoder_pretrained_path
-        )
-    instantiate_text = _instantiate
-    if text_feature_cache:
-        t5_overrides.update(load_features=(initialization == "checkpoint_overlay" if cached_wan22 else initialization == "components"),
-                            allow_live_fallback=False)
-        if cached_wan22:
-            t5_overrides["source_checkpoint"] = str(directory)
-            # Exported checkpoints remain portable for evaluation; refreshing
-            # from an external cache is an explicit training-only operation.
-            t5_overrides["refresh_cache_on_load"] = refresh_text_cache
-    if direct_prefix:
-        from worldscape_policy.conditioning.text.disabled import DisabledT5
-        if text_feature_cache:
-            raise ValueError("vlm direct_prefix must not inherit a T5 cache")
-        t5 = DisabledT5()
-    else:
-        t5 = instantiate_text(
-            t5_config,
-            target=(
-                "worldscape_policy.conditioning.text.persisted.PrecomputedT5InstructionEncoder"
-                if cached_wan22 else
-                "worldscape_policy.conditioning.text.t5.T5InstructionEncoder"
-            ),
-            **t5_overrides,
-        )
     vae = _instantiate(
         _required_mapping(action, "vae_cfg"),
         **(
@@ -315,31 +265,10 @@ def build_wan22_policy_from_checkpoint(
     _validate_block_geometry(action, core)
     if mode is InteractionMode.AUTO:
         backbone = _required_mapping(raw, "backbone_cfg")
-        vlm_overrides: dict[str, Any] = {}
-        if vlm_pretrained_path is not None:
-            vlm_overrides["vlm_base"] = vlm_pretrained_path
-        if vlm_cot_prompt is not None:
-            vlm_overrides["vlm_cot_prompt"] = vlm_cot_prompt
-        if vlm_attn_implementation is not None:
-            vlm_overrides["attn_implementation"] = vlm_attn_implementation
-        for key in ("enable_planning_branch", "planning_num_tokens"):
-            if key in action:
-                vlm_overrides[key] = action[key]
-        if vlm_prefix:
-            vlm_overrides = {"cache_only": training}
-            if backbone["_target_"] in {"worldscape_policy.conditioning.vlm.cached_features.CachedVLMFeatureEncoder", "worldscape_policy.conditioning.vlm.native_features.NativeVLMFeatureEncoder"}:
-                from worldscape_policy.conditioning.vlm.cached_features import resolve_vlm_assets_dir
-                vlm_overrides["assets_dir"] = str(resolve_vlm_assets_dir(directory, backbone["assets_dir"]))
-        vlm = _instantiate(
-            backbone,
-            target=(
-                backbone["_target_"] if vlm_prefix else
-                "worldscape_policy.conditioning.vlm.qwen3vl.QwenPlanningEncoder"
-            ),
-            **vlm_overrides,
-        )
+        vlm_overrides = {"checkpoint_dir": str(directory)}
+        vlm = _instantiate(backbone, target=backbone["_target_"], **vlm_overrides)
         projector = _build_projector(action)
-        if t5_vlm_concat:
+        if joint_t5_vlm:
             # Learned weights are restored later on strict resume/evaluation.
             nn.init.zeros_(projector.weight)
         output_norm: nn.Module | None = (
@@ -413,33 +342,16 @@ def build_wan22_policy_from_checkpoint(
         image_encoder=image_encoder,
         vlm=vlm,
         diffusion_model_pretrained_path=diffusion_model_pretrained_path,
-        text_encoder_pretrained_path=None if text_feature_cache or direct_prefix else text_encoder_pretrained_path,
+        text_encoder_pretrained_path=text_encoder_pretrained_path,
         vae_pretrained_path=vae_pretrained_path,
         image_encoder_pretrained_path=image_encoder_pretrained_path,
-        vlm_pretrained_path=None if vlm_prefix else vlm_pretrained_path,
+        vlm_pretrained_path=None,
         pretrained_action_adapter_index=pretrained_action_adapter_index,
     )
-    if text_feature_cache and initialization == "components" and not defer_text_cache_restore:
-        raw_loaded.update("condition_router.interactive.t5." + key for key in t5.state_dict())
     checkpoint_loaded: set[str] = set()
     if initialization in {"checkpoint", "checkpoint_overlay"}:
-        if direct_prefix and initialization == "checkpoint_overlay":
-            from worldscape_policy.conditioning.text.persisted import filtered_checkpoint, PREFIX
-            state_dict = filtered_checkpoint(directory, exclude=PREFIX)
-        elif cached_wan22 and initialization == "checkpoint_overlay":
-            # The offline artifact was validated against this exact source above.
-            # Read all other components but never materialize original T5 weights.
-            from worldscape_policy.conditioning.text.persisted import filtered_checkpoint, PREFIX
-            state_dict = filtered_checkpoint(directory, exclude=PREFIX)
-            cached_state = {PREFIX + key: value for key, value in t5.state_dict().items()}
-            state_dict.update(cached_state)
-            raw_loaded.update(cached_state)
-        else:
-            state_dict = _load_wsp_policy_state(
-                directory,
-                validate_artifacts=not is_native_bundle,
-            )
-        if t5_vlm_concat and initialization == "checkpoint_overlay":
+        state_dict = _load_wsp_policy_state(directory)
+        if joint_t5_vlm and initialization == "checkpoint_overlay":
             if any(key.startswith("condition_router.auto.projector.") for key in state_dict):
                 raise ValueError("Fresh T5 + vlm initialization requires a T5-only source; do not reuse a direct-prefix projector")
         checkpoint_loaded = _load_policy_state(
@@ -448,8 +360,6 @@ def build_wan22_policy_from_checkpoint(
             allow_stage2_missing=initialization == "checkpoint_overlay",
             pretrained_action_adapter_index=pretrained_action_adapter_index,
         )
-    if cached_wan22 and initialization == "checkpoint_overlay":
-        checkpoint_loaded -= set(cached_state)
     report = _initialization_report(policy, raw_loaded, checkpoint_loaded)
     policy.initialization_report = report.as_dict()
     LOGGER.info("WSP initialization sources: %s", json.dumps(report.as_dict()))
@@ -711,15 +621,9 @@ def _policy_state_aliases(
 
 def _load_wsp_policy_state(
     path: Path | None,
-    *,
-    validate_artifacts: bool = True,
 ) -> dict[str, Tensor]:
     if path is None:
         raise ValueError("checkpoint path is required")
-    if path.is_dir() and (path / "checkpoint_manifest.json").is_file():
-        if validate_artifacts:
-            validate_native_checkpoint_artifacts(path)
-        return load_checkpoint_state_dict(path)
     if path.is_dir() and (
         (path / "model.safetensors").is_file()
         or (path / "model.safetensors.index.json").is_file()
@@ -804,11 +708,7 @@ def _initialization_report(
 
 def checkpoint_mode(
     checkpoint_dir: str | Path,
-    *,
-    validate_artifacts: bool = True,
 ) -> InteractionMode:
-    if validate_artifacts:
-        validate_native_checkpoint_artifacts(checkpoint_dir)
     directory = Path(checkpoint_dir)
     return InteractionMode.parse(_load_native_model_config(directory).model.mode)
 
@@ -956,9 +856,6 @@ def _instantiate(
             f"Unsupported native component _target_: {configured_target!r}"
         )
     component["_target_"] = configured_target
-    if component["_target_"].endswith(".QwenPlanningEncoder"):
-        component.pop("freeze_vlm", None)
-        component.pop("freeze_qformer", None)
     component.update(overrides)
     result = instantiate(OmegaConf.create(component))
     if not isinstance(result, nn.Module):
@@ -971,6 +868,9 @@ def _resolve_tokenizer_path(
     action: dict[str, Any],
 ) -> str:
     if directory is not None and directory.is_dir():
+        if (directory / "t5_tokenizer.json").is_file():
+            from worldscape_policy.checkpoint.processors import processor_directory
+            return processor_directory(directory, "t5")
         bundled = directory / "tokenizer"
         if bundled.is_dir():
             return str(bundled)

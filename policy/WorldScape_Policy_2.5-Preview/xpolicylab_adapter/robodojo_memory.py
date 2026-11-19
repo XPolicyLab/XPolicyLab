@@ -1,4 +1,4 @@
-"""VLM direct-prefix or T5 fusion, with unchanged 5B VAE history."""
+"""Joint T5 and VLM conditioning with visual history."""
 from collections import OrderedDict
 import numpy as np
 import torch
@@ -15,12 +15,12 @@ class RoboDojoMemoryPolicy(RoboDojoLeRobotMemoryModel):
     _expected_mode = 'auto'
 
     def _validate_checkpoint_contract(self, config):
-        expected = self.model_cfg.get('vlm_conditioning', 't5_vlm_concat')
-        if (expected != 't5_vlm_concat' or config.wam.plugin != 'wan22'
+        expected = self.model_cfg.get('vlm_conditioning', 'joint_t5_vlm')
+        if (expected != 'joint_t5_vlm' or config.wam.plugin != 'wan22'
                 or config.condition_router.auto.feature_mode != expected
                 or self.model_cfg.get('history_capture_mode') != 'dense'):
-            raise ValueError('VLM adapter requires a 5B t5_vlm_concat checkpoint and dense observations')
-        trained_color = config.condition_router.auto.vlm.parameters.get('teacher_color_order')
+            raise ValueError('VLM adapter requires a 5B joint_t5_vlm checkpoint and dense observations')
+        trained_color = config.condition_router.auto.vlm.parameters.get('input_color_order')
         if self.model_cfg.get('vlm_input_color_order', 'rgb') != trained_color:
             raise ValueError('vlm_input_color_order must explicitly match the checkpoint color contract')
         super()._validate_checkpoint_contract(config)
@@ -47,7 +47,7 @@ class RoboDojoMemoryPolicy(RoboDojoLeRobotMemoryModel):
 
     def _adapt_observation(self, env_idx, *, cameras=None):
         adapted = super()._adapt_observation(env_idx, cameras=cameras)
-        if self.model_cfg.get('vlm_conditioning', 't5_vlm_concat') == 't5_vlm_concat':
+        if self.model_cfg.get('vlm_conditioning', 'joint_t5_vlm') == 'joint_t5_vlm':
             # Generic AUTO adapters only populate the VLM prompt. Fusion also
             # needs the same raw instruction for T5, as during training.
             instructions = adapted.prompts.vlm_planning_text

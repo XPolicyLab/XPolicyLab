@@ -1,4 +1,4 @@
-"""Direct instruction/summary injection; legacy Event Memory stays untouched."""
+"""Instruction and summary token conditioning."""
 import torch
 from worldscape_policy.types import Conditioning
 

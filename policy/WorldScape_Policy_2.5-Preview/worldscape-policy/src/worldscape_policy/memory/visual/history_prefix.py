@@ -1,7 +1,4 @@
-"""Opt-in history whole-clip history with nine RGB slots.
-
-Adapted from ActiveMemory-WAM's history path; nominal stride is one H24 chunk.
-"""
+"""Nine-frame visual history adapted from ActiveMemory-WAM."""
 from __future__ import annotations
 from collections import OrderedDict
 from collections.abc import Mapping

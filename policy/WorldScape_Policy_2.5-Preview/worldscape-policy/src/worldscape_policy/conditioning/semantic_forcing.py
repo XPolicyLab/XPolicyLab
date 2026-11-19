@@ -1,9 +1,4 @@
-"""Shared semantic-forcing target selection contracts.
-
-Target selection is deliberately stateless: conditioner checkpoint ownership
-and parameter names must not change when this policy is composed into Auto or
-Interactive paths.
-"""
+"""Stateless semantic target selection."""
 
 from __future__ import annotations
 

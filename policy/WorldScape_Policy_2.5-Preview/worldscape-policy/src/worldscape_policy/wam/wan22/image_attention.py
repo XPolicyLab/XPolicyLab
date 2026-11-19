@@ -1,4 +1,4 @@
-# Vendored Wan attention implementation; see docs/provenance.md.
+# Wan image attention.
 # Repository license: Apache-2.0.
 from __future__ import annotations
 

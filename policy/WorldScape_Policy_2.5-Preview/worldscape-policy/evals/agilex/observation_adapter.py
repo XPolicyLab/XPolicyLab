@@ -1,4 +1,4 @@
-"""WorldScape-owned AgileX image, state, and action conversions."""
+"""AgileX image, state, and action conversions."""
 
 from __future__ import annotations
 

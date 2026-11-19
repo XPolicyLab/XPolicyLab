@@ -1,10 +1,4 @@
-"""Tokenizer used by the WorldScape-owned Wan T5 encoder.
-
-Adapted from
-``groot.vla.model.dreamzero.transform.dreamzero_cotrain.HuggingfaceTokenizer``.
-The tokenization and cleaning behavior is intentionally unchanged; optional
-dependencies are imported only when an encoder is constructed.
-"""
+"""Wan tokenizer adapted from DreamZero."""
 
 from __future__ import annotations
 

@@ -1,9 +1,4 @@
-"""Runner-independent evaluation contracts.
-
-Rollout classes are resolved lazily because the platform-neutral runner imports
-the protocols in this package. Eagerly importing it here would create a package
-initialization cycle.
-"""
+"""Evaluation contracts with lazy rollout imports."""
 
 from evals.common.protocols import RolloutInput
 

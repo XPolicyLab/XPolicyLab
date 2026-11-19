@@ -19,10 +19,6 @@ policy_name="$(basename "${SCRIPT_DIR}")"
 source "${SCRIPT_DIR}/inference_launch_common.sh"
 wsp_select_deploy "${bench_name}"
 
-warp_cache_root="${ROBODOJO_WARP_CACHE_ROOT:-${TMPDIR:-/tmp}/robodojo-warp-cache-${USER:-user}}"
-export WARP_CACHE_PATH="${warp_cache_root}/gpu-${env_gpu_id}"
-echo "[${policy_name}] WARP_CACHE_PATH=${WARP_CACHE_PATH}"
-
 policy_server_port=$(bash "${UTILS_DIR}/get_free_port.sh")
 policy_server_ip=localhost
 additional_info="ckpt_name=${ckpt_name},action_type=${action_type}"

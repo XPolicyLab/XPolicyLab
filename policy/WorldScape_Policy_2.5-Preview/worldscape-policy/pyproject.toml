@@ -106,9 +106,6 @@ where = [".", "src"]
 include = ["worldscape_policy*", "evals*"]
 exclude = ["worldscape_policy.training*", "worldscape_policy.data*", "worldscape_policy.cli*", "worldscape_policy.wam.wan21*"]
 
-[tool.setuptools.package-data]
-"worldscape_policy.conditioning.vlm.encoder_core" = ["LICENSE-model.md"]
-
 [tool.setuptools]
 include-package-data = false
 py-modules = []

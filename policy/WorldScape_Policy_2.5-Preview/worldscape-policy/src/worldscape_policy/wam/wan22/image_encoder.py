@@ -1,8 +1,4 @@
-"""
-Concise re-implementation of
-``https://github.com/openai/CLIP'' and
-``https://github.com/mlfoundations/open_clip''.
-"""
+"""CLIP image encoder adapted from OpenAI CLIP and OpenCLIP."""
 import math
 import torch
 import torch.nn as nn

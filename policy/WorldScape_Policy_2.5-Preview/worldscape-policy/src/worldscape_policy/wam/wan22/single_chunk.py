@@ -1,11 +1,4 @@
-"""Remove dead clean-future tokens from one-chunk teacher-forced training.
-
-Layout before: [history][clean anchor/future][noisy anchor/future][action][state].
-Only the clean anchor is read by the sole noisy/action block. History and clean
-anchor never read the clean future, and clean outputs are not supervised. Keep
-the noisy anchor so even its unsupervised output and gradients remain available.
-No parameters, positions, attention visibility, or model output shapes change.
-"""
+"""Prune unsupervised clean-future tokens in single-chunk training."""
 import torch
 
 

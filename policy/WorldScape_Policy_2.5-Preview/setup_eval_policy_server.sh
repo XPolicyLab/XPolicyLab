@@ -14,9 +14,9 @@ policy_server_host=${10:-localhost}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
-export BENCH_ROOT="${BENCH_ROOT:-$(cd "${XPL_ROOT}/.." && pwd)}"
 policy_name="$(basename "${SCRIPT_DIR}")"
 source "${SCRIPT_DIR}/inference_launch_common.sh"
+wsp_select_bench_root
 wsp_select_deploy "${bench_name}"
 wsp_select_python "${policy_conda_env}" "${WSP_PYTHON:-}"
 
@@ -50,20 +50,18 @@ add_override ROBODOJO_ACTION_HORIZON action_horizon
 add_override ROBODOJO_REPLAN_STEPS replan_steps
 add_override ROBODOJO_OBSERVATION_INTERVAL observation_interval
 add_override ROBODOJO_MEMORY_RESET_CHUNKS memory_reset_chunks
-add_override ROBODOJO_VLM_HISTORY_NUM_FRAMES vlm_history_num_frames
 add_override ROBODOJO_DIFFUSION_VIEW_LAYOUT diffusion_view_layout
-add_override ROBODOJO_VLM_COT_PROMPT vlm_cot_prompt
 add_override ROBODOJO_T5_PROMPT_TEMPLATE t5_prompt_template
-add_override WSP_VALIDATE_CHECKPOINT_ARTIFACTS validate_checkpoint_artifacts
 add_override WSP_LOG_INFERENCE log_inference
 add_override WORLDSCAPE_ALLOW_DUMMY_POLICY allow_dummy_policy
 
 echo "[SERVER] policy=${policy_name} task=${task_name} config=${yaml_file}"
 echo "[SERVER] runtime=${worldscape_root} checkpoint=${WORLDSCAPE_CHECKPOINT:-${ckpt_name}}"
 echo "[SERVER] endpoint=${policy_server_host}:${policy_server_port} python=${WSP_SELECTED_PYTHON}"
+# Prefer this checkout over any XPolicyLab copy in the benchmark workspace.
 wsp_launch_or_print env \
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}" PYTHONUNBUFFERED=1 \
     TOKENIZERS_PARALLELISM=false HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
-    PYTHONPATH="${BENCH_ROOT}:${XPL_ROOT}/..:${XPL_ROOT}:${worldscape_root}/src:${worldscape_root}:${PYTHONPATH:-}" \
+    PYTHONPATH="${XPL_ROOT}/..:${XPL_ROOT}:${worldscape_root}/src:${worldscape_root}:${BENCH_ROOT}:${PYTHONPATH:-}" \
     "${WSP_SELECTED_PYTHON}" -P -u "${XPL_ROOT}/setup_policy_server.py" \
     --config_path "${yaml_file}" --overrides "${overrides[@]}"
