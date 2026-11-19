@@ -1,0 +1,16 @@
+policy_name: LingBot_VLA_V2_C05
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+action_type: joint
+gpu_id: null
+eval_batch: false
+# clean: 32; randomized: launch with C05_ACTION_CHUNK=20
+# Native horizon remains 50 and denoising remains 10 for both.
+action_chunk: 32
+request_timeout_s: 300
