@@ -1,0 +1,9 @@
+defaults:
+  - xpolicylab
+  - _self_
+
+model_type: openpi
+num_steps: ${.xpolicylab.rl_head.num_steps}
+openpi:
+  task: rl
+  config_name: ${..xpolicylab.train_config_name}

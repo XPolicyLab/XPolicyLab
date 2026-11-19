@@ -1,0 +1,18 @@
+model_type: "xpolicylab"
+
+model_path: ${oc.env:POLICY_MODEL_PATH}
+
+precision: null
+is_lora: False
+lora_rank: 32
+
+action_dim: 14
+num_action_chunks: 50
+add_value_head: False
+
+# Forwarded as the XPolicyLab policy ``model_cfg`` (same keys as its deploy.yml).
+xpolicylab:
+  policy_name: null
+  # eval | sft | ppo | grpo | nft. ppo / grpo enable the policy's RL path and are
+  # rejected if the policy does not list them in RL_MODES.
+  required_mode: eval

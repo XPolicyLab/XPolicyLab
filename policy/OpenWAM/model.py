@@ -179,6 +179,9 @@ def _to_pil(value: Any, ctx: str):
 class Model(ModelTemplate):
     def __init__(self, model_cfg):
         self.model_cfg = dict(model_cfg)
+        self.benchmark = str(self.model_cfg.get("openwam_benchmark") or "robodojo").lower()
+        if self.benchmark not in ("robodojo", "robotwin"):
+            raise ValueError("openwam_benchmark must be robodojo or robotwin.")
 
         action_type = self.model_cfg.get("action_type") or "ee"
         if action_type != "ee":
@@ -187,6 +190,8 @@ class Model(ModelTemplate):
         if not env_cfg_type:
             raise ValueError("env_cfg_type is required for the OpenWAM adapter.")
         dim_info = get_robot_action_dim_info(env_cfg_type)
+        self.action_type = action_type
+        self.robot_action_dim_info = dim_info
         if list(dim_info.get("arm_dim") or []) != _EXPECTED_ARM_DIMS or list(dim_info.get("ee_dim") or []) != _EXPECTED_EE_DIMS:
             raise ValueError(
                 "OpenWAM's RoboDojo checkpoint is dual-X5 only (arm_dim [6, 6], ee_dim [1, 1]); "
@@ -203,7 +208,7 @@ class Model(ModelTemplate):
 
         self._poses = _poses
         self._format_prompt = format_prompt_for_inference
-        self._calibration = arx_x5_calibration()
+        self._calibration = arx_x5_calibration() if self.benchmark == "robodojo" else None
 
         self.default_instruction = str(self.model_cfg.get("default_instruction") or "follow the instruction")
         replan = self.model_cfg.get("replan_steps")
@@ -252,6 +257,15 @@ class Model(ModelTemplate):
         self._wam_policy = server._policy  # for the binary-dim legality projection
         self._preprocessor = server._obs_preprocessor
 
+        if self.benchmark == "robotwin":
+            saved = OmegaConf.load(str(Path(ckpt_dir) / "config.yaml"))
+            if OmegaConf.select(saved, "dataloader.type") != "robotwin":
+                raise ValueError("Expected a RoboTwin checkpoint.")
+            if self._engine.architecture.repr_contract.get("representation") != "eef":
+                raise ValueError("RoboTwin inference requires an EEF checkpoint.")
+            if self.replan_steps is None:
+                self.replan_steps = 1
+
         if self.replan_steps is None:
             horizon = OmegaConf.select(server.cfg, "inference.inference_horizon", default=None)
             self.replan_steps = None if horizon is None else int(horizon)
@@ -271,6 +285,10 @@ class Model(ModelTemplate):
     # Observation: obs dict -> OpenWAM conditions (world -> base -> EEF20)
     # ------------------------------------------------------------------
     def _state_to_eef20(self, state: Mapping) -> np.ndarray:
+        if self.benchmark == "robotwin":
+            from .robotwin import state_to_eef20
+
+            return state_to_eef20(state)
         missing = [k for k in ("left_ee_pose", "left_ee_joint_state", "right_ee_pose", "right_ee_joint_state") if k not in state]
         if missing:
             raise KeyError(f"obs['state'] is missing required field(s): {', '.join(missing)}")
@@ -302,6 +320,8 @@ class Model(ModelTemplate):
             raise ValueError("obs['vision'] must be a mapping of camera name -> {'color': image}")
         images = {}
         for camera_name, payload_name in _CAMERA_TO_PAYLOAD.items():
+            if camera_name == "cam_head" and camera_name not in vision:
+                camera_name = "cam_high"
             camera = vision.get(camera_name)
             if not isinstance(camera, Mapping) or "color" not in camera:
                 raise KeyError(f"missing required camera vision/{camera_name}/color")
@@ -337,6 +357,10 @@ class Model(ModelTemplate):
     # Action: EEF20 chunk (base frame) -> env-relative world ee dicts
     # ------------------------------------------------------------------
     def _eef20_chunk_to_native(self, chunk: np.ndarray) -> list[dict]:
+        if self.benchmark == "robotwin":
+            from .robotwin import eef20_to_steps
+
+            return eef20_to_steps(chunk)
         left_pose, left_grip, right_pose, right_grip = self._poses.eef20_to_arms(np.asarray(chunk, dtype=np.float64))
         left = self._calibration["arms"]["left"]
         right = self._calibration["arms"]["right"]
@@ -408,6 +432,9 @@ class Model(ModelTemplate):
             return [self._hold_position_chunk(p) for p in payloads]
 
         conditions = [self._conditions(p) for p in payloads]
+        if self.benchmark == "robotwin":
+            for condition in conditions:
+                condition["seed"] = int(self.model_cfg.get("seed", 42))
         result = self._engine.generate_batch(conditions)
         actions = result["actions"]
         if hasattr(actions, "cpu"):

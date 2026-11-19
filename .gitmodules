@@ -1,0 +1,3 @@
+[submodule "infra/RLinf/RLinf"]
+	path = infra/RLinf/RLinf
+	url = https://github.com/RLinf/RLinf.git

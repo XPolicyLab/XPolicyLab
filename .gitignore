@@ -1,4 +1,5 @@
 **/__pycache__/**
+.import_shim/
 .DS_Store
 **/*.egg-info/
 .cursor/*
