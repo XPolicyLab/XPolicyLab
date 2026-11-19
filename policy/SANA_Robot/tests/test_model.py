@@ -18,12 +18,12 @@ CHUNK_ROWS, FRAME_STRIDE = 32, 4
 
 
 class CountingController:
-    """A controller whose chunk generated at row r holds, in the first two joints of row i, the episode row r + i and the chunk's index."""
+    """A controller whose chunk generated at step r holds, in the first two joints of row i, the episode step r + i and the chunk's index. Its attributes carry the names the package's ``ChunkRunner`` reads."""
 
-    def __init__(self, period_rows, delay_rows):
+    def __init__(self, n_action_steps, async_delay_steps):
         self.chunk_rows, self.frame_stride = CHUNK_ROWS, FRAME_STRIDE
-        self.delay_rows = delay_rows
-        self.period_rows = CHUNK_ROWS - delay_rows if period_rows is None else period_rows
+        self.delay_rows = async_delay_steps
+        self.period_rows = CHUNK_ROWS - async_delay_steps if n_action_steps is None else n_action_steps
         self.window_rows = int(np.gcd(CHUNK_ROWS, self.period_rows))
         self.events = []
         self.chunks = 0
@@ -67,11 +67,13 @@ class CountingRobot:
 
 
 class CountingDeployment:
-    def __init__(self, period_rows, delay_rows):
+    def __init__(self, n_action_steps, async_delay_steps):
         self.robot = CountingRobot()
-        self.config = type("Config", (), dict(policy_type="ar", steps=10, period_rows=period_rows, delay_rows=delay_rows, optimized=False, precision="bf16"))
+        fields = dict(policy_type="ar", steps=10, optimized=False, precision="bf16")
+        fields.update(period_rows=n_action_steps, delay_rows=async_delay_steps)
+        self.config = type("Config", (), fields)
         self.runners = []
-        self.arguments = (period_rows, delay_rows)
+        self.arguments = (n_action_steps, async_delay_steps)
 
     def runner(self, instruction):
         runner = ChunkRunner(CountingController(*self.arguments), self.robot)
@@ -82,7 +84,7 @@ class CountingDeployment:
 
 @pytest.fixture
 def build(tmp_path, monkeypatch):
-    """Return ``build(period_rows, delay_rows, **keys)``, which builds the adapter on a counting deployment."""
+    """Return ``build(n_action_steps, async_delay_steps, **keys)``, which builds the adapter on a counting deployment."""
     checkpoint = tmp_path / "checkpoint"
     checkpoint.mkdir()
     for name in ("vae", "gemma"):
@@ -93,8 +95,8 @@ def build(tmp_path, monkeypatch):
     monkeypatch.setattr(adapter, "get_robot_action_dim_info", lambda env_cfg_type: {"arm_dim": [6, 6], "ee_dim": [1, 1]})
     models = []
 
-    def build(period_rows=None, delay_rows=0, **keys):
-        deployment = CountingDeployment(period_rows, delay_rows)
+    def build(n_action_steps=None, async_delay_steps=0, **keys):
+        deployment = CountingDeployment(n_action_steps, async_delay_steps)
         monkeypatch.setattr(runtime, "build_deployment", lambda model_cfg, run, dataset: deployment)
         cfg = dict(
             policy_name="SANA_Robot", bench_name="RoboDojo", task_name="stack_bowls", ckpt_name="unused", env_cfg_type="arx_x5",
@@ -155,7 +157,7 @@ def test_whole_chunks_run_one_after_another(build):
 
 
 def test_a_shorter_period_replans_inside_the_chunk(build):
-    model, deployment = build(period_rows=24)
+    model, deployment = build(n_action_steps=24)
     executed = run_episode(model, 72)
     model.close()                      # the worker has done everything that was handed over
     assert [row for row, _chunk in executed] == list(range(72))
@@ -165,7 +167,7 @@ def test_a_shorter_period_replans_inside_the_chunk(build):
 
 
 def test_a_delay_keeps_the_running_chunk_while_the_next_is_generated(build):
-    model, deployment = build(period_rows=24, delay_rows=8)
+    model, deployment = build(n_action_steps=24, async_delay_steps=8)
     executed = run_episode(model, 80)
     model.close()                      # the worker has done everything that was handed over
     assert [row for row, _chunk in executed] == list(range(80))
@@ -194,7 +196,7 @@ def test_get_action_needs_an_observation(build):
 
 
 def test_episodes_restart_the_runner_and_an_instruction_change_replaces_it(build):
-    model, deployment = build(period_rows=24)
+    model, deployment = build(n_action_steps=24)
     first = run_episode(model, 30)
     model.reset()
     model.reset()                      # RoboDojo resets twice between episodes

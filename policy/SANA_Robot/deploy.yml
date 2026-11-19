@@ -36,7 +36,7 @@ text_encoder_path: null
 # null: read from the checkpoint's config.yaml (the arguments of the policy class and the data settings).
 policy: null
 view_sizes: null
-chunk_rows: null
+chunk_size: null
 video_frame_stride: null
 
 # -- inference (the fields of sana_robot's DeployConfig; null keeps its default) ------------------------------------
@@ -45,9 +45,9 @@ steps: 10
 video_flow_shift: 5.0
 action_flow_shift: 1.0
 # Actions run of every chunk before the next one is generated; null: the whole chunk.
-period_rows: null
+n_action_steps: null
 # Actions the robot runs from the running chunk while the next one is generated; 0: it waits for every chunk.
-delay_rows: 0
+async_delay_steps: 0
 # The inference kernels of the GPU and CUDA graphs for the policy; false: the plain eager path.
 optimized: true
 # bf16 | fp8 | nvfp4: the precision of the large matrix products of an optimized policy.

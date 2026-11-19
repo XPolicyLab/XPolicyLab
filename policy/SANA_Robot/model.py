@@ -62,8 +62,10 @@ class Model(ModelTemplate):
         config = self.deployment.config
         print(
             f"{TAG} ready: SANA-Robot-{config.policy_type} from {run.weights}, action_type={self.action_type}, "
-            f"cameras={self.cameras}, steps={config.steps}, period_rows={config.period_rows}, "
-            f"delay_rows={config.delay_rows}, optimized={config.optimized}, precision={config.precision}",
+            f"cameras={self.cameras}, steps={config.steps}, "
+            f"n_action_steps={runtime.setting(config, 'n_action_steps')}, "
+            f"async_delay_steps={runtime.setting(config, 'async_delay_steps')}, optimized={config.optimized}, "
+            f"precision={config.precision}",
             flush=True,
         )
 
@@ -71,10 +73,10 @@ class Model(ModelTemplate):
 
     def update_obs(self, obs):
         self._obs = obs
-        if self._row is None:
+        if self._step is None:
             return
-        self._row += 1
-        if self._row % self._runner.controller.frame_stride == 0:
+        self._step += 1
+        if self._step % self._runner.controller.frame_stride == 0:
             self._runner.push_frame(*self._frame(obs))
 
     def update_obs_batch(self, obs_list):
@@ -93,22 +95,23 @@ class Model(ModelTemplate):
     def get_action(self):
         if self._obs is None:
             raise RuntimeError("SANA_Robot needs an observation before get_action")
-        if self._row is None:
+        if self._step is None:
             plan = self._open_episode(self._obs)
         else:
             controller = self._runner.controller
-            due = self._plans * controller.period_rows + controller.delay_rows
-            if self._row != due:
+            period = runtime.setting(controller, "n_action_steps")
+            due = self._plans * period + runtime.setting(controller, "async_delay_steps")
+            if self._step != due:
                 raise RuntimeError(
                     f"SANA_Robot hands out the next actions after {due} executed actions of this episode, asked "
-                    f"after {self._row}: run every action of a chunk and send the observation after each"
+                    f"after {self._step}: run every action of a chunk and send the observation after each"
                 )
             plan = self._runner.next_plan()
         self._plans += 1
         generate = [timing["ms"] for timing in self._runner.timings if timing["event"] == "generate"]
         self._runner.timings.clear()
         print(
-            f"{TAG} episode {self._episode} chunk {plan.index} at row {self._row}: {len(plan.targets)} actions"
+            f"{TAG} episode {self._episode} chunk {plan.index} at step {self._step}: {len(plan.targets)} actions"
             + (f", generated in {generate[-1]:.0f} ms" if generate else ""),
             flush=True,
         )
@@ -137,7 +140,7 @@ class Model(ModelTemplate):
         if self.action_type == self.robodojo.ACTION_TYPE_EE:
             self._check_reported_pose(obs["state"], row)
         self._runner.timings.clear()
-        self._row = 0
+        self._step = 0
         return self._runner.start(images, row)
 
     def _check_reported_pose(self, state, row) -> None:
@@ -159,7 +162,7 @@ class Model(ModelTemplate):
     def reset(self):
         """Forget the episode; the next observation starts a new one."""
         self._obs = None
-        self._row = None
+        self._step = None
         self._plans = 0
 
     def close(self):

@@ -65,7 +65,7 @@ def test_a_run_directory_serves_its_latest_step(tmp_path, repository):
     assert run.vae == repository / "checkpoints/LTX-2.3-Diffusers"
     assert run.text_encoder == repository / "checkpoints/gemma-2-2b-it"
     assert run.policy == TRAIN_CONFIG["policy"]
-    assert (run.view_sizes, run.chunk_rows, run.video_frame_stride) == ([[384, 480], [192, 256], [192, 256]], 32, 4)
+    assert (run.view_sizes, run.chunk_size, run.video_frame_stride) == ([[384, 480], [192, 256], [192, 256]], 32, 4)
 
 
 def test_checkpoint_step_and_checkpoint_file_choose_the_weights(tmp_path, repository):
@@ -105,14 +105,14 @@ def test_deploy_keys_come_before_the_directory_and_the_training_config(tmp_path,
         "vae_path": str(elsewhere / "vae"),
         "policy": {"spatial_layout": "2x2"},
         "view_sizes": [[256, 320]],
-        "chunk_rows": 16,
+        "chunk_size": 16,
     }
     monkeypatch.setenv(runtime.TEXT_ENCODER_ENV, str(elsewhere / "gemma"))
     run = runtime.resolve_run(cfg, root, repository)
     assert run.normalization == elsewhere / "normalization.json" and run.meta == elsewhere / "meta.json"
     assert run.vae == elsewhere / "vae" and run.text_encoder == elsewhere / "gemma"
     assert run.policy == {"spatial_layout": "2x2"}
-    assert (run.view_sizes, run.chunk_rows, run.video_frame_stride) == ([[256, 320]], 16, 4)
+    assert (run.view_sizes, run.chunk_size, run.video_frame_stride) == ([[256, 320]], 16, 4)
 
 
 def test_the_description_and_the_normalization_fall_back_to_the_training_dataset(tmp_path, repository):
@@ -166,15 +166,17 @@ def test_build_deployment_passes_the_keys_that_are_set(tmp_path, repository, mon
     monkeypatch.setattr(deployment, "Deployment", lambda config: built.append(config) or config)
     monkeypatch.setattr(runtime, "use_causal_vae", streams.append)
     run = runtime.resolve_run({}, run_directory(tmp_path), repository)
-    cfg = {"policy_type": "ar", "steps": 10, "period_rows": 24, "delay_rows": 0, "optimized": False, "precision": None,
+    cfg = {"policy_type": "ar", "steps": 10, "n_action_steps": 24, "async_delay_steps": 0, "optimized": False, "precision": None,
            "video_flow_shift": None, "action_flow_shift": 1.0, "device": None}
     config = runtime.build_deployment(cfg, run, "/dataset")
     assert streams == built == [config]          # the deployment gets the stream of SANA's causal VAE
     defaults = deployment.DeployConfig()
     assert (config.policy_type, config.checkpoint, config.dataset) == ("ar", str(run.weights), "/dataset")
-    assert (config.steps, config.period_rows, config.delay_rows, config.optimized) == (10, 24, 0, False)
+    assert (config.steps, runtime.setting(config, "n_action_steps"), config.optimized) == (10, 24, False)
+    assert runtime.setting(config, "async_delay_steps") == 0
     assert (config.precision, config.video_flow_shift, config.device) == (defaults.precision, defaults.video_flow_shift, defaults.device)
-    assert config.policy == TRAIN_CONFIG["policy"] and config.chunk_rows == 32 and config.video_frame_stride == 4
+    assert config.policy == TRAIN_CONFIG["policy"] and config.video_frame_stride == 4
+    assert runtime.setting(config, "chunk_size") == 32
     assert config.normalization == str(run.normalization) and config.vae == str(run.vae)
 
 
@@ -184,3 +186,16 @@ def test_sana_root_reads_the_key_then_the_environment(tmp_path, monkeypatch):
     monkeypatch.setenv(runtime.SANA_ROOT_ENV, str(tmp_path / "env"))
     assert runtime.sana_root({}) == tmp_path / "env"
     assert runtime.sana_root({"sana_robot_root": str(tmp_path / "key")}) == tmp_path / "key"
+
+
+def test_settings_are_read_under_the_packages_names_before_and_after_its_renaming(tmp_path, repository):
+    earlier = type("Earlier", (), {"chunk_rows": 32, "period_rows": 24, "delay_rows": 8, "steps": 4})
+    renamed = type("Renamed", (), {"chunk_size": 32, "n_action_steps": 24, "async_delay_steps": 8, "steps": 4})
+    for owner in (earlier, renamed):
+        values = [runtime.setting(owner, name) for name in ("chunk_size", "n_action_steps", "async_delay_steps", "steps")]
+        assert values == [32, 24, 8, 4]
+    assert runtime.package_name(earlier, "n_action_steps") == "period_rows"
+    assert runtime.package_name(renamed, "n_action_steps") == "n_action_steps"
+    # a training config written after the renaming names the chunk's length chunk_size
+    config = dict(TRAIN_CONFIG, data={"view_sizes": [[384, 480]], "chunk_size": 16, "video_frame_stride": 4})
+    assert runtime.resolve_run({}, run_directory(tmp_path, config=config), repository).chunk_size == 16

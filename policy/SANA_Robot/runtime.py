@@ -39,17 +39,29 @@ CHECKPOINT_FOLDER = "checkpoints"
 LATEST_LINK = "latest"
 RECIPES = {"ar": "configs/sana_robot/robodojo_ar.yaml", "base": "configs/sana_robot/robodojo_base.yaml"}
 
-# deploy.yml keys that are fields of ``sana_robot``'s ``DeployConfig`` under the same name.
+# deploy.yml keys that are fields of ``sana_robot``'s ``DeployConfig``.
 DEPLOY_FIELDS = (
     "steps",
     "video_flow_shift",
     "action_flow_shift",
-    "delay_rows",
-    "period_rows",
+    "async_delay_steps",
+    "n_action_steps",
     "optimized",
     "precision",
     "device",
 )
+# What a release of the package before it took these names calls three of them.
+EARLIER_NAMES = {"chunk_size": "chunk_rows", "n_action_steps": "period_rows", "async_delay_steps": "delay_rows"}
+
+
+def package_name(owner, name: str) -> str:
+    """Return the name under which ``owner``, a config or a controller of the package, holds a setting of the adapter."""
+    return name if hasattr(owner, name) else EARLIER_NAMES.get(name, name)
+
+
+def setting(owner, name: str):
+    """Return a setting of the adapter from a config or a controller of the package."""
+    return getattr(owner, package_name(owner, name))
 
 
 @dataclass(frozen=True)
@@ -64,7 +76,7 @@ class RunFiles:
     text_encoder: Path
     policy: dict
     view_sizes: Optional[list]
-    chunk_rows: Optional[int]
+    chunk_size: Optional[int]
     video_frame_stride: Optional[int]
 
 
@@ -186,7 +198,7 @@ def resolve_run(model_cfg: Mapping[str, Any], checkpoint: Path, repository: Path
         ),
         policy=dict(policy),
         view_sizes=model_cfg.get("view_sizes") or data.get("view_sizes"),
-        chunk_rows=model_cfg.get("chunk_rows") or data.get("chunk_rows"),
+        chunk_size=model_cfg.get("chunk_size") or data.get("chunk_size") or data.get(EARLIER_NAMES["chunk_size"]),
         video_frame_stride=model_cfg.get("video_frame_stride") or data.get("video_frame_stride"),
     )
 
@@ -228,10 +240,10 @@ def build_deployment(model_cfg: Mapping[str, Any], run: RunFiles, dataset: str):
         "dataset": str(dataset),
         "normalization": str(run.normalization),
         "view_sizes": run.view_sizes,
-        "chunk_rows": run.chunk_rows,
+        package_name(DeployConfig, "chunk_size"): run.chunk_size,
         "video_frame_stride": run.video_frame_stride,
     }
-    settings.update({name: model_cfg.get(name) for name in DEPLOY_FIELDS})
+    settings.update({package_name(DeployConfig, name): model_cfg.get(name) for name in DEPLOY_FIELDS})
     deployment = Deployment(DeployConfig(**{name: value for name, value in settings.items() if value is not None}))
     use_causal_vae(deployment)
     return deployment
