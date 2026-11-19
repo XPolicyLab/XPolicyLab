@@ -44,7 +44,8 @@ conda activate "${policy_conda_env}"
 #   3. checkpoints/<ckpt_name>/ — the conventional symlink target used by
 #      every other XPolicyLab adapter. Never a real copy of the (multi-GB)
 #      weights.
-if ! cogwam_artifact_dir="$(
+# A standalone heredoc avoids the Bash 3.2 parser bug in command substitution.
+resolve_cogwam_artifact() {
     COGWAM_RESOLVE_BENCH_NAME="${bench_name}" \
     COGWAM_RESOLVE_CKPT_NAME="${ckpt_name}" \
     COGWAM_RESOLVE_ENV_CFG_TYPE="${env_cfg_type}" \
@@ -76,7 +77,8 @@ root = resolve_checkpoint_root(
 )
 print(root.resolve())
 PY
-)"; then
+}
+if ! cogwam_artifact_dir="$(resolve_cogwam_artifact)"; then
     echo "[SERVER][ERROR] Could not resolve a CogWAM checkpoint directory." >&2
     echo "[SERVER][ERROR] export COGWAM_ARTIFACT_DIR=/path/to/artifact, or:" >&2
     echo "[SERVER][ERROR]   mkdir -p ${SCRIPT_DIR}/checkpoints && ln -sfn <artifact_dir> ${SCRIPT_DIR}/checkpoints/${ckpt_name}" >&2

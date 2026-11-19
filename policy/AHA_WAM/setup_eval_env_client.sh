@@ -23,7 +23,9 @@ eval_episode_num="${AHA_WAM_DEBUG_EVAL_EPISODE_NUM:-${DEBUG_EVAL_EPISODE_NUM:-10
 bench_root="${XPOLICYLAB_BENCH_ROOT:-${BENCH_ROOT}}"
 env_cfg_root="${AHA_WAM_ENV_CFG_ROOT:-${BENCH_ROOT}/env_cfg}"
 
-read eval_batch < <(python3 - "${yaml_file}" <<'PY'
+# Keep the heredoc outside process substitution for Bash 3.2.
+read_eval_batch() {
+    python3 - "${yaml_file}" <<'PY'
 import sys
 from pathlib import Path
 
@@ -51,7 +53,8 @@ except Exception:
 
 print(str(data.get("eval_batch", False)).lower())
 PY
-)
+}
+eval_batch="$(read_eval_batch)"
 
 if [[ "${eval_batch}" == "true" ]]; then
     echo "[ERROR] AHA-WAM eval_batch=true is unsupported: one model instance has a single mutable rollout/history state." >&2
