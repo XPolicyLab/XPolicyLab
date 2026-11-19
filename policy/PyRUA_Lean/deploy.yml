@@ -1,0 +1,42 @@
+policy_name: PyRUA_Lean
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+action_type: joint
+gpu_id: null
+eval_batch: false
+
+# The robot the programs are written against, as `pyrualean play --robot` names it:
+# RoboDojo's default observation, three colour images and the robot's state.  A depth image
+# or camera matrices, should a client send them, are not read.
+robot: robodojo_xpl_rgb
+primitives: no-vla
+
+# The agent that writes the programs: an OpenAI-compatible chat endpoint (OPENAI_BASE_URL,
+# OPENAI_API_KEY) and a model name (here, or PYRUALEAN_MODEL).
+runtime: openai
+model: null
+max_turns: 100
+budget_s: 5400
+images: on-demand
+feedback: pure
+openai_options:
+  max_tokens: 8192
+  nudges: 20
+  extra_body:
+    reasoning_effort: high
+
+# One conversation drives one environment.  The policy server answers get_action within
+# poll_s seconds whether or not the program has stepped (deploy.py asks again), so the
+# client never waits on one request for as long as a model thinks.
+poll_s: 20.0
+# The verdict is acknowledged when the episode's record is written, at most this long (keep it
+# far below the client's 120 s request timeout): the client exits after its last trial, and
+# the policy server is stopped with it.
+wrap_up_s: 30.0
+result_dir: ./results
