@@ -1,6 +1,6 @@
 #!/bin/bash
-# Policy server of JoyAI_VL. The Python of the Isaac environment is used (it has cuRobo); the
-# policy env argument is ignored. Settings come from JoyAI_VL's config.env.
+# JoyAI_VL policy server. Use ISAAC_PYTHON from config.env when configured;
+# otherwise use the supplied policy environment path. The interpreter needs cuRobo.
 set -euo pipefail
 bench_name=${1}; task_name=${2}; ckpt_name=${3}; env_cfg_type=${4}; action_type=${5}; seed=${6}
 policy_gpu_id=${7}; policy_conda_env=${8}; policy_server_port=${9}; policy_server_host=${10:-"localhost"}
@@ -26,7 +26,7 @@ export ROBODOJO_REPO ISAAC_PYTHON
 echo "[SERVER] policy=JoyAI_VL task=${task_name} port=${policy_server_port} gpu=${policy_gpu_id}"
 # The Isaac environment bundles an old `websockets`; the policy server needs a newer one (see scripts/install_policy_deps.sh)
 DEPS="${ROBOSHELL_ROOT}/.cache/policy-deps"
-export PYTHONPATH="${DEPS}:${ROBOSHELL_ROOT}:${ROBODOJO_REPO}:${XPL_ROOT}${PYTHONPATH:+:$PYTHONPATH}"
+export PYTHONPATH="${DEPS}:${ROBOSHELL_ROOT}:${BENCH_ROOT}:${XPL_ROOT}:${ROBODOJO_REPO}${PYTHONPATH:+:$PYTHONPATH}"
 export PYTHONNOUSERSITE=1 ROBOSHELL_RUN_ROOT="${ROBOSHELL_RUN_ROOT:-${ROBOSHELL_ROOT}/runs/bridge/${task_name}}"
 cd "${XPL_ROOT}"
 exec env CUDA_VISIBLE_DEVICES="${policy_gpu_id}" "${ISAAC_PYTHON}" -u "${XPL_ROOT}/setup_policy_server.py" \

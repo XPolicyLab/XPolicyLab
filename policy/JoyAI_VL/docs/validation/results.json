@@ -1,0 +1,183 @@
+{
+  "recorded_at_utc": "2026-11-19T09:03:56.340684+00:00",
+  "scope": "synthetic interface and process validation; not task-score evaluation",
+  "model": "local interface-check fixture",
+  "modes": {
+    "plain": {
+      "passed": true,
+      "episodes": [
+        {
+          "episode": "stack_bowls_ep01_20261119T085429",
+          "agent_exit_code": 0,
+          "action_steps": 6,
+          "done_called": true,
+          "sam3_calls": 2,
+          "model_requests": 2
+        },
+        {
+          "episode": "stack_bowls_ep02_20261119T085454",
+          "agent_exit_code": 0,
+          "action_steps": 6,
+          "done_called": true,
+          "sam3_calls": 2,
+          "model_requests": 2
+        },
+        {
+          "episode": "stack_bowls_ep03_20261119T085519",
+          "agent_exit_code": 0,
+          "action_steps": 6,
+          "done_called": true,
+          "sam3_calls": 2,
+          "model_requests": 2
+        },
+        {
+          "episode": "stack_bowls_ep04_20261119T085544",
+          "agent_exit_code": 0,
+          "action_steps": 6,
+          "done_called": true,
+          "sam3_calls": 2,
+          "model_requests": 2
+        },
+        {
+          "episode": "stack_bowls_ep05_20261119T085609",
+          "agent_exit_code": 0,
+          "action_steps": 6,
+          "done_called": true,
+          "sam3_calls": 2,
+          "model_requests": 2
+        },
+        {
+          "episode": "stack_bowls_ep06_20261119T085633",
+          "agent_exit_code": 0,
+          "action_steps": 6,
+          "done_called": true,
+          "sam3_calls": 2,
+          "model_requests": 2
+        },
+        {
+          "episode": "stack_bowls_ep07_20261119T085658",
+          "agent_exit_code": 0,
+          "action_steps": 6,
+          "done_called": true,
+          "sam3_calls": 2,
+          "model_requests": 2
+        },
+        {
+          "episode": "stack_bowls_ep08_20261119T085723",
+          "agent_exit_code": 0,
+          "action_steps": 6,
+          "done_called": true,
+          "sam3_calls": 2,
+          "model_requests": 2
+        },
+        {
+          "episode": "stack_bowls_ep09_20261119T085747",
+          "agent_exit_code": 0,
+          "action_steps": 6,
+          "done_called": true,
+          "sam3_calls": 2,
+          "model_requests": 2
+        },
+        {
+          "episode": "stack_bowls_ep10_20261119T085812",
+          "agent_exit_code": 0,
+          "action_steps": 6,
+          "done_called": true,
+          "sam3_calls": 2,
+          "model_requests": 2
+        }
+      ],
+      "final_verdict_records": 10
+    },
+    "encoded": {
+      "passed": true,
+      "episodes": [
+        {
+          "episode": "stack_bowls_ep01_20261119T085908",
+          "agent_exit_code": 0,
+          "action_steps": 6,
+          "done_called": true,
+          "sam3_calls": 2,
+          "model_requests": 2
+        },
+        {
+          "episode": "stack_bowls_ep02_20261119T085933",
+          "agent_exit_code": 0,
+          "action_steps": 6,
+          "done_called": true,
+          "sam3_calls": 2,
+          "model_requests": 2
+        },
+        {
+          "episode": "stack_bowls_ep03_20261119T085958",
+          "agent_exit_code": 0,
+          "action_steps": 6,
+          "done_called": true,
+          "sam3_calls": 2,
+          "model_requests": 2
+        },
+        {
+          "episode": "stack_bowls_ep04_20261119T090022",
+          "agent_exit_code": 0,
+          "action_steps": 6,
+          "done_called": true,
+          "sam3_calls": 2,
+          "model_requests": 2
+        },
+        {
+          "episode": "stack_bowls_ep05_20261119T090047",
+          "agent_exit_code": 0,
+          "action_steps": 6,
+          "done_called": true,
+          "sam3_calls": 2,
+          "model_requests": 2
+        },
+        {
+          "episode": "stack_bowls_ep06_20261119T090112",
+          "agent_exit_code": 0,
+          "action_steps": 6,
+          "done_called": true,
+          "sam3_calls": 2,
+          "model_requests": 2
+        },
+        {
+          "episode": "stack_bowls_ep07_20261119T090138",
+          "agent_exit_code": 0,
+          "action_steps": 6,
+          "done_called": true,
+          "sam3_calls": 2,
+          "model_requests": 2
+        },
+        {
+          "episode": "stack_bowls_ep08_20261119T090203",
+          "agent_exit_code": 0,
+          "action_steps": 6,
+          "done_called": true,
+          "sam3_calls": 2,
+          "model_requests": 2
+        },
+        {
+          "episode": "stack_bowls_ep09_20261119T090229",
+          "agent_exit_code": 0,
+          "action_steps": 6,
+          "done_called": true,
+          "sam3_calls": 2,
+          "model_requests": 2
+        },
+        {
+          "episode": "stack_bowls_ep10_20261119T090254",
+          "agent_exit_code": 0,
+          "action_steps": 6,
+          "done_called": true,
+          "sam3_calls": 2,
+          "model_requests": 2
+        }
+      ],
+      "final_verdict_records": 10
+    }
+  },
+  "cpu_tests_passed": 22,
+  "model_requests": 40,
+  "sam3_segment_requests_200": 40,
+  "action_steps": 120
+}

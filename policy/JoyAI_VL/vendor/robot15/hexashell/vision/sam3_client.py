@@ -8,7 +8,8 @@ from typing import NamedTuple
 from urllib.error import HTTPError, URLError
 from urllib.request import ProxyHandler, Request, build_opener
 
-import cv2
+import io
+from PIL import Image
 import numpy as np
 
 DEFAULT_URL = "http://127.0.0.1:18300"
@@ -77,8 +78,10 @@ class Sam3Client:
                 result = self._request("/segment", {**prompt, "image_id": image_id})
             segments = []
             for item in result["masks"]:
-                png = np.frombuffer(base64.b64decode(item["png_b64"]), np.uint8)
-                mask = cv2.imdecode(png, cv2.IMREAD_GRAYSCALE)
+                with Image.open(io.BytesIO(base64.b64decode(item["png_b64"]))) as picture:
+                    if picture.format != "PNG":
+                        raise ValueError("SAM3 mask must be PNG")
+                    mask = np.array(picture.convert("L"), copy=True)
                 if mask is None or mask.shape != rgb.shape[:2]:
                     raise Sam3Error(f"invalid mask for an image of shape {rgb.shape[:2]}")
                 pixels = mask > 0
@@ -87,7 +90,7 @@ class Sam3Client:
             return segments
         except HTTPError as exc:
             raise Sam3Error(f"SAM3 returned HTTP {exc.code}: {exc.read(300).decode(errors='replace')}") from exc
-        except (KeyError, TypeError, ValueError, cv2.error) as exc:
+        except (KeyError, TypeError, ValueError, OSError) as exc:
             raise Sam3Error(f"invalid SAM3 response: {exc}") from exc
 
     def close(self):

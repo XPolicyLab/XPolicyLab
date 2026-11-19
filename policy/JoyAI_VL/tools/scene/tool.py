@@ -67,6 +67,7 @@ import time
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
+from roboshell.image_transport import decode_png, encode_png
 import cv2
 import numpy as np
 
@@ -182,11 +183,11 @@ def _r3(values, nd=3):
 class Camera:
     """One colour image with its intrinsics K and camera-to-world T (OpenCV axes: x right, y down, z forward)."""
 
-    def __init__(self, name, bgr, k, t):
-        self.name, self.bgr = name, bgr
+    def __init__(self, name, rgb, k, t):
+        self.name, self.rgb = name, rgb
         self.K, self.T = np.asarray(k, float), np.asarray(t, float)
         self.Tinv = _rigid_inverse(self.T)
-        self.h, self.w = bgr.shape[:2]
+        self.h, self.w = rgb.shape[:2]
         self._rays = None
         self._lab = None
         self._smoothed = None
@@ -209,12 +210,12 @@ class Camera:
         (5 px for the head camera, more for a wrist camera close to the table)."""
         if self._smoothed is None:
             k = self.smooth_px()
-            self._smoothed = cv2.blur(self.bgr, (k, k))
+            self._smoothed = cv2.blur(self.rgb, (k, k))
         return self._smoothed
 
     def lab(self):
         if self._lab is None:
-            self._lab = cv2.cvtColor(self.smoothed(), cv2.COLOR_BGR2LAB)
+            self._lab = cv2.cvtColor(self.smoothed(), cv2.COLOR_RGB2LAB)
         return self._lab
 
     def smooth_px(self):
@@ -274,7 +275,7 @@ class Camera:
 
 
 def _decode(png):
-    return cv2.imdecode(np.frombuffer(png, np.uint8), cv2.IMREAD_COLOR)
+    return decode_png(png)
 
 
 # ---- robot model ----------------------------------------------------------------------------------------------------
@@ -516,7 +517,7 @@ def estimate_opening(cam, arm, model):
     low = float(np.clip(arm.gripper, 0.0, 1.0))
     if low >= 0.98:
         return None
-    dark = cv2.cvtColor(cam.bgr, cv2.COLOR_BGR2HSV)[..., 2] < 50
+    dark = cv2.cvtColor(cam.rgb, cv2.COLOR_RGB2HSV)[..., 2] < 50
     best, best_score = None, -1.0
     for g in np.arange(low, 1.0 + 1e-9, 0.025):
         m = np.zeros((cam.h, cam.w), np.uint8)
@@ -620,12 +621,12 @@ class TableColour:
     def l_max(self):
         return float(self.mean[0] + 3.0 * np.sqrt(self.cov[0, 0]))
 
-    def is_table_bgr(self, smoothed_bgr):
+    def is_table_rgb(self, smoothed_rgb):
         """Table colour, or table colour in a shadow: the pixel brightened by 1/s (s = SHADOW_SCALES) is table."""
         out = None
         for s in (1.0,) + SHADOW_SCALES:
-            img = smoothed_bgr if s == 1.0 else np.clip(smoothed_bgr.astype(np.float32) / s, 0, 255).astype(np.uint8)
-            t = self.is_table(cv2.cvtColor(img, cv2.COLOR_BGR2LAB))
+            img = smoothed_rgb if s == 1.0 else np.clip(smoothed_rgb.astype(np.float32) / s, 0, 255).astype(np.uint8)
+            t = self.is_table(cv2.cvtColor(img, cv2.COLOR_RGB2LAB))
             out = t if out is None else out | t
         return out
 
@@ -654,9 +655,9 @@ def _mahalanobis2(x, mean, cov):
 COLOUR_NAMES = ["red", "orange", "yellow", "green", "cyan", "blue", "purple", "pink", "brown", "white", "grey", "black"]
 
 
-def colour_names(bgr):
+def colour_names(rgb):
     """Per-pixel index into COLOUR_NAMES (coarse, from HSV)."""
-    hsv = cv2.cvtColor(bgr.reshape(-1, 1, 3), cv2.COLOR_BGR2HSV).reshape(-1, 3).astype(np.int32)
+    hsv = cv2.cvtColor(rgb.reshape(-1, 1, 3), cv2.COLOR_RGB2HSV).reshape(-1, 3).astype(np.int32)
     h, s, v = hsv[:, 0], hsv[:, 1], hsv[:, 2]
     out = np.full(len(h), COLOUR_NAMES.index("grey"))
     hue = np.select([(h < 6) | (h >= 170), h < 19, h < 34, h < 80, h < 100, h < 130, h < 150],
@@ -672,8 +673,8 @@ def colour_names(bgr):
     return out
 
 
-def _colour_summary(pixels_bgr):
-    idx = colour_names(pixels_bgr)
+def _colour_summary(pixels_rgb):
+    idx = colour_names(pixels_rgb)
     counts = np.bincount(idx, minlength=len(COLOUR_NAMES)).astype(float)
     share = counts / max(counts.sum(), 1)
     order = np.argsort(-share)
@@ -774,7 +775,7 @@ class Scene:
     def table_mask(self, name):
         """Pixels of table colour (shadows included) in one camera."""
         if name not in self._table:
-            self._table[name] = self.colour_model(name).is_table_bgr(self.cams[name].smoothed())
+            self._table[name] = self.colour_model(name).is_table_rgb(self.cams[name].smoothed())
         return self._table[name]
 
     def colour_model(self, name):
@@ -875,7 +876,7 @@ def _small_bright_or_coloured(cam, table, allowed, model=None):
     smoothing size; the deviations of the table's own pixels from it (wood grain) give a Gaussian; a pixel
     counts when it deviates by more than 7 sigma. Only brighter or differently coloured pixels count: thin dark
     lines are the seams of the wood."""
-    lab = cv2.cvtColor(cam.bgr, cv2.COLOR_BGR2LAB).astype(np.float32)
+    lab = cv2.cvtColor(cam.rgb, cv2.COLOR_RGB2LAB).astype(np.float32)
     k = 4 * cam.smooth_px() + 1
     w = cv2.blur(table.astype(np.float32), (k, k))
     local = cv2.blur(lab * table[..., None].astype(np.float32), (k, k)) / np.maximum(w, 1e-3)[..., None]
@@ -1040,7 +1041,7 @@ def _merge_shadows(cam, regions):
     """A small dark region touching a larger region is its contact shadow or a dark part of it: merge them."""
     if len(regions) < 2:
         return regions
-    value = cv2.cvtColor(cam.bgr, cv2.COLOR_BGR2HSV)[..., 2]
+    value = cv2.cvtColor(cam.rgb, cv2.COLOR_RGB2HSV)[..., 2]
     areas = [int(np.count_nonzero(m)) for m, _ in regions]
     order = sorted(range(len(regions)), key=lambda k: areas[k])
     kernel = np.ones((7, 7), np.uint8)
@@ -1071,14 +1072,14 @@ def _describe(scene, cam, hits, dist, mask, robot, clipped):
     bottom = hits[ys[j], xs[j]]
     cu, cv_ = float(xs.mean()), float(ys.mean())
     centre_hit = cam.pixel_on_plane(cu, cv_, scene.table_z)
-    pixels = cam.bgr[ys, xs]
+    pixels = cam.rgb[ys, xs]
     main, colours = _colour_summary(pixels)
     near_robot = bool(cv2.dilate(mask.astype(np.uint8), np.ones((5, 5), np.uint8)).astype(bool)[robot].any())
     return {
         "bbox": [int(xs.min()), int(ys.min()), int(xs.max()), int(ys.max())],
         "centroid_px": [round(cu, 1), round(cv_, 1)],
         "area_px": int(len(ys)),
-        "mean_rgb": [int(round(v)) for v in pixels.mean(0)[::-1]],
+        "mean_rgb": [int(round(v)) for v in pixels.mean(0)],
         "color": main,
         "colors": colours,
         "touches_border": bool(xs.min() == 0 or ys.min() == 0 or xs.max() == cam.w - 1 or ys.max() == cam.h - 1),
@@ -1105,12 +1106,12 @@ def _fill_holes(mask, max_hole):
 
 def overlay(scene, seg):
     cam = scene.cams[seg["camera"]]
-    img = cam.bgr.copy()
+    img = cam.rgb.copy()
     dim = ~seg["inside"]
     img[dim] = (img[dim] * 0.45).astype(np.uint8)
     rob = seg["robot"]
-    img[rob] = (0.5 * img[rob] + 0.5 * np.array([255, 120, 0])).astype(np.uint8)
-    palette = [(0, 255, 255), (255, 0, 255), (0, 255, 0), (255, 255, 0), (0, 128, 255), (255, 128, 128)]
+    img[rob] = (0.5 * img[rob] + 0.5 * np.array([0, 120, 255])).astype(np.uint8)
+    palette = [(255, 255, 0), (255, 0, 255), (0, 255, 0), (0, 255, 255), (255, 128, 0), (128, 128, 255)]
     for obj, mask in zip(seg["objects"], seg["masks"]):
         colour = palette[obj["id"] % len(palette)]
         contours, _ = cv2.findContours(mask.astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -1121,8 +1122,7 @@ def overlay(scene, seg):
         text = str(obj["id"])
         cv2.putText(img, text, (u - 4, v + 4), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 0), 3, cv2.LINE_AA)
         cv2.putText(img, text, (u - 4, v + 4), cv2.FONT_HERSHEY_SIMPLEX, 0.45, colour, 1, cv2.LINE_AA)
-    ok, png = cv2.imencode(".png", img)
-    return png.tobytes()
+    return encode_png(img)
 
 
 # ---- locate (plane sweep of two silhouettes) ---------------------------------------------------------------------
@@ -1445,12 +1445,12 @@ def scene_from_api(api):
             ee = None
         arms.append(ArmState(tag, base, joints, ee, float(arm.gripper())))
     model = _model(*_robot_files(api))
-    signature = {name: _image_signature(cam.bgr) for name, cam in cams.items()}
+    signature = {name: _image_signature(cam.rgb) for name, cam in cams.items()}
     return Scene(cams, table_z, arms, model, signature)
 
 
-def _image_signature(bgr):
-    return cv2.resize(bgr, (80, 60), interpolation=cv2.INTER_AREA).astype(np.int16)
+def _image_signature(rgb):
+    return cv2.resize(rgb, (80, 60), interpolation=cv2.INTER_AREA).astype(np.int16)
 
 
 def _same_image(a, b):
@@ -1466,7 +1466,7 @@ def scene_from_dir(obs_dir, prefix, table_z=None, joints=None, urdf=None, base_p
         path, cam = os.path.join(obs_dir, f"{prefix}_{name}.png"), state.get("cameras", {}).get(name)
         if cam is None or not os.path.exists(path):
             continue
-        cams[name] = Camera(name, cv2.imread(path, cv2.IMREAD_COLOR), cam["intrinsics"], cam["extrinsics_world"])
+        cams[name] = Camera(name, decode_png(Path(path).read_bytes()), cam["intrinsics"], cam["extrinsics_world"])
     if table_z is None:
         table_z = table_plane.measure_dir(obs_dir, prefix)["table_z"]
     base_poses = base_poses or {"left": [-0.3, -0.45, 0.765, 0.7071068, 0, 0, 0.7071068],

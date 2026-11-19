@@ -29,7 +29,9 @@ class Packaging(unittest.TestCase):
         self.assertEqual(report["shared_service"], "verified")
         manifest = json.loads((ROOT / "metadata/variant_manifest.json").read_text())
         self.assertNotIn("agent/api/run_policy.py", manifest["modified_files"])
-        self.assertFalse(any(rel.startswith("vendor/") for rel in manifest["modified_files"]))
+        # Only the SAM3 mask decoder changes in the retained robot implementation.
+        self.assertEqual({rel for rel in manifest["modified_files"] if rel.startswith("vendor/")},
+                         {"vendor/robot15/hexashell/vision/sam3_client.py"})
         self.assertFalse((ROOT / "tasks").exists())
         self.assertFalse((ROOT / "agent/api/skills").exists())
         self.assertFalse((ROOT / "agent/recipes").exists())

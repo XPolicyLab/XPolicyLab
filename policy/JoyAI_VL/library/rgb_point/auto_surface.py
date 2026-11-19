@@ -1,4 +1,5 @@
 """Local calibrated horizontal-plane sweep, using only RGB and camera matrices."""
+from roboshell.image_transport import decode_png
 import cv2
 import numpy as np
 import importlib.util
@@ -12,7 +13,7 @@ _spec.loader.exec_module(silhouette)
 def view(obs, name):
     c = obs['cameras'][name]
     k, t = np.asarray(c['intrinsics'], float), np.asarray(c['extrinsics_world'], float)
-    im = cv2.imdecode(np.frombuffer(obs['png'][name], np.uint8), cv2.IMREAD_COLOR)
+    im = decode_png(obs['png'][name])
     if (im is None or k.shape != (3, 3) or t.shape != (4, 4)
             or not np.isfinite(np.r_[k.ravel(), t.ravel()]).all()
             or not np.allclose(t[:3, :3].T @ t[:3, :3], np.eye(3), atol=1e-3)

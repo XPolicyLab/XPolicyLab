@@ -1127,7 +1127,7 @@
       "sha256": "36c53c3604024d6fa0f2154a3238f39cad011a79d5cf717ed95a8cee48721cd7"
     },
     "README.md": {
-      "sha256": "9fc33aeee3f5f3c7fe07527292a3c4cb37399ca163575dfa34dc2acb2bb8e8e9"
+      "sha256": "aa9dc2894d320ce7a1493063966263a47162d3f8b6317c2075a550bf560f3888"
     },
     "THIRD_PARTY_NOTICES.md": {
       "sha256": "a3ab2644d9fc6920a8e8ac414e0c2d6eda71c3869e8492be683513bfc500d888"
@@ -1136,7 +1136,7 @@
       "sha256": "a64082403b0ad7f9519a4d1cb0dd084dccb1b78532341ddaca20bd6166a76372"
     },
     "agent/api/run_agent.sh": {
-      "sha256": "1c81d76e12790885c812bc38ebfb374bc81800471885c49d22d313566a63f681"
+      "sha256": "05aeabdb02872442d0b2b8356dad804a760c71359caa471b7b26fb042fede20d"
     },
     "config.env.example": {
       "sha256": "684e1edaa97002f1f5a8367c17288bd0cb1cbe68bc6982092e5017085131df62"
@@ -1154,7 +1154,7 @@
       "sha256": "1d0713fb47a192c383d6ce92e3dd991b26624a5e3c41488f0c13944034b294f0"
     },
     "docs/integration.md": {
-      "sha256": "a38bbc6e7ca194905202d6acfabecea75ae6519fd76cdda2f659b4a24addd644"
+      "sha256": "b119959028c92cc2aef4efbcd4efd2ec180fa401ed627314d68fb2954fd83cb5"
     },
     "docs/reproducibility.md": {
       "sha256": "349a07970a64ceb9d3e478f9b27594b68ae1ae068200373d6ffb3fa4c7b3f808"
@@ -1172,7 +1172,7 @@
       "sha256": "c5d1770216257a65d58bee275369a653f6641c38f1ed181d88a6c0577ac0c022"
     },
     "roboshell/server/bridge.py": {
-      "sha256": "275add9f8df3a64e804fc1ca7f50c5415f4019a67f0fe6247b27e78acc05ebd5"
+      "sha256": "83db87217a94103808f5d95a1d372fc1fdb405659e2e5693b5edc6393091b613"
     },
     "roboshell/server/tools.py": {
       "sha256": "ff2b40677157de51f4afbfab7e3d30c7841ddabb462b2da65be7bedf5e63f5a7"
@@ -1181,19 +1181,60 @@
       "sha256": "83ee9eb797cdf3cab64a6ab22874673344dae4c93869953e8ffb0da07c411dcd"
     },
     "tests/test_release.py": {
-      "sha256": "ab16df41ce92673ed22f7a3ae58b32040df94edd840ed1fae7aec75c92d09d22"
+      "sha256": "9f98b7229dece9301c8c75598ffbee5a232a9c1ab2316415c9307eb23e4b6ec2"
     },
     "tools/configure.py": {
       "sha256": "16abdde922ae74e624ddc820ebc74c3de0066bfc19fca4c6be2ca055a2fa6e73"
     },
     "tools/verify_release.py": {
       "sha256": "5c09b5940b7b5ebdddef493edebec039e15ca9381f9a7dcff7def9cf15f6301a"
+    },
+    "library/rgb_point/auto_surface.py": {
+      "sha256": "5f21b1fbfed9154c19768216b0228609c45849f5d0726c7610e61bc733b3e5a1"
+    },
+    "library/rgb_point/tool.py": {
+      "sha256": "b7c5d8c7e66a7c1323815e343a7f00bc2ea32afafdc51cec41e8369e01f63edc"
+    },
+    "library/rgb_quad/rgb_measure.py": {
+      "sha256": "86d20ac1048cc7f3e974cb31d8bb3e12ea1cc17df0b149c1425a8a86fb5b2d1d"
+    },
+    "library/rim_geometry/tool.py": {
+      "sha256": "f46dca388bca88daa9f0a60ec1ab74e2a73881527b77f2d38d0c8a049cd86767"
+    },
+    "roboshell/server/core.py": {
+      "sha256": "d22b0d669eb900b13eabbe2020dab8f067e45c9c98bd508be005f9ac0a7d28a4"
+    },
+    "roboshell/server/robot15.py": {
+      "sha256": "28989fb6b1cf57b9d8f5f82f6f47a191e0b1a0f49489d4da8aef7ee35e8a37be"
+    },
+    "setup_eval_policy_server.sh": {
+      "sha256": "4de7a3b49862dcb341b5fb621194bd1efefa53b66b9a48bc848cbc8e946ad20a"
+    },
+    "tools/scene/tool.py": {
+      "sha256": "99dd87e29ac180ceaa300bc6dbf66aa46c65883b9f2e6e534cda7e8e608a7bd1"
+    },
+    "tools/table_plane/tool.py": {
+      "sha256": "a707eba609fe4705d4519a1919ff98dc1c953dd3628f715e3a40e48cb9e87be4"
+    },
+    "vendor/robot15/hexashell/vision/sam3_client.py": {
+      "sha256": "2d09e422d4c1833f69b2a10df17bfe0ba8c4d83f7b798104f962a662035e8374"
     }
   },
   "added_files": [
     "docs/development.md",
+    "docs/validation.md",
+    "docs/validation/cpu.log",
+    "docs/validation/encoded.log",
+    "docs/validation/model-api.log",
+    "docs/validation/plain.log",
+    "docs/validation/results.json",
+    "docs/validation/sam3.log",
     "profiles/generic/enabled_tools.txt",
+    "roboshell/image_transport.py",
     "roboshell/task_card.py",
-    "tests/test_agent_context.py"
+    "tests/mock_model_api.py",
+    "tests/test_agent_context.py",
+    "tests/test_image_transport.py",
+    "tests/test_runtime_startup.py"
   ]
 }

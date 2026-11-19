@@ -1,5 +1,6 @@
 """Horizontal circular boundary reconstruction from calibrated RGB views."""
 import json
+from roboshell.image_transport import decode_png
 import cv2
 import numpy as np
 
@@ -162,7 +163,7 @@ def run(api, command, args):
                 raise ValueError('invalid_pixels')
             source = CAMERAS[camera]
             model = observation['cameras'][source]
-            image = cv2.imdecode(np.frombuffer(observation['png'][source], np.uint8), cv2.IMREAD_GRAYSCALE)
+            image = decode_png(observation['png'][source], "L")
             k = np.asarray(model['intrinsics'], dtype=float)
             transform = np.asarray(model['extrinsics_world'], dtype=float)
             if (image is None or k.shape != (3, 3) or transform.shape != (4, 4) or

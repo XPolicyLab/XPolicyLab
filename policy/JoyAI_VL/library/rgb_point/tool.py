@@ -1,5 +1,6 @@
 """Calibrated pixel rays; no scene state or assumed surface dimensions."""
 import numpy as np
+from roboshell.image_transport import decode_png
 import cv2
 import json
 import importlib.util
@@ -39,7 +40,7 @@ def ray(observation, camera, u, v):
     if (not np.allclose(t[:3, :3].T @ t[:3, :3], np.eye(3), atol=1e-3)
             or np.linalg.det(t[:3, :3]) < .99):
         raise ValueError('invalid_camera_rotation')
-    im = cv2.imdecode(np.frombuffer(observation['png'][camera], np.uint8), cv2.IMREAD_GRAYSCALE)
+    im = decode_png(observation['png'][camera], "L")
     if im is None or not (0 <= u < im.shape[1] and 0 <= v < im.shape[0]):
         raise ValueError('pixel_outside_image')
     d = t[:3, :3] @ np.linalg.solve(k, [u, v, 1.])

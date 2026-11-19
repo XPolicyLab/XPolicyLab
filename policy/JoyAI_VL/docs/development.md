@@ -11,10 +11,33 @@ and current robot observations. All tasks use one generic tool registry. The sys
 prompt contains robot API documentation and general execution instructions; stored
 task procedures and benchmark scoring tolerances have been removed.
 
-The API request loop, model inference parameters other than the skills flag, shared
-SAM3 service, robot controller and perception geometry retain their source bytes.
+At the initial adapter commit, the API request loop, model inference parameters other
+than the skills flag, shared SAM3 service, robot controller and perception geometry
+retained their source bytes.
 `metadata/variant_manifest.json` records source hashes and the file-level changes.
 
 The previously evaluated JoyAI-VL release includes task skills; its results are recorded
-with that release. This variant has passed 14 CPU checks using synthetic inputs and
-mocked services. Simulator evaluation: not run.
+with that release. The initial adapter passed 14 CPU checks using synthetic inputs
+and mocked services. Simulator evaluation: not run.
+
+## 2026-11-19 — Image transport and deployment validation
+
+Internal camera and tool PNGs now use a shared Pillow codec. Image tools keep RGB
+arrays and use the corresponding RGB-to-HSV/Lab conversions. SAM3 mask decoding
+uses grayscale PNG; the service, geometric calculations and motion planning are
+unchanged. Grayscale conversion uses Pillow luminance, which can differ from the
+previous PNG decoder by one intensity level. Tests cover official legacy/marked
+JPEG input, internal camera images, tool pictures, colour names and mask pixels.
+
+A full process debug run found that the fallback Docker network could have an
+empty gateway after the default address pools were exhausted. Fallback creation
+now specifies its gateway. The launcher reports a missing gateway before starting
+an agent. Policy startup also puts the selected XPolicyLab checkout before an
+external RoboDojo checkout in the Python import path.
+
+The debug fixture uses synthetic observations and a local fixed-response model API.
+It exercises the real policy server, agent container, SAM3 and the official debug
+client. It is kept under `tests/` and is not used by evaluation deployments.
+After these changes, 22 CPU tests and both ten-episode process checks passed.
+Validation commands, environment versions and results are recorded in
+`docs/validation.md`; per-file hashes are in the variant and release manifests.

@@ -98,3 +98,4 @@ python3 -m unittest discover -s tests -v
 
 The suite uses synthetic responses and mocked endpoints to check source integrity,
 configuration, API requests, RGB observations and the evaluation entry points.
+The full process debug checks and their logs are described in [validation](docs/validation.md).

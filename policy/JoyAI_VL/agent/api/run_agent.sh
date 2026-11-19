@@ -27,17 +27,20 @@ make_net() {  # make_net NAME [--internal]
   local name=$1; shift
   docker network inspect "$name" >/dev/null 2>&1 && return 0
   docker network create "$@" "$name" >/dev/null 2>&1 && return 0
-  local h i sub
+  local h i sub subnet gateway
   h=$(printf '%s' "$name" | cksum | cut -d' ' -f1)
   for i in 0 1 2 3 4 5 6 7 8 9; do
     sub=$(( (h + i * 7919) % 4096 ))
-    if docker network create "$@" --subnet "10.202.$((sub / 16)).$(( (sub % 16) * 16 ))/28" "$name" >/dev/null 2>&1; then return 0; fi
+    subnet="10.202.$((sub / 16)).$(( (sub % 16) * 16 ))/28"
+    gateway="10.202.$((sub / 16)).$(( (sub % 16) * 16 + 1 ))"
+    if docker network create "$@" --subnet "$subnet" --gateway "$gateway" "$name" >/dev/null 2>&1; then return 0; fi
   done
   echo "could not create docker network $name" >&2; return 1
 }
 make_net "$NET_INT" --internal
 make_net "$NET_EXT"
 GATEWAY=$(docker network inspect "$NET_EXT" --format '{{(index .IPAM.Config 0).Gateway}}')
+[ -n "$GATEWAY" ] || { echo "Docker network $NET_EXT has no IPv4 gateway; check its IPAM configuration" >&2; exit 1; }
 if [ "${1:-}" = "--gateway" ]; then echo "$GATEWAY"; exit 0; fi
 
 RUN=$1; PROMPT=$2

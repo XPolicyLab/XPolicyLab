@@ -41,6 +41,7 @@ Use from a task tool (tasks/<task>/tools/<name>/tool.py):
 import time
 from statistics import median
 
+from roboshell.image_transport import decode_png
 import cv2
 import numpy as np
 
@@ -91,7 +92,7 @@ def views_from_observation(obs):
         png, cam = (obs.get("png") or {}).get(source), (obs.get("cameras") or {}).get(source)
         if png is None or cam is None:
             continue
-        gray = cv2.imdecode(np.frombuffer(png, np.uint8), cv2.IMREAD_GRAYSCALE)
+        gray = decode_png(png, "L")
         view = _view(gray, cam.get("intrinsics"), cam.get("extrinsics_world"))
         if view is not None:
             views[name] = view

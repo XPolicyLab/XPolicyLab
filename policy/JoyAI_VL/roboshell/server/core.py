@@ -13,6 +13,7 @@ import time
 
 import numpy as np
 
+from roboshell.image_transport import decode_png, encode_png
 from roboshell.contract import v0 as C
 from roboshell.server import geometry as geo
 from roboshell.server import motion
@@ -58,22 +59,19 @@ class NoDepth(dict):
 
 def depth_preview(depth):
     """8-bit grayscale PNG: near is bright, far is dark, 0 (no data) is black. 0.2 m to 2.0 m."""
-    import cv2
 
     valid = depth > 0
     scaled = np.clip((2.0 - depth) / 1.8, 0.0, 1.0)
     image = (scaled * 255).astype(np.uint8)
     image[~valid] = 0
-    ok, encoded = cv2.imencode(".png", image)
-    return encoded.tobytes()
+    return encode_png(image)
 
 
 def pixel_array(png):
     """PNG bytes -> base64 of an .npy file holding the RGB image (height x width x 3, uint8)."""
     import base64
-    import cv2
 
-    image = cv2.cvtColor(cv2.imdecode(np.frombuffer(png, np.uint8), cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB)
+    image = decode_png(png)
     buffer = io.BytesIO()
     np.save(buffer, np.ascontiguousarray(image))
     return base64.b64encode(buffer.getvalue()).decode()

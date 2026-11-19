@@ -17,7 +17,7 @@ import threading
 import time
 import traceback
 
-import cv2
+from roboshell.image_transport import encode_png
 import numpy as np
 import yaml
 
@@ -151,8 +151,7 @@ class BridgeExecutor:
         png, cameras, depth = {}, {}, {}
         for source in CAMERA_NAMES:
             color = np.ascontiguousarray(np.asarray(self.obs["vision"][source]["color"])[:, :, :3]).astype(np.uint8)
-            ok, encoded = cv2.imencode(".png", cv2.cvtColor(color, cv2.COLOR_RGB2BGR))
-            png[source] = encoded.tobytes()
+            png[source] = encode_png(color)
             model = self.camera_model[source]
             if "extrinsics_world" in model:
                 extrinsic = np.asarray(model["extrinsics_world"], dtype=float)

@@ -2,6 +2,7 @@
 import importlib.util
 import json
 from pathlib import Path
+from roboshell.image_transport import decode_png
 import cv2
 import numpy as np
 
@@ -29,7 +30,7 @@ def view(obs, name):
             or not np.allclose(t[:3, :3].T @ t[:3, :3], np.eye(3), atol=.001)
             or abs(np.linalg.det(t[:3, :3]) - 1) > .001):
         raise ValueError("invalid camera calibration")
-    img = cv2.imdecode(np.frombuffer(obs["png"][key], np.uint8), cv2.IMREAD_GRAYSCALE)
+    img = decode_png(obs["png"][key], "L")
     if img is None:
         raise ValueError("missing RGB image")
     return {"K": k, "T": t, "shape": img.shape, "image": img}

@@ -7,7 +7,7 @@ import os
 import threading
 import time
 
-import cv2
+from roboshell.image_transport import encode_png
 
 from vendor.robot15.hexashell.errors import CallFailed, Stop
 from vendor.robot15.hexashell.motion.driver import EpisodeOver
@@ -74,9 +74,7 @@ class RobotTools:
         return self.host.snap.seq + 1, self.observation
 
     def attach(self, kind, image, caption):
-        ok, png = cv2.imencode(".png", cv2.cvtColor(image, cv2.COLOR_RGB2BGR))
-        if not ok:
-            raise ValueError("could not encode the robot picture")
+        png = encode_png(image)
         name = f"robot_{next(self.picture_index):06d}.png"
         self.files[name] = base64.b64encode(png).decode("ascii")
         self.captions[name] = caption
