@@ -1,0 +1,11 @@
+{
+  "schema": "riemann-public-observation-contract-v1",
+  "task": "pick_from_conveyor_by_image",
+  "standard_observation_only": true,
+  "measured_finger_joints_required": false,
+  "public_factory": "controller.create_public_environment",
+  "gripper_semantics": "normalized feedback-limited applied target; exact width/contact unknown",
+  "evaluation_enabled": true,
+  "gpu_review_hold": false,
+  "status": "fixed0 compatibility probe only"
+}

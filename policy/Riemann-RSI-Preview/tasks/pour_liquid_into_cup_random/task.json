@@ -1,0 +1,7 @@
+{
+  "task": "pour_liquid_into_cup_random",
+  "backend": "rule",
+  "evaluation_enabled": true,
+  "entry": "tasks/pour_liquid_into_cup_random/entry.py",
+  "runtime_config": "configs/official-rule-evaluation.json"
+}

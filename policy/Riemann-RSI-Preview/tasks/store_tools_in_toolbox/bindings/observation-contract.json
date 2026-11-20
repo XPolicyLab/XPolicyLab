@@ -1,0 +1,18 @@
+{
+  "schema": "a6-toolbox-public-observation-contract-v1",
+  "standard_observation_only": true,
+  "measured_finger_joints_required": false,
+  "public_factory": "controller.create_public_environment",
+  "gripper_fields": [
+    "left_ee_joint_state",
+    "right_ee_joint_state"
+  ],
+  "gripper_semantics": "Official normalized applied target after MetaControl measured-position rate limiting at0.2 travel; public indirect feedback, not precise aperture or contact",
+  "grasp_feedback": "unknown unless independently confirmed with public RGB",
+  "unavailable_release_feedback": "run only original bounded staged-clear fallback; no physical early-stop claim",
+  "evaluation_enabled": true,
+  "gpu_review_hold": false,
+  "status": "R45_pliers_loaded_timing_bounded_probe_actual_closure",
+  "feedback_provenance": "env/robot_manager/control_manager.py:12-55,81-94 -> env/observation_manager/obs_manager.py:187-211 at officialf57",
+  "public_feedback_has_indirect_measurement_information": true
+}

@@ -1,0 +1,1273 @@
+{
+  "schema": "riemann-mature-teacher-programs-v1",
+  "package": "tasks.general_pickup",
+  "task": "general_pickup",
+  "official_action_horizon": 200,
+  "mode": "rule_only",
+  "wam_reselection": false,
+  "programs": {
+    "U00_PickupController_advance_phase": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 200,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U00_PickupController_advance_phase_motion_001": "skills.motion.implementation:U00_PickupController_advance_phase_motion_001",
+        "U00_PickupController_advance_phase_self_phase_locate_002": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_locate_002",
+        "U00_PickupController_advance_phase_self_schedule_visual_clear_observation_roots_003": "skills.motion.implementation:U00_PickupController_advance_phase_self_schedule_visual_clear_observation_roots_003",
+        "U00_PickupController_advance_phase_self_schedule_visual_clear_observation_roots_004": "skills.motion.implementation:U00_PickupController_advance_phase_self_schedule_visual_clear_observation_roots_004",
+        "U00_PickupController_advance_phase_self_phase_locate_005": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_locate_005",
+        "U00_PickupController_advance_phase_self_phase_locate_006": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_locate_006",
+        "U00_PickupController_advance_phase_self_detection_silhouette_iou_0_4_and_self_visua_007": "skills.motion.implementation:U00_PickupController_advance_phase_self_detection_silhouette_iou_0_4_and_self_visua_007",
+        "U00_PickupController_advance_phase_self_schedule_visual_clear_observation_roots_008": "skills.motion.implementation:U00_PickupController_advance_phase_self_schedule_visual_clear_observation_roots_008",
+        "U00_PickupController_advance_phase_self_schedule_visual_clear_observation_roots_009": "skills.motion.implementation:U00_PickupController_advance_phase_self_schedule_visual_clear_observation_roots_009",
+        "U00_PickupController_advance_phase_self_phase_locate_010": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_locate_010",
+        "U00_PickupController_advance_phase_self_phase_locate_011": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_locate_011",
+        "U00_PickupController_advance_phase_self_phase_locate_012": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_locate_012",
+        "U00_PickupController_advance_phase_self_phase_locate_013": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_locate_013",
+        "U00_PickupController_advance_phase_self_phase_locate_014": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_locate_014",
+        "U00_PickupController_advance_phase_self_recipient_is_not_none_015": "skills.motion.implementation:U00_PickupController_advance_phase_self_recipient_is_not_none_015",
+        "U00_PickupController_advance_phase_self_recipient_is_not_none_016": "skills.motion.implementation:U00_PickupController_advance_phase_self_recipient_is_not_none_016",
+        "U00_PickupController_advance_phase_not_candidates_017": "skills.motion.implementation:U00_PickupController_advance_phase_not_candidates_017",
+        "U00_PickupController_advance_phase_self_schedule_visual_clear_observation_roots_018": "skills.motion.implementation:U00_PickupController_advance_phase_self_schedule_visual_clear_observation_roots_018",
+        "U00_PickupController_advance_phase_self_schedule_visual_clear_observation_roots_019": "skills.motion.implementation:U00_PickupController_advance_phase_self_schedule_visual_clear_observation_roots_019",
+        "U00_PickupController_advance_phase_self_schedule_object_clear_observation_roots_pla_020": "skills.motion.implementation:U00_PickupController_advance_phase_self_schedule_object_clear_observation_roots_pla_020",
+        "U00_PickupController_advance_phase_self_schedule_object_clear_observation_roots_pla_021": "skills.motion.implementation:U00_PickupController_advance_phase_self_schedule_object_clear_observation_roots_pla_021",
+        "U00_PickupController_advance_phase_not_candidates_022": "skills.motion.implementation:U00_PickupController_advance_phase_not_candidates_022",
+        "U00_PickupController_advance_phase_self_attempts_3_023": "skills.motion.implementation:U00_PickupController_advance_phase_self_attempts_3_023",
+        "U00_PickupController_advance_phase_self_attempts_3_024": "skills.motion.implementation:U00_PickupController_advance_phase_self_attempts_3_024",
+        "U00_PickupController_advance_phase_self_phase_locate_025": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_locate_025",
+        "U00_PickupController_advance_phase_candidates_min_self_attempts_len_candidates_1_ca_026": "skills.motion.implementation:U00_PickupController_advance_phase_candidates_min_self_attempts_len_candidates_1_ca_026",
+        "U00_PickupController_advance_phase_self_phase_locate_027": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_locate_027",
+        "U00_PickupController_advance_phase_self_phase_locate_028": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_locate_028",
+        "U00_PickupController_advance_phase_self_phase_locate_029": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_locate_029",
+        "U00_PickupController_advance_phase_self_phase_locate_030": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_locate_030",
+        "U00_PickupController_advance_phase_self_phase_locate_031": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_locate_031",
+        "U00_PickupController_advance_phase_self_phase_locate_032": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_locate_032",
+        "U00_PickupController_advance_phase_self_phase_locate_033": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_locate_033",
+        "U00_PickupController_advance_phase_selected_is_none_034": "skills.motion.implementation:U00_PickupController_advance_phase_selected_is_none_034",
+        "U00_PickupController_advance_phase_self_schedule_visual_clear_observation_roots_035": "skills.motion.implementation:U00_PickupController_advance_phase_self_schedule_visual_clear_observation_roots_035",
+        "U00_PickupController_advance_phase_self_schedule_visual_clear_observation_roots_036": "skills.motion.implementation:U00_PickupController_advance_phase_self_schedule_visual_clear_observation_roots_036",
+        "U00_PickupController_advance_phase_selected_is_none_037": "skills.motion.implementation:U00_PickupController_advance_phase_selected_is_none_037",
+        "U00_PickupController_advance_phase_self_phase_locate_038": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_locate_038",
+        "U00_PickupController_advance_phase_self_phase_locate_039": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_locate_039",
+        "U00_PickupController_advance_phase_self_phase_locate_040": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_locate_040",
+        "U00_PickupController_advance_phase_self_phase_visual_clear_041": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_visual_clear_041",
+        "U00_PickupController_advance_phase_self_phase_visual_clear_042": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_visual_clear_042",
+        "U00_PickupController_advance_phase_self_phase_visual_clear_043": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_visual_clear_043",
+        "U00_PickupController_advance_phase_motion_044": "skills.motion.implementation:U00_PickupController_advance_phase_motion_044",
+        "U00_PickupController_advance_phase_self_phase_pregrasp_045": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_pregrasp_045",
+        "U00_PickupController_advance_phase_self_phase_pregrasp_046": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_pregrasp_046",
+        "U00_PickupController_advance_phase_self_phase_pregrasp_047": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_pregrasp_047",
+        "U00_PickupController_advance_phase_endpoint_error_0_025_048": "skills.motion.implementation:U00_PickupController_advance_phase_endpoint_error_0_025_048",
+        "U00_PickupController_advance_phase_endpoint_error_0_025_049": "skills.motion.implementation:U00_PickupController_advance_phase_endpoint_error_0_025_049",
+        "U00_PickupController_advance_phase_q_is_none_050": "skills.motion.implementation:U00_PickupController_advance_phase_q_is_none_050",
+        "U00_PickupController_advance_phase_q_is_none_051": "skills.motion.implementation:U00_PickupController_advance_phase_q_is_none_051",
+        "U00_PickupController_advance_phase_endpoint_error_0_025_052": "skills.motion.implementation:U00_PickupController_advance_phase_endpoint_error_0_025_052",
+        "U00_PickupController_advance_phase_endpoint_error_0_025_053": "skills.motion.implementation:U00_PickupController_advance_phase_endpoint_error_0_025_053",
+        "U00_PickupController_advance_phase_self_phase_pregrasp_054": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_pregrasp_054",
+        "U00_PickupController_advance_phase_self_phase_pregrasp_055": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_pregrasp_055",
+        "U00_PickupController_advance_phase_self_phase_pregrasp_056": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_pregrasp_056",
+        "U00_PickupController_advance_phase_self_phase_pregrasp_057": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_pregrasp_057",
+        "U00_PickupController_advance_phase_np_linalg_norm_delta_0_045_058": "skills.motion.implementation:U00_PickupController_advance_phase_np_linalg_norm_delta_0_045_058",
+        "U00_PickupController_advance_phase_np_linalg_norm_delta_0_045_059": "skills.motion.implementation:U00_PickupController_advance_phase_np_linalg_norm_delta_0_045_059",
+        "U00_PickupController_advance_phase_self_phase_pregrasp_060": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_pregrasp_060",
+        "U00_PickupController_advance_phase_self_phase_pregrasp_061": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_pregrasp_061",
+        "U00_PickupController_advance_phase_self_phase_contact_062": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_contact_062",
+        "U00_PickupController_advance_phase_self_phase_contact_063": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_contact_063",
+        "U00_PickupController_advance_phase_self_phase_contact_064": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_contact_064",
+        "U00_PickupController_advance_phase_error_0_018_065": "skills.motion.implementation:U00_PickupController_advance_phase_error_0_018_065",
+        "U00_PickupController_advance_phase_self_contact_corrections_1_066": "skills.motion.implementation:U00_PickupController_advance_phase_self_contact_corrections_1_066",
+        "U00_PickupController_advance_phase_self_contact_corrections_1_067": "skills.motion.implementation:U00_PickupController_advance_phase_self_contact_corrections_1_067",
+        "U00_PickupController_advance_phase_self_contact_corrections_1_068": "skills.motion.implementation:U00_PickupController_advance_phase_self_contact_corrections_1_068",
+        "U00_PickupController_advance_phase_self_contact_corrections_1_069": "skills.motion.implementation:U00_PickupController_advance_phase_self_contact_corrections_1_069",
+        "U00_PickupController_advance_phase_error_0_018_070": "skills.motion.implementation:U00_PickupController_advance_phase_error_0_018_070",
+        "U00_PickupController_advance_phase_error_0_018_071": "skills.motion.implementation:U00_PickupController_advance_phase_error_0_018_071",
+        "U00_PickupController_advance_phase_error_0_018_072": "skills.motion.implementation:U00_PickupController_advance_phase_error_0_018_072",
+        "U00_PickupController_advance_phase_error_0_018_073": "skills.motion.implementation:U00_PickupController_advance_phase_error_0_018_073",
+        "U00_PickupController_advance_phase_goal_is_none_074": "skills.motion.implementation:U00_PickupController_advance_phase_goal_is_none_074",
+        "U00_PickupController_advance_phase_goal_is_none_075": "skills.motion.implementation:U00_PickupController_advance_phase_goal_is_none_075",
+        "U00_PickupController_advance_phase_error_0_018_076": "skills.motion.implementation:U00_PickupController_advance_phase_error_0_018_076",
+        "U00_PickupController_advance_phase_error_0_018_077": "skills.motion.implementation:U00_PickupController_advance_phase_error_0_018_077",
+        "U00_PickupController_advance_phase_error_0_018_078": "skills.motion.implementation:U00_PickupController_advance_phase_error_0_018_078",
+        "U00_PickupController_advance_phase_error_0_018_079": "skills.motion.implementation:U00_PickupController_advance_phase_error_0_018_079",
+        "U00_PickupController_advance_phase_self_phase_contact_080": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_contact_080",
+        "U00_PickupController_advance_phase_self_phase_contact_081": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_contact_081",
+        "U00_PickupController_advance_phase_self_phase_close_082": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_close_082",
+        "U00_PickupController_advance_phase_self_phase_close_083": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_close_083",
+        "U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_084": "skills.pickup.implementation:U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_084",
+        "U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_085": "skills.pickup.implementation:U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_085",
+        "U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_086": "skills.pickup.implementation:U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_086",
+        "U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_087": "skills.pickup.implementation:U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_087",
+        "U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_088": "skills.pickup.implementation:U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_088",
+        "U00_PickupController_advance_phase_self_phase_close_089": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_close_089",
+        "U00_PickupController_advance_phase_self_phase_close_090": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_close_090",
+        "U00_PickupController_advance_phase_self_phase_close_091": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_close_091",
+        "U00_PickupController_advance_phase_self_phase_close_092": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_close_092",
+        "U00_PickupController_advance_phase_self_phase_close_093": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_close_093",
+        "U00_PickupController_advance_phase_self_phase_close_094": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_close_094",
+        "U00_PickupController_advance_phase_self_phase_close_095": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_close_095",
+        "U00_PickupController_advance_phase_self_phase_lift_check_096": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_lift_check_096",
+        "U00_PickupController_advance_phase_self_phase_lift_check_097": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_lift_check_097",
+        "U00_PickupController_advance_phase_self_phase_lift_check_098": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_lift_check_098",
+        "U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_or_099": "skills.pickup.implementation:U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_or_099",
+        "U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_or_100": "skills.pickup.implementation:U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_or_100",
+        "U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_or_101": "skills.pickup.implementation:U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_or_101",
+        "U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_or_102": "skills.pickup.implementation:U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_or_102",
+        "U00_PickupController_advance_phase_self_phase_lift_check_103": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_lift_check_103",
+        "U00_PickupController_advance_phase_self_phase_lift_check_104": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_lift_check_104",
+        "U00_PickupController_advance_phase_self_mode_clear_or_self_relay_requested_or_self__105": "skills.transport.implementation:U00_PickupController_advance_phase_self_mode_clear_or_self_relay_requested_or_self__105",
+        "U00_PickupController_advance_phase_self_mode_clear_or_self_relay_requested_or_self__106": "skills.transport.implementation:U00_PickupController_advance_phase_self_mode_clear_or_self_relay_requested_or_self__106",
+        "U00_PickupController_advance_phase_self_mode_clear_or_self_relay_requested_or_self__107": "skills.transport.implementation:U00_PickupController_advance_phase_self_mode_clear_or_self_relay_requested_or_self__107",
+        "U00_PickupController_advance_phase_self_phase_lift_check_108": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_lift_check_108",
+        "U00_PickupController_advance_phase_self_phase_lift_check_109": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_lift_check_109",
+        "U00_PickupController_advance_phase_self_phase_lift_check_110": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_lift_check_110",
+        "U00_PickupController_advance_phase_self_phase_lift_check_111": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_lift_check_111",
+        "U00_PickupController_advance_phase_self_phase_lift_112": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_lift_112",
+        "U00_PickupController_advance_phase_self_phase_lift_113": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_lift_113",
+        "U00_PickupController_advance_phase_self_phase_lift_114": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_lift_114",
+        "U00_PickupController_advance_phase_self_phase_verify_lift_115": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_verify_lift_115",
+        "U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_116": "skills.pickup.implementation:U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_116",
+        "U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_117": "skills.pickup.implementation:U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_117",
+        "U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_118": "skills.pickup.implementation:U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_118",
+        "U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_119": "skills.pickup.implementation:U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_119",
+        "U00_PickupController_advance_phase_observation_physical_step_112_and_not_self_relay_120": "skills.transport.implementation:U00_PickupController_advance_phase_observation_physical_step_112_and_not_self_relay_120",
+        "U00_PickupController_advance_phase_observation_physical_step_112_and_not_self_relay_121": "skills.transport.implementation:U00_PickupController_advance_phase_observation_physical_step_112_and_not_self_relay_121",
+        "U00_PickupController_advance_phase_observation_physical_step_112_and_not_self_relay_122": "skills.transport.implementation:U00_PickupController_advance_phase_observation_physical_step_112_and_not_self_relay_122",
+        "U00_PickupController_advance_phase_stationary_123": "skills.motion.implementation:U00_PickupController_advance_phase_stationary_123",
+        "U00_PickupController_advance_phase_stationary_124": "skills.motion.implementation:U00_PickupController_advance_phase_stationary_124",
+        "U00_PickupController_advance_phase_stationary_125": "skills.motion.implementation:U00_PickupController_advance_phase_stationary_125",
+        "U00_PickupController_advance_phase_stationary_126": "skills.motion.implementation:U00_PickupController_advance_phase_stationary_126",
+        "U00_PickupController_advance_phase_observation_physical_step_112_and_not_self_relay_127": "skills.transport.implementation:U00_PickupController_advance_phase_observation_physical_step_112_and_not_self_relay_127",
+        "U00_PickupController_advance_phase_self_phase_verify_lift_128": "skills.pickup.implementation:U00_PickupController_advance_phase_self_phase_verify_lift_128",
+        "U00_PickupController_advance_phase_self_phase_visual_clear_129": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_visual_clear_129",
+        "U00_PickupController_advance_phase_self_phase_visual_clear_130": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_visual_clear_130",
+        "U00_PickupController_advance_phase_self_phase_blocked_retreat_131": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_blocked_retreat_131",
+        "U00_PickupController_advance_phase_self_schedule_object_clear_observation_roots_pla_132": "skills.motion.implementation:U00_PickupController_advance_phase_self_schedule_object_clear_observation_roots_pla_132",
+        "U00_PickupController_advance_phase_self_schedule_object_clear_observation_roots_pla_133": "skills.motion.implementation:U00_PickupController_advance_phase_self_schedule_object_clear_observation_roots_pla_133",
+        "U00_PickupController_advance_phase_self_phase_blocked_retreat_134": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_blocked_retreat_134",
+        "U00_PickupController_advance_phase_self_phase_carry_135": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_carry_135",
+        "U00_PickupController_advance_phase_self_phase_carry_136": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_carry_136",
+        "U00_PickupController_advance_phase_self_phase_place_low_137": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_place_low_137",
+        "U00_PickupController_advance_phase_self_phase_place_low_138": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_place_low_138",
+        "U00_PickupController_advance_phase_self_phase_place_low_139": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_place_low_139",
+        "U00_PickupController_advance_phase_endpoint_0_025_140": "skills.motion.implementation:U00_PickupController_advance_phase_endpoint_0_025_140",
+        "U00_PickupController_advance_phase_endpoint_0_025_141": "skills.motion.implementation:U00_PickupController_advance_phase_endpoint_0_025_141",
+        "U00_PickupController_advance_phase_self_phase_place_low_142": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_place_low_142",
+        "U00_PickupController_advance_phase_self_phase_place_low_143": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_place_low_143",
+        "U00_PickupController_advance_phase_self_phase_place_release_144": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_place_release_144",
+        "U00_PickupController_advance_phase_self_phase_place_release_145": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_place_release_145",
+        "U00_PickupController_advance_phase_self_phase_place_release_146": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_place_release_146",
+        "U00_PickupController_advance_phase_self_phase_place_release_147": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_place_release_147",
+        "U00_PickupController_advance_phase_self_phase_place_retreat_148": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_place_retreat_148",
+        "U00_PickupController_advance_phase_self_mode_clear_149": "skills.motion.implementation:U00_PickupController_advance_phase_self_mode_clear_149",
+        "U00_PickupController_advance_phase_self_mode_clear_150": "skills.motion.implementation:U00_PickupController_advance_phase_self_mode_clear_150",
+        "U00_PickupController_advance_phase_self_phase_place_retreat_151": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_place_retreat_151",
+        "U00_PickupController_advance_phase_self_phase_place_retreat_152": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_place_retreat_152",
+        "U00_PickupController_advance_phase_self_phase_retry_retreat_153": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_retry_retreat_153",
+        "U00_PickupController_advance_phase_self_phase_retry_retreat_154": "skills.motion.implementation:U00_PickupController_advance_phase_self_phase_retry_retreat_154",
+        "U00_PickupController_advance_phase_motion_155": "skills.motion.implementation:U00_PickupController_advance_phase_motion_155"
+      },
+      "errors": {
+        "ValueError": "skills.state.implementation:ValueError"
+      },
+      "steps": [
+        {
+          "call": "U00_PickupController_advance_phase_motion_001"
+        },
+        {
+          "call": "U00_PickupController_advance_phase_self_phase_locate_002",
+          "store": "condition_2"
+        },
+        {
+          "if": {
+            "var": "condition_2"
+          },
+          "then": [
+            {
+              "try": [
+                {
+                  "call": "U00_PickupController_advance_phase_self_phase_locate_006"
+                }
+              ],
+              "catch": [
+                {
+                  "errors": [
+                    "ValueError"
+                  ],
+                  "as": "caught_error",
+                  "do": [
+                    {
+                      "call": "U00_PickupController_advance_phase_self_schedule_visual_clear_observation_roots_003",
+                      "store": "condition_3"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_3"
+                      },
+                      "then": [
+                        {
+                          "call": "U00_PickupController_advance_phase_self_schedule_visual_clear_observation_roots_004",
+                          "store": "result_4"
+                        },
+                        {
+                          "return": {
+                            "var": "result_4"
+                          }
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U00_PickupController_advance_phase_self_phase_locate_005"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "call": "U00_PickupController_advance_phase_self_detection_silhouette_iou_0_4_and_self_visua_007",
+              "store": "condition_7"
+            },
+            {
+              "if": {
+                "var": "condition_7"
+              },
+              "then": [
+                {
+                  "call": "U00_PickupController_advance_phase_self_schedule_visual_clear_observation_roots_008",
+                  "store": "condition_8"
+                },
+                {
+                  "if": {
+                    "var": "condition_8"
+                  },
+                  "then": [
+                    {
+                      "call": "U00_PickupController_advance_phase_self_schedule_visual_clear_observation_roots_009",
+                      "store": "result_9"
+                    },
+                    {
+                      "return": {
+                        "var": "result_9"
+                      }
+                    }
+                  ],
+                  "else": []
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U00_PickupController_advance_phase_self_phase_locate_010"
+            },
+            {
+              "call": "U00_PickupController_advance_phase_self_phase_locate_011"
+            },
+            {
+              "call": "U00_PickupController_advance_phase_self_phase_locate_012"
+            },
+            {
+              "call": "U00_PickupController_advance_phase_self_phase_locate_013"
+            },
+            {
+              "call": "U00_PickupController_advance_phase_self_phase_locate_014"
+            },
+            {
+              "call": "U00_PickupController_advance_phase_self_recipient_is_not_none_015",
+              "store": "condition_15"
+            },
+            {
+              "if": {
+                "var": "condition_15"
+              },
+              "then": [
+                {
+                  "call": "U00_PickupController_advance_phase_self_recipient_is_not_none_016"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U00_PickupController_advance_phase_not_candidates_017",
+              "store": "condition_17"
+            },
+            {
+              "if": {
+                "var": "condition_17"
+              },
+              "then": [
+                {
+                  "call": "U00_PickupController_advance_phase_self_schedule_visual_clear_observation_roots_018",
+                  "store": "condition_18"
+                },
+                {
+                  "if": {
+                    "var": "condition_18"
+                  },
+                  "then": [
+                    {
+                      "call": "U00_PickupController_advance_phase_self_schedule_visual_clear_observation_roots_019",
+                      "store": "result_19"
+                    },
+                    {
+                      "return": {
+                        "var": "result_19"
+                      }
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U00_PickupController_advance_phase_self_schedule_object_clear_observation_roots_pla_020",
+                  "store": "condition_20"
+                },
+                {
+                  "if": {
+                    "var": "condition_20"
+                  },
+                  "then": [
+                    {
+                      "call": "U00_PickupController_advance_phase_self_schedule_object_clear_observation_roots_pla_021",
+                      "store": "result_21"
+                    },
+                    {
+                      "return": {
+                        "var": "result_21"
+                      }
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U00_PickupController_advance_phase_not_candidates_022"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U00_PickupController_advance_phase_self_attempts_3_023",
+              "store": "condition_23"
+            },
+            {
+              "if": {
+                "var": "condition_23"
+              },
+              "then": [
+                {
+                  "call": "U00_PickupController_advance_phase_self_attempts_3_024"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U00_PickupController_advance_phase_self_phase_locate_025"
+            },
+            {
+              "call": "U00_PickupController_advance_phase_candidates_min_self_attempts_len_candidates_1_ca_026",
+              "store": "items_26"
+            },
+            {
+              "for_each": {
+                "var": "items_26"
+              },
+              "as": "loop_item_27",
+              "max_items": 4096,
+              "do": [
+                {
+                  "call": "U00_PickupController_advance_phase_self_phase_locate_027",
+                  "args": {
+                    "__workflow_item": {
+                      "var": "loop_item_27"
+                    }
+                  }
+                },
+                {
+                  "try": [
+                    {
+                      "call": "U00_PickupController_advance_phase_self_phase_locate_030"
+                    },
+                    {
+                      "call": "U00_PickupController_advance_phase_self_phase_locate_031"
+                    },
+                    {
+                      "call": "U00_PickupController_advance_phase_self_phase_locate_032"
+                    }
+                  ],
+                  "catch": [
+                    {
+                      "errors": [
+                        "ValueError"
+                      ],
+                      "as": "caught_error",
+                      "do": [
+                        {
+                          "call": "U00_PickupController_advance_phase_self_phase_locate_028",
+                          "args": {
+                            "__workflow_error": {
+                              "var": "caught_error"
+                            }
+                          }
+                        },
+                        {
+                          "call": "U00_PickupController_advance_phase_self_phase_locate_029"
+                        },
+                        {
+                          "continue": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "call": "U00_PickupController_advance_phase_self_phase_locate_033"
+                },
+                {
+                  "break": true
+                }
+              ]
+            },
+            {
+              "call": "U00_PickupController_advance_phase_selected_is_none_034",
+              "store": "condition_34"
+            },
+            {
+              "if": {
+                "var": "condition_34"
+              },
+              "then": [
+                {
+                  "call": "U00_PickupController_advance_phase_self_schedule_visual_clear_observation_roots_035",
+                  "store": "condition_35"
+                },
+                {
+                  "if": {
+                    "var": "condition_35"
+                  },
+                  "then": [
+                    {
+                      "call": "U00_PickupController_advance_phase_self_schedule_visual_clear_observation_roots_036",
+                      "store": "result_36"
+                    },
+                    {
+                      "return": {
+                        "var": "result_36"
+                      }
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U00_PickupController_advance_phase_selected_is_none_037"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U00_PickupController_advance_phase_self_phase_locate_038"
+            },
+            {
+              "call": "U00_PickupController_advance_phase_self_phase_locate_039",
+              "args": {
+                "phase_0": "pregrasp"
+              }
+            },
+            {
+              "call": "U00_PickupController_advance_phase_self_phase_locate_040",
+              "store": "result_40"
+            },
+            {
+              "return": {
+                "var": "result_40"
+              }
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U00_PickupController_advance_phase_self_phase_visual_clear_041",
+          "store": "condition_41"
+        },
+        {
+          "if": {
+            "var": "condition_41"
+          },
+          "then": [
+            {
+              "call": "U00_PickupController_advance_phase_self_phase_visual_clear_042",
+              "args": {
+                "phase_0": "locate"
+              }
+            },
+            {
+              "call": "U00_PickupController_advance_phase_self_phase_visual_clear_043",
+              "store": "result_43"
+            },
+            {
+              "return": {
+                "var": "result_43"
+              }
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U00_PickupController_advance_phase_motion_044"
+        },
+        {
+          "call": "U00_PickupController_advance_phase_self_phase_pregrasp_045",
+          "store": "condition_45"
+        },
+        {
+          "if": {
+            "var": "condition_45"
+          },
+          "then": [
+            {
+              "call": "U00_PickupController_advance_phase_self_phase_pregrasp_046"
+            },
+            {
+              "call": "U00_PickupController_advance_phase_self_phase_pregrasp_047"
+            },
+            {
+              "call": "U00_PickupController_advance_phase_endpoint_error_0_025_048",
+              "store": "condition_48"
+            },
+            {
+              "if": {
+                "var": "condition_48"
+              },
+              "then": [
+                {
+                  "call": "U00_PickupController_advance_phase_endpoint_error_0_025_049"
+                },
+                {
+                  "call": "U00_PickupController_advance_phase_q_is_none_050",
+                  "store": "condition_50"
+                },
+                {
+                  "if": {
+                    "var": "condition_50"
+                  },
+                  "then": [
+                    {
+                      "call": "U00_PickupController_advance_phase_q_is_none_051"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U00_PickupController_advance_phase_endpoint_error_0_025_052"
+                },
+                {
+                  "call": "U00_PickupController_advance_phase_endpoint_error_0_025_053",
+                  "store": "result_53"
+                },
+                {
+                  "return": {
+                    "var": "result_53"
+                  }
+                }
+              ],
+              "else": []
+            },
+            {
+              "try": [
+                {
+                  "call": "U00_PickupController_advance_phase_self_phase_pregrasp_056"
+                },
+                {
+                  "call": "U00_PickupController_advance_phase_self_phase_pregrasp_057"
+                },
+                {
+                  "call": "U00_PickupController_advance_phase_np_linalg_norm_delta_0_045_058",
+                  "store": "condition_58"
+                },
+                {
+                  "if": {
+                    "var": "condition_58"
+                  },
+                  "then": [
+                    {
+                      "call": "U00_PickupController_advance_phase_np_linalg_norm_delta_0_045_059"
+                    }
+                  ],
+                  "else": []
+                }
+              ],
+              "catch": [
+                {
+                  "errors": [
+                    "ValueError"
+                  ],
+                  "as": "caught_error",
+                  "do": [
+                    {
+                      "call": "U00_PickupController_advance_phase_self_phase_pregrasp_054",
+                      "args": {
+                        "__workflow_error": {
+                          "var": "caught_error"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U00_PickupController_advance_phase_self_phase_pregrasp_055"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "call": "U00_PickupController_advance_phase_self_phase_pregrasp_060"
+            },
+            {
+              "call": "U00_PickupController_advance_phase_self_phase_pregrasp_061",
+              "args": {
+                "phase_0": "contact"
+              }
+            }
+          ],
+          "else": [
+            {
+              "call": "U00_PickupController_advance_phase_self_phase_contact_062",
+              "store": "condition_62"
+            },
+            {
+              "if": {
+                "var": "condition_62"
+              },
+              "then": [
+                {
+                  "call": "U00_PickupController_advance_phase_self_phase_contact_063"
+                },
+                {
+                  "call": "U00_PickupController_advance_phase_self_phase_contact_064"
+                },
+                {
+                  "call": "U00_PickupController_advance_phase_error_0_018_065",
+                  "store": "condition_65"
+                },
+                {
+                  "if": {
+                    "var": "condition_65"
+                  },
+                  "then": [
+                    {
+                      "call": "U00_PickupController_advance_phase_self_contact_corrections_1_066",
+                      "store": "condition_66"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_66"
+                      },
+                      "then": [
+                        {
+                          "call": "U00_PickupController_advance_phase_self_contact_corrections_1_067"
+                        },
+                        {
+                          "call": "U00_PickupController_advance_phase_self_contact_corrections_1_068"
+                        },
+                        {
+                          "call": "U00_PickupController_advance_phase_self_contact_corrections_1_069",
+                          "store": "result_69"
+                        },
+                        {
+                          "return": {
+                            "var": "result_69"
+                          }
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U00_PickupController_advance_phase_error_0_018_070"
+                    },
+                    {
+                      "call": "U00_PickupController_advance_phase_error_0_018_071"
+                    },
+                    {
+                      "call": "U00_PickupController_advance_phase_error_0_018_072"
+                    },
+                    {
+                      "try": [
+                        {
+                          "call": "U00_PickupController_advance_phase_error_0_018_077"
+                        }
+                      ],
+                      "catch": [
+                        {
+                          "errors": [
+                            "ValueError"
+                          ],
+                          "as": "caught_error",
+                          "do": [
+                            {
+                              "call": "U00_PickupController_advance_phase_error_0_018_073"
+                            },
+                            {
+                              "call": "U00_PickupController_advance_phase_goal_is_none_074",
+                              "store": "condition_74"
+                            },
+                            {
+                              "if": {
+                                "var": "condition_74"
+                              },
+                              "then": [
+                                {
+                                  "call": "U00_PickupController_advance_phase_goal_is_none_075"
+                                }
+                              ],
+                              "else": []
+                            },
+                            {
+                              "call": "U00_PickupController_advance_phase_error_0_018_076"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "call": "U00_PickupController_advance_phase_error_0_018_078",
+                      "args": {
+                        "phase_0": "blocked_retreat"
+                      }
+                    },
+                    {
+                      "call": "U00_PickupController_advance_phase_error_0_018_079",
+                      "store": "result_79"
+                    },
+                    {
+                      "return": {
+                        "var": "result_79"
+                      }
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U00_PickupController_advance_phase_self_phase_contact_080"
+                },
+                {
+                  "call": "U00_PickupController_advance_phase_self_phase_contact_081",
+                  "args": {
+                    "phase_0": "close"
+                  }
+                }
+              ],
+              "else": [
+                {
+                  "call": "U00_PickupController_advance_phase_self_phase_close_082",
+                  "store": "condition_82"
+                },
+                {
+                  "if": {
+                    "var": "condition_82"
+                  },
+                  "then": [
+                    {
+                      "call": "U00_PickupController_advance_phase_self_phase_close_083"
+                    },
+                    {
+                      "call": "U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_084",
+                      "store": "condition_84"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_84"
+                      },
+                      "then": [
+                        {
+                          "call": "U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_085"
+                        },
+                        {
+                          "call": "U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_086"
+                        },
+                        {
+                          "call": "U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_087"
+                        },
+                        {
+                          "call": "U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_088",
+                          "args": {
+                            "phase_0": "retry_retreat"
+                          }
+                        }
+                      ],
+                      "else": [
+                        {
+                          "call": "U00_PickupController_advance_phase_self_phase_close_089"
+                        },
+                        {
+                          "call": "U00_PickupController_advance_phase_self_phase_close_090"
+                        },
+                        {
+                          "call": "U00_PickupController_advance_phase_self_phase_close_091"
+                        },
+                        {
+                          "try": [
+                            {
+                              "call": "U00_PickupController_advance_phase_self_phase_close_094"
+                            }
+                          ],
+                          "catch": [
+                            {
+                              "errors": [
+                                "ValueError"
+                              ],
+                              "as": "caught_error",
+                              "do": [
+                                {
+                                  "call": "U00_PickupController_advance_phase_self_phase_close_092"
+                                },
+                                {
+                                  "call": "U00_PickupController_advance_phase_self_phase_close_093"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "call": "U00_PickupController_advance_phase_self_phase_close_095",
+                          "args": {
+                            "phase_0": "lift_check"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "else": [
+                    {
+                      "call": "U00_PickupController_advance_phase_self_phase_lift_check_096",
+                      "store": "condition_96"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_96"
+                      },
+                      "then": [
+                        {
+                          "call": "U00_PickupController_advance_phase_self_phase_lift_check_097"
+                        },
+                        {
+                          "call": "U00_PickupController_advance_phase_self_phase_lift_check_098"
+                        },
+                        {
+                          "call": "U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_or_099",
+                          "store": "condition_99"
+                        },
+                        {
+                          "if": {
+                            "var": "condition_99"
+                          },
+                          "then": [
+                            {
+                              "call": "U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_or_100"
+                            },
+                            {
+                              "call": "U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_or_101"
+                            },
+                            {
+                              "call": "U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_or_102",
+                              "args": {
+                                "phase_0": "retry_retreat"
+                              }
+                            }
+                          ],
+                          "else": [
+                            {
+                              "call": "U00_PickupController_advance_phase_self_phase_lift_check_103"
+                            },
+                            {
+                              "call": "U00_PickupController_advance_phase_self_phase_lift_check_104"
+                            },
+                            {
+                              "call": "U00_PickupController_advance_phase_self_mode_clear_or_self_relay_requested_or_self__105",
+                              "store": "condition_105"
+                            },
+                            {
+                              "if": {
+                                "var": "condition_105"
+                              },
+                              "then": [
+                                {
+                                  "call": "U00_PickupController_advance_phase_self_mode_clear_or_self_relay_requested_or_self__106"
+                                },
+                                {
+                                  "call": "U00_PickupController_advance_phase_self_mode_clear_or_self_relay_requested_or_self__107",
+                                  "store": "result_107"
+                                },
+                                {
+                                  "return": {
+                                    "var": "result_107"
+                                  }
+                                }
+                              ],
+                              "else": []
+                            },
+                            {
+                              "try": [
+                                {
+                                  "call": "U00_PickupController_advance_phase_self_phase_lift_check_110"
+                                }
+                              ],
+                              "catch": [
+                                {
+                                  "errors": [
+                                    "ValueError"
+                                  ],
+                                  "as": "caught_error",
+                                  "do": [
+                                    {
+                                      "call": "U00_PickupController_advance_phase_self_phase_lift_check_108"
+                                    },
+                                    {
+                                      "call": "U00_PickupController_advance_phase_self_phase_lift_check_109"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "call": "U00_PickupController_advance_phase_self_phase_lift_check_111",
+                              "args": {
+                                "phase_0": "lift"
+                              }
+                            }
+                          ]
+                        }
+                      ],
+                      "else": [
+                        {
+                          "call": "U00_PickupController_advance_phase_self_phase_lift_112",
+                          "store": "condition_112"
+                        },
+                        {
+                          "if": {
+                            "var": "condition_112"
+                          },
+                          "then": [
+                            {
+                              "call": "U00_PickupController_advance_phase_self_phase_lift_113"
+                            },
+                            {
+                              "call": "U00_PickupController_advance_phase_self_phase_lift_114",
+                              "args": {
+                                "phase_0": "verify_lift"
+                              }
+                            }
+                          ],
+                          "else": [
+                            {
+                              "call": "U00_PickupController_advance_phase_self_phase_verify_lift_115",
+                              "store": "condition_115"
+                            },
+                            {
+                              "if": {
+                                "var": "condition_115"
+                              },
+                              "then": [
+                                {
+                                  "call": "U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_116",
+                                  "store": "condition_116"
+                                },
+                                {
+                                  "if": {
+                                    "var": "condition_116"
+                                  },
+                                  "then": [
+                                    {
+                                      "call": "U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_117"
+                                    },
+                                    {
+                                      "call": "U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_118"
+                                    },
+                                    {
+                                      "call": "U00_PickupController_advance_phase_u07_public_grasp_state_observation_arm_absent_119",
+                                      "args": {
+                                        "phase_0": "retry_retreat"
+                                      }
+                                    }
+                                  ],
+                                  "else": [
+                                    {
+                                      "call": "U00_PickupController_advance_phase_observation_physical_step_112_and_not_self_relay_120",
+                                      "store": "condition_120"
+                                    },
+                                    {
+                                      "if": {
+                                        "var": "condition_120"
+                                      },
+                                      "then": [
+                                        {
+                                          "call": "U00_PickupController_advance_phase_observation_physical_step_112_and_not_self_relay_121"
+                                        },
+                                        {
+                                          "call": "U00_PickupController_advance_phase_observation_physical_step_112_and_not_self_relay_122"
+                                        },
+                                        {
+                                          "call": "U00_PickupController_advance_phase_stationary_123",
+                                          "store": "condition_123"
+                                        },
+                                        {
+                                          "if": {
+                                            "var": "condition_123"
+                                          },
+                                          "then": [
+                                            {
+                                              "call": "U00_PickupController_advance_phase_stationary_124"
+                                            },
+                                            {
+                                              "call": "U00_PickupController_advance_phase_stationary_125"
+                                            },
+                                            {
+                                              "call": "U00_PickupController_advance_phase_stationary_126",
+                                              "args": {
+                                                "phase_0": "retry_retreat"
+                                              }
+                                            }
+                                          ],
+                                          "else": [
+                                            {
+                                              "call": "U00_PickupController_advance_phase_observation_physical_step_112_and_not_self_relay_127"
+                                            }
+                                          ]
+                                        }
+                                      ],
+                                      "else": [
+                                        {
+                                          "call": "U00_PickupController_advance_phase_self_phase_verify_lift_128"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ],
+                              "else": [
+                                {
+                                  "call": "U00_PickupController_advance_phase_self_phase_visual_clear_129",
+                                  "store": "condition_129"
+                                },
+                                {
+                                  "if": {
+                                    "var": "condition_129"
+                                  },
+                                  "then": [
+                                    {
+                                      "call": "U00_PickupController_advance_phase_self_phase_visual_clear_130",
+                                      "args": {
+                                        "phase_0": "locate"
+                                      }
+                                    }
+                                  ],
+                                  "else": [
+                                    {
+                                      "call": "U00_PickupController_advance_phase_self_phase_blocked_retreat_131",
+                                      "store": "condition_131"
+                                    },
+                                    {
+                                      "if": {
+                                        "var": "condition_131"
+                                      },
+                                      "then": [
+                                        {
+                                          "call": "U00_PickupController_advance_phase_self_schedule_object_clear_observation_roots_pla_132",
+                                          "store": "condition_132"
+                                        },
+                                        {
+                                          "if": {
+                                            "var": "condition_132"
+                                          },
+                                          "then": [
+                                            {
+                                              "call": "U00_PickupController_advance_phase_self_schedule_object_clear_observation_roots_pla_133",
+                                              "store": "result_133"
+                                            },
+                                            {
+                                              "return": {
+                                                "var": "result_133"
+                                              }
+                                            }
+                                          ],
+                                          "else": []
+                                        },
+                                        {
+                                          "call": "U00_PickupController_advance_phase_self_phase_blocked_retreat_134",
+                                          "args": {
+                                            "phase_0": "locate"
+                                          }
+                                        }
+                                      ],
+                                      "else": [
+                                        {
+                                          "call": "U00_PickupController_advance_phase_self_phase_carry_135",
+                                          "store": "condition_135"
+                                        },
+                                        {
+                                          "if": {
+                                            "var": "condition_135"
+                                          },
+                                          "then": [
+                                            {
+                                              "call": "U00_PickupController_advance_phase_self_phase_carry_136"
+                                            }
+                                          ],
+                                          "else": [
+                                            {
+                                              "call": "U00_PickupController_advance_phase_self_phase_place_low_137",
+                                              "store": "condition_137"
+                                            },
+                                            {
+                                              "if": {
+                                                "var": "condition_137"
+                                              },
+                                              "then": [
+                                                {
+                                                  "call": "U00_PickupController_advance_phase_self_phase_place_low_138"
+                                                },
+                                                {
+                                                  "call": "U00_PickupController_advance_phase_self_phase_place_low_139"
+                                                },
+                                                {
+                                                  "call": "U00_PickupController_advance_phase_endpoint_0_025_140",
+                                                  "store": "condition_140"
+                                                },
+                                                {
+                                                  "if": {
+                                                    "var": "condition_140"
+                                                  },
+                                                  "then": [
+                                                    {
+                                                      "call": "U00_PickupController_advance_phase_endpoint_0_025_141"
+                                                    }
+                                                  ],
+                                                  "else": []
+                                                },
+                                                {
+                                                  "call": "U00_PickupController_advance_phase_self_phase_place_low_142"
+                                                },
+                                                {
+                                                  "call": "U00_PickupController_advance_phase_self_phase_place_low_143",
+                                                  "args": {
+                                                    "phase_0": "place_release"
+                                                  }
+                                                }
+                                              ],
+                                              "else": [
+                                                {
+                                                  "call": "U00_PickupController_advance_phase_self_phase_place_release_144",
+                                                  "store": "condition_144"
+                                                },
+                                                {
+                                                  "if": {
+                                                    "var": "condition_144"
+                                                  },
+                                                  "then": [
+                                                    {
+                                                      "call": "U00_PickupController_advance_phase_self_phase_place_release_145"
+                                                    },
+                                                    {
+                                                      "call": "U00_PickupController_advance_phase_self_phase_place_release_146"
+                                                    },
+                                                    {
+                                                      "call": "U00_PickupController_advance_phase_self_phase_place_release_147",
+                                                      "args": {
+                                                        "phase_0": "place_retreat"
+                                                      }
+                                                    }
+                                                  ],
+                                                  "else": [
+                                                    {
+                                                      "call": "U00_PickupController_advance_phase_self_phase_place_retreat_148",
+                                                      "store": "condition_148"
+                                                    },
+                                                    {
+                                                      "if": {
+                                                        "var": "condition_148"
+                                                      },
+                                                      "then": [
+                                                        {
+                                                          "call": "U00_PickupController_advance_phase_self_mode_clear_149",
+                                                          "store": "condition_149"
+                                                        },
+                                                        {
+                                                          "if": {
+                                                            "var": "condition_149"
+                                                          },
+                                                          "then": [
+                                                            {
+                                                              "call": "U00_PickupController_advance_phase_self_mode_clear_150"
+                                                            }
+                                                          ],
+                                                          "else": [
+                                                            {
+                                                              "call": "U00_PickupController_advance_phase_self_phase_place_retreat_151"
+                                                            }
+                                                          ]
+                                                        },
+                                                        {
+                                                          "call": "U00_PickupController_advance_phase_self_phase_place_retreat_152",
+                                                          "args": {
+                                                            "phase_0": "locate"
+                                                          }
+                                                        }
+                                                      ],
+                                                      "else": [
+                                                        {
+                                                          "call": "U00_PickupController_advance_phase_self_phase_retry_retreat_153",
+                                                          "store": "condition_153"
+                                                        },
+                                                        {
+                                                          "if": {
+                                                            "var": "condition_153"
+                                                          },
+                                                          "then": [
+                                                            {
+                                                              "call": "U00_PickupController_advance_phase_self_phase_retry_retreat_154",
+                                                              "args": {
+                                                                "phase_0": "locate"
+                                                              }
+                                                            }
+                                                          ],
+                                                          "else": [
+                                                            {
+                                                              "call": "U00_PickupController_advance_phase_motion_155"
+                                                            }
+                                                          ]
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "parameters": {
+    "motion_speed": 1.0,
+    "public_instruction_source": "official_observation"
+  },
+  "environment": {
+    "control_frequency_hz": 25,
+    "physics_dt": 0.004,
+    "sdk_commit": "f57e1633ffed59761bc8e568cfe7530c4b33381c"
+  }
+}

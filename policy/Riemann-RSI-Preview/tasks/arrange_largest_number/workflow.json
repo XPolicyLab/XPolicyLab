@@ -1,0 +1,189 @@
+{
+  "schema": "riemann-declarative-generator-workflow-v1",
+  "mode": "rule_only",
+  "official_action_horizon": 1050,
+  "wam_reselection": false,
+  "max_operations": 16384,
+  "bindings": {
+    "perception_failure": "skills.placement_state.implementation:perception_failure",
+    "recover_scene": "skills.placement_state.implementation:recover_scene",
+    "items": "skills.placement_state.implementation:items",
+    "prepare_digit": "skills.placement_state.implementation:prepare_digit",
+    "select_direct": "skills.placement_state.implementation:select_direct",
+    "relay_judgment": "skills.placement_state.implementation:relay_judgment",
+    "is_direct": "skills.placement_state.implementation:is_direct",
+    "transfer_current": "skills.placement_state.implementation:transfer_current",
+    "distance": "skills.placement_state.implementation:distance",
+    "repair_pending": "skills.placement_state.implementation:repair_pending",
+    "repair_judgment": "skills.placement_state.implementation:repair_judgment",
+    "complete": "skills.placement_state.implementation:complete",
+    "clear_target": "skills.placement_state.implementation:clear_target",
+    "home_arm": "skills.placement_state.implementation:home_arm",
+    "terminal_stage": "skills.placement_state.implementation:terminal_stage",
+    "terminal_pending": "skills.placement_state.implementation:terminal_pending",
+    "terminal_hold": "skills.placement_state.implementation:terminal_hold",
+    "relay_current": "skills.placement_state.implementation:relay_current",
+    "read_scene": "skills.scene_reader.implementation:read_scene"
+  },
+  "errors": {
+    "RecognitionNeedsObservation": "skills.digit_outline.implementation:RecognitionNeedsObservation",
+    "MotionError": "skills.motion.implementation:MotionError"
+  },
+  "steps": [
+    {
+      "try": [
+        {
+          "call": "read_scene"
+        }
+      ],
+      "catch": [
+        {
+          "errors": [
+            "RecognitionNeedsObservation"
+          ],
+          "as": "initial_error",
+          "do": [
+            {
+              "call": "perception_failure",
+              "args": {
+                "error": {
+                  "var": "initial_error"
+                }
+              }
+            },
+            {
+              "call": "recover_scene",
+              "args": {
+                "error": {
+                  "var": "initial_error"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "call": "items",
+      "store": "digit_items"
+    },
+    {
+      "for_each": {
+        "var": "digit_items"
+      },
+      "as": "digit_item",
+      "max_items": 64,
+      "do": [
+        {
+          "call": "prepare_digit",
+          "args": {
+            "item": {
+              "var": "digit_item"
+            }
+          }
+        },
+        {
+          "try": [
+            {
+              "call": "select_direct"
+            }
+          ],
+          "catch": [
+            {
+              "errors": [
+                "MotionError"
+              ],
+              "as": "selection_error",
+              "do": [
+                {
+                  "call": "relay_judgment",
+                  "args": {
+                    "error": {
+                      "var": "selection_error"
+                    }
+                  }
+                },
+                {
+                  "call": "relay_current"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "call": "is_direct",
+          "store": "is_direct_value"
+        },
+        {
+          "if": {
+            "var": "is_direct_value"
+          },
+          "then": [
+            {
+              "call": "transfer_current"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "distance"
+        },
+        {
+          "while": {
+            "call": "repair_pending"
+          },
+          "max_iterations": 1051,
+          "do": [
+            {
+              "call": "repair_judgment"
+            },
+            {
+              "call": "transfer_current"
+            },
+            {
+              "call": "distance"
+            }
+          ]
+        },
+        {
+          "call": "complete"
+        }
+      ]
+    },
+    {
+      "call": "clear_target"
+    },
+    {
+      "for_each": [
+        "left",
+        "right"
+      ],
+      "as": "arm",
+      "max_items": 64,
+      "do": [
+        {
+          "call": "home_arm",
+          "args": {
+            "arm": {
+              "var": "arm"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "call": "terminal_stage"
+    },
+    {
+      "while": {
+        "call": "terminal_pending"
+      },
+      "max_iterations": 1051,
+      "do": [
+        {
+          "call": "terminal_hold"
+        }
+      ]
+    }
+  ]
+}

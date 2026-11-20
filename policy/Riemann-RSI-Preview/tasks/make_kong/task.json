@@ -1,0 +1,6 @@
+{
+  "task": "make_kong",
+  "backend": "rule",
+  "entry": "entry.py",
+  "runtime_config": "configs/official-rule-evaluation.json"
+}

@@ -1,0 +1,26 @@
+{
+  "schema": "external-public-rule-resources-v1",
+  "default_root": "resource://mature_assets/a3-mature-original-20261029",
+  "files": {
+    "public_assets.json": {
+      "path": "public_assets.json",
+      "sha256": "1ef4b7a21bd69ac8050fe7b78c7d425ec5ef7bbb4e4c26087977d69a13edf7ef",
+      "purpose": "public static calibration or object/own-robot geometry; no instance pose"
+    },
+    "public_templates.npz": {
+      "path": "public_templates.npz",
+      "sha256": "d4dffedb96ca4456a848e504660d23443c7711fe20967a47da3ee8048e56add9",
+      "purpose": "public static calibration or object/own-robot geometry; no instance pose"
+    },
+    "X5A.urdf": {
+      "path": "X5A.urdf",
+      "sha256": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423",
+      "purpose": "public static calibration or object/own-robot geometry; no instance pose"
+    },
+    "x5-collision.yml": {
+      "path": "x5-collision.yml",
+      "sha256": "7e28b2a617369d0b4b381d77224ccb43069816acb24c5c6c49235126f8fc459a",
+      "purpose": "public static calibration or object/own-robot geometry; no instance pose"
+    }
+  }
+}

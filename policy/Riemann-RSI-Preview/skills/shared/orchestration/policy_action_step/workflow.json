@@ -1,0 +1,82 @@
+{
+  "schema": "riemann-executable-workflow-v1",
+  "symbol": "Model.get_action",
+  "nodes": [
+    {
+      "kind": "if",
+      "condition": "self._latest is None",
+      "then": [
+        {
+          "kind": "operation",
+          "code": "raise RuntimeError('get_action() before update_obs()')"
+        }
+      ],
+      "else": []
+    },
+    {
+      "kind": "operation",
+      "code": "(img, state) = self._latest"
+    },
+    {
+      "kind": "operation",
+      "code": "a = np.asarray(self.policy.act(img, state), np.float32).reshape(-1).copy()"
+    },
+    {
+      "kind": "if",
+      "condition": "a.shape[0] != _STATE_DIM",
+      "then": [
+        {
+          "kind": "operation",
+          "code": "raise ValueError(f'policy returned {a.shape}, expected 16-d')"
+        }
+      ],
+      "else": []
+    },
+    {
+      "kind": "for",
+      "target": "s",
+      "iterable": "_QUAT_STARTS",
+      "body": [
+        {
+          "kind": "operation",
+          "code": "n = np.linalg.norm(a[s:s + 4])"
+        },
+        {
+          "kind": "if",
+          "condition": "n > 1e-08",
+          "then": [
+            {
+              "kind": "operation",
+              "code": "a[s:s + 4] /= n"
+            }
+          ],
+          "else": []
+        }
+      ],
+      "else": [],
+      "type_comment": null
+    },
+    {
+      "kind": "for",
+      "target": "g",
+      "iterable": "_GRIP_IDXS",
+      "body": [
+        {
+          "kind": "operation",
+          "code": "a[g] = np.clip(a[g], 0.0, 1.0)"
+        }
+      ],
+      "else": [],
+      "type_comment": null
+    },
+    {
+      "kind": "operation",
+      "code": "action = {'left_ee_pose': a[0:7], 'left_ee_joint_state': a[7:8], 'right_ee_pose': a[8:15], 'right_ee_joint_state': a[15:16]}"
+    },
+    {
+      "kind": "return",
+      "value": "[action]"
+    }
+  ],
+  "scope": "frozen trusted policy control flow; never interpreted from observations or external logs"
+}

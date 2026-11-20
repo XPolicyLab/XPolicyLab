@@ -1,0 +1,1007 @@
+{
+  "schema": "riemann-current-observation-programs-v1",
+  "package": "tasks.insert_key",
+  "initial_phase": "pregrasp",
+  "programs": {
+    "act": {
+      "schema": "riemann-declarative-skill-workflow-v1",
+      "mode": "rule_only",
+      "official_action_horizon": 300,
+      "wam_reselection": false,
+      "max_operations": 4096,
+      "bindings": {
+        "key_motion_001": "skills.motion.implementation:key_motion_001",
+        "key_i_not_in_self_envs_002": "skills.perception.implementation:key_i_not_in_self_envs_002",
+        "key_i_not_in_self_envs_003": "skills.perception.implementation:key_i_not_in_self_envs_003",
+        "key_i_not_in_self_envs_004": "skills.perception.implementation:key_i_not_in_self_envs_004",
+        "key_i_not_in_self_envs_005": "skills.perception.implementation:key_i_not_in_self_envs_005",
+        "key_i_not_in_self_envs_006": "skills.perception.implementation:key_i_not_in_self_envs_006",
+        "key_rotation_from_matrix_variants_1_reference_t_magn_007": "skills.motion.implementation:key_rotation_from_matrix_variants_1_reference_t_magn_007",
+        "key_rotation_from_matrix_variants_1_reference_t_magn_008": "skills.motion.implementation:key_rotation_from_matrix_variants_1_reference_t_magn_008",
+        "key_i_not_in_self_envs_009": "skills.perception.implementation:key_i_not_in_self_envs_009",
+        "key_i_not_in_self_envs_010": "skills.perception.implementation:key_i_not_in_self_envs_010",
+        "key_motion_011": "skills.motion.implementation:key_motion_011",
+        "key_n_10_0_012": "skills.motion.implementation:key_n_10_0_012",
+        "key_o_vision_items_013": "skills.perception.implementation:key_o_vision_items_013",
+        "key_n_10_0_014": "skills.motion.implementation:key_n_10_0_014",
+        "key_n_10_0_015": "skills.motion.implementation:key_n_10_0_015",
+        "key_motion_016": "skills.motion.implementation:key_motion_016",
+        "key_phase_handoff_move_017": "skills.transport.implementation:key_phase_handoff_move_017",
+        "key_phase_handoff_move_018": "skills.transport.implementation:key_phase_handoff_move_018",
+        "key_phase_in_orient_align_insert_019": "skills.insertion.implementation:key_phase_in_orient_align_insert_019",
+        "key_phase_in_orient_align_insert_020": "skills.insertion.implementation:key_phase_in_orient_align_insert_020",
+        "key_phase_insert_021": "skills.insertion.implementation:key_phase_insert_021",
+        "key_phase_insert_022": "skills.insertion.implementation:key_phase_insert_022",
+        "key_phase_in_orient_align_insert_023": "skills.insertion.implementation:key_phase_in_orient_align_insert_023",
+        "key_phase_pregrasp_and_t_20_024": "skills.pickup.implementation:key_phase_pregrasp_and_t_20_024",
+        "key_err_0_015_025": "skills.motion.implementation:key_err_0_015_025",
+        "key_err_0_015_026": "skills.motion.implementation:key_err_0_015_026",
+        "key_t_55_027": "skills.motion.implementation:key_t_55_027",
+        "key_t_55_028": "skills.motion.implementation:key_t_55_028",
+        "key_phase_descend_and_t_20_029": "skills.pickup.implementation:key_phase_descend_and_t_20_029",
+        "key_err_0_008_030": "skills.motion.implementation:key_err_0_008_030",
+        "key_not_d_get_wrist_centered_031": "skills.motion.implementation:key_not_d_get_wrist_centered_031",
+        "key_not_d_get_wrist_centered_032": "skills.motion.implementation:key_not_d_get_wrist_centered_032",
+        "key_center_is_not_none_033": "skills.motion.implementation:key_center_is_not_none_033",
+        "key_center_is_not_none_034": "skills.motion.implementation:key_center_is_not_none_034",
+        "key_not_d_get_wrist_centered_035": "skills.motion.implementation:key_not_d_get_wrist_centered_035",
+        "key_err_0_008_036": "skills.motion.implementation:key_err_0_008_036",
+        "key_t_45_037": "skills.motion.implementation:key_t_45_037",
+        "key_t_45_038": "skills.motion.implementation:key_t_45_038",
+        "key_phase_close_and_t_30_039": "skills.pickup.implementation:key_phase_close_and_t_30_039",
+        "key_phase_close_and_t_30_040": "skills.pickup.implementation:key_phase_close_and_t_30_040",
+        "key_phase_lift_and_t_30_041": "skills.pickup.implementation:key_phase_lift_and_t_30_041",
+        "key_phase_lift_and_t_30_042": "skills.pickup.implementation:key_phase_lift_and_t_30_042",
+        "key_phase_handoff_move_and_t_35_043": "skills.transport.implementation:key_phase_handoff_move_and_t_35_043",
+        "key_d_get_source_settled_count_0_3_044": "skills.motion.implementation:key_d_get_source_settled_count_0_3_044",
+        "key_d_get_source_settled_count_0_3_045": "skills.motion.implementation:key_d_get_source_settled_count_0_3_045",
+        "key_measured_is_not_none_046": "skills.motion.implementation:key_measured_is_not_none_046",
+        "key_measured_is_not_none_047": "skills.motion.implementation:key_measured_is_not_none_047",
+        "key_d_get_source_settled_count_0_3_048": "skills.motion.implementation:key_d_get_source_settled_count_0_3_048",
+        "key_rotation_from_matrix_frame_0_0_0_ap_axis_3_3_ref_049": "skills.motion.implementation:key_rotation_from_matrix_frame_0_0_0_ap_axis_3_3_ref_049",
+        "key_rotation_from_matrix_frame_0_0_0_ap_axis_3_3_ref_050": "skills.motion.implementation:key_rotation_from_matrix_frame_0_0_0_ap_axis_3_3_ref_050",
+        "key_d_get_source_settled_count_0_3_051": "skills.motion.implementation:key_d_get_source_settled_count_0_3_051",
+        "key_t_55_052": "skills.motion.implementation:key_t_55_052",
+        "key_t_55_053": "skills.motion.implementation:key_t_55_053",
+        "key_phase_receiver_approach_and_t_25_054": "skills.transport.implementation:key_phase_receiver_approach_and_t_25_054",
+        "key_phase_receiver_approach_and_t_25_055": "skills.transport.implementation:key_phase_receiver_approach_and_t_25_055",
+        "key_receiver_error_0_008_056": "skills.transport.implementation:key_receiver_error_0_008_056",
+        "key_receiver_error_0_008_057": "skills.transport.implementation:key_receiver_error_0_008_057",
+        "key_t_40_058": "skills.motion.implementation:key_t_40_058",
+        "key_t_40_059": "skills.motion.implementation:key_t_40_059",
+        "key_phase_receiver_close_and_t_25_060": "skills.transport.implementation:key_phase_receiver_close_and_t_25_060",
+        "key_phase_receiver_close_and_t_25_061": "skills.transport.implementation:key_phase_receiver_close_and_t_25_061",
+        "key_receiver_error_0_008_062": "skills.transport.implementation:key_receiver_error_0_008_062",
+        "key_receiver_error_0_008_063": "skills.transport.implementation:key_receiver_error_0_008_063",
+        "key_phase_receiver_close_and_t_25_064": "skills.transport.implementation:key_phase_receiver_close_and_t_25_064",
+        "key_phase_source_release_and_t_10_065": "skills.transport.implementation:key_phase_source_release_and_t_10_065",
+        "key_phase_source_release_and_t_10_066": "skills.transport.implementation:key_phase_source_release_and_t_10_066",
+        "key_d_hole_is_none_or_not_carried_067": "skills.motion.implementation:key_d_hole_is_none_or_not_carried_067",
+        "key_d_hole_is_none_or_not_carried_068": "skills.motion.implementation:key_d_hole_is_none_or_not_carried_068",
+        "key_phase_source_release_and_t_10_069": "skills.transport.implementation:key_phase_source_release_and_t_10_069",
+        "key_phase_orient_and_t_35_and_d_get_settled_count_0__070": "skills.insertion.implementation:key_phase_orient_and_t_35_and_d_get_settled_count_0__070",
+        "key_phase_orient_and_t_35_and_d_get_settled_count_0__071": "skills.insertion.implementation:key_phase_orient_and_t_35_and_d_get_settled_count_0__071",
+        "key_observed_is_none_072": "skills.motion.implementation:key_observed_is_none_072",
+        "key_observed_is_none_073": "skills.motion.implementation:key_observed_is_none_073",
+        "key_observed_is_not_none_074": "skills.motion.implementation:key_observed_is_not_none_074",
+        "key_observed_is_not_none_075": "skills.motion.implementation:key_observed_is_not_none_075",
+        "key_yaw_is_not_none_076": "skills.motion.implementation:key_yaw_is_not_none_076",
+        "key_yaw_is_not_none_077": "skills.motion.implementation:key_yaw_is_not_none_077",
+        "key_phase_orient_and_t_35_and_d_get_settled_count_0__078": "skills.insertion.implementation:key_phase_orient_and_t_35_and_d_get_settled_count_0__078",
+        "key_phase_align_and_t_8_and_d_get_settled_count_0_4_079": "skills.insertion.implementation:key_phase_align_and_t_8_and_d_get_settled_count_0_4_079",
+        "key_phase_align_and_t_8_and_d_get_settled_count_0_4_080": "skills.insertion.implementation:key_phase_align_and_t_8_and_d_get_settled_count_0_4_080",
+        "key_observed_is_not_none_081": "skills.motion.implementation:key_observed_is_not_none_081",
+        "key_observed_is_not_none_082": "skills.motion.implementation:key_observed_is_not_none_082",
+        "key_phase_align_and_t_8_and_d_get_settled_count_0_4_083": "skills.insertion.implementation:key_phase_align_and_t_8_and_d_get_settled_count_0_4_083",
+        "key_phase_insert_and_d_get_insertion_ready_count_0_2_084": "skills.insertion.implementation:key_phase_insert_and_d_get_insertion_ready_count_0_2_084",
+        "key_phase_insert_and_d_get_insertion_ready_count_0_2_085": "skills.insertion.implementation:key_phase_insert_and_d_get_insertion_ready_count_0_2_085",
+        "key_phase_in_orient_align_and_t_65_086": "skills.insertion.implementation:key_phase_in_orient_align_and_t_65_086",
+        "key_phase_in_orient_align_and_t_65_087": "skills.insertion.implementation:key_phase_in_orient_align_and_t_65_087",
+        "key_phase_lift_and_t_30_or_phase_handoff_move_and_t__088": "skills.transport.implementation:key_phase_lift_and_t_30_or_phase_handoff_move_and_t__088",
+        "key_phase_lift_and_t_30_or_phase_handoff_move_and_t__089": "skills.transport.implementation:key_phase_lift_and_t_30_or_phase_handoff_move_and_t__089",
+        "key_not_held_090": "skills.motion.implementation:key_not_held_090",
+        "key_not_held_091": "skills.motion.implementation:key_not_held_091",
+        "key_motion_092": "skills.motion.implementation:key_motion_092",
+        "key_left_right_093": "skills.motion.implementation:key_left_right_093",
+        "key_motion_094": "skills.motion.implementation:key_motion_094",
+        "key_motion_095": "skills.motion.implementation:key_motion_095",
+        "key_d_phase_insert_and_arm_b_096": "skills.insertion.implementation:key_d_phase_insert_and_arm_b_096",
+        "key_d_phase_insert_and_arm_b_097": "skills.insertion.implementation:key_d_phase_insert_and_arm_b_097",
+        "key_clearance_0_008_098": "skills.pickup.implementation:key_clearance_0_008_098",
+        "key_clearance_0_008_099": "skills.pickup.implementation:key_clearance_0_008_099",
+        "key_d_phase_insert_and_arm_b_100": "skills.insertion.implementation:key_d_phase_insert_and_arm_b_100",
+        "key_norm_speed_101": "skills.motion.implementation:key_norm_speed_101",
+        "key_norm_speed_102": "skills.motion.implementation:key_norm_speed_102",
+        "key_motion_103": "skills.motion.implementation:key_motion_103",
+        "key_d_phase_handoff_move_and_arm_a_104": "skills.transport.implementation:key_d_phase_handoff_move_and_arm_a_104",
+        "key_d_phase_handoff_move_and_arm_a_105": "skills.transport.implementation:key_d_phase_handoff_move_and_arm_a_105",
+        "key_ang_angular_speed_106": "skills.motion.implementation:key_ang_angular_speed_106",
+        "key_ang_angular_speed_107": "skills.motion.implementation:key_ang_angular_speed_107",
+        "key_motion_108": "skills.motion.implementation:key_motion_108",
+        "key_i_not_in_self_trace_handles_109": "skills.state.implementation:key_i_not_in_self_trace_handles_109",
+        "key_i_not_in_self_trace_handles_110": "skills.state.implementation:key_i_not_in_self_trace_handles_110",
+        "key_motion_111": "skills.motion.implementation:key_motion_111",
+        "key_motion_112": "skills.motion.implementation:key_motion_112"
+      },
+      "errors": {
+        "Exception": "skills.state.implementation:Exception"
+      },
+      "steps": [
+        {
+          "call": "key_motion_001"
+        },
+        {
+          "call": "key_i_not_in_self_envs_002",
+          "store": "condition_2"
+        },
+        {
+          "if": {
+            "var": "condition_2"
+          },
+          "then": [
+            {
+              "call": "key_i_not_in_self_envs_003",
+              "args": {
+                "phase_0": "pregrasp"
+              }
+            },
+            {
+              "try": [
+                {
+                  "call": "key_i_not_in_self_envs_006"
+                },
+                {
+                  "call": "key_rotation_from_matrix_variants_1_reference_t_magn_007",
+                  "store": "condition_7"
+                },
+                {
+                  "if": {
+                    "var": "condition_7"
+                  },
+                  "then": [
+                    {
+                      "call": "key_rotation_from_matrix_variants_1_reference_t_magn_008"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "key_i_not_in_self_envs_009"
+                }
+              ],
+              "catch": [
+                {
+                  "errors": [
+                    "Exception"
+                  ],
+                  "as": "caught_error",
+                  "do": [
+                    {
+                      "call": "key_i_not_in_self_envs_004",
+                      "args": {
+                        "__workflow_error": {
+                          "var": "caught_error"
+                        }
+                      }
+                    },
+                    {
+                      "call": "key_i_not_in_self_envs_005",
+                      "args": {
+                        "phase_0": "hold"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "call": "key_i_not_in_self_envs_010"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "key_motion_011"
+        },
+        {
+          "call": "key_n_10_0_012",
+          "store": "condition_12"
+        },
+        {
+          "if": {
+            "var": "condition_12"
+          },
+          "then": [
+            {
+              "call": "key_o_vision_items_013",
+              "store": "items_13"
+            },
+            {
+              "for_each": {
+                "var": "items_13"
+              },
+              "as": "loop_item_14",
+              "max_items": 64,
+              "do": [
+                {
+                  "call": "key_n_10_0_014",
+                  "args": {
+                    "__workflow_item": {
+                      "var": "loop_item_14"
+                    }
+                  }
+                },
+                {
+                  "call": "key_n_10_0_015"
+                }
+              ]
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "key_motion_016"
+        },
+        {
+          "call": "key_phase_handoff_move_017",
+          "store": "condition_17"
+        },
+        {
+          "if": {
+            "var": "condition_17"
+          },
+          "then": [
+            {
+              "call": "key_phase_handoff_move_018"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "key_phase_in_orient_align_insert_019",
+          "store": "condition_19"
+        },
+        {
+          "if": {
+            "var": "condition_19"
+          },
+          "then": [
+            {
+              "call": "key_phase_in_orient_align_insert_020"
+            },
+            {
+              "call": "key_phase_insert_021",
+              "store": "condition_21"
+            },
+            {
+              "if": {
+                "var": "condition_21"
+              },
+              "then": [
+                {
+                  "call": "key_phase_insert_022"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "key_phase_in_orient_align_insert_023"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "key_phase_pregrasp_and_t_20_024",
+          "store": "condition_24"
+        },
+        {
+          "if": {
+            "var": "condition_24"
+          },
+          "then": [
+            {
+              "call": "key_err_0_015_025",
+              "store": "condition_25"
+            },
+            {
+              "if": {
+                "var": "condition_25"
+              },
+              "then": [
+                {
+                  "call": "key_err_0_015_026",
+                  "args": {
+                    "phase_0": "descend"
+                  }
+                }
+              ],
+              "else": [
+                {
+                  "call": "key_t_55_027",
+                  "store": "condition_27"
+                },
+                {
+                  "if": {
+                    "var": "condition_27"
+                  },
+                  "then": [
+                    {
+                      "call": "key_t_55_028",
+                      "args": {
+                        "phase_0": "hold"
+                      }
+                    }
+                  ],
+                  "else": []
+                }
+              ]
+            }
+          ],
+          "else": [
+            {
+              "call": "key_phase_descend_and_t_20_029",
+              "store": "condition_29"
+            },
+            {
+              "if": {
+                "var": "condition_29"
+              },
+              "then": [
+                {
+                  "call": "key_err_0_008_030",
+                  "store": "condition_30"
+                },
+                {
+                  "if": {
+                    "var": "condition_30"
+                  },
+                  "then": [
+                    {
+                      "call": "key_not_d_get_wrist_centered_031",
+                      "store": "condition_31"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_31"
+                      },
+                      "then": [
+                        {
+                          "call": "key_not_d_get_wrist_centered_032"
+                        },
+                        {
+                          "call": "key_center_is_not_none_033",
+                          "store": "condition_33"
+                        },
+                        {
+                          "if": {
+                            "var": "condition_33"
+                          },
+                          "then": [
+                            {
+                              "call": "key_center_is_not_none_034"
+                            }
+                          ],
+                          "else": [
+                            {
+                              "call": "key_not_d_get_wrist_centered_035",
+                              "args": {
+                                "phase_0": "hold"
+                              }
+                            }
+                          ]
+                        }
+                      ],
+                      "else": [
+                        {
+                          "call": "key_err_0_008_036",
+                          "args": {
+                            "phase_0": "close"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "else": [
+                    {
+                      "call": "key_t_45_037",
+                      "store": "condition_37"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_37"
+                      },
+                      "then": [
+                        {
+                          "call": "key_t_45_038",
+                          "args": {
+                            "phase_0": "hold"
+                          }
+                        }
+                      ],
+                      "else": []
+                    }
+                  ]
+                }
+              ],
+              "else": [
+                {
+                  "call": "key_phase_close_and_t_30_039",
+                  "store": "condition_39"
+                },
+                {
+                  "if": {
+                    "var": "condition_39"
+                  },
+                  "then": [
+                    {
+                      "call": "key_phase_close_and_t_30_040",
+                      "args": {
+                        "phase_0": "lift"
+                      }
+                    }
+                  ],
+                  "else": [
+                    {
+                      "call": "key_phase_lift_and_t_30_041",
+                      "store": "condition_41"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_41"
+                      },
+                      "then": [
+                        {
+                          "call": "key_phase_lift_and_t_30_042",
+                          "args": {
+                            "phase_0": "handoff_move"
+                          }
+                        }
+                      ],
+                      "else": [
+                        {
+                          "call": "key_phase_handoff_move_and_t_35_043",
+                          "store": "condition_43"
+                        },
+                        {
+                          "if": {
+                            "var": "condition_43"
+                          },
+                          "then": [
+                            {
+                              "call": "key_d_get_source_settled_count_0_3_044",
+                              "store": "condition_44"
+                            },
+                            {
+                              "if": {
+                                "var": "condition_44"
+                              },
+                              "then": [
+                                {
+                                  "call": "key_d_get_source_settled_count_0_3_045"
+                                },
+                                {
+                                  "call": "key_measured_is_not_none_046",
+                                  "store": "condition_46"
+                                },
+                                {
+                                  "if": {
+                                    "var": "condition_46"
+                                  },
+                                  "then": [
+                                    {
+                                      "call": "key_measured_is_not_none_047"
+                                    }
+                                  ],
+                                  "else": []
+                                },
+                                {
+                                  "call": "key_d_get_source_settled_count_0_3_048"
+                                },
+                                {
+                                  "call": "key_rotation_from_matrix_frame_0_0_0_ap_axis_3_3_ref_049",
+                                  "store": "condition_49"
+                                },
+                                {
+                                  "if": {
+                                    "var": "condition_49"
+                                  },
+                                  "then": [
+                                    {
+                                      "call": "key_rotation_from_matrix_frame_0_0_0_ap_axis_3_3_ref_050"
+                                    }
+                                  ],
+                                  "else": []
+                                },
+                                {
+                                  "call": "key_d_get_source_settled_count_0_3_051",
+                                  "args": {
+                                    "phase_0": "receiver_approach"
+                                  }
+                                }
+                              ],
+                              "else": [
+                                {
+                                  "call": "key_t_55_052",
+                                  "store": "condition_52"
+                                },
+                                {
+                                  "if": {
+                                    "var": "condition_52"
+                                  },
+                                  "then": [
+                                    {
+                                      "call": "key_t_55_053",
+                                      "args": {
+                                        "phase_0": "hold"
+                                      }
+                                    }
+                                  ],
+                                  "else": []
+                                }
+                              ]
+                            }
+                          ],
+                          "else": [
+                            {
+                              "call": "key_phase_receiver_approach_and_t_25_054",
+                              "store": "condition_54"
+                            },
+                            {
+                              "if": {
+                                "var": "condition_54"
+                              },
+                              "then": [
+                                {
+                                  "call": "key_phase_receiver_approach_and_t_25_055"
+                                },
+                                {
+                                  "call": "key_receiver_error_0_008_056",
+                                  "store": "condition_56"
+                                },
+                                {
+                                  "if": {
+                                    "var": "condition_56"
+                                  },
+                                  "then": [
+                                    {
+                                      "call": "key_receiver_error_0_008_057",
+                                      "args": {
+                                        "phase_0": "receiver_close"
+                                      }
+                                    }
+                                  ],
+                                  "else": [
+                                    {
+                                      "call": "key_t_40_058",
+                                      "store": "condition_58"
+                                    },
+                                    {
+                                      "if": {
+                                        "var": "condition_58"
+                                      },
+                                      "then": [
+                                        {
+                                          "call": "key_t_40_059",
+                                          "args": {
+                                            "phase_0": "hold"
+                                          }
+                                        }
+                                      ],
+                                      "else": []
+                                    }
+                                  ]
+                                }
+                              ],
+                              "else": [
+                                {
+                                  "call": "key_phase_receiver_close_and_t_25_060",
+                                  "store": "condition_60"
+                                },
+                                {
+                                  "if": {
+                                    "var": "condition_60"
+                                  },
+                                  "then": [
+                                    {
+                                      "call": "key_phase_receiver_close_and_t_25_061"
+                                    },
+                                    {
+                                      "call": "key_receiver_error_0_008_062",
+                                      "store": "condition_62"
+                                    },
+                                    {
+                                      "if": {
+                                        "var": "condition_62"
+                                      },
+                                      "then": [
+                                        {
+                                          "call": "key_receiver_error_0_008_063",
+                                          "args": {
+                                            "phase_0": "source_release"
+                                          }
+                                        }
+                                      ],
+                                      "else": [
+                                        {
+                                          "call": "key_phase_receiver_close_and_t_25_064",
+                                          "args": {
+                                            "phase_0": "hold"
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  ],
+                                  "else": [
+                                    {
+                                      "call": "key_phase_source_release_and_t_10_065",
+                                      "store": "condition_65"
+                                    },
+                                    {
+                                      "if": {
+                                        "var": "condition_65"
+                                      },
+                                      "then": [
+                                        {
+                                          "call": "key_phase_source_release_and_t_10_066"
+                                        },
+                                        {
+                                          "call": "key_d_hole_is_none_or_not_carried_067",
+                                          "store": "condition_67"
+                                        },
+                                        {
+                                          "if": {
+                                            "var": "condition_67"
+                                          },
+                                          "then": [
+                                            {
+                                              "call": "key_d_hole_is_none_or_not_carried_068",
+                                              "args": {
+                                                "phase_0": "hold"
+                                              }
+                                            }
+                                          ],
+                                          "else": [
+                                            {
+                                              "call": "key_phase_source_release_and_t_10_069",
+                                              "args": {
+                                                "phase_0": "orient"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      ],
+                                      "else": [
+                                        {
+                                          "call": "key_phase_orient_and_t_35_and_d_get_settled_count_0__070",
+                                          "store": "condition_70"
+                                        },
+                                        {
+                                          "if": {
+                                            "var": "condition_70"
+                                          },
+                                          "then": [
+                                            {
+                                              "call": "key_phase_orient_and_t_35_and_d_get_settled_count_0__071"
+                                            },
+                                            {
+                                              "call": "key_observed_is_none_072",
+                                              "store": "condition_72"
+                                            },
+                                            {
+                                              "if": {
+                                                "var": "condition_72"
+                                              },
+                                              "then": [
+                                                {
+                                                  "call": "key_observed_is_none_073"
+                                                }
+                                              ],
+                                              "else": []
+                                            },
+                                            {
+                                              "call": "key_observed_is_not_none_074",
+                                              "store": "condition_74"
+                                            },
+                                            {
+                                              "if": {
+                                                "var": "condition_74"
+                                              },
+                                              "then": [
+                                                {
+                                                  "call": "key_observed_is_not_none_075"
+                                                }
+                                              ],
+                                              "else": []
+                                            },
+                                            {
+                                              "call": "key_yaw_is_not_none_076",
+                                              "store": "condition_76"
+                                            },
+                                            {
+                                              "if": {
+                                                "var": "condition_76"
+                                              },
+                                              "then": [
+                                                {
+                                                  "call": "key_yaw_is_not_none_077"
+                                                }
+                                              ],
+                                              "else": []
+                                            },
+                                            {
+                                              "call": "key_phase_orient_and_t_35_and_d_get_settled_count_0__078",
+                                              "args": {
+                                                "phase_0": "align"
+                                              }
+                                            }
+                                          ],
+                                          "else": [
+                                            {
+                                              "call": "key_phase_align_and_t_8_and_d_get_settled_count_0_4_079",
+                                              "store": "condition_79"
+                                            },
+                                            {
+                                              "if": {
+                                                "var": "condition_79"
+                                              },
+                                              "then": [
+                                                {
+                                                  "call": "key_phase_align_and_t_8_and_d_get_settled_count_0_4_080"
+                                                },
+                                                {
+                                                  "call": "key_observed_is_not_none_081",
+                                                  "store": "condition_81"
+                                                },
+                                                {
+                                                  "if": {
+                                                    "var": "condition_81"
+                                                  },
+                                                  "then": [
+                                                    {
+                                                      "call": "key_observed_is_not_none_082"
+                                                    }
+                                                  ],
+                                                  "else": []
+                                                },
+                                                {
+                                                  "call": "key_phase_align_and_t_8_and_d_get_settled_count_0_4_083"
+                                                }
+                                              ],
+                                              "else": [
+                                                {
+                                                  "call": "key_phase_insert_and_d_get_insertion_ready_count_0_2_084",
+                                                  "store": "condition_84"
+                                                },
+                                                {
+                                                  "if": {
+                                                    "var": "condition_84"
+                                                  },
+                                                  "then": [
+                                                    {
+                                                      "call": "key_phase_insert_and_d_get_insertion_ready_count_0_2_085",
+                                                      "args": {
+                                                        "phase_0": "turn"
+                                                      }
+                                                    }
+                                                  ],
+                                                  "else": []
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "call": "key_phase_in_orient_align_and_t_65_086",
+          "store": "condition_86"
+        },
+        {
+          "if": {
+            "var": "condition_86"
+          },
+          "then": [
+            {
+              "call": "key_phase_in_orient_align_and_t_65_087",
+              "args": {
+                "phase_0": "hold"
+              }
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "key_phase_lift_and_t_30_or_phase_handoff_move_and_t__088",
+          "store": "condition_88"
+        },
+        {
+          "if": {
+            "var": "condition_88"
+          },
+          "then": [
+            {
+              "call": "key_phase_lift_and_t_30_or_phase_handoff_move_and_t__089"
+            },
+            {
+              "call": "key_not_held_090",
+              "store": "condition_90"
+            },
+            {
+              "if": {
+                "var": "condition_90"
+              },
+              "then": [
+                {
+                  "call": "key_not_held_091",
+                  "args": {
+                    "phase_0": "hold"
+                  }
+                }
+              ],
+              "else": []
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "key_motion_092"
+        },
+        {
+          "call": "key_left_right_093",
+          "store": "items_93"
+        },
+        {
+          "for_each": {
+            "var": "items_93"
+          },
+          "as": "loop_item_94",
+          "max_items": 64,
+          "do": [
+            {
+              "call": "key_motion_094",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_94"
+                }
+              }
+            },
+            {
+              "call": "key_motion_095"
+            },
+            {
+              "call": "key_d_phase_insert_and_arm_b_096",
+              "store": "condition_96"
+            },
+            {
+              "if": {
+                "var": "condition_96"
+              },
+              "then": [
+                {
+                  "call": "key_d_phase_insert_and_arm_b_097"
+                },
+                {
+                  "call": "key_clearance_0_008_098",
+                  "store": "condition_98"
+                },
+                {
+                  "if": {
+                    "var": "condition_98"
+                  },
+                  "then": [
+                    {
+                      "call": "key_clearance_0_008_099"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "key_d_phase_insert_and_arm_b_100"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "key_norm_speed_101",
+              "store": "condition_101"
+            },
+            {
+              "if": {
+                "var": "condition_101"
+              },
+              "then": [
+                {
+                  "call": "key_norm_speed_102"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "key_motion_103"
+            },
+            {
+              "call": "key_d_phase_handoff_move_and_arm_a_104",
+              "store": "condition_104"
+            },
+            {
+              "if": {
+                "var": "condition_104"
+              },
+              "then": [
+                {
+                  "call": "key_d_phase_handoff_move_and_arm_a_105"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "key_ang_angular_speed_106",
+              "store": "condition_106"
+            },
+            {
+              "if": {
+                "var": "condition_106"
+              },
+              "then": [
+                {
+                  "call": "key_ang_angular_speed_107"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "key_motion_108"
+            }
+          ]
+        },
+        {
+          "call": "key_i_not_in_self_trace_handles_109",
+          "store": "condition_109"
+        },
+        {
+          "if": {
+            "var": "condition_109"
+          },
+          "then": [
+            {
+              "call": "key_i_not_in_self_trace_handles_110"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "key_motion_111"
+        },
+        {
+          "call": "key_motion_112",
+          "store": "result_112"
+        },
+        {
+          "return": {
+            "var": "result_112"
+          }
+        }
+      ]
+    }
+  },
+  "plans": {},
+  "execution": {
+    "output": "ee_pose",
+    "controls_per_decision": 1,
+    "official_action_horizon": 300
+  }
+}

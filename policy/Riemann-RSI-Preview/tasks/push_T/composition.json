@@ -1,0 +1,33 @@
+{
+  "schema": "riemann-rule-composition-v1",
+  "task_mode": "push_T",
+  "backend": "rule",
+  "workflow": "workflow.json",
+  "context": "controller:U52_VisionPushTTeacher",
+  "task_skills": {
+    "geometry": "skills/geometry/implementation.py",
+    "home": "skills/home/implementation.py",
+    "motion": "skills/motion/implementation.py",
+    "state": "skills/state/implementation.py",
+    "perception": "skills/perception/implementation.py",
+    "insertion": "skills/insertion/implementation.py",
+    "contact": "skills/contact/implementation.py",
+    "planning": "skills/planning/implementation.py",
+    "pickup": "skills/pickup/implementation.py",
+    "own_robot": "skills/own_robot/implementation.py"
+  },
+  "validation": "public_port_implemented_CPU_and_production_closure_pending",
+  "public_factory": "controller:create_public_environment",
+  "factory": "controller:create",
+  "python_entry_files": [
+    "harness/runtime/mature_teacher_boundary.py",
+    "harness/runtime/mature_teacher_clock.py",
+    "tasks/push_T/controller.py",
+    "tasks/push_T/entry.py",
+    "tasks/push_T/resources.py"
+  ],
+  "source_versioning": "git",
+  "native_workflow": "workflow.json",
+  "graph_files": [],
+  "resource_files": []
+}

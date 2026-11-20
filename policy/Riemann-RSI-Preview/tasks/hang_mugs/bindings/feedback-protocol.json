@@ -1,0 +1,18 @@
+{
+  "schema": "a18-public-limited-command-feedback-protocol-v1",
+  "official_root": "resource://official_runtime",
+  "official_commit": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
+  "source": "env/robot_manager/control_manager.py",
+  "source_sha256": "81b7ecc3bed8248c16aa1517e686682d8e28ccfa9e550d45011b579a9219caab",
+  "normalized_limiter_epsilon": 0.2,
+  "command_scale_m": [
+    -0.01,
+    0.044
+  ],
+  "public_static_finger_joint_limits_m": [
+    0.0,
+    0.044
+  ],
+  "scope": "Previous first-finger interval from public applied target and own matched requested command; no present aperture, second-finger reading or contact claim",
+  "online_factory_binding": false
+}

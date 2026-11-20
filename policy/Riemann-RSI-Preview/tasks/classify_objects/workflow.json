@@ -1,0 +1,497 @@
+{
+  "schema": "riemann-mature-teacher-programs-v1",
+  "package": "tasks.classify_objects",
+  "task": "classify_objects",
+  "official_action_horizon": 1100,
+  "mode": "rule_only",
+  "wam_reselection": false,
+  "programs": {
+    "U18_Skill_run": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 1100,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U18_Skill_run_motion_001": "skills.motion.implementation:U18_Skill_run_motion_001",
+        "U18_Skill_run_range_3_002": "skills.motion.implementation:U18_Skill_run_range_3_002",
+        "U18_Skill_run_motion_003": "skills.motion.implementation:U18_Skill_run_motion_003",
+        "U18_Skill_run_motion_004": "skills.motion.implementation:U18_Skill_run_motion_004",
+        "U18_Skill_run_motion_005": "skills.motion.implementation:U18_Skill_run_motion_005",
+        "U18_Skill_run_motion_006": "skills.motion.implementation:U18_Skill_run_motion_006",
+        "U18_Skill_run_initial_attempt_2_007": "skills.perception.implementation:U18_Skill_run_initial_attempt_2_007",
+        "U18_Skill_run_initial_attempt_2_008": "skills.perception.implementation:U18_Skill_run_initial_attempt_2_008",
+        "U18_Skill_run_motion_009": "skills.motion.implementation:U18_Skill_run_motion_009",
+        "U18_Skill_run_motion_010": "skills.motion.implementation:U18_Skill_run_motion_010",
+        "U18_Skill_run_motion_011": "skills.motion.implementation:U18_Skill_run_motion_011",
+        "U18_Skill_run_self_obs_physical_step_1100_012": "skills.motion.implementation:U18_Skill_run_self_obs_physical_step_1100_012",
+        "U18_Skill_run_motion_013": "skills.motion.implementation:U18_Skill_run_motion_013",
+        "U18_Skill_run_relay_pending_is_none_014": "skills.transport.implementation:U18_Skill_run_relay_pending_is_none_014",
+        "U18_Skill_run_relay_pending_is_none_015": "skills.transport.implementation:U18_Skill_run_relay_pending_is_none_015",
+        "U18_Skill_run_relay_pending_is_none_016": "skills.transport.implementation:U18_Skill_run_relay_pending_is_none_016",
+        "U18_Skill_run_not_candidates_017": "skills.motion.implementation:U18_Skill_run_not_candidates_017",
+        "U18_Skill_run_not_candidates_018": "skills.motion.implementation:U18_Skill_run_not_candidates_018",
+        "U18_Skill_run_empty_rounds_2_019": "skills.motion.implementation:U18_Skill_run_empty_rounds_2_019",
+        "U18_Skill_run_empty_rounds_2_020": "skills.motion.implementation:U18_Skill_run_empty_rounds_2_020",
+        "U18_Skill_run_not_candidates_021": "skills.motion.implementation:U18_Skill_run_not_candidates_021",
+        "U18_Skill_run_relay_pending_is_none_022": "skills.transport.implementation:U18_Skill_run_relay_pending_is_none_022",
+        "U18_Skill_run_motion_023": "skills.motion.implementation:U18_Skill_run_motion_023",
+        "U18_Skill_run_motion_024": "skills.motion.implementation:U18_Skill_run_motion_024",
+        "U18_Skill_run_motion_025": "skills.motion.implementation:U18_Skill_run_motion_025",
+        "U18_Skill_run_self_obs_physical_step_estimate_reserve_1100_026": "skills.motion.implementation:U18_Skill_run_self_obs_physical_step_estimate_reserve_1100_026",
+        "U18_Skill_run_self_obs_physical_step_estimate_reserve_1100_027": "skills.motion.implementation:U18_Skill_run_self_obs_physical_step_estimate_reserve_1100_027",
+        "U18_Skill_run_alternatives_028": "skills.motion.implementation:U18_Skill_run_alternatives_028",
+        "U18_Skill_run_alternatives_029": "skills.motion.implementation:U18_Skill_run_alternatives_029",
+        "U18_Skill_run_alternatives_030": "skills.motion.implementation:U18_Skill_run_alternatives_030",
+        "U18_Skill_run_self_obs_physical_step_estimate_reserve_1100_031": "skills.motion.implementation:U18_Skill_run_self_obs_physical_step_estimate_reserve_1100_031",
+        "U18_Skill_run_motion_032": "skills.motion.implementation:U18_Skill_run_motion_032",
+        "U18_Skill_run_motion_033": "skills.motion.implementation:U18_Skill_run_motion_033",
+        "U18_Skill_run_motion_034": "skills.motion.implementation:U18_Skill_run_motion_034",
+        "U18_Skill_run_motion_035": "skills.motion.implementation:U18_Skill_run_motion_035",
+        "U18_Skill_run_motion_036": "skills.motion.implementation:U18_Skill_run_motion_036",
+        "U18_Skill_run_motion_037": "skills.motion.implementation:U18_Skill_run_motion_037",
+        "U18_Skill_run_targets_is_none_038": "skills.motion.implementation:U18_Skill_run_targets_is_none_038",
+        "U18_Skill_run_item_get_relay_count_0_1_039": "skills.transport.implementation:U18_Skill_run_item_get_relay_count_0_1_039",
+        "U18_Skill_run_item_get_relay_count_0_1_040": "skills.transport.implementation:U18_Skill_run_item_get_relay_count_0_1_040",
+        "U18_Skill_run_targets_is_none_041": "skills.motion.implementation:U18_Skill_run_targets_is_none_041",
+        "U18_Skill_run_targets_is_none_042": "skills.motion.implementation:U18_Skill_run_targets_is_none_042",
+        "U18_Skill_run_motion_043": "skills.motion.implementation:U18_Skill_run_motion_043",
+        "U18_Skill_run_item_get_track_id_is_not_none_044": "skills.motion.implementation:U18_Skill_run_item_get_track_id_is_not_none_044",
+        "U18_Skill_run_item_get_track_id_is_not_none_045": "skills.motion.implementation:U18_Skill_run_item_get_track_id_is_not_none_045",
+        "U18_Skill_run_item_get_track_id_is_not_none_046": "skills.motion.implementation:U18_Skill_run_item_get_track_id_is_not_none_046",
+        "U18_Skill_run_motion_047": "skills.motion.implementation:U18_Skill_run_motion_047",
+        "U18_Skill_run_motion_048": "skills.motion.implementation:U18_Skill_run_motion_048",
+        "U18_Skill_run_motion_049": "skills.motion.implementation:U18_Skill_run_motion_049",
+        "U18_Skill_run_motion_050": "skills.motion.implementation:U18_Skill_run_motion_050",
+        "U18_Skill_run_motion_051": "skills.motion.implementation:U18_Skill_run_motion_051",
+        "U18_Skill_run_motion_052": "skills.motion.implementation:U18_Skill_run_motion_052",
+        "U18_Skill_run_u07_arms_053": "skills.motion.implementation:U18_Skill_run_u07_arms_053",
+        "U18_Skill_run_motion_054": "skills.motion.implementation:U18_Skill_run_motion_054",
+        "U18_Skill_run_motion_055": "skills.motion.implementation:U18_Skill_run_motion_055",
+        "U18_Skill_run_motion_056": "skills.motion.implementation:U18_Skill_run_motion_056",
+        "U18_Skill_run_motion_057": "skills.motion.implementation:U18_Skill_run_motion_057",
+        "U18_Skill_run_range_24_058": "skills.motion.implementation:U18_Skill_run_range_24_058",
+        "U18_Skill_run_motion_059": "skills.motion.implementation:U18_Skill_run_motion_059",
+        "U18_Skill_run_motion_060": "skills.motion.implementation:U18_Skill_run_motion_060",
+        "U18_Skill_run_self_obs_physical_step_1100_061": "skills.motion.implementation:U18_Skill_run_self_obs_physical_step_1100_061",
+        "U18_Skill_run_motion_062": "skills.motion.implementation:U18_Skill_run_motion_062",
+        "U22_completion_recheck_possible": "skills.recovery.implementation:U22_completion_recheck_possible",
+        "U22_prepare_completion_recheck": "skills.recovery.implementation:U22_prepare_completion_recheck"
+      },
+      "errors": {
+        "U13_PlanningFailure": "skills.state.implementation:U13_PlanningFailure",
+        "U18_CaptureFailure": "skills.state.implementation:U18_CaptureFailure"
+      },
+      "steps": [
+        {
+          "call": "U18_Skill_run_motion_001"
+        },
+        {
+          "call": "U18_Skill_run_range_3_002",
+          "store": "items_2"
+        },
+        {
+          "for_each": {
+            "var": "items_2"
+          },
+          "as": "loop_item_3",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U18_Skill_run_motion_003",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_3"
+                }
+              }
+            },
+            {
+              "call": "U18_Skill_run_motion_004"
+            },
+            {
+              "try": [
+                {
+                  "call": "U18_Skill_run_motion_010"
+                },
+                {
+                  "break": true
+                }
+              ],
+              "catch": [
+                {
+                  "errors": [
+                    "U13_PlanningFailure"
+                  ],
+                  "as": "caught_error",
+                  "do": [
+                    {
+                      "call": "U18_Skill_run_motion_005",
+                      "args": {
+                        "__workflow_error": {
+                          "var": "caught_error"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U18_Skill_run_motion_006"
+                    },
+                    {
+                      "call": "U18_Skill_run_initial_attempt_2_007",
+                      "store": "condition_7"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_7"
+                      },
+                      "then": [
+                        {
+                          "call": "U18_Skill_run_initial_attempt_2_008"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U18_Skill_run_motion_009"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "call": "U18_Skill_run_motion_011"
+        },
+        {
+          "while": "U18_Skill_run_self_obs_physical_step_1100_012",
+          "args": {},
+          "max_iterations": 4096,
+          "do": [
+            {
+              "call": "U18_Skill_run_motion_013"
+            },
+            {
+              "call": "U18_Skill_run_relay_pending_is_none_014",
+              "store": "condition_14"
+            },
+            {
+              "if": {
+                "var": "condition_14"
+              },
+              "then": [
+                {
+                  "call": "U18_Skill_run_relay_pending_is_none_015"
+                },
+                {
+                  "call": "U18_Skill_run_relay_pending_is_none_016"
+                },
+                {
+                  "call": "U18_Skill_run_not_candidates_017",
+                  "store": "condition_17"
+                },
+                {
+                  "if": {
+                    "var": "condition_17"
+                  },
+                  "then": [
+                    {
+                      "call": "U18_Skill_run_not_candidates_018"
+                    },
+                    {
+                      "call": "U18_Skill_run_empty_rounds_2_019",
+                      "store": "condition_19"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_19"
+                      },
+                      "then": [
+                        {
+                          "call": "U22_completion_recheck_possible",
+                          "store": "completion_recheck_allowed"
+                        },
+                        {
+                          "if": {
+                            "var": "completion_recheck_allowed"
+                          },
+                          "then": [
+                            {
+                              "call": "U22_prepare_completion_recheck"
+                            },
+                            {
+                              "call": "U18_Skill_run_not_candidates_021"
+                            },
+                            {
+                              "continue": true
+                            }
+                          ],
+                          "else": [
+                            {
+                              "call": "U18_Skill_run_empty_rounds_2_020"
+                            },
+                            {
+                              "break": true
+                            }
+                          ]
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U18_Skill_run_not_candidates_021"
+                    },
+                    {
+                      "continue": true
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U18_Skill_run_relay_pending_is_none_022"
+                }
+              ],
+              "else": [
+                {
+                  "call": "U18_Skill_run_motion_023"
+                }
+              ]
+            },
+            {
+              "call": "U18_Skill_run_motion_024"
+            },
+            {
+              "call": "U18_Skill_run_motion_025"
+            },
+            {
+              "call": "U18_Skill_run_self_obs_physical_step_estimate_reserve_1100_026",
+              "store": "condition_26"
+            },
+            {
+              "if": {
+                "var": "condition_26"
+              },
+              "then": [
+                {
+                  "call": "U18_Skill_run_self_obs_physical_step_estimate_reserve_1100_027"
+                },
+                {
+                  "call": "U18_Skill_run_alternatives_028",
+                  "store": "condition_28"
+                },
+                {
+                  "if": {
+                    "var": "condition_28"
+                  },
+                  "then": [
+                    {
+                      "call": "U18_Skill_run_alternatives_029"
+                    },
+                    {
+                      "call": "U18_Skill_run_alternatives_030"
+                    }
+                  ],
+                  "else": [
+                    {
+                      "call": "U18_Skill_run_self_obs_physical_step_estimate_reserve_1100_031"
+                    },
+                    {
+                      "break": true
+                    }
+                  ]
+                }
+              ],
+              "else": []
+            },
+            {
+              "try": [
+                {
+                  "call": "U18_Skill_run_motion_035"
+                },
+                {
+                  "call": "U18_Skill_run_motion_036"
+                },
+                {
+                  "call": "U18_Skill_run_motion_037"
+                },
+                {
+                  "call": "U18_Skill_run_targets_is_none_038",
+                  "store": "condition_38"
+                },
+                {
+                  "if": {
+                    "var": "condition_38"
+                  },
+                  "then": [
+                    {
+                      "call": "U18_Skill_run_item_get_relay_count_0_1_039",
+                      "store": "condition_39"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_39"
+                      },
+                      "then": [
+                        {
+                          "call": "U18_Skill_run_item_get_relay_count_0_1_040"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U18_Skill_run_targets_is_none_041"
+                    },
+                    {
+                      "call": "U18_Skill_run_targets_is_none_042"
+                    },
+                    {
+                      "continue": true
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U18_Skill_run_motion_043"
+                },
+                {
+                  "call": "U18_Skill_run_item_get_track_id_is_not_none_044",
+                  "store": "condition_44"
+                },
+                {
+                  "if": {
+                    "var": "condition_44"
+                  },
+                  "then": [
+                    {
+                      "call": "U18_Skill_run_item_get_track_id_is_not_none_045"
+                    },
+                    {
+                      "call": "U18_Skill_run_item_get_track_id_is_not_none_046"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U18_Skill_run_motion_047"
+                },
+                {
+                  "call": "U18_Skill_run_motion_048"
+                },
+                {
+                  "call": "U18_Skill_run_motion_049"
+                },
+                {
+                  "call": "U18_Skill_run_motion_050"
+                }
+              ],
+              "catch": [
+                {
+                  "errors": [
+                    "U13_PlanningFailure",
+                    "U18_CaptureFailure"
+                  ],
+                  "as": "caught_error",
+                  "do": [
+                    {
+                      "call": "U18_Skill_run_motion_032",
+                      "args": {
+                        "__workflow_error": {
+                          "var": "caught_error"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U18_Skill_run_motion_033"
+                    },
+                    {
+                      "call": "U18_Skill_run_motion_034"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "call": "U18_Skill_run_motion_051"
+            }
+          ]
+        },
+        {
+          "call": "U18_Skill_run_motion_052"
+        },
+        {
+          "call": "U18_Skill_run_u07_arms_053",
+          "store": "items_53"
+        },
+        {
+          "for_each": {
+            "var": "items_53"
+          },
+          "as": "loop_item_54",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U18_Skill_run_motion_054",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_54"
+                }
+              }
+            },
+            {
+              "call": "U18_Skill_run_motion_055"
+            },
+            {
+              "call": "U18_Skill_run_motion_056"
+            }
+          ]
+        },
+        {
+          "call": "U18_Skill_run_motion_057"
+        },
+        {
+          "call": "U18_Skill_run_range_24_058",
+          "store": "items_58"
+        },
+        {
+          "for_each": {
+            "var": "items_58"
+          },
+          "as": "loop_item_59",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U18_Skill_run_motion_059",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_59"
+                }
+              }
+            },
+            {
+              "call": "U18_Skill_run_motion_060"
+            }
+          ]
+        },
+        {
+          "while": "U18_Skill_run_self_obs_physical_step_1100_061",
+          "args": {},
+          "max_iterations": 4096,
+          "do": [
+            {
+              "call": "U18_Skill_run_motion_062"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "parameters": {
+    "motion_speed": 1.0,
+    "completion_rechecks": 2,
+    "completion_recheck_controls_reserve": 32
+  },
+  "environment": {
+    "control_frequency_hz": 25,
+    "physics_dt": 0.004,
+    "sdk_commit": "f57e1633ffed59761bc8e568cfe7530c4b33381c"
+  }
+}

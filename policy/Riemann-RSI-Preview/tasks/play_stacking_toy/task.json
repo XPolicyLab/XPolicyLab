@@ -1,0 +1,7 @@
+{
+  "task": "play_stacking_toy",
+  "entry": "entry.py",
+  "backend": "rule",
+  "evaluation_enabled": true,
+  "runtime_config": "configs/official-rule-evaluation.json"
+}

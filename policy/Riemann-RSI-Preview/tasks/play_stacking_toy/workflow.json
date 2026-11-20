@@ -1,0 +1,588 @@
+{
+  "schema": "riemann-mature-teacher-programs-v1",
+  "package": "tasks.play_stacking_toy",
+  "task": "play_stacking_toy",
+  "official_action_horizon": 1200,
+  "mode": "rule_only",
+  "wam_reselection": false,
+  "programs": {
+    "U05_VisionPlayStackingToyTeacher_place": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 1200,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U05_VisionPlayStackingToyTeacher_place_motion_001": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_001",
+        "U05_VisionPlayStackingToyTeacher_place_motion_002": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_002",
+        "U05_VisionPlayStackingToyTeacher_place_motion_003": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_003",
+        "U05_VisionPlayStackingToyTeacher_place_self_robots_values_004": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_self_robots_values_004",
+        "U05_VisionPlayStackingToyTeacher_place_motion_005": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_005",
+        "U05_VisionPlayStackingToyTeacher_place_motion_006": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_006",
+        "U05_VisionPlayStackingToyTeacher_place_motion_007": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_007",
+        "U05_VisionPlayStackingToyTeacher_place_motion_008": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_008",
+        "U05_VisionPlayStackingToyTeacher_place_motion_009": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_009",
+        "U05_VisionPlayStackingToyTeacher_place_motion_010": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_010",
+        "U05_VisionPlayStackingToyTeacher_place_motion_011": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_011",
+        "U05_VisionPlayStackingToyTeacher_place_getattr_self_last_arm_none_not_in_none_robot_arm_012": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_getattr_self_last_arm_none_not_in_none_robot_arm_012",
+        "U05_VisionPlayStackingToyTeacher_place_getattr_self_last_arm_none_not_in_none_robot_arm_013": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_getattr_self_last_arm_none_not_in_none_robot_arm_013",
+        "U05_VisionPlayStackingToyTeacher_place_motion_014": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_014",
+        "U05_VisionPlayStackingToyTeacher_place_shape_3_015": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_shape_3_015",
+        "U05_VisionPlayStackingToyTeacher_place_shape_3_016": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_shape_3_016",
+        "U05_VisionPlayStackingToyTeacher_place_attempt_and_shape_in_1_3_017": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_attempt_and_shape_in_1_3_017",
+        "U05_VisionPlayStackingToyTeacher_place_attempt_and_shape_in_1_3_018": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_attempt_and_shape_in_1_3_018",
+        "U05_VisionPlayStackingToyTeacher_place_motion_019": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_019",
+        "U05_VisionPlayStackingToyTeacher_place_motion_020": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_020",
+        "U05_VisionPlayStackingToyTeacher_place_motion_021": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_021",
+        "U05_VisionPlayStackingToyTeacher_place_shape_3_022": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_shape_3_022",
+        "U05_VisionPlayStackingToyTeacher_place_shape_3_023": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_shape_3_023",
+        "U05_VisionPlayStackingToyTeacher_place_motion_024": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_024",
+        "U05_VisionPlayStackingToyTeacher_place_motion_025": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_025",
+        "U05_VisionPlayStackingToyTeacher_place_motion_026": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_026",
+        "U05_VisionPlayStackingToyTeacher_place_motion_027": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_027",
+        "U05_VisionPlayStackingToyTeacher_place_motion_028": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_028",
+        "U05_VisionPlayStackingToyTeacher_place_self_gripper_targets_get_robot_arm_name_0_85_029": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_self_gripper_targets_get_robot_arm_name_0_85_029",
+        "U05_VisionPlayStackingToyTeacher_place_self_gripper_targets_get_robot_arm_name_0_85_030": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_self_gripper_targets_get_robot_arm_name_0_85_030",
+        "U05_VisionPlayStackingToyTeacher_place_motion_031": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_031",
+        "U05_VisionPlayStackingToyTeacher_place_motion_032": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_032",
+        "U05_VisionPlayStackingToyTeacher_place_motion_033": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_033",
+        "U05_VisionPlayStackingToyTeacher_place_motion_034": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_034",
+        "U05_VisionPlayStackingToyTeacher_place_motion_035": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_035",
+        "U05_VisionPlayStackingToyTeacher_place_motion_036": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_036",
+        "U05_VisionPlayStackingToyTeacher_place_motion_037": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_037",
+        "U05_VisionPlayStackingToyTeacher_place_motion_038": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_038",
+        "U05_VisionPlayStackingToyTeacher_place_motion_039": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_039",
+        "U05_VisionPlayStackingToyTeacher_place_motion_040": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_040",
+        "U05_VisionPlayStackingToyTeacher_place_motion_041": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_041",
+        "U05_VisionPlayStackingToyTeacher_place_motion_042": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_042",
+        "U05_VisionPlayStackingToyTeacher_place_motion_043": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_043",
+        "U05_VisionPlayStackingToyTeacher_place_motion_044": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_044",
+        "U05_VisionPlayStackingToyTeacher_place_motion_045": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_045",
+        "U05_VisionPlayStackingToyTeacher_place_shape_in_1_2_046": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_shape_in_1_2_046",
+        "U05_VisionPlayStackingToyTeacher_place_shape_in_1_2_047": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_shape_in_1_2_047",
+        "U05_VisionPlayStackingToyTeacher_place_shape_in_1_2_048": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_shape_in_1_2_048",
+        "U05_VisionPlayStackingToyTeacher_place_shape_in_1_2_049": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_shape_in_1_2_049",
+        "U05_VisionPlayStackingToyTeacher_place_motion_050": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_050",
+        "U05_VisionPlayStackingToyTeacher_place_motion_051": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_051",
+        "U05_VisionPlayStackingToyTeacher_place_motion_052": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_052",
+        "U05_VisionPlayStackingToyTeacher_place_motion_053": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_053",
+        "U05_VisionPlayStackingToyTeacher_place_motion_054": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_054",
+        "U05_VisionPlayStackingToyTeacher_place_motion_055": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_055",
+        "U05_VisionPlayStackingToyTeacher_place_motion_056": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_056",
+        "U05_VisionPlayStackingToyTeacher_place_motion_057": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_place_motion_057"
+      },
+      "errors": {
+        "RuntimeError": "skills.state.implementation:RuntimeError"
+      },
+      "steps": [
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_001"
+        },
+        {
+          "try": [
+            {
+              "call": "U05_VisionPlayStackingToyTeacher_place_motion_009"
+            }
+          ],
+          "catch": [
+            {
+              "errors": [
+                "RuntimeError"
+              ],
+              "as": "caught_error",
+              "do": [
+                {
+                  "call": "U05_VisionPlayStackingToyTeacher_place_motion_002"
+                },
+                {
+                  "call": "U05_VisionPlayStackingToyTeacher_place_motion_003"
+                },
+                {
+                  "try": [
+                    {
+                      "call": "U05_VisionPlayStackingToyTeacher_place_motion_008"
+                    }
+                  ],
+                  "catch": [
+                    {
+                      "errors": [
+                        "RuntimeError"
+                      ],
+                      "as": "caught_error",
+                      "do": [
+                        {
+                          "call": "U05_VisionPlayStackingToyTeacher_place_self_robots_values_004",
+                          "store": "items_4"
+                        },
+                        {
+                          "for_each": {
+                            "var": "items_4"
+                          },
+                          "as": "loop_item_5",
+                          "max_items": 4096,
+                          "do": [
+                            {
+                              "call": "U05_VisionPlayStackingToyTeacher_place_motion_005",
+                              "args": {
+                                "__workflow_item": {
+                                  "var": "loop_item_5"
+                                }
+                              }
+                            },
+                            {
+                              "call": "U05_VisionPlayStackingToyTeacher_place_motion_006"
+                            }
+                          ]
+                        },
+                        {
+                          "call": "U05_VisionPlayStackingToyTeacher_place_motion_007"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_010"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_011"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_getattr_self_last_arm_none_not_in_none_robot_arm_012",
+          "store": "condition_12"
+        },
+        {
+          "if": {
+            "var": "condition_12"
+          },
+          "then": [
+            {
+              "call": "U05_VisionPlayStackingToyTeacher_place_getattr_self_last_arm_none_not_in_none_robot_arm_013",
+              "args": {
+                "phase_0": "park_previous_arm"
+              }
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_014"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_shape_3_015",
+          "store": "condition_15"
+        },
+        {
+          "if": {
+            "var": "condition_15"
+          },
+          "then": [
+            {
+              "call": "U05_VisionPlayStackingToyTeacher_place_shape_3_016"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_attempt_and_shape_in_1_3_017",
+          "store": "condition_17"
+        },
+        {
+          "if": {
+            "var": "condition_17"
+          },
+          "then": [
+            {
+              "call": "U05_VisionPlayStackingToyTeacher_place_attempt_and_shape_in_1_3_018"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_019"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_020"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_021"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_shape_3_022",
+          "store": "condition_22"
+        },
+        {
+          "if": {
+            "var": "condition_22"
+          },
+          "then": [
+            {
+              "call": "U05_VisionPlayStackingToyTeacher_place_shape_3_023"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_024"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_025"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_026"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_027"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_028"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_self_gripper_targets_get_robot_arm_name_0_85_029",
+          "store": "condition_29"
+        },
+        {
+          "if": {
+            "var": "condition_29"
+          },
+          "then": [
+            {
+              "call": "U05_VisionPlayStackingToyTeacher_place_self_gripper_targets_get_robot_arm_name_0_85_030"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_031"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_032"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_033"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_034"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_035"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_036"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_037"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_038"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_039"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_040"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_041"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_042"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_043"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_044"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_045"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_shape_in_1_2_046",
+          "store": "condition_46"
+        },
+        {
+          "if": {
+            "var": "condition_46"
+          },
+          "then": [
+            {
+              "call": "U05_VisionPlayStackingToyTeacher_place_shape_in_1_2_047"
+            },
+            {
+              "call": "U05_VisionPlayStackingToyTeacher_place_shape_in_1_2_048"
+            },
+            {
+              "call": "U05_VisionPlayStackingToyTeacher_place_shape_in_1_2_049"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_050"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_051"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_052"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_053"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_054"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_055"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_056"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_place_motion_057"
+        }
+      ]
+    },
+    "U05_VisionPlayStackingToyTeacher_run": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 1200,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U05_VisionPlayStackingToyTeacher_run_motion_001": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_run_motion_001",
+        "U05_VisionPlayStackingToyTeacher_run_self_robots_values_002": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_run_self_robots_values_002",
+        "U05_VisionPlayStackingToyTeacher_run_motion_003": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_run_motion_003",
+        "U05_VisionPlayStackingToyTeacher_run_motion_004": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_run_motion_004",
+        "U05_VisionPlayStackingToyTeacher_run_motion_005": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_run_motion_005",
+        "U05_VisionPlayStackingToyTeacher_run_motion_006": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_run_motion_006",
+        "U05_VisionPlayStackingToyTeacher_run_motion_007": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_run_motion_007",
+        "U05_VisionPlayStackingToyTeacher_run_motion_008": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_run_motion_008",
+        "U05_VisionPlayStackingToyTeacher_run_motion_009": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_run_motion_009",
+        "U05_VisionPlayStackingToyTeacher_run_reversed_range_4_010": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_run_reversed_range_4_010",
+        "U05_VisionPlayStackingToyTeacher_run_motion_011": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_run_motion_011",
+        "U05_VisionPlayStackingToyTeacher_run_motion_012": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_run_motion_012",
+        "U05_VisionPlayStackingToyTeacher_run_enumerate_pieces_013": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_run_enumerate_pieces_013",
+        "U05_VisionPlayStackingToyTeacher_run_motion_014": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_run_motion_014",
+        "U05_VisionPlayStackingToyTeacher_run_range_2_015": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_run_range_2_015",
+        "U05_VisionPlayStackingToyTeacher_run_motion_016": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_run_motion_016",
+        "U05_VisionPlayStackingToyTeacher_run_motion_017": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_run_motion_017",
+        "U05_VisionPlayStackingToyTeacher_run_attempt_1_018": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_run_attempt_1_018",
+        "U05_VisionPlayStackingToyTeacher_run_attempt_1_019": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_run_attempt_1_019",
+        "U05_VisionPlayStackingToyTeacher_run_motion_020": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_run_motion_020",
+        "U05_VisionPlayStackingToyTeacher_run_motion_021": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_run_motion_021",
+        "U05_VisionPlayStackingToyTeacher_run_motion_022": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_run_motion_022",
+        "U05_VisionPlayStackingToyTeacher_run_motion_023": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_run_motion_023",
+        "U05_VisionPlayStackingToyTeacher_run_motion_024": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_run_motion_024",
+        "U05_VisionPlayStackingToyTeacher_run_motion_025": "skills.motion.implementation:U05_VisionPlayStackingToyTeacher_run_motion_025"
+      },
+      "errors": {
+        "RuntimeError": "skills.state.implementation:RuntimeError",
+        "U05_LostGrasp": "skills.state.implementation:U05_LostGrasp"
+      },
+      "steps": [
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_run_motion_001"
+        },
+        {
+          "try": [
+            {
+              "call": "U05_VisionPlayStackingToyTeacher_run_motion_007"
+            }
+          ],
+          "catch": [
+            {
+              "errors": [
+                "RuntimeError"
+              ],
+              "as": "caught_error",
+              "do": [
+                {
+                  "call": "U05_VisionPlayStackingToyTeacher_run_self_robots_values_002",
+                  "store": "items_2"
+                },
+                {
+                  "for_each": {
+                    "var": "items_2"
+                  },
+                  "as": "loop_item_3",
+                  "max_items": 4096,
+                  "do": [
+                    {
+                      "call": "U05_VisionPlayStackingToyTeacher_run_motion_003",
+                      "args": {
+                        "__workflow_item": {
+                          "var": "loop_item_3"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U05_VisionPlayStackingToyTeacher_run_motion_004"
+                    }
+                  ]
+                },
+                {
+                  "call": "U05_VisionPlayStackingToyTeacher_run_motion_005"
+                },
+                {
+                  "call": "U05_VisionPlayStackingToyTeacher_run_motion_006"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_run_motion_008"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_run_motion_009"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_run_reversed_range_4_010",
+          "store": "items_10"
+        },
+        {
+          "for_each": {
+            "var": "items_10"
+          },
+          "as": "loop_item_11",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U05_VisionPlayStackingToyTeacher_run_motion_011",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_11"
+                }
+              }
+            },
+            {
+              "call": "U05_VisionPlayStackingToyTeacher_run_motion_012"
+            },
+            {
+              "call": "U05_VisionPlayStackingToyTeacher_run_enumerate_pieces_013",
+              "store": "items_13"
+            },
+            {
+              "for_each": {
+                "var": "items_13"
+              },
+              "as": "loop_item_14",
+              "max_items": 4096,
+              "do": [
+                {
+                  "call": "U05_VisionPlayStackingToyTeacher_run_motion_014",
+                  "args": {
+                    "__workflow_item": {
+                      "var": "loop_item_14"
+                    }
+                  }
+                },
+                {
+                  "call": "U05_VisionPlayStackingToyTeacher_run_range_2_015",
+                  "store": "items_15"
+                },
+                {
+                  "for_each": {
+                    "var": "items_15"
+                  },
+                  "as": "loop_item_16",
+                  "max_items": 4096,
+                  "do": [
+                    {
+                      "call": "U05_VisionPlayStackingToyTeacher_run_motion_016",
+                      "args": {
+                        "__workflow_item": {
+                          "var": "loop_item_16"
+                        }
+                      }
+                    },
+                    {
+                      "try": [
+                        {
+                          "call": "U05_VisionPlayStackingToyTeacher_run_motion_023"
+                        },
+                        {
+                          "break": true
+                        }
+                      ],
+                      "catch": [
+                        {
+                          "errors": [
+                            "U05_LostGrasp"
+                          ],
+                          "as": "caught_error",
+                          "do": [
+                            {
+                              "call": "U05_VisionPlayStackingToyTeacher_run_motion_017",
+                              "args": {
+                                "__workflow_error": {
+                                  "var": "caught_error"
+                                }
+                              }
+                            },
+                            {
+                              "call": "U05_VisionPlayStackingToyTeacher_run_attempt_1_018",
+                              "store": "condition_18"
+                            },
+                            {
+                              "if": {
+                                "var": "condition_18"
+                              },
+                              "then": [
+                                {
+                                  "call": "U05_VisionPlayStackingToyTeacher_run_attempt_1_019"
+                                }
+                              ],
+                              "else": []
+                            },
+                            {
+                              "call": "U05_VisionPlayStackingToyTeacher_run_motion_020"
+                            },
+                            {
+                              "call": "U05_VisionPlayStackingToyTeacher_run_motion_021",
+                              "args": {
+                                "phase_0": "lost_grasp_clear_view"
+                              }
+                            },
+                            {
+                              "call": "U05_VisionPlayStackingToyTeacher_run_motion_022"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_run_motion_024"
+        },
+        {
+          "call": "U05_VisionPlayStackingToyTeacher_run_motion_025",
+          "args": {
+            "phase_0": "return_both_home"
+          }
+        }
+      ]
+    }
+  },
+  "parameters": {
+    "motion_speed": 2.4,
+    "motion_speedup": 1.0,
+    "gripper_forward_offset": 0.155,
+    "planner_pose_frame": "world",
+    "feedback_servo": false,
+    "debug_fk": false,
+    "official_eval": true
+  },
+  "environment": {}
+}

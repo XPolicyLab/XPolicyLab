@@ -1,0 +1,2295 @@
+{
+  "schema": "riemann-fold-public-native-installed-profile-v1",
+  "recorded_at": "2026-11-02T10:45:04.087459+00:00",
+  "task": "fold_clothes",
+  "official_root": "resource://official_runtime",
+  "official_commit": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
+  "official_files": {
+    "deployment/runtime.sh": {
+      "sha256": "2b3b96528a795f22990e2688c44a6084caf5228b123c074c8ace460c1e69bf07",
+      "bytes": 5560
+    },
+    "env/camera_manager/camera_manager.py": {
+      "sha256": "1a4250cb3bdc7305fe362a7c6b113f57e6f3e9e4983b69bd61e2c84e8e995471",
+      "bytes": 22799
+    },
+    "env/camera_manager/capture/camera_view.py": {
+      "sha256": "364cd10dfd2be164efb4adf7a52adf2e7b38e49f4da90e70575d2ceaa7a6cada",
+      "bytes": 15720
+    },
+    "env/camera_manager/capture/render_sync.py": {
+      "sha256": "48d70e9a95f3445ae464ab7ea00a00c0d4829752eb55c4ce52ef73ab1f453cae",
+      "bytes": 5775
+    },
+    "env/camera_manager/capture/tiled_capture_manager.py": {
+      "sha256": "9e70ba9165130d6adf4b63989a447db269b741597bcff7f9095a577f084ff126",
+      "bytes": 8090
+    },
+    "env/description_manager/desc_manager.py": {
+      "sha256": "bb566028b523a4cc27363cee2e526c2d3e008e671c9773d4f0b8401f58f0388e",
+      "bytes": 3491
+    },
+    "env/environment/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "env/environment/base_env.py": {
+      "sha256": "ade58ebc19c79bdbf720def30786a0c397b1c7d2141fb6a1bfd63c80f8a3db8e",
+      "bytes": 11035
+    },
+    "env/environment/isaac/__init__.py": {
+      "sha256": "123023ddc75a0f9b1139c7322bee64a27f0e756b6e84242f43a1481428596126",
+      "bytes": 273
+    },
+    "env/environment/isaac/direct_rl_env.py": {
+      "sha256": "151096897a8da352aed474dc840a74a02164af422af7fa9cae38a9681871b0ca",
+      "bytes": 955
+    },
+    "env/environment/isaac/isaac_rl_env.py": {
+      "sha256": "144af40adc2113751bc1bd72caadab145e918b316de53ef3e4e42358c01a1fbb",
+      "bytes": 1614
+    },
+    "env/environment/task_env.py": {
+      "sha256": "ac816cf26efabbb8ac4276d2a2a09fbd557e3db805514db0c3dd7ac22b58e931",
+      "bytes": 3868
+    },
+    "env/global_configs.py": {
+      "sha256": "e96f6141b42e635d69bba5b4727fb1fec54f8965431b3a70d95fe5dcd3d0ee45",
+      "bytes": 505
+    },
+    "env/observation_manager/obs_manager.py": {
+      "sha256": "771d6cda443b591f3e7850b901a06b4e653a2feefcbabd23608042377fe9be4b",
+      "bytes": 10484
+    },
+    "env/planner_manager/curobo_planner.py": {
+      "sha256": "3cd830c002901959409ef6f64d54106d8106b48471b266409abc2199f3cb33e1",
+      "bytes": 33238
+    },
+    "env/reward_manager/func_parser.py": {
+      "sha256": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
+      "bytes": 112814
+    },
+    "env/reward_manager/reward_manager.py": {
+      "sha256": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41",
+      "bytes": 46466
+    },
+    "env/robot_manager/control_manager.py": {
+      "sha256": "81b7ecc3bed8248c16aa1517e686682d8e28ccfa9e550d45011b579a9219caab",
+      "bytes": 5855
+    },
+    "env/robot_manager/robot_class/franka.py": {
+      "sha256": "1f8ed55431863fd633baa8dbe67bd7ba3a0e85c9c4bbbb7ff2d31f436691caf7",
+      "bytes": 2356
+    },
+    "env/robot_manager/robot_class/x5.py": {
+      "sha256": "107274d0944a4416a1b5216b3ebf05e5f6e96c17eb8a50e4bcd3e134db20ce0f",
+      "bytes": 2464
+    },
+    "env/robot_manager/robot_config/franka.py": {
+      "sha256": "8bf57a07913573e74dad97aec6c50e58b67746fa90875915d74ce213856ce35a",
+      "bytes": 2148
+    },
+    "env/robot_manager/robot_config/x5.py": {
+      "sha256": "13d35630f833d1b0a1e3df0bea05f843e88aae1248b59af8aadfefa9cad29bbb",
+      "bytes": 1725
+    },
+    "env/robot_manager/robot_manager.py": {
+      "sha256": "1306cb6d17b58a04ad8fc298edb6eb9122469048dbc9717dcf246f4f985d9974",
+      "bytes": 27888
+    },
+    "env/scene_manager/layout_manager.py": {
+      "sha256": "7f244bec972e09236a94d8b4761b248ba19ec3f61c631d3c83c00b82912a14b8",
+      "bytes": 39510
+    },
+    "env/scene_manager/objects/articulation.py": {
+      "sha256": "dd8f43ad3dfb3beca2944e76537f540bfbbdd86ed2816b747ece368819b42442",
+      "bytes": 22740
+    },
+    "env/scene_manager/objects/background.py": {
+      "sha256": "04afea9b5c4e21a105ba3b08ce0e5b6692c082cf17ec1053fdffd5dba1c9511b",
+      "bytes": 3093
+    },
+    "env/scene_manager/objects/dynamic.py": {
+      "sha256": "7a4652c649f503681914e37c50c959c7ca8457918bb00628413f4288993f8ea7",
+      "bytes": 5800
+    },
+    "env/scene_manager/objects/fluid.py": {
+      "sha256": "12b183d4d798d6b7188fd42747ee1927747318c386a91135551d1fa0561c41b5",
+      "bytes": 15973
+    },
+    "env/scene_manager/objects/garment.py": {
+      "sha256": "85f38bd85b52da8dd2ce34ce3692d45848016a9f0f14ecf13114705d4a1ff46a",
+      "bytes": 21131
+    },
+    "env/scene_manager/objects/geometry.py": {
+      "sha256": "3100d61b152b894b3b59be0b3be1d2708f2d8f363ddb8311dabfb5411c731f3d",
+      "bytes": 14727
+    },
+    "env/scene_manager/objects/ground.py": {
+      "sha256": "12dd51addae6f5b7c6ad410b4ae7248231d216cf63513c564057d577a09a2972",
+      "bytes": 19227
+    },
+    "env/scene_manager/objects/light.py": {
+      "sha256": "ba8c8529c6608592d4d0eb9638820b70ae6b3c0cd616631bc6dabdb1c20e421a",
+      "bytes": 6235
+    },
+    "env/scene_manager/objects/physics_material.py": {
+      "sha256": "a1ac0dc9928e9253e644ceb9a604aed262514aaad0473aff303bfae448e76c29",
+      "bytes": 5005
+    },
+    "env/scene_manager/objects/primitives.py": {
+      "sha256": "848f4ab08d86307812ebaea18cc86a51638395f0e6ea194b412d45a699ced926",
+      "bytes": 10315
+    },
+    "env/scene_manager/objects/rigid.py": {
+      "sha256": "ac50a7792b43be99e2f4362b946e9319a6aeb9c26be2766ebca6b780296cfa9b",
+      "bytes": 9931
+    },
+    "env/scene_manager/objects/room.py": {
+      "sha256": "946aa1afc23ab9b8fd17394517a5f54605bbbc609582d0854fed2078b3b2d8ee",
+      "bytes": 1957
+    },
+    "env/scene_manager/objects/table.py": {
+      "sha256": "c0e71396b0d53a250f74c75490e91086d67962237400a49f886a13ec07875308",
+      "bytes": 9412
+    },
+    "env/scene_manager/scene_manager.py": {
+      "sha256": "87776a7803ec5b1666dd3478295978986f8ecec7ef989aa45e697da9854556df",
+      "bytes": 30756
+    },
+    "env/seed_manager/seed_manager.py": {
+      "sha256": "292eee4003de1c22b288ec3bc1d04d95c7aee5368f30991679ea1cc4c37247b3",
+      "bytes": 3879
+    },
+    "env/seeding.py": {
+      "sha256": "2d7286b78c8060c6e838b55be025f51d09262a4a63bcb3884077a1492e66400a",
+      "bytes": 1444
+    },
+    "env_cfg/arx_x5.yml": {
+      "sha256": "7691350159fdeca92fd1b0b2da36913464ccdea3f3251eefb0176aa51db0807f",
+      "bytes": 323
+    },
+    "env_cfg/camera/camera_config.yml": {
+      "sha256": "c1752170da855e735beba27fddbf78dad16f2395e4ef8b24e9827a768e616a62",
+      "bytes": 750
+    },
+    "env_cfg/camera/template.py": {
+      "sha256": "68287ed1daec3b8ed7f053bf97a4d48bbddeb8b5757b53e438ac3c4240a9e61b",
+      "bytes": 791
+    },
+    "env_cfg/robot/_robot_info.json": {
+      "sha256": "4c9de628bc1572502fc48d876c023fc63e02760e1a11a2a5258dea30ffa330e8",
+      "bytes": 79
+    },
+    "env_cfg/robot/dual_x5.yml": {
+      "sha256": "4eefaccc75c5f83443b7bb85ef1de68ee7a3772e27af2b04a5e8d8769ab9baa1",
+      "bytes": 430
+    },
+    "env_cfg/robot/dual_x5_and_franka_competition.yml": {
+      "sha256": "ec893f9fde577d0d1209e7dcb85ec2dd74288b636d0c68316cb07bc817b743ab",
+      "bytes": 673
+    },
+    "env_cfg/scene/conveyor.yml": {
+      "sha256": "c1dfd27faf978f90dfc4825cd83bd203823547c46793f4f9201ce9f4b43beee7",
+      "bytes": 948
+    },
+    "env_cfg/scene/default.yml": {
+      "sha256": "729df024b9707a55449da94f980c1ca116035e09a1284e2fe071f1b38efd061a",
+      "bytes": 1072
+    },
+    "env_cfg/sim/sim_config.yml": {
+      "sha256": "e442ede1c3d90fcfb50b9461c854d31b22dad9bfbb23397db228b27a6a486963",
+      "bytes": 83
+    },
+    "src/eval_client/eval_env.py": {
+      "sha256": "3ae75304d8a840ede2589441f987824f50b2a89cc2ef37f4d43ce0a8dbc4fd88",
+      "bytes": 45027
+    },
+    "src/eval_client/main.py": {
+      "sha256": "ca6ba652b6f123506370f1907b1d88060d83f56c9e91ce6e6930f63d9f2b71a8",
+      "bytes": 16471
+    },
+    "src/eval_client/physx_warning_monitor.py": {
+      "sha256": "6a9f8e8d75b1031d2cf2feb6dd72d37370d85d5bd80c4bea798622e23ce8dae6",
+      "bytes": 41430
+    },
+    "task/RoboDojo/task_registry.py": {
+      "sha256": "11218028f772d9253ee709a7d85aa72d1e1fd87e4f8d33ee3787d6064438f9ab",
+      "bytes": 717
+    },
+    "utils/cluttered_generator.py": {
+      "sha256": "f59cfcfed2b4cce5ae9aeaf3339c86d17e237874e3526bded3cb05136dbcbd50",
+      "bytes": 26426
+    },
+    "utils/ensure_usd_path.py": {
+      "sha256": "7c8e71cf91636e630b1b174098fe0b38740857daeaf207e2fae772c4727b11bf",
+      "bytes": 831
+    },
+    "utils/load_file.py": {
+      "sha256": "ef3a6dc96aa1a7442cfd24f7be9671052a98d2f20783c3e71032332704132943",
+      "bytes": 2327
+    },
+    "utils/path.py": {
+      "sha256": "1d427c7cf33e748e01d0d083c9432d8be8b5c3a1f35c5fb0f6ebb0714098f1d1",
+      "bytes": 6093
+    },
+    "utils/pipeline_utils.py": {
+      "sha256": "d5d8da29e6ca84ab04323a2f79130f930572785b4399634e06a42834ed4087ae",
+      "bytes": 4402
+    },
+    "utils/rotations.py": {
+      "sha256": "8e814f79938bdb9e85f1c024825617cc08d281b61728c6410b23ef1bd852c340",
+      "bytes": 1953
+    },
+    "utils/save_file.py": {
+      "sha256": "6cff5950f73bf7a1ed404f804d6f08af712974f22c3955de4cdf142f211aaf00",
+      "bytes": 4795
+    },
+    "utils/transformer.py": {
+      "sha256": "73de4f5e1e0ff60d4f2e1aaf6104368e8f919269facb68b4fa0344d35bc08cbe",
+      "bytes": 10255
+    },
+    "utils/update_embodiment_config_path.py": {
+      "sha256": "6a8252e1dcb3fa7aba15fbbecf4408a908beb324f11624d979e867d2ea332259",
+      "bytes": 3774
+    },
+    "utils/usd_schema.py": {
+      "sha256": "260d30b0ada2976136cad3e49e810b4409304eb4a2bc60bd9ed710864d3953ac",
+      "bytes": 1461
+    },
+    "task/RoboDojo/tasks/fold_clothes.py": {
+      "sha256": "ecea9c287d0579605330168e6f36734704fb14a6b1e5dec82b6f2ee3a56ec20a",
+      "bytes": 7264
+    },
+    "task/RoboDojo/config/fold_clothes.yml": {
+      "sha256": "56447e3f592e0db388ebb7482ec758ecd5485ec81b9227c2dffe5390bd7d8c8e",
+      "bytes": 312
+    }
+  },
+  "official_files_match_commit": true,
+  "submodules": {
+    "XPolicyLab": {
+      "gitlink": "5d0be1499634d3176258c8f2e31f5fe816497b0a",
+      "actual_head": "aa46382aa12dc46b360e2fdc63d0d3d39215b3e9",
+      "matches_gitlink": false
+    },
+    "third_party/IsaacLab": {
+      "gitlink": "afca7b09d60d8beb9c1cb28b43066499940b969b",
+      "actual_head": "afca7b09d60d8beb9c1cb28b43066499940b969b",
+      "matches_gitlink": true
+    },
+    "third_party/curobo": {
+      "gitlink": "d17b54ce32cba095c0b000c4c58777075d11de0e",
+      "actual_head": "895c6517243f8cb091c73c018c8167192d39599a",
+      "matches_gitlink": false
+    }
+  },
+  "submodule_gitlinks_match": false,
+  "python_version": "3.11.15",
+  "python_prefix": "resource://eval_environment",
+  "python_distribution_scope": "resource://eval_environment/lib/python3.11/site-packages",
+  "python_distributions": [
+    [
+      "absl-py",
+      "2.5.1"
+    ],
+    [
+      "aioboto3",
+      "15.1.0"
+    ],
+    [
+      "aiobotocore",
+      "2.24.0"
+    ],
+    [
+      "aiodns",
+      "3.1.1"
+    ],
+    [
+      "aiofiles",
+      "23.2.1"
+    ],
+    [
+      "aiohappyeyeballs",
+      "2.4.4"
+    ],
+    [
+      "aiohttp",
+      "3.11.11"
+    ],
+    [
+      "aioitertools",
+      "0.11.0"
+    ],
+    [
+      "aiosignal",
+      "1.3.2"
+    ],
+    [
+      "annotated-types",
+      "0.8.0"
+    ],
+    [
+      "antlr4-python3-runtime",
+      "4.9.3"
+    ],
+    [
+      "anyio",
+      "4.14.2"
+    ],
+    [
+      "anytree",
+      "2.13.0"
+    ],
+    [
+      "asteval",
+      "1.0.6"
+    ],
+    [
+      "asttokens",
+      "3.0.2"
+    ],
+    [
+      "async-timeout",
+      "5.0.1"
+    ],
+    [
+      "attrs",
+      "25.1.0"
+    ],
+    [
+      "awscrt",
+      "0.23.8"
+    ],
+    [
+      "azure-core",
+      "1.28.0"
+    ],
+    [
+      "azure-identity",
+      "1.13.0"
+    ],
+    [
+      "azure-storage-blob",
+      "12.17.0"
+    ],
+    [
+      "blinker",
+      "1.9.0"
+    ],
+    [
+      "boto3",
+      "1.39.11"
+    ],
+    [
+      "botocore",
+      "1.39.11"
+    ],
+    [
+      "certifi",
+      "2026.10.19"
+    ],
+    [
+      "cffi",
+      "2.1.1"
+    ],
+    [
+      "cfgv",
+      "3.5.0"
+    ],
+    [
+      "chardet",
+      "7.7.0"
+    ],
+    [
+      "charset-normalizer",
+      "3.3.2"
+    ],
+    [
+      "click",
+      "8.1.7"
+    ],
+    [
+      "cloudpickle",
+      "3.1.2"
+    ],
+    [
+      "cmake",
+      "3.31.10"
+    ],
+    [
+      "cmeel",
+      "0.61.0"
+    ],
+    [
+      "cmeel-assimp",
+      "5.4.3.1"
+    ],
+    [
+      "cmeel-boost",
+      "1.83.0"
+    ],
+    [
+      "cmeel-console-bridge",
+      "1.0.2.3"
+    ],
+    [
+      "cmeel-octomap",
+      "1.10.0"
+    ],
+    [
+      "cmeel-qhull",
+      "8.0.2.1"
+    ],
+    [
+      "cmeel-tinyxml",
+      "2.6.2.3"
+    ],
+    [
+      "cmeel-urdfdom",
+      "3.1.1.1"
+    ],
+    [
+      "cmeel-zlib",
+      "1.3.2"
+    ],
+    [
+      "colorlog",
+      "6.12.0"
+    ],
+    [
+      "comm",
+      "0.2.3"
+    ],
+    [
+      "configargparse",
+      "1.8.0"
+    ],
+    [
+      "contourpy",
+      "1.3.1"
+    ],
+    [
+      "coverage",
+      "7.4.4"
+    ],
+    [
+      "cryptography",
+      "44.0.0"
+    ],
+    [
+      "cuda-bindings",
+      "12.9.10"
+    ],
+    [
+      "cuda-core",
+      "1.2.2"
+    ],
+    [
+      "cuda-pathfinder",
+      "1.8.3"
+    ],
+    [
+      "cuda-toolkit",
+      "12.9.2.0"
+    ],
+    [
+      "cycler",
+      "0.11.0"
+    ],
+    [
+      "daqp",
+      "0.7.2"
+    ],
+    [
+      "dash",
+      "4.4.1"
+    ],
+    [
+      "decorator",
+      "5.3.1"
+    ],
+    [
+      "dex_retargeting",
+      "0.4.6"
+    ],
+    [
+      "distlib",
+      "0.4.4"
+    ],
+    [
+      "docstring_parser",
+      "0.18.0"
+    ],
+    [
+      "eigenpy",
+      "3.5.1"
+    ],
+    [
+      "einops",
+      "0.8.2"
+    ],
+    [
+      "embreex",
+      "4.4.0.post1"
+    ],
+    [
+      "executing",
+      "2.3.0"
+    ],
+    [
+      "farama-notifications",
+      "0.0.6"
+    ],
+    [
+      "fastapi",
+      "0.115.7"
+    ],
+    [
+      "fastjsonschema",
+      "2.22.2"
+    ],
+    [
+      "ffmpeg",
+      "1.4"
+    ],
+    [
+      "filelock",
+      "3.13.1"
+    ],
+    [
+      "flaky",
+      "3.8.1"
+    ],
+    [
+      "flask",
+      "3.1.3"
+    ],
+    [
+      "flatdict",
+      "4.0.0"
+    ],
+    [
+      "fonttools",
+      "4.55.3"
+    ],
+    [
+      "frozenlist",
+      "1.5.0"
+    ],
+    [
+      "fsspec",
+      "2024.6.1"
+    ],
+    [
+      "grpcio",
+      "1.84.0"
+    ],
+    [
+      "gunicorn",
+      "23.0.0"
+    ],
+    [
+      "gymnasium",
+      "1.2.1"
+    ],
+    [
+      "h11",
+      "0.16.0"
+    ],
+    [
+      "h5py",
+      "3.16.0"
+    ],
+    [
+      "hf-xet",
+      "1.7.0"
+    ],
+    [
+      "hidapi",
+      "0.14.0.post2"
+    ],
+    [
+      "hpp-fcl",
+      "2.4.4"
+    ],
+    [
+      "httpcore",
+      "1.0.9"
+    ],
+    [
+      "httptools",
+      "0.6.1"
+    ],
+    [
+      "httpx",
+      "0.28.1"
+    ],
+    [
+      "huggingface_hub",
+      "0.36.2"
+    ],
+    [
+      "hydra-core",
+      "1.3.7"
+    ],
+    [
+      "identify",
+      "2.6.20"
+    ],
+    [
+      "idna",
+      "3.10"
+    ],
+    [
+      "idna-ssl",
+      "1.1.0"
+    ],
+    [
+      "imageio",
+      "2.37.0"
+    ],
+    [
+      "imageio-ffmpeg",
+      "0.6.0"
+    ],
+    [
+      "importlib_metadata",
+      "9.0.1"
+    ],
+    [
+      "importlib_resources",
+      "7.1.0"
+    ],
+    [
+      "iniconfig",
+      "2.3.1"
+    ],
+    [
+      "ipython",
+      "8.39.0"
+    ],
+    [
+      "ipywidgets",
+      "8.1.5"
+    ],
+    [
+      "isaaclab",
+      "0.54.3"
+    ],
+    [
+      "isaaclab_assets",
+      "0.2.4"
+    ],
+    [
+      "isaaclab_contrib",
+      "0.0.2"
+    ],
+    [
+      "isaaclab_mimic",
+      "1.0.16"
+    ],
+    [
+      "isaaclab_rl",
+      "0.5.0"
+    ],
+    [
+      "isaaclab_tasks",
+      "0.11.14"
+    ],
+    [
+      "isaacsim",
+      "5.1.0.0"
+    ],
+    [
+      "isaacsim-app",
+      "5.1.0.0"
+    ],
+    [
+      "isaacsim-asset",
+      "5.1.0.0"
+    ],
+    [
+      "isaacsim-benchmark",
+      "5.1.0.0"
+    ],
+    [
+      "isaacsim-code-editor",
+      "5.1.0.0"
+    ],
+    [
+      "isaacsim-core",
+      "5.1.0.0"
+    ],
+    [
+      "isaacsim-cortex",
+      "5.1.0.0"
+    ],
+    [
+      "isaacsim-example",
+      "5.1.0.0"
+    ],
+    [
+      "isaacsim-extscache-kit",
+      "5.1.0.0"
+    ],
+    [
+      "isaacsim-extscache-kit-sdk",
+      "5.1.0.0"
+    ],
+    [
+      "isaacsim-extscache-physics",
+      "5.1.0.0"
+    ],
+    [
+      "isaacsim-gui",
+      "5.1.0.0"
+    ],
+    [
+      "isaacsim-kernel",
+      "5.1.0.0"
+    ],
+    [
+      "isaacsim-replicator",
+      "5.1.0.0"
+    ],
+    [
+      "isaacsim-rl",
+      "5.1.0.0"
+    ],
+    [
+      "isaacsim-robot",
+      "5.1.0.0"
+    ],
+    [
+      "isaacsim-robot-motion",
+      "5.1.0.0"
+    ],
+    [
+      "isaacsim-robot-setup",
+      "5.1.0.0"
+    ],
+    [
+      "isaacsim-ros1",
+      "5.1.0.0"
+    ],
+    [
+      "isaacsim-ros2",
+      "5.1.0.0"
+    ],
+    [
+      "isaacsim-sensor",
+      "5.1.0.0"
+    ],
+    [
+      "isaacsim-storage",
+      "5.1.0.0"
+    ],
+    [
+      "isaacsim-template",
+      "5.1.0.0"
+    ],
+    [
+      "isaacsim-test",
+      "5.1.0.0"
+    ],
+    [
+      "isaacsim-utils",
+      "5.1.0.0"
+    ],
+    [
+      "isodate",
+      "0.6.1"
+    ],
+    [
+      "itsdangerous",
+      "2.2.0"
+    ],
+    [
+      "janus",
+      "2.0.0"
+    ],
+    [
+      "jedi",
+      "0.20.1"
+    ],
+    [
+      "jinja2",
+      "3.1.6"
+    ],
+    [
+      "jmespath",
+      "1.0.1"
+    ],
+    [
+      "joblib",
+      "1.6.0"
+    ],
+    [
+      "jsonschema",
+      "4.26.0"
+    ],
+    [
+      "jsonschema-specifications",
+      "2025.9.1"
+    ],
+    [
+      "junitparser",
+      "5.0.3"
+    ],
+    [
+      "jupyter_core",
+      "5.9.1"
+    ],
+    [
+      "jupyterlab_widgets",
+      "3.0.17"
+    ],
+    [
+      "kiwisolver",
+      "1.4.4"
+    ],
+    [
+      "lazy-loader",
+      "0.6"
+    ],
+    [
+      "llvmlite",
+      "0.42.0"
+    ],
+    [
+      "loop-rate-limiters",
+      "1.2.0"
+    ],
+    [
+      "lxml",
+      "6.1.3"
+    ],
+    [
+      "manifold3d",
+      "3.5.4"
+    ],
+    [
+      "mapbox_earcut",
+      "2.1.0"
+    ],
+    [
+      "markdown",
+      "3.11.2"
+    ],
+    [
+      "markdown-it-py",
+      "4.2.0"
+    ],
+    [
+      "markupsafe",
+      "2.1.3"
+    ],
+    [
+      "matplotlib",
+      "3.10.3"
+    ],
+    [
+      "matplotlib-inline",
+      "0.2.2"
+    ],
+    [
+      "mdurl",
+      "0.1.2"
+    ],
+    [
+      "ml_dtypes",
+      "0.5.4"
+    ],
+    [
+      "moviepy",
+      "2.2.1"
+    ],
+    [
+      "mpmath",
+      "1.3.0"
+    ],
+    [
+      "msal",
+      "1.27.0"
+    ],
+    [
+      "msal-extensions",
+      "1.0.0"
+    ],
+    [
+      "msgpack",
+      "1.2.3"
+    ],
+    [
+      "msgpack-numpy",
+      "0.4.8"
+    ],
+    [
+      "msgspec",
+      "0.22.0"
+    ],
+    [
+      "multidict",
+      "6.1.0"
+    ],
+    [
+      "narwhals",
+      "2.27.1"
+    ],
+    [
+      "nbformat",
+      "5.11.1"
+    ],
+    [
+      "nest-asyncio",
+      "1.5.6"
+    ],
+    [
+      "networkx",
+      "3.3"
+    ],
+    [
+      "ninja",
+      "1.13.2"
+    ],
+    [
+      "nlopt",
+      "2.7.1"
+    ],
+    [
+      "nodeenv",
+      "1.11.0"
+    ],
+    [
+      "numba",
+      "0.59.1"
+    ],
+    [
+      "numpy",
+      "1.26.0"
+    ],
+    [
+      "numpy-quaternion",
+      "2024.0.13"
+    ],
+    [
+      "nvidia-cublas-cu12",
+      "12.8.3.14"
+    ],
+    [
+      "nvidia-cuda-cupti-cu12",
+      "12.8.57"
+    ],
+    [
+      "nvidia-cuda-nvcc-cu12",
+      "12.9.86"
+    ],
+    [
+      "nvidia-cuda-nvrtc-cu12",
+      "12.8.61"
+    ],
+    [
+      "nvidia-cuda-runtime-cu12",
+      "12.8.57"
+    ],
+    [
+      "nvidia-cudnn-cu12",
+      "9.7.1.26"
+    ],
+    [
+      "nvidia-cufft-cu12",
+      "11.3.3.41"
+    ],
+    [
+      "nvidia-cufile-cu12",
+      "1.13.0.11"
+    ],
+    [
+      "nvidia-curand-cu12",
+      "10.3.9.55"
+    ],
+    [
+      "nvidia-curobo",
+      "0.0.0+g895c6517243f"
+    ],
+    [
+      "nvidia-cusolver-cu12",
+      "11.7.2.55"
+    ],
+    [
+      "nvidia-cusparse-cu12",
+      "12.5.7.53"
+    ],
+    [
+      "nvidia-cusparselt-cu12",
+      "0.6.3"
+    ],
+    [
+      "nvidia-nccl-cu12",
+      "2.26.2"
+    ],
+    [
+      "nvidia-nvfatbin-cu12",
+      "12.9.82"
+    ],
+    [
+      "nvidia-nvjitlink-cu12",
+      "12.8.61"
+    ],
+    [
+      "nvidia-nvtx-cu12",
+      "12.8.55"
+    ],
+    [
+      "oauthlib",
+      "3.2.2"
+    ],
+    [
+      "omegaconf",
+      "2.3.1"
+    ],
+    [
+      "onnx",
+      "1.21.0"
+    ],
+    [
+      "open3d",
+      "0.20.0"
+    ],
+    [
+      "opencv-python-headless",
+      "4.11.0.86"
+    ],
+    [
+      "osqp",
+      "0.6.7.post3"
+    ],
+    [
+      "packaging",
+      "23.0"
+    ],
+    [
+      "parso",
+      "0.8.7"
+    ],
+    [
+      "pexpect",
+      "4.9.0"
+    ],
+    [
+      "pillow",
+      "11.3.0"
+    ],
+    [
+      "pin",
+      "2.7.0"
+    ],
+    [
+      "pin-pink",
+      "3.1.0"
+    ],
+    [
+      "pint",
+      "0.20.1"
+    ],
+    [
+      "pip",
+      "26.2.1"
+    ],
+    [
+      "platformdirs",
+      "4.13.5"
+    ],
+    [
+      "plotly",
+      "7.1.0"
+    ],
+    [
+      "pluggy",
+      "1.7.0"
+    ],
+    [
+      "plyfile",
+      "1.1.3"
+    ],
+    [
+      "portalocker",
+      "2.7.0"
+    ],
+    [
+      "pre_commit",
+      "4.7.0"
+    ],
+    [
+      "prettytable",
+      "3.3.0"
+    ],
+    [
+      "proglog",
+      "0.1.12"
+    ],
+    [
+      "prompt_toolkit",
+      "3.0.53"
+    ],
+    [
+      "propcache",
+      "0.2.1"
+    ],
+    [
+      "protobuf",
+      "7.36.2"
+    ],
+    [
+      "psutil",
+      "5.9.8"
+    ],
+    [
+      "ptyprocess",
+      "0.7.0"
+    ],
+    [
+      "pure_eval",
+      "0.2.4"
+    ],
+    [
+      "pycares",
+      "4.8.0"
+    ],
+    [
+      "pycollada",
+      "0.9.3"
+    ],
+    [
+      "pycparser",
+      "3.11"
+    ],
+    [
+      "pydantic",
+      "2.11.10"
+    ],
+    [
+      "pydantic_core",
+      "2.33.2"
+    ],
+    [
+      "pyglet",
+      "1.5.31"
+    ],
+    [
+      "pygments",
+      "2.21.0"
+    ],
+    [
+      "pyjwt",
+      "2.15.1"
+    ],
+    [
+      "pyliblzfse",
+      "0.4.1"
+    ],
+    [
+      "pyparsing",
+      "3.0.9"
+    ],
+    [
+      "pyperclip",
+      "1.8.0"
+    ],
+    [
+      "pypng",
+      "0.20220715.0"
+    ],
+    [
+      "pytest",
+      "9.1.1"
+    ],
+    [
+      "pytest-mock",
+      "3.17.0"
+    ],
+    [
+      "python-dateutil",
+      "2.9.0.post0"
+    ],
+    [
+      "python-dotenv",
+      "1.2.4"
+    ],
+    [
+      "python-multipart",
+      "0.0.20"
+    ],
+    [
+      "pytransform3d",
+      "3.17.0"
+    ],
+    [
+      "pytz",
+      "2024.1"
+    ],
+    [
+      "pyyaml",
+      "6.0.2"
+    ],
+    [
+      "qdldl",
+      "0.1.7.post5"
+    ],
+    [
+      "qpsolvers",
+      "4.13.0"
+    ],
+    [
+      "qrcode",
+      "7.4.2"
+    ],
+    [
+      "quadprog",
+      "0.1.14"
+    ],
+    [
+      "referencing",
+      "0.37.0"
+    ],
+    [
+      "regex",
+      "2026.9.29"
+    ],
+    [
+      "requests",
+      "2.32.3"
+    ],
+    [
+      "requests-oauthlib",
+      "1.3.1"
+    ],
+    [
+      "retrying",
+      "1.4.2"
+    ],
+    [
+      "rich",
+      "14.3.4"
+    ],
+    [
+      "rpds-py",
+      "2026.9.1"
+    ],
+    [
+      "rtree",
+      "1.3.0"
+    ],
+    [
+      "ruff",
+      "0.17.1"
+    ],
+    [
+      "s3transfer",
+      "0.13.1"
+    ],
+    [
+      "safetensors",
+      "0.8.0"
+    ],
+    [
+      "scikit-image",
+      "0.26.0"
+    ],
+    [
+      "scikit-learn",
+      "1.9.1"
+    ],
+    [
+      "scipy",
+      "1.15.3"
+    ],
+    [
+      "sentry-sdk",
+      "2.29.1"
+    ],
+    [
+      "setuptools",
+      "81.0.0"
+    ],
+    [
+      "setuptools-scm",
+      "10.2.1"
+    ],
+    [
+      "shapely",
+      "2.2.0"
+    ],
+    [
+      "shtab",
+      "1.13.0"
+    ],
+    [
+      "six",
+      "1.17.0"
+    ],
+    [
+      "stack-data",
+      "0.6.3"
+    ],
+    [
+      "starlette",
+      "0.45.3"
+    ],
+    [
+      "svg.path",
+      "7.1"
+    ],
+    [
+      "sympy",
+      "1.13.3"
+    ],
+    [
+      "tensorboard",
+      "2.21.0"
+    ],
+    [
+      "tensorboard-data-server",
+      "0.7.2"
+    ],
+    [
+      "threadpoolctl",
+      "3.7.0"
+    ],
+    [
+      "tifffile",
+      "2026.3.3"
+    ],
+    [
+      "tokenizers",
+      "0.22.2"
+    ],
+    [
+      "toml",
+      "0.10.2"
+    ],
+    [
+      "tomli",
+      "2.5.0"
+    ],
+    [
+      "torch",
+      "2.7.0+cu128"
+    ],
+    [
+      "torchaudio",
+      "2.7.0+cu128"
+    ],
+    [
+      "torchvision",
+      "0.22.0+cu128"
+    ],
+    [
+      "tornado",
+      "6.5.1"
+    ],
+    [
+      "tqdm",
+      "4.70.1"
+    ],
+    [
+      "traitlets",
+      "5.16.1"
+    ],
+    [
+      "transformers",
+      "4.57.6"
+    ],
+    [
+      "transforms3d",
+      "0.4.2"
+    ],
+    [
+      "trimesh",
+      "4.5.1"
+    ],
+    [
+      "triton",
+      "3.3.0"
+    ],
+    [
+      "typeguard",
+      "4.4.2"
+    ],
+    [
+      "typing-inspection",
+      "0.4.2"
+    ],
+    [
+      "typing_extensions",
+      "4.12.2"
+    ],
+    [
+      "tyro",
+      "0.9.17"
+    ],
+    [
+      "urllib3",
+      "2.8.0"
+    ],
+    [
+      "uvicorn",
+      "0.29.0"
+    ],
+    [
+      "vcs-versioning",
+      "2.2.2"
+    ],
+    [
+      "vhacdx",
+      "0.1.0"
+    ],
+    [
+      "virtualenv",
+      "20.30.0"
+    ],
+    [
+      "viser",
+      "0.2.11"
+    ],
+    [
+      "warp-lang",
+      "1.11.0"
+    ],
+    [
+      "watchdog",
+      "4.0.0"
+    ],
+    [
+      "wcwidth",
+      "0.9.3"
+    ],
+    [
+      "websockets",
+      "12.0"
+    ],
+    [
+      "werkzeug",
+      "3.1.9"
+    ],
+    [
+      "wheel",
+      "0.45.1"
+    ],
+    [
+      "widgetsnbextension",
+      "4.0.16"
+    ],
+    [
+      "wrapt",
+      "1.16.0"
+    ],
+    [
+      "xatlas",
+      "0.0.11"
+    ],
+    [
+      "xpolicylab",
+      "0.0.1"
+    ],
+    [
+      "xxhash",
+      "4.0.2"
+    ],
+    [
+      "yarl",
+      "1.18.3"
+    ],
+    [
+      "yourdfpy",
+      "0.0.60"
+    ],
+    [
+      "zipp",
+      "4.1.2"
+    ]
+  ],
+  "python_distributions_sha256": "bfdb2b6fcc45ba9742ce3b49292ea24ccb0b31cbecbf337c1af64a568d300564",
+  "package_bindings": {
+    "PIL": {
+      "origin": "resource://eval_environment/lib/python3.11/site-packages/PIL/__init__.py",
+      "entry_sha256": "43828e12947b4bf5ec8f7d1fbceb2f47de311295f8294b15794c1a54fd5f53cd",
+      "namespace_locations": [
+        "resource://eval_environment/lib/python3.11/site-packages/PIL"
+      ]
+    },
+    "curobo": {
+      "origin": "resource://official_runtime/third_party/curobo/curobo/__init__.py",
+      "entry_sha256": "f1141c8054044fb61d26925cc2ededf58f11c53bde6d36cea02421573e11b872",
+      "namespace_locations": [
+        "resource://official_runtime/third_party/curobo/curobo"
+      ]
+    },
+    "cv2": {
+      "origin": "resource://eval_environment/lib/python3.11/site-packages/cv2/__init__.py",
+      "entry_sha256": "936bd94c5a5debf0212fc751af79d3a163652f3e850259df2159db6aa3ed8ad8",
+      "namespace_locations": [
+        "resource://eval_environment/lib/python3.11/site-packages/cv2"
+      ]
+    },
+    "env": {
+      "origin": null,
+      "entry_sha256": null,
+      "namespace_locations": [
+        "resource://official_runtime/env"
+      ]
+    },
+    "h5py": {
+      "origin": "resource://eval_environment/lib/python3.11/site-packages/h5py/__init__.py",
+      "entry_sha256": "d4a46803087247cef67ee34a4d98d797be2f55b1f9230bc5f8a1fa358f8d1b87",
+      "namespace_locations": [
+        "resource://eval_environment/lib/python3.11/site-packages/h5py"
+      ]
+    },
+    "isaaclab": {
+      "origin": "resource://official_runtime/third_party/IsaacLab/source/isaaclab/isaaclab/__init__.py",
+      "entry_sha256": "9031fe4e7dc80d02d78a26f408e276fb457b7d28bc06ef459227adab6cb431fe",
+      "namespace_locations": [
+        "resource://official_runtime/third_party/IsaacLab/source/isaaclab/isaaclab"
+      ]
+    },
+    "numba": {
+      "origin": "resource://eval_environment/lib/python3.11/site-packages/numba/__init__.py",
+      "entry_sha256": "95cfc2592a5e1de37013281abbc825a546f5af3a449b2502b39988c6f514c9db",
+      "namespace_locations": [
+        "resource://eval_environment/lib/python3.11/site-packages/numba"
+      ]
+    },
+    "numpy": {
+      "origin": "resource://eval_environment/lib/python3.11/site-packages/numpy/__init__.py",
+      "entry_sha256": "11a9455eb4297e45351657f5a60f198c21831c7a395f8c59a7361fb2edf785e5",
+      "namespace_locations": [
+        "resource://eval_environment/lib/python3.11/site-packages/numpy"
+      ]
+    },
+    "omegaconf": {
+      "origin": "resource://eval_environment/lib/python3.11/site-packages/omegaconf/__init__.py",
+      "entry_sha256": "9729f08831c414120732aac13771d18742897afcc86a9e8cc942c53643269417",
+      "namespace_locations": [
+        "resource://eval_environment/lib/python3.11/site-packages/omegaconf"
+      ]
+    },
+    "pinocchio": {
+      "origin": "resource://eval_environment/lib/python3.11/site-packages/cmeel.prefix/lib/python3.11/site-packages/pinocchio/__init__.py",
+      "entry_sha256": "cdfaebb16ba1e85d9cd55419f790db7c6b5de51661e14035ca26f9ff479abb89",
+      "namespace_locations": [
+        "resource://eval_environment/lib/python3.11/site-packages/cmeel.prefix/lib/python3.11/site-packages/pinocchio"
+      ]
+    },
+    "safetensors": {
+      "origin": "resource://eval_environment/lib/python3.11/site-packages/safetensors/__init__.py",
+      "entry_sha256": "92c988289b8c225a92f25e487ad5d7a1eb7e326eec0fedfc6b75e6f04d85e32f",
+      "namespace_locations": [
+        "resource://eval_environment/lib/python3.11/site-packages/safetensors"
+      ]
+    },
+    "scipy": {
+      "origin": "resource://eval_environment/lib/python3.11/site-packages/scipy/__init__.py",
+      "entry_sha256": "185913aa107512fafd5cf89dfd452a8719b45a6eba833e2dcee2cbfd18b4bbe5",
+      "namespace_locations": [
+        "resource://eval_environment/lib/python3.11/site-packages/scipy"
+      ]
+    },
+    "torch": {
+      "origin": "resource://eval_environment/lib/python3.11/site-packages/torch/__init__.py",
+      "entry_sha256": "9801e75447c7f585545f989f8a21940b60e0c4cc888effb2f08e739664b4b904",
+      "namespace_locations": [
+        "resource://eval_environment/lib/python3.11/site-packages/torch"
+      ]
+    },
+    "transformers": {
+      "origin": "resource://eval_environment/lib/python3.11/site-packages/transformers/__init__.py",
+      "entry_sha256": "aa8cb54da488cf43ba37b9955bb6c0d84d2000db0306f6a5f1c20b6842482d04",
+      "namespace_locations": [
+        "resource://eval_environment/lib/python3.11/site-packages/transformers"
+      ]
+    },
+    "yaml": {
+      "origin": "resource://eval_environment/lib/python3.11/site-packages/yaml/__init__.py",
+      "entry_sha256": "377e52d351cc7ac1537b469144c5a43e3d0f6bc2046c7a44f452bb72be4176dc",
+      "namespace_locations": [
+        "resource://eval_environment/lib/python3.11/site-packages/yaml"
+      ]
+    },
+    "sam3": {
+      "origin": "resource://models/sam3-robodojo-v21/sam3_source/sam3/__init__.py",
+      "entry_sha256": "ca3821a125f767e6a35188603b51ef2501b1e7c3d1a90546ac567c5d2a80b9fb"
+    }
+  },
+  "inherited_repository_runtime_lock_commit": "09bd5f5e762b949f5858ece31347ce62057b3a5e",
+  "dependency_profile_approved": true,
+  "installed_profile_bounded_probe_authorized": true,
+  "approval_scope": "Read-only installed f57/official-Python profile and task-local public-only CPU candidate; launch requires an independently owned physical EX lease",
+  "native_execution_authorized": true,
+  "public_boundary": "Current standard RGB/six own-state fields; no physical fingers, contact, garment/layout state, scorer or private manager",
+  "GPU_started_by_capture": false,
+  "resource_bank": null,
+  "models": {},
+  "full_binary_environment_image_verified": false,
+  "production_performance_verified": false,
+  "sam3": {
+    "root": "resource://models/sam3-robodojo-v21",
+    "manifest_sha256": "eb82f36b8be4fb4d1bc638405a12c9331f631426216731caa71e62720f36314d",
+    "files_sha256": {
+      "overlay/cloudpickle/__init__.py": "12b2b2beaa8012b3a46c2a30ae2ce11a937d0cdf93683db642da88f4243db03c",
+      "overlay/cloudpickle/cloudpickle.py": "29c2c0fee031a762ae3096fdbda4d5bdeec52c5510bbb998903ddd0ac7317917",
+      "overlay/cloudpickle/cloudpickle_fast.py": "008e5929fd806cb3710fc957c8b0e9299cb3799da87c5b5d2b565616afde7357",
+      "overlay/cloudpickle-3.1.2.dist-info/INSTALLER": "e6184ce10e266134fdcfa401e8f1a95005bcd4f18d16b62b757323e2833fe9a9",
+      "overlay/cloudpickle-3.1.2.dist-info/METADATA": "3d0263bfe9ee4f23b244bdcaff73acbe7a1957ebf82743b6ae42693adc48d721",
+      "overlay/cloudpickle-3.1.2.dist-info/RECORD": "a24820e3d3ea3f0fb210f58b84abb5450a94cc649e573a9a0a69354afc6fa1de",
+      "overlay/cloudpickle-3.1.2.dist-info/REQUESTED": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "overlay/cloudpickle-3.1.2.dist-info/WHEEL": "1b68144734c4b66791f27add5d425f3620775585718a03d0f9b110ba3a4d88db",
+      "overlay/cloudpickle-3.1.2.dist-info/licenses/LICENSE": "3029ea34173e9fdc233ad315dc6b100bd1ea71f529b1c1af97664a272fdc55f5",
+      "overlay/decord/__init__.py": "0920d346a64d92aad5e43ca67cee12d358f0ae1bf07ea74ba4119a48def7bfb0",
+      "overlay/decord/_api_internal.py": "4f283de6270207177bd7c9f3e6b631e26441d3fb23d8fb0be01e4645f0ff06de",
+      "overlay/decord/_ffi/__init__.py": "88be9b7bce2637bba0ba4bcefffad867a418a404ed92057836f001a79bc9f9b1",
+      "overlay/decord/_ffi/_ctypes/__init__.py": "31a1e673e8c4229a334521bd7fc34367ce5aa5b83af5ad59c768df612280de21",
+      "overlay/decord/_ffi/_ctypes/function.py": "f33fa3d5b3fb80c2a7fb0400976c3608975d5b161401359d342ab8aa8ccccce3",
+      "overlay/decord/_ffi/_ctypes/ndarray.py": "1b9253fc79339f06a6200b097967b3a60a1413f36c37fdd2b79ffcb2c8d6f708",
+      "overlay/decord/_ffi/_ctypes/types.py": "5d814119b51909104d9572c5e88d32b759eb51e90421ae7fdfd42c58ba94fab1",
+      "overlay/decord/_ffi/_cy2/__init__.py": "6d1c9d09ace8bd62a6bc4f69329f9e3c400eae8c260a29879b08bfd3a777920d",
+      "overlay/decord/_ffi/_cy3/__init__.py": "f017885d07429335d01c7a9fe6973a724ccd3b959333b179f6ef0334f1d96022",
+      "overlay/decord/_ffi/base.py": "b0376b62a88e65fe9731257a3a76efec600b22626cbb260f5af0340d3be2e79d",
+      "overlay/decord/_ffi/function.py": "b17d9941bc3df2f3bb9c2300762c2058e9695f5139705f71b30bf06ec72e53e6",
+      "overlay/decord/_ffi/libinfo.py": "93b8d28794dd05f9a89390edec7d477bd597cdf7ae453832a20ae904db528000",
+      "overlay/decord/_ffi/ndarray.py": "aaad0479bcb054cfc062aec276986e257c1c3c4517932a3491223a7949f9f8f5",
+      "overlay/decord/_ffi/runtime_ctypes.py": "d531461211551e39514088e89d73a423c2dd6d65f5cdbe22d8a3f354c9c6c2ec",
+      "overlay/decord/audio_reader.py": "01e59d3e674ef769f53947c2bd02370ee4c0f1927b0a13a50dfc839089a1ac1d",
+      "overlay/decord/av_reader.py": "b65dc136cbd6034c4cdf22ac44390a94896f02b7d4ec44553a5537b686507fbd",
+      "overlay/decord/base.py": "4bfd9cfafba6dbd316157ca2134929282c6020d1b35bdbf53db98e8471138859",
+      "overlay/decord/bridge/__init__.py": "00f190f0b41b380802d3baef5792be9427d372566f22ec06ccfe192aac7592cd",
+      "overlay/decord/bridge/mxnet.py": "afe4865f459c4757044e21c73e8cd05c857285c811109b489adc8535c4687083",
+      "overlay/decord/bridge/tf.py": "3bf640be0ae41b0f7f0a706efc72f19767e820d33f307b479fffff25ca0b22a6",
+      "overlay/decord/bridge/torchdl.py": "ccae38600d9900cde082d220afc9f4ae695bba3e3045fc106a40adfeba4ba22d",
+      "overlay/decord/bridge/tvm.py": "bf0e5d678d9f80d0a83564842821194e12cbf72d5f4a360f3788655f95d7d330",
+      "overlay/decord/bridge/utils.py": "7a9fcf7e3f696caf19b44120ce6e3d64aade188d9e36d1211be6867c86e97bb5",
+      "overlay/decord/data/__init__.py": "072b8039275da82c44f0edafd6df5d2755c2e2bc386ab00193f509c3610c2b21",
+      "overlay/decord/data/base_action.py": "be1ba3e6d576e6f74094b0d20addaa6ba198a1925038d1de3a9609dcfca40871",
+      "overlay/decord/data/dataloader.py": "cfa4e455125a3e5bcb8dd0054a080f00c6ce55aacc8effaa68f141de498d862d",
+      "overlay/decord/data/kinetics/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "overlay/decord/data/kinetics/kinetics400_action.py": "8221091efafe22450534d482c0d33418006762cc6025e0dcc23c5d8c9ad59f41",
+      "overlay/decord/data/transforms/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "overlay/decord/data/transforms/action.py": "b1a03fa00f27cde257068003271a9a18f8d69869e77a79ffeca6d03b8c50dfb3",
+      "overlay/decord/function/__init__.py": "edf13f2e1de8867fbf35c746259a9818337aa105e5b423afda95c5c5de339569",
+      "overlay/decord/function/base.py": "cf1eb51fddbdbe2bf1e18c7924867a4781a79e67560159bf88f6a36c14abfc3b",
+      "overlay/decord/libdecord.so": "98b260c5812106648ba299279916fbe98439893e346d4efdcf5cde66ba8973da",
+      "overlay/decord/logging.py": "92c06f2f94b63b0113ef9d8dd9ba2960409ca55beb406c7b605d260eaf7555e9",
+      "overlay/decord/ndarray.py": "8a39c6daaab1ff998de6635c8d12b839c00101e9e28a2071d79ce717451fdba8",
+      "overlay/decord/video_loader.py": "485ce851a600958ffc216a4698eeae10a2f442138244f47fdfffa2871e46a5c1",
+      "overlay/decord/video_reader.py": "d871751a659c34abb8fe3ed7ffbf8ee7c1bbc424127a4575fc5f003ddbc04857",
+      "overlay/decord-0.6.0.dist-info/INSTALLER": "e6184ce10e266134fdcfa401e8f1a95005bcd4f18d16b62b757323e2833fe9a9",
+      "overlay/decord-0.6.0.dist-info/METADATA": "c716df1c8d318a318acadc35ad1160770e0ff1776a19a4b7e29b6fc10ccd19a6",
+      "overlay/decord-0.6.0.dist-info/RECORD": "718261718a5e36cd5ece89cf6e788ca12c5180955ad4054b6515bfcbc6c95c78",
+      "overlay/decord-0.6.0.dist-info/REQUESTED": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "overlay/decord-0.6.0.dist-info/WHEEL": "d24f09731316657ed32488ba245812cbb5047342b148776a371264e69966d856",
+      "overlay/decord-0.6.0.dist-info/top_level.txt": "da0717446c6fbabd99d622e6204e1fc4be9c9b2c156580ffffcaf30c62046433",
+      "overlay/decord.libs/libXau-b2e5323c.so.6.0.0": "7c1f85bc329e109739c6a63298a8f271577ceec9f592ad56224a56cf25c2d3aa",
+      "overlay/decord.libs/libavcodec-bc50294c.so.58.35.100": "06f9b34a493b6b1583388358b81d793d7f78dc9105c2682ef0dd53b29047b4f5",
+      "overlay/decord.libs/libavdevice-bf61e037.so.58.5.100": "06e50e5ae19def6f1c73ffa308361ed4e6665f5cd53056892874848540a2017c",
+      "overlay/decord.libs/libavfilter-1e2243e2.so.7.40.101": "79b37a526b50d6ebcd2255983198276718c29c0942d1fde96306e413041e01cb",
+      "overlay/decord.libs/libavformat-8b46ea57.so.58.20.100": "9a1eee8f823048e9059d3516d69c57b8a10604f7b722bfaf2327d021b4662518",
+      "overlay/decord.libs/libavutil-2b26904a.so.56.22.100": "f257fbb5b251f0b8580b5d65296a4d391ae28b98a4ed715961db0df2aaa3c7b9",
+      "overlay/decord.libs/libbz2-13e8c345.so.1.0.4": "9da8688e0f57a2be814dc22af9be3b18f15e02bcaf2e2a7c0f6b7e674b0a8c64",
+      "overlay/decord.libs/libpostproc-88b722f8.so.55.3.100": "94f8b2c0b25e7ecce3e6648c20fc25839c0000b07616d797d02983dc75efe9f8",
+      "overlay/decord.libs/libswresample-230d9f46.so.3.3.100": "44597797921ca2b1f74955397cc04e8f18a2625c70a5f0ca016e5f924c42b59a",
+      "overlay/decord.libs/libswscale-8e37dcfd.so.5.3.100": "cc48193958276cf1ae7c1272554710a96271331f8d0b4f31061752caae8c5b13",
+      "overlay/decord.libs/libvpx-5769b0ce.so.6.4.0": "64a892a71a9f4cfc043c875b0b299f27719ec8b8b823f7a89c11d26ea18aee91",
+      "overlay/decord.libs/libx264-555fb44a.so.164": "b3af8357308eb67bb16f2cd21d22b283ffb59559fd1cc7d38aeaa63e84eb15d5",
+      "overlay/decord.libs/libxcb-77222338.so.1.1.0": "266a250225f2e7e62c3b21496090ff8bdf9c8ff7555c7fef82b2e06385d36dab",
+      "overlay/decord.libs/libxcb-shape-893f3868.so.0.0.0": "899925f0fa9e57cf13d82f48af364422eac5ca77118646c5a53c6e904c059183",
+      "overlay/decord.libs/libxcb-shm-7ffb2544.so.0.0.0": "9ca2401e3f8228dfcf7da7f61dac77dba3a97277f3a0231e2b1e72a98316f04d",
+      "overlay/decord.libs/libxcb-xfixes-6523fc53.so.0.0.0": "7d61c3b791b112c5ee425be189cba736de42912e35fe1c0fe614ae17f8c03a79",
+      "overlay/decord.libs/libz-eb09ad1d.so.1.2.3": "39c737f11771a67aa5bf8960923da29eb8c44672e4c748a0f4a6f409ee46310e",
+      "overlay/pycocotools/__init__.py": "d02e91fe125b82e6e5f0642b897f7439094506d06f32771b40d00170deb8eae1",
+      "overlay/pycocotools/_mask.cpython-311-x86_64-linux-gnu.so": "2f690626cbf2ec65b0d0182fb7844be9101c00ef9b440ba8b94b6bbd79e869eb",
+      "overlay/pycocotools/coco.py": "4a234fc502c6e622f044747312d6a696652545f527e766c98bedf5aa4ca77f41",
+      "overlay/pycocotools/cocoeval.py": "988485f79624cd42ceed9335d284df4cdcdf7b3d583e052fcbed2dd6bccf0267",
+      "overlay/pycocotools/mask.py": "4d4788f995971c97c5548f0bd19941f6ec1faaf5d0d7fb6ec489256ff872c617",
+      "overlay/pycocotools-2.0.11.dist-info/INSTALLER": "e6184ce10e266134fdcfa401e8f1a95005bcd4f18d16b62b757323e2833fe9a9",
+      "overlay/pycocotools-2.0.11.dist-info/METADATA": "4310ec1c3b4eab38c4d8f850366c0f90c2a4ac078f486bab19b86eafa17f2fa4",
+      "overlay/pycocotools-2.0.11.dist-info/RECORD": "11cc8c76c070b17cbc9422b4044cb0c059f1850f48011a696682338fd64fca78",
+      "overlay/pycocotools-2.0.11.dist-info/REQUESTED": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "overlay/pycocotools-2.0.11.dist-info/WHEEL": "06f03f8bcf30705525e5e8572e09a1c320cbe173c6ac22a7e824d403d6b11431",
+      "overlay/pycocotools-2.0.11.dist-info/top_level.txt": "9324b027becef551751346a209beb6d6d11f1c5f405180cc85fd8bec56099d53",
+      "overlay/submitit/__init__.py": "a9b9fe2b126c0b0ab7a8e1328c83e3df451ccadd1e5f94bd61a53fb664e719f4",
+      "overlay/submitit/auto/__init__.py": "0e8d2e84644dae37164c0402bd3bf0fe5f2d01c2e1fa46041bc33bf08ff87bde",
+      "overlay/submitit/auto/auto.py": "f5600422b4b43b9df18c7e37cc929effc26e0fe4ed13fb0232ea6af30e01f1b3",
+      "overlay/submitit/auto/test_auto.py": "dc989906e07e753f1aa03a9c30f8b9cdd93008929dbc5b711dd1eb6fea5af811",
+      "overlay/submitit/conftest.py": "f01006b9e638eeca2ba143520c005ce5ef8d52040046705af9556341532ff45c",
+      "overlay/submitit/core/__init__.py": "0e8d2e84644dae37164c0402bd3bf0fe5f2d01c2e1fa46041bc33bf08ff87bde",
+      "overlay/submitit/core/_submit.py": "4451c2feaa67c8b7e82e2617be0e5103196e442dbb07ea8754c748f636b02d28",
+      "overlay/submitit/core/core.py": "dcddbe4bafd94e1fcc8478780e5e0e86a4712ae173a4f37c45ee8afb01e1821b",
+      "overlay/submitit/core/job_environment.py": "e61208865df0f4fb2448899358f4e44b1248c9dd23306bef204b2b0dcfe326d5",
+      "overlay/submitit/core/logger.py": "3c94a7839d4f4ae314fd645d1128a5fc8a3d7acff4168b86868b8051a7673788",
+      "overlay/submitit/core/plugins.py": "4d617971b6d56453590d98572c3b45a56be2e7a034efba5efd3d37ceb4533804",
+      "overlay/submitit/core/submission.py": "e65be3626aa551ecb261b6cc77b7f83309b0715a32a258ae1f81e5b56ef73cb4",
+      "overlay/submitit/core/test_async.py": "188591b84e17abefdee385143910ba4f9a5d462dbdb163c42450403d129d8677",
+      "overlay/submitit/core/test_core.py": "9efdbe6af71971c04aaac5f00bb7fc829857b2bc360c26f43a482ba694f0e045",
+      "overlay/submitit/core/test_plugins.py": "7f00f290b0b0fbc4334130e6847ae36f59423ed8265b6ff8b7e0cd8097dad719",
+      "overlay/submitit/core/test_utils.py": "f96d0967d27ca6ded88b5adaa1487ab2ccf272e9346c690c78e269cb9e2a8064",
+      "overlay/submitit/core/utils.py": "f95a78e1e03158a05efb78f982a0f454d135b57bdb2c67e8fd0b75e3b739bb93",
+      "overlay/submitit/helpers.py": "b9761c694555b6aa7c25ef6c6aa16bea33db39f423e58bd5ec22d0c3ba30e7d8",
+      "overlay/submitit/local/__init__.py": "0e8d2e84644dae37164c0402bd3bf0fe5f2d01c2e1fa46041bc33bf08ff87bde",
+      "overlay/submitit/local/_local.py": "c900cae49841adbb79aa0d6542a7b12d14c31fe991b689dd98e3aea2ad87c09f",
+      "overlay/submitit/local/debug.py": "e48d02826366848f2bcdeaeeb0118912680ff54625fb1a52a8ea21fe5ca50043",
+      "overlay/submitit/local/local.py": "447f4eb19f2dde3097e686dc58b60305eef3d5f5c1112ee3b48abaddb9b807fd",
+      "overlay/submitit/local/test_debug.py": "77c2ff14949abed86e7e4fb781bd588dae7370cf70f0a09356bf494d383584fc",
+      "overlay/submitit/local/test_local.py": "c5b94e2e3010b0ddc7b77d4f3429a4ef7aa2d3f57f7aebd28f09469663f89985",
+      "overlay/submitit/py.typed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "overlay/submitit/slurm/__init__.py": "0e8d2e84644dae37164c0402bd3bf0fe5f2d01c2e1fa46041bc33bf08ff87bde",
+      "overlay/submitit/slurm/_sbatch_test_record.txt": "8f47c3ad0515bceefdbe0b5adf5ee9ee39de2e90fef3c6acfd5718c2e522550b",
+      "overlay/submitit/slurm/slurm.py": "75fc1dcc388b66871cdd249c30a07fc3dc7f91a4aa8517d21acc7ff05a346c18",
+      "overlay/submitit/slurm/test_slurm.py": "d85db0ded64d0be57872bb14b5be04a17605806424545138ee8ecaf58541a2d7",
+      "overlay/submitit/test_documentation.py": "01ece8cf68fb4b68d0702a37b08759294cdf82af9ea4a0d7a5773256c44562a7",
+      "overlay/submitit/test_helpers.py": "fa251b7b329368c306523f5f5f6ed7485a4a8aae1cbabc9b6056073713378c49",
+      "overlay/submitit/test_pickle.py": "c2bb876f4d07a5fd4507698708cace7b92216246d75c70fa8ef04136bfcf82a7",
+      "overlay/submitit-1.5.4.dist-info/INSTALLER": "e6184ce10e266134fdcfa401e8f1a95005bcd4f18d16b62b757323e2833fe9a9",
+      "overlay/submitit-1.5.4.dist-info/METADATA": "78bf9234af213198c83e86c4fe7f7356a0d41486e91ec50b45ee5a759bde65a4",
+      "overlay/submitit-1.5.4.dist-info/RECORD": "77da464802c142e2116afd8a1ca9ea8b3e13c9078db7772dae89aeb6c36c51e1",
+      "overlay/submitit-1.5.4.dist-info/REQUESTED": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "overlay/submitit-1.5.4.dist-info/WHEEL": "1b68144734c4b66791f27add5d425f3620775585718a03d0f9b110ba3a4d88db",
+      "overlay/submitit-1.5.4.dist-info/licenses/LICENSE": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85",
+      "overlay/typing_extensions-4.16.0.dist-info/INSTALLER": "e6184ce10e266134fdcfa401e8f1a95005bcd4f18d16b62b757323e2833fe9a9",
+      "overlay/typing_extensions-4.16.0.dist-info/METADATA": "b05084ca1d50879865178d9fff9fabeab61bdfb1f361bfbde95421ffc8f9be46",
+      "overlay/typing_extensions-4.16.0.dist-info/RECORD": "9e07fea845cac76293d927afa7157a14ecba39b318bc8af236b8de530b7656c1",
+      "overlay/typing_extensions-4.16.0.dist-info/REQUESTED": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "overlay/typing_extensions-4.16.0.dist-info/WHEEL": "1b68144734c4b66791f27add5d425f3620775585718a03d0f9b110ba3a4d88db",
+      "overlay/typing_extensions-4.16.0.dist-info/licenses/LICENSE": "3b2f81fe21d181c499c59a256c8e1968455d6689d269aa85373bfb6af41da3bf",
+      "overlay/typing_extensions.py": "4040ca1a1ecbee00d1385c12a93084d1c5bd46f0b774f07e5ae7e91c4f55e696",
+      "python_deps/ftfy/__init__.py": "7a45fa65b2674775319a05b0a4cdbfd04a22ce7f36ba4098411bf9ec1b22cb3c",
+      "python_deps/ftfy/bad_codecs/__init__.py": "b0f29669ef7be2f8dcdc978eb06859f1914d5283d3212c7df3ccc16f127b4884",
+      "python_deps/ftfy/bad_codecs/sloppy.py": "6f3828640408af3454c5bfaa2660d55fafc4876975e3722ab2d7451456b24c82",
+      "python_deps/ftfy/bad_codecs/utf8_variants.py": "5a5c8c6ceb5415fb5e3c48ff4a9c434d78ab3c08fc1dcbb1559d5a498029561d",
+      "python_deps/ftfy/badness.py": "8ce47eb9c01f5fa2d38e650fe047474bde5537beba5971b722ca6b4079df6fd3",
+      "python_deps/ftfy/chardata.py": "b405eaad7d98df306c9406688fab45072f989feffe530175baccef28dedc55c9",
+      "python_deps/ftfy/cli.py": "abd0cd8b82ee84a1ab95ea07fd9dda07a274a124f7e1ad9659ab5aa7b39dafbb",
+      "python_deps/ftfy/fixes.py": "1bc5d02b332572cc3868f851ad081cc0031cc6a6ad7fb10398d68eaec63e0ba5",
+      "python_deps/ftfy/formatting.py": "a5b981ba76327603ecddbc4c8425c5b5a4ccd3fdea4ffca9e9eb19be3bce2999",
+      "python_deps/ftfy/py.typed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "python_deps/iopath/__init__.py": "0c235d04461021792c89ad3d3415d4f35d3b9ac14bf5f0a58970d77dc9648749",
+      "python_deps/iopath/common/__init__.py": "0123fdedd9c5b94cb5ae583416f1240b79e3f0d85efd7b927eda466d726bdbd2",
+      "python_deps/iopath/common/download.py": "c3035d7e194d7925f68845d4e74b02c5f3273f4a3f44d322192a52e90383cec5",
+      "python_deps/iopath/common/event_logger.py": "004fc65fae8f0b260c43391785d70f1293e93c4e3c51837c6906fbbc51441f37",
+      "python_deps/iopath/common/file_io.py": "fd20391c8ebebacf9acbc1336f0643433dd5668410e55c0d05e066d51cfd541e",
+      "python_deps/iopath/common/non_blocking_io.py": "cd01da0240677799725922620b02b5dee029d786e7ee369824e94ce4a4af9590",
+      "python_deps/iopath/common/s3.py": "2ca5edbf55ba3f54415ebceb9d8a4cd927d24108993e2163b04c5ecbba7c9dad",
+      "python_deps/iopath/tabular/__init__.py": "25bf9e4803f238790789a985fa2551fbb02665bc3f0a337fb2fc8256b14e14f7",
+      "python_deps/iopath/tabular/tabular_io.py": "5b287921eea080e7f953a35629355d407ef8913fda4ecdfdd90c68c368848165",
+      "python_deps/iopath/version.py": "d5410e9558f50c0b3fc60d7f5956eba31b1db82cab5d5f4c05dc4750a0126111",
+      "python_deps/timm/__init__.py": "9668df8ff48b33f846428cd7607399cf14b4f0feef157930eabf6defe932b1d3",
+      "python_deps/timm/data/__init__.py": "68b3c5369e59249bb9bfe7c765b4dd6da02fa20eeb7e6ebb389197dd3c6329f9",
+      "python_deps/timm/data/_info/imagenet12k_synsets.txt": "f6483e79f18a9b670d43d915ddba40bbcaf82cfc4e92a07bd44057b9d44935f3",
+      "python_deps/timm/data/_info/imagenet21k_goog_synsets.txt": "66362bdedf36d933382edca5493fc562dcc17128ce36403c9e730a75f48cb2f2",
+      "python_deps/timm/data/_info/imagenet21k_goog_to_12k_indices.txt": "6b588e9d55c7fed67aac82e91beeabe7eace2de1ed67115010ca076179e8c508",
+      "python_deps/timm/data/_info/imagenet21k_goog_to_22k_indices.txt": "86a76780366f807a9f804617ea244ca1bf5817414d0330cf11ba29e285c1cc57",
+      "python_deps/timm/data/_info/imagenet21k_miil_synsets.txt": "cd76d977daaa2f13a4a91fca0f53713f2f29675308d4ce0f0ee0e5b07a3164c6",
+      "python_deps/timm/data/_info/imagenet21k_miil_w21_synsets.txt": "f49dde3d69946b8635586432f34f35985f807d168286ce5fde746aac3a7d94c8",
+      "python_deps/timm/data/_info/imagenet22k_ms_synsets.txt": "f2c7ac47500e1d1d70432d3cb2e2b2187c6880125439832bf4b4038f716ca278",
+      "python_deps/timm/data/_info/imagenet22k_ms_to_12k_indices.txt": "c0c910923b70d892a6f8accde9b0cabdaa8dd67b8c0fcfd0b82d481557a2d63b",
+      "python_deps/timm/data/_info/imagenet22k_ms_to_22k_indices.txt": "4a9fdd07433e9dc385fe3feb021586308f894a3dcb85f4882b25ed204cf63321",
+      "python_deps/timm/data/_info/imagenet22k_synsets.txt": "0ae24538751973797b29d8dec412b2bdc61bc4ec3ecd081eba0735804236bbd2",
+      "python_deps/timm/data/_info/imagenet22k_to_12k_indices.txt": "d3ffaab48064bab1ea7ce1626c72f5a011ee4503cac612b90ee1da0d147c8e87",
+      "python_deps/timm/data/_info/imagenet_a_indices.txt": "e81223a35add6e78f9afe6f215652c1926ebefe1d8efc26c6e923d7ac9143937",
+      "python_deps/timm/data/_info/imagenet_a_synsets.txt": "9826a24166e74ce62fb87b27889874ca26917542c745712309d6e25855d63bc2",
+      "python_deps/timm/data/_info/imagenet_r_indices.txt": "91e09d2ff0a002104bc0d37a892a7e75ffc2cc0db47b2b506047a3493b9116d2",
+      "python_deps/timm/data/_info/imagenet_r_synsets.txt": "a6a0729f7a99230280639cab6e51e01485a3b41a676ea35621a501c9d6e83ca4",
+      "python_deps/timm/data/_info/imagenet_real_labels.json": "d83e9bff374c631aae8439eb064c7019acc56e1b3bc3f56b8380c2a710b0220b",
+      "python_deps/timm/data/_info/imagenet_synset_to_definition.txt": "191e227d48fc8c7b7e2d2a3cac41fc8b2eb517d9d2819d0edbc91c5767250eed",
+      "python_deps/timm/data/_info/imagenet_synset_to_lemma.txt": "1b8babda187421a4bde0c9c5a197c36f6bdda962f7ca11ffb2813806cbb2178f",
+      "python_deps/timm/data/_info/imagenet_synsets.txt": "70002b0ff5de60a3a17a82dbfcff291931f96225ddf941ad2e182fc39e183d15",
+      "python_deps/timm/data/_info/mini_imagenet_indices.txt": "006476a78431bdb7afecabe8160978715fa1f3cb903bbb86a7bda391aa8d2752",
+      "python_deps/timm/data/_info/mini_imagenet_synsets.txt": "01be89a8f69ce3bf1f361d701c84ba5eb3b73993fdc56f30641256103dc45e57",
+      "python_deps/timm/data/auto_augment.py": "9a734d99ab8ddb2d8f4798c38c51e763ec4d9d315b811e2a92a19c33f1b32794",
+      "python_deps/timm/data/config.py": "b9fda9fa6356ff09ed09edf82bf5ebdc9e3970987c216125fdc33083228647e8",
+      "python_deps/timm/data/constants.py": "6644abed002b72c0f238e051610a4b7b873654e24a4406280d1535270609b1e1",
+      "python_deps/timm/data/dataset.py": "d2340ca03764e115871da297d5488f2582c847c4689bf1d0d4ca01b7e8adf401",
+      "python_deps/timm/data/dataset_factory.py": "1058ccb9ccd392c3bbe9f96e5e7d0e5e653b5a487de7580235aa86f8ef3fe408",
+      "python_deps/timm/data/dataset_info.py": "07a1989cb0dcf8f29b299701b0a7156ea7e6f76d824d3bf9958c1fc5ebe333d9",
+      "python_deps/timm/data/distributed_sampler.py": "99f712fdbccbff3108444a517abf0b01d5f0d56bd415826b5e0a8ac367ea9471",
+      "python_deps/timm/data/imagenet_info.py": "cdd521ee39702b4b4fcc95da95308488c053a7f68687f02f27b369c0218c32a5",
+      "python_deps/timm/data/loader.py": "513f89779b718422754bc8d3f0de48413570dd29a2b09662ec766244de905bbb",
+      "python_deps/timm/data/mixup.py": "c71833c183701134a0c26f5ac33d18ae4b9595d316dd61a462e1f4acb7fc304a",
+      "python_deps/timm/data/naflex_dataset.py": "61bdcd11c301bcdb87c086c6bdfc92fe497f94d38792188810289a74da13124f",
+      "python_deps/timm/data/naflex_loader.py": "3e14892ba1432a174343a0295c2ec4f3099fd5770c2a2c17ecb682b35d2d7675",
+      "python_deps/timm/data/naflex_mixup.py": "bf28e87f1417022ac25b1b10acf9b9c6aad601eec34dc085e81d2d1b2857e4a0",
+      "python_deps/timm/data/naflex_random_erasing.py": "1e582a239ede44622e6f9ff85e411d416829421a3ad8ed1f6bb71a3bdc62c379",
+      "python_deps/timm/data/naflex_transforms.py": "4180d0f54f990c03abfbd3a5e6632f7f38ddda8d318eae683908b039bbc9107e",
+      "python_deps/timm/data/random_erasing.py": "8d24c9abed731994f5cd15afe41cb206e038950763fc415ca226dd2e3450683a",
+      "python_deps/timm/data/readers/__init__.py": "02e2a0423679abd5c82c866eea2443209cbe5f276283fcc2d5395a5519917026",
+      "python_deps/timm/data/readers/class_map.py": "f632bab6c01562ecb3b16e44655824e316383d4a10aeb145c1dd2e6f5b684add",
+      "python_deps/timm/data/readers/img_extensions.py": "293b640b27eb3a12f01fbbf0b3b93bc6c86412a7a476b10667eae612bc92bdc4",
+      "python_deps/timm/data/readers/reader.py": "fc5a7def02c8d5cc45148d5094e92f5882b0766b5068f1201fdeca9ad4036682",
+      "python_deps/timm/data/readers/reader_factory.py": "6b32177f056baa50b19ded699833b70b2bb0892c0e847658f312a9199c139554",
+      "python_deps/timm/data/readers/reader_hfds.py": "f117a98e442c75aa57497cfe5e37cf44dafbb8069f687ca5c922a93e5447773e",
+      "python_deps/timm/data/readers/reader_hfids.py": "059fdacaf2c539cb75d254e9230d73d7acb522b11e57c1d8e162f028365321c5",
+      "python_deps/timm/data/readers/reader_image_folder.py": "0aa0b08e67698fddc71b800c4c57b040decdfd35b5396eaf920324d50db64b88",
+      "python_deps/timm/data/readers/reader_image_in_tar.py": "be348ee04435afdb9dc23dea413e60f12d801a420e9e26b1b2f5e8b6d8c44469",
+      "python_deps/timm/data/readers/reader_image_tar.py": "8743e58661d4ff5433532e29de9b08f49a1e6806a8d7f38114ad7f2ba45ef5ee",
+      "python_deps/timm/data/readers/reader_tfds.py": "e5d69aaa127362aee16d80407ae174ea55c23bb034b4f8a91db25530532ff8d9",
+      "python_deps/timm/data/readers/reader_wds.py": "64836bd22077c6bcfd5629b576fa1b7a950ea45c906403fc48574ea1b2c36249",
+      "python_deps/timm/data/readers/shared_count.py": "ffffd1bcb47e8e8851674227b3a88a54090a538e0bc54de8e07ec4d01d1bdb9a",
+      "python_deps/timm/data/real_labels.py": "c5d7b17a853f284e9cd876341bcd4dcb6f93fe24d0ff51ce58b8fb47f59f025b",
+      "python_deps/timm/data/scheduled_sampler.py": "f7e633e26d0df2eb8a9dd02c12ac9431301e95e74e10653cbd29e0b699e85fab",
+      "python_deps/timm/data/tf_preprocessing.py": "c4294c799c943f1f1801306f567ce28346c324d05af19ab3729995594c1e7d68",
+      "python_deps/timm/data/transforms.py": "c2b65d35981b17239225be027a40e980e5070339799ef0ee4276917b74003456",
+      "python_deps/timm/data/transforms_factory.py": "e4a882732a221327495457cad7a381292375d7b407b49875b92b95012a61f067",
+      "python_deps/timm/layers/__init__.py": "dcf836e7d240a2965dde733b5575462ab776eb2508ed70f3e30c193524fc6af9",
+      "python_deps/timm/layers/_fx.py": "234f6b7faf759c0c30e2e84483b20c358c1cc4c6f3c34af221f10b17c957ab8c",
+      "python_deps/timm/layers/activations.py": "effc50cc017066d60f3e8bc9f4a65b2765ad374a1b4da7bf023c1db99e8f1cd9",
+      "python_deps/timm/layers/activations_me.py": "a17a65e5f72c7938cdcd2ca7e54e779548e49c06af8f488c1666bf8c174cc60b",
+      "python_deps/timm/layers/adaptive_avgmax_pool.py": "c82fd5bc5e44c0b2adf1165261cb2f318aa76db3d0a831304e3dd9e5538efe97",
+      "python_deps/timm/layers/attention.py": "d5455aa091ceb1b7f5ff814e93910938227616d974550ad5a3f033e5dce52832",
+      "python_deps/timm/layers/attention2d.py": "eea95e2f73f1500719dfb2d023d5968bc5ae919fd08ed43c53e5f69158b78c5e",
+      "python_deps/timm/layers/attention_pool.py": "9c78e7472898892b02a8c5056380e5177e6fb0a9ffaef8689ec96ef74a048f79",
+      "python_deps/timm/layers/attention_pool2d.py": "74d95d43b026fe71a671aac086bba250e4a962109091e180ef4a045f642882b2",
+      "python_deps/timm/layers/blur_pool.py": "be6b5a5c89ac86d3c0678e5bb671991a4e9b82c10fd9dbe7eae456043b45a2f0",
+      "python_deps/timm/layers/bottleneck_attn.py": "b09c15992ea042c412f17c28bb5145660d20483c10750c6edc8ac04bb00887d1",
+      "python_deps/timm/layers/cbam.py": "43512ab18f21a4817c53c9c8af6a8d9bc72c5e66926ea756dc606a5674f833ea",
+      "python_deps/timm/layers/classifier.py": "447aaa6ad2d70e6297f0b7d4a47e19cbfe6d910f933246c3c233d355b85671be",
+      "python_deps/timm/layers/cond_conv2d.py": "315fd5d71c324474b8a3bf7a073c006f6773c4bfc2d110a7569c99a68d3c83f2",
+      "python_deps/timm/layers/config.py": "59ec44335504ed70c5c3a02a7cf91d943c6435ee87c1006063730835783fa4e5",
+      "python_deps/timm/layers/conv2d_same.py": "225395241462682adb5696b8cf29dd853d54babcd2ac78b27b7eb9e0ea55ea1c",
+      "python_deps/timm/layers/conv_bn_act.py": "4855d97df31fb588634ac0cebd9fde7f4dced9aee9007c635c670c31cd97981e",
+      "python_deps/timm/layers/coord_attn.py": "952afa523e35ae6082ee4705b47189e601bb531ac0019fb7608585650ef77a42",
+      "python_deps/timm/layers/create_act.py": "88a6300c35d175c63a37943be714a9b7677edf001489897a95746f720d695b19",
+      "python_deps/timm/layers/create_attn.py": "f9b13c1c2879bc3d14378cbc3b7818219d553b569153fbd377cce461dc6a37e8",
+      "python_deps/timm/layers/create_conv2d.py": "75aaf153392f3d853182eb89fd625dd4f7a993138ae227f92702730b9202f399",
+      "python_deps/timm/layers/create_norm.py": "fe540d7462a2e9031b3c3a941a5fa9ad37c1a89043e65d71109b3044336ac156",
+      "python_deps/timm/layers/create_norm_act.py": "7523d591ba2c3c7ac6efe374483f1dc5eaf5357baa953dbb475dd10807449750",
+      "python_deps/timm/layers/diff_attention.py": "a3a4d9a7bf034aac5734ef23ad57d5e149452929890efd58a4ffb49076e6bc9d",
+      "python_deps/timm/layers/drop.py": "2047ce241398537d6e502716f1f3bb7a285b006554f2e27e9a68618d68376ac2",
+      "python_deps/timm/layers/eca.py": "c98058c0876fb71d3bec59c8ce5602685a03809d4f804afea3ea2b96017bcfa4",
+      "python_deps/timm/layers/evo_norm.py": "f4f7783e110c8ee899c4f29ce44686e100475fcd7a1fa5cc5bfba03fbdafa180",
+      "python_deps/timm/layers/fast_norm.py": "f2bc1b8841ae01ff782ffd768335d27f95ccf7e8ef1d1ad7e930e38580600e0b",
+      "python_deps/timm/layers/filter_response_norm.py": "dbd5cfe10d85d21eaf9bc96be6291eff12bdcf9ccd6c8e53ebb678262cb53010",
+      "python_deps/timm/layers/format.py": "95c87c90abfc1968f2aa45d7e85e4a80d151eb46d2aa60364329b50073cf2ff0",
+      "python_deps/timm/layers/gather_excite.py": "5ea5566fa417ced7a87a39313e63666acb1d4e9eb1d222ab2f99875c48ce5940",
+      "python_deps/timm/layers/global_context.py": "82800e62e82da04a383594aa7bd02b8f6bbc22cfdd000884f678c6101d745888",
+      "python_deps/timm/layers/grid.py": "94c33c6ccde0831ba7bd016a40207de3749901f63b370d38c3e94568c064c6df",
+      "python_deps/timm/layers/grn.py": "7a357b2a2f53c549cf8fc5ba4829934f7eb416456d0f4964cca825f0526ee95d",
+      "python_deps/timm/layers/halo_attn.py": "6b06d69e6f591a76f9da1ee18912b86df85c6e4f53fd571ea918450e95fa5b1f",
+      "python_deps/timm/layers/helpers.py": "f4aaf505d3a44d0d2d2af8f5b6f0912fb1059fa6e4bca24c35944e64640756c3",
+      "python_deps/timm/layers/hybrid_embed.py": "1215d2a428beb4cd20997388767252142fabd26f18c372504778e5cf83bb911e",
+      "python_deps/timm/layers/inplace_abn.py": "b84f39bf33413cb651de20543f2af0a346e1de9b60e24a179f9c6e68d2fbfe35",
+      "python_deps/timm/layers/interpolate.py": "3aca1b5aa1750aba4b7ba6245cb991cc049b02cc3fbb3cedcaab0167ac5462bb",
+      "python_deps/timm/layers/lambda_layer.py": "c3b0c0319ad8b60d7e026e23a8d82c37c180ccfbf3d30aba94fcb9825f983485",
+      "python_deps/timm/layers/layer_scale.py": "499631e59c5ae5d2a36e3172a7e9e1a0feb8fc22fa3b404be38c447a1eef7b6c",
+      "python_deps/timm/layers/linear.py": "6da4b65a9974bd810b9ef86743a2f0eb98d5a2d689cf98866eba0927d2662113",
+      "python_deps/timm/layers/median_pool.py": "8e4eabb9356fef792e1794c47b07d16d4e59d8467c7aee82954656ed63d8f1ef",
+      "python_deps/timm/layers/mixed_conv2d.py": "6dbfad421f06f72b558e15349f9cab7bd1e2da6393268c96cbe8b9c0302caca3",
+      "python_deps/timm/layers/ml_decoder.py": "de8ad42a254b1960612008c6d4246bb07a9e20d479a2f518c227c36b64901945",
+      "python_deps/timm/layers/mlp.py": "c024128a1c7e2a55ebc5e33a7c94c585ae1e960cd032b39b08445ea30f05c5a5",
+      "python_deps/timm/layers/non_local_attn.py": "2f8a117c915150d76ef6bf92d177e7ca102adb5c13e62868cd10a374e69162bd",
+      "python_deps/timm/layers/norm.py": "afe3abf01a4379065c1c11bf6b6f947a1a743aff7f5e51849b353697b0db557d",
+      "python_deps/timm/layers/norm_act.py": "4821c9fa7b73c19cb63d16a4c86912f36380c56e34d25bc6170ea728aa21fed6",
+      "python_deps/timm/layers/other_pool.py": "85272f303f4fc61814e28abebb1c93bf6d548bc361264f1fd462ec6f8d5f9f97",
+      "python_deps/timm/layers/padding.py": "ed3a083809391e23acf0aa623f3aa935023c5221901c86f0596931927367219a",
+      "python_deps/timm/layers/patch_dropout.py": "829053987061419344ed83cefd5ec2f12024bf1801dcc0b4f936d85b1b701ee3",
+      "python_deps/timm/layers/patch_embed.py": "fb308cdb0bd12576baf851fe5cfc1abd49d0079e2e0e7dc2751fbfbd8b3f8d9d",
+      "python_deps/timm/layers/pool1d.py": "730f4c3cac736e0d63b564d79fc5d8e024e6255eefff70f3eceb2effba0aefc1",
+      "python_deps/timm/layers/pool2d_same.py": "854b2afe33149cf4339f821a9b3aaa3c1053ad08d8284ee70a4bd6b968c8f92b",
+      "python_deps/timm/layers/pos_embed.py": "06b469fbe07a42fa6ef485874678a847e209aa188d09902258af44fdb57834c1",
+      "python_deps/timm/layers/pos_embed_rel.py": "fcc07b7ebcb8b807ed46d04eb5491ee8c985fd46ab13b1ea0158e485309ad254",
+      "python_deps/timm/layers/pos_embed_sincos.py": "0662a5299197f64cf4a864ed0987191d986861b3ec157dee1a2a097ec5354fb7",
+      "python_deps/timm/layers/selective_kernel.py": "70e06298d6c9be1d98bb9cc98825db8a612ba9e526f1e2d6fefec08c4efe7b10",
+      "python_deps/timm/layers/separable_conv.py": "72b805d1e7bcc5dc3b0c64749d0501fadf1a4fcb3527f01a542376dace0b943c",
+      "python_deps/timm/layers/space_to_depth.py": "2fb48f6b310ead760dd31898cf52f329f8620377a48fd31a52a27aaf57a51d35",
+      "python_deps/timm/layers/split_attn.py": "fb71f37b4b616848298c1e656c61edb126cb62371b523b0768c5b237dbcb4c02",
+      "python_deps/timm/layers/split_batchnorm.py": "46f243533e2d883876e085e92746762f780b1565319ac7dbf63a3f14bd5c9afe",
+      "python_deps/timm/layers/squeeze_excite.py": "6d45bc824a71872e0035c25b2efe32feced5180ef5f702e46b39fb675065d4e5",
+      "python_deps/timm/layers/std_conv.py": "7851e78f4cbd91bef5e6e42f42a0fd19c442e688e6ac046021828b932ff8a888",
+      "python_deps/timm/layers/test_time_pool.py": "f4efe24ed6d4fa08235d40a7ca04d684171bcdf65c7f3890b1146d509f78dea9",
+      "python_deps/timm/layers/trace_utils.py": "71b66e7ce6862a685318431ce764009eacc64537e7e2fbf3aac00e25a2ca250f",
+      "python_deps/timm/layers/typing.py": "74f4a5f6ba98a42cc18a0d096118003de530dfba2b73a3f1df4b464745b8761a",
+      "python_deps/timm/layers/weight_init.py": "cabd60684d955367d39fc58b02ac94e86f5285a3f3d97b1aa9f819a72aa92df8",
+      "python_deps/timm/loss/__init__.py": "882341f5b5007faf6778d7b5fd73b479e835417bb1bba8d14c0bb2e15f7214bf",
+      "python_deps/timm/loss/asymmetric_loss.py": "dc16a34fde0e26c970f8c4aba902d107aed22d3da96e16f6bea8f40ad38a37ac",
+      "python_deps/timm/loss/binary_cross_entropy.py": "f40800482bc3f94446652d44e97c9a6980717f450ec7c0071ca0bbb532d34335",
+      "python_deps/timm/loss/cross_entropy.py": "5c3135f459e16237ae7407ab6fa52e948203df80266685d0d423c40231240903",
+      "python_deps/timm/loss/jsd.py": "3057bc1ff242d6cac513f14a8a717b8cc54841880d5a0793ee464bf567885c62",
+      "python_deps/timm/models/__init__.py": "ee3767b0cad4ccc3a40a53b9f300e437733f6bae70086159142e827437ab80a3",
+      "python_deps/timm/models/_builder.py": "bda088022ec2733c64d428108e6251f5a9231b6cf2c4d623f5a18a2f00cf9062",
+      "python_deps/timm/models/_efficientnet_blocks.py": "2a3de2c0371a74d7f4fe165f4ad062d768473ca9565a9ebf63fadbd0aa5ae021",
+      "python_deps/timm/models/_efficientnet_builder.py": "084cf15cc4725fd926966f0dad94c8b4786f4c96aae625a8497f35ae00704000",
+      "python_deps/timm/models/_factory.py": "5c9437a1be7e9a4e07cb6b623484b17a53b0eeb17e004fc87f61672c6cb7c812",
+      "python_deps/timm/models/_features.py": "7db8cd957988bce4d78a6686986b08253d1c20451034ab1808d55edf573e9cba",
+      "python_deps/timm/models/_features_fx.py": "0f14bc2648dd3bd89505e5e119883a4f471e48e56e44b373252a830d1ad6d332",
+      "python_deps/timm/models/_helpers.py": "c680cfe4740447ac7cf82c735da24e65c5228370d2875a07754078799a82b411",
+      "python_deps/timm/models/_hub.py": "b34c71bece3c1c02ba549a635ab9a513cb85f002a5434347fe1f694a7c8e98df",
+      "python_deps/timm/models/_manipulate.py": "67930863b7a9bb92c1bebcac360e72ad12b07a9d4c41a8588e04cffe31e327a3",
+      "python_deps/timm/models/_pretrained.py": "ae6d5d38e817333bcdf5b327739f512b97663bd722005bf5363ea3dea4e36386",
+      "python_deps/timm/models/_prune.py": "b11a7f873fbd620a82bb40f4534a51de644bee24aa604ad83193277363c71309",
+      "python_deps/timm/models/_pruned/ecaresnet101d_pruned.txt": "d7303b5dac6c4e7149c59f4f31b7cc5524fbc0f49070057e5334a07457c68186",
+      "python_deps/timm/models/_pruned/ecaresnet50d_pruned.txt": "2780254f069b69207af97ac83423c20d632233f16b74d8ee24dfc92516fcf561",
+      "python_deps/timm/models/_pruned/efficientnet_b1_pruned.txt": "a4d0e6d4410d258313f3e1a35d9de45d60970032c3ba7fb88df8a087be1110b1",
+      "python_deps/timm/models/_pruned/efficientnet_b2_pruned.txt": "7bfa1a49533e531dcd315011ca727be18c23cf1b81017ff0ee4ccec3d325de03",
+      "python_deps/timm/models/_pruned/efficientnet_b3_pruned.txt": "0350c91308c49ab83ca14af4430cf0064740255ddd55e5058e73bda4d0bfd0f8",
+      "python_deps/timm/models/_registry.py": "4c8d2bb3d2fe6174d103ef33bb1acd5844f3add1b00f93de916d9452851a8db8",
+      "python_deps/timm/models/beit.py": "e852a2ab1bc91bd645d1701d0e74cab3198b4425f2c1de6c61f7fbceb2beeee3",
+      "python_deps/timm/models/byoanet.py": "1486532a903ad95286c275e4ae2c02aba11e2b5d96e5663778dfa1f4a7fbd396",
+      "python_deps/timm/models/byobnet.py": "2976ce2225b4e9b13636f1645574f07cea6efcd94e14dcf997e65073b8f81e36",
+      "python_deps/timm/models/cait.py": "d78517b2067cbe99ed9039be62584ee7200c8d67c09fcec6265a184c3599cf06",
+      "python_deps/timm/models/coat.py": "c6727c42feba62d9f6a462aa97bc68f8b5307db926c08978e432563731f98020",
+      "python_deps/timm/models/convit.py": "502493f8cf8d252547147f5ca237ba0a78827b55359aca5a2bfcd610f0e20c9e",
+      "python_deps/timm/models/convmixer.py": "7e0fc25be86e531b37d7c11e8e8e63cb8d6f9a55ee8aa9fbfc85d49928992d79",
+      "python_deps/timm/models/convnext.py": "84345f20872589a0ab62f1bbc8b3ad750863aece995bda28db2a8b35ca0897a6",
+      "python_deps/timm/models/cpubone.py": "a3c769d2a0eae89f1d75ba62460879ed96aede971af91071a62d65388847d666",
+      "python_deps/timm/models/crossvit.py": "a96020a7d99f7fae369d9603b316955ff1246a19fd67e8c12c5f91244be52634",
+      "python_deps/timm/models/csatv2.py": "67798410c365b2f33eb3d2c3dc2630f22032c4db9965e187132bce42b3556b92",
+      "python_deps/timm/models/cspnet.py": "632a93cbf511a0a70a71ed1ce10fa365a93c81cd1ee9cc99f789ef1d5aa04931",
+      "python_deps/timm/models/davit.py": "a95beec38f05c88f04829beb02519765c7accffa7fa7d011601900c1e51407c2",
+      "python_deps/timm/models/deit.py": "5d064ca39779594015156daabed7ec55cd8443ebcd9fd3fad33420de200976af",
+      "python_deps/timm/models/densenet.py": "4fee749c6aa3afd8319adfd80fefbb77d77e4ba63eb55770642720625713adc9",
+      "python_deps/timm/models/dla.py": "cc3c91a8ec37aa2ecd26c333d2b74f25e33295d1aef9ab76f32ddb2c2df4a416",
+      "python_deps/timm/models/dpn.py": "7bd9e0d70760cc39db827298f087ea6fd73f254b2d2ae138e04cf9620ad70bc9",
+      "python_deps/timm/models/edgenext.py": "5200ed0c96f5e5a4be518dd92226fbeee5d0eebba48e6159069b228e08c244c5",
+      "python_deps/timm/models/efficientformer.py": "440738539c0c0a4167fc56ede1f1b17d5845fd478422755745aafd7e02a25d14",
+      "python_deps/timm/models/efficientformer_v2.py": "e62f0ef49547ff3c280f74610461a9f034f9621d74397df91284868b2545c5e7",
+      "python_deps/timm/models/efficientnet.py": "e8fad9ee8e718343c7ecbf8db704d256a9904f7821fe35d4d9b3ffe7743e5674",
+      "python_deps/timm/models/efficientvit_mit.py": "d9e9022746b352e9bdb4c88c65c5d3fdb9be60065bb5e90351b8759ad3348119",
+      "python_deps/timm/models/efficientvit_msra.py": "9c9e5e693baf47825501bbe17555e745b5a7586ec2b3b0ca5aca5717379ae4fe",
+      "python_deps/timm/models/eva.py": "9fe4c8aba96e9e4a107befb14ec72ff7c3340c6274bc48fd4bc2f8f5c56fcbc8",
+      "python_deps/timm/models/factory.py": "bdb5d3ab756c187f07ef54654e2d232cc7a61e93529f9d1f4d3ff82b990db1bd",
+      "python_deps/timm/models/fasternet.py": "7b13a01c318184ea7b7878122fbb7d1f895f0dc15fb4a4593a37dd78cc94fedd",
+      "python_deps/timm/models/fastvit.py": "c2ddec5203b8aa4cf3386741d8fc2fa7848d03f7f38b0fb279cb26aae5a415b3",
+      "python_deps/timm/models/features.py": "97ed6905adfaaf42264919d545dea42d839da0cc7c4ef50c0a06c8910028a13d",
+      "python_deps/timm/models/focalnet.py": "2e1b5d5df466fdfe69ba3926072a8742fc6aae9d2f5179da7164abe78e385c32",
+      "python_deps/timm/models/fx_features.py": "fb1c879d3f96a6e54524f562564869751160930e463574acfd1cc56031e42079",
+      "python_deps/timm/models/gcvit.py": "2b7e806e81e0e94e392215af41c70397f8806fd813c19874b1448a1199be9286",
+      "python_deps/timm/models/gemma4_vit.py": "ba73bf7903d4ba31fda303de893611d6aba2876b429791f6b0b81f4fb7976a57",
+      "python_deps/timm/models/ghostnet.py": "e70e12531c0c49c0105a8ff75790e57bc22bc3101fbaae60c4387d60a974cdea",
+      "python_deps/timm/models/hardcorenas.py": "1c13f0bd46413f0655f2644a6bc77cf2a363f61ccbeb3b0e45c058662e96636e",
+      "python_deps/timm/models/helpers.py": "27cd5917e961a7c2f7a291fc6f4d88a1bf9514c9bfdfa95e1755b9a7744b5ace",
+      "python_deps/timm/models/hgnet.py": "91d4586d765cfe261934fd0a432c5acdcbdd94eb712c62412f23a4007f0150bd",
+      "python_deps/timm/models/hiera.py": "ebe9ce69a040a5d7078e80e22c9a0372eaca189ae1eb9dbb05f8ffc505e9519f",
+      "python_deps/timm/models/hieradet_sam2.py": "62e01a96101043b624b974d7b5b901dcb61784e14aa8ccd961463e6e20f296e4",
+      "python_deps/timm/models/hrnet.py": "ea17f7e9ffdd622db19cb9683612fe9304c06581a90564cedca26a670da90d41",
+      "python_deps/timm/models/hub.py": "59d525b346d99537c0b50e38ed69395be8d6134ef86e4ce774e7e528f275bb2a",
+      "python_deps/timm/models/inception_next.py": "e6a367c6f9f78045e7b2dc3455ae46d66685e6d841c7c2cc6cbe29688e09f2bd",
+      "python_deps/timm/models/inception_resnet_v2.py": "aebbb7e75098de43e251839351cc7d87dc0a5b079e8b4180e60b15faca463ccc",
+      "python_deps/timm/models/inception_v3.py": "c6878de6438a9d5efaa796322262120f4d7b41c7b787c465338bbcdc52a9bf0c",
+      "python_deps/timm/models/inception_v4.py": "c3e4461e03b69db5b547224f17d37a7e8a09ca7b3b7a8a1444ae79d624e7d1c8",
+      "python_deps/timm/models/layers/__init__.py": "1b3551ffeb1ac21207eadf7748974048eeed6dded661f9b7e48e12fb2a9554dc",
+      "python_deps/timm/models/lcnetv2.py": "3df1342a8d0f93fb82fa1a557669f4972058cf669eb07c5256fcd2ae1045cbf7",
+      "python_deps/timm/models/levit.py": "d304d7b4f2612b744c388fabe034cecbe774a66673b6a6d0aca0b7155dd7db94",
+      "python_deps/timm/models/lowformer.py": "ef8f82e95b65aad41de683dbf2465118a26faf9db28c27d67883153f12f09c92",
+      "python_deps/timm/models/mambaout.py": "ab08af3343b0608297675de6c03b640ecbbdec918b3f4dfd35d855d5bd83f805",
+      "python_deps/timm/models/maxxvit.py": "a904be655fc8ec4f5171ad313a1ee8b189c6a29e10ff2d82429f22a1fb3cbdc8",
+      "python_deps/timm/models/metaformer.py": "07612aca30bf2f48caac468236a553f0398c2c73bed0b5001af8d1e3c9c764b9",
+      "python_deps/timm/models/mlp_mixer.py": "0f533c69b5c6097eed939e9140c16e1c8d167b7b5f2dc8d3fe41dac2ac9b425b",
+      "python_deps/timm/models/mobilenetv3.py": "d3ec97b206dac9554d1354870cff051053c9ffd095dd2e0716b4023a007e9239",
+      "python_deps/timm/models/mobilenetv5.py": "efe9ac6a64c4d799a96ddde810f6374d08ca32e557561bac51d893a85b3e277b",
+      "python_deps/timm/models/mobilevit.py": "904ff7754708a964cece18ada44a7f0af974296170b4d4fdc5c7573bb2cfe418",
+      "python_deps/timm/models/mvitv2.py": "70f3d9bd74a9b82f91124aaaa993ad5a60c70377b7f0f3527a89aeb63481573c",
+      "python_deps/timm/models/naflexvit.py": "b5035df1304b3e46f7fe27776f1876b7a6abd9b88f95d264f4ec9832b914aa4d",
+      "python_deps/timm/models/nasnet.py": "26fc5ac0c4a06d25632e24a3addd6b8360de7996793c705da921a80d4600a7f0",
+      "python_deps/timm/models/nest.py": "060232829129f643ce0413e0c2197b36dceb9fde4a5424dee2795bad4604a94c",
+      "python_deps/timm/models/nextvit.py": "bb4b5df97daf9449f588d52eb943bad3d0c38f958e3189aa1170b6a95de53142",
+      "python_deps/timm/models/nfnet.py": "feaa03181923e1930522bda507aecfa1ba9899c4fdce477c01080e78acac2030",
+      "python_deps/timm/models/pit.py": "e6f0e8164acc50ba0c897c3bfe7fa136287f0b84cbfa4892b48e7576ca768493",
+      "python_deps/timm/models/pnasnet.py": "e7f6ec05a432701973fd1923c56e0b42b33d4ce3991b4cae58580770d30ddf51",
+      "python_deps/timm/models/pvt_v2.py": "c6b23a4b22408865f5a400a19417e66c7eb8f4b76e83e39cd809c36e8f3fa1d1",
+      "python_deps/timm/models/rdnet.py": "5d6cbeac2b7d6b2c17a5500e8a7b25f07d275e3be3d994761950b9253d8865a1",
+      "python_deps/timm/models/registry.py": "25d6d623e6c6c1587382375c8bbdd2330f0942c8c711961a4be12dbad3f3f60d",
+      "python_deps/timm/models/regnet.py": "8842fe22ce0fa6093c144ba164c8c0ea947eba423d4b9e23030bbb3633ee0bdc",
+      "python_deps/timm/models/repghost.py": "e67b50242b92bced9669a7bc71604f947195651697c98a5eb35c1a019d06a9fc",
+      "python_deps/timm/models/repvit.py": "81cea9a058dd34ddc93f00b36c21ddce1f8c5c53591d376c62c968afd5938b5d",
+      "python_deps/timm/models/res2net.py": "2da99a4faaaf360391cc9ff3f87ea1f080c19423c0b8ba1426633601bb7432d6",
+      "python_deps/timm/models/resnest.py": "f97bc1a68d7d59eba85b5231294fdebb1ed4b6029d39bb253d89d88518167c1f",
+      "python_deps/timm/models/resnet.py": "1f5f941e35961769ad95dd9fa80ad55596f5daf2da955097396230b4513fb2a9",
+      "python_deps/timm/models/resnetv2.py": "b75e64b6d5fbf25c55a3572ebf0502e7ae5a719243116bc7997b5bf14886d5d5",
+      "python_deps/timm/models/rexnet.py": "1064dde94746c5bdffed2f2c586e3f8dfc9dc598089f753eb219c892b8fea278",
+      "python_deps/timm/models/selecsls.py": "895b948467d005b48c9bc57e7bdf3e1cb1b71cdc5c03dae8df2e04de3a10b32c",
+      "python_deps/timm/models/senet.py": "3a1a965f03c58125fd1a32d661785ea8a1af8bc41b2640d7f660248d868da0ee",
+      "python_deps/timm/models/sequencer.py": "ff3696d35e316931e86a77b50104a2369930b33ae05b23a2de3fe0d17a2a4264",
+      "python_deps/timm/models/shvit.py": "07df5aa0246caa5c850000cafaea0a2da2dd5e953adaddbf5e9d6f2df1f589ea",
+      "python_deps/timm/models/sknet.py": "1260a96f6dc4308a55434efa2d477fd14dd157f65eab397200dbb905f6e3eca9",
+      "python_deps/timm/models/starnet.py": "1d802aa8bb774c30cb0bff4cc1d8032e834e32d172e582e1ea64e8f10bcb69ea",
+      "python_deps/timm/models/swiftformer.py": "525da9b24082fdd8bdabb42307b1594bc5f1637e7beef4ba536aea24be508a81",
+      "python_deps/timm/models/swin_transformer.py": "712f5ca827f87d17efbc797ad8e822674b12d5f1cf482c3e03aacd109a23da0f",
+      "python_deps/timm/models/swin_transformer_v2.py": "02a4f46aafeaab34c9427dddd904ded12d2f995ff54ee4cc45b1bb783bfee6e1",
+      "python_deps/timm/models/swin_transformer_v2_cr.py": "40b7a0d6c3fd538a3fa1a48b0f170f3549d366aba76a38f96f68d285968dbb85",
+      "python_deps/timm/models/tiny_vit.py": "037fc64e040dfba736b543366e61b9ae977df550126222e9f82f78563deb5c68",
+      "python_deps/timm/models/tnt.py": "b18ffa873eb7ac2e5540c0a41963192a8ed67a07679a98892782a30b7eb62863",
+      "python_deps/timm/models/tresnet.py": "b6f28274047ed6c5168bf58b433c1c701c4cecf0b161805a9bc996a3420ae857",
+      "python_deps/timm/models/twins.py": "f310af3bae1bf59a43f920d4cfe1baa9261444812866e974fa09aeff484d4832",
+      "python_deps/timm/models/vgg.py": "d4365532487ce2191b9807eaf7e68ee9c8771b9fd6633992937cd41a1b06fbd0",
+      "python_deps/timm/models/visformer.py": "dcec27d1ddc9e5ba7703d426d876dbb2b8169a7ddbe5f59d3e9e95faa75e9a6b",
+      "python_deps/timm/models/vision_transformer.py": "88891e4af894a7797b2d625db1be93c85c9843110d8491fd6aba927320b06df7",
+      "python_deps/timm/models/vision_transformer_hybrid.py": "c7d7326760e9afc2a7cd91c8bf27f3e50f70f381833cecd22dc44ad60b1f2501",
+      "python_deps/timm/models/vision_transformer_relpos.py": "06a4c6774fb953cdbdaa610c1a46800a9d7e1f264aed93169d033259024c2532",
+      "python_deps/timm/models/vision_transformer_sam.py": "b42b427f6df4ce9477de92ab9d2bb0968337fb5106ccac0598924b8cad0e71d9",
+      "python_deps/timm/models/vitamin.py": "5722b047ed6825808b8109f8edce4466d354f88d16793b3db1fe0b1e35f67e8f",
+      "python_deps/timm/models/volo.py": "35efde0fcc8f0c57a64390dbf04d7087418d564784526d4be9ebdad873592e25",
+      "python_deps/timm/models/vovnet.py": "1538283dce4c854167a40446e8015ef396fdac2e879a082519033de6d282e32d",
+      "python_deps/timm/models/xception.py": "2e31476db88adcad1aa3940c971bfe658ba443444ad1060e8b123426f00d7921",
+      "python_deps/timm/models/xception_aligned.py": "a5d5a5cce8e0585654b5e610ecdf74ea93e58ea9f66cf6eb8a69fab79b56b7b0",
+      "python_deps/timm/models/xcit.py": "03a5ab92552be1033e959b143dea653d43bd2be80e96283d19e657ef43a90b58",
+      "python_deps/timm/optim/__init__.py": "23e205eb4a9550856f3fae32f0de174f2081d1d67df5b4c747884d4d280975ce",
+      "python_deps/timm/optim/_helpers.py": "7495c9fc733c1339405e43a0cc0dfc5d3ccd384adf38226d6b6997fde9b7e7f6",
+      "python_deps/timm/optim/_optim_factory.py": "786ce0e9e2644b706b356824465277680c4b6e59fc8fe46c46e461db1fe49d2e",
+      "python_deps/timm/optim/_param_groups.py": "e74c3775825b24de615ba0a9e75c25447e31de14cd5dde2fa6b52ee3946b2ade",
+      "python_deps/timm/optim/_types.py": "5dbfdd801607791d7168556ccba0f040cbcea0e30dc6ad1a7b5ec19be127366b",
+      "python_deps/timm/optim/adabelief.py": "3b0f78048d7b02d695975daf597cec560c5436ab7ddb1a49f1734f7bad136df4",
+      "python_deps/timm/optim/adafactor.py": "a99956882619acf42dc0f128a1ef5a23616212e8391921c7963da642e4b2fdcb",
+      "python_deps/timm/optim/adafactor_bv.py": "82c348a68ffa2c95c2c8ae200c55f67e5bc9dc5273fec01cb1092a22fa1493a3",
+      "python_deps/timm/optim/adahessian.py": "79c747b1f71e17ae89630331cd6ab02336a76379c3cda0541ce2540be96af0a8",
+      "python_deps/timm/optim/adamp.py": "2b98a32a7403a6f449fb8a1bfbcc5670f4ccf8f2e2c9448d1bcc7bc72af38ade",
+      "python_deps/timm/optim/adamw.py": "8616dd48057f957ec3acdd3b17d3e3d5b117e551ea340d51febbe98362941a63",
+      "python_deps/timm/optim/adan.py": "b9b0daa9c952445081e2d4a2b523b3c0dffc1f5de73823354fa987aaeae96b3c",
+      "python_deps/timm/optim/adopt.py": "ba5abb912b28412e3f7d465166e50dff95639cc4a6ff0d0977bdc0caf86a66c9",
+      "python_deps/timm/optim/kron.py": "27b333bd87e1d4fa6eae6b9ea5ea618bb32f6078fcea4a07f785fb0eed3c1611",
+      "python_deps/timm/optim/lamb.py": "f3cfdc6cbcf0ade75a539b0dac9812e3478509f74e2e19a3ece0bce45111ef98",
+      "python_deps/timm/optim/laprop.py": "8f180e17e36fe1927f8a101a19262f12402557e0a470795220d35d85573429c2",
+      "python_deps/timm/optim/lars.py": "a1bb7fa52f35a2a2243f62208ff1d7c4b507f6051eeff931b15aee83bca51d18",
+      "python_deps/timm/optim/lion.py": "b4374a6779291d3937915f7ed7d44027f579d33b88ae188d12bacd1ea00a7d50",
+      "python_deps/timm/optim/lookahead.py": "f9f3350c4c057ff6e96cdab6717764272ae86c5e2269534806e99a9ff45f464f",
+      "python_deps/timm/optim/madgrad.py": "bb701f725aab921f054a73a951ed07306b2e3d7c43fd927935c36d45219942e3",
+      "python_deps/timm/optim/mars.py": "8aa98b388592eb893b2858af8adeb7984ae200921dcf48a633b3a5bd8cda0cfb",
+      "python_deps/timm/optim/muon.py": "f9776a6d25070e51a09071b35e9e2c06bffd18daeb46083661b6809b8ff95076",
+      "python_deps/timm/optim/nadam.py": "44b3936e6b14bd38e5efc767d07f4b65a4334e695d7cb50f967b2657511f7e55",
+      "python_deps/timm/optim/nadamw.py": "9e2a9d3d4fec63177956920e39d244cf5230407f168c084672c590aed78a94f2",
+      "python_deps/timm/optim/nvnovograd.py": "4ee419b590de4fd5618031d34cbcd7106c7d3e820b3e1dc6504b2df72b08c594",
+      "python_deps/timm/optim/optim_factory.py": "aa76617a7d36d3f96bdc54fb860d047a0b18c6600a302d1e9ffceeba0b64119c",
+      "python_deps/timm/optim/radam.py": "3b4014a7a9a09ea5991b352f71e306d58d74a016fe33b3205ec0d9284b30cc5c",
+      "python_deps/timm/optim/rmsprop_tf.py": "b06b0513ed1c8bb1b5092d1885b3bd6eaebf7245b8bee8a4093129fac1be781c",
+      "python_deps/timm/optim/sgdp.py": "dd698a06b68c04d5fd446caed69ab1387ab69bd9fc0c09ec8577642d44134ad4",
+      "python_deps/timm/optim/sgdw.py": "897d6fbe088a38830c772717011d634fe3f07c8fdb3eeaae21acd479f6fe3c80",
+      "python_deps/timm/py.typed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "python_deps/timm/scheduler/__init__.py": "3b7c8d45c8237bd97fc1487137956d7800114463290b13a685b3a657ff23d83c",
+      "python_deps/timm/scheduler/cosine_lr.py": "d80b20a42975bcef0d6f90e13fb745d0f089192d0078ddaa69a519b33ab3f4ec",
+      "python_deps/timm/scheduler/multistep_lr.py": "b5752d8a54f1265ffd7a6b30b4a8addad09830362c9792b9bb2d472990af252d",
+      "python_deps/timm/scheduler/plateau_lr.py": "a219d831358aebb496c54efa80a72e23275686970f4353b3043986bcc6152f86",
+      "python_deps/timm/scheduler/poly_lr.py": "2614683a91fc82959c300fafd6a9b7239878549d1bf3ee2ef0d31ef9c7f1ce84",
+      "python_deps/timm/scheduler/scheduler.py": "1378a9ddf091ac98c466c18a4c91f593f36757a8cd5a8bb771462ed557304bb5",
+      "python_deps/timm/scheduler/scheduler_factory.py": "15884c2f03b9416790f9b367bdfd1453c309ba116cfad31777eee8cb3bdd72dc",
+      "python_deps/timm/scheduler/step_lr.py": "dbfe5c91deaeacf571fd3156811078c3b3e00264ce558c6c8d00111be272b6de",
+      "python_deps/timm/scheduler/tanh_lr.py": "31ed82f5d3803c33d65f34340a12fc92ec8fc348f2a8514cf0a943746b9d7b55",
+      "python_deps/timm/task/__init__.py": "a9314ab281e9f5bb232ad9a2ebab0ed3395f93bb44597326a082e34f3cf4512c",
+      "python_deps/timm/task/_helpers.py": "c792d2116d980d14941ecc4c0f81a205982ff826328a898d074a8edaf0ad64c3",
+      "python_deps/timm/task/classification.py": "cb3b8d46eda78a31b23e9c9866d5a88fc982a5b162f5aec0cef6c78dabb68841",
+      "python_deps/timm/task/distillation.py": "57df620b42f3863c1b187d4203f724282dce135556a3ac939840762bbaf60eca",
+      "python_deps/timm/task/task.py": "dca838dfa665715b85710efd9da924fa162de5dbae679dc211f001c5be385878",
+      "python_deps/timm/task/token_distillation.py": "d7c40dc3ff36c5609526f51d662d8ef45707a77027dfe1547dede252f92f895e",
+      "python_deps/timm/utils/__init__.py": "afe9a013bb003986ad14462381d5d7287d118ce2ef439147d2b731bfcfa0351d",
+      "python_deps/timm/utils/agc.py": "ea56420a17db5b428634c7e4cf3b560ff34ff3b112a298e4db85ed6f759b06a5",
+      "python_deps/timm/utils/attention_extract.py": "0823cc9a7124e1d33552bbcea58eec7c6648f0a2d07a42484fbadf960fb8a83c",
+      "python_deps/timm/utils/checkpoint_saver.py": "e6bd895efc161674ee2c2d9c43e49f1e21eb7521831a183ca62589cb9b9ca013",
+      "python_deps/timm/utils/clip_grad.py": "8981447fb7ef3dba728792b5488f8429ecb91aab36833b51f555141a36b4181d",
+      "python_deps/timm/utils/cuda.py": "17e3fe0bf6df05b23f2e86dc5cb655527d12a993877e87bd95e7ef75669d51b3",
+      "python_deps/timm/utils/decay_batch.py": "e5f3ab30ef7ce4fc3cbb3bc12bbf11c180a81f736fda36f8e8e19af46909e8b0",
+      "python_deps/timm/utils/distributed.py": "0d4166c612b21c6d5e702a0029dd4c7d01aea40b84aa7d924eb9b0abcc3561d4",
+      "python_deps/timm/utils/jit.py": "13aa862c777d8daec2c89f1d018335b4c3f49a6e436fc63c233393748e78f9e6",
+      "python_deps/timm/utils/log.py": "05d6763aa5a8deff1def0b03449fae00272878d5214bc4c94b0237098beadd2b",
+      "python_deps/timm/utils/metrics.py": "1bb613b59a40319c5f406a337e11a1b060af86398301f6371e8962c5553bc2ca",
+      "python_deps/timm/utils/misc.py": "c14238c0948169b664cbf41b8e711a0765ea3178b1b25f6db9b46157a6027a0a",
+      "python_deps/timm/utils/model.py": "cbd0ae079c31bbdef9c21e6eabe038ab440661bbf6d341b65ada29fe99425a4d",
+      "python_deps/timm/utils/model_ema.py": "2e9a25fed2f8a319ffc62b0b803f997f33ae4f6b8df34e885eb171fa406a3384",
+      "python_deps/timm/utils/onnx.py": "0d9a91dfd92bbe2086eecdec958250f44456920b4b0941a402b6aaf1e397ff8b",
+      "python_deps/timm/utils/random.py": "62cbfa1779c83bc25813c8fa52b0f11b2243a77b8da6ae6ff14d0aa8bffc7627",
+      "python_deps/timm/utils/summary.py": "1d80f99c9b13383dc31aa08f52ed8bdec5f85633454f26c76e3c27b52116062e",
+      "python_deps/timm/version.py": "6b2989b3e89fb2976946e4255563e608442b18dc4df244411ddedc542b748b0b",
+      "sam3.pt": "9999e2341ceef5e136daa386eecb55cb414446a00ac2b55eb2dfd2f7c3cf8c9e",
+      "sam3_source/sam3/__init__.py": "ca3821a125f767e6a35188603b51ef2501b1e7c3d1a90546ac567c5d2a80b9fb",
+      "sam3_source/sam3/agent/__init__.py": "5737b3ba20d7549b2fce53c995fa80c331b116d1f958980d99bf6f161e28e3a6",
+      "sam3_source/sam3/agent/agent_core.py": "8682027289ab8eb5b72366dae1fc11b012d794ac35ad0f1dee3087b4e3b32059",
+      "sam3_source/sam3/agent/client_llm.py": "6dba1f3da05b21fe1681b830e56861ba1f34066ff4fe365051d9badc6a25e0fd",
+      "sam3_source/sam3/agent/client_sam3.py": "fd056d64ae33c76d7dfa67ebba9988c4f23bafbb259844962e91ca48285fc141",
+      "sam3_source/sam3/agent/helpers/__init__.py": "5737b3ba20d7549b2fce53c995fa80c331b116d1f958980d99bf6f161e28e3a6",
+      "sam3_source/sam3/agent/helpers/boxes.py": "d389371c80d75cfe8ec3dfa9f165ee4ce9bb0157a4fbcabd8002d24d486057a2",
+      "sam3_source/sam3/agent/helpers/color_map.py": "5770b167f4be7ee1c10864494f7feda899eea1cef4bff2ed04cff4842c5b1b15",
+      "sam3_source/sam3/agent/helpers/keypoints.py": "50bc54f97456bfd48a435a4e77fa1188625b345279ad70c24d759b3489c3a6ed",
+      "sam3_source/sam3/agent/helpers/mask_overlap_removal.py": "724ca37c5bb7a25303a71aafe7af4a265b5b3389362a752da557af486cd559ec",
+      "sam3_source/sam3/agent/helpers/masks.py": "35993c40a5ecf909001ee19e114debd2c997810895f602a2ac4d9f04fecd4750",
+      "sam3_source/sam3/agent/helpers/memory.py": "cf231157f5b796e59ee2bff0b1942bd91c33bf45bc3e20afa96d557c0f02a0da",
+      "sam3_source/sam3/agent/helpers/rle.py": "f304d4dc14ebdb35f82784e945bad517bc48f69038b67f2d5fcf7e2416b562c3",
+      "sam3_source/sam3/agent/helpers/roi_align.py": "4e6c1e6ea542d07708d3a11c6f62f14527fe4652dcc7bceced5bd08200a9ea67",
+      "sam3_source/sam3/agent/helpers/rotated_boxes.py": "f68ce67f8e197f5c066c76885d2c3434fa5222fa19e4fd744143a966653e038d",
+      "sam3_source/sam3/agent/helpers/som_utils.py": "ac34c3804a3d2761420a2a3947e2c43d674825feb47ba269346db92768291f78",
+      "sam3_source/sam3/agent/helpers/visualizer.py": "6830e7749fb82a5286577d59c899e5a2a877e7fe5081f8c54107ec9a95bfcbeb",
+      "sam3_source/sam3/agent/helpers/zoom_in.py": "84d1e78db181b2f3edd82278c2ae5628d571323c70dfda366c7f6332f4884d79",
+      "sam3_source/sam3/agent/inference.py": "cc1d2db757116016b821e9b72125f2dc5f827b36d794c1357604a84fc7ea0b3f",
+      "sam3_source/sam3/agent/system_prompts/system_prompt.txt": "37009389e2b211d62968a0fd8898e24008830bdbce905e901f764910e9079dec",
+      "sam3_source/sam3/agent/system_prompts/system_prompt_iterative_checking.txt": "6b2e85ec91017d4aafa2787cd769b8d98c1adec99f55f1fba1307354f3d60c05",
+      "sam3_source/sam3/agent/viz.py": "568b9c0a6bb359f82f533bd17757d4445556b347d87e289ed6c389a5bb325a35",
+      "sam3_source/sam3/assets/bpe_simple_vocab_16e6.txt.gz": "924691ac288e54409236115652ad4aa250f48203de50a9e4722a6ecd48d6804a",
+      "sam3_source/sam3/eval/__init__.py": "5737b3ba20d7549b2fce53c995fa80c331b116d1f958980d99bf6f161e28e3a6",
+      "sam3_source/sam3/eval/cgf1_eval.py": "ac9fb7ec0e0abe08261914311552fe36480853cd9532f166ae212bc3d31ac3e0",
+      "sam3_source/sam3/eval/coco_eval.py": "53c754435186069ca47c1b79e81e0e94fa864cf576b590227a438a4ba09b1cc6",
+      "sam3_source/sam3/eval/coco_eval_offline.py": "9d493b7c1825188870a723dd8ecef7251c5ff1fe4a92a86e7d4d9677527ac345",
+      "sam3_source/sam3/eval/coco_reindex.py": "a4aa2b127565ecbfe03bb29cdd16d4c59c909728e2f613dce214b9d38e49b6bc",
+      "sam3_source/sam3/eval/coco_writer.py": "fe3e0f1ac040ca9592d531da06f791309e203d24dd62da297d123cca3265f1fe",
+      "sam3_source/sam3/eval/conversion_util.py": "d89ec54fdf64df181db1d26e5b3c7e55aafc9d186d37a85c47dfdd8d8ab453f0",
+      "sam3_source/sam3/eval/demo_eval.py": "52dc280e8297c4fabb78942ac2bc680327a796c8d3169d08c486ab61d5435ec5",
+      "sam3_source/sam3/eval/hota_eval_toolkit/__init__.py": "306af87a672c16943f75dc68c0abec85410f56d8903b7d0426b5fddc23ffb191",
+      "sam3_source/sam3/eval/hota_eval_toolkit/run_ytvis_eval.py": "64f9fa375d6d0aa8423330fb755c5c180416bdd9edcd3dafb4646d396abcfc8e",
+      "sam3_source/sam3/eval/hota_eval_toolkit/trackeval/__init__.py": "89abc09dcc7adabfb5da96eac78aa09e79eae3f1546f77bfeb16144cbd888e56",
+      "sam3_source/sam3/eval/hota_eval_toolkit/trackeval/_timing.py": "0255b2eeceede8c8a97d3eccaa5a67360376e1cbc0006e3e9f61d9b2c0b5bef2",
+      "sam3_source/sam3/eval/hota_eval_toolkit/trackeval/datasets/__init__.py": "562b6f9ed77b209580a6c45e4f28ce85dcc84ac948b22eed6aadca453062c10e",
+      "sam3_source/sam3/eval/hota_eval_toolkit/trackeval/datasets/_base_dataset.py": "4cba64db4dc1ea3fa06c4c1abdf4e0b38b4337dad511ccf76d1208121a323138",
+      "sam3_source/sam3/eval/hota_eval_toolkit/trackeval/datasets/tao_ow.py": "9531d7b44aa57959801375ed58bc1d73ca755b374a9749e95ff94ac70331e89b",
+      "sam3_source/sam3/eval/hota_eval_toolkit/trackeval/datasets/youtube_vis.py": "6f1be7c0f5f6751fae302a982debea6d5fa9309b4ed9a5c3f2f0c8c9b98e7618",
+      "sam3_source/sam3/eval/hota_eval_toolkit/trackeval/eval.py": "f57c314805841ef909bdf92271b7d4e72c6cfdb0552e8c410608cd4ba2bb8552",
+      "sam3_source/sam3/eval/hota_eval_toolkit/trackeval/metrics/__init__.py": "fecf9dfe07e85b453f954f95d178a6d845fff623ab71efddc91db3773cfed4ee",
+      "sam3_source/sam3/eval/hota_eval_toolkit/trackeval/metrics/_base_metric.py": "f82c91ae33440cf07c42a6e4a88d307195413b78bd0783ad056bf541625c6ba3",
+      "sam3_source/sam3/eval/hota_eval_toolkit/trackeval/metrics/count.py": "17f4e10590b046415a1f35b3bcbf6cc894f0aedd099ae0691c6e2b2936e6069d",
+      "sam3_source/sam3/eval/hota_eval_toolkit/trackeval/metrics/hota.py": "e2b2ecf997bb076f1c89e1bfaede0afc260b9063c5cbc931e0ed6d92ab14d487",
+      "sam3_source/sam3/eval/hota_eval_toolkit/trackeval/utils.py": "80932a1b296579cb1e1a6a472df57a29928921b8684f753236bc779d76bef72b",
+      "sam3_source/sam3/eval/postprocessors.py": "09d9ec26c25e527c9faa32364be21b41aa64ce0c32d6c2fc0fdb5502ffa35678",
+      "sam3_source/sam3/eval/saco_veval_eval.py": "251d0a6448c2e9ccb881a9d6637cc2c3861dd6bf9e16978e1f845c627bf2f65b",
+      "sam3_source/sam3/eval/saco_veval_evaluators.py": "0bdc1818bc6151d40455453d5551607ecc9a48309a9176bf37cf11a21817afda",
+      "sam3_source/sam3/eval/teta_eval_toolkit/__init__.py": "be20c90599fb3cc970426712d85171033e340ef7833308cec82fe3170c87a37f",
+      "sam3_source/sam3/eval/teta_eval_toolkit/_timing.py": "05a87ff0821814f488f7f181f6e9324faae02d0be8a1992afde90d067386f4c3",
+      "sam3_source/sam3/eval/teta_eval_toolkit/config.py": "8b2d2cfe98b68c0f75d3cfcb75f90dca6d0e6a2ef6cc9e20517eea41b03e55f1",
+      "sam3_source/sam3/eval/teta_eval_toolkit/datasets/__init__.py": "e07986408023a3303518a6fd2e3ea4d92caa0400a1eec21b21b6ca90a36223d3",
+      "sam3_source/sam3/eval/teta_eval_toolkit/datasets/_base_dataset.py": "f15063ac33f68e16b0b5d4820d6cac49e35d7e3d3a3a691bbfda1b9384ad72b2",
+      "sam3_source/sam3/eval/teta_eval_toolkit/datasets/coco.py": "6e47246f689a66f9e5c9ccff2d9da10fb93579bcbdaa7f65e14ce42b99fe6c84",
+      "sam3_source/sam3/eval/teta_eval_toolkit/datasets/tao.py": "4caecb783cc5881c800a40f8ca78428fa09bd02eb20a8adf66ea8511f5f02ccb",
+      "sam3_source/sam3/eval/teta_eval_toolkit/eval.py": "120c278110c3fd1359417d663975c3ce3a5692fb33c16886ee89a763ca36910c",
+      "sam3_source/sam3/eval/teta_eval_toolkit/metrics/__init__.py": "8c4329dc6bf88ed4afb0b5d670bcba2a0473a07e0f80819aedeef376a649bc2d",
+      "sam3_source/sam3/eval/teta_eval_toolkit/metrics/_base_metric.py": "dc117cd3ef46a0e3c01840570d2a9d241cd20bd54203877ef8460e8b088d4520",
+      "sam3_source/sam3/eval/teta_eval_toolkit/metrics/teta.py": "829b2a82ca2251d2b0ccf8f103b1016e15142cd53c1fd94bb774dc61b40a7f7e",
+      "sam3_source/sam3/eval/teta_eval_toolkit/utils.py": "b656d69ca39de06447aa2d9f4d264f925a96093cb860832a2b3c67df884d77d4",
+      "sam3_source/sam3/eval/ytvis_coco_wrapper.py": "680c6d934aa49cfec8e8f5a94a8f199299e3b3eab76b18d13bcdb61e208dc547",
+      "sam3_source/sam3/eval/ytvis_eval.py": "54dfb8fa1ca9cb831fea3cdea2cb2dc2b0e22086b39de713ffd2b6bd2602c761",
+      "sam3_source/sam3/logger.py": "886d7b6101ab3cc07f40348a67054101ad87ca2ab9b3546fef1113f3e19db51e",
+      "sam3_source/sam3/model/__init__.py": "5737b3ba20d7549b2fce53c995fa80c331b116d1f958980d99bf6f161e28e3a6",
+      "sam3_source/sam3/model/act_ckpt_utils.py": "913317a663cf0f19317feb66ea43ff7a86e44393f39af3731ba3d33dfff93a82",
+      "sam3_source/sam3/model/box_ops.py": "2d1a11337f1db93ccd87132319716cf68b215c59fa51e43416bdad7ab30c8151",
+      "sam3_source/sam3/model/data_misc.py": "f07db3864727a41b36d7e1168e29b0438c443b9ca690ab9171a120754ac192ee",
+      "sam3_source/sam3/model/decoder.py": "2bc0ad4ab894f09306e6225c116119f9a696e5b5b3dfa5aafde35081ad68d1e0",
+      "sam3_source/sam3/model/edt.py": "d0833410c5e0ff3a473a2db3ba67bd2207ccc6d041cb7a6cee878265405fca7e",
+      "sam3_source/sam3/model/encoder.py": "e114b5ce823ba383dbbf63e6c710ed898c562235029796fb1bf13f27a79031eb",
+      "sam3_source/sam3/model/geometry_encoders.py": "0b61cdf7160d0275176a66da089bbe126ce3a8ac34a4f2a088c68ce7d3cc54ee",
+      "sam3_source/sam3/model/io_utils.py": "c3782bb34c9ea9efe2d9d4fd855a7f726d458226dd3ed9a7f5f07f7b6f248362",
+      "sam3_source/sam3/model/maskformer_segmentation.py": "bec9aea2ccd2d337357b9fecec820decc488f2691944a4b3ee0770b3939da94b",
+      "sam3_source/sam3/model/memory.py": "e558f536cdda032d10dcb62f0210a452edd7dd1fc876907b4432a95908c0376e",
+      "sam3_source/sam3/model/model_misc.py": "38c7230dd987fb54bda5808ab68fd0fa3f6dec8baf104a24db748601b4fe5995",
+      "sam3_source/sam3/model/multiplex_mask_decoder.py": "cc621b2fcb596386b704d7e2d4a198dbbce3a541dce38d632e7927cd8bc84091",
+      "sam3_source/sam3/model/multiplex_utils.py": "8829fa87ff3e844e5507b06a21315677ada9e63d3de98f05bda602daa959a610",
+      "sam3_source/sam3/model/necks.py": "07f72e26e9628a4329a5e6640f98962e1b3202f002e0c663e1d3cbcd2ec0b65b",
+      "sam3_source/sam3/model/position_encoding.py": "6ec4e053bad5d17035f9ea8f60a032f60c51ba5ce5a5a174b4b2fe0de62749f6",
+      "sam3_source/sam3/model/sam1_task_predictor.py": "b520b835ed9b31f1aec7033a78d62af2eef5ffb0a0f43b71501f9f2bc7db288d",
+      "sam3_source/sam3/model/sam3_base_predictor.py": "e51444ee8927135a082a2f21035bade86ce1f97abff237141166e568cfce5d26",
+      "sam3_source/sam3/model/sam3_image.py": "c34ae59dba5ef5823da8fbaab66e7d4b78c7df2677efc6e8c9156e3ca80c9b81",
+      "sam3_source/sam3/model/sam3_image_processor.py": "cb52a75ff84d46e62fbf8d18cd080b77814ab54d9e99b44763676ad194246853",
+      "sam3_source/sam3/model/sam3_multiplex_base.py": "684d4a65f3c7f2f4b8dacc40be4ee99121140c3dc5eb11fe5c585c8b1cdb751c",
+      "sam3_source/sam3/model/sam3_multiplex_detector.py": "7b055b4ecb6e94c61810bf9483641fa641582e15b7259043ce9191828ff8bd8c",
+      "sam3_source/sam3/model/sam3_multiplex_detector_utils.py": "64735cb06c51134e02642d91551c9c3cbaff9616e5666f3179db67409b00748e",
+      "sam3_source/sam3/model/sam3_multiplex_tracking.py": "ddf830ef5be793a14221f0a7e5f1fda28f01e3660dc3c53997671cbee90160ca",
+      "sam3_source/sam3/model/sam3_multiplex_video_predictor.py": "15abe64bff63c95b8bcb67b5af0818b1b3783eb6537ec4d8b3a5e6b56915d1c1",
+      "sam3_source/sam3/model/sam3_tracker_base.py": "b2b52409c002e1590262375aa794f8ab67e7476f42f8fee41a76de0c14aa62e2",
+      "sam3_source/sam3/model/sam3_tracker_utils.py": "a6b62b4091470de10754bbf378f3adb5698a04e5c3868301c2cdb6c605d1f449",
+      "sam3_source/sam3/model/sam3_tracking_predictor.py": "145df76a5c045605d4d15360456015adb4f987c4b18e82f4f4876a63e6a32345",
+      "sam3_source/sam3/model/sam3_video_base.py": "1bc8ee2fe1ed6a021acbaa0cc8862adfaa6af9fcf3cad016750c37af27255dec",
+      "sam3_source/sam3/model/sam3_video_inference.py": "bbcc8d1804efdc1290d7b68a9cbcd03d7dba88db54aef8cfe4bff5768bb9e5ac",
+      "sam3_source/sam3/model/sam3_video_predictor.py": "645a1f21b3258e54d93b30c66bf7627c4af9de23571a5ceb9a060d7f098d012b",
+      "sam3_source/sam3/model/text_encoder_ve.py": "0b6257506c45aa6de8131a9ec4d9655ac29ea440bd2ad6a47cc814aa9fbf9f35",
+      "sam3_source/sam3/model/tokenizer_ve.py": "e8e0ea44125008e3a3109b6085a6eaca068a3624e0af00950bbdc553153bb969",
+      "sam3_source/sam3/model/utils/__init__.py": "dbc5c8475ec79c2980b95cb09862887052cbabd49bc7fe22f2014d0a2b836609",
+      "sam3_source/sam3/model/utils/misc.py": "676b592db05c820e143c193c0cf5856e44d9ae7c0ebee645a00235b6e38e5ca1",
+      "sam3_source/sam3/model/utils/sam1_utils.py": "3eb335d6eb447e117eb079136cb897475a0210d41b3990edb830c5866b587c2a",
+      "sam3_source/sam3/model/utils/sam2_utils.py": "78048b7b131250ac14b19c0c6f5fdb21402542b281964af675247e19734e5b2e",
+      "sam3_source/sam3/model/video_tracking_multiplex.py": "798aba2cf41eaf7f36ede092e2e79f18e947c28fa8e3dc7570eec02565999b24",
+      "sam3_source/sam3/model/video_tracking_multiplex_demo.py": "2893fef82b293e6ce462ed60c1596bd3f165d176e663cc18732a32acdeac25ff",
+      "sam3_source/sam3/model/vitdet.py": "76a851c0d7ef1d2d05f37a6e97e791d71f21a4477b82e71306f475f20e4ec2ee",
+      "sam3_source/sam3/model/vl_combiner.py": "5b14a8ce350922d1d62a86112193e5a96b3d438b778a7163a1e9662d53e7bb37",
+      "sam3_source/sam3/model_builder.py": "faba3d0099f3da6d63d3ca49a8bf945d4014657b813e76ad082602d3922d3ff6",
+      "sam3_source/sam3/perflib/__init__.py": "e25fa5fb31908e816f0ce0f55dae8715076f47ca9ffcbc34335e60cf74bfbd21",
+      "sam3_source/sam3/perflib/associate_det_trk.py": "411ca39cc2e9008788fe5df3a5c43ec3122b8d16077c5ce96a6abc93574ccd90",
+      "sam3_source/sam3/perflib/compile.py": "403f2b91771e5b0c05c6b623bb5d032765c788cb9674136cbdeb0be628fafbfe",
+      "sam3_source/sam3/perflib/connected_components.py": "d1f4619223fb9695f7682ba9f33e97213ab29b685a8e5df7f71ecb38035b5f6a",
+      "sam3_source/sam3/perflib/fa3.py": "95640b5797916632a4aae33598bf077e0f5092650cc4a7c334d7dff690faf913",
+      "sam3_source/sam3/perflib/fused.py": "f528109e043331da4c240741d1403812b2020801d8f01af0b5fbf0c6e93c1af6",
+      "sam3_source/sam3/perflib/iou.py": "a99a3de83115ca96bc6b100f7d80cea18f23cb65d0f174a7896af8abacd94311",
+      "sam3_source/sam3/perflib/masks_ops.py": "b1b6fae420565315dd434d4efb9a6f76fe0fc2959a8c30f2f1120a0a25e80a55",
+      "sam3_source/sam3/perflib/nms.py": "dbf10304e37b3fc2505420827141b8181764ac555bd268ae175c34fe8dc08e48",
+      "sam3_source/sam3/perflib/triton/connected_components.py": "1856686c86d0f1663b4125fa1c5d5329ce6ba3b261eaa6144dfe987bd99490b8",
+      "sam3_source/sam3/perflib/triton/nms.py": "19aa5274b41f3a117fcaf9b4da6ac36c93958daaf0508105ed87a5b0b9cf34d7",
+      "sam3_source/sam3/sam/__init__.py": "9fd565929cc73505a78397f87c558d721b4df92a279551a4860bf8947baa8ae0",
+      "sam3_source/sam3/sam/common.py": "e64cb707f7c332761b34ac1135718e699a8271d4c5c4f42831d5fa393d2edc86",
+      "sam3_source/sam3/sam/mask_decoder.py": "9355e459fc91a32cdbc3317a64e3c6256f42f522cc6c6f41c838b80f6a598e00",
+      "sam3_source/sam3/sam/prompt_encoder.py": "09910d50d19803803c245edaebb11ef8dc5f6850da55a1cc53ad5294b53d2d30",
+      "sam3_source/sam3/sam/rope.py": "e90c4bd3a1de44402fc2e8baba5a5621829002fd8f5136b63738743951da9290",
+      "sam3_source/sam3/sam/transformer.py": "3228f5d1bcf96b8e65b4e8ec1f3a8058b5a919a770f5d4b6cc177c3f1e9ddc01",
+      "sam3_source/sam3/train/__init__.py": "5737b3ba20d7549b2fce53c995fa80c331b116d1f958980d99bf6f161e28e3a6",
+      "sam3_source/sam3/train/configs/eval_base.yaml": "3f02f5cf0ad56267677cb8f725401db34c3fae5001ad33594b7f13cc5f707807",
+      "sam3_source/sam3/train/configs/gold_image_evals/sam3_gold_image_attributes.yaml": "53d076657d5e4071dae1f007d52b28f841a0a664632e6e73f67a8a7c0d1240d4",
+      "sam3_source/sam3/train/configs/gold_image_evals/sam3_gold_image_crowded.yaml": "9160ee1f3fad8ebcde6fd25fbf90d061bfda48554e585d24f04da2fe1c8a76a4",
+      "sam3_source/sam3/train/configs/gold_image_evals/sam3_gold_image_fg_food.yaml": "55a82f314cdd5ee7a28605566da334ff80684a5a7511cb33a942b5049fc17c54",
+      "sam3_source/sam3/train/configs/gold_image_evals/sam3_gold_image_fg_sports.yaml": "ae0f34dc883eefa137b90b306c6237262b838eaaeb4383c084a1d73892ee1b2b",
+      "sam3_source/sam3/train/configs/gold_image_evals/sam3_gold_image_metaclip_nps.yaml": "7edcae1a5d2873bab720dc551fe68589df9bfa1ce41ad108b8862c4d6f16422d",
+      "sam3_source/sam3/train/configs/gold_image_evals/sam3_gold_image_sa1b_nps.yaml": "e877030f2b7f32e46ca8203f2780e5807e232b3604f1ca46c8bc40cdd4c78e23",
+      "sam3_source/sam3/train/configs/gold_image_evals/sam3_gold_image_wiki_common.yaml": "c9fa0a5fc35a2f504573064c50c41986012c8c406393bd738665d4c73ea7bf7c",
+      "sam3_source/sam3/train/configs/odinw13/odinw_text_and_visual.yaml": "be6e8f6fdb8087890c1e748b0da9d60a467d66439ffbe86178416e428058b141",
+      "sam3_source/sam3/train/configs/odinw13/odinw_text_only.yaml": "1b227b2eae27af11598575ef3ea0f8d8019e1596d9d4b3b65de2b535faff3de3",
+      "sam3_source/sam3/train/configs/odinw13/odinw_text_only_positive.yaml": "081b5758615ce93280a303c595263f49daedb1a2cbfced97544ed3e561c46b7f",
+      "sam3_source/sam3/train/configs/odinw13/odinw_text_only_train.yaml": "099d435cdc759c71284afa09480ac0a6396e9505a1b76ce55976768508bd0839",
+      "sam3_source/sam3/train/configs/odinw13/odinw_visual_only.yaml": "5a9844ae950c9debe4c947999ea37fd39f8c9595aabc47337a353d658f70410a",
+      "sam3_source/sam3/train/configs/roboflow_v100/roboflow_v100_eval.yaml": "f37f46cad8ea43d0e7a0eb85c0137a3558a92f27bd0f50c494d4509fae09a6ea",
+      "sam3_source/sam3/train/configs/roboflow_v100/roboflow_v100_full_ft_100_images.yaml": "9de90a95529669a6a01d3366ed660b6776522a0ddabcd65d6cbeddeefc3b193e",
+      "sam3_source/sam3/train/configs/saco_video_evals/saco_veval_sav_test.yaml": "630765e18ce2014f645896746c1e77ab431ac5834f882dc2f78f13722a4cee81",
+      "sam3_source/sam3/train/configs/saco_video_evals/saco_veval_sav_test_noheur.yaml": "64c6e2774661e892b8dd3a7810d9b7e3e70465d28828711141d607b8e277405a",
+      "sam3_source/sam3/train/configs/saco_video_evals/saco_veval_sav_val.yaml": "926566c32e6d54ef25445a8f9abc312cbec727cf8d18a1d73d6f6ff2b0410221",
+      "sam3_source/sam3/train/configs/saco_video_evals/saco_veval_sav_val_noheur.yaml": "01d12365dbe07dea9498566eb2e9c1a3bc6ea8d291bea138648de57c1f1f2ce7",
+      "sam3_source/sam3/train/configs/saco_video_evals/saco_veval_smartglasses_test.yaml": "edb03dac8b7fbcedcb94d70fc9ce36a7621e38f23a99072c9c60e9a5187547a9",
+      "sam3_source/sam3/train/configs/saco_video_evals/saco_veval_smartglasses_test_noheur.yaml": "c91f45119c4b5f7fc4bb1e50e8d4b3fd9f0638e9e8d95a09fbcf0cc9e3b05736",
+      "sam3_source/sam3/train/configs/saco_video_evals/saco_veval_smartglasses_val.yaml": "2458518922c6153081f0ec849c0a13708bcb81918cd58ffafdeb492a2615fca9",
+      "sam3_source/sam3/train/configs/saco_video_evals/saco_veval_smartglasses_val_noheur.yaml": "07464c78c22defc54ec58d6b0e72d05f6430a6834e48da988f5c7dc0a04e4f8d",
+      "sam3_source/sam3/train/configs/saco_video_evals/saco_veval_yt1b_test.yaml": "c64e6c18231aa67e35bf23d08b27859e0b04da0f26f5c5513dc0d313f29b8189",
+      "sam3_source/sam3/train/configs/saco_video_evals/saco_veval_yt1b_test_noheur.yaml": "93abbaf8cf906e69ca25dc9f707fc8b5e0388fa8c6b16a5abb12f7b444b262f2",
+      "sam3_source/sam3/train/configs/saco_video_evals/saco_veval_yt1b_val.yaml": "23067b557fd28fcd30a6def9243598f0e2532bef8898a88cf5de0a5b77aa77d8",
+      "sam3_source/sam3/train/configs/saco_video_evals/saco_veval_yt1b_val_noheur.yaml": "4bf0f27fee6d006290263fbd52adb4ed318174e2827c51734e5c257e8cd613f4",
+      "sam3_source/sam3/train/configs/silver_image_evals/sam3_silver_image_bdd100k.yaml": "161331c3d8b2a9a9ba60f924a9a4d5f391bcf5a4b074c450847620a1e0375d04",
+      "sam3_source/sam3/train/configs/silver_image_evals/sam3_silver_image_droid.yaml": "34c4ca4377a4a51c43891ed8ee5bc8632b64f0fb2f30ff13748520baf3a9681c",
+      "sam3_source/sam3/train/configs/silver_image_evals/sam3_silver_image_ego4d.yaml": "21d41a0eb498a47824754c76f8568f0c80552f9a05f870c5d1a1c5651bff4ea5",
+      "sam3_source/sam3/train/configs/silver_image_evals/sam3_silver_image_fathomnet.yaml": "c1ce4df2ed2883f821bb4b709698d68434cd4ae75127bc870bc45893f9ef37f2",
+      "sam3_source/sam3/train/configs/silver_image_evals/sam3_silver_image_food_rec.yaml": "30552434937c4077c47240e1e8b14a63f4beeec53bef6b524df2444871cfa35c",
+      "sam3_source/sam3/train/configs/silver_image_evals/sam3_silver_image_geode.yaml": "5a5d0914be186d5bd9fcb5f7709da0b3e5bd062768970801f8e5f3e2270b4ba7",
+      "sam3_source/sam3/train/configs/silver_image_evals/sam3_silver_image_inaturalist.yaml": "31366b2d378edd3f97fb6625bbedef359a047bfdd8c967bbcacade4b1b3d9a28",
+      "sam3_source/sam3/train/configs/silver_image_evals/sam3_silver_image_nga.yaml": "2e1bc73ff85f32c06a5d6b69c8283c8df2149c8d7fd110bda93c445918953c99",
+      "sam3_source/sam3/train/configs/silver_image_evals/sam3_silver_image_sav.yaml": "7faa3b8664e2c234bd764b557caad384fac9f29ad6bea91ddb75e1fd20bf98ce",
+      "sam3_source/sam3/train/configs/silver_image_evals/sam3_silver_image_yt1b.yaml": "ca157c7fa6e59866e999f7a9caf9b654902e290d5db36385c691abac50b978a6",
+      "sam3_source/sam3/train/data/__init__.py": "5737b3ba20d7549b2fce53c995fa80c331b116d1f958980d99bf6f161e28e3a6",
+      "sam3_source/sam3/train/data/coco_json_loaders.py": "5a11f1f571ac6902c6aebdd2d469a1ece4b507d4a62322cb5e2d4beea40349dc",
+      "sam3_source/sam3/train/data/collator.py": "9016874e17437d1ab6bf74f1157db1ba8aa91582e8a4e955aba79c8cbb399f13",
+      "sam3_source/sam3/train/data/sam3_image_dataset.py": "e3a8aee01c9e109bd4dc1abe05c3d2ac90eb945a439d74cfc32266aaeceb764c",
+      "sam3_source/sam3/train/data/sam3_video_dataset.py": "989c5eec0a431d090271d0476b1ffbf3f6ec662d77722ed8d98dbb35d0918dea",
+      "sam3_source/sam3/train/data/torch_dataset.py": "879fef6ff917128097a35ea43536f966d3bca801d71d566411d90bb0ecdb097a",
+      "sam3_source/sam3/train/loss/__init__.py": "5737b3ba20d7549b2fce53c995fa80c331b116d1f958980d99bf6f161e28e3a6",
+      "sam3_source/sam3/train/loss/loss_fns.py": "72cfbc8750be577d3bcb11279e6c9d62f83db89dd446c08e1339e8e4a5944ee0",
+      "sam3_source/sam3/train/loss/mask_sampling.py": "4d0a41bce141ffe2e5f71716d9ccbc787c92cca155aa375672cab419931d86c2",
+      "sam3_source/sam3/train/loss/sam3_loss.py": "ea2f7667ba8d715cf74c8ae0b240aa3173450c8d538943484ed7927a7bcef801",
+      "sam3_source/sam3/train/loss/sigmoid_focal_loss.py": "a69b70f09ca975ce55d3e9da2e31ca255338097a1368fbf020fa4bb60319f32e",
+      "sam3_source/sam3/train/masks_ops.py": "e2a63a1858b31df93792f7ea0f1d0a19fb0c1f833d886642c26267d016456455",
+      "sam3_source/sam3/train/matcher.py": "31d8c49b773a229b558a229204111c7dab09a8a9ec09a070e74e92008c2c4a83",
+      "sam3_source/sam3/train/nms_helper.py": "fb5c894880a76600d1af9b95a5d75b26066ee535617970df2d46e32bca061608",
+      "sam3_source/sam3/train/optim/__init__.py": "5737b3ba20d7549b2fce53c995fa80c331b116d1f958980d99bf6f161e28e3a6",
+      "sam3_source/sam3/train/optim/optimizer.py": "80727845338d91afcc4d6f601e95bb8ca72ca377b9117e64e6250acf14f72016",
+      "sam3_source/sam3/train/optim/schedulers.py": "0ea5efdf808e11bdc27fbe5ce080f86dc41fb886acbdcd9cc97387bdff2ebd13",
+      "sam3_source/sam3/train/train.py": "db8ae18650109cf0563902e0b203d41654c959b96534882d6bf08e2d5b957660",
+      "sam3_source/sam3/train/trainer.py": "979d40803cdcd427847ce6493b0344fd80d9f4e38f936aa9b4802a026b9b6c6d",
+      "sam3_source/sam3/train/transforms/__init__.py": "5737b3ba20d7549b2fce53c995fa80c331b116d1f958980d99bf6f161e28e3a6",
+      "sam3_source/sam3/train/transforms/basic.py": "05b7b9998bd1e44548fdcf9a65233b0423718debbac35472830fba960eb81e2f",
+      "sam3_source/sam3/train/transforms/basic_for_api.py": "e8a4213d4c18d7173c55c416a1d96e539c88bfaf87a1d89ca6cb99b7288bd126",
+      "sam3_source/sam3/train/transforms/filter_query_transforms.py": "50e4dbc4960134cdcfd3a5ef681a70e7dc67871b49e9b403406b6cc524021858",
+      "sam3_source/sam3/train/transforms/point_sampling.py": "1901e7464e430531064e9a0d5538e1d6064a6d30e6acc8fb4ebface779a7e3b8",
+      "sam3_source/sam3/train/transforms/segmentation.py": "e75d72f3a3b1cc0b3267f0c4de6cede6738c3dc5eb481a742c1bdeb014190cab",
+      "sam3_source/sam3/train/utils/__init__.py": "5737b3ba20d7549b2fce53c995fa80c331b116d1f958980d99bf6f161e28e3a6",
+      "sam3_source/sam3/train/utils/checkpoint_utils.py": "2c5718b0a1ed3153fd4a9b6c5471a46d53ae882ecc23b970226e76516b643754",
+      "sam3_source/sam3/train/utils/distributed.py": "188f3cf375542b858eaaee5ff8c2714418222174540834525be14e20ec8a530f",
+      "sam3_source/sam3/train/utils/logger.py": "e7c08716f626ffdb88d00aa467e8b75617081fcbbf3ad2f3d5ea55191fea8fca",
+      "sam3_source/sam3/train/utils/train_utils.py": "f1ad4ada8c64454caa8d4ac06dfcd91a948f92de57aadf5282904983dfb8aad1",
+      "sam3_source/sam3/visualization_utils.py": "d1454a4ce5410ba89d4c2f46bcdefba5984fbdbd0c1626ec635e982415d6a14d",
+      "LICENSE": "4dea99bfaa016e21bc860d73f344236bd1e5c4977d1a9a8fd32f822b500ae1be"
+    }
+  },
+  "capture_parent_commit": "0fe9c8da3629064b8375be9dd81abbf697662710",
+  "GPU_or_allocation_authorized_by_profile": false
+}

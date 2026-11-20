@@ -1,0 +1,19 @@
+{
+  "backend": "rule",
+  "entry": "entry.py",
+  "original_policy_config": {
+    "approach_height": 0.04,
+    "carry_motion_speed": 1.4,
+    "gripper_close_steps": 60,
+    "gripper_forward_offset": 0.155,
+    "gripper_open_steps": 40,
+    "gripper_settle_steps": 20,
+    "lift_height": 0.04,
+    "motion_speedup": 1.0,
+    "planner_pose_frame": "world",
+    "top_layer_transfer_clearance": 0.035,
+    "transfer_clearance": 0.035
+  },
+  "task": "stack_blocks_by_language",
+  "runtime_config": "configs/official-rule-evaluation.json"
+}

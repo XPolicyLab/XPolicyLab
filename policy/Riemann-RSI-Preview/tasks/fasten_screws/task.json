@@ -1,0 +1,8 @@
+{
+  "task": "fasten_screws",
+  "backend": "rule",
+  "entry": "tasks/fasten_screws/entry.py",
+  "native_evaluation_profile": "workflow.json",
+  "evaluation_enabled": true,
+  "runtime_config": "configs/official-rule-evaluation.json"
+}

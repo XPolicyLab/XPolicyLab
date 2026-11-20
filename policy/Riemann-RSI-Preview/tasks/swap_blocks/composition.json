@@ -1,0 +1,51 @@
+{
+  "schema": "riemann-rule-composition-v1",
+  "task_mode": "swap_blocks",
+  "backend": "rule",
+  "selection": "frozen_original_workflow",
+  "context": "controller:OriginalSwapContext",
+  "task_entry": "entry:run_task",
+  "native_workflow": "workflow.json",
+  "task_skills": {
+    "button_press": "skills/button_press/implementation.py",
+    "camera_geometry": "skills/camera_geometry/implementation.py",
+    "cube_transfer": "skills/cube_transfer/implementation.py",
+    "grasp_evidence": "skills/grasp_evidence/implementation.py",
+    "grasp_reference": "skills/grasp_reference/implementation.py",
+    "grip_intent": "skills/grip_intent/implementation.py",
+    "lift_feedback": "skills/lift_feedback/implementation.py",
+    "motion": "skills/motion/implementation.py",
+    "perception": "skills/perception/implementation.py",
+    "placement_reference": "skills/placement_reference/implementation.py",
+    "pose_execution": "skills/pose_execution/implementation.py",
+    "press_feedback": "skills/press_feedback/implementation.py",
+    "pose_math": "skills/pose_math/implementation.py",
+    "public_binding": "skills/public_binding/implementation.py",
+    "robot_calibration": "skills/robot_calibration/implementation.py",
+    "robot_planning": "skills/robot_planning/implementation.py",
+    "scene_perception": "skills/scene_perception/implementation.py",
+    "sequence_state": "skills/sequence_state/implementation.py",
+    "servo_feedback": "skills/servo_feedback/implementation.py",
+    "verified_transfer": "skills/verified_transfer/implementation.py"
+  },
+  "shared_skills": [
+    "skills/shared/motion/public_dense_execution/implementation.py",
+    "skills/shared/geometry/conditional_payload_placement_rgb/implementation.py"
+  ],
+  "shared_action_tools": [],
+  "executor": "harness.runtime.declarative_workflow:execute",
+  "dispatch": "Fixed original motion continuity; public evidence only; no model or resolver reselection",
+  "python_entry_files": [
+    "harness/runtime/mature_teacher_boundary.py",
+    "harness/runtime/mature_teacher_clock.py",
+    "harness/runtime/native_rule_evaluation/binding.py",
+    "harness/runtime/native_rule_evaluation/planner.py",
+    "tasks/swap_blocks/bindings/official_policy.py",
+    "tasks/swap_blocks/controller.py",
+    "tasks/swap_blocks/entry.py",
+    "tasks/swap_blocks/resources.py"
+  ],
+  "source_versioning": "git",
+  "graph_files": [],
+  "resource_files": []
+}

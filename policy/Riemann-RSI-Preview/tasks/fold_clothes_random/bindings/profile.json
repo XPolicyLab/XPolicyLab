@@ -1,0 +1,9 @@
+{
+  "schema": "riemann-native-mature-profile-v1",
+  "parameters": {
+    "motion_speed": 1.0,
+    "official_eval": true,
+    "public_instruction_source": "official_observation",
+    "full_curobo_warmup": false
+  }
+}

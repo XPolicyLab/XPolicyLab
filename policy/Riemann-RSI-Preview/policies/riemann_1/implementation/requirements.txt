@@ -1,0 +1,20 @@
+# Versions of the existing policy364k environment used by the CPU parity check.
+# CUDA 12.8 wheels preserve the current torch/torchvision implementation.
+--extra-index-url https://download.pytorch.org/whl/cu128
+
+diffusers==0.35.2
+einops==0.8.2
+ftfy==6.3.1
+huggingface_hub==0.36.2
+msgpack==1.2.3
+msgpack-numpy==0.4.8
+numpy==2.4.6
+opencv-python-headless==4.11.0.86
+pillow==12.3.0
+regex==2026.9.29
+safetensors==0.8.0
+sentencepiece==0.2.1
+torch==2.7.0+cu128
+torchvision==0.22.0+cu128
+tqdm==4.70.1
+transformers==4.57.6

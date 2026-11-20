@@ -1,0 +1,3021 @@
+{
+  "schema": "riemann-mature-teacher-programs-v1",
+  "package": "tasks.fill_egg_holder",
+  "task": "fill_egg_holder",
+  "official_action_horizon": 700,
+  "mode": "rule_only",
+  "wam_reselection": false,
+  "programs": {
+    "U35_VisionFillEggHolderTeacher_recover_slip": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 700,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U35_VisionFillEggHolderTeacher_recover_slip_motion_001": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_slip_motion_001",
+        "U35_VisionFillEggHolderTeacher_recover_slip_motion_002": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_slip_motion_002",
+        "U35_VisionFillEggHolderTeacher_recover_slip_motion_003": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_slip_motion_003",
+        "U35_VisionFillEggHolderTeacher_recover_slip_motion_004": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_slip_motion_004",
+        "U35_VisionFillEggHolderTeacher_recover_slip_motion_005": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_slip_motion_005",
+        "U35_VisionFillEggHolderTeacher_recover_slip_motion_006": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_slip_motion_006",
+        "U35_VisionFillEggHolderTeacher_recover_slip_motion_007": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_slip_motion_007",
+        "U35_VisionFillEggHolderTeacher_recover_slip_not_evidence_held_egg_visible_008": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_slip_not_evidence_held_egg_visible_008",
+        "U35_VisionFillEggHolderTeacher_recover_slip_not_evidence_held_egg_visible_009": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_slip_not_evidence_held_egg_visible_009",
+        "U35_VisionFillEggHolderTeacher_recover_slip_not_evidence_held_egg_visible_010": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_slip_not_evidence_held_egg_visible_010",
+        "U35_VisionFillEggHolderTeacher_recover_slip_not_evidence_held_egg_visible_011": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_slip_not_evidence_held_egg_visible_011",
+        "U35_VisionFillEggHolderTeacher_recover_slip_reversed_self_carry_trace_label_1_012": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_slip_reversed_self_carry_trace_label_1_012",
+        "U35_VisionFillEggHolderTeacher_recover_slip_motion_013": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_slip_motion_013",
+        "U35_VisionFillEggHolderTeacher_recover_slip_motion_014": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_slip_motion_014",
+        "U35_VisionFillEggHolderTeacher_recover_slip_motion_015": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_slip_motion_015",
+        "U35_VisionFillEggHolderTeacher_recover_slip_motion_016": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_slip_motion_016",
+        "U35_VisionFillEggHolderTeacher_recover_slip_motion_017": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_slip_motion_017",
+        "U35_VisionFillEggHolderTeacher_recover_slip_not_u30_wrist_held_color_evidence_self_recorder__018": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_slip_not_u30_wrist_held_color_evidence_self_recorder__018",
+        "U35_VisionFillEggHolderTeacher_recover_slip_not_u30_wrist_held_color_evidence_self_recorder__019": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_slip_not_u30_wrist_held_color_evidence_self_recorder__019",
+        "U35_VisionFillEggHolderTeacher_recover_slip_not_u30_wrist_held_color_evidence_self_recorder__020": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_slip_not_u30_wrist_held_color_evidence_self_recorder__020",
+        "U35_VisionFillEggHolderTeacher_recover_slip_not_u30_wrist_held_color_evidence_self_recorder__021": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_slip_not_u30_wrist_held_color_evidence_self_recorder__021",
+        "U35_VisionFillEggHolderTeacher_recover_slip_motion_022": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_slip_motion_022",
+        "U35_VisionFillEggHolderTeacher_recover_slip_motion_023": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_slip_motion_023"
+      },
+      "errors": {},
+      "steps": [
+        {
+          "call": "U35_VisionFillEggHolderTeacher_recover_slip_motion_001"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_recover_slip_motion_002"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_recover_slip_motion_003"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_recover_slip_motion_004"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_recover_slip_motion_005"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_recover_slip_motion_006"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_recover_slip_motion_007"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_recover_slip_not_evidence_held_egg_visible_008",
+          "store": "condition_8"
+        },
+        {
+          "if": {
+            "var": "condition_8"
+          },
+          "then": [
+            {
+              "call": "U35_VisionFillEggHolderTeacher_recover_slip_not_evidence_held_egg_visible_009"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_recover_slip_not_evidence_held_egg_visible_010"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_recover_slip_not_evidence_held_egg_visible_011",
+              "store": "result_11"
+            },
+            {
+              "return": {
+                "var": "result_11"
+              }
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_recover_slip_reversed_self_carry_trace_label_1_012",
+          "store": "items_12"
+        },
+        {
+          "for_each": {
+            "var": "items_12"
+          },
+          "as": "loop_item_13",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U35_VisionFillEggHolderTeacher_recover_slip_motion_013",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_13"
+                }
+              }
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_recover_slip_motion_014"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_recover_slip_motion_015"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_recover_slip_motion_016"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_recover_slip_motion_017"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_recover_slip_not_u30_wrist_held_color_evidence_self_recorder__018",
+              "store": "condition_18"
+            },
+            {
+              "if": {
+                "var": "condition_18"
+              },
+              "then": [
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_recover_slip_not_u30_wrist_held_color_evidence_self_recorder__019"
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_recover_slip_not_u30_wrist_held_color_evidence_self_recorder__020"
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_recover_slip_not_u30_wrist_held_color_evidence_self_recorder__021",
+                  "store": "result_21"
+                },
+                {
+                  "return": {
+                    "var": "result_21"
+                  }
+                }
+              ],
+              "else": []
+            }
+          ]
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_recover_slip_motion_022"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_recover_slip_motion_023",
+          "store": "result_23"
+        },
+        {
+          "return": {
+            "var": "result_23"
+          }
+        }
+      ]
+    },
+    "U35_VisionFillEggHolderTeacher_transport": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 700,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U35_VisionFillEggHolderTeacher_transport_motion_001": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_motion_001",
+        "U35_VisionFillEggHolderTeacher_transport_carry_in_phase_002": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_carry_in_phase_002",
+        "U35_VisionFillEggHolderTeacher_transport_carry_in_phase_003": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_carry_in_phase_003",
+        "U35_VisionFillEggHolderTeacher_transport_motion_004": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_motion_004",
+        "U35_VisionFillEggHolderTeacher_transport_motion_005": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_motion_005",
+        "U35_VisionFillEggHolderTeacher_transport_enumerate_waypoints_1_006": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_enumerate_waypoints_1_006",
+        "U35_VisionFillEggHolderTeacher_transport_motion_007": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_motion_007",
+        "U35_VisionFillEggHolderTeacher_transport_not_seating_or_index_steps_008": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_not_seating_or_index_steps_008",
+        "U35_VisionFillEggHolderTeacher_transport_not_seating_or_index_steps_009": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_not_seating_or_index_steps_009",
+        "U35_VisionFillEggHolderTeacher_transport_motion_010": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_motion_010",
+        "U35_VisionFillEggHolderTeacher_transport_motion_011": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_motion_011",
+        "U35_VisionFillEggHolderTeacher_transport_motion_012": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_motion_012",
+        "U35_VisionFillEggHolderTeacher_transport_motion_013": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_motion_013",
+        "U35_VisionFillEggHolderTeacher_transport_motion_014": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_motion_014",
+        "U35_VisionFillEggHolderTeacher_transport_not_accepted_015": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_not_accepted_015",
+        "U35_VisionFillEggHolderTeacher_transport_not_accepted_016": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_not_accepted_016",
+        "U35_VisionFillEggHolderTeacher_transport_motion_017": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_motion_017",
+        "U35_VisionFillEggHolderTeacher_transport_motion_018": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_motion_018",
+        "U35_VisionFillEggHolderTeacher_transport_motion_019": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_motion_019",
+        "U35_VisionFillEggHolderTeacher_transport_motion_020": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_motion_020",
+        "U35_VisionFillEggHolderTeacher_transport_motion_021": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_motion_021",
+        "U35_VisionFillEggHolderTeacher_transport_motion_022": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_motion_022",
+        "U35_VisionFillEggHolderTeacher_transport_motion_023": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_motion_023",
+        "U35_VisionFillEggHolderTeacher_transport_not_stable_or_diagnostic_drift_m_0_002_024": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_not_stable_or_diagnostic_drift_m_0_002_024",
+        "U35_VisionFillEggHolderTeacher_transport_not_stable_or_diagnostic_drift_m_0_002_025": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_not_stable_or_diagnostic_drift_m_0_002_025",
+        "U35_VisionFillEggHolderTeacher_transport_motion_026": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_motion_026",
+        "U35_VisionFillEggHolderTeacher_transport_motion_027": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_motion_027",
+        "U35_VisionFillEggHolderTeacher_transport_upright_in_phase_or_carry_in_phase_028": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_upright_in_phase_or_carry_in_phase_028",
+        "U35_VisionFillEggHolderTeacher_transport_upright_in_phase_or_carry_in_phase_029": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_upright_in_phase_or_carry_in_phase_029",
+        "U35_VisionFillEggHolderTeacher_transport_upright_in_phase_or_carry_in_phase_030": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_upright_in_phase_or_carry_in_phase_030",
+        "U35_VisionFillEggHolderTeacher_transport_upright_in_phase_or_carry_in_phase_031": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_upright_in_phase_or_carry_in_phase_031",
+        "U35_VisionFillEggHolderTeacher_transport_upright_in_phase_or_carry_in_phase_032": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_upright_in_phase_or_carry_in_phase_032",
+        "U35_VisionFillEggHolderTeacher_transport_current_egg_color_px_minimum_and_not_current_get_033": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_current_egg_color_px_minimum_and_not_current_get_033",
+        "U35_VisionFillEggHolderTeacher_transport_current_egg_color_px_minimum_and_not_current_get_034": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_current_egg_color_px_minimum_and_not_current_get_034",
+        "U35_VisionFillEggHolderTeacher_transport_current_egg_color_px_minimum_and_not_current_get_035": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_transport_current_egg_color_px_minimum_and_not_current_get_035"
+      },
+      "errors": {
+        "U34_PoseFeedbackError": "skills.state.implementation:U34_PoseFeedbackError"
+      },
+      "steps": [
+        {
+          "call": "U35_VisionFillEggHolderTeacher_transport_motion_001"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_transport_carry_in_phase_002",
+          "store": "condition_2"
+        },
+        {
+          "if": {
+            "var": "condition_2"
+          },
+          "then": [
+            {
+              "call": "U35_VisionFillEggHolderTeacher_transport_carry_in_phase_003"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_transport_motion_004"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_transport_motion_005"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_transport_enumerate_waypoints_1_006",
+          "store": "items_6"
+        },
+        {
+          "for_each": {
+            "var": "items_6"
+          },
+          "as": "loop_item_7",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U35_VisionFillEggHolderTeacher_transport_motion_007",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_7"
+                }
+              }
+            },
+            {
+              "try": [
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_transport_motion_027"
+                }
+              ],
+              "catch": [
+                {
+                  "errors": [
+                    "U34_PoseFeedbackError"
+                  ],
+                  "as": "caught_error",
+                  "do": [
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_transport_not_seating_or_index_steps_008",
+                      "store": "condition_8"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_8"
+                      },
+                      "then": [
+                        {
+                          "call": "U35_VisionFillEggHolderTeacher_transport_not_seating_or_index_steps_009"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_transport_motion_010"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_transport_motion_011"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_transport_motion_012"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_transport_motion_013"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_transport_motion_014"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_transport_not_accepted_015",
+                      "store": "condition_15"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_15"
+                      },
+                      "then": [
+                        {
+                          "call": "U35_VisionFillEggHolderTeacher_transport_not_accepted_016"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_transport_motion_017"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_transport_motion_018"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_transport_motion_019"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_transport_motion_020"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_transport_motion_021"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_transport_motion_022"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_transport_motion_023"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_transport_not_stable_or_diagnostic_drift_m_0_002_024",
+                      "store": "condition_24"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_24"
+                      },
+                      "then": [
+                        {
+                          "call": "U35_VisionFillEggHolderTeacher_transport_not_stable_or_diagnostic_drift_m_0_002_025"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_transport_motion_026"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_transport_upright_in_phase_or_carry_in_phase_028",
+              "store": "condition_28"
+            },
+            {
+              "if": {
+                "var": "condition_28"
+              },
+              "then": [
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_transport_upright_in_phase_or_carry_in_phase_029"
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_transport_upright_in_phase_or_carry_in_phase_030"
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_transport_upright_in_phase_or_carry_in_phase_031"
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_transport_upright_in_phase_or_carry_in_phase_032"
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_transport_current_egg_color_px_minimum_and_not_current_get_033",
+                  "store": "condition_33"
+                },
+                {
+                  "if": {
+                    "var": "condition_33"
+                  },
+                  "then": [
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_transport_current_egg_color_px_minimum_and_not_current_get_034"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_transport_current_egg_color_px_minimum_and_not_current_get_035"
+                    }
+                  ],
+                  "else": []
+                }
+              ],
+              "else": []
+            }
+          ]
+        }
+      ]
+    },
+    "U35_VisionFillEggHolderTeacher_recover_socket_occupancy": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 700,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U35_VisionFillEggHolderTeacher_recover_socket_occupancy_motion_001": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_socket_occupancy_motion_001",
+        "U35_VisionFillEggHolderTeacher_recover_socket_occupancy_motion_002": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_socket_occupancy_motion_002",
+        "U35_VisionFillEggHolderTeacher_recover_socket_occupancy_motion_003": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_socket_occupancy_motion_003",
+        "U35_VisionFillEggHolderTeacher_recover_socket_occupancy_label_not_in_self_visible_remaining_and_len_newl_004": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_socket_occupancy_label_not_in_self_visible_remaining_and_len_newl_004",
+        "U35_VisionFillEggHolderTeacher_recover_socket_occupancy_label_not_in_self_visible_remaining_and_len_newl_005": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_socket_occupancy_label_not_in_self_visible_remaining_and_len_newl_005",
+        "U35_VisionFillEggHolderTeacher_recover_socket_occupancy_label_not_in_self_visible_remaining_and_len_newl_006": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_socket_occupancy_label_not_in_self_visible_remaining_and_len_newl_006",
+        "U35_VisionFillEggHolderTeacher_recover_socket_occupancy_all_checks_values_007": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_socket_occupancy_all_checks_values_007",
+        "U35_VisionFillEggHolderTeacher_recover_socket_occupancy_label_not_in_self_events_placed_008": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_socket_occupancy_label_not_in_self_events_placed_008",
+        "U35_VisionFillEggHolderTeacher_recover_socket_occupancy_label_not_in_self_events_placed_009": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_socket_occupancy_label_not_in_self_events_placed_009",
+        "U35_VisionFillEggHolderTeacher_recover_socket_occupancy_all_checks_values_010": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_socket_occupancy_all_checks_values_010",
+        "U35_VisionFillEggHolderTeacher_recover_socket_occupancy_all_checks_values_011": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_socket_occupancy_all_checks_values_011",
+        "U35_VisionFillEggHolderTeacher_recover_socket_occupancy_label_not_in_self_visible_remaining_and_len_newl_012": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_socket_occupancy_label_not_in_self_visible_remaining_and_len_newl_012",
+        "U35_VisionFillEggHolderTeacher_recover_socket_occupancy_motion_013": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_recover_socket_occupancy_motion_013"
+      },
+      "errors": {},
+      "steps": [
+        {
+          "call": "U35_VisionFillEggHolderTeacher_recover_socket_occupancy_motion_001"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_recover_socket_occupancy_motion_002"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_recover_socket_occupancy_motion_003"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_recover_socket_occupancy_label_not_in_self_visible_remaining_and_len_newl_004",
+          "store": "condition_4"
+        },
+        {
+          "if": {
+            "var": "condition_4"
+          },
+          "then": [
+            {
+              "call": "U35_VisionFillEggHolderTeacher_recover_socket_occupancy_label_not_in_self_visible_remaining_and_len_newl_005"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_recover_socket_occupancy_label_not_in_self_visible_remaining_and_len_newl_006"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_recover_socket_occupancy_all_checks_values_007",
+              "store": "condition_7"
+            },
+            {
+              "if": {
+                "var": "condition_7"
+              },
+              "then": [
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_recover_socket_occupancy_label_not_in_self_events_placed_008",
+                  "store": "condition_8"
+                },
+                {
+                  "if": {
+                    "var": "condition_8"
+                  },
+                  "then": [
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_recover_socket_occupancy_label_not_in_self_events_placed_009"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_recover_socket_occupancy_all_checks_values_010"
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_recover_socket_occupancy_all_checks_values_011"
+                }
+              ],
+              "else": [
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_recover_socket_occupancy_label_not_in_self_visible_remaining_and_len_newl_012"
+                }
+              ]
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_recover_socket_occupancy_motion_013",
+          "store": "result_13"
+        },
+        {
+          "return": {
+            "var": "result_13"
+          }
+        }
+      ]
+    },
+    "U35_VisionFillEggHolderTeacher_repick_released_egg": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 700,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_001": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_001",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_range_2_002": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_range_2_002",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_003": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_003",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_004": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_004",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_005": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_005",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_006": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_006",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_007": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_007",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_008": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_008",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_009": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_009",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_010": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_010",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_011": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_011",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_012": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_012",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_013": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_013",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_014": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_014",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_015": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_015",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_016": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_016",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_017": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_017",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_attempt_index_or_self_held_or_len_attempts_1_018": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_attempt_index_or_self_held_or_len_attempts_1_018",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_attempt_index_or_self_held_or_len_attempts_1_019": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_attempt_index_or_self_held_or_len_attempts_1_019",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_020": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_020",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_not_attempt_get_socket_regrasp_or_attempt_get_la_021": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_not_attempt_get_socket_regrasp_or_attempt_get_la_021",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_not_attempt_get_socket_regrasp_or_attempt_get_la_022": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_not_attempt_get_socket_regrasp_or_attempt_get_la_022",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_023": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_023",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_024": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_024",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_025": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_025",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_026": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_026",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_027": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_027",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_028": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_028",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_029": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_029",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_030": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_030",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_031": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_031",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_032": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_032",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_033": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_033",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_states_socket_occupied_034": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_states_socket_occupied_034",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_states_socket_occupied_035": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_states_socket_occupied_035",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_036": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_036",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_037": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_037",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_038": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_038",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_039": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_039",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_040": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_040",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_041": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_041",
+        "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_042": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_repick_released_egg_motion_042"
+      },
+      "errors": {
+        "U35_VisionOpenGraspError": "skills.state.implementation:U35_VisionOpenGraspError",
+        "Exception": "skills.state.implementation:Exception"
+      },
+      "steps": [
+        {
+          "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_001"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_range_2_002",
+          "store": "items_2"
+        },
+        {
+          "for_each": {
+            "var": "items_2"
+          },
+          "as": "loop_item_3",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_003",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_3"
+                }
+              }
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_004"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_005"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_006"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_007"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_008"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_009"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_010"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_011"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_012"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_013"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_014"
+            },
+            {
+              "try": [
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_040"
+                }
+              ],
+              "catch": [
+                {
+                  "errors": [
+                    "U35_VisionOpenGraspError"
+                  ],
+                  "as": "caught_error",
+                  "do": [
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_015",
+                      "args": {
+                        "__workflow_error": {
+                          "var": "caught_error"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_016"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_017"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_attempt_index_or_self_held_or_len_attempts_1_018",
+                      "store": "condition_18"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_18"
+                      },
+                      "then": [
+                        {
+                          "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_attempt_index_or_self_held_or_len_attempts_1_019"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_020"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_not_attempt_get_socket_regrasp_or_attempt_get_la_021",
+                      "store": "condition_21"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_21"
+                      },
+                      "then": [
+                        {
+                          "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_not_attempt_get_socket_regrasp_or_attempt_get_la_022"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_023"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_024"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_025"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_026"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_027"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_028"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_029"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_030"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_031"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_032"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_033"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_states_socket_occupied_034",
+                      "store": "condition_34"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_34"
+                      },
+                      "then": [
+                        {
+                          "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_states_socket_occupied_035"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_036"
+                    },
+                    {
+                      "continue": true
+                    }
+                  ]
+                },
+                {
+                  "errors": [
+                    "Exception"
+                  ],
+                  "as": "caught_error",
+                  "do": [
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_037",
+                      "args": {
+                        "__workflow_error": {
+                          "var": "caught_error"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_038"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_039"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_041"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_repick_released_egg_motion_042",
+              "store": "result_42"
+            },
+            {
+              "return": {
+                "var": "result_42"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "U35_VisionFillEggHolderTeacher_close_lid": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 700,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U35_VisionFillEggHolderTeacher_close_lid_motion_001": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_motion_001",
+        "U35_VisionFillEggHolderTeacher_close_lid_motion_002": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_motion_002",
+        "U35_VisionFillEggHolderTeacher_close_lid_choices_003": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_choices_003",
+        "U35_VisionFillEggHolderTeacher_close_lid_motion_004": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_motion_004",
+        "U35_VisionFillEggHolderTeacher_close_lid_motion_005": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_motion_005",
+        "U35_VisionFillEggHolderTeacher_close_lid_motion_006": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_motion_006",
+        "U35_VisionFillEggHolderTeacher_close_lid_motion_007": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_motion_007",
+        "U35_VisionFillEggHolderTeacher_close_lid_motion_008": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_motion_008",
+        "U35_VisionFillEggHolderTeacher_close_lid_motion_009": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_motion_009",
+        "U35_VisionFillEggHolderTeacher_close_lid_motion_010": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_motion_010",
+        "U35_VisionFillEggHolderTeacher_close_lid_motion_011": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_motion_011",
+        "U35_VisionFillEggHolderTeacher_close_lid_motion_012": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_motion_012",
+        "U35_VisionFillEggHolderTeacher_close_lid_motion_013": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_motion_013",
+        "U35_VisionFillEggHolderTeacher_close_lid_motion_014": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_motion_014",
+        "U35_VisionFillEggHolderTeacher_close_lid_motion_015": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_motion_015",
+        "U35_VisionFillEggHolderTeacher_close_lid_range_40_016": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_range_40_016",
+        "U35_VisionFillEggHolderTeacher_close_lid_motion_017": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_motion_017",
+        "U35_VisionFillEggHolderTeacher_close_lid_motion_018": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_motion_018",
+        "U35_VisionFillEggHolderTeacher_close_lid_motion_019": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_motion_019",
+        "U35_VisionFillEggHolderTeacher_close_lid_closed_020": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_close_lid_closed_020",
+        "U35_VisionFillEggHolderTeacher_close_lid_motion_021": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_motion_021",
+        "U35_VisionFillEggHolderTeacher_close_lid_angle_math_radians_5_0_022": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_angle_math_radians_5_0_022",
+        "U35_VisionFillEggHolderTeacher_close_lid_motion_023": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_motion_023",
+        "U35_VisionFillEggHolderTeacher_close_lid_motion_024": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_motion_024",
+        "U35_VisionFillEggHolderTeacher_close_lid_motion_025": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_motion_025",
+        "U35_VisionFillEggHolderTeacher_close_lid_motion_026": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_motion_026",
+        "U35_VisionFillEggHolderTeacher_close_lid_motion_027": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_motion_027",
+        "U35_VisionFillEggHolderTeacher_close_lid_motion_028": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_motion_028",
+        "U35_VisionFillEggHolderTeacher_close_lid_motion_029": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_motion_029",
+        "U35_VisionFillEggHolderTeacher_close_lid_motion_030": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_motion_030",
+        "U35_VisionFillEggHolderTeacher_close_lid_motion_031": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_motion_031",
+        "U35_VisionFillEggHolderTeacher_close_lid_self_robots_items_032": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_self_robots_items_032",
+        "U35_VisionFillEggHolderTeacher_close_lid_motion_033": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_motion_033",
+        "U35_VisionFillEggHolderTeacher_close_lid_name_arm_034": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_name_arm_034",
+        "U35_VisionFillEggHolderTeacher_close_lid_name_arm_035": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_name_arm_035",
+        "U35_VisionFillEggHolderTeacher_close_lid_motion_036": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_close_lid_motion_036"
+      },
+      "errors": {
+        "U34_PosePlanningError": "skills.state.implementation:U34_PosePlanningError"
+      },
+      "steps": [
+        {
+          "call": "U35_VisionFillEggHolderTeacher_close_lid_motion_001"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_close_lid_motion_002"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_close_lid_choices_003",
+          "store": "items_3"
+        },
+        {
+          "for_each": {
+            "var": "items_3"
+          },
+          "as": "loop_item_4",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U35_VisionFillEggHolderTeacher_close_lid_motion_004",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_4"
+                }
+              }
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_close_lid_motion_005"
+            },
+            {
+              "for_each": [
+                0.09,
+                0.06
+              ],
+              "as": "loop_item_6",
+              "max_items": 4096,
+              "do": [
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_close_lid_motion_006",
+                  "args": {
+                    "__workflow_item": {
+                      "var": "loop_item_6"
+                    }
+                  }
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_close_lid_motion_007"
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_close_lid_motion_008"
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_close_lid_motion_009"
+                },
+                {
+                  "try": [
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_close_lid_motion_010"
+                    }
+                  ],
+                  "catch": [
+                    {
+                      "errors": [
+                        "U34_PosePlanningError"
+                      ],
+                      "as": "caught_error",
+                      "do": [
+                        {
+                          "continue": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "break": true
+                }
+              ],
+              "else": [
+                {
+                  "continue": true
+                }
+              ]
+            },
+            {
+              "break": true
+            }
+          ],
+          "else": [
+            {
+              "call": "U35_VisionFillEggHolderTeacher_close_lid_motion_011"
+            }
+          ]
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_close_lid_motion_012"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_close_lid_motion_013"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_close_lid_motion_014"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_close_lid_motion_015"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_close_lid_range_40_016",
+          "store": "items_16"
+        },
+        {
+          "for_each": {
+            "var": "items_16"
+          },
+          "as": "loop_item_17",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U35_VisionFillEggHolderTeacher_close_lid_motion_017",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_17"
+                }
+              }
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_close_lid_motion_018"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_close_lid_motion_019"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_close_lid_closed_020",
+              "store": "condition_20"
+            },
+            {
+              "if": {
+                "var": "condition_20"
+              },
+              "then": [
+                {
+                  "break": true
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_close_lid_motion_021"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_close_lid_angle_math_radians_5_0_022",
+              "store": "condition_22"
+            },
+            {
+              "if": {
+                "var": "condition_22"
+              },
+              "then": [
+                {
+                  "break": true
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_close_lid_motion_023"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_close_lid_motion_024"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_close_lid_motion_025"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_close_lid_motion_026"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_close_lid_motion_027"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_close_lid_motion_028"
+            }
+          ]
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_close_lid_motion_029"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_close_lid_motion_030"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_close_lid_motion_031",
+          "args": {
+            "phase_0": "lid_home"
+          }
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_close_lid_self_robots_items_032",
+          "store": "items_32"
+        },
+        {
+          "for_each": {
+            "var": "items_32"
+          },
+          "as": "loop_item_33",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U35_VisionFillEggHolderTeacher_close_lid_motion_033",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_33"
+                }
+              }
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_close_lid_name_arm_034",
+              "store": "condition_34"
+            },
+            {
+              "if": {
+                "var": "condition_34"
+              },
+              "then": [
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_close_lid_name_arm_035"
+                }
+              ],
+              "else": []
+            }
+          ]
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_close_lid_motion_036"
+        }
+      ]
+    },
+    "U35_VisionFillEggHolderTeacher_pick_and_place": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 700,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_001": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_001",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_002": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_002",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_center_offset_shape_3_or_not_np_isfinite_center__003": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_center_offset_shape_3_or_not_np_isfinite_center__003",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_center_offset_shape_3_or_not_np_isfinite_center__004": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_center_offset_shape_3_or_not_np_isfinite_center__004",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_grasp_height_override_is_not_none_and_not_math_i_005": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_grasp_height_override_is_not_none_and_not_math_i_005",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_grasp_height_override_is_not_none_and_not_math_i_006": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_grasp_height_override_is_not_none_and_not_math_i_006",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_007": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_007",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_socket_regrasp_008": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_socket_regrasp_008",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_socket_regrasp_009": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_socket_regrasp_009",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_010": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_010",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_011": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_011",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_np_linalg_norm_closing_0_1_012": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_np_linalg_norm_closing_0_1_012",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_np_linalg_norm_closing_0_1_013": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_np_linalg_norm_closing_0_1_013",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_closing_axis_is_not_none_014": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_closing_axis_is_not_none_014",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_closing_axis_is_not_none_015": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_closing_axis_is_not_none_015",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_016": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_016",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_017": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_017",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_018": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_018",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_019": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_019",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_enumerate_order_020": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_enumerate_order_020",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_021": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_021",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_022": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_022",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_basket_regrasp_and_self_official_motion_profile__023": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_basket_regrasp_and_self_official_motion_profile__023",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_basket_regrasp_and_self_official_motion_profile__024": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_basket_regrasp_and_self_official_motion_profile__024",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_025": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_025",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_not_basket_regrasp_and_not_self_ignore_basket_ri_026": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_not_basket_regrasp_and_not_self_ignore_basket_ri_026",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_not_basket_regrasp_and_not_self_ignore_basket_ri_027": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_not_basket_regrasp_and_not_self_ignore_basket_ri_027",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_not_basket_regrasp_and_not_self_ignore_basket_ri_028": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_not_basket_regrasp_and_not_self_ignore_basket_ri_028",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_scores_flips_0_0_008_029": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_scores_flips_0_0_008_029",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_scores_flips_0_0_008_030": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_scores_flips_0_0_008_030",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_enumerate_flips_031": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_enumerate_flips_031",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_032": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_032",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_033": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_033",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_enumerate_variants_034": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_enumerate_variants_034",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_035": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_035",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_036": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_036",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_any_float_camera_direction_rejected_0_7_for_reje_037": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_any_float_camera_direction_rejected_0_7_for_reje_037",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_socket_regrasp_and_self_socket_repick_faces_lid__038": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_socket_regrasp_and_self_socket_repick_faces_lid__038",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_socket_regrasp_and_self_socket_repick_faces_lid__039": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_socket_regrasp_and_self_socket_repick_faces_lid__039",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_040": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_040",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_041": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_041",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_042": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_042",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_sorted_grasp_options_key_lambda_row_row_4_043": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_sorted_grasp_options_key_lambda_row_row_4_043",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_044": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_044",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_045": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_045",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_046": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_046",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_not_all_self_ik_arm_p_get_status_success_for_p_i_047": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_not_all_self_ik_arm_p_get_status_success_for_p_i_047",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_048": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_048",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_049": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_049",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_selected_is_none_050": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_selected_is_none_050",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_selected_is_none_051": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_selected_is_none_051",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_052": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_052",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_053": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_053",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_054": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_054",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_055": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_055",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_056": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_056",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_057": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_057",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_058": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_058",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_059": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_059",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_060": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_060",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_061": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_061",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_z_block_0_002_and_np_linalg_norm_actual_2_near_2_062": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_z_block_0_002_and_np_linalg_norm_actual_2_near_2_062",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_z_block_0_002_and_np_linalg_norm_actual_2_near_2_063": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_z_block_0_002_and_np_linalg_norm_actual_2_near_2_063",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_064": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_064",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_065": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_065",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_066": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_066",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_067": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_067",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_068": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_068",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_069": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_069",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_070": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_070",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_071": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_071",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_self_accept_small_pinch_gap_arm_label_low_grasp__072": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_self_accept_small_pinch_gap_arm_label_low_grasp__072",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_self_accept_small_pinch_gap_arm_label_low_grasp__073": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_self_accept_small_pinch_gap_arm_label_low_grasp__073",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_self_accept_small_pinch_gap_arm_label_low_grasp__074": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_self_accept_small_pinch_gap_arm_label_low_grasp__074",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_075": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_075",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_076": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_076",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_z_block_0_008_and_np_linalg_norm_actual_pose_2_l_077": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_z_block_0_008_and_np_linalg_norm_actual_pose_2_l_077",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_z_block_0_008_and_np_linalg_norm_actual_pose_2_l_078": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_z_block_0_008_and_np_linalg_norm_actual_pose_2_l_078",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_or_not_0_0_error_position_error_0_079": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_or_not_0_0_error_position_error_0_079",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_or_not_0_0_error_position_error_0_080": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_or_not_0_0_error_position_error_0_080",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_raised_delta_0_008_081": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_raised_delta_0_008_081",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_raised_delta_0_008_082": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_raised_delta_0_008_082",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_083": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_083",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_084": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_084",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_085": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_085",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_086": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_086",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_087": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_087",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_088": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_088",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_089": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_089",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_090": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_090",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_091": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_091",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_092": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_092",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_093": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_093",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_094": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_094",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_095": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_095",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_dz_self_args_lift_height_0_5_096": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_dz_self_args_lift_height_0_5_096",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_dz_self_args_lift_height_0_5_097": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_dz_self_args_lift_height_0_5_097",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_098": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_098",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_099": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_099",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_100": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_100",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_101": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_101",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_102": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_102",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_not_sites_103": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_not_sites_103",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_not_sites_104": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_not_sites_104",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_105": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_105",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_106": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_106",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_107": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_107",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_108": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_108",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_109": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_109",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_110": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_110",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_111": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_111",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_112": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_112",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_np_linalg_norm_measured_3_grasp_3_self_args_max__113": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_np_linalg_norm_measured_3_grasp_3_self_args_max__113",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_np_linalg_norm_measured_3_grasp_3_self_args_max__114": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_np_linalg_norm_measured_3_grasp_3_self_args_max__114",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_115": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_115",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_116": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_116",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_117": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_117",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_118": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_118",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_119": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_119",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_120": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_120",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_121": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_121",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_122": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_122",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_123": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_123",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_124": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_124",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_125": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_125",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_np_linalg_norm_closing_0_1_126": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_np_linalg_norm_closing_0_1_126",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_np_linalg_norm_closing_0_1_127": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_np_linalg_norm_closing_0_1_127",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_128": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_128",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_129": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_129",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_130": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_130",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_label_in_self_unusable_held_grasp_131": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_label_in_self_unusable_held_grasp_131",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_label_in_self_unusable_held_grasp_132": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_label_in_self_unusable_held_grasp_132",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_label_in_self_unusable_held_grasp_133": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_label_in_self_unusable_held_grasp_133",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_134": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_134",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_135": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_135",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_136": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_136",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_137": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_137",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_138": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_138",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_139": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_139",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_140": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_140",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_141": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_141",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_142": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_142",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_143": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_143",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_144": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_144",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_145": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_145",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_146": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_146",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_147": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_147",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_148": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_148",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_arm_left_arm_149": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_arm_left_arm_149",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_arm_left_arm_150": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_arm_left_arm_150",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_arm_left_arm_151": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_arm_left_arm_151",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_arm_left_arm_152": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_arm_left_arm_152",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_153": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_153",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_154": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_154",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_155": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_155",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_allow_post_release_repick_and_checks_rgb_socket__156": "skills.perception.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_allow_post_release_repick_and_checks_rgb_socket__156",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_allow_post_release_repick_and_checks_rgb_socket__157": "skills.perception.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_allow_post_release_repick_and_checks_rgb_socket__157",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_allow_post_release_repick_and_checks_rgb_socket__158": "skills.perception.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_allow_post_release_repick_and_checks_rgb_socket__158",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_159": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_159",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_160": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_160",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_not_all_checks_values_161": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_not_all_checks_values_161",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_not_all_checks_values_162": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_not_all_checks_values_162",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_motion_163": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_motion_163",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_label_not_in_self_events_placed_164": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_label_not_in_self_events_placed_164",
+        "U35_VisionFillEggHolderTeacher_pick_and_place_label_not_in_self_events_placed_165": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_pick_and_place_label_not_in_self_events_placed_165"
+      },
+      "errors": {
+        "U34_PosePlanningError": "skills.state.implementation:U34_PosePlanningError",
+        "U34_PoseFeedbackError": "skills.state.implementation:U34_PoseFeedbackError"
+      },
+      "steps": [
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_001"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_002"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_center_offset_shape_3_or_not_np_isfinite_center__003",
+          "store": "condition_3"
+        },
+        {
+          "if": {
+            "var": "condition_3"
+          },
+          "then": [
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_center_offset_shape_3_or_not_np_isfinite_center__004"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_grasp_height_override_is_not_none_and_not_math_i_005",
+          "store": "condition_5"
+        },
+        {
+          "if": {
+            "var": "condition_5"
+          },
+          "then": [
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_grasp_height_override_is_not_none_and_not_math_i_006"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_007"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_socket_regrasp_008",
+          "store": "condition_8"
+        },
+        {
+          "if": {
+            "var": "condition_8"
+          },
+          "then": [
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_socket_regrasp_009"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_010"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_011"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_np_linalg_norm_closing_0_1_012",
+          "store": "condition_12"
+        },
+        {
+          "if": {
+            "var": "condition_12"
+          },
+          "then": [
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_np_linalg_norm_closing_0_1_013"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_closing_axis_is_not_none_014",
+          "store": "condition_14"
+        },
+        {
+          "if": {
+            "var": "condition_14"
+          },
+          "then": [
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_closing_axis_is_not_none_015"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_016"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_017"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_018"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_019"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_enumerate_order_020",
+          "store": "items_20"
+        },
+        {
+          "for_each": {
+            "var": "items_20"
+          },
+          "as": "loop_item_21",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_021",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_21"
+                }
+              }
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_022"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_basket_regrasp_and_self_official_motion_profile__023",
+              "store": "condition_23"
+            },
+            {
+              "if": {
+                "var": "condition_23"
+              },
+              "then": [
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_pick_and_place_basket_regrasp_and_self_official_motion_profile__024"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_025"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_not_basket_regrasp_and_not_self_ignore_basket_ri_026",
+              "store": "condition_26"
+            },
+            {
+              "if": {
+                "var": "condition_26"
+              },
+              "then": [
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_pick_and_place_not_basket_regrasp_and_not_self_ignore_basket_ri_027"
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_pick_and_place_not_basket_regrasp_and_not_self_ignore_basket_ri_028"
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_pick_and_place_scores_flips_0_0_008_029",
+                  "store": "condition_29"
+                },
+                {
+                  "if": {
+                    "var": "condition_29"
+                  },
+                  "then": [
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_pick_and_place_scores_flips_0_0_008_030"
+                    }
+                  ],
+                  "else": []
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_enumerate_flips_031",
+              "store": "items_31"
+            },
+            {
+              "for_each": {
+                "var": "items_31"
+              },
+              "as": "loop_item_32",
+              "max_items": 4096,
+              "do": [
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_032",
+                  "args": {
+                    "__workflow_item": {
+                      "var": "loop_item_32"
+                    }
+                  }
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_033"
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_pick_and_place_enumerate_variants_034",
+                  "store": "items_34"
+                },
+                {
+                  "for_each": {
+                    "var": "items_34"
+                  },
+                  "as": "loop_item_35",
+                  "max_items": 4096,
+                  "do": [
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_035",
+                      "args": {
+                        "__workflow_item": {
+                          "var": "loop_item_35"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_036"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_pick_and_place_any_float_camera_direction_rejected_0_7_for_reje_037",
+                      "store": "condition_37"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_37"
+                      },
+                      "then": [
+                        {
+                          "continue": true
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_pick_and_place_socket_regrasp_and_self_socket_repick_faces_lid__038",
+                      "store": "condition_38"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_38"
+                      },
+                      "then": [
+                        {
+                          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_socket_regrasp_and_self_socket_repick_faces_lid__039"
+                        },
+                        {
+                          "continue": true
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_040"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_041"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_042"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_sorted_grasp_options_key_lambda_row_row_4_043",
+          "store": "items_43"
+        },
+        {
+          "for_each": {
+            "var": "items_43"
+          },
+          "as": "loop_item_44",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_044",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_44"
+                }
+              }
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_045"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_046"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_not_all_self_ik_arm_p_get_status_success_for_p_i_047",
+              "store": "condition_47"
+            },
+            {
+              "if": {
+                "var": "condition_47"
+              },
+              "then": [
+                {
+                  "continue": true
+                }
+              ],
+              "else": []
+            },
+            {
+              "try": [
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_048"
+                }
+              ],
+              "catch": [
+                {
+                  "errors": [
+                    "U34_PosePlanningError"
+                  ],
+                  "as": "caught_error",
+                  "do": [
+                    {
+                      "continue": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_049"
+            },
+            {
+              "break": true
+            }
+          ]
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_selected_is_none_050",
+          "store": "condition_50"
+        },
+        {
+          "if": {
+            "var": "condition_50"
+          },
+          "then": [
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_selected_is_none_051"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_052"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_053"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_054"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_055"
+        },
+        {
+          "for_each": [
+            0.04,
+            0.02
+          ],
+          "as": "loop_item_56",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_056",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_56"
+                }
+              }
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_057"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_058"
+            },
+            {
+              "try": [
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_065"
+                }
+              ],
+              "catch": [
+                {
+                  "errors": [
+                    "U34_PoseFeedbackError"
+                  ],
+                  "as": "caught_error",
+                  "do": [
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_059",
+                      "args": {
+                        "__workflow_error": {
+                          "var": "caught_error"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_060"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_061"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_pick_and_place_z_block_0_002_and_np_linalg_norm_actual_2_near_2_062",
+                      "store": "condition_62"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_62"
+                      },
+                      "then": [
+                        {
+                          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_z_block_0_002_and_np_linalg_norm_actual_2_near_2_063"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_064"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_066"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_067"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_068"
+        },
+        {
+          "try": [
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_088"
+            }
+          ],
+          "catch": [
+            {
+              "errors": [
+                "U34_PoseFeedbackError"
+              ],
+              "as": "caught_error",
+              "do": [
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_069",
+                  "args": {
+                    "__workflow_error": {
+                      "var": "caught_error"
+                    }
+                  }
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_070"
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_071"
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_pick_and_place_self_accept_small_pinch_gap_arm_label_low_grasp__072",
+                  "store": "condition_72"
+                },
+                {
+                  "if": {
+                    "var": "condition_72"
+                  },
+                  "then": [
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_pick_and_place_self_accept_small_pinch_gap_arm_label_low_grasp__073"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_pick_and_place_self_accept_small_pinch_gap_arm_label_low_grasp__074"
+                    }
+                  ],
+                  "else": [
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_075"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_076"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_pick_and_place_z_block_0_008_and_np_linalg_norm_actual_pose_2_l_077",
+                      "store": "condition_77"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_77"
+                      },
+                      "then": [
+                        {
+                          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_z_block_0_008_and_np_linalg_norm_actual_pose_2_l_078"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_or_not_0_0_error_position_error_0_079",
+                      "store": "condition_79"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_79"
+                      },
+                      "then": [
+                        {
+                          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_or_not_0_0_error_position_error_0_080"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_pick_and_place_raised_delta_0_008_081",
+                      "store": "condition_81"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_81"
+                      },
+                      "then": [
+                        {
+                          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_raised_delta_0_008_082"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_083"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_084"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_085"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_086"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_087"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_089"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_090"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_091"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_092"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_093"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_094"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_095"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_dz_self_args_lift_height_0_5_096",
+          "store": "condition_96"
+        },
+        {
+          "if": {
+            "var": "condition_96"
+          },
+          "then": [
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_dz_self_args_lift_height_0_5_097"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_098"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_099"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_100"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_101",
+          "store": "condition_101"
+        },
+        {
+          "if": {
+            "var": "condition_101"
+          },
+          "then": [
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_102"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_not_sites_103",
+              "store": "condition_103"
+            },
+            {
+              "if": {
+                "var": "condition_103"
+              },
+              "then": [
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_pick_and_place_not_sites_104"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_105"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_106"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_107"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_108"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_109"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_110"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_111"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_112"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_np_linalg_norm_measured_3_grasp_3_self_args_max__113",
+              "store": "condition_113"
+            },
+            {
+              "if": {
+                "var": "condition_113"
+              },
+              "then": [
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_pick_and_place_np_linalg_norm_measured_3_grasp_3_self_args_max__114"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_115"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_116"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_117"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_118"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_119"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_120"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_121"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_122"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_123"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_124"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_125"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_np_linalg_norm_closing_0_1_126",
+              "store": "condition_126"
+            },
+            {
+              "if": {
+                "var": "condition_126"
+              },
+              "then": [
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_pick_and_place_np_linalg_norm_closing_0_1_127"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_128"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_129"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_diagonal_grasp_130",
+              "store": "result_130"
+            },
+            {
+              "return": {
+                "var": "result_130"
+              }
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_label_in_self_unusable_held_grasp_131",
+          "store": "condition_131"
+        },
+        {
+          "if": {
+            "var": "condition_131"
+          },
+          "then": [
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_label_in_self_unusable_held_grasp_132"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_label_in_self_unusable_held_grasp_133"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_134"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_135"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_136"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_137"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_138"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_139"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_140"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_141"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_142"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_143"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_144"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_145"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_146"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_147"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_148"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_arm_left_arm_149",
+          "store": "condition_149"
+        },
+        {
+          "if": {
+            "var": "condition_149"
+          },
+          "then": [
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_arm_left_arm_150"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_arm_left_arm_151"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_arm_left_arm_152"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_153"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_154"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_155"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_allow_post_release_repick_and_checks_rgb_socket__156",
+          "store": "condition_156"
+        },
+        {
+          "if": {
+            "var": "condition_156"
+          },
+          "then": [
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_allow_post_release_repick_and_checks_rgb_socket__157"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_allow_post_release_repick_and_checks_rgb_socket__158",
+              "store": "result_158"
+            },
+            {
+              "return": {
+                "var": "result_158"
+              }
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_159"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_160"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_not_all_checks_values_161",
+          "store": "condition_161"
+        },
+        {
+          "if": {
+            "var": "condition_161"
+          },
+          "then": [
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_not_all_checks_values_162"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_motion_163"
+        },
+        {
+          "call": "U35_VisionFillEggHolderTeacher_pick_and_place_label_not_in_self_events_placed_164",
+          "store": "condition_164"
+        },
+        {
+          "if": {
+            "var": "condition_164"
+          },
+          "then": [
+            {
+              "call": "U35_VisionFillEggHolderTeacher_pick_and_place_label_not_in_self_events_placed_165"
+            }
+          ],
+          "else": []
+        }
+      ]
+    },
+    "U35_VisionFillEggHolderTeacher_run": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 700,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U35_VisionFillEggHolderTeacher_run_motion_001": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_001",
+        "U35_VisionFillEggHolderTeacher_run_motion_002": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_002",
+        "U35_VisionFillEggHolderTeacher_run_self_args_perception_only_003": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_self_args_perception_only_003",
+        "U35_VisionFillEggHolderTeacher_run_self_args_perception_only_004": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_self_args_perception_only_004",
+        "U35_VisionFillEggHolderTeacher_run_motion_005": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_005",
+        "U35_VisionFillEggHolderTeacher_run_np_linspace_0_06_0_115_56_006": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_np_linspace_0_06_0_115_56_006",
+        "U35_VisionFillEggHolderTeacher_run_motion_007": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_007",
+        "U35_VisionFillEggHolderTeacher_run_motion_008": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_008",
+        "U35_VisionFillEggHolderTeacher_run_motion_009": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_009",
+        "U35_VisionFillEggHolderTeacher_run_best_is_none_or_candidate_best_010": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_best_is_none_or_candidate_best_010",
+        "U35_VisionFillEggHolderTeacher_run_best_is_none_or_candidate_best_011": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_best_is_none_or_candidate_best_011",
+        "U35_VisionFillEggHolderTeacher_run_motion_012": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_012",
+        "U35_VisionFillEggHolderTeacher_run_motion_013": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_013",
+        "U35_VisionFillEggHolderTeacher_run_motion_014": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_014",
+        "U35_VisionFillEggHolderTeacher_run_motion_015": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_015",
+        "U35_VisionFillEggHolderTeacher_run_motion_016": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_016",
+        "U35_VisionFillEggHolderTeacher_run_motion_017": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_017",
+        "U35_VisionFillEggHolderTeacher_run_slots_018": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_slots_018",
+        "U35_VisionFillEggHolderTeacher_run_motion_019": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_019",
+        "U35_VisionFillEggHolderTeacher_run_self_events_placed_020": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_self_events_placed_020",
+        "U35_VisionFillEggHolderTeacher_run_self_events_placed_021": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_self_events_placed_021",
+        "U35_VisionFillEggHolderTeacher_run_motion_022": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_022",
+        "U35_VisionFillEggHolderTeacher_run_states_socket_occupied_023": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_states_socket_occupied_023",
+        "U35_VisionFillEggHolderTeacher_run_states_socket_unknown_024": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_states_socket_unknown_024",
+        "U35_VisionFillEggHolderTeacher_run_states_socket_unknown_025": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_states_socket_unknown_025",
+        "U35_VisionFillEggHolderTeacher_run_states_socket_unknown_026": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_states_socket_unknown_026",
+        "U35_VisionFillEggHolderTeacher_run_states_socket_empty_027": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_states_socket_empty_027",
+        "U35_VisionFillEggHolderTeacher_run_states_socket_empty_028": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_states_socket_empty_028",
+        "U35_VisionFillEggHolderTeacher_run_motion_029": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_029",
+        "U35_VisionFillEggHolderTeacher_run_not_candidates_030": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_not_candidates_030",
+        "U35_VisionFillEggHolderTeacher_run_not_candidates_031": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_not_candidates_031",
+        "U35_VisionFillEggHolderTeacher_run_motion_032": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_032",
+        "U35_VisionFillEggHolderTeacher_run_motion_033": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_033",
+        "U35_VisionFillEggHolderTeacher_run_motion_034": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_034",
+        "U35_VisionFillEggHolderTeacher_run_motion_035": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_035",
+        "U35_VisionFillEggHolderTeacher_run_true_036": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_true_036",
+        "U35_VisionFillEggHolderTeacher_run_motion_037": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_037",
+        "U35_VisionFillEggHolderTeacher_run_motion_038": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_038",
+        "U35_VisionFillEggHolderTeacher_run_self_official_bridge_action_count_action_before__039": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_self_official_bridge_action_count_action_before__039",
+        "U35_VisionFillEggHolderTeacher_run_self_official_bridge_action_count_action_before__040": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_self_official_bridge_action_count_action_before__040",
+        "U35_VisionFillEggHolderTeacher_run_motion_041": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_041",
+        "U35_VisionFillEggHolderTeacher_run_motion_042": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_042",
+        "U35_VisionFillEggHolderTeacher_run_motion_043": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_043",
+        "U35_VisionFillEggHolderTeacher_run_motion_044": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_044",
+        "U35_VisionFillEggHolderTeacher_run_not_retry_045": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_not_retry_045",
+        "U35_VisionFillEggHolderTeacher_run_not_retry_046": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_not_retry_046",
+        "U35_VisionFillEggHolderTeacher_run_not_retry_047": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_not_retry_047",
+        "U35_VisionFillEggHolderTeacher_run_not_retry_048": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_not_retry_048",
+        "U35_VisionFillEggHolderTeacher_run_not_retry_049": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_not_retry_049",
+        "U35_VisionFillEggHolderTeacher_run_not_retry_050": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_not_retry_050",
+        "U35_VisionFillEggHolderTeacher_run_motion_051": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_051",
+        "U35_VisionFillEggHolderTeacher_run_motion_052": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_052",
+        "U35_VisionFillEggHolderTeacher_run_not_retry_and_len_remaining_1_and_last_egg_plan__053": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_not_retry_and_len_remaining_1_and_last_egg_plan__053",
+        "U35_VisionFillEggHolderTeacher_run_not_retry_and_len_remaining_1_and_last_egg_plan__054": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_not_retry_and_len_remaining_1_and_last_egg_plan__054",
+        "U35_VisionFillEggHolderTeacher_run_retry_055": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_retry_055",
+        "U35_VisionFillEggHolderTeacher_run_retry_056": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_retry_056",
+        "U35_VisionFillEggHolderTeacher_run_retry_057": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_retry_057",
+        "U35_VisionFillEggHolderTeacher_run_retry_058": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_retry_058",
+        "U35_VisionFillEggHolderTeacher_run_not_retry_059": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_not_retry_059",
+        "U35_VisionFillEggHolderTeacher_run_not_retry_060": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_not_retry_060",
+        "U35_VisionFillEggHolderTeacher_run_motion_061": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_061",
+        "U35_VisionFillEggHolderTeacher_run_motion_062": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_062",
+        "U35_VisionFillEggHolderTeacher_run_motion_063": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_063",
+        "U35_VisionFillEggHolderTeacher_run_motion_064": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_064",
+        "U35_VisionFillEggHolderTeacher_run_motion_065": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_065",
+        "U35_VisionFillEggHolderTeacher_run_descent_blocked_in_str_error_lower_066": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_descent_blocked_in_str_error_lower_066",
+        "U35_VisionFillEggHolderTeacher_run_descent_blocked_in_str_error_lower_067": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_descent_blocked_in_str_error_lower_067",
+        "U35_VisionFillEggHolderTeacher_run_descent_blocked_in_str_error_lower_068": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_descent_blocked_in_str_error_lower_068",
+        "U35_VisionFillEggHolderTeacher_run_descent_blocked_in_str_error_lower_069": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_descent_blocked_in_str_error_lower_069",
+        "U35_VisionFillEggHolderTeacher_run_motion_070": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_070",
+        "U35_VisionFillEggHolderTeacher_run_isinstance_error_u35_visionsliperror_071": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_isinstance_error_u35_visionsliperror_071",
+        "U35_VisionFillEggHolderTeacher_run_isinstance_error_u35_visionsliperror_072": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_isinstance_error_u35_visionsliperror_072",
+        "U35_VisionFillEggHolderTeacher_run_self_phase_endswith_lift_settle_and_not_lower_he_073": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_run_self_phase_endswith_lift_settle_and_not_lower_he_073",
+        "U35_VisionFillEggHolderTeacher_run_self_phase_endswith_lift_settle_and_not_lower_he_074": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_run_self_phase_endswith_lift_settle_and_not_lower_he_074",
+        "U35_VisionFillEggHolderTeacher_run_self_phase_endswith_lift_settle_and_not_lower_he_075": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_run_self_phase_endswith_lift_settle_and_not_lower_he_075",
+        "U35_VisionFillEggHolderTeacher_run_lower_held_egg_076": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_lower_held_egg_076",
+        "U35_VisionFillEggHolderTeacher_run_lower_held_egg_077": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_lower_held_egg_077",
+        "U35_VisionFillEggHolderTeacher_run_lower_held_egg_078": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_lower_held_egg_078",
+        "U35_VisionFillEggHolderTeacher_run_descend_in_self_phase_079": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_run_descend_in_self_phase_079",
+        "U35_VisionFillEggHolderTeacher_run_descend_in_self_phase_080": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_run_descend_in_self_phase_080",
+        "U35_VisionFillEggHolderTeacher_run_descend_in_self_phase_081": "skills.pickup.implementation:U35_VisionFillEggHolderTeacher_run_descend_in_self_phase_081",
+        "U35_VisionFillEggHolderTeacher_run_motion_082": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_082",
+        "U35_VisionFillEggHolderTeacher_run_motion_083": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_083",
+        "U35_VisionFillEggHolderTeacher_run_motion_084": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_084",
+        "U35_VisionFillEggHolderTeacher_run_motion_085": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_085",
+        "U35_VisionFillEggHolderTeacher_run_motion_086": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_086",
+        "U35_VisionFillEggHolderTeacher_run_motion_087": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_087",
+        "U35_VisionFillEggHolderTeacher_run_motion_088": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_088",
+        "U35_VisionFillEggHolderTeacher_run_motion_089": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_089",
+        "U35_VisionFillEggHolderTeacher_run_states_socket_empty_090": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_states_socket_empty_090",
+        "U35_VisionFillEggHolderTeacher_run_states_socket_empty_091": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_states_socket_empty_091",
+        "U35_VisionFillEggHolderTeacher_run_len_retries_4_092": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_len_retries_4_092",
+        "U35_VisionFillEggHolderTeacher_run_len_retries_4_093": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_len_retries_4_093",
+        "U35_VisionFillEggHolderTeacher_run_motion_094": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_094",
+        "U35_VisionFillEggHolderTeacher_run_not_retry_095": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_not_retry_095",
+        "U35_VisionFillEggHolderTeacher_run_not_retry_096": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_not_retry_096",
+        "U35_VisionFillEggHolderTeacher_run_not_retry_097": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_not_retry_097",
+        "U35_VisionFillEggHolderTeacher_run_not_retry_098": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_not_retry_098",
+        "U35_VisionFillEggHolderTeacher_run_not_retry_099": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_not_retry_099",
+        "U35_VisionFillEggHolderTeacher_run_not_retry_100": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_not_retry_100",
+        "U35_VisionFillEggHolderTeacher_run_not_retry_101": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_not_retry_101",
+        "U35_VisionFillEggHolderTeacher_run_not_retry_102": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_not_retry_102",
+        "U35_VisionFillEggHolderTeacher_run_motion_103": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_103",
+        "U35_VisionFillEggHolderTeacher_run_motion_104": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_104",
+        "U35_VisionFillEggHolderTeacher_run_motion_105": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_105",
+        "U35_VisionFillEggHolderTeacher_run_motion_106": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_106",
+        "U35_VisionFillEggHolderTeacher_run_remaining_or_any_state_occupied_for_state_in_sta_107": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_remaining_or_any_state_occupied_for_state_in_sta_107",
+        "U35_VisionFillEggHolderTeacher_run_remaining_or_any_state_occupied_for_state_in_sta_108": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_remaining_or_any_state_occupied_for_state_in_sta_108",
+        "U35_VisionFillEggHolderTeacher_run_motion_109": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_109",
+        "U35_VisionFillEggHolderTeacher_run_motion_110": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_110",
+        "U35_VisionFillEggHolderTeacher_run_motion_111": "skills.motion.implementation:U35_VisionFillEggHolderTeacher_run_motion_111",
+        "rpc_capture_failure": "skills.finalization.implementation:capture_failure",
+        "rpc_remaining_hold_actions": "skills.finalization.implementation:remaining_hold_actions",
+        "rpc_hold_last_command": "skills.finalization.implementation:hold_last_command",
+        "rpc_restore_feedback": "skills.finalization.implementation:restore_feedback",
+        "rpc_raise_original_failure": "skills.finalization.implementation:raise_original_failure",
+        "rpc_propagate_terminal": "skills.finalization.implementation:propagate_terminal"
+      },
+      "errors": {
+        "U35_VisionPickPlanningError": "skills.state.implementation:U35_VisionPickPlanningError",
+        "U35_VisionGraspError": "skills.state.implementation:U35_VisionGraspError",
+        "rpc_NativeTerminal": "skills.finalization.implementation:NativeTerminal",
+        "rpc_ControllerFailure": "skills.finalization.implementation:ControllerFailure"
+      },
+      "steps": [
+        {
+          "try": [
+            {
+              "call": "U35_VisionFillEggHolderTeacher_run_motion_001"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_run_motion_002"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_run_self_args_perception_only_003",
+              "store": "condition_3"
+            },
+            {
+              "if": {
+                "var": "condition_3"
+              },
+              "then": [
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_run_self_args_perception_only_004"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_run_motion_005"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_run_np_linspace_0_06_0_115_56_006",
+              "store": "items_6"
+            },
+            {
+              "for_each": {
+                "var": "items_6"
+              },
+              "as": "loop_item_7",
+              "max_items": 4096,
+              "do": [
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_run_motion_007",
+                  "args": {
+                    "__workflow_item": {
+                      "var": "loop_item_7"
+                    }
+                  }
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_run_motion_008"
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_run_motion_009"
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_run_best_is_none_or_candidate_best_010",
+                  "store": "condition_10"
+                },
+                {
+                  "if": {
+                    "var": "condition_10"
+                  },
+                  "then": [
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_run_best_is_none_or_candidate_best_011"
+                    }
+                  ],
+                  "else": []
+                }
+              ]
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_run_motion_012"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_run_motion_013"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_run_motion_014"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_run_motion_015"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_run_motion_016"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_run_motion_017"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_run_slots_018",
+              "store": "items_18"
+            },
+            {
+              "for_each": {
+                "var": "items_18"
+              },
+              "as": "loop_item_19",
+              "max_items": 4096,
+              "do": [
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_run_motion_019",
+                  "args": {
+                    "__workflow_item": {
+                      "var": "loop_item_19"
+                    }
+                  }
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_run_self_events_placed_020",
+                  "store": "condition_20"
+                },
+                {
+                  "if": {
+                    "var": "condition_20"
+                  },
+                  "then": [
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_run_self_events_placed_021"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_run_motion_022"
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_run_states_socket_occupied_023",
+                  "store": "condition_23"
+                },
+                {
+                  "if": {
+                    "var": "condition_23"
+                  },
+                  "then": [
+                    {
+                      "continue": true
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_run_states_socket_unknown_024",
+                  "store": "condition_24"
+                },
+                {
+                  "if": {
+                    "var": "condition_24"
+                  },
+                  "then": [
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_run_states_socket_unknown_025"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_run_states_socket_unknown_026"
+                    },
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_run_states_socket_empty_027",
+                      "store": "condition_27"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_27"
+                      },
+                      "then": [
+                        {
+                          "call": "U35_VisionFillEggHolderTeacher_run_states_socket_empty_028"
+                        }
+                      ],
+                      "else": []
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_run_motion_029"
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_run_not_candidates_030",
+                  "store": "condition_30"
+                },
+                {
+                  "if": {
+                    "var": "condition_30"
+                  },
+                  "then": [
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_run_not_candidates_031"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_run_motion_032"
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_run_motion_033"
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_run_motion_034"
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_run_motion_035"
+                },
+                {
+                  "while": "U35_VisionFillEggHolderTeacher_run_true_036",
+                  "args": {},
+                  "max_iterations": 4096,
+                  "do": [
+                    {
+                      "call": "U35_VisionFillEggHolderTeacher_run_motion_037"
+                    },
+                    {
+                      "try": [
+                        {
+                          "call": "U35_VisionFillEggHolderTeacher_run_motion_104"
+                        },
+                        {
+                          "break": true
+                        }
+                      ],
+                      "catch": [
+                        {
+                          "errors": [
+                            "U35_VisionPickPlanningError"
+                          ],
+                          "as": "caught_error",
+                          "do": [
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_motion_038",
+                              "args": {
+                                "__workflow_error": {
+                                  "var": "caught_error"
+                                }
+                              }
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_self_official_bridge_action_count_action_before__039",
+                              "store": "condition_39"
+                            },
+                            {
+                              "if": {
+                                "var": "condition_39"
+                              },
+                              "then": [
+                                {
+                                  "call": "U35_VisionFillEggHolderTeacher_run_self_official_bridge_action_count_action_before__040"
+                                }
+                              ],
+                              "else": []
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_motion_041"
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_motion_042"
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_motion_043"
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_motion_044"
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_not_retry_045",
+                              "store": "condition_45"
+                            },
+                            {
+                              "if": {
+                                "var": "condition_45"
+                              },
+                              "then": [
+                                {
+                                  "call": "U35_VisionFillEggHolderTeacher_run_not_retry_046"
+                                }
+                              ],
+                              "else": []
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_not_retry_047",
+                              "store": "condition_47"
+                            },
+                            {
+                              "if": {
+                                "var": "condition_47"
+                              },
+                              "then": [
+                                {
+                                  "call": "U35_VisionFillEggHolderTeacher_run_not_retry_048"
+                                }
+                              ],
+                              "else": []
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_not_retry_049",
+                              "store": "condition_49"
+                            },
+                            {
+                              "if": {
+                                "var": "condition_49"
+                              },
+                              "then": [
+                                {
+                                  "call": "U35_VisionFillEggHolderTeacher_run_not_retry_050"
+                                }
+                              ],
+                              "else": []
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_motion_051"
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_motion_052"
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_not_retry_and_len_remaining_1_and_last_egg_plan__053",
+                              "store": "condition_53"
+                            },
+                            {
+                              "if": {
+                                "var": "condition_53"
+                              },
+                              "then": [
+                                {
+                                  "call": "U35_VisionFillEggHolderTeacher_run_not_retry_and_len_remaining_1_and_last_egg_plan__054"
+                                },
+                                {
+                                  "call": "U35_VisionFillEggHolderTeacher_run_retry_055",
+                                  "store": "condition_55"
+                                },
+                                {
+                                  "if": {
+                                    "var": "condition_55"
+                                  },
+                                  "then": [
+                                    {
+                                      "call": "U35_VisionFillEggHolderTeacher_run_retry_056"
+                                    },
+                                    {
+                                      "call": "U35_VisionFillEggHolderTeacher_run_retry_057"
+                                    },
+                                    {
+                                      "call": "U35_VisionFillEggHolderTeacher_run_retry_058"
+                                    }
+                                  ],
+                                  "else": []
+                                }
+                              ],
+                              "else": []
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_not_retry_059",
+                              "store": "condition_59"
+                            },
+                            {
+                              "if": {
+                                "var": "condition_59"
+                              },
+                              "then": [
+                                {
+                                  "call": "U35_VisionFillEggHolderTeacher_run_not_retry_060"
+                                }
+                              ],
+                              "else": []
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_motion_061"
+                            }
+                          ]
+                        },
+                        {
+                          "errors": [
+                            "U35_VisionGraspError"
+                          ],
+                          "as": "caught_error",
+                          "do": [
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_motion_062",
+                              "args": {
+                                "__workflow_error": {
+                                  "var": "caught_error"
+                                }
+                              }
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_motion_063"
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_motion_064"
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_motion_065"
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_descent_blocked_in_str_error_lower_066",
+                              "store": "condition_66"
+                            },
+                            {
+                              "if": {
+                                "var": "condition_66"
+                              },
+                              "then": [
+                                {
+                                  "call": "U35_VisionFillEggHolderTeacher_run_descent_blocked_in_str_error_lower_067"
+                                },
+                                {
+                                  "call": "U35_VisionFillEggHolderTeacher_run_descent_blocked_in_str_error_lower_068"
+                                },
+                                {
+                                  "call": "U35_VisionFillEggHolderTeacher_run_descent_blocked_in_str_error_lower_069"
+                                }
+                              ],
+                              "else": []
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_motion_070"
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_isinstance_error_u35_visionsliperror_071",
+                              "store": "condition_71"
+                            },
+                            {
+                              "if": {
+                                "var": "condition_71"
+                              },
+                              "then": [
+                                {
+                                  "call": "U35_VisionFillEggHolderTeacher_run_isinstance_error_u35_visionsliperror_072"
+                                }
+                              ],
+                              "else": []
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_self_phase_endswith_lift_settle_and_not_lower_he_073",
+                              "store": "condition_73"
+                            },
+                            {
+                              "if": {
+                                "var": "condition_73"
+                              },
+                              "then": [
+                                {
+                                  "call": "U35_VisionFillEggHolderTeacher_run_self_phase_endswith_lift_settle_and_not_lower_he_074"
+                                },
+                                {
+                                  "call": "U35_VisionFillEggHolderTeacher_run_self_phase_endswith_lift_settle_and_not_lower_he_075"
+                                }
+                              ],
+                              "else": []
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_lower_held_egg_076",
+                              "store": "condition_76"
+                            },
+                            {
+                              "if": {
+                                "var": "condition_76"
+                              },
+                              "then": [
+                                {
+                                  "call": "U35_VisionFillEggHolderTeacher_run_lower_held_egg_077"
+                                },
+                                {
+                                  "call": "U35_VisionFillEggHolderTeacher_run_lower_held_egg_078"
+                                }
+                              ],
+                              "else": [
+                                {
+                                  "call": "U35_VisionFillEggHolderTeacher_run_descend_in_self_phase_079",
+                                  "store": "condition_79"
+                                },
+                                {
+                                  "if": {
+                                    "var": "condition_79"
+                                  },
+                                  "then": [
+                                    {
+                                      "call": "U35_VisionFillEggHolderTeacher_run_descend_in_self_phase_080"
+                                    },
+                                    {
+                                      "call": "U35_VisionFillEggHolderTeacher_run_descend_in_self_phase_081"
+                                    }
+                                  ],
+                                  "else": []
+                                }
+                              ]
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_motion_082"
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_motion_083"
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_motion_084"
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_motion_085"
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_motion_086"
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_motion_087"
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_motion_088"
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_motion_089"
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_states_socket_empty_090",
+                              "store": "condition_90"
+                            },
+                            {
+                              "if": {
+                                "var": "condition_90"
+                              },
+                              "then": [
+                                {
+                                  "call": "U35_VisionFillEggHolderTeacher_run_states_socket_empty_091"
+                                },
+                                {
+                                  "break": true
+                                }
+                              ],
+                              "else": []
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_len_retries_4_092",
+                              "store": "condition_92"
+                            },
+                            {
+                              "if": {
+                                "var": "condition_92"
+                              },
+                              "then": [
+                                {
+                                  "call": "U35_VisionFillEggHolderTeacher_run_len_retries_4_093"
+                                }
+                              ],
+                              "else": []
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_motion_094"
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_not_retry_095",
+                              "store": "condition_95"
+                            },
+                            {
+                              "if": {
+                                "var": "condition_95"
+                              },
+                              "then": [
+                                {
+                                  "call": "U35_VisionFillEggHolderTeacher_run_not_retry_096"
+                                }
+                              ],
+                              "else": []
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_not_retry_097",
+                              "store": "condition_97"
+                            },
+                            {
+                              "if": {
+                                "var": "condition_97"
+                              },
+                              "then": [
+                                {
+                                  "call": "U35_VisionFillEggHolderTeacher_run_not_retry_098"
+                                }
+                              ],
+                              "else": []
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_not_retry_099",
+                              "store": "condition_99"
+                            },
+                            {
+                              "if": {
+                                "var": "condition_99"
+                              },
+                              "then": [
+                                {
+                                  "call": "U35_VisionFillEggHolderTeacher_run_not_retry_100"
+                                }
+                              ],
+                              "else": []
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_not_retry_101",
+                              "store": "condition_101"
+                            },
+                            {
+                              "if": {
+                                "var": "condition_101"
+                              },
+                              "then": [
+                                {
+                                  "call": "U35_VisionFillEggHolderTeacher_run_not_retry_102"
+                                }
+                              ],
+                              "else": []
+                            },
+                            {
+                              "call": "U35_VisionFillEggHolderTeacher_run_motion_103"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_run_motion_105"
+                }
+              ]
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_run_motion_106"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_run_remaining_or_any_state_occupied_for_state_in_sta_107",
+              "store": "condition_107"
+            },
+            {
+              "if": {
+                "var": "condition_107"
+              },
+              "then": [
+                {
+                  "call": "U35_VisionFillEggHolderTeacher_run_remaining_or_any_state_occupied_for_state_in_sta_108"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_run_motion_109"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_run_motion_110"
+            },
+            {
+              "call": "U35_VisionFillEggHolderTeacher_run_motion_111",
+              "store": "result_111"
+            },
+            {
+              "return": {
+                "var": "result_111"
+              }
+            }
+          ],
+          "catch": [
+            {
+              "errors": [
+                "rpc_NativeTerminal"
+              ],
+              "as": "rpc_native_terminal",
+              "do": [
+                {
+                  "call": "rpc_propagate_terminal",
+                  "args": {
+                    "error": {
+                      "var": "rpc_native_terminal"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "errors": [
+                "rpc_ControllerFailure"
+              ],
+              "as": "rpc_controller_failure",
+              "do": [
+                {
+                  "call": "rpc_capture_failure",
+                  "args": {
+                    "error": {
+                      "var": "rpc_controller_failure"
+                    }
+                  },
+                  "store": "rpc_hold_eligible"
+                },
+                {
+                  "if": {
+                    "var": "rpc_hold_eligible"
+                  },
+                  "then": [
+                    {
+                      "call": "rpc_remaining_hold_actions",
+                      "store": "rpc_hold_indices"
+                    },
+                    {
+                      "try": [
+                        {
+                          "for_each": {
+                            "var": "rpc_hold_indices"
+                          },
+                          "as": "rpc_hold_index",
+                          "max_items": 700,
+                          "do": [
+                            {
+                              "call": "rpc_hold_last_command"
+                            }
+                          ]
+                        }
+                      ],
+                      "catch": [
+                        {
+                          "errors": [
+                            "rpc_NativeTerminal"
+                          ],
+                          "as": "rpc_hold_terminal",
+                          "do": []
+                        }
+                      ]
+                    },
+                    {
+                      "call": "rpc_restore_feedback"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "rpc_raise_original_failure"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "parameters": {
+    "official_eval": true,
+    "motion_speed": 3.5,
+    "head_camera_pitch": null,
+    "pick_arm": "auto",
+    "lid_arm": "auto",
+    "pick_opening": 0.62,
+    "prefer_single_grasp": true,
+    "grasp_height": 0.004,
+    "gripper_forward_offset": 0.145,
+    "gripper_settle_seconds": 0.4,
+    "approach_clearance": 0.12,
+    "lift_height": 0.13,
+    "place_tilt_deg": 25.0,
+    "place_yaw_deg": 105.0,
+    "release_height": 0.09,
+    "pose_corrections": 4,
+    "pose_tolerance": 0.002,
+    "insertion_tolerance": 0.001,
+    "max_grasp_slip": 0.015,
+    "planner_pose_frame": "world",
+    "perception_only": false
+  },
+  "environment": {},
+  "original_rpc_failure_hold": {
+    "source": "v107 RPC final command; bounded candidate adaptation",
+    "eligible_errors": "task-origin RuntimeError only",
+    "max_settle_actions": 20,
+    "hold_to_horizon": false,
+    "official_horizon_unchanged": 700,
+    "after_settling": "restore callback and rethrow original exception for official abort/finalcheck"
+  },
+  "empty_arm_lid_retreat_speed": 4.5
+}

@@ -1,0 +1,8 @@
+{
+  "schema": "riemann-current-rgb-segmentation-v1",
+  "model": "SAM3",
+  "manifest": "configs/models/sam3.json",
+  "cuda_device": 1,
+  "maximum_regions_per_label": 12,
+  "history_retained": false
+}

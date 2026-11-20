@@ -1,0 +1,106 @@
+{
+  "schema": "riemann-public-command-workflow-v1",
+  "instruction_predicate": "current_instruction_garment_fold",
+  "view_skill": "garment_scene_view",
+  "stages": [
+    {
+      "id": "approach_contact",
+      "skill": "garment_approach_contact"
+    },
+    {
+      "id": "lower_contact",
+      "skill": "garment_lower_contact"
+    },
+    {
+      "id": "close_grasp",
+      "skill": "garment_close_grasp"
+    },
+    {
+      "id": "lift_fold",
+      "skill": "garment_lift_fold"
+    },
+    {
+      "id": "carry_fold",
+      "skill": "garment_carry_fold"
+    },
+    {
+      "id": "settle_fold",
+      "skill": "garment_settle_fold"
+    },
+    {
+      "id": "release_fold",
+      "skill": "garment_release_fold"
+    },
+    {
+      "id": "clear_wrist",
+      "skill": "garment_clear_wrist"
+    },
+    {
+      "id": "recover_contact",
+      "skill": "garment_recover_contact"
+    },
+    {
+      "id": "prehome_settle",
+      "skill": "garment_settle_fold"
+    },
+    {
+      "id": "return_home",
+      "skill": "garment_return_home"
+    }
+  ],
+  "native_control_chunk_width": 16,
+  "maximum_contact_attempts": 3,
+  "fold_parts": [
+    "first_cuff",
+    "second_cuff",
+    "paired_hems"
+  ],
+  "same_instance_current_rgb_required": true,
+  "task_asset_geometry_used": true,
+  "true_finger_state_used": false,
+  "preference": "public_grounded_mature_rule_before_learned_recovery",
+  "completion_is_official_success": false,
+  "official_action_budget_changed": false,
+  "execution": {
+    "executor": "deterministic_native",
+    "maximum_recovery_attempts_per_stage": 2,
+    "partial_irreversible_replay": false
+  },
+  "phase_dispatch": {
+    "view": "garment_scene_view",
+    "approach": "garment_approach_contact",
+    "contact": "garment_lower_contact",
+    "close": "garment_close_grasp",
+    "lift": "garment_lift_fold",
+    "carry": "garment_carry_fold",
+    "lower": "garment_settle_fold",
+    "release": "garment_release_fold",
+    "clear": "garment_clear_wrist",
+    "recover": "garment_recover_contact",
+    "home": "garment_return_home",
+    "prehome_settle": "garment_settle_fold"
+  },
+  "template_assets": [
+    "assets/perception/garments/metadata.json",
+    "assets/perception/garments/geometry.npz"
+  ],
+  "support_source": "public_own_robot_mounting_datum_v45_static_task_geometry_not_observed_surface",
+  "native_execution": {
+    "official_action_horizon": 500,
+    "sample_chunk_actions": 16,
+    "sample_frequency_hz": 25,
+    "control_fields": {
+      "left_arm_joint_state": 6,
+      "left_ee_joint_state": 1,
+      "right_arm_joint_state": 6,
+      "right_ee_joint_state": 1
+    },
+    "maximum_skill_boundaries": 64,
+    "learned_fallback": false,
+    "visual_shortfall": "bounded_original_recovery_then_public_home_open_and_official_terminal",
+    "scoring": "audited_official_run_eval_finalcheck_only",
+    "task_bindings": {
+      "garment_scene_view": "skills/fold_scene_geometry/implementation.py:run"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "schema": "riemann-public-command-workflow-v1",
+  "instruction_predicate": "counted_cards_and_blue_confirmation",
+  "stages": [
+    {"id": "first_count", "button_role": "first_red", "count_source": "current_first_card", "preferred_side": "left", "skill": "press_card_button"},
+    {"id": "first_confirmation", "button_role": "confirm_blue", "count_source": "single_stage_confirmation", "preferred_side": "right", "skill": "press_card_button"},
+    {"id": "second_count", "button_role": "second_red", "count_source": "current_second_card", "preferred_side": "left", "skill": "press_card_button"},
+    {"id": "final_confirmation", "button_role": "confirm_blue", "count_source": "single_stage_confirmation", "preferred_side": "right", "skill": "press_card_button"}
+  ],
+  "view_skill": "button_view",
+  "home_skill": "return_episode_home",
+  "maximum_uncertain_attempts": 2,
+  "maximum_wrist_views_per_stage": 2,
+  "preference": "public_grounded_mature_rule_before_learned_recovery",
+  "completion_evidence": "pose_qualified_command_cycles_and_home_return",
+  "completion_is_official_success": false
+}

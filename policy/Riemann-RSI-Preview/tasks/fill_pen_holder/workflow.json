@@ -1,0 +1,3002 @@
+{
+  "schema": "riemann-mature-teacher-programs-v1",
+  "package": "tasks.fill_pen_holder",
+  "task": "fill_pen_holder",
+  "official_action_horizon": 1100,
+  "mode": "rule_only",
+  "wam_reselection": false,
+  "programs": {
+    "U06_VisionFillPenHolderTeacher_run": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 1100,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U06_VisionFillPenHolderTeacher_run_motion_001": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_motion_001",
+        "U06_VisionFillPenHolderTeacher_run_len_pens_4_and_self_args_initial_view_recovery_002": "skills.perception.implementation:U06_VisionFillPenHolderTeacher_run_len_pens_4_and_self_args_initial_view_recovery_002",
+        "U06_VisionFillPenHolderTeacher_run_len_pens_4_and_self_args_initial_view_recovery_003": "skills.perception.implementation:U06_VisionFillPenHolderTeacher_run_len_pens_4_and_self_args_initial_view_recovery_003",
+        "U06_VisionFillPenHolderTeacher_run_self_args_initial_mouth_fit_004": "skills.perception.implementation:U06_VisionFillPenHolderTeacher_run_self_args_initial_mouth_fit_004",
+        "U06_VisionFillPenHolderTeacher_run_self_args_initial_mouth_fit_005": "skills.perception.implementation:U06_VisionFillPenHolderTeacher_run_self_args_initial_mouth_fit_005",
+        "U06_VisionFillPenHolderTeacher_run_self_args_initial_mouth_fit_006": "skills.perception.implementation:U06_VisionFillPenHolderTeacher_run_self_args_initial_mouth_fit_006",
+        "U06_VisionFillPenHolderTeacher_run_self_args_initial_mouth_fit_007": "skills.perception.implementation:U06_VisionFillPenHolderTeacher_run_self_args_initial_mouth_fit_007",
+        "U06_VisionFillPenHolderTeacher_run_self_args_initial_mouth_fit_008": "skills.perception.implementation:U06_VisionFillPenHolderTeacher_run_self_args_initial_mouth_fit_008",
+        "U06_VisionFillPenHolderTeacher_run_self_args_initial_mouth_fit_009": "skills.perception.implementation:U06_VisionFillPenHolderTeacher_run_self_args_initial_mouth_fit_009",
+        "U06_VisionFillPenHolderTeacher_run_a9_try_succeeded_1_010": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_a9_try_succeeded_1_010",
+        "U06_VisionFillPenHolderTeacher_run_a9_try_succeeded_1_011": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_a9_try_succeeded_1_011",
+        "U06_VisionFillPenHolderTeacher_run_a9_try_succeeded_1_012": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_a9_try_succeeded_1_012",
+        "U06_VisionFillPenHolderTeacher_run_motion_013": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_motion_013",
+        "U06_VisionFillPenHolderTeacher_run_motion_014": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_motion_014",
+        "U06_VisionFillPenHolderTeacher_run_self_args_perception_only_015": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_self_args_perception_only_015",
+        "U06_VisionFillPenHolderTeacher_run_self_args_perception_only_016": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_self_args_perception_only_016",
+        "U06_VisionFillPenHolderTeacher_run_len_pens_4_017": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_len_pens_4_017",
+        "U06_VisionFillPenHolderTeacher_run_len_pens_4_018": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_len_pens_4_018",
+        "U06_VisionFillPenHolderTeacher_run_self_args_public_texture_polarity_019": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_self_args_public_texture_polarity_019",
+        "U06_VisionFillPenHolderTeacher_run_enumerate_pens_020": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_enumerate_pens_020",
+        "U06_VisionFillPenHolderTeacher_run_self_args_public_texture_polarity_021": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_self_args_public_texture_polarity_021",
+        "U06_VisionFillPenHolderTeacher_run_self_args_public_texture_polarity_022": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_self_args_public_texture_polarity_022",
+        "U06_VisionFillPenHolderTeacher_run_self_args_public_texture_polarity_023": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_self_args_public_texture_polarity_023",
+        "U06_VisionFillPenHolderTeacher_run_self_args_public_texture_polarity_024": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_self_args_public_texture_polarity_024",
+        "U06_VisionFillPenHolderTeacher_run_self_args_public_texture_polarity_025": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_self_args_public_texture_polarity_025",
+        "U06_VisionFillPenHolderTeacher_run_self_args_public_texture_polarity_026": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_self_args_public_texture_polarity_026",
+        "U06_VisionFillPenHolderTeacher_run_self_args_public_texture_polarity_027": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_self_args_public_texture_polarity_027",
+        "U06_VisionFillPenHolderTeacher_run_self_args_public_texture_recenter_and_texture_di_028": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_self_args_public_texture_recenter_and_texture_di_028",
+        "U06_VisionFillPenHolderTeacher_run_self_args_public_texture_recenter_and_texture_di_029": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_self_args_public_texture_recenter_and_texture_di_029",
+        "U06_VisionFillPenHolderTeacher_run_self_args_public_texture_polarity_030": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_self_args_public_texture_polarity_030",
+        "U06_VisionFillPenHolderTeacher_run_motion_031": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_motion_031",
+        "U06_VisionFillPenHolderTeacher_run_motion_032": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_motion_032",
+        "U06_VisionFillPenHolderTeacher_run_self_args_holder_only_033": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_self_args_holder_only_033",
+        "U06_VisionFillPenHolderTeacher_run_self_args_holder_only_034": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_self_args_holder_only_034",
+        "U06_VisionFillPenHolderTeacher_run_self_args_park_holder_035": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_self_args_park_holder_035",
+        "U06_VisionFillPenHolderTeacher_run_self_args_park_holder_036": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_self_args_park_holder_036",
+        "U06_VisionFillPenHolderTeacher_run_self_args_park_holder_037": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_self_args_park_holder_037",
+        "U06_VisionFillPenHolderTeacher_run_self_args_park_holder_038": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_self_args_park_holder_038",
+        "U06_VisionFillPenHolderTeacher_run_self_args_park_holder_039": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_self_args_park_holder_039",
+        "U06_VisionFillPenHolderTeacher_run_self_args_park_holder_040": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_self_args_park_holder_040",
+        "U06_VisionFillPenHolderTeacher_run_enumerate_u06_insertion_schedule_pens_thin_first_041": "skills.insertion.implementation:U06_VisionFillPenHolderTeacher_run_enumerate_u06_insertion_schedule_pens_thin_first_041",
+        "U06_VisionFillPenHolderTeacher_run_motion_042": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_motion_042",
+        "U06_VisionFillPenHolderTeacher_run_self_args_pick_index_is_not_none_and_index_self__043": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_self_args_pick_index_is_not_none_and_index_self__043",
+        "U06_VisionFillPenHolderTeacher_run_motion_044": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_motion_044",
+        "U06_VisionFillPenHolderTeacher_run_self_args_single_pen_045": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_self_args_single_pen_045",
+        "U06_VisionFillPenHolderTeacher_run_motion_046": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_motion_046",
+        "U06_VisionFillPenHolderTeacher_run_self_args_retry_dropped_pen_and_not_self_args_si_047": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_self_args_retry_dropped_pen_and_not_self_args_si_047",
+        "U06_VisionFillPenHolderTeacher_run_self_args_retry_dropped_pen_and_not_self_args_si_048": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_self_args_retry_dropped_pen_and_not_self_args_si_048",
+        "U06_VisionFillPenHolderTeacher_run_self_args_seat_pens_and_not_self_args_single_pen_049": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_self_args_seat_pens_and_not_self_args_single_pen_049",
+        "U06_VisionFillPenHolderTeacher_run_self_args_seat_pens_and_not_self_args_single_pen_050": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_self_args_seat_pens_and_not_self_args_single_pen_050",
+        "U06_VisionFillPenHolderTeacher_run_not_self_args_park_holder_051": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_not_self_args_park_holder_051",
+        "U06_VisionFillPenHolderTeacher_run_not_self_args_park_holder_052": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_not_self_args_park_holder_052",
+        "U06_VisionFillPenHolderTeacher_run_motion_053": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_motion_053",
+        "U06_VisionFillPenHolderTeacher_run_motion_054": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_motion_054",
+        "U06_VisionFillPenHolderTeacher_run_motion_055": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_motion_055",
+        "U06_VisionFillPenHolderTeacher_run_motion_056": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_run_motion_056"
+      },
+      "errors": {
+        "RuntimeError": "skills.state.implementation:RuntimeError"
+      },
+      "steps": [
+        {
+          "call": "U06_VisionFillPenHolderTeacher_run_motion_001"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_run_len_pens_4_and_self_args_initial_view_recovery_002",
+          "store": "condition_2"
+        },
+        {
+          "if": {
+            "var": "condition_2"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_run_len_pens_4_and_self_args_initial_view_recovery_003"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_run_self_args_initial_mouth_fit_004",
+          "store": "condition_4"
+        },
+        {
+          "if": {
+            "var": "condition_4"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_run_self_args_initial_mouth_fit_005"
+            },
+            {
+              "try": [
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_run_self_args_initial_mouth_fit_008"
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_run_self_args_initial_mouth_fit_009"
+                }
+              ],
+              "catch": [
+                {
+                  "errors": [
+                    "RuntimeError"
+                  ],
+                  "as": "caught_error",
+                  "do": [
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_run_self_args_initial_mouth_fit_006",
+                      "args": {
+                        "__workflow_error": {
+                          "var": "caught_error"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_run_self_args_initial_mouth_fit_007"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_run_a9_try_succeeded_1_010",
+              "store": "condition_10"
+            },
+            {
+              "if": {
+                "var": "condition_10"
+              },
+              "then": [
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_run_a9_try_succeeded_1_011"
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_run_a9_try_succeeded_1_012"
+                }
+              ],
+              "else": []
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_run_motion_013"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_run_motion_014"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_run_self_args_perception_only_015",
+          "store": "condition_15"
+        },
+        {
+          "if": {
+            "var": "condition_15"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_run_self_args_perception_only_016"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_run_len_pens_4_017",
+          "store": "condition_17"
+        },
+        {
+          "if": {
+            "var": "condition_17"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_run_len_pens_4_018"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_run_self_args_public_texture_polarity_019",
+          "store": "condition_19"
+        },
+        {
+          "if": {
+            "var": "condition_19"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_run_enumerate_pens_020",
+              "store": "items_20"
+            },
+            {
+              "for_each": {
+                "var": "items_20"
+              },
+              "as": "loop_item_21",
+              "max_items": 4096,
+              "do": [
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_run_self_args_public_texture_polarity_021",
+                  "args": {
+                    "__workflow_item": {
+                      "var": "loop_item_21"
+                    }
+                  }
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_run_self_args_public_texture_polarity_022"
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_run_self_args_public_texture_polarity_023"
+                },
+                {
+                  "try": [
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_run_self_args_public_texture_polarity_026"
+                    }
+                  ],
+                  "catch": [
+                    {
+                      "errors": [
+                        "RuntimeError"
+                      ],
+                      "as": "caught_error",
+                      "do": [
+                        {
+                          "call": "U06_VisionFillPenHolderTeacher_run_self_args_public_texture_polarity_024",
+                          "args": {
+                            "__workflow_error": {
+                              "var": "caught_error"
+                            }
+                          }
+                        },
+                        {
+                          "call": "U06_VisionFillPenHolderTeacher_run_self_args_public_texture_polarity_025"
+                        },
+                        {
+                          "continue": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_run_self_args_public_texture_polarity_027"
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_run_self_args_public_texture_recenter_and_texture_di_028",
+                  "store": "condition_28"
+                },
+                {
+                  "if": {
+                    "var": "condition_28"
+                  },
+                  "then": [
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_run_self_args_public_texture_recenter_and_texture_di_029"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_run_self_args_public_texture_polarity_030"
+                }
+              ]
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_run_motion_031",
+          "args": {
+            "phase_0": "initial_open"
+          }
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_run_motion_032"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_run_self_args_holder_only_033",
+          "store": "condition_33"
+        },
+        {
+          "if": {
+            "var": "condition_33"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_run_self_args_holder_only_034"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_run_self_args_park_holder_035",
+          "store": "condition_35"
+        },
+        {
+          "if": {
+            "var": "condition_35"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_run_self_args_park_holder_036"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_run_self_args_park_holder_037",
+              "args": {
+                "phase_0": "park_holder_right_home"
+              }
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_run_self_args_park_holder_038",
+              "args": {
+                "phase_0": "park_holder_visual_settle"
+              }
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_run_self_args_park_holder_039"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_run_self_args_park_holder_040"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_run_enumerate_u06_insertion_schedule_pens_thin_first_041",
+          "store": "items_41"
+        },
+        {
+          "for_each": {
+            "var": "items_41"
+          },
+          "as": "loop_item_42",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_run_motion_042",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_42"
+                }
+              }
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_run_self_args_pick_index_is_not_none_and_index_self__043",
+              "store": "condition_43"
+            },
+            {
+              "if": {
+                "var": "condition_43"
+              },
+              "then": [
+                {
+                  "continue": true
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_run_motion_044"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_run_self_args_single_pen_045",
+              "store": "condition_45"
+            },
+            {
+              "if": {
+                "var": "condition_45"
+              },
+              "then": [
+                {
+                  "break": true
+                }
+              ],
+              "else": []
+            }
+          ]
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_run_motion_046"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_run_self_args_retry_dropped_pen_and_not_self_args_si_047",
+          "store": "condition_47"
+        },
+        {
+          "if": {
+            "var": "condition_47"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_run_self_args_retry_dropped_pen_and_not_self_args_si_048"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_run_self_args_seat_pens_and_not_self_args_single_pen_049",
+          "store": "condition_49"
+        },
+        {
+          "if": {
+            "var": "condition_49"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_run_self_args_seat_pens_and_not_self_args_single_pen_050"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_run_not_self_args_park_holder_051",
+          "store": "condition_51"
+        },
+        {
+          "if": {
+            "var": "condition_51"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_run_not_self_args_park_holder_052"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_run_motion_053"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_run_motion_054",
+          "args": {
+            "phase_0": "return_both_home"
+          }
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_run_motion_055"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_run_motion_056",
+          "store": "result_56"
+        },
+        {
+          "return": {
+            "var": "result_56"
+          }
+        }
+      ]
+    },
+    "U06_VisionFillPenHolderTeacher_hold_holder": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 1100,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_001": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_001",
+        "U06_VisionFillPenHolderTeacher_hold_holder_self_args_low_holder_grasp_002": "skills.pickup.implementation:U06_VisionFillPenHolderTeacher_hold_holder_self_args_low_holder_grasp_002",
+        "U06_VisionFillPenHolderTeacher_hold_holder_self_args_low_holder_grasp_003": "skills.pickup.implementation:U06_VisionFillPenHolderTeacher_hold_holder_self_args_low_holder_grasp_003",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_004": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_004",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_005": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_005",
+        "U06_VisionFillPenHolderTeacher_hold_holder_candidates_006": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_candidates_006",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_007": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_007",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_008": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_008",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_009": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_009",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_010": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_010",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_011": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_011",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_012": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_012",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_013": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_013",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_014": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_014",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_015": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_015",
+        "U06_VisionFillPenHolderTeacher_hold_holder_out_of_memory_in_str_error_lower_or_cuda_error_i_016": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_out_of_memory_in_str_error_lower_or_cuda_error_i_016",
+        "U06_VisionFillPenHolderTeacher_hold_holder_out_of_memory_in_str_error_lower_or_cuda_error_i_017": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_out_of_memory_in_str_error_lower_or_cuda_error_i_017",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_018": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_018",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_019": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_019",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_020": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_020",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_021": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_021",
+        "U06_VisionFillPenHolderTeacher_hold_holder_approach_0_21_approach_height_holder_height_022": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_approach_0_21_approach_height_holder_height_022",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_023": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_023",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_024": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_024",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_025": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_025",
+        "U06_VisionFillPenHolderTeacher_hold_holder_planned_get_status_success_026": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_planned_get_status_success_026",
+        "U06_VisionFillPenHolderTeacher_hold_holder_planned_get_status_success_027": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_planned_get_status_success_027",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_028": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_028",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_029": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_029",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_030": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_030",
+        "U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_031": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_031",
+        "U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_032": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_032",
+        "U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_033": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_033",
+        "U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_034": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_034",
+        "U06_VisionFillPenHolderTeacher_hold_holder_cuda_in_str_error_or_out_of_memory_in_str_error__035": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_cuda_in_str_error_or_out_of_memory_in_str_error__035",
+        "U06_VisionFillPenHolderTeacher_hold_holder_cuda_in_str_error_or_out_of_memory_in_str_error__036": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_cuda_in_str_error_or_out_of_memory_in_str_error__036",
+        "U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_037": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_037",
+        "U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_038": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_038",
+        "U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_039": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_039",
+        "U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_040": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_040",
+        "U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_041": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_041",
+        "U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_042": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_042",
+        "U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_043": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_043",
+        "U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_044": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_044",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_045": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_045",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_046": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_046",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_047": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_047",
+        "U06_VisionFillPenHolderTeacher_hold_holder_not_self_args_holder_execution_fallback_048": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_not_self_args_holder_execution_fallback_048",
+        "U06_VisionFillPenHolderTeacher_hold_holder_not_self_args_holder_execution_fallback_049": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_not_self_args_holder_execution_fallback_049",
+        "U06_VisionFillPenHolderTeacher_hold_holder_not_self_args_holder_execution_fallback_050": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_not_self_args_holder_execution_fallback_050",
+        "U06_VisionFillPenHolderTeacher_hold_holder_not_self_args_holder_execution_fallback_051": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_not_self_args_holder_execution_fallback_051",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_052": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_052",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_053": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_053",
+        "U06_VisionFillPenHolderTeacher_hold_holder_grasp_absent_054": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_grasp_absent_054",
+        "U06_VisionFillPenHolderTeacher_hold_holder_grasp_absent_055": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_grasp_absent_055",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_056": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_056",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_057": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_057",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_058": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_058",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_059": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_059",
+        "U06_VisionFillPenHolderTeacher_hold_holder_self_args_canonical_holder_yaw_060": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_self_args_canonical_holder_yaw_060",
+        "U06_VisionFillPenHolderTeacher_hold_holder_self_args_canonical_holder_yaw_061": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_self_args_canonical_holder_yaw_061",
+        "U06_VisionFillPenHolderTeacher_hold_holder_self_args_canonical_holder_yaw_062": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_self_args_canonical_holder_yaw_062",
+        "U06_VisionFillPenHolderTeacher_hold_holder_self_args_canonical_holder_yaw_063": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_self_args_canonical_holder_yaw_063",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_064": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_064",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_065": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_065",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_066": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_066",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_067": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_067",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_068": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_068",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_069": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_069",
+        "U06_VisionFillPenHolderTeacher_hold_holder_self_args_table_regrasp_070": "skills.pickup.implementation:U06_VisionFillPenHolderTeacher_hold_holder_self_args_table_regrasp_070",
+        "U06_VisionFillPenHolderTeacher_hold_holder_self_args_table_regrasp_071": "skills.pickup.implementation:U06_VisionFillPenHolderTeacher_hold_holder_self_args_table_regrasp_071",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_072": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_072",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_073": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_073",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_074": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_074",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_075": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_075",
+        "U06_VisionFillPenHolderTeacher_hold_holder_motion_076": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_hold_holder_motion_076",
+        "public_begin_holder": "skills.grasp_evidence.implementation:begin_holder",
+        "public_require_holder": "skills.grasp_evidence.implementation:require_holder",
+        "public_attach": "skills.grasp_evidence.implementation:attach"
+      },
+      "errors": {
+        "RuntimeError": "skills.state.implementation:RuntimeError",
+        "EpisodeTerminated": "skills.state.implementation:EpisodeTerminated"
+      },
+      "steps": [
+        {
+          "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_001"
+        },
+        {
+          "call": "public_begin_holder"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_hold_holder_self_args_low_holder_grasp_002",
+          "store": "condition_2"
+        },
+        {
+          "if": {
+            "var": "condition_2"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_hold_holder_self_args_low_holder_grasp_003"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_004"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_005"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_hold_holder_candidates_006",
+          "store": "items_6"
+        },
+        {
+          "for_each": {
+            "var": "items_6"
+          },
+          "as": "loop_item_7",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_007",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_7"
+                }
+              }
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_008"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_009"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_010"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_011"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_012"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_013"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_014"
+            },
+            {
+              "try": [
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_019"
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_020"
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_021"
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_hold_holder_approach_0_21_approach_height_holder_height_022",
+                  "store": "items_22"
+                },
+                {
+                  "for_each": {
+                    "var": "items_22"
+                  },
+                  "as": "loop_item_23",
+                  "max_items": 4096,
+                  "do": [
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_023",
+                      "args": {
+                        "__workflow_item": {
+                          "var": "loop_item_23"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_024"
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_025"
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_hold_holder_planned_get_status_success_026",
+                      "store": "condition_26"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_26"
+                      },
+                      "then": [
+                        {
+                          "call": "U06_VisionFillPenHolderTeacher_hold_holder_planned_get_status_success_027"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_028"
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_029"
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_030"
+                    }
+                  ]
+                }
+              ],
+              "catch": [
+                {
+                  "errors": [
+                    "RuntimeError"
+                  ],
+                  "as": "caught_error",
+                  "do": [
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_015",
+                      "args": {
+                        "__workflow_error": {
+                          "var": "caught_error"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_hold_holder_out_of_memory_in_str_error_lower_or_cuda_error_i_016",
+                      "store": "condition_16"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_16"
+                      },
+                      "then": [
+                        {
+                          "call": "U06_VisionFillPenHolderTeacher_hold_holder_out_of_memory_in_str_error_lower_or_cuda_error_i_017"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_018"
+                    },
+                    {
+                      "continue": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_031",
+              "store": "condition_31"
+            },
+            {
+              "if": {
+                "var": "condition_31"
+              },
+              "then": [
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_032"
+                },
+                {
+                  "try": [
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_042"
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_043"
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_044"
+                    }
+                  ],
+                  "catch": [
+                    {
+                      "errors": [
+                        "EpisodeTerminated"
+                      ],
+                      "as": "caught_error",
+                      "do": [
+                        {
+                          "call": "U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_033"
+                        }
+                      ]
+                    },
+                    {
+                      "errors": [
+                        "RuntimeError"
+                      ],
+                      "as": "caught_error",
+                      "do": [
+                        {
+                          "call": "U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_034",
+                          "args": {
+                            "__workflow_error": {
+                              "var": "caught_error"
+                            }
+                          }
+                        },
+                        {
+                          "call": "U06_VisionFillPenHolderTeacher_hold_holder_cuda_in_str_error_or_out_of_memory_in_str_error__035",
+                          "store": "condition_35"
+                        },
+                        {
+                          "if": {
+                            "var": "condition_35"
+                          },
+                          "then": [
+                            {
+                              "call": "U06_VisionFillPenHolderTeacher_hold_holder_cuda_in_str_error_or_out_of_memory_in_str_error__036"
+                            }
+                          ],
+                          "else": []
+                        },
+                        {
+                          "call": "U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_037"
+                        },
+                        {
+                          "call": "U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_038",
+                          "args": {
+                            "phase_0": "holder_candidate_safe_return"
+                          }
+                        },
+                        {
+                          "call": "U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_039",
+                          "args": {
+                            "phase_0": "holder_candidate_view_settle"
+                          }
+                        },
+                        {
+                          "call": "U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_040"
+                        },
+                        {
+                          "call": "U06_VisionFillPenHolderTeacher_hold_holder_self_args_holder_execution_fallback_041"
+                        },
+                        {
+                          "continue": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "else": []
+            },
+            {
+              "break": true
+            }
+          ],
+          "else": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_045"
+            }
+          ]
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_046"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_047"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_hold_holder_not_self_args_holder_execution_fallback_048",
+          "store": "condition_48"
+        },
+        {
+          "if": {
+            "var": "condition_48"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_hold_holder_not_self_args_holder_execution_fallback_049"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_hold_holder_not_self_args_holder_execution_fallback_050"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_hold_holder_not_self_args_holder_execution_fallback_051"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "public_attach"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_052",
+          "args": {
+            "phase_0": "holder_close"
+          }
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_053"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_hold_holder_grasp_absent_054",
+          "store": "condition_54"
+        },
+        {
+          "if": {
+            "var": "condition_54"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_hold_holder_grasp_absent_055"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_056"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_057"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_058"
+        },
+        {
+          "call": "public_require_holder"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_059"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_hold_holder_self_args_canonical_holder_yaw_060",
+          "store": "condition_60"
+        },
+        {
+          "if": {
+            "var": "condition_60"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_hold_holder_self_args_canonical_holder_yaw_061"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_hold_holder_self_args_canonical_holder_yaw_062"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_hold_holder_self_args_canonical_holder_yaw_063"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_064"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_065"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_066"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_067"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_068"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_069"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_hold_holder_self_args_table_regrasp_070",
+          "store": "condition_70"
+        },
+        {
+          "if": {
+            "var": "condition_70"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_hold_holder_self_args_table_regrasp_071"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_072"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_073"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_074"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_075"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_hold_holder_motion_076"
+        }
+      ]
+    },
+    "U06_VisionFillPenHolderTeacher_release_holder": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 1100,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U06_VisionFillPenHolderTeacher_release_holder_motion_001": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_release_holder_motion_001",
+        "U06_VisionFillPenHolderTeacher_release_holder_motion_002": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_release_holder_motion_002",
+        "U06_VisionFillPenHolderTeacher_release_holder_motion_003": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_release_holder_motion_003",
+        "U06_VisionFillPenHolderTeacher_release_holder_motion_004": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_release_holder_motion_004",
+        "U06_VisionFillPenHolderTeacher_release_holder_motion_005": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_release_holder_motion_005",
+        "U06_VisionFillPenHolderTeacher_release_holder_self_args_horizontal_holder_retreat_006": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_release_holder_self_args_horizontal_holder_retreat_006",
+        "U06_VisionFillPenHolderTeacher_release_holder_self_args_horizontal_holder_retreat_007": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_release_holder_self_args_horizontal_holder_retreat_007",
+        "U06_VisionFillPenHolderTeacher_release_holder_motion_008": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_release_holder_motion_008",
+        "U06_VisionFillPenHolderTeacher_release_holder_motion_009": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_release_holder_motion_009"
+      },
+      "errors": {},
+      "steps": [
+        {
+          "call": "U06_VisionFillPenHolderTeacher_release_holder_motion_001"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_release_holder_motion_002",
+          "args": {
+            "phase_0": "holder_settle"
+          }
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_release_holder_motion_003",
+          "args": {
+            "phase_0": "holder_release"
+          }
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_release_holder_motion_004",
+          "args": {
+            "phase_0": "holder_release_settle"
+          }
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_release_holder_motion_005"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_release_holder_self_args_horizontal_holder_retreat_006",
+          "store": "condition_6"
+        },
+        {
+          "if": {
+            "var": "condition_6"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_release_holder_self_args_horizontal_holder_retreat_007"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_release_holder_motion_008"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_release_holder_motion_009"
+        }
+      ]
+    },
+    "U06_VisionFillPenHolderTeacher_retry_dropped_pen": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 1100,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_001": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_001",
+        "U06_VisionFillPenHolderTeacher_retry_dropped_pen_used_830_002": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_retry_dropped_pen_used_830_002",
+        "U06_VisionFillPenHolderTeacher_retry_dropped_pen_used_830_003": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_retry_dropped_pen_used_830_003",
+        "U06_VisionFillPenHolderTeacher_retry_dropped_pen_used_830_004": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_retry_dropped_pen_used_830_004",
+        "U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_005": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_005",
+        "U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_006": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_006",
+        "U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_007": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_007",
+        "U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_008": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_008",
+        "U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_009": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_009",
+        "U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_010": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_010",
+        "U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_011": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_011",
+        "U06_VisionFillPenHolderTeacher_retry_dropped_pen_len_candidates_1_012": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_retry_dropped_pen_len_candidates_1_012",
+        "U06_VisionFillPenHolderTeacher_retry_dropped_pen_len_candidates_1_013": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_retry_dropped_pen_len_candidates_1_013",
+        "U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_014": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_014",
+        "U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_015": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_015",
+        "U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_016": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_016"
+      },
+      "errors": {
+        "RuntimeError": "skills.state.implementation:RuntimeError"
+      },
+      "steps": [
+        {
+          "call": "U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_001"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_retry_dropped_pen_used_830_002",
+          "store": "condition_2"
+        },
+        {
+          "if": {
+            "var": "condition_2"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_retry_dropped_pen_used_830_003"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_retry_dropped_pen_used_830_004",
+              "store": "result_4"
+            },
+            {
+              "return": {
+                "var": "result_4"
+              }
+            }
+          ],
+          "else": []
+        },
+        {
+          "try": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_008"
+            }
+          ],
+          "catch": [
+            {
+              "errors": [
+                "RuntimeError"
+              ],
+              "as": "caught_error",
+              "do": [
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_005",
+                  "args": {
+                    "__workflow_error": {
+                      "var": "caught_error"
+                    }
+                  }
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_006"
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_007",
+                  "store": "result_7"
+                },
+                {
+                  "return": {
+                    "var": "result_7"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_009"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_010"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_011"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_retry_dropped_pen_len_candidates_1_012",
+          "store": "condition_12"
+        },
+        {
+          "if": {
+            "var": "condition_12"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_retry_dropped_pen_len_candidates_1_013",
+              "store": "result_13"
+            },
+            {
+              "return": {
+                "var": "result_13"
+              }
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_014"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_015"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_retry_dropped_pen_motion_016",
+          "store": "result_16"
+        },
+        {
+          "return": {
+            "var": "result_16"
+          }
+        }
+      ]
+    },
+    "U06_VisionFillPenHolderTeacher_insert_pen": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 1100,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_001": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_001",
+        "U06_VisionFillPenHolderTeacher_insert_pen_self_args_freeze_held_mouth_002": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_self_args_freeze_held_mouth_002",
+        "U06_VisionFillPenHolderTeacher_insert_pen_self_args_freeze_held_mouth_003": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_self_args_freeze_held_mouth_003",
+        "U06_VisionFillPenHolderTeacher_insert_pen_self_args_freeze_held_mouth_004": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_self_args_freeze_held_mouth_004",
+        "U06_VisionFillPenHolderTeacher_insert_pen_self_args_freeze_held_mouth_005": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_self_args_freeze_held_mouth_005",
+        "U06_VisionFillPenHolderTeacher_insert_pen_self_args_holder_rim_fit_006": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_self_args_holder_rim_fit_006",
+        "U06_VisionFillPenHolderTeacher_insert_pen_self_args_holder_rim_fit_007": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_self_args_holder_rim_fit_007",
+        "U06_VisionFillPenHolderTeacher_insert_pen_not_self_args_rim_memory_or_self_args_park_holde_008": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_not_self_args_rim_memory_or_self_args_park_holde_008",
+        "U06_VisionFillPenHolderTeacher_insert_pen_not_self_args_rim_memory_or_self_args_park_holde_009": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_not_self_args_rim_memory_or_self_args_park_holde_009",
+        "U06_VisionFillPenHolderTeacher_insert_pen_self_args_holder_rim_fit_010": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_self_args_holder_rim_fit_010",
+        "U06_VisionFillPenHolderTeacher_insert_pen_self_args_holder_rim_fit_011": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_self_args_holder_rim_fit_011",
+        "U06_VisionFillPenHolderTeacher_insert_pen_self_args_holder_rim_fit_012": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_self_args_holder_rim_fit_012",
+        "U06_VisionFillPenHolderTeacher_insert_pen_self_args_holder_rim_fit_013": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_self_args_holder_rim_fit_013",
+        "U06_VisionFillPenHolderTeacher_insert_pen_self_args_holder_rim_fit_014": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_self_args_holder_rim_fit_014",
+        "U06_VisionFillPenHolderTeacher_insert_pen_a9_try_succeeded_1_015": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_a9_try_succeeded_1_015",
+        "U06_VisionFillPenHolderTeacher_insert_pen_a9_try_succeeded_1_016": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_a9_try_succeeded_1_016",
+        "U06_VisionFillPenHolderTeacher_insert_pen_a9_try_succeeded_1_017": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_a9_try_succeeded_1_017",
+        "U06_VisionFillPenHolderTeacher_insert_pen_a9_try_succeeded_1_018": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_a9_try_succeeded_1_018",
+        "U06_VisionFillPenHolderTeacher_insert_pen_self_args_holder_rim_fit_019": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_self_args_holder_rim_fit_019",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_020": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_020",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_021": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_021",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_022": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_022",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_023": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_023",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_024": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_024",
+        "U06_VisionFillPenHolderTeacher_insert_pen_candidates_025": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_candidates_025",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_026": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_026",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_027": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_027",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_028": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_028",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_029": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_029",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_030": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_030",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_031": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_031",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_032": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_032",
+        "U06_VisionFillPenHolderTeacher_insert_pen_out_of_memory_in_str_error_lower_or_cuda_error_i_033": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_out_of_memory_in_str_error_lower_or_cuda_error_i_033",
+        "U06_VisionFillPenHolderTeacher_insert_pen_out_of_memory_in_str_error_lower_or_cuda_error_i_034": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_out_of_memory_in_str_error_lower_or_cuda_error_i_034",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_035": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_035",
+        "U06_VisionFillPenHolderTeacher_insert_pen_self_args_grasp_chain_preflight_036": "skills.pickup.implementation:U06_VisionFillPenHolderTeacher_insert_pen_self_args_grasp_chain_preflight_036",
+        "U06_VisionFillPenHolderTeacher_insert_pen_self_args_grasp_chain_preflight_037": "skills.pickup.implementation:U06_VisionFillPenHolderTeacher_insert_pen_self_args_grasp_chain_preflight_037",
+        "U06_VisionFillPenHolderTeacher_insert_pen_self_args_grasp_chain_preflight_038": "skills.pickup.implementation:U06_VisionFillPenHolderTeacher_insert_pen_self_args_grasp_chain_preflight_038",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_039": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_039",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_040": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_040",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_041": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_041",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_042": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_042",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_043": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_043",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_044": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_044",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_045": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_045",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_046": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_046",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_047": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_047",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_048": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_048",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_049": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_049",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_050": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_050",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_051": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_051",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_052": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_052",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_053": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_053",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_054": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_054",
+        "U06_VisionFillPenHolderTeacher_insert_pen_grasp_absent_and_pitch_and_self_args_empty_grasp__055": "skills.pickup.implementation:U06_VisionFillPenHolderTeacher_insert_pen_grasp_absent_and_pitch_and_self_args_empty_grasp__055",
+        "U06_VisionFillPenHolderTeacher_insert_pen_grasp_absent_and_pitch_and_self_args_empty_grasp__056": "skills.pickup.implementation:U06_VisionFillPenHolderTeacher_insert_pen_grasp_absent_and_pitch_and_self_args_empty_grasp__056",
+        "U06_VisionFillPenHolderTeacher_insert_pen_grasp_absent_057": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_grasp_absent_057",
+        "U06_VisionFillPenHolderTeacher_insert_pen_grasp_absent_058": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_grasp_absent_058",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_059": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_059",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_060": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_060",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_061": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_061",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_062": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_062",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_063": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_063",
+        "U06_VisionFillPenHolderTeacher_insert_pen_lift_absent_064": "skills.pickup.implementation:U06_VisionFillPenHolderTeacher_insert_pen_lift_absent_064",
+        "U06_VisionFillPenHolderTeacher_insert_pen_lift_absent_065": "skills.pickup.implementation:U06_VisionFillPenHolderTeacher_insert_pen_lift_absent_065",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_066": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_066",
+        "U06_VisionFillPenHolderTeacher_insert_pen_staging_0_19_grasp_0_19_staging_0_14_grasp_0_14_067": "skills.pickup.implementation:U06_VisionFillPenHolderTeacher_insert_pen_staging_0_19_grasp_0_19_staging_0_14_grasp_0_14_067",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_068": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_068",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_069": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_069",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_070": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_070",
+        "U06_VisionFillPenHolderTeacher_insert_pen_out_of_memory_in_str_error_lower_or_cuda_error_i_071": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_out_of_memory_in_str_error_lower_or_cuda_error_i_071",
+        "U06_VisionFillPenHolderTeacher_insert_pen_out_of_memory_in_str_error_lower_or_cuda_error_i_072": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_out_of_memory_in_str_error_lower_or_cuda_error_i_072",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_073": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_073",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_074": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_074",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_075": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_075",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_076": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_076",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_077": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_077",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_078": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_078",
+        "U06_VisionFillPenHolderTeacher_insert_pen_self_args_active_cap_or_self_args_active_axis_or_079": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_self_args_active_cap_or_self_args_active_axis_or_079",
+        "U06_VisionFillPenHolderTeacher_insert_pen_self_args_active_cap_or_self_args_active_axis_or_080": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_self_args_active_cap_or_self_args_active_axis_or_080",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_081": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_081",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_082": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_082",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_083": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_083",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_084": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_084",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_085": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_085",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_086": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_086",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_087": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_087",
+        "U06_VisionFillPenHolderTeacher_insert_pen_self_args_held_rgb_correction_088": "skills.perception.implementation:U06_VisionFillPenHolderTeacher_insert_pen_self_args_held_rgb_correction_088",
+        "U06_VisionFillPenHolderTeacher_insert_pen_self_args_held_rgb_correction_089": "skills.perception.implementation:U06_VisionFillPenHolderTeacher_insert_pen_self_args_held_rgb_correction_089",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_090": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_090",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_091": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_091",
+        "U06_VisionFillPenHolderTeacher_insert_pen_self_args_cap_feedback_092": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_self_args_cap_feedback_092",
+        "U06_VisionFillPenHolderTeacher_insert_pen_self_args_cap_feedback_093": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_self_args_cap_feedback_093",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_094": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_094",
+        "U06_VisionFillPenHolderTeacher_insert_pen_self_args_cap_feedback_or_self_args_guarded_inse_095": "skills.insertion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_self_args_cap_feedback_or_self_args_guarded_inse_095",
+        "U06_VisionFillPenHolderTeacher_insert_pen_self_args_cap_feedback_or_self_args_guarded_inse_096": "skills.insertion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_self_args_cap_feedback_or_self_args_guarded_inse_096",
+        "U06_VisionFillPenHolderTeacher_insert_pen_self_args_cap_feedback_or_self_args_guarded_inse_097": "skills.insertion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_self_args_cap_feedback_or_self_args_guarded_inse_097",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_098": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_098",
+        "U06_VisionFillPenHolderTeacher_insert_pen_self_args_guarded_insertion_099": "skills.insertion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_self_args_guarded_insertion_099",
+        "U06_VisionFillPenHolderTeacher_insert_pen_self_args_guarded_insertion_100": "skills.insertion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_self_args_guarded_insertion_100",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_101": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_101",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_102": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_102",
+        "U06_VisionFillPenHolderTeacher_insert_pen_clearance_release_103": "skills.pickup.implementation:U06_VisionFillPenHolderTeacher_insert_pen_clearance_release_103",
+        "U06_VisionFillPenHolderTeacher_insert_pen_clearance_release_104": "skills.pickup.implementation:U06_VisionFillPenHolderTeacher_insert_pen_clearance_release_104",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_105": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_105",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_106": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_106",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_107": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_107",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_108": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_108",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_109": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_109",
+        "U06_VisionFillPenHolderTeacher_insert_pen_motion_110": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_insert_pen_motion_110",
+        "public_begin_pen": "skills.grasp_evidence.implementation:begin_pen",
+        "public_attach": "skills.grasp_evidence.implementation:attach"
+      },
+      "errors": {
+        "RuntimeError": "skills.state.implementation:RuntimeError"
+      },
+      "steps": [
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_001"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_self_args_freeze_held_mouth_002",
+          "store": "condition_2"
+        },
+        {
+          "if": {
+            "var": "condition_2"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_insert_pen_self_args_freeze_held_mouth_003"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_insert_pen_self_args_freeze_held_mouth_004"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_insert_pen_self_args_freeze_held_mouth_005"
+            }
+          ],
+          "else": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_insert_pen_self_args_holder_rim_fit_006",
+              "store": "condition_6"
+            },
+            {
+              "if": {
+                "var": "condition_6"
+              },
+              "then": [
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_insert_pen_self_args_holder_rim_fit_007"
+                },
+                {
+                  "try": [
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_insert_pen_self_args_holder_rim_fit_013"
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_insert_pen_self_args_holder_rim_fit_014"
+                    }
+                  ],
+                  "catch": [
+                    {
+                      "errors": [
+                        "RuntimeError"
+                      ],
+                      "as": "caught_error",
+                      "do": [
+                        {
+                          "call": "U06_VisionFillPenHolderTeacher_insert_pen_not_self_args_rim_memory_or_self_args_park_holde_008",
+                          "store": "condition_8"
+                        },
+                        {
+                          "if": {
+                            "var": "condition_8"
+                          },
+                          "then": [
+                            {
+                              "call": "U06_VisionFillPenHolderTeacher_insert_pen_not_self_args_rim_memory_or_self_args_park_holde_009"
+                            }
+                          ],
+                          "else": []
+                        },
+                        {
+                          "call": "U06_VisionFillPenHolderTeacher_insert_pen_self_args_holder_rim_fit_010"
+                        },
+                        {
+                          "call": "U06_VisionFillPenHolderTeacher_insert_pen_self_args_holder_rim_fit_011"
+                        },
+                        {
+                          "call": "U06_VisionFillPenHolderTeacher_insert_pen_self_args_holder_rim_fit_012"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_insert_pen_a9_try_succeeded_1_015",
+                  "store": "condition_15"
+                },
+                {
+                  "if": {
+                    "var": "condition_15"
+                  },
+                  "then": [
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_insert_pen_a9_try_succeeded_1_016"
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_insert_pen_a9_try_succeeded_1_017"
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_insert_pen_a9_try_succeeded_1_018"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_insert_pen_self_args_holder_rim_fit_019"
+                }
+              ],
+              "else": []
+            }
+          ]
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_020"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_021"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_022"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_023"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_024"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_candidates_025",
+          "store": "items_25"
+        },
+        {
+          "for_each": {
+            "var": "items_25"
+          },
+          "as": "loop_item_26",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_026",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_26"
+                }
+              }
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_027"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_028"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_029"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_030"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_031"
+            },
+            {
+              "try": [
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_insert_pen_self_args_grasp_chain_preflight_036",
+                  "store": "condition_36"
+                },
+                {
+                  "if": {
+                    "var": "condition_36"
+                  },
+                  "then": [
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_insert_pen_self_args_grasp_chain_preflight_037"
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_insert_pen_self_args_grasp_chain_preflight_038"
+                    }
+                  ],
+                  "else": [
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_039"
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_040"
+                    }
+                  ]
+                }
+              ],
+              "catch": [
+                {
+                  "errors": [
+                    "RuntimeError"
+                  ],
+                  "as": "caught_error",
+                  "do": [
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_032",
+                      "args": {
+                        "__workflow_error": {
+                          "var": "caught_error"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_insert_pen_out_of_memory_in_str_error_lower_or_cuda_error_i_033",
+                      "store": "condition_33"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_33"
+                      },
+                      "then": [
+                        {
+                          "call": "U06_VisionFillPenHolderTeacher_insert_pen_out_of_memory_in_str_error_lower_or_cuda_error_i_034"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_035"
+                    },
+                    {
+                      "continue": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "break": true
+            }
+          ],
+          "else": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_041"
+            }
+          ]
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_042"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_043"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_044"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_045"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_046"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_047"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_048"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_049"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_050"
+        },
+        {
+          "call": "public_begin_pen"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_051"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_052"
+        },
+        {
+          "call": "public_attach"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_053"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_054"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_grasp_absent_and_pitch_and_self_args_empty_grasp__055",
+          "store": "condition_55"
+        },
+        {
+          "if": {
+            "var": "condition_55"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_insert_pen_grasp_absent_and_pitch_and_self_args_empty_grasp__056"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_grasp_absent_057",
+          "store": "condition_57"
+        },
+        {
+          "if": {
+            "var": "condition_57"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_insert_pen_grasp_absent_058"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_059"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_060"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_061"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_062"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_063"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_lift_absent_064",
+          "store": "condition_64"
+        },
+        {
+          "if": {
+            "var": "condition_64"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_insert_pen_lift_absent_065"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_066"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_staging_0_19_grasp_0_19_staging_0_14_grasp_0_14_067",
+          "store": "items_67"
+        },
+        {
+          "for_each": {
+            "var": "items_67"
+          },
+          "as": "loop_item_68",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_068",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_68"
+                }
+              }
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_069"
+            },
+            {
+              "try": [
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_074"
+                }
+              ],
+              "catch": [
+                {
+                  "errors": [
+                    "RuntimeError"
+                  ],
+                  "as": "caught_error",
+                  "do": [
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_070",
+                      "args": {
+                        "__workflow_error": {
+                          "var": "caught_error"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_insert_pen_out_of_memory_in_str_error_lower_or_cuda_error_i_071",
+                      "store": "condition_71"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_71"
+                      },
+                      "then": [
+                        {
+                          "call": "U06_VisionFillPenHolderTeacher_insert_pen_out_of_memory_in_str_error_lower_or_cuda_error_i_072"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_073"
+                    },
+                    {
+                      "continue": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "break": true
+            }
+          ],
+          "else": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_075"
+            }
+          ]
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_076"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_077"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_078"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_self_args_active_cap_or_self_args_active_axis_or_079",
+          "store": "condition_79"
+        },
+        {
+          "if": {
+            "var": "condition_79"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_insert_pen_self_args_active_cap_or_self_args_active_axis_or_080",
+              "store": "result_80"
+            },
+            {
+              "return": {
+                "var": "result_80"
+              }
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_081"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_082"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_083"
+        },
+        {
+          "try": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_086"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_087"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_insert_pen_self_args_held_rgb_correction_088",
+              "store": "condition_88"
+            },
+            {
+              "if": {
+                "var": "condition_88"
+              },
+              "then": [
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_insert_pen_self_args_held_rgb_correction_089"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_090"
+            }
+          ],
+          "catch": [
+            {
+              "errors": [
+                "RuntimeError"
+              ],
+              "as": "caught_error",
+              "do": [
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_084",
+                  "args": {
+                    "__workflow_error": {
+                      "var": "caught_error"
+                    }
+                  }
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_085"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_091"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_self_args_cap_feedback_092",
+          "store": "condition_92"
+        },
+        {
+          "if": {
+            "var": "condition_92"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_insert_pen_self_args_cap_feedback_093"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_094"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_self_args_cap_feedback_or_self_args_guarded_inse_095",
+          "store": "condition_95"
+        },
+        {
+          "if": {
+            "var": "condition_95"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_insert_pen_self_args_cap_feedback_or_self_args_guarded_inse_096"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_insert_pen_self_args_cap_feedback_or_self_args_guarded_inse_097"
+            }
+          ],
+          "else": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_098"
+            }
+          ]
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_self_args_guarded_insertion_099",
+          "store": "condition_99"
+        },
+        {
+          "if": {
+            "var": "condition_99"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_insert_pen_self_args_guarded_insertion_100"
+            }
+          ],
+          "else": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_101"
+            }
+          ]
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_102"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_clearance_release_103",
+          "store": "condition_103"
+        },
+        {
+          "if": {
+            "var": "condition_103"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_insert_pen_clearance_release_104"
+            }
+          ],
+          "else": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_105"
+            }
+          ]
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_106"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_107"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_108"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_109"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_insert_pen_motion_110"
+        }
+      ]
+    },
+    "U06_VisionFillPenHolderTeacher_move_pen_upright": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 1100,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_001": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_motion_001",
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_002": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_motion_002",
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_not_self_args_upright_staging_fallback_or_curobo_003": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_not_self_args_upright_staging_fallback_or_curobo_003",
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_not_self_args_upright_staging_fallback_or_curobo_004": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_not_self_args_upright_staging_fallback_or_curobo_004",
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_005": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_motion_005",
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_0_1_0_13_self_x5_base_z_0_17_0_1_self_x5_base_z_006": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_0_1_0_13_self_x5_base_z_0_17_0_1_self_x5_base_z_006",
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_007": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_motion_007",
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_008": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_motion_008",
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_009": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_motion_009",
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_010": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_motion_010",
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_cuda_in_str_failure_or_out_of_memory_in_str_fail_011": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_cuda_in_str_failure_or_out_of_memory_in_str_fail_011",
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_cuda_in_str_failure_or_out_of_memory_in_str_fail_012": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_cuda_in_str_failure_or_out_of_memory_in_str_fail_012",
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_013": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_motion_013",
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_014": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_motion_014",
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_015": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_motion_015",
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_016": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_motion_016",
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_017": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_motion_017",
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_018": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_motion_018",
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_019": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_motion_019",
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_self_args_loaded_home_recovery_020": "skills.home.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_self_args_loaded_home_recovery_020",
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_self_args_loaded_home_recovery_021": "skills.home.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_self_args_loaded_home_recovery_021",
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_self_args_loaded_home_recovery_022": "skills.home.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_self_args_loaded_home_recovery_022",
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_self_args_loaded_home_recovery_023": "skills.home.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_self_args_loaded_home_recovery_023",
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_self_args_loaded_home_recovery_024": "skills.home.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_self_args_loaded_home_recovery_024",
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_grasp_absent_025": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_grasp_absent_025",
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_width_0_003_026": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_width_0_003_026",
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_self_args_loaded_home_recovery_027": "skills.home.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_self_args_loaded_home_recovery_027",
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_self_args_loaded_home_recovery_028": "skills.home.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_self_args_loaded_home_recovery_028",
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_self_args_loaded_home_recovery_029": "skills.home.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_self_args_loaded_home_recovery_029",
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_030": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_motion_030",
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_031": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_motion_031",
+        "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_032": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_move_pen_upright_motion_032"
+      },
+      "errors": {
+        "RuntimeError": "skills.state.implementation:RuntimeError"
+      },
+      "steps": [
+        {
+          "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_001"
+        },
+        {
+          "try": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_031"
+            }
+          ],
+          "catch": [
+            {
+              "errors": [
+                "RuntimeError"
+              ],
+              "as": "caught_error",
+              "do": [
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_002",
+                  "args": {
+                    "__workflow_error": {
+                      "var": "caught_error"
+                    }
+                  }
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_not_self_args_upright_staging_fallback_or_curobo_003",
+                  "store": "condition_3"
+                },
+                {
+                  "if": {
+                    "var": "condition_3"
+                  },
+                  "then": [
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_not_self_args_upright_staging_fallback_or_curobo_004"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_005"
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_0_1_0_13_self_x5_base_z_0_17_0_1_self_x5_base_z_006",
+                  "store": "items_6"
+                },
+                {
+                  "for_each": {
+                    "var": "items_6"
+                  },
+                  "as": "loop_item_7",
+                  "max_items": 4096,
+                  "do": [
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_007",
+                      "args": {
+                        "__workflow_item": {
+                          "var": "loop_item_7"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_008"
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_009"
+                    },
+                    {
+                      "try": [
+                        {
+                          "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_014"
+                        }
+                      ],
+                      "catch": [
+                        {
+                          "errors": [
+                            "RuntimeError"
+                          ],
+                          "as": "caught_error",
+                          "do": [
+                            {
+                              "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_010",
+                              "args": {
+                                "__workflow_error": {
+                                  "var": "caught_error"
+                                }
+                              }
+                            },
+                            {
+                              "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_cuda_in_str_failure_or_out_of_memory_in_str_fail_011",
+                              "store": "condition_11"
+                            },
+                            {
+                              "if": {
+                                "var": "condition_11"
+                              },
+                              "then": [
+                                {
+                                  "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_cuda_in_str_failure_or_out_of_memory_in_str_fail_012"
+                                }
+                              ],
+                              "else": []
+                            },
+                            {
+                              "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_013"
+                            },
+                            {
+                              "continue": true
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_015"
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_016"
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_017"
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_018"
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_019",
+                      "store": "result_19"
+                    },
+                    {
+                      "return": {
+                        "var": "result_19"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_self_args_loaded_home_recovery_020",
+                  "store": "condition_20"
+                },
+                {
+                  "if": {
+                    "var": "condition_20"
+                  },
+                  "then": [
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_self_args_loaded_home_recovery_021"
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_self_args_loaded_home_recovery_022"
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_self_args_loaded_home_recovery_023"
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_self_args_loaded_home_recovery_024"
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_grasp_absent_025",
+                      "store": "condition_25"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_25"
+                      },
+                      "then": [
+                        {
+                          "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_width_0_003_026"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_self_args_loaded_home_recovery_027"
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_self_args_loaded_home_recovery_028"
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_self_args_loaded_home_recovery_029",
+                      "store": "result_29"
+                    },
+                    {
+                      "return": {
+                        "var": "result_29"
+                      }
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_030"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_move_pen_upright_motion_032"
+        }
+      ]
+    },
+    "U06_VisionFillPenHolderTeacher_active_cap_insert": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 1100,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_001": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_001",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_range_3_if_self_args_active_view_recovery_else_2_002": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_range_3_if_self_args_active_view_recovery_else_2_002",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_003": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_003",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_004": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_004",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_view_2_and_reliable_and_self_args_active_tip_and_005": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_view_2_and_reliable_and_self_args_active_tip_and_005",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_view_2_and_reliable_and_self_args_active_tip_and_006": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_view_2_and_reliable_and_self_args_active_tip_and_006",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_view_2_and_reliable_and_self_args_active_tip_and_007": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_view_2_and_reliable_and_self_args_active_tip_and_007",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_view_2_and_reliable_and_self_args_active_tip_and_008": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_view_2_and_reliable_and_self_args_active_tip_and_008",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_view_2_and_reliable_009": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_view_2_and_reliable_009",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_view_010": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_view_010",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_view_011": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_view_011",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_view_012": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_view_012",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_013": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_013",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_014": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_014",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_015": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_015",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_016": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_016",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_017": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_017",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_axis_018": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_axis_018",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_axis_019": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_axis_019",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_axis_020": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_axis_020",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_axis_021": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_axis_021",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_022": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_022",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_023": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_023",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_024": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_024",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_025": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_025",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_026": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_026",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_027": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_027",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_028": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_028",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_029": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_029",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_030": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_030",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_031": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_031",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_032": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_032",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_033": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_033",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_034": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_034",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_035": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_035",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_036": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_036",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_axis_and_len_axis_views_2_037": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_axis_and_len_axis_views_2_037",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_axis_and_len_axis_views_2_038": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_axis_and_len_axis_views_2_038",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_axis_and_len_axis_views_2_039": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_axis_and_len_axis_views_2_039",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_axis_and_len_axis_views_2_040": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_axis_and_len_axis_views_2_040",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_axis_and_len_axis_views_2_041": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_axis_and_len_axis_views_2_041",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_axis_and_len_axis_views_2_042": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_axis_and_len_axis_views_2_042",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_043": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_043",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_and_len_tip_views_2_044": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_and_len_tip_views_2_044",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_and_len_tip_views_2_045": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_and_len_tip_views_2_045",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_and_len_tip_views_2_046": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_and_len_tip_views_2_046",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_and_len_tip_views_2_047": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_and_len_tip_views_2_047",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_pair_recovery_048": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_pair_recovery_048",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_pair_recovery_049": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_pair_recovery_049",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_and_len_tip_views_2_050": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_and_len_tip_views_2_050",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_and_len_tip_views_2_051": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_and_len_tip_views_2_051",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_and_len_tip_views_2_052": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_and_len_tip_views_2_052",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_and_len_tip_views_2_053": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_and_len_tip_views_2_053",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_054": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_054",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_tip_result_is_not_none_055": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_tip_result_is_not_none_055",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_tip_result_is_not_none_056": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_tip_result_is_not_none_056",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_tip_result_is_not_none_057": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_tip_result_is_not_none_057",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_height_0_31_058": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_height_0_31_058",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_height_0_31_059": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_height_0_31_059",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_tip_result_is_not_none_060": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_tip_result_is_not_none_060",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_axis_result_is_not_none_061": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_axis_result_is_not_none_061",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_axis_result_is_not_none_062": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_axis_result_is_not_none_062",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_axis_result_is_not_none_063": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_axis_result_is_not_none_063",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_axis_result_is_not_none_064": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_axis_result_is_not_none_064",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_065": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_065",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_len_cap_views_2_066": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_len_cap_views_2_066",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_len_cap_views_2_067": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_len_cap_views_2_067",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_068": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_068",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_np_linalg_norm_local_cap_nominal_0_06_069": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_np_linalg_norm_local_cap_nominal_0_06_069",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_np_linalg_norm_local_cap_nominal_0_06_070": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_np_linalg_norm_local_cap_nominal_0_06_070",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_071": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_071",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_072": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_072",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_073": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_073",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_visible_gap_and_not_pen_marker_and_ind_074": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_visible_gap_and_not_pen_marker_and_ind_074",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_visible_gap_and_not_pen_marker_and_ind_075": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_visible_gap_and_not_pen_marker_and_ind_075",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_visible_gap_and_not_pen_marker_and_ind_076": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_visible_gap_and_not_pen_marker_and_ind_076",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_visible_gap_and_not_pen_marker_and_ind_077": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_visible_gap_and_not_pen_marker_and_ind_077",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_visible_gap_and_not_pen_marker_and_ind_078": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_visible_gap_and_not_pen_marker_and_ind_078",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_visible_gap_and_not_pen_marker_and_ind_079": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_visible_gap_and_not_pen_marker_and_ind_079",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_visible_gap_and_not_pen_marker_and_ind_080": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_visible_gap_and_not_pen_marker_and_ind_080",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_visible_gap_and_not_pen_marker_and_ind_081": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_visible_gap_and_not_pen_marker_and_ind_081",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_a9_try_succeeded_1_082": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_a9_try_succeeded_1_082",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_a9_try_succeeded_1_083": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_a9_try_succeeded_1_083",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_a9_try_succeeded_1_084": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_a9_try_succeeded_1_084",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_085": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_085",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_086": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_086",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_087": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_087",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_088": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_088",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_precision_entry_and_tip_result_is_not__089": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_precision_entry_and_tip_result_is_not__089",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_precision_entry_and_tip_result_is_not__090": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_precision_entry_and_tip_result_is_not__090",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_precision_entry_091": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_precision_entry_091",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_precision_entry_092": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_precision_entry_092",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_093": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_093",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_high_open_release_094": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_high_open_release_094",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_high_open_release_095": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_high_open_release_095",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_096": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_096",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_097": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_097",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_098": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_098",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_099": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_099",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_100": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_100",
+        "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_101": "skills.motion.implementation:U06_VisionFillPenHolderTeacher_active_cap_insert_motion_101"
+      },
+      "errors": {
+        "RuntimeError": "skills.state.implementation:RuntimeError"
+      },
+      "steps": [
+        {
+          "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_001"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_range_3_if_self_args_active_view_recovery_else_2_002",
+          "store": "items_2"
+        },
+        {
+          "for_each": {
+            "var": "items_2"
+          },
+          "as": "loop_item_3",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_003",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_3"
+                }
+              }
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_004"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_view_2_and_reliable_and_self_args_active_tip_and_005",
+              "store": "condition_5"
+            },
+            {
+              "if": {
+                "var": "condition_5"
+              },
+              "then": [
+                {
+                  "try": [
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_view_2_and_reliable_and_self_args_active_tip_and_008"
+                    }
+                  ],
+                  "catch": [
+                    {
+                      "errors": [
+                        "RuntimeError"
+                      ],
+                      "as": "caught_error",
+                      "do": [
+                        {
+                          "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_view_2_and_reliable_and_self_args_active_tip_and_006",
+                          "args": {
+                            "__workflow_error": {
+                              "var": "caught_error"
+                            }
+                          }
+                        },
+                        {
+                          "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_view_2_and_reliable_and_self_args_active_tip_and_007"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_view_2_and_reliable_009",
+              "store": "condition_9"
+            },
+            {
+              "if": {
+                "var": "condition_9"
+              },
+              "then": [
+                {
+                  "break": true
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_view_010",
+              "store": "condition_10"
+            },
+            {
+              "if": {
+                "var": "condition_10"
+              },
+              "then": [
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_view_011"
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_view_012"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_013"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_014"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_015"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_016"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_017"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_axis_018",
+              "store": "condition_18"
+            },
+            {
+              "if": {
+                "var": "condition_18"
+              },
+              "then": [
+                {
+                  "try": [
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_axis_021"
+                    }
+                  ],
+                  "catch": [
+                    {
+                      "errors": [
+                        "RuntimeError"
+                      ],
+                      "as": "caught_error",
+                      "do": [
+                        {
+                          "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_axis_019",
+                          "args": {
+                            "__workflow_error": {
+                              "var": "caught_error"
+                            }
+                          }
+                        },
+                        {
+                          "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_axis_020"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "else": []
+            },
+            {
+              "try": [
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_024"
+                }
+              ],
+              "catch": [
+                {
+                  "errors": [
+                    "RuntimeError"
+                  ],
+                  "as": "caught_error",
+                  "do": [
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_022",
+                      "args": {
+                        "__workflow_error": {
+                          "var": "caught_error"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_023"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_025",
+              "store": "condition_25"
+            },
+            {
+              "if": {
+                "var": "condition_25"
+              },
+              "then": [
+                {
+                  "try": [
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_028"
+                    }
+                  ],
+                  "catch": [
+                    {
+                      "errors": [
+                        "RuntimeError"
+                      ],
+                      "as": "caught_error",
+                      "do": [
+                        {
+                          "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_026",
+                          "args": {
+                            "__workflow_error": {
+                              "var": "caught_error"
+                            }
+                          }
+                        },
+                        {
+                          "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_027"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_029"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_030"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_031"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_032"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_033"
+            }
+          ]
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_034"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_035"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_036"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_axis_and_len_axis_views_2_037",
+          "store": "condition_37"
+        },
+        {
+          "if": {
+            "var": "condition_37"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_axis_and_len_axis_views_2_038"
+            },
+            {
+              "try": [
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_axis_and_len_axis_views_2_041"
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_axis_and_len_axis_views_2_042"
+                }
+              ],
+              "catch": [
+                {
+                  "errors": [
+                    "RuntimeError"
+                  ],
+                  "as": "caught_error",
+                  "do": [
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_axis_and_len_axis_views_2_039",
+                      "args": {
+                        "__workflow_error": {
+                          "var": "caught_error"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_axis_and_len_axis_views_2_040"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_043"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_and_len_tip_views_2_044",
+          "store": "condition_44"
+        },
+        {
+          "if": {
+            "var": "condition_44"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_and_len_tip_views_2_045"
+            },
+            {
+              "try": [
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_pair_recovery_048",
+                  "store": "condition_48"
+                },
+                {
+                  "if": {
+                    "var": "condition_48"
+                  },
+                  "then": [
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_pair_recovery_049"
+                    }
+                  ],
+                  "else": [
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_and_len_tip_views_2_050"
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_and_len_tip_views_2_051"
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_and_len_tip_views_2_052"
+                    }
+                  ]
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_and_len_tip_views_2_053"
+                }
+              ],
+              "catch": [
+                {
+                  "errors": [
+                    "RuntimeError"
+                  ],
+                  "as": "caught_error",
+                  "do": [
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_and_len_tip_views_2_046",
+                      "args": {
+                        "__workflow_error": {
+                          "var": "caught_error"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_active_tip_and_len_tip_views_2_047"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_054"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_tip_result_is_not_none_055",
+          "store": "condition_55"
+        },
+        {
+          "if": {
+            "var": "condition_55"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_tip_result_is_not_none_056"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_tip_result_is_not_none_057"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_height_0_31_058",
+              "store": "condition_58"
+            },
+            {
+              "if": {
+                "var": "condition_58"
+              },
+              "then": [
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_height_0_31_059"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_tip_result_is_not_none_060"
+            }
+          ],
+          "else": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_axis_result_is_not_none_061",
+              "store": "condition_61"
+            },
+            {
+              "if": {
+                "var": "condition_61"
+              },
+              "then": [
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_axis_result_is_not_none_062"
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_axis_result_is_not_none_063"
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_axis_result_is_not_none_064"
+                }
+              ],
+              "else": [
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_065"
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_len_cap_views_2_066",
+                  "store": "condition_66"
+                },
+                {
+                  "if": {
+                    "var": "condition_66"
+                  },
+                  "then": [
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_len_cap_views_2_067"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_068"
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_np_linalg_norm_local_cap_nominal_0_06_069",
+                  "store": "condition_69"
+                },
+                {
+                  "if": {
+                    "var": "condition_69"
+                  },
+                  "then": [
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_np_linalg_norm_local_cap_nominal_0_06_070"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_071"
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_072"
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_073"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_visible_gap_and_not_pen_marker_and_ind_074",
+          "store": "condition_74"
+        },
+        {
+          "if": {
+            "var": "condition_74"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_visible_gap_and_not_pen_marker_and_ind_075"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_visible_gap_and_not_pen_marker_and_ind_076"
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_visible_gap_and_not_pen_marker_and_ind_077"
+            },
+            {
+              "try": [
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_visible_gap_and_not_pen_marker_and_ind_080"
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_visible_gap_and_not_pen_marker_and_ind_081"
+                }
+              ],
+              "catch": [
+                {
+                  "errors": [
+                    "RuntimeError"
+                  ],
+                  "as": "caught_error",
+                  "do": [
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_visible_gap_and_not_pen_marker_and_ind_078",
+                      "args": {
+                        "__workflow_error": {
+                          "var": "caught_error"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_visible_gap_and_not_pen_marker_and_ind_079"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_a9_try_succeeded_1_082",
+              "store": "condition_82"
+            },
+            {
+              "if": {
+                "var": "condition_82"
+              },
+              "then": [
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_a9_try_succeeded_1_083"
+                },
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_a9_try_succeeded_1_084"
+                }
+              ],
+              "else": []
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_085"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_086"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_087"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_088"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_precision_entry_and_tip_result_is_not__089",
+          "store": "condition_89"
+        },
+        {
+          "if": {
+            "var": "condition_89"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_precision_entry_and_tip_result_is_not__090"
+            }
+          ],
+          "else": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_precision_entry_091",
+              "store": "condition_91"
+            },
+            {
+              "if": {
+                "var": "condition_91"
+              },
+              "then": [
+                {
+                  "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_precision_entry_092"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_093"
+            }
+          ]
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_high_open_release_094",
+          "store": "condition_94"
+        },
+        {
+          "if": {
+            "var": "condition_94"
+          },
+          "then": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_self_args_high_open_release_095"
+            }
+          ],
+          "else": [
+            {
+              "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_096"
+            }
+          ]
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_097"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_098"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_099"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_100"
+        },
+        {
+          "call": "U06_VisionFillPenHolderTeacher_active_cap_insert_motion_101"
+        }
+      ]
+    }
+  },
+  "parameters": {
+    "seed": 0,
+    "eval_seed": 0,
+    "num_episodes": 1,
+    "episode_index": 0,
+    "device_id": 0,
+    "output_dir": "data/fill_pen_holder_vision_debug",
+    "motion_speed": 1.8,
+    "no_video": false,
+    "images_in_hdf5": false,
+    "save_npz": false,
+    "full_curobo_warmup": false,
+    "perception_only": false,
+    "holder_only": false,
+    "holder_forward_offset": 0.115,
+    "holder_workspace_x": 0.14,
+    "low_holder_grasp": false,
+    "holder_execution_fallback": true,
+    "high_open_release": true,
+    "active_view_recovery": true,
+    "deskew_axis": false,
+    "upright_yaw": 45.0,
+    "hex_mouth_fallback": true,
+    "loaded_motion_speed": 1.5,
+    "active_tip": true,
+    "body_axis": true,
+    "tip_target_height": 0.105,
+    "seat_pens": false,
+    "table_regrasp": true,
+    "freeze_held_mouth": true,
+    "flat_grasp_first": false,
+    "longitudinal_grasp_fallback": true,
+    "horizontal_holder_retreat": false,
+    "upright_staging_fallback": true,
+    "loaded_home_recovery": true,
+    "retry_dropped_pen": true,
+    "visible_gap": false,
+    "deduplicate_pen_masks": true,
+    "empty_grasp_retry": true,
+    "grasp_offset_fallback": true,
+    "initial_view_recovery": true,
+    "initial_mouth_fit": true,
+    "thin_first": false,
+    "public_texture_polarity": true,
+    "active_pair_recovery": true,
+    "public_texture_recenter": true,
+    "precision_entry": false,
+    "precision_entry_speed": 0.9,
+    "pen_forward_offset": 0.145,
+    "marker_forward_offset": 0.135,
+    "pen_grasp_cap_offset": 0.028,
+    "insertion_height": 0.195,
+    "thin_insertion_height": 0.195,
+    "insertion_forward_bias": 0.0,
+    "slot_yaw": 0.0,
+    "slot_scale": 0.5,
+    "thin_slot_scale": 0.7,
+    "pen_release_steps": 60,
+    "holder_tilt": 0.0,
+    "holder_tilt_fallback": true,
+    "holder_rim_fit": true,
+    "canonical_holder_yaw": true,
+    "holder_wrist_bend_limit": null,
+    "cap_feedback": false,
+    "guarded_insertion": false,
+    "clearance_release": false,
+    "narrow_release": false,
+    "staged_release": false,
+    "grasp_chain_preflight": false,
+    "held_rgb_correction": false,
+    "active_cap": false,
+    "active_axis": true,
+    "rim_memory": true,
+    "park_holder": false,
+    "single_pen": false,
+    "pick_index": null,
+    "grasp_height_offset": 0.003,
+    "thin_grasp_height_offset": 0.01,
+    "grasp_tilt": null,
+    "motion_speedup": 1.0,
+    "planner_pose_frame": "world",
+    "gripper_forward_offset": 0.145,
+    "feedback_servo": false,
+    "debug_fk": false,
+    "official_eval": true,
+    "head_camera_pitch": null,
+    "compact_physx": false,
+    "headless": true,
+    "enable_cameras": true,
+    "kit_args": " --enable isaacsim.replicator.behavior --enable isaacsim.sensors.camera --/app/settings/persistent=false --/renderer/multiGpu/enabled=false --/renderer/multiGpu/autoEnable=false"
+  },
+  "environment": {},
+  "public_grasp_adaptation": {
+    "states": [
+      "present",
+      "absent",
+      "unknown"
+    ],
+    "source": "current RGB instance track and public EE co-motion; normalized target is command echo only",
+    "unknown": "Continue original motion with payload explicitly unverified; do not classify as held or empty. Confirmed absence invokes original recovery; invalid commands/histories abort.",
+    "physical_finger_feedback": false,
+    "holder_regrasp_probe_m": null,
+    "native_evaluation_enabled": true
+  }
+}

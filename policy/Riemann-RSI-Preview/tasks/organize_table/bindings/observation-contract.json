@@ -1,0 +1,14 @@
+{
+  "schema": "organize-standard-public-observation-v1",
+  "standard_observation_only": true,
+  "public_factory": "controller.create_public_environment",
+  "measured_finger_joints_required": false,
+  "gripper_state_semantics": "normalized_applied_target_with_indirect_feedback_not_precise_aperture_or_contact",
+  "images": ["cam_head", "cam_left_wrist", "cam_right_wrist"],
+  "robot_state": ["own_six_arm_joints", "own_end_effector_pose", "normalized_gripper_command_intent"],
+  "instruction": "current_official_public_instruction_only",
+  "public_static_resources": ["fixed_own_x5_robot_metadata_and_meshes", "audited_visual_figurine_mesh_and_texture_model_bank"],
+  "grasp_feedback": "current_RGB_hypothesis_or_uncertain_no_true_contact_measurement",
+  "layout_reward_and_scorer_visible_to_policy": false,
+  "cloud_or_full_performance_verified": false
+}

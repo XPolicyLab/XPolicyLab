@@ -1,0 +1,316 @@
+{
+  "schema": "riemann-static-public-rule-models-v1",
+  "default_root": "resource://rule_assets/a15-original-three-20261030",
+  "files": {
+    "X5A.urdf": {
+      "path": "X5A.urdf",
+      "sha256": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423",
+      "bytes": 9218,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/robot_geometry.npz": {
+      "path": "assets/robot_geometry.npz",
+      "sha256": "38022afca6311a9475f91ae8f486ed6305d58a470e9a7cd5c41f283efa5f2f71",
+      "bytes": 15154,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/templates/pen_00004.npz": {
+      "path": "assets/templates/pen_00004.npz",
+      "sha256": "aa9537ca6f48a4a3bb6a52fc458aba8fd7d5ba4184c2084a94bd686233bae6d0",
+      "bytes": 26239,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/templates/toy_car_00004.npz": {
+      "path": "assets/templates/toy_car_00004.npz",
+      "sha256": "2a016c866646ff4bb33d9f2ef8c756df261ad7611b0e6afce7fb874d2a3c05ad",
+      "bytes": 112613,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/templates/toy_car_00000.npz": {
+      "path": "assets/templates/toy_car_00000.npz",
+      "sha256": "0384e032bb3651c5fee9f8d99331c5e17f1d29ffb374f11cc1dd2f12f7354dc0",
+      "bytes": 221579,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/templates/action_camera_00002.npz": {
+      "path": "assets/templates/action_camera_00002.npz",
+      "sha256": "8625fa9db4c97479293fd422ade60eacd4b4afc1fe707e21393d236b473cdd89",
+      "bytes": 139120,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/templates/toy_car_00001.npz": {
+      "path": "assets/templates/toy_car_00001.npz",
+      "sha256": "52e1a26b78bd45f46536c2d759754d62a0e6ec3f5295236dc44c8cac79a5e771",
+      "bytes": 248229,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/templates/garage_00015.npz": {
+      "path": "assets/templates/garage_00015.npz",
+      "sha256": "d8d67caf9f503ae3f57d54d3f723722c427fe750d53bca78e0dd5c09111f51ce",
+      "bytes": 320653,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/templates/pen_00000.npz": {
+      "path": "assets/templates/pen_00000.npz",
+      "sha256": "b75073786ed88788b0c7ed7f6f33b291053942c07dd06d09fb8d167027a0171f",
+      "bytes": 95565,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/templates/toy_car_00003.npz": {
+      "path": "assets/templates/toy_car_00003.npz",
+      "sha256": "c2bb3233c94c724095c676f9c3f8c8dae5e580f104cf34e669db074c8e2aa0a9",
+      "bytes": 291352,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/templates/action_camera_00001.npz": {
+      "path": "assets/templates/action_camera_00001.npz",
+      "sha256": "5ef09ac817a50b6cca3c049ad9b89e80c3ddf66b2ee5af3994a640651fd438bd",
+      "bytes": 44724,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/templates/action_camera_00000.npz": {
+      "path": "assets/templates/action_camera_00000.npz",
+      "sha256": "432d3ec0e57fe446632c57fce40dda0e210d08d8edfc608058fa76e90906761b",
+      "bytes": 159888,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/templates/toy_car_00002.npz": {
+      "path": "assets/templates/toy_car_00002.npz",
+      "sha256": "88c49278ab59b7c0b3c58f21e7f883c419cc032371c6268e61f59df6e64972e5",
+      "bytes": 204163,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/templates/pen_00001.npz": {
+      "path": "assets/templates/pen_00001.npz",
+      "sha256": "a387f550be4577d3afe6dca078f766a069e3237a30c78b40693af73a93d7defe",
+      "bytes": 64165,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/templates/garage_00014.npz": {
+      "path": "assets/templates/garage_00014.npz",
+      "sha256": "0b6e7da2e3c5ee43fcc3e4cfdfb2d0e5e8f967c1201e0568b139d10d07e08c3e",
+      "bytes": 292842,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/templates/public_colors.json": {
+      "path": "assets/templates/public_colors.json",
+      "sha256": "70a9dd2d3a52aeace7289000e24b626452ec1ee18a931ee31fe70c2644c8e00a",
+      "bytes": 7529,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/templates/watch_00002.npz": {
+      "path": "assets/templates/watch_00002.npz",
+      "sha256": "c55cf3e187c1ca733e7fb24d4753695990df5f26730c3cfdfa96390a974e9f7a",
+      "bytes": 89943,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/templates/manifest.json": {
+      "path": "assets/templates/manifest.json",
+      "sha256": "b9ec0f6eb828369badfcec7ca368338f2712bba6ef95000dd221b348192150c8",
+      "bytes": 15910,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/templates/watch_00001.npz": {
+      "path": "assets/templates/watch_00001.npz",
+      "sha256": "8a57a7f5de6beca2f17495e9c39274b08a5da343376d0a191335a14fc623e357",
+      "bytes": 43956,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/templates/watch_00000.npz": {
+      "path": "assets/templates/watch_00000.npz",
+      "sha256": "bcf7ebc8cf82fc598f9456988ba33e8f1788c10c0ae43502b548ec836e28e0d0",
+      "bytes": 33069,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/mesh_templates_v2/toy_car_00000_mesh.npz": {
+      "path": "assets/mesh_templates_v2/toy_car_00000_mesh.npz",
+      "sha256": "1d5a83897337ddd2b9c3007f1171d30307c6214c1439b8ae5923ab8ca9749c6d",
+      "bytes": 120912,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/mesh_templates_v2/toy_car_00001_mesh.npz": {
+      "path": "assets/mesh_templates_v2/toy_car_00001_mesh.npz",
+      "sha256": "5036b3e2b0be48622677bc16d40e19b3709a4f2645e086efacadbc77a83749d7",
+      "bytes": 113454,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/mesh_templates_v2/garage_00015_mesh.npz": {
+      "path": "assets/mesh_templates_v2/garage_00015_mesh.npz",
+      "sha256": "920ef672f1c672dd88ee15e3e824deb5589b2f2ef3cef29fc515bd62d795f1ac",
+      "bytes": 104820,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/mesh_templates_v2/garage_00014_mesh.npz": {
+      "path": "assets/mesh_templates_v2/garage_00014_mesh.npz",
+      "sha256": "af9f202d650420e99b7ef2aba85e61e19d4088af6ef6e2e26cfba9a5b5664ae3",
+      "bytes": 100603,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/mesh_templates_v2/pen_00004_mesh.npz": {
+      "path": "assets/mesh_templates_v2/pen_00004_mesh.npz",
+      "sha256": "df465816e0370e35eb0a0c01738ddc14430547868e63ea2ce8bd7a3cff2bd841",
+      "bytes": 47339,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/mesh_templates_v2/action_camera_00002_mesh.npz": {
+      "path": "assets/mesh_templates_v2/action_camera_00002_mesh.npz",
+      "sha256": "7571c102afb1e9340a7ebd8a258267f8138ee737c79cdc4ca2d46e775ee38445",
+      "bytes": 38978,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/mesh_templates_v2/watch_00002_mesh.npz": {
+      "path": "assets/mesh_templates_v2/watch_00002_mesh.npz",
+      "sha256": "96aabfa2ca8bbcc3e437337fe646b42d071ee81227ab9d2562492a28a7df46ac",
+      "bytes": 114914,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/mesh_templates_v2/mesh_manifest.json": {
+      "path": "assets/mesh_templates_v2/mesh_manifest.json",
+      "sha256": "7ed7f26391505ae9adb2bfc709c731d2d9a355245839a7544298e9365d9e15e0",
+      "bytes": 128882,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/mesh_templates_v2/toy_car_00003_mesh.npz": {
+      "path": "assets/mesh_templates_v2/toy_car_00003_mesh.npz",
+      "sha256": "b81294dd7a0e6fdd576aba7ead3992c7bfd3b4aae11749a7ec77d1514b94b820",
+      "bytes": 119909,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/mesh_templates_v2/toy_car_00002_mesh.npz": {
+      "path": "assets/mesh_templates_v2/toy_car_00002_mesh.npz",
+      "sha256": "aa45a55013dd57ca9b340ccd509a5c4e40d9a0c8201a0eb847f3d937ec789c1d",
+      "bytes": 119390,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/mesh_templates_v2/toy_car_00004_mesh.npz": {
+      "path": "assets/mesh_templates_v2/toy_car_00004_mesh.npz",
+      "sha256": "37721efa284e5d4235be66ec09516258b76ae6a43d8445edd89ccd2023b3f82c",
+      "bytes": 58677,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/mesh_templates_v2/watch_00000_mesh.npz": {
+      "path": "assets/mesh_templates_v2/watch_00000_mesh.npz",
+      "sha256": "5087ce892f1da01d0bc0d9679fba82ebfc96bf71741fb312b015b699de231373",
+      "bytes": 84405,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/mesh_templates_v2/watch_00001_mesh.npz": {
+      "path": "assets/mesh_templates_v2/watch_00001_mesh.npz",
+      "sha256": "a4df211878119115a6f6ade0c9148cd109868fe34f61a775b447da5f76da7e5c",
+      "bytes": 188402,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/mesh_templates_v2/pen_00000_mesh.npz": {
+      "path": "assets/mesh_templates_v2/pen_00000_mesh.npz",
+      "sha256": "959003fb8f3e3f766e67099a225c0a4dd61531c31300f01c8e7f7996273ceddd",
+      "bytes": 95388,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/mesh_templates_v2/pen_00001_mesh.npz": {
+      "path": "assets/mesh_templates_v2/pen_00001_mesh.npz",
+      "sha256": "d494d00b60c369cac8132ea18480313058cfc031b97f0b052a44a6351dd01d5b",
+      "bytes": 55903,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/mesh_templates_v2/action_camera_00001_mesh.npz": {
+      "path": "assets/mesh_templates_v2/action_camera_00001_mesh.npz",
+      "sha256": "aa4b57e78601fda39bfff6e88edead7d5667becd629212bb66c81cdedced5931",
+      "bytes": 34252,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "assets/mesh_templates_v2/action_camera_00000_mesh.npz": {
+      "path": "assets/mesh_templates_v2/action_camera_00000_mesh.npz",
+      "sha256": "8cba9bba9cca1e450df4d04f4e2a9b785aaf0402829e6cbb7e973504f61231b2",
+      "bytes": 111944,
+      "provenance": "Original payload fixed public USD geometry/template or public model declaration; no evaluation layouts"
+    },
+    "curobo.yml": {
+      "path": "curobo.yml",
+      "sha256": "7e28b2a617369d0b4b381d77224ccb43069816acb24c5c6c49235126f8fc459a",
+      "bytes": 12536,
+      "provenance": "Current exact official f57 fixed X5 cuRobo config; only resource pathname is adapted at planner construction"
+    }
+  },
+  "models": {
+    "clip_model_manifest.json": {
+      "model": "openai/clip-vit-base-patch32",
+      "path": "resource://models/clip-vit-base-patch32",
+      "read_only": true,
+      "trained_here": false,
+      "files": {
+        "config.json": {
+          "bytes": 4186,
+          "sha256": "b575ef3c36f2a057fa19e221650105052d61cc9c1a972ec15019c6261ec98770"
+        },
+        "pytorch_model.bin": {
+          "bytes": 605247071,
+          "sha256": "a63082132ba4f97a80bea76823f544493bffa8082296d62d71581a4feff1576f"
+        },
+        "preprocessor_config.json": {
+          "bytes": 316,
+          "sha256": "910e70b3956ac9879ebc90b22fb3bc8a75b6a0677814500101a4c072bd7857bd"
+        },
+        "tokenizer.json": {
+          "bytes": 2224041,
+          "sha256": "b556ac8c99757ffb677208af34bc8c6721572114111a6e0aaf5fa69ff0b8d842"
+        },
+        "vocab.json": {
+          "bytes": 862328,
+          "sha256": "5047b556ce86ccaf6aa22b3ffccfc52d391ea4accdab9c2f2407da5b742d4363"
+        },
+        "merges.txt": {
+          "bytes": 524657,
+          "sha256": "f526393189112391ce6f9795d4695f704121ce452c3aad1f5335cc41337eba85"
+        },
+        "tokenizer_config.json": {
+          "bytes": 592,
+          "sha256": "34b7336e4bee12e0a9730eaf5189f582ef3c3eea5027f65730e5717256755aad"
+        },
+        "special_tokens_map.json": {
+          "bytes": 389,
+          "sha256": "f8c0d6c39aee3f8431078ef6646567b0aba7f2246e9c54b8b99d55c22b707cbf"
+        }
+      }
+    },
+    "grounding_model_manifest.json": {
+      "model": "IDEA-Research/grounding-dino-tiny",
+      "path": "resource://models/grounding-dino-tiny",
+      "files": {
+        "added_tokens.json": {
+          "sha256": "909e96cb32d92ce728a01bc99850cbba26196d74115c17ebeb019275412588f2",
+          "bytes": 82
+        },
+        "config.json": {
+          "sha256": "eec82c5ab66e16df12a9a212e68ac011779927c2536cf9078658e35d85f0c67a",
+          "bytes": 1644
+        },
+        "model.safetensors": {
+          "sha256": "1a2412ef99bd74bcd3c2a246fa1e48581f8889a1300c9051974741314fc042f3",
+          "bytes": 689359096
+        },
+        "preprocessor_config.json": {
+          "sha256": "8454179ba95e2ad22947835aad7b45862a601fc0055ab88bf1ee70892d3aea60",
+          "bytes": 457
+        },
+        "special_tokens_map.json": {
+          "sha256": "b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3",
+          "bytes": 125
+        },
+        "tokenizer.json": {
+          "sha256": "d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66",
+          "bytes": 711396
+        },
+        "tokenizer_config.json": {
+          "sha256": "d40ab645b68211910b9170d22433d43186a6ec8ee6fd10ba170524b25bf4fb56",
+          "bytes": 1237
+        },
+        "vocab.txt": {
+          "sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3",
+          "bytes": 231508
+        }
+      },
+      "source": "Existing frozen public PhysicalRSI resource",
+      "use": "Current RGB proposals only; no learned actions"
+    }
+  }
+}

@@ -1,0 +1,179 @@
+{
+  "schema": "riemann-declarative-skill-workflow-v1",
+  "mode": "rule_only",
+  "official_action_horizon": 1400,
+  "wam_reselection": false,
+  "max_operations": 19,
+  "bindings": {
+    "initial_scene": "skills.object_tracking.implementation:record_initial_scene",
+    "hold": "skills.object_tracking.implementation:hold",
+    "controller_incomplete": "skills.object_tracking.implementation:controller_incomplete",
+    "result": "skills.object_tracking.implementation:finish_result",
+    "pick": "skills.pickup.implementation:pick",
+    "diagnostic_grasp_only": "skills.pickup.implementation:diagnostic_grasp_only",
+    "retention": "skills.pickup.implementation:check_grasp_retention",
+    "withdraw": "skills.pickup.implementation:withdraw_grasp",
+    "finish_grasp_diagnostic": "skills.pickup.implementation:finish_grasp_diagnostic",
+    "handover": "skills.insertion.implementation:handover",
+    "place": "skills.insertion.implementation:place",
+    "press": "skills.lever_press.implementation:press",
+    "home": "skills.lever_press.implementation:home"
+  },
+  "errors": {
+    "ControllerFailure": "skills.transport_motion.implementation:ControllerFailure",
+    "PosePlanningError": "skills.arm_motion.implementation:PosePlanningError",
+    "PoseFeedbackError": "skills.arm_motion.implementation:PoseFeedbackError"
+  },
+  "steps": [
+    {
+      "id": "std_task_error_boundary",
+      "try": [
+        {
+          "call": "initial_scene",
+          "id": "initial_public_rgb_scene"
+        },
+        {
+          "id": "two_bread_slot_scope",
+          "for_each": [
+            [
+              "bread_0",
+              1
+            ],
+            [
+              "bread_1",
+              2
+            ]
+          ],
+          "as": "bread_slot",
+          "max_items": 2,
+          "do": [
+            {
+              "call": "pick",
+              "args": {
+                "bread_slot": {
+                  "var": "bread_slot"
+                }
+              },
+              "id": "rgb_pickup"
+            },
+            {
+              "call": "diagnostic_grasp_only",
+              "store": "grasp_only"
+            },
+            {
+              "id": "diagnostic_or_normal_path",
+              "if": {
+                "var": "grasp_only"
+              },
+              "then": [
+                {
+                  "call": "hold",
+                  "args": {
+                    "phase": "grasp_two_second_hold",
+                    "actions": 50
+                  }
+                },
+                {
+                  "call": "retention",
+                  "args": {
+                    "bread_slot": {
+                      "var": "bread_slot"
+                    },
+                    "phase": "after_two_second_hold"
+                  }
+                },
+                {
+                  "call": "withdraw"
+                },
+                {
+                  "call": "hold",
+                  "args": {
+                    "phase": "grasp_withdraw_settle",
+                    "actions": 5
+                  }
+                },
+                {
+                  "call": "retention",
+                  "args": {
+                    "bread_slot": {
+                      "var": "bread_slot"
+                    },
+                    "phase": "after_50mm_withdraw"
+                  }
+                },
+                {
+                  "call": "finish_grasp_diagnostic"
+                }
+              ],
+              "else": [
+                {
+                  "call": "handover",
+                  "args": {
+                    "bread_slot": {
+                      "var": "bread_slot"
+                    }
+                  },
+                  "id": "bread_handover"
+                },
+                {
+                  "call": "place",
+                  "args": {
+                    "bread_slot": {
+                      "var": "bread_slot"
+                    }
+                  },
+                  "id": "bread_insertion"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "call": "press",
+          "id": "public_slider_press"
+        },
+        {
+          "call": "home",
+          "id": "active_arm_home"
+        },
+        {
+          "call": "hold",
+          "args": {
+            "phase": "final_settle",
+            "actions": 15
+          },
+          "id": "final_settle_15"
+        }
+      ],
+      "catch": [
+        {
+          "errors": [
+            "ControllerFailure",
+            "PosePlanningError",
+            "PoseFeedbackError"
+          ],
+          "as": "controller_error",
+          "do": [
+            {
+              "call": "controller_incomplete",
+              "args": {
+                "error": {
+                  "var": "controller_error"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "call": "result",
+      "store": "task_result"
+    },
+    {
+      "return": {
+        "var": "task_result"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1757 @@
+{
+  "schema": "riemann-mature-teacher-programs-v1",
+  "package": "tasks.store_tools_in_toolbox",
+  "task": "store_tools_in_toolbox",
+  "official_action_horizon": 900,
+  "mode": "rule_only",
+  "wam_reselection": false,
+  "parameters": {
+    "num_episodes": 1,
+    "episode_index": 0,
+    "seed": 0,
+    "eval_seed": 0,
+    "device_id": 0,
+    "output_dir": "data/press_by_number_vision_debug",
+    "motion_speed": 2.4,
+    "motion_speedup": 1.0,
+    "planner_pose_frame": "world",
+    "gripper_forward_offset": 0.155,
+    "press_forward_offset": 0.09,
+    "press_approach_offset": 0.125,
+    "press_offset": 0.075,
+    "press_hold_steps": 8,
+    "card_roi_radius": 70,
+    "vision_inspect_only": false,
+    "feedback_servo": false,
+    "reward_debug": false,
+    "debug_fk": false,
+    "full_curobo_warmup": false,
+    "no_video": false,
+    "save_npz": false,
+    "images_in_hdf5": false,
+    "head_camera_pitch": null,
+    "official_eval": true,
+    "compact_physx": false,
+    "headless": true,
+    "enable_cameras": true,
+    "kit_args": " --enable isaacsim.replicator.behavior --enable isaacsim.sensors.camera --/app/settings/persistent=false --/renderer/multiGpu/enabled=false --/renderer/multiGpu/autoEnable=false",
+    "task": "store_tools_in_toolbox"
+  },
+  "environment": {
+    "TOOLS_MEMORY_STAGING": "1",
+    "TOOLS_MOTION_SPEED": "2.4",
+    "TAPE_MEASURE_PROFILE": "far_right",
+    "WRENCH_NORMAL_REGION": "exclude_far_corner",
+    "PLIERS_CARRY_HEIGHT": ".11",
+    "WRENCH_FAR_CORNER_RELEASE_MODE": "stationary",
+    "WRENCH_RIM_PLACE_PITCH": "0",
+    "WRENCH_RIM_RELEASE_MODE": "stationary",
+    "WRENCH_RELEASE_MODE": "retreat",
+    "WRENCH_NORMAL_PROFILE": "high_release",
+    "WRENCH_NORMAL_Y_MODE": "source_strip",
+    "WRENCH_RIM_PLACE_ROLL": "0",
+    "WRENCH_RIM_PLACE_YAW": "5",
+    "TAPE_MEASURE_RELEASE_HEIGHT": ".015",
+    "PLIERS_TILT": "85",
+    "WRENCH_PROFILE": "rim_clearance",
+    "WRENCH_RECOVERY_PLACE_YAW": "5",
+    "WRENCH_NORMAL_PLACE_YAW": "10",
+    "WRENCH_NORMAL_RELEASE_MODE": "gradual",
+    "WRENCH_NORMAL_RELEASE_HEIGHT": "-.005",
+    "WRENCH_NORMAL_PLACE_Y": ".008",
+    "WRENCH_RIM_CARRY_HEIGHT": ".12",
+    "WRENCH_ANGULAR_STEP": ".015",
+    "WRENCH_NORMAL_ANGULAR_STEP": ".015",
+    "WRENCH_RIM_ANGULAR_STEP": ".03",
+    "WRENCH_RIM_FRONT_TILT": "45",
+    "WRENCH_RIM_FRONT_HEIGHT": "-.003",
+    "WRENCH_RIM_FRONT_RECOVERY_ERROR": ".006",
+    "WRENCH_RIM_FRONT_RECOVERY_PLACE_ROLL": "-4",
+    "WRENCH_RIM_FRONT_RECOVERY_PLACE_PITCH": "4",
+    "WRENCH_RIM_FRONT_PLACE_ROLL": "0",
+    "WRENCH_RIM_FRONT_PLACE_PITCH": "-14",
+    "WRENCH_RIM_FRONT_PLACE_YAW": "8",
+    "WRENCH_RIM_FRONT_RELEASE_HEIGHT": ".015",
+    "WRENCH_RIM_FRONT_RELEASE_MODE": "stationary",
+    "WRENCH_NORMAL_TILT": "45",
+    "WRENCH_NORMAL_HEIGHT": "-.003",
+    "WRENCH_NORMAL_PLACE_ROLL": "0",
+    "WRENCH_NORMAL_PLACE_PITCH": "-5",
+    "TAPE_MEASURE_TILT": "45",
+    "TAPE_MEASURE_PLACE_ROLL": "8",
+    "TAPE_MEASURE_PLACE_PITCH": "0",
+    "TAPE_MEASURE_PLACE_YAW": "0",
+    "TAPE_MEASURE_RELEASE_MODE": "partial_retreat",
+    "HAMMER_RELEASE_HEIGHT": ".015",
+    "HAMMER_ROLL": "-5",
+    "HAMMER_TILT": "30",
+    "HAMMER_RELEASE_MODE": "stationary",
+    "HAMMER_PRESS": "1",
+    "HAMMER_Y": "0",
+    "HAMMER_REAR_PROFILE": "steep",
+    "HAMMER_REAR_BOX_Y_MAX": "-.105",
+    "HAMMER_REAR_SOURCE_X_MIN": "-.30",
+    "HAMMER_REAR_TILT": "60",
+    "HAMMER_REAR_ROLL": "-4",
+    "HAMMER_REAR_RELEASE_HEIGHT": "-.005",
+    "HAMMER_REAR_RELEASE_MODE": "staged_clear",
+    "HAMMER_REAR_PRESS": "0",
+    "HAMMER_REAR_Y": "0",
+    "TAPE_MEASURE_FAR_PLACE_PITCH": "6",
+    "TAPE_MEASURE_FAR_PLACE_ROLL": "8",
+    "TAPE_MEASURE_FAR_TILT": "45",
+    "TAPE_MEASURE_FAR_RELEASE_HEIGHT": "-.003",
+    "TAPE_MEASURE_FAR_RELEASE_MODE": "staged_clear",
+    "WRENCH_BASELINE_RELEASE_MODE": "stationary",
+    "HAMMER_REAR_RELEASE_PARTIAL": ".35",
+    "HAMMER_REAR_HIGH_SOURCE_Y_MIN": "-.085",
+    "HAMMER_REAR_HIGH_RELEASE_HEIGHT": ".015",
+    "HAMMER_REAR_HIGH_ROLL": "6",
+    "WRENCH_FAR_CORNER_PLACE_ROLL": "-5",
+    "WRENCH_FAR_CORNER_PLACE_PITCH": "3",
+    "WRENCH_FAR_CORNER_PLACE_YAW": "0",
+    "HAMMER_REAR_HIGH_ROLL_BOX_X_MIN": "0",
+    "TAPE_MEASURE_BACK_SOURCE_Y_MAX": "-.07",
+    "TAPE_MEASURE_BACK_PLACE_PITCH": "6",
+    "WRENCH_FAR_CORNER_DESCEND_ALIGNED": "1",
+    "WRENCH_FAR_CORNER_ALIGNED_BOX_X_MAX": "0",
+    "HAMMER_REAR_HIGH_LEFT_ROLL": "3",
+    "WRENCH_RIM_RECOVERY_RELEASE_HEIGHT": ".020",
+    "TAPE_MEASURE_BACK_RELEASE_MODE": "staged_clear",
+    "TOOLS_KEEP_VIDEO_SEEDS": "",
+    "TOOLS_KIT_ARGS": "--/app/tokens/cache=/dev/shm/store_tools_in_toolbox_cache --/app/tokens/omni_cache=/dev/shm/store_tools_in_toolbox_cache --/cache/texturecache=/dev/shm/store_tools_in_toolbox_cache/textures --/rtx-transient/resourcemanager/localTextureCachePath=/dev/shm/store_tools_in_toolbox_cache/textures --/rtx-transient/UJITSO/serviceCachePath=/dev/shm/store_tools_in_toolbox_cache/datastore --/UJITSO/datastore/localDataStore/diskSafetyMiB=1024",
+    "TAPE_MEASURE_BACK_TILT": "60",
+    "WRENCH_RIM_DIR_X": "0",
+    "WRENCH_RIM_FRONT_DIR_X": ".3",
+    "WRENCH_RIM_RECOVERY_PLACE_PITCH": "0",
+    "WRENCH_RIM_RECOVERY_PLACE_ROLL": "-4",
+    "WRENCH_RIM_FRONT_RECOVERY_RELEASE_HEIGHT": ".040",
+    "WRENCH_RIM_RELEASE_HEIGHT": ".020",
+    "WRENCH_RIM_TILT": "60",
+    "WRENCH_RIM_GRASP_LOCAL_Z": ".004",
+    "WRENCH_RIM_FRONT_GRASP_LOCAL_Z": "0",
+    "WRENCH_RIM_BACK_SOURCE_Y_MAX": "-.07",
+    "WRENCH_RIM_BACK_DIR_X": ".3",
+    "WRENCH_RIM_BACK_TILT": "30",
+    "WRENCH_RIM_BACK_GRASP_LOCAL_Z": "0",
+    "WRENCH_RIM_BACK_PLACE_ROLL": "0",
+    "WRENCH_RIM_BACK_PLACE_PITCH": "-14",
+    "WRENCH_RIM_BACK_PLACE_YAW": "8",
+    "WRENCH_RIM_BACK_RECOVERY_TILT": "75",
+    "WRENCH_RIM_BACK_RECOVERY_PLACE_ROLL": "0",
+    "WRENCH_RIM_BACK_RECOVERY_PLACE_PITCH": "-14",
+    "WRENCH_RIM_BACK_RECOVERY_PLACE_YAW": "8",
+    "WRENCH_RIM_SHALLOW_SOURCE_X_MIN": "-.2075",
+    "WRENCH_RIM_SHALLOW_DIR_X": ".3",
+    "WRENCH_RIM_SHALLOW_TILT": "30",
+    "WRENCH_RIM_SHALLOW_GRASP_LOCAL_Z": "0",
+    "WRENCH_RIM_SHALLOW_PLACE_ROLL": "14",
+    "WRENCH_RIM_SHALLOW_PLACE_PITCH": "-20",
+    "WRENCH_RIM_SHALLOW_PLACE_YAW": "12",
+    "WRENCH_RIM_SHALLOW_RECOVERY_TILT": "60",
+    "WRENCH_RIM_SHALLOW_RECOVERY_PLACE_ROLL": "14",
+    "WRENCH_RIM_SHALLOW_RECOVERY_PLACE_PITCH": "-20",
+    "WRENCH_RIM_SHALLOW_RECOVERY_PLACE_YAW": "5",
+    "HAMMER_FRONT_FAR_SOURCE_X_MAX": "-.36",
+    "HAMMER_FRONT_FAR_SOURCE_Y_MIN": "-.025",
+    "HAMMER_FRONT_FAR_RELEASE_HEIGHT": ".015",
+    "HAMMER_FRONT_FAR_ROLL": "-5",
+    "WRENCH_RIM_BACK_RELEASE_HEIGHT": ".015",
+    "WRENCH_RIM_BACK_RECOVERY_RELEASE_HEIGHT": ".015",
+    "WRENCH_RIM_SHALLOW_RELEASE_HEIGHT": ".040",
+    "WRENCH_RIM_SHALLOW_RECOVERY_RELEASE_HEIGHT": ".040",
+    "WRENCH_REACH_RELEASE_HEIGHT": ".030",
+    "WRENCH_REACH_RECOVERY_RELEASE_HEIGHT": ".030",
+    "WRENCH_REACH_PLACE_ROLL": "-14",
+    "WRENCH_REACH_PLACE_YAW": "0",
+    "WRENCH_REACH_RECOVERY_PLACE_YAW": "0",
+    "WRENCH_BASELINE_REAR_SOURCE_Y_MAX": "-.09",
+    "WRENCH_BASELINE_REAR_PLACE_ROLL": "0",
+    "WRENCH_BASELINE_REAR_PLACE_PITCH": "0",
+    "WRENCH_BASELINE_REAR_PLACE_YAW": "0",
+    "WRENCH_BASELINE_REAR_DESCEND_ALIGNED": "0",
+    "TAPE_MEASURE_BACK_FRONT_BOX_X_MAX": ".01",
+    "TAPE_MEASURE_BACK_FRONT_BOX_Y_MIN": "-.05",
+    "TAPE_MEASURE_BACK_FRONT_TILT": "45",
+    "TAPE_MEASURE_BACK_FRONT_TRANSFER_HEIGHT": ".075",
+    "WRENCH_BASELINE_REAR_RELEASE_MODE": "gradual",
+    "WRENCH_BASELINE_REAR_RELEASE_PARTIAL": ".35",
+    "WRENCH_BASELINE_REAR_RELEASE_HEIGHT": "-.002",
+    "WRENCH_BASELINE_REAR_DESCEND_ROLL": "-4",
+    "WRENCH_NORMAL_FAR_SOURCE_X_MAX": "-.39",
+    "WRENCH_NORMAL_FAR_BOX_X_MAX": "-.02",
+    "WRENCH_NORMAL_FAR_PLACE_ROLL": "4",
+    "WRENCH_NORMAL_FAR_PLACE_PITCH": "-5",
+    "WRENCH_NORMAL_FAR_PLACE_YAW": "10",
+    "WRENCH_NORMAL_PRESS_MODE": "vertical",
+    "WRENCH_NORMAL_PRESS_KEEP_ATTITUDE": "1",
+    "WRENCH_NORMAL_PRESS_LOCAL_X": ".005",
+    "WRENCH_NORMAL_PRESS_LOCAL_Z": ".008",
+    "WRENCH_NORMAL_PRESS_HEIGHT": ".012",
+    "WRENCH_NORMAL_PRESS_CLEAR": ".035",
+    "WRENCH_NORMAL_PRESS_CLOSE_STEPS": "40",
+    "HAMMER_BACK_FAR_SOURCE_X_MAX": "-.36",
+    "HAMMER_BACK_FAR_SOURCE_Y_MAX": "-.085",
+    "HAMMER_BACK_FAR_BOX_Y_MAX": "-.07",
+    "HAMMER_BACK_FAR_PRESS_MODE": "vertical",
+    "HAMMER_BACK_FAR_PRESS_KEEP_ATTITUDE": "1",
+    "HAMMER_BACK_FAR_PRESS_LOCAL_X": ".004",
+    "HAMMER_BACK_FAR_PRESS_LOCAL_Z": "-.002",
+    "HAMMER_BACK_FAR_PRESS_HEIGHT": ".012",
+    "HAMMER_BACK_FAR_PRESS_CLEAR": ".035",
+    "HAMMER_BACK_FAR_PRESS_CLOSE_STEPS": "40",
+    "TAPE_MEASURE_FRONT_SOURCE_X_MIN": ".36",
+    "TAPE_MEASURE_FRONT_SOURCE_Y_MIN": "-.05",
+    "TAPE_MEASURE_FRONT_RELEASE_HEIGHT": ".015",
+    "WRENCH_NORMAL_FRONT_SOURCE_Y_MIN": "-.015",
+    "WRENCH_NORMAL_FRONT_PRESS_HEIGHT": "0",
+    "WRENCH_NORMAL_FRONT_PRESS_POSITION_TOLERANCE": ".001",
+    "WRENCH_NORMAL_BACK_SOURCE_Y_MAX": "-.09",
+    "WRENCH_NORMAL_BACK_SOURCE_Y_MIN": "-.12",
+    "WRENCH_NORMAL_BACK_PRESS_HEIGHT": "0",
+    "WRENCH_NORMAL_BACK_PRESS_POSITION_TOLERANCE": ".001",
+    "TAPE_MEASURE_BACK_NEAR_SOURCE_X_MAX": ".26",
+    "TAPE_MEASURE_BACK_NEAR_SOURCE_Y_MAX": "-.085",
+    "TAPE_MEASURE_BACK_NEAR_RELEASE_HEIGHT": ".015",
+    "HAMMER_FRONT_MID_SOURCE_X_MIN": "-.36",
+    "HAMMER_FRONT_MID_SOURCE_X_MAX": "-.30",
+    "HAMMER_FRONT_MID_SOURCE_Y_MIN": "-.01",
+    "HAMMER_FRONT_MID_BOX_Y_MAX": "0",
+    "HAMMER_FRONT_MID_RELEASE_HEIGHT": ".015",
+    "HAMMER_FRONT_MID_ROLL": "0",
+    "HAMMER_FRONT_MID_TILT": "60",
+    "HAMMER_FRONT_MID_RELEASE_MODE": "partial_retreat",
+    "HAMMER_FRONT_MID_PRESS": "0",
+    "WRENCH_BASELINE_FRONT_SOURCE_X_MIN": "-.235",
+    "WRENCH_BASELINE_FRONT_SOURCE_Y_MIN": "-.045",
+    "WRENCH_BASELINE_FRONT_RELEASE_HEIGHT": ".015",
+    "WRENCH_BASELINE_FRONT_PRESS_MODE": "vertical",
+    "WRENCH_BASELINE_FRONT_PRESS_KEEP_ATTITUDE": "0",
+    "WRENCH_BASELINE_FRONT_PRESS_TILT": "45",
+    "WRENCH_BASELINE_FRONT_PRESS_LOCAL_X": ".005",
+    "WRENCH_BASELINE_FRONT_PRESS_LOCAL_Z": ".004",
+    "WRENCH_BASELINE_FRONT_PRESS_HEIGHT": "0",
+    "WRENCH_BASELINE_FRONT_PRESS_CLEAR": ".040",
+    "WRENCH_BASELINE_FRONT_PRESS_CLOSE_STEPS": "20",
+    "WRENCH_BASELINE_FRONT_PRESS_POSITION_TOLERANCE": ".001",
+    "WRENCH_NORMAL_BACK_PRESS_LOCAL_Z": ".008",
+    "WRENCH_NORMAL_BACK_PRESS_KEEP_ATTITUDE": "0",
+    "WRENCH_NORMAL_BACK_PRESS_TILT": "60",
+    "WRENCH_NORMAL_BACK_PRESS_CLEAR": ".040",
+    "WRENCH_NORMAL_BACK_PRESS_ANGULAR_STEP": ".06",
+    "WRENCH_NORMAL_BACK_PRESS_KEEP_RETRACT_ATTITUDE": "1",
+    "WRENCH_NORMAL_BACK_PRESS_CLOSE_STEPS": "20",
+    "WRENCH_RIM_FRONT_PRESS_MODE": "vertical",
+    "WRENCH_RIM_FRONT_PRESS_KEEP_ATTITUDE": "0",
+    "WRENCH_RIM_FRONT_PRESS_TILT": "60",
+    "WRENCH_RIM_FRONT_PRESS_LOCAL_X": ".005",
+    "WRENCH_RIM_FRONT_PRESS_LOCAL_Z": ".004",
+    "WRENCH_RIM_FRONT_PRESS_HEIGHT": "0",
+    "WRENCH_RIM_FRONT_PRESS_CLEAR": ".040",
+    "WRENCH_RIM_FRONT_PRESS_CLOSE_STEPS": "20",
+    "WRENCH_RIM_FRONT_PRESS_POSITION_TOLERANCE": ".001",
+    "WRENCH_RIM_FRONT_PRESS_ANGULAR_STEP": ".06",
+    "WRENCH_RIM_FRONT_PRESS_KEEP_RETRACT_ATTITUDE": "1",
+    "WRENCH_RIM_BACK_DESCEND_ALIGNED": "1",
+    "WRENCH_RIM_BACK_RELEASE_MODE": "partial_retreat",
+    "WRENCH_RIM_BACK_RELEASE_PARTIAL": ".35",
+    "TAPE_MEASURE_MID_RIGHT_SOURCE_X_MIN": ".36",
+    "TAPE_MEASURE_MID_RIGHT_SOURCE_Y_MIN": "-.075",
+    "TAPE_MEASURE_MID_RIGHT_SOURCE_Y_MAX": "-.065",
+    "TAPE_MEASURE_MID_RIGHT_RELEASE_HEIGHT": ".015",
+    "TAPE_MEASURE_BACK_NEAR_PLACE_PITCH": "3",
+    "TAPE_MEASURE_MID_RIGHT_TILT": "45",
+    "TAPE_MEASURE_MID_RIGHT_PLACE_PITCH": "0",
+    "WRENCH_NORMAL_BACK_RELEASE_MODE": "partial_retreat",
+    "WRENCH_NORMAL_BACK_RELEASE_PARTIAL": ".35",
+    "HAMMER_REAR_HIGH_FRONT_SOURCE_Y_MIN": "-.035",
+    "HAMMER_REAR_HIGH_FRONT_ROLL": "3",
+    "WRENCH_NORMAL_FRONT_MID_SOURCE_X_MAX": "-.36",
+    "WRENCH_NORMAL_FRONT_MID_SOURCE_Y_MIN": "-.045",
+    "WRENCH_NORMAL_FRONT_MID_SOURCE_Y_MAX": "-.02",
+    "WRENCH_NORMAL_FRONT_MID_PRESS_HEIGHT": "0",
+    "WRENCH_NORMAL_FRONT_MID_PRESS_POSITION_TOLERANCE": ".001",
+    "WRENCH_NORMAL_FRONT_MID_PRESS_LOCAL_Z": ".004",
+    "WRENCH_NORMAL_FRONT_MID_PRESS_KEEP_ATTITUDE": "0",
+    "WRENCH_NORMAL_FRONT_MID_PRESS_TILT": "60",
+    "WRENCH_NORMAL_FRONT_MID_PRESS_CLEAR": ".040",
+    "WRENCH_NORMAL_FRONT_MID_PRESS_ANGULAR_STEP": ".06",
+    "WRENCH_NORMAL_FRONT_MID_PRESS_KEEP_RETRACT_ATTITUDE": "1",
+    "WRENCH_NORMAL_FRONT_MID_PRESS_CLOSE_STEPS": "20",
+    "WRENCH_NORMAL_FRONT_MID_RELEASE_MODE": "partial_retreat",
+    "WRENCH_NORMAL_FRONT_MID_RELEASE_PARTIAL": ".35",
+    "WRENCH_NORMAL_FRONT_MID_BOX_X_MAX": ".02",
+    "WRENCH_FAR_CORNER_MID_SOURCE_Y_MAX": "-.12",
+    "WRENCH_FAR_CORNER_MID_BOX_X_MIN": "-.05",
+    "WRENCH_FAR_CORNER_MID_BOX_X_MAX": ".02",
+    "WRENCH_FAR_CORNER_MID_RELEASE_MODE": "partial_retreat",
+    "WRENCH_FAR_CORNER_MID_RELEASE_PARTIAL": ".35",
+    "HAMMER_FRONT_MID_RELEASE_PARTIAL": ".35",
+    "TAPE_MEASURE_BACK_NEAR_RELEASE_MODE": "partial_retreat",
+    "TAPE_MEASURE_BACK_NEAR_RELEASE_PARTIAL": ".75",
+    "WRENCH_NORMAL_MID_SOURCE_Y_MIN": "-.09",
+    "WRENCH_NORMAL_MID_SOURCE_Y_MAX": "-.015",
+    "WRENCH_NORMAL_MID_PRESS_HEIGHT": "0",
+    "WRENCH_NORMAL_MID_PRESS_POSITION_TOLERANCE": ".001",
+    "WRENCH_NORMAL_MID_PRESS_LOCAL_Z": ".008",
+    "WRENCH_NORMAL_MID_PRESS_KEEP_ATTITUDE": "0",
+    "WRENCH_NORMAL_MID_PRESS_TILT": "60",
+    "WRENCH_NORMAL_MID_PRESS_CLEAR": ".040",
+    "WRENCH_NORMAL_MID_PRESS_ANGULAR_STEP": ".06",
+    "WRENCH_NORMAL_MID_PRESS_KEEP_RETRACT_ATTITUDE": "1",
+    "WRENCH_NORMAL_MID_PRESS_CLOSE_STEPS": "20",
+    "WRENCH_NORMAL_MID_RELEASE_MODE": "partial_retreat",
+    "WRENCH_NORMAL_MID_RELEASE_PARTIAL": ".35",
+    "HAMMER_REAR_HIGH_RELEASE_MODE": "staged_clear",
+    "HAMMER_REAR_HIGH_RELEASE_PARTIAL": ".35",
+    "HAMMER_REAR_HIGH_LEFT_RELEASE_MODE": "partial_retreat",
+    "HAMMER_REAR_HIGH_LEFT_RELEASE_PARTIAL": ".35",
+    "HAMMER_REAR_HIGH_FRONT_RELEASE_MODE": "partial_retreat",
+    "HAMMER_REAR_HIGH_FRONT_RELEASE_PARTIAL": ".35",
+    "WRENCH_FAR_CORNER_MID_PRESS_MODE": "vertical",
+    "WRENCH_FAR_CORNER_MID_PRESS_KEEP_ATTITUDE": "0",
+    "WRENCH_FAR_CORNER_MID_PRESS_TILT": "60",
+    "WRENCH_FAR_CORNER_MID_PRESS_LOCAL_X": ".005",
+    "WRENCH_FAR_CORNER_MID_PRESS_LOCAL_Z": ".004",
+    "WRENCH_FAR_CORNER_MID_PRESS_HEIGHT": "0",
+    "WRENCH_FAR_CORNER_MID_PRESS_CLEAR": ".040",
+    "WRENCH_FAR_CORNER_MID_PRESS_CLOSE_STEPS": "20",
+    "WRENCH_FAR_CORNER_MID_PRESS_POSITION_TOLERANCE": ".001",
+    "WRENCH_FAR_CORNER_MID_PRESS_ANGULAR_STEP": ".06",
+    "WRENCH_FAR_CORNER_MID_PRESS_KEEP_RETRACT_ATTITUDE": "1",
+    "HAMMER_BACK_MID_SOURCE_X_MIN": "-.34",
+    "HAMMER_BACK_MID_SOURCE_X_MAX": "-.30",
+    "HAMMER_BACK_MID_SOURCE_Y_MAX": "-.075",
+    "HAMMER_BACK_MID_TILT": "60",
+    "HAMMER_BACK_MID_ROLL": "0",
+    "HAMMER_BACK_MID_RELEASE_MODE": "partial_retreat",
+    "HAMMER_BACK_MID_RELEASE_PARTIAL": ".35",
+    "HAMMER_BACK_MID_RELEASE_HEIGHT": ".015",
+    "HAMMER_BACK_MID_PRESS": "0",
+    "TAPE_MEASURE_FRONT_RELEASE_MODE": "partial_retreat",
+    "TAPE_MEASURE_FRONT_RELEASE_PARTIAL": ".75",
+    "HAMMER_BACK_MID_BOX_X_MAX": "-.02",
+    "TAPE_MEASURE_RELEASE_PARTIAL": ".75",
+    "TAPE_MEASURE_MID_RIGHT_RELEASE_MODE": "partial_retreat",
+    "TAPE_MEASURE_MID_RIGHT_RELEASE_PARTIAL": ".75",
+    "HAMMER_BACK_FAR_FRONT_SOURCE_X_MAX": "-.36",
+    "HAMMER_BACK_FAR_FRONT_SOURCE_Y_MAX": "-.085",
+    "HAMMER_BACK_FAR_FRONT_BOX_X_MIN": ".02",
+    "HAMMER_BACK_FAR_FRONT_BOX_Y_MIN": "-.035",
+    "HAMMER_BACK_FAR_FRONT_RELEASE_MODE": "partial_retreat",
+    "HAMMER_BACK_FAR_FRONT_RELEASE_PARTIAL": ".35",
+    "HAMMER_BACK_FAR_FRONT_PRESS_MODE": "vertical",
+    "HAMMER_BACK_FAR_FRONT_PRESS_KEEP_ATTITUDE": "0",
+    "HAMMER_BACK_FAR_FRONT_PRESS_TILT": "60",
+    "HAMMER_BACK_FAR_FRONT_PRESS_LOCAL_X": "0",
+    "HAMMER_BACK_FAR_FRONT_PRESS_LOCAL_Z": "0",
+    "HAMMER_BACK_FAR_FRONT_PRESS_HEIGHT": "0",
+    "HAMMER_BACK_FAR_FRONT_PRESS_CLEAR": ".050",
+    "HAMMER_BACK_FAR_FRONT_PRESS_CLOSE_STEPS": "20",
+    "HAMMER_BACK_FAR_FRONT_PRESS_POSITION_TOLERANCE": ".001",
+    "HAMMER_BACK_FAR_FRONT_PRESS_ANGULAR_STEP": ".06",
+    "HAMMER_BACK_FAR_FRONT_PRESS_KEEP_RETRACT_ATTITUDE": "1",
+    "HAMMER_REAR_HIGH_PRESS_MODE": "vertical",
+    "HAMMER_REAR_HIGH_PRESS_KEEP_ATTITUDE": "0",
+    "HAMMER_REAR_HIGH_PRESS_TILT": "60",
+    "HAMMER_REAR_HIGH_PRESS_LOCAL_X": "0",
+    "HAMMER_REAR_HIGH_PRESS_LOCAL_Z": "0",
+    "HAMMER_REAR_HIGH_PRESS_HEIGHT": "0",
+    "HAMMER_REAR_HIGH_PRESS_CLEAR": ".050",
+    "HAMMER_REAR_HIGH_PRESS_CLOSE_STEPS": "20",
+    "HAMMER_REAR_HIGH_PRESS_POSITION_TOLERANCE": ".001",
+    "HAMMER_REAR_HIGH_PRESS_ANGULAR_STEP": ".06",
+    "HAMMER_REAR_HIGH_PRESS_KEEP_RETRACT_ATTITUDE": "1",
+    "HAMMER_REAR_HIGH_LEFT_PRESS_MODE": "",
+    "HAMMER_REAR_HIGH_FRONT_PRESS_MODE": "",
+    "HAMMER_FRONT_MID_PRESS_MODE": "vertical",
+    "HAMMER_FRONT_MID_PRESS_KEEP_ATTITUDE": "0",
+    "HAMMER_FRONT_MID_PRESS_TILT": "60",
+    "HAMMER_FRONT_MID_PRESS_LOCAL_X": "0",
+    "HAMMER_FRONT_MID_PRESS_LOCAL_Z": "0",
+    "HAMMER_FRONT_MID_PRESS_HEIGHT": "0",
+    "HAMMER_FRONT_MID_PRESS_CLEAR": ".050",
+    "HAMMER_FRONT_MID_PRESS_CLOSE_STEPS": "20",
+    "HAMMER_FRONT_MID_PRESS_POSITION_TOLERANCE": ".001",
+    "HAMMER_FRONT_MID_PRESS_ANGULAR_STEP": ".06",
+    "HAMMER_FRONT_MID_PRESS_KEEP_RETRACT_ATTITUDE": "1",
+    "HAMMER_FRONT_MID_LEFT_BOX_X_MAX": "0",
+    "HAMMER_FRONT_MID_LEFT_PRESS_LOCAL_X": ".004",
+    "HAMMER_FRONT_MID_LEFT_PRESS_LOCAL_Z": "-.008",
+    "WRENCH_NORMAL_FRONT_MID_RIGHT_BOX_X_MIN": ".02",
+    "WRENCH_NORMAL_FRONT_MID_RIGHT_PRESS_LOCAL_Z": ".012",
+    "TOOLS_GRASP_SWEEP_CLEARANCE": ".002",
+    "TOOLS_PLIERS_LOADED_DT": ".04",
+    "TOOLS_PLIERS_LOADED_ACCELERATION": ".3",
+    "TOOLS_PLIERS_LOADED_CRUISE_STEP": ".004"
+  },
+  "programs": {
+    "U04_VisionStoreToolsTeacher_run": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 900,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U04_VisionStoreToolsTeacher_run_motion_001": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_001",
+        "U04_VisionStoreToolsTeacher_run_self_robots_items_002": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_self_robots_items_002",
+        "U04_VisionStoreToolsTeacher_run_motion_003": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_003",
+        "U04_VisionStoreToolsTeacher_run_motion_004": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_004",
+        "U04_VisionStoreToolsTeacher_run_motion_005": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_005",
+        "U04_VisionStoreToolsTeacher_run_motion_006": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_006",
+        "U04_VisionStoreToolsTeacher_run_motion_007": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_007",
+        "U04_VisionStoreToolsTeacher_run_motion_008": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_008",
+        "U04_VisionStoreToolsTeacher_run_motion_009": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_009",
+        "U04_VisionStoreToolsTeacher_run_motion_010": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_010",
+        "U04_VisionStoreToolsTeacher_run_motion_011": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_011",
+        "U04_VisionStoreToolsTeacher_run_motion_012": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_012",
+        "U04_VisionStoreToolsTeacher_run_motion_013": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_013",
+        "U04_VisionStoreToolsTeacher_run_motion_014": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_014",
+        "U04_VisionStoreToolsTeacher_run_motion_015": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_015",
+        "U04_VisionStoreToolsTeacher_run_parameters_get_tools_only_and_name_parameters_to_016": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_parameters_get_tools_only_and_name_parameters_to_016",
+        "U04_VisionStoreToolsTeacher_run_motion_017": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_017",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_018": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_018",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_019": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_019",
+        "U04_VisionStoreToolsTeacher_run_motion_020": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_020",
+        "U04_VisionStoreToolsTeacher_run_motion_021": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_021",
+        "U04_VisionStoreToolsTeacher_run_motion_022": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_022",
+        "U04_VisionStoreToolsTeacher_run_motion_023": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_023",
+        "U04_VisionStoreToolsTeacher_run_motion_024": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_024",
+        "U04_VisionStoreToolsTeacher_run_motion_025": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_025",
+        "U04_VisionStoreToolsTeacher_run_motion_026": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_026",
+        "U04_VisionStoreToolsTeacher_run_motion_027": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_027",
+        "U04_VisionStoreToolsTeacher_run_motion_028": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_028",
+        "U04_VisionStoreToolsTeacher_run_motion_029": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_029",
+        "U04_VisionStoreToolsTeacher_run_motion_030": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_030",
+        "U04_VisionStoreToolsTeacher_run_motion_031": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_031",
+        "U04_VisionStoreToolsTeacher_run_motion_032": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_032",
+        "U04_VisionStoreToolsTeacher_run_motion_033": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_033",
+        "U04_VisionStoreToolsTeacher_run_motion_034": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_034",
+        "U04_VisionStoreToolsTeacher_run_motion_035": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_035",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_036": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_036",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_037": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_037",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_038": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_038",
+        "U04_VisionStoreToolsTeacher_run_name_hammer_039": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_hammer_039",
+        "U04_VisionStoreToolsTeacher_run_name_hammer_040": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_hammer_040",
+        "U04_VisionStoreToolsTeacher_run_name_hammer_041": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_hammer_041",
+        "U04_VisionStoreToolsTeacher_run_name_tape_measure_042": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_tape_measure_042",
+        "U04_VisionStoreToolsTeacher_run_name_tape_measure_043": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_tape_measure_043",
+        "U04_VisionStoreToolsTeacher_run_name_tape_measure_044": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_tape_measure_044",
+        "U04_VisionStoreToolsTeacher_run_motion_045": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_045",
+        "U04_VisionStoreToolsTeacher_run_motion_046": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_046",
+        "U04_VisionStoreToolsTeacher_run_motion_047": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_047",
+        "U04_VisionStoreToolsTeacher_run_motion_048": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_048",
+        "U04_VisionStoreToolsTeacher_run_motion_049": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_049",
+        "U04_VisionStoreToolsTeacher_run_motion_050": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_050",
+        "U04_VisionStoreToolsTeacher_run_name_hammer_051": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_hammer_051",
+        "U04_VisionStoreToolsTeacher_run_name_hammer_052": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_hammer_052",
+        "U04_VisionStoreToolsTeacher_run_name_hammer_053": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_hammer_053",
+        "U04_VisionStoreToolsTeacher_run_name_tape_measure_054": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_tape_measure_054",
+        "U04_VisionStoreToolsTeacher_run_name_tape_measure_055": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_tape_measure_055",
+        "U04_VisionStoreToolsTeacher_run_name_tape_measure_056": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_tape_measure_056",
+        "U04_VisionStoreToolsTeacher_run_name_tape_measure_057": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_tape_measure_057",
+        "U04_VisionStoreToolsTeacher_run_motion_058": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_058",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_059": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_059",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_060": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_060",
+        "U04_VisionStoreToolsTeacher_run_motion_061": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_061",
+        "U04_VisionStoreToolsTeacher_run_motion_062": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_062",
+        "U04_VisionStoreToolsTeacher_run_motion_063": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_063",
+        "U04_VisionStoreToolsTeacher_run_motion_064": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_064",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_065": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_065",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_066": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_066",
+        "U04_VisionStoreToolsTeacher_run_motion_067": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_067",
+        "U04_VisionStoreToolsTeacher_run_motion_068": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_068",
+        "U04_VisionStoreToolsTeacher_run_motion_069": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_069",
+        "U04_VisionStoreToolsTeacher_run_motion_070": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_070",
+        "U04_VisionStoreToolsTeacher_run_motion_071": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_071",
+        "U04_VisionStoreToolsTeacher_run_motion_072": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_072",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_073": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_073",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_074": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_074",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_and_grasp_error_float_wrench_option__075": "skills.pickup.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_and_grasp_error_float_wrench_option__075",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_and_grasp_error_float_wrench_option__076": "skills.pickup.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_and_grasp_error_float_wrench_option__076",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_and_grasp_error_float_wrench_option__077": "skills.pickup.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_and_grasp_error_float_wrench_option__077",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_and_grasp_error_float_wrench_option__078": "skills.pickup.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_and_grasp_error_float_wrench_option__078",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_and_grasp_error_float_wrench_option__079": "skills.pickup.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_and_grasp_error_float_wrench_option__079",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_and_grasp_error_float_wrench_option__080": "skills.pickup.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_and_grasp_error_float_wrench_option__080",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_and_grasp_error_float_wrench_option__081": "skills.pickup.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_and_grasp_error_float_wrench_option__081",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_and_grasp_error_float_wrench_option__082": "skills.pickup.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_and_grasp_error_float_wrench_option__082",
+        "U04_VisionStoreToolsTeacher_run_grasp_error_0_006_083": "skills.pickup.implementation:U04_VisionStoreToolsTeacher_run_grasp_error_0_006_083",
+        "U04_VisionStoreToolsTeacher_run_grasp_error_0_006_084": "skills.pickup.implementation:U04_VisionStoreToolsTeacher_run_grasp_error_0_006_084",
+        "U04_VisionStoreToolsTeacher_run_motion_085": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_085",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_086": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_086",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_087": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_087",
+        "U04_VisionStoreToolsTeacher_run_motion_088": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_088",
+        "U04_VisionStoreToolsTeacher_run_motion_089": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_089",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_090": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_090",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_091": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_091",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_and_wrench_option_wrench_rgb_retry_0_092": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_and_wrench_option_wrench_rgb_retry_0_092",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_and_wrench_option_wrench_rgb_retry_0_093": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_and_wrench_option_wrench_rgb_retry_0_093",
+        "U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_094": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_094",
+        "U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_095": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_095",
+        "U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_096": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_096",
+        "U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_097": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_097",
+        "U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_098": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_098",
+        "U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_099": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_099",
+        "U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_100": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_100",
+        "U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_101": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_101",
+        "U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_102": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_102",
+        "U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_103": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_103",
+        "U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_104": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_104",
+        "U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_105": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_105",
+        "U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_106": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_106",
+        "U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_107": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_107",
+        "U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_108": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_108",
+        "U04_VisionStoreToolsTeacher_run_motion_109": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_109",
+        "U04_VisionStoreToolsTeacher_run_parameters_get_tools_stage_name_lift_110": "skills.pickup.implementation:U04_VisionStoreToolsTeacher_run_parameters_get_tools_stage_name_lift_110",
+        "U04_VisionStoreToolsTeacher_run_parameters_get_tools_stage_name_lift_111": "skills.pickup.implementation:U04_VisionStoreToolsTeacher_run_parameters_get_tools_stage_name_lift_111",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_112": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_112",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_113": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_113",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_and_rim_profile_or_normal_profile_or_114": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_and_rim_profile_or_normal_profile_or_114",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_and_rim_profile_or_normal_profile_or_115": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_and_rim_profile_or_normal_profile_or_115",
+        "U04_VisionStoreToolsTeacher_run_self_events_1_get_grasp_recovery_116": "skills.pickup.implementation:U04_VisionStoreToolsTeacher_run_self_events_1_get_grasp_recovery_116",
+        "U04_VisionStoreToolsTeacher_run_enumerate_roll_pitch_yaw_117": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_enumerate_roll_pitch_yaw_117",
+        "U04_VisionStoreToolsTeacher_run_self_events_1_get_grasp_recovery_118": "skills.pickup.implementation:U04_VisionStoreToolsTeacher_run_self_events_1_get_grasp_recovery_118",
+        "U04_VisionStoreToolsTeacher_run_self_events_1_get_grasp_recovery_119": "skills.pickup.implementation:U04_VisionStoreToolsTeacher_run_self_events_1_get_grasp_recovery_119",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_and_rim_profile_or_normal_profile_or_120": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_and_rim_profile_or_normal_profile_or_120",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_and_rim_profile_or_normal_profile_or_121": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_and_rim_profile_or_normal_profile_or_121",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_and_rim_profile_or_normal_profile_or_122": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_and_rim_profile_or_normal_profile_or_122",
+        "U04_VisionStoreToolsTeacher_run_motion_123": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_123",
+        "U04_VisionStoreToolsTeacher_run_motion_124": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_124",
+        "U04_VisionStoreToolsTeacher_run_motion_125": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_125",
+        "U04_VisionStoreToolsTeacher_run_name_tape_measure_126": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_tape_measure_126",
+        "U04_VisionStoreToolsTeacher_run_name_tape_measure_127": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_tape_measure_127",
+        "U04_VisionStoreToolsTeacher_run_motion_128": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_128",
+        "U04_VisionStoreToolsTeacher_run_rotate_wrench_at_dest_129": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_rotate_wrench_at_dest_129",
+        "U04_VisionStoreToolsTeacher_run_rotate_wrench_at_dest_130": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_rotate_wrench_at_dest_130",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_and_wrench_option_wrench_descend_ali_131": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_and_wrench_option_wrench_descend_ali_131",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_and_wrench_option_wrench_descend_ali_132": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_and_wrench_option_wrench_descend_ali_132",
+        "U04_VisionStoreToolsTeacher_run_baseline_rear_profile_and_wrench_baseline_rear_d_133": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_baseline_rear_profile_and_wrench_baseline_rear_d_133",
+        "U04_VisionStoreToolsTeacher_run_baseline_rear_profile_and_wrench_baseline_rear_d_134": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_baseline_rear_profile_and_wrench_baseline_rear_d_134",
+        "U04_VisionStoreToolsTeacher_run_baseline_rear_profile_and_wrench_baseline_rear_d_135": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_baseline_rear_profile_and_wrench_baseline_rear_d_135",
+        "U04_VisionStoreToolsTeacher_run_motion_136": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_136",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_and_self_events_1_get_grasp_recovery_137": "skills.pickup.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_and_self_events_1_get_grasp_recovery_137",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_and_self_events_1_get_grasp_recovery_138": "skills.pickup.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_and_self_events_1_get_grasp_recovery_138",
+        "U04_VisionStoreToolsTeacher_run_motion_139": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_139",
+        "U04_VisionStoreToolsTeacher_run_motion_140": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_140",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_and_self_events_1_get_grasp_recovery_141": "skills.pickup.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_and_self_events_1_get_grasp_recovery_141",
+        "U04_VisionStoreToolsTeacher_run_name_wrench_and_self_events_1_get_grasp_recovery_142": "skills.pickup.implementation:U04_VisionStoreToolsTeacher_run_name_wrench_and_self_events_1_get_grasp_recovery_142",
+        "U04_VisionStoreToolsTeacher_run_motion_143": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_143",
+        "U04_VisionStoreToolsTeacher_run_name_hammer_144": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_hammer_144",
+        "U04_VisionStoreToolsTeacher_run_name_hammer_145": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_hammer_145",
+        "U04_VisionStoreToolsTeacher_run_release_mode_gradual_146": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_release_mode_gradual_146",
+        "U04_VisionStoreToolsTeacher_run_np_linspace_0_1_1_0_10_147": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_np_linspace_0_1_1_0_10_147",
+        "U04_VisionStoreToolsTeacher_run_release_mode_gradual_148": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_release_mode_gradual_148",
+        "U04_VisionStoreToolsTeacher_run_release_mode_gradual_149": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_release_mode_gradual_149",
+        "U04_VisionStoreToolsTeacher_run_release_mode_gradual_150": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_release_mode_gradual_150",
+        "U04_VisionStoreToolsTeacher_run_release_mode_staged_clear_151": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_release_mode_staged_clear_151",
+        "U04_VisionStoreToolsTeacher_run_release_mode_staged_clear_152": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_release_mode_staged_clear_152",
+        "U04_VisionStoreToolsTeacher_run_range_4_153": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_range_4_153",
+        "U04_VisionStoreToolsTeacher_run_release_mode_staged_clear_154": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_release_mode_staged_clear_154",
+        "U04_VisionStoreToolsTeacher_run_release_mode_staged_clear_155": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_release_mode_staged_clear_155",
+        "U04_VisionStoreToolsTeacher_run_np_min_np_abs_widths_0_038_156": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_np_min_np_abs_widths_0_038_156",
+        "U04_VisionStoreToolsTeacher_run_release_mode_staged_clear_157": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_release_mode_staged_clear_157",
+        "U04_VisionStoreToolsTeacher_run_release_mode_staged_clear_158": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_release_mode_staged_clear_158",
+        "U04_VisionStoreToolsTeacher_run_release_mode_staged_clear_159": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_release_mode_staged_clear_159",
+        "U04_VisionStoreToolsTeacher_run_release_mode_staged_clear_160": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_release_mode_staged_clear_160",
+        "U04_VisionStoreToolsTeacher_run_release_mode_staged_clear_161": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_release_mode_staged_clear_161",
+        "U04_VisionStoreToolsTeacher_run_release_mode_partial_retreat_162": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_release_mode_partial_retreat_162",
+        "U04_VisionStoreToolsTeacher_run_release_mode_partial_retreat_163": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_release_mode_partial_retreat_163",
+        "U04_VisionStoreToolsTeacher_run_release_mode_partial_retreat_164": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_release_mode_partial_retreat_164",
+        "U04_VisionStoreToolsTeacher_run_release_mode_partial_retreat_165": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_release_mode_partial_retreat_165",
+        "U04_VisionStoreToolsTeacher_run_release_mode_partial_retreat_166": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_release_mode_partial_retreat_166",
+        "U04_VisionStoreToolsTeacher_run_release_mode_retreat_167": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_release_mode_retreat_167",
+        "U04_VisionStoreToolsTeacher_run_release_mode_retreat_168": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_release_mode_retreat_168",
+        "U04_VisionStoreToolsTeacher_run_release_mode_retreat_169": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_release_mode_retreat_169",
+        "U04_VisionStoreToolsTeacher_run_motion_170": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_170",
+        "U04_VisionStoreToolsTeacher_run_motion_171": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_171",
+        "U04_VisionStoreToolsTeacher_run_motion_172": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_172",
+        "U04_VisionStoreToolsTeacher_run_vertical_seat_173": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_vertical_seat_173",
+        "U04_VisionStoreToolsTeacher_run_vertical_seat_174": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_vertical_seat_174",
+        "U04_VisionStoreToolsTeacher_run_vertical_seat_175": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_vertical_seat_175",
+        "U04_VisionStoreToolsTeacher_run_vertical_seat_176": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_vertical_seat_176",
+        "U04_VisionStoreToolsTeacher_run_vertical_seat_177": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_vertical_seat_177",
+        "U04_VisionStoreToolsTeacher_run_vertical_seat_178": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_vertical_seat_178",
+        "U04_VisionStoreToolsTeacher_run_vertical_seat_179": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_vertical_seat_179",
+        "U04_VisionStoreToolsTeacher_run_vertical_seat_180": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_vertical_seat_180",
+        "U04_VisionStoreToolsTeacher_run_vertical_seat_181": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_vertical_seat_181",
+        "U04_VisionStoreToolsTeacher_run_vertical_seat_182": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_vertical_seat_182",
+        "U04_VisionStoreToolsTeacher_run_vertical_seat_183": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_vertical_seat_183",
+        "U04_VisionStoreToolsTeacher_run_press_option_name_upper_press_keep_retract_attit_184": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_press_option_name_upper_press_keep_retract_attit_184",
+        "U04_VisionStoreToolsTeacher_run_press_option_name_upper_press_keep_retract_attit_185": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_press_option_name_upper_press_keep_retract_attit_185",
+        "U04_VisionStoreToolsTeacher_run_name_hammer_and_not_vertical_seat_and_hammer_opt_186": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_hammer_and_not_vertical_seat_and_hammer_opt_186",
+        "U04_VisionStoreToolsTeacher_run_name_hammer_and_not_vertical_seat_and_hammer_opt_187": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_hammer_and_not_vertical_seat_and_hammer_opt_187",
+        "U04_VisionStoreToolsTeacher_run_name_hammer_and_not_vertical_seat_and_hammer_opt_188": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_hammer_and_not_vertical_seat_and_hammer_opt_188",
+        "U04_VisionStoreToolsTeacher_run_name_hammer_and_not_vertical_seat_and_hammer_opt_189": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_name_hammer_and_not_vertical_seat_and_hammer_opt_189",
+        "U04_VisionStoreToolsTeacher_run_motion_190": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_190",
+        "U04_VisionStoreToolsTeacher_run_parameters_get_tools_only_or_name_hammer_191": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_parameters_get_tools_only_or_name_hammer_191",
+        "U04_VisionStoreToolsTeacher_run_parameters_get_tools_only_or_name_hammer_192": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_parameters_get_tools_only_or_name_hammer_192",
+        "U04_VisionStoreToolsTeacher_run_motion_193": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_193",
+        "U04_VisionStoreToolsTeacher_run_parameters_get_tools_stage_name_194": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_parameters_get_tools_stage_name_194",
+        "U04_VisionStoreToolsTeacher_run_parameters_get_tools_stage_name_195": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_parameters_get_tools_stage_name_195",
+        "U04_VisionStoreToolsTeacher_run_motion_196": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_196",
+        "U04_VisionStoreToolsTeacher_run_motion_197": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_197",
+        "U04_VisionStoreToolsTeacher_run_motion_198": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_198",
+        "U04_VisionStoreToolsTeacher_run_motion_199": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_199",
+        "U04_VisionStoreToolsTeacher_run_motion_200": "skills.motion.implementation:U04_VisionStoreToolsTeacher_run_motion_200",
+        "failure_select_tool_stop": "skills.failure_continuation.implementation:select_tool_stop",
+        "failure_select_program_stop": "skills.failure_continuation.implementation:select_program_stop",
+        "failure_raise_tool_error": "skills.failure_continuation.implementation:raise_tool_error",
+        "failure_raise_program_error": "skills.failure_continuation.implementation:raise_program_error",
+        "failure_finish_current_tool": "skills.failure_continuation.implementation:finish_current_tool",
+        "failure_finish_program": "skills.failure_continuation.implementation:finish_program",
+        "failure_finish_result": "skills.failure_continuation.implementation:finish_result",
+        "support_choose_contact": "skills.support_contact_depth.implementation:choose_contact",
+        "support_record_contact": "skills.support_contact_depth.implementation:record_contact"
+      },
+      "errors": {
+        "RuleControlError": "skills.failure_continuation.implementation:RuleControlError"
+      },
+      "steps": [
+        {
+          "try": [
+            {
+              "call": "U04_VisionStoreToolsTeacher_run_motion_001"
+            },
+            {
+              "call": "U04_VisionStoreToolsTeacher_run_self_robots_items_002",
+              "store": "items_2"
+            },
+            {
+              "for_each": {
+                "var": "items_2"
+              },
+              "as": "loop_item_3",
+              "max_items": 4096,
+              "do": [
+                {
+                  "call": "U04_VisionStoreToolsTeacher_run_motion_003",
+                  "args": {
+                    "__workflow_item": {
+                      "var": "loop_item_3"
+                    }
+                  }
+                },
+                {
+                  "call": "U04_VisionStoreToolsTeacher_run_motion_004"
+                },
+                {
+                  "call": "U04_VisionStoreToolsTeacher_run_motion_005"
+                },
+                {
+                  "call": "U04_VisionStoreToolsTeacher_run_motion_006"
+                }
+              ]
+            },
+            {
+              "call": "U04_VisionStoreToolsTeacher_run_motion_007"
+            },
+            {
+              "call": "U04_VisionStoreToolsTeacher_run_motion_008"
+            },
+            {
+              "call": "U04_VisionStoreToolsTeacher_run_motion_009"
+            },
+            {
+              "call": "U04_VisionStoreToolsTeacher_run_motion_010"
+            },
+            {
+              "call": "U04_VisionStoreToolsTeacher_run_motion_011"
+            },
+            {
+              "call": "U04_VisionStoreToolsTeacher_run_motion_012"
+            },
+            {
+              "call": "U04_VisionStoreToolsTeacher_run_motion_013"
+            },
+            {
+              "call": "U04_VisionStoreToolsTeacher_run_motion_014"
+            },
+            {
+              "for_each": [
+                "wrench",
+                "hammer",
+                "pliers",
+                "tape_measure"
+              ],
+              "as": "loop_item_15",
+              "max_items": 4096,
+              "do": [
+                {
+                  "try": [
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_015",
+                      "args": {
+                        "__workflow_item": {
+                          "var": "loop_item_15"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_parameters_get_tools_only_and_name_parameters_to_016",
+                      "store": "condition_16"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_16"
+                      },
+                      "then": [
+                        {
+                          "continue": true
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_017"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_name_wrench_018",
+                      "store": "condition_18"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_18"
+                      },
+                      "then": [
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_wrench_019"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_020"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_021"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_022"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_023"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_024"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_025"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_026"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_027"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_028"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_029"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_030"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_031"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_032"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_033"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_034"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_035"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_name_wrench_036",
+                      "store": "condition_36"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_36"
+                      },
+                      "then": [
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_wrench_037"
+                        },
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_wrench_038"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_name_hammer_039",
+                      "store": "condition_39"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_39"
+                      },
+                      "then": [
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_hammer_040"
+                        },
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_hammer_041"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_name_tape_measure_042",
+                      "store": "condition_42"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_42"
+                      },
+                      "then": [
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_tape_measure_043"
+                        },
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_tape_measure_044"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_045"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_046"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_047"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_048"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_049"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_050"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_name_hammer_051",
+                      "store": "condition_51"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_51"
+                      },
+                      "then": [
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_hammer_052"
+                        },
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_hammer_053"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_name_tape_measure_054",
+                      "store": "condition_54"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_54"
+                      },
+                      "then": [
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_tape_measure_055"
+                        },
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_tape_measure_056"
+                        },
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_tape_measure_057"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_058"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_name_wrench_059",
+                      "store": "condition_59"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_59"
+                      },
+                      "then": [
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_wrench_060"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_061"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_062"
+                    },
+                    {
+                      "call": "support_choose_contact"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_063"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_064"
+                    },
+                    {
+                      "call": "support_record_contact"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_name_wrench_065",
+                      "store": "condition_65"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_65"
+                      },
+                      "then": [
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_wrench_066"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_067"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_068"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_069"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_070"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_071"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_072"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_name_wrench_073",
+                      "store": "condition_73"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_73"
+                      },
+                      "then": [
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_wrench_074"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_name_wrench_and_grasp_error_float_wrench_option__075",
+                      "store": "condition_75"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_75"
+                      },
+                      "then": [
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_wrench_and_grasp_error_float_wrench_option__076"
+                        },
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_wrench_and_grasp_error_float_wrench_option__077"
+                        },
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_wrench_and_grasp_error_float_wrench_option__078"
+                        },
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_wrench_and_grasp_error_float_wrench_option__079"
+                        },
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_wrench_and_grasp_error_float_wrench_option__080"
+                        },
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_wrench_and_grasp_error_float_wrench_option__081"
+                        },
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_wrench_and_grasp_error_float_wrench_option__082"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_grasp_error_0_006_083",
+                      "store": "condition_83"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_83"
+                      },
+                      "then": [
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_grasp_error_0_006_084"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_085"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_name_wrench_086",
+                      "store": "condition_86"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_86"
+                      },
+                      "then": [
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_wrench_087"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_088"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_089"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_name_wrench_090",
+                      "store": "condition_90"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_90"
+                      },
+                      "then": [
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_wrench_091"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_name_wrench_and_wrench_option_wrench_rgb_retry_0_092",
+                      "store": "condition_92"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_92"
+                      },
+                      "then": [
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_wrench_and_wrench_option_wrench_rgb_retry_0_093"
+                        },
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_094",
+                          "store": "condition_94"
+                        },
+                        {
+                          "if": {
+                            "var": "condition_94"
+                          },
+                          "then": [
+                            {
+                              "call": "U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_095"
+                            },
+                            {
+                              "call": "U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_096"
+                            },
+                            {
+                              "call": "U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_097"
+                            },
+                            {
+                              "call": "U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_098"
+                            },
+                            {
+                              "call": "U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_099"
+                            },
+                            {
+                              "call": "U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_100"
+                            },
+                            {
+                              "call": "U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_101"
+                            },
+                            {
+                              "call": "U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_102"
+                            },
+                            {
+                              "call": "U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_103"
+                            },
+                            {
+                              "call": "U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_104"
+                            },
+                            {
+                              "call": "U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_105"
+                            },
+                            {
+                              "call": "U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_106"
+                            },
+                            {
+                              "call": "U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_107"
+                            },
+                            {
+                              "call": "U04_VisionStoreToolsTeacher_run_np_max_np_abs_widths_0_002_108"
+                            }
+                          ],
+                          "else": []
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_109"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_parameters_get_tools_stage_name_lift_110",
+                      "store": "condition_110"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_110"
+                      },
+                      "then": [
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_parameters_get_tools_stage_name_lift_111"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_name_wrench_112",
+                      "store": "condition_112"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_112"
+                      },
+                      "then": [
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_wrench_113"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_name_wrench_and_rim_profile_or_normal_profile_or_114",
+                      "store": "condition_114"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_114"
+                      },
+                      "then": [
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_wrench_and_rim_profile_or_normal_profile_or_115"
+                        },
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_self_events_1_get_grasp_recovery_116",
+                          "store": "condition_116"
+                        },
+                        {
+                          "if": {
+                            "var": "condition_116"
+                          },
+                          "then": [
+                            {
+                              "call": "U04_VisionStoreToolsTeacher_run_enumerate_roll_pitch_yaw_117",
+                              "store": "items_117"
+                            },
+                            {
+                              "for_each": {
+                                "var": "items_117"
+                              },
+                              "as": "loop_item_118",
+                              "max_items": 4096,
+                              "do": [
+                                {
+                                  "call": "U04_VisionStoreToolsTeacher_run_self_events_1_get_grasp_recovery_118",
+                                  "args": {
+                                    "__workflow_item": {
+                                      "var": "loop_item_118"
+                                    }
+                                  }
+                                },
+                                {
+                                  "call": "U04_VisionStoreToolsTeacher_run_self_events_1_get_grasp_recovery_119"
+                                }
+                              ]
+                            }
+                          ],
+                          "else": []
+                        },
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_wrench_and_rim_profile_or_normal_profile_or_120"
+                        },
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_wrench_and_rim_profile_or_normal_profile_or_121"
+                        },
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_wrench_and_rim_profile_or_normal_profile_or_122"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_123"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_124"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_125"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_name_tape_measure_126",
+                      "store": "condition_126"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_126"
+                      },
+                      "then": [
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_tape_measure_127"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_128"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_rotate_wrench_at_dest_129",
+                      "store": "condition_129"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_129"
+                      },
+                      "then": [
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_rotate_wrench_at_dest_130"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_name_wrench_and_wrench_option_wrench_descend_ali_131",
+                      "store": "condition_131"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_131"
+                      },
+                      "then": [
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_wrench_and_wrench_option_wrench_descend_ali_132"
+                        }
+                      ],
+                      "else": [
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_baseline_rear_profile_and_wrench_baseline_rear_d_133",
+                          "store": "condition_133"
+                        },
+                        {
+                          "if": {
+                            "var": "condition_133"
+                          },
+                          "then": [
+                            {
+                              "call": "U04_VisionStoreToolsTeacher_run_baseline_rear_profile_and_wrench_baseline_rear_d_134"
+                            },
+                            {
+                              "call": "U04_VisionStoreToolsTeacher_run_baseline_rear_profile_and_wrench_baseline_rear_d_135"
+                            }
+                          ],
+                          "else": []
+                        }
+                      ]
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_136"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_name_wrench_and_self_events_1_get_grasp_recovery_137",
+                      "store": "condition_137"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_137"
+                      },
+                      "then": [
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_wrench_and_self_events_1_get_grasp_recovery_138"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_139"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_140"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_name_wrench_and_self_events_1_get_grasp_recovery_141",
+                      "store": "condition_141"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_141"
+                      },
+                      "then": [
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_wrench_and_self_events_1_get_grasp_recovery_142"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_143"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_name_hammer_144",
+                      "store": "condition_144"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_144"
+                      },
+                      "then": [
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_hammer_145"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_release_mode_gradual_146",
+                      "store": "condition_146"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_146"
+                      },
+                      "then": [
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_np_linspace_0_1_1_0_10_147",
+                          "store": "items_147"
+                        },
+                        {
+                          "for_each": {
+                            "var": "items_147"
+                          },
+                          "as": "loop_item_148",
+                          "max_items": 4096,
+                          "do": [
+                            {
+                              "call": "U04_VisionStoreToolsTeacher_run_release_mode_gradual_148",
+                              "args": {
+                                "__workflow_item": {
+                                  "var": "loop_item_148"
+                                }
+                              }
+                            },
+                            {
+                              "call": "U04_VisionStoreToolsTeacher_run_release_mode_gradual_149"
+                            }
+                          ]
+                        },
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_release_mode_gradual_150"
+                        }
+                      ],
+                      "else": [
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_release_mode_staged_clear_151",
+                          "store": "condition_151"
+                        },
+                        {
+                          "if": {
+                            "var": "condition_151"
+                          },
+                          "then": [
+                            {
+                              "call": "U04_VisionStoreToolsTeacher_run_release_mode_staged_clear_152"
+                            },
+                            {
+                              "call": "U04_VisionStoreToolsTeacher_run_range_4_153",
+                              "store": "items_153"
+                            },
+                            {
+                              "for_each": {
+                                "var": "items_153"
+                              },
+                              "as": "loop_item_154",
+                              "max_items": 4096,
+                              "do": [
+                                {
+                                  "call": "U04_VisionStoreToolsTeacher_run_release_mode_staged_clear_154",
+                                  "args": {
+                                    "__workflow_item": {
+                                      "var": "loop_item_154"
+                                    }
+                                  }
+                                },
+                                {
+                                  "call": "U04_VisionStoreToolsTeacher_run_release_mode_staged_clear_155"
+                                },
+                                {
+                                  "call": "U04_VisionStoreToolsTeacher_run_np_min_np_abs_widths_0_038_156",
+                                  "store": "condition_156"
+                                },
+                                {
+                                  "if": {
+                                    "var": "condition_156"
+                                  },
+                                  "then": [
+                                    {
+                                      "break": true
+                                    }
+                                  ],
+                                  "else": []
+                                },
+                                {
+                                  "call": "U04_VisionStoreToolsTeacher_run_release_mode_staged_clear_157"
+                                },
+                                {
+                                  "call": "U04_VisionStoreToolsTeacher_run_release_mode_staged_clear_158"
+                                },
+                                {
+                                  "call": "U04_VisionStoreToolsTeacher_run_release_mode_staged_clear_159"
+                                },
+                                {
+                                  "call": "U04_VisionStoreToolsTeacher_run_release_mode_staged_clear_160"
+                                }
+                              ]
+                            },
+                            {
+                              "call": "U04_VisionStoreToolsTeacher_run_release_mode_staged_clear_161"
+                            }
+                          ],
+                          "else": [
+                            {
+                              "call": "U04_VisionStoreToolsTeacher_run_release_mode_partial_retreat_162",
+                              "store": "condition_162"
+                            },
+                            {
+                              "if": {
+                                "var": "condition_162"
+                              },
+                              "then": [
+                                {
+                                  "call": "U04_VisionStoreToolsTeacher_run_release_mode_partial_retreat_163"
+                                },
+                                {
+                                  "call": "U04_VisionStoreToolsTeacher_run_release_mode_partial_retreat_164"
+                                },
+                                {
+                                  "call": "U04_VisionStoreToolsTeacher_run_release_mode_partial_retreat_165"
+                                },
+                                {
+                                  "call": "U04_VisionStoreToolsTeacher_run_release_mode_partial_retreat_166"
+                                }
+                              ],
+                              "else": [
+                                {
+                                  "call": "U04_VisionStoreToolsTeacher_run_release_mode_retreat_167",
+                                  "store": "condition_167"
+                                },
+                                {
+                                  "if": {
+                                    "var": "condition_167"
+                                  },
+                                  "then": [
+                                    {
+                                      "call": "U04_VisionStoreToolsTeacher_run_release_mode_retreat_168"
+                                    },
+                                    {
+                                      "call": "U04_VisionStoreToolsTeacher_run_release_mode_retreat_169"
+                                    }
+                                  ],
+                                  "else": [
+                                    {
+                                      "call": "U04_VisionStoreToolsTeacher_run_motion_170"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_171"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_172"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_vertical_seat_173",
+                      "store": "condition_173"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_173"
+                      },
+                      "then": [
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_vertical_seat_174"
+                        },
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_vertical_seat_175"
+                        },
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_vertical_seat_176"
+                        },
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_vertical_seat_177"
+                        },
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_vertical_seat_178"
+                        },
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_vertical_seat_179"
+                        },
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_vertical_seat_180"
+                        },
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_vertical_seat_181"
+                        },
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_vertical_seat_182"
+                        },
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_vertical_seat_183"
+                        },
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_press_option_name_upper_press_keep_retract_attit_184",
+                          "store": "condition_184"
+                        },
+                        {
+                          "if": {
+                            "var": "condition_184"
+                          },
+                          "then": [
+                            {
+                              "call": "U04_VisionStoreToolsTeacher_run_press_option_name_upper_press_keep_retract_attit_185"
+                            }
+                          ],
+                          "else": []
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_name_hammer_and_not_vertical_seat_and_hammer_opt_186",
+                      "store": "condition_186"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_186"
+                      },
+                      "then": [
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_hammer_and_not_vertical_seat_and_hammer_opt_187"
+                        },
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_hammer_and_not_vertical_seat_and_hammer_opt_188"
+                        },
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_name_hammer_and_not_vertical_seat_and_hammer_opt_189"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_190"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_parameters_get_tools_only_or_name_hammer_191",
+                      "store": "condition_191"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_191"
+                      },
+                      "then": [
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_parameters_get_tools_only_or_name_hammer_192"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_motion_193"
+                    },
+                    {
+                      "call": "U04_VisionStoreToolsTeacher_run_parameters_get_tools_stage_name_194",
+                      "store": "condition_194"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_194"
+                      },
+                      "then": [
+                        {
+                          "call": "U04_VisionStoreToolsTeacher_run_parameters_get_tools_stage_name_195"
+                        }
+                      ],
+                      "else": []
+                    }
+                  ],
+                  "catch": [
+                    {
+                      "errors": [
+                        "RuleControlError"
+                      ],
+                      "as": "tool_error",
+                      "do": [
+                        {
+                          "call": "failure_select_tool_stop",
+                          "store": "expected_tool_stop",
+                          "args": {
+                            "error": {
+                              "var": "tool_error"
+                            }
+                          }
+                        },
+                        {
+                          "if": {
+                            "var": "expected_tool_stop"
+                          },
+                          "then": [
+                            {
+                              "call": "failure_finish_current_tool",
+                              "args": {
+                                "error": {
+                                  "var": "tool_error"
+                                }
+                              }
+                            }
+                          ],
+                          "else": [
+                            {
+                              "call": "failure_raise_tool_error",
+                              "args": {
+                                "error": {
+                                  "var": "tool_error"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "call": "U04_VisionStoreToolsTeacher_run_motion_196"
+            },
+            {
+              "call": "U04_VisionStoreToolsTeacher_run_motion_197",
+              "args": {
+                "phase_0": "return_home"
+              }
+            },
+            {
+              "call": "U04_VisionStoreToolsTeacher_run_motion_198",
+              "args": {
+                "phase_0": "settle"
+              }
+            },
+            {
+              "call": "U04_VisionStoreToolsTeacher_run_motion_199"
+            },
+            {
+              "call": "U04_VisionStoreToolsTeacher_run_motion_200",
+              "store": "result_200"
+            },
+            {
+              "return": {
+                "var": "result_200"
+              }
+            }
+          ],
+          "catch": [
+            {
+              "errors": [
+                "RuleControlError"
+              ],
+              "as": "program_error",
+              "do": [
+                {
+                  "call": "failure_select_program_stop",
+                  "store": "expected_program_stop",
+                  "args": {
+                    "error": {
+                      "var": "program_error"
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "var": "expected_program_stop"
+                  },
+                  "then": [
+                    {
+                      "call": "failure_finish_program",
+                      "args": {
+                        "error": {
+                          "var": "program_error"
+                        }
+                      }
+                    },
+                    {
+                      "call": "failure_finish_result",
+                      "store": "normal_finish"
+                    },
+                    {
+                      "return": {
+                        "var": "normal_finish"
+                      }
+                    }
+                  ],
+                  "else": [
+                    {
+                      "call": "failure_raise_program_error",
+                      "args": {
+                        "error": {
+                          "var": "program_error"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

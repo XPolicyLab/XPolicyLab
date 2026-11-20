@@ -1,0 +1,6 @@
+{
+  "task": "imitate_sorting_sequence",
+  "entry": "entry.py",
+  "backend": "rule",
+  "runtime_config": "configs/official-rule-evaluation.json"
+}

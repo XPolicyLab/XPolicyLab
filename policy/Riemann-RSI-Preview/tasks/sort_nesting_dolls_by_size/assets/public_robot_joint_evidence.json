@@ -1,0 +1,82 @@
+{
+  "schema": "public-USD-authored-joint-evidence-v1",
+  "source_asset": "public_robot_usd",
+  "source_sha256": "5723a835bf5627a935a8dabb3a44447725bd1465243ce791e221b3e990121d63",
+  "evidence": [
+    {
+      "name": "joint1",
+      "prim_path": "/X5A/joints/joint1",
+      "authored_degrees": [
+        -572.957763671875,
+        572.957763671875
+      ],
+      "float32_radians": [
+        -9.999999046325684,
+        9.999999046325684
+      ]
+    },
+    {
+      "name": "joint2",
+      "prim_path": "/X5A/joints/joint2",
+      "authored_degrees": [
+        -572.957763671875,
+        572.957763671875
+      ],
+      "float32_radians": [
+        -9.999999046325684,
+        9.999999046325684
+      ]
+    },
+    {
+      "name": "joint3",
+      "prim_path": "/X5A/joints/joint3",
+      "authored_degrees": [
+        -572.957763671875,
+        572.957763671875
+      ],
+      "float32_radians": [
+        -9.999999046325684,
+        9.999999046325684
+      ]
+    },
+    {
+      "name": "joint4",
+      "prim_path": "/X5A/joints/joint4",
+      "authored_degrees": [
+        -572.957763671875,
+        572.957763671875
+      ],
+      "float32_radians": [
+        -9.999999046325684,
+        9.999999046325684
+      ]
+    },
+    {
+      "name": "joint5",
+      "prim_path": "/X5A/joints/joint5",
+      "authored_degrees": [
+        -572.957763671875,
+        572.957763671875
+      ],
+      "float32_radians": [
+        -9.999999046325684,
+        9.999999046325684
+      ]
+    },
+    {
+      "name": "joint6",
+      "prim_path": "/X5A/joints/joint6",
+      "authored_degrees": [
+        -179.9087371826172,
+        179.9087371826172
+      ],
+      "float32_radians": [
+        -3.1399998664855957,
+        3.1399998664855957
+      ]
+    }
+  ],
+  "original_reader_AST_sha256": "894a3da60344a55d6262a61b97cef5cbb82189d83fdd0d1dacacacbfc0985a68",
+  "extractor_sha256": "4b858527e690d40f1085ef4485b910a42ead7a04dcc48988a27c6bf7c4ea61c0",
+  "runtime_scene_or_observation_included": false
+}

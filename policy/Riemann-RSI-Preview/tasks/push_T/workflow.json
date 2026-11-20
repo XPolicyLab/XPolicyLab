@@ -1,0 +1,1459 @@
+{
+  "schema": "riemann-mature-teacher-programs-v1",
+  "package": "tasks.push_T",
+  "task": "push_T",
+  "official_action_horizon": 600,
+  "mode": "rule_only",
+  "wam_reselection": false,
+  "programs": {
+    "U51_PushTTeacher_retreat_feasible": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 600,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U51_PushTTeacher_retreat_feasible_motion_001": "skills.motion.implementation:U51_PushTTeacher_retreat_feasible_motion_001",
+        "U51_PushTTeacher_retreat_feasible_motion_002": "skills.motion.implementation:U51_PushTTeacher_retreat_feasible_motion_002",
+        "U51_PushTTeacher_retreat_feasible_exact_is_none_or_np_max_np_abs_exact_reference_s_003": "skills.motion.implementation:U51_PushTTeacher_retreat_feasible_exact_is_none_or_np_max_np_abs_exact_reference_s_003",
+        "U51_PushTTeacher_retreat_feasible_exact_is_none_or_np_max_np_abs_exact_reference_s_004": "skills.motion.implementation:U51_PushTTeacher_retreat_feasible_exact_is_none_or_np_max_np_abs_exact_reference_s_004",
+        "U51_PushTTeacher_retreat_feasible_motion_005": "skills.motion.implementation:U51_PushTTeacher_retreat_feasible_motion_005",
+        "U51_PushTTeacher_retreat_feasible_range_5_006": "skills.motion.implementation:U51_PushTTeacher_retreat_feasible_range_5_006",
+        "U51_PushTTeacher_retreat_feasible_motion_007": "skills.motion.implementation:U51_PushTTeacher_retreat_feasible_motion_007",
+        "U51_PushTTeacher_retreat_feasible_motion_008": "skills.motion.implementation:U51_PushTTeacher_retreat_feasible_motion_008",
+        "U51_PushTTeacher_retreat_feasible_following_is_none_or_np_max_np_abs_following_ref_009": "skills.motion.implementation:U51_PushTTeacher_retreat_feasible_following_is_none_or_np_max_np_abs_following_ref_009",
+        "U51_PushTTeacher_retreat_feasible_following_is_none_or_np_max_np_abs_following_ref_010": "skills.motion.implementation:U51_PushTTeacher_retreat_feasible_following_is_none_or_np_max_np_abs_following_ref_010",
+        "U51_PushTTeacher_retreat_feasible_motion_011": "skills.motion.implementation:U51_PushTTeacher_retreat_feasible_motion_011",
+        "U51_PushTTeacher_retreat_feasible_motion_012": "skills.motion.implementation:U51_PushTTeacher_retreat_feasible_motion_012"
+      },
+      "errors": {},
+      "steps": [
+        {
+          "call": "U51_PushTTeacher_retreat_feasible_motion_001"
+        },
+        {
+          "call": "U51_PushTTeacher_retreat_feasible_motion_002"
+        },
+        {
+          "call": "U51_PushTTeacher_retreat_feasible_exact_is_none_or_np_max_np_abs_exact_reference_s_003",
+          "store": "condition_3"
+        },
+        {
+          "if": {
+            "var": "condition_3"
+          },
+          "then": [
+            {
+              "call": "U51_PushTTeacher_retreat_feasible_exact_is_none_or_np_max_np_abs_exact_reference_s_004",
+              "store": "result_4"
+            },
+            {
+              "return": {
+                "var": "result_4"
+              }
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U51_PushTTeacher_retreat_feasible_motion_005"
+        },
+        {
+          "call": "U51_PushTTeacher_retreat_feasible_range_5_006",
+          "store": "items_6"
+        },
+        {
+          "for_each": {
+            "var": "items_6"
+          },
+          "as": "loop_item_7",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U51_PushTTeacher_retreat_feasible_motion_007",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_7"
+                }
+              }
+            },
+            {
+              "call": "U51_PushTTeacher_retreat_feasible_motion_008"
+            },
+            {
+              "call": "U51_PushTTeacher_retreat_feasible_following_is_none_or_np_max_np_abs_following_ref_009",
+              "store": "condition_9"
+            },
+            {
+              "if": {
+                "var": "condition_9"
+              },
+              "then": [
+                {
+                  "call": "U51_PushTTeacher_retreat_feasible_following_is_none_or_np_max_np_abs_following_ref_010",
+                  "store": "result_10"
+                },
+                {
+                  "return": {
+                    "var": "result_10"
+                  }
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U51_PushTTeacher_retreat_feasible_motion_011"
+            }
+          ]
+        },
+        {
+          "call": "U51_PushTTeacher_retreat_feasible_motion_012",
+          "store": "result_12"
+        },
+        {
+          "return": {
+            "var": "result_12"
+          }
+        }
+      ]
+    },
+    "U51_PushTTeacher_select_contact": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 600,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U51_PushTTeacher_select_contact_motion_001": "skills.motion.implementation:U51_PushTTeacher_select_contact_motion_001",
+        "U51_PushTTeacher_select_contact_motion_002": "skills.motion.implementation:U51_PushTTeacher_select_contact_motion_002",
+        "U51_PushTTeacher_select_contact_self_robots_003": "skills.motion.implementation:U51_PushTTeacher_select_contact_self_robots_003",
+        "U51_PushTTeacher_select_contact_motion_004": "skills.motion.implementation:U51_PushTTeacher_select_contact_motion_004",
+        "U51_PushTTeacher_select_contact_motion_005": "skills.motion.implementation:U51_PushTTeacher_select_contact_motion_005",
+        "U51_PushTTeacher_select_contact_motion_006": "skills.motion.implementation:U51_PushTTeacher_select_contact_motion_006",
+        "U51_PushTTeacher_select_contact_motion_007": "skills.motion.implementation:U51_PushTTeacher_select_contact_motion_007",
+        "U51_PushTTeacher_select_contact_motion_008": "skills.motion.implementation:U51_PushTTeacher_select_contact_motion_008",
+        "U51_PushTTeacher_select_contact_motion_009": "skills.motion.implementation:U51_PushTTeacher_select_contact_motion_009",
+        "U51_PushTTeacher_select_contact_motion_010": "skills.motion.implementation:U51_PushTTeacher_select_contact_motion_010",
+        "U51_PushTTeacher_select_contact_motion_011": "skills.motion.implementation:U51_PushTTeacher_select_contact_motion_011",
+        "U51_PushTTeacher_select_contact_motion_012": "skills.motion.implementation:U51_PushTTeacher_select_contact_motion_012",
+        "U51_PushTTeacher_select_contact_motion_013": "skills.motion.implementation:U51_PushTTeacher_select_contact_motion_013",
+        "U51_PushTTeacher_select_contact_motion_014": "skills.motion.implementation:U51_PushTTeacher_select_contact_motion_014",
+        "U51_PushTTeacher_select_contact_motion_015": "skills.motion.implementation:U51_PushTTeacher_select_contact_motion_015",
+        "U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_016": "skills.motion.implementation:U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_016",
+        "U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_017": "skills.motion.implementation:U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_017",
+        "U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_018": "skills.motion.implementation:U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_018",
+        "U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_019": "skills.motion.implementation:U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_019",
+        "U51_PushTTeacher_select_contact_range_80_020": "skills.motion.implementation:U51_PushTTeacher_select_contact_range_80_020",
+        "U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_021": "skills.motion.implementation:U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_021",
+        "U51_PushTTeacher_select_contact_u74_pose_errors_probe_destination_xy_m_0_001_and_022": "skills.insertion.implementation:U51_PushTTeacher_select_contact_u74_pose_errors_probe_destination_xy_m_0_001_and_022",
+        "U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_023": "skills.motion.implementation:U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_023",
+        "U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_024": "skills.motion.implementation:U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_024",
+        "U51_PushTTeacher_select_contact_next_q_is_none_or_np_max_np_abs_next_q_reference_025": "skills.motion.implementation:U51_PushTTeacher_select_contact_next_q_is_none_or_np_max_np_abs_next_q_reference_025",
+        "U51_PushTTeacher_select_contact_next_q_is_none_or_np_max_np_abs_next_q_reference_026": "skills.motion.implementation:U51_PushTTeacher_select_contact_next_q_is_none_or_np_max_np_abs_next_q_reference_026",
+        "U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_027": "skills.motion.implementation:U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_027",
+        "U51_PushTTeacher_select_contact_not_reachable_028": "skills.motion.implementation:U51_PushTTeacher_select_contact_not_reachable_028",
+        "U51_PushTTeacher_select_contact_not_self_retreat_feasible_arm_target_reference_029": "skills.motion.implementation:U51_PushTTeacher_select_contact_not_self_retreat_feasible_arm_target_reference_029",
+        "U51_PushTTeacher_select_contact_margin_0_08_030": "skills.motion.implementation:U51_PushTTeacher_select_contact_margin_0_08_030",
+        "U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_031": "skills.motion.implementation:U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_031",
+        "U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_032": "skills.motion.implementation:U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_032",
+        "U51_PushTTeacher_select_contact_approach_plan_get_status_success_033": "skills.motion.implementation:U51_PushTTeacher_select_contact_approach_plan_get_status_success_033",
+        "U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_034": "skills.motion.implementation:U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_034",
+        "U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_035": "skills.motion.implementation:U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_035",
+        "U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_036": "skills.motion.implementation:U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_036",
+        "U51_PushTTeacher_select_contact_not_candidates_037": "skills.motion.implementation:U51_PushTTeacher_select_contact_not_candidates_037",
+        "U51_PushTTeacher_select_contact_not_candidates_038": "skills.motion.implementation:U51_PushTTeacher_select_contact_not_candidates_038",
+        "U51_PushTTeacher_select_contact_motion_039": "skills.motion.implementation:U51_PushTTeacher_select_contact_motion_039"
+      },
+      "errors": {},
+      "steps": [
+        {
+          "call": "U51_PushTTeacher_select_contact_motion_001"
+        },
+        {
+          "call": "U51_PushTTeacher_select_contact_motion_002"
+        },
+        {
+          "call": "U51_PushTTeacher_select_contact_self_robots_003",
+          "store": "items_3"
+        },
+        {
+          "for_each": {
+            "var": "items_3"
+          },
+          "as": "loop_item_4",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U51_PushTTeacher_select_contact_motion_004",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_4"
+                }
+              }
+            },
+            {
+              "call": "U51_PushTTeacher_select_contact_motion_005"
+            },
+            {
+              "call": "U51_PushTTeacher_select_contact_motion_006"
+            },
+            {
+              "for_each": [
+                1.0,
+                -1.0
+              ],
+              "as": "loop_item_7",
+              "max_items": 4096,
+              "do": [
+                {
+                  "call": "U51_PushTTeacher_select_contact_motion_007",
+                  "args": {
+                    "__workflow_item": {
+                      "var": "loop_item_7"
+                    }
+                  }
+                },
+                {
+                  "call": "U51_PushTTeacher_select_contact_motion_008"
+                },
+                {
+                  "call": "U51_PushTTeacher_select_contact_motion_009"
+                },
+                {
+                  "call": "U51_PushTTeacher_select_contact_motion_010"
+                },
+                {
+                  "call": "U51_PushTTeacher_select_contact_motion_011"
+                },
+                {
+                  "call": "U51_PushTTeacher_select_contact_motion_012"
+                },
+                {
+                  "call": "U51_PushTTeacher_select_contact_motion_013"
+                },
+                {
+                  "call": "U51_PushTTeacher_select_contact_motion_014"
+                },
+                {
+                  "call": "U51_PushTTeacher_select_contact_motion_015"
+                },
+                {
+                  "call": "U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_016",
+                  "store": "condition_16"
+                },
+                {
+                  "if": {
+                    "var": "condition_16"
+                  },
+                  "then": [
+                    {
+                      "call": "U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_017"
+                    },
+                    {
+                      "call": "U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_018"
+                    },
+                    {
+                      "call": "U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_019"
+                    },
+                    {
+                      "call": "U51_PushTTeacher_select_contact_range_80_020",
+                      "store": "items_20"
+                    },
+                    {
+                      "for_each": {
+                        "var": "items_20"
+                      },
+                      "as": "loop_item_21",
+                      "max_items": 4096,
+                      "do": [
+                        {
+                          "call": "U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_021",
+                          "args": {
+                            "__workflow_item": {
+                              "var": "loop_item_21"
+                            }
+                          }
+                        },
+                        {
+                          "call": "U51_PushTTeacher_select_contact_u74_pose_errors_probe_destination_xy_m_0_001_and_022",
+                          "store": "condition_22"
+                        },
+                        {
+                          "if": {
+                            "var": "condition_22"
+                          },
+                          "then": [
+                            {
+                              "break": true
+                            }
+                          ],
+                          "else": []
+                        },
+                        {
+                          "call": "U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_023"
+                        },
+                        {
+                          "call": "U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_024"
+                        },
+                        {
+                          "call": "U51_PushTTeacher_select_contact_next_q_is_none_or_np_max_np_abs_next_q_reference_025",
+                          "store": "condition_25"
+                        },
+                        {
+                          "if": {
+                            "var": "condition_25"
+                          },
+                          "then": [
+                            {
+                              "call": "U51_PushTTeacher_select_contact_next_q_is_none_or_np_max_np_abs_next_q_reference_026"
+                            },
+                            {
+                              "break": true
+                            }
+                          ],
+                          "else": []
+                        },
+                        {
+                          "call": "U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_027"
+                        }
+                      ]
+                    },
+                    {
+                      "call": "U51_PushTTeacher_select_contact_not_reachable_028",
+                      "store": "condition_28"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_28"
+                      },
+                      "then": [
+                        {
+                          "continue": true
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U51_PushTTeacher_select_contact_not_self_retreat_feasible_arm_target_reference_029",
+                      "store": "condition_29"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_29"
+                      },
+                      "then": [
+                        {
+                          "continue": true
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U51_PushTTeacher_select_contact_margin_0_08_030",
+                      "store": "condition_30"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_30"
+                      },
+                      "then": [
+                        {
+                          "continue": true
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_031"
+                    },
+                    {
+                      "call": "U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_032"
+                    },
+                    {
+                      "call": "U51_PushTTeacher_select_contact_approach_plan_get_status_success_033",
+                      "store": "condition_33"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_33"
+                      },
+                      "then": [
+                        {
+                          "continue": true
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_034"
+                    },
+                    {
+                      "call": "U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_035"
+                    },
+                    {
+                      "call": "U51_PushTTeacher_select_contact_low_q_is_not_none_and_high_q_is_not_none_036"
+                    }
+                  ],
+                  "else": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "call": "U51_PushTTeacher_select_contact_not_candidates_037",
+          "store": "condition_37"
+        },
+        {
+          "if": {
+            "var": "condition_37"
+          },
+          "then": [
+            {
+              "call": "U51_PushTTeacher_select_contact_not_candidates_038",
+              "store": "result_38"
+            },
+            {
+              "return": {
+                "var": "result_38"
+              }
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U51_PushTTeacher_select_contact_motion_039",
+          "store": "result_39"
+        },
+        {
+          "return": {
+            "var": "result_39"
+          }
+        }
+      ]
+    },
+    "U51_PushTTeacher_establish": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 600,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U51_PushTTeacher_establish_motion_001": "skills.motion.implementation:U51_PushTTeacher_establish_motion_001",
+        "U51_PushTTeacher_establish_motion_002": "skills.motion.implementation:U51_PushTTeacher_establish_motion_002",
+        "U51_PushTTeacher_establish_motion_003": "skills.motion.implementation:U51_PushTTeacher_establish_motion_003",
+        "U51_PushTTeacher_establish_plan_get_status_success_004": "skills.motion.implementation:U51_PushTTeacher_establish_plan_get_status_success_004",
+        "U51_PushTTeacher_establish_plan_get_status_success_005": "skills.motion.implementation:U51_PushTTeacher_establish_plan_get_status_success_005",
+        "U51_PushTTeacher_establish_motion_006": "skills.motion.implementation:U51_PushTTeacher_establish_motion_006",
+        "U51_PushTTeacher_establish_not_path_007": "skills.motion.implementation:U51_PushTTeacher_establish_not_path_007",
+        "U51_PushTTeacher_establish_not_path_008": "skills.motion.implementation:U51_PushTTeacher_establish_not_path_008",
+        "U51_PushTTeacher_establish_motion_009": "skills.motion.implementation:U51_PushTTeacher_establish_motion_009",
+        "U51_PushTTeacher_establish_motion_010": "skills.motion.implementation:U51_PushTTeacher_establish_motion_010",
+        "U51_PushTTeacher_establish_motion_011": "skills.motion.implementation:U51_PushTTeacher_establish_motion_011",
+        "U51_PushTTeacher_establish_motion_012": "skills.motion.implementation:U51_PushTTeacher_establish_motion_012",
+        "U51_PushTTeacher_establish_range_1_count_1_013": "skills.motion.implementation:U51_PushTTeacher_establish_range_1_count_1_013",
+        "U51_PushTTeacher_establish_motion_014": "skills.motion.implementation:U51_PushTTeacher_establish_motion_014",
+        "U51_PushTTeacher_establish_motion_015": "skills.motion.implementation:U51_PushTTeacher_establish_motion_015",
+        "U51_PushTTeacher_establish_motion_016": "skills.motion.implementation:U51_PushTTeacher_establish_motion_016",
+        "U51_PushTTeacher_establish_motion_017": "skills.motion.implementation:U51_PushTTeacher_establish_motion_017",
+        "U51_PushTTeacher_establish_np_max_np_abs_actual_q_low_q_0_25_018": "skills.motion.implementation:U51_PushTTeacher_establish_np_max_np_abs_actual_q_low_q_0_25_018",
+        "U51_PushTTeacher_establish_np_max_np_abs_actual_q_low_q_0_25_019": "skills.motion.implementation:U51_PushTTeacher_establish_np_max_np_abs_actual_q_low_q_0_25_019",
+        "U51_PushTTeacher_establish_motion_020": "skills.motion.implementation:U51_PushTTeacher_establish_motion_020",
+        "U51_PushTTeacher_establish_motion_021": "skills.motion.implementation:U51_PushTTeacher_establish_motion_021",
+        "U51_PushTTeacher_establish_motion_022": "skills.motion.implementation:U51_PushTTeacher_establish_motion_022"
+      },
+      "errors": {},
+      "steps": [
+        {
+          "call": "U51_PushTTeacher_establish_motion_001"
+        },
+        {
+          "call": "U51_PushTTeacher_establish_motion_002"
+        },
+        {
+          "call": "U51_PushTTeacher_establish_motion_003"
+        },
+        {
+          "call": "U51_PushTTeacher_establish_plan_get_status_success_004",
+          "store": "condition_4"
+        },
+        {
+          "if": {
+            "var": "condition_4"
+          },
+          "then": [
+            {
+              "call": "U51_PushTTeacher_establish_plan_get_status_success_005"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U51_PushTTeacher_establish_motion_006"
+        },
+        {
+          "call": "U51_PushTTeacher_establish_not_path_007",
+          "store": "condition_7"
+        },
+        {
+          "if": {
+            "var": "condition_7"
+          },
+          "then": [
+            {
+              "call": "U51_PushTTeacher_establish_not_path_008"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U51_PushTTeacher_establish_motion_009",
+          "args": {
+            "phase_0": "contact_approach"
+          }
+        },
+        {
+          "call": "U51_PushTTeacher_establish_motion_010"
+        },
+        {
+          "call": "U51_PushTTeacher_establish_motion_011"
+        },
+        {
+          "call": "U51_PushTTeacher_establish_motion_012"
+        },
+        {
+          "call": "U51_PushTTeacher_establish_range_1_count_1_013",
+          "store": "items_13"
+        },
+        {
+          "for_each": {
+            "var": "items_13"
+          },
+          "as": "loop_item_14",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U51_PushTTeacher_establish_motion_014",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_14"
+                }
+              }
+            },
+            {
+              "call": "U51_PushTTeacher_establish_motion_015"
+            },
+            {
+              "call": "U51_PushTTeacher_establish_motion_016"
+            }
+          ]
+        },
+        {
+          "call": "U51_PushTTeacher_establish_motion_017"
+        },
+        {
+          "call": "U51_PushTTeacher_establish_np_max_np_abs_actual_q_low_q_0_25_018",
+          "store": "condition_18"
+        },
+        {
+          "if": {
+            "var": "condition_18"
+          },
+          "then": [
+            {
+              "call": "U51_PushTTeacher_establish_np_max_np_abs_actual_q_low_q_0_25_019"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U51_PushTTeacher_establish_motion_020"
+        },
+        {
+          "call": "U51_PushTTeacher_establish_motion_021"
+        },
+        {
+          "call": "U51_PushTTeacher_establish_motion_022"
+        }
+      ]
+    },
+    "U51_PushTTeacher_release_home": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 600,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U51_PushTTeacher_release_home_motion_001": "skills.motion.implementation:U51_PushTTeacher_release_home_motion_001",
+        "U51_PushTTeacher_release_home_motion_002": "skills.motion.implementation:U51_PushTTeacher_release_home_motion_002",
+        "U51_PushTTeacher_release_home_motion_003": "skills.motion.implementation:U51_PushTTeacher_release_home_motion_003",
+        "U51_PushTTeacher_release_home_range_5_004": "skills.motion.implementation:U51_PushTTeacher_release_home_range_5_004",
+        "U51_PushTTeacher_release_home_motion_005": "skills.motion.implementation:U51_PushTTeacher_release_home_motion_005",
+        "U51_PushTTeacher_release_home_motion_006": "skills.motion.implementation:U51_PushTTeacher_release_home_motion_006",
+        "U51_PushTTeacher_release_home_motion_007": "skills.motion.implementation:U51_PushTTeacher_release_home_motion_007",
+        "U51_PushTTeacher_release_home_motion_008": "skills.motion.implementation:U51_PushTTeacher_release_home_motion_008",
+        "U51_PushTTeacher_release_home_motion_009": "skills.motion.implementation:U51_PushTTeacher_release_home_motion_009"
+      },
+      "errors": {},
+      "steps": [
+        {
+          "call": "U51_PushTTeacher_release_home_motion_001"
+        },
+        {
+          "call": "U51_PushTTeacher_release_home_motion_002"
+        },
+        {
+          "call": "U51_PushTTeacher_release_home_motion_003"
+        },
+        {
+          "call": "U51_PushTTeacher_release_home_range_5_004",
+          "store": "items_4"
+        },
+        {
+          "for_each": {
+            "var": "items_4"
+          },
+          "as": "loop_item_5",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U51_PushTTeacher_release_home_motion_005",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_5"
+                }
+              }
+            },
+            {
+              "call": "U51_PushTTeacher_release_home_motion_006"
+            },
+            {
+              "call": "U51_PushTTeacher_release_home_motion_007"
+            }
+          ]
+        },
+        {
+          "call": "U51_PushTTeacher_release_home_motion_008"
+        },
+        {
+          "call": "U51_PushTTeacher_release_home_motion_009"
+        }
+      ]
+    },
+    "U51_PushTTeacher_slide": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 600,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U51_PushTTeacher_slide_motion_001": "skills.motion.implementation:U51_PushTTeacher_slide_motion_001",
+        "U51_PushTTeacher_slide_range_self_args_max_contact_updates_002": "skills.motion.implementation:U51_PushTTeacher_slide_range_self_args_max_contact_updates_002",
+        "U51_PushTTeacher_slide_motion_003": "skills.motion.implementation:U51_PushTTeacher_slide_motion_003",
+        "U51_PushTTeacher_slide_motion_004": "skills.motion.implementation:U51_PushTTeacher_slide_motion_004",
+        "U51_PushTTeacher_slide_motion_005": "skills.motion.implementation:U51_PushTTeacher_slide_motion_005",
+        "U51_PushTTeacher_slide_np_linalg_norm_delta_self_args_position_toleranc_006": "skills.insertion.implementation:U51_PushTTeacher_slide_np_linalg_norm_delta_self_args_position_toleranc_006",
+        "U51_PushTTeacher_slide_np_linalg_norm_delta_self_args_position_toleranc_007": "skills.insertion.implementation:U51_PushTTeacher_slide_np_linalg_norm_delta_self_args_position_toleranc_007",
+        "U51_PushTTeacher_slide_np_linalg_norm_delta_self_args_position_toleranc_008": "skills.insertion.implementation:U51_PushTTeacher_slide_np_linalg_norm_delta_self_args_position_toleranc_008",
+        "U51_PushTTeacher_slide_settled_xy_m_self_args_position_tolerance_and_se_009": "skills.insertion.implementation:U51_PushTTeacher_slide_settled_xy_m_self_args_position_tolerance_and_se_009",
+        "U51_PushTTeacher_slide_settled_xy_m_self_args_position_tolerance_and_se_010": "skills.insertion.implementation:U51_PushTTeacher_slide_settled_xy_m_self_args_position_tolerance_and_se_010",
+        "U51_PushTTeacher_slide_int_self_env_take_action_cnt_0_510_011": "skills.motion.implementation:U51_PushTTeacher_slide_int_self_env_take_action_cnt_0_510_011",
+        "U51_PushTTeacher_slide_int_self_env_take_action_cnt_0_510_012": "skills.motion.implementation:U51_PushTTeacher_slide_int_self_env_take_action_cnt_0_510_012",
+        "U51_PushTTeacher_slide_motion_013": "skills.motion.implementation:U51_PushTTeacher_slide_motion_013",
+        "U51_PushTTeacher_slide_motion_014": "skills.motion.implementation:U51_PushTTeacher_slide_motion_014",
+        "U51_PushTTeacher_slide_motion_015": "skills.motion.implementation:U51_PushTTeacher_slide_motion_015",
+        "U51_PushTTeacher_slide_motion_016": "skills.motion.implementation:U51_PushTTeacher_slide_motion_016",
+        "U51_PushTTeacher_slide_motion_017": "skills.motion.implementation:U51_PushTTeacher_slide_motion_017"
+      },
+      "errors": {},
+      "steps": [
+        {
+          "call": "U51_PushTTeacher_slide_motion_001"
+        },
+        {
+          "call": "U51_PushTTeacher_slide_range_self_args_max_contact_updates_002",
+          "store": "items_2"
+        },
+        {
+          "for_each": {
+            "var": "items_2"
+          },
+          "as": "loop_item_3",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U51_PushTTeacher_slide_motion_003",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_3"
+                }
+              }
+            },
+            {
+              "call": "U51_PushTTeacher_slide_motion_004"
+            },
+            {
+              "call": "U51_PushTTeacher_slide_motion_005"
+            },
+            {
+              "call": "U51_PushTTeacher_slide_np_linalg_norm_delta_self_args_position_toleranc_006",
+              "store": "condition_6"
+            },
+            {
+              "if": {
+                "var": "condition_6"
+              },
+              "then": [
+                {
+                  "call": "U51_PushTTeacher_slide_np_linalg_norm_delta_self_args_position_toleranc_007"
+                },
+                {
+                  "call": "U51_PushTTeacher_slide_np_linalg_norm_delta_self_args_position_toleranc_008"
+                },
+                {
+                  "call": "U51_PushTTeacher_slide_settled_xy_m_self_args_position_tolerance_and_se_009",
+                  "store": "condition_9"
+                },
+                {
+                  "if": {
+                    "var": "condition_9"
+                  },
+                  "then": [
+                    {
+                      "call": "U51_PushTTeacher_slide_settled_xy_m_self_args_position_tolerance_and_se_010",
+                      "store": "result_10"
+                    },
+                    {
+                      "return": {
+                        "var": "result_10"
+                      }
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "continue": true
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U51_PushTTeacher_slide_int_self_env_take_action_cnt_0_510_011",
+              "store": "condition_11"
+            },
+            {
+              "if": {
+                "var": "condition_11"
+              },
+              "then": [
+                {
+                  "call": "U51_PushTTeacher_slide_int_self_env_take_action_cnt_0_510_012"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U51_PushTTeacher_slide_motion_013"
+            },
+            {
+              "call": "U51_PushTTeacher_slide_motion_014"
+            },
+            {
+              "call": "U51_PushTTeacher_slide_motion_015"
+            },
+            {
+              "call": "U51_PushTTeacher_slide_motion_016"
+            }
+          ]
+        },
+        {
+          "call": "U51_PushTTeacher_slide_motion_017"
+        }
+      ]
+    },
+    "U51_PushTTeacher_run": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 600,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U51_PushTTeacher_run_motion_001": "skills.motion.implementation:U51_PushTTeacher_run_motion_001",
+        "U51_PushTTeacher_run_motion_002": "skills.motion.implementation:U51_PushTTeacher_run_motion_002",
+        "U51_PushTTeacher_run_selected_is_none_003": "skills.motion.implementation:U51_PushTTeacher_run_selected_is_none_003",
+        "U51_PushTTeacher_run_selected_is_none_004": "skills.motion.implementation:U51_PushTTeacher_run_selected_is_none_004",
+        "U51_PushTTeacher_run_selected_is_none_005": "skills.motion.implementation:U51_PushTTeacher_run_selected_is_none_005",
+        "U51_PushTTeacher_run_selected_is_none_006": "skills.motion.implementation:U51_PushTTeacher_run_selected_is_none_006",
+        "U51_PushTTeacher_run_selected_is_none_007": "skills.motion.implementation:U51_PushTTeacher_run_selected_is_none_007",
+        "U51_PushTTeacher_run_selected_is_none_008": "skills.motion.implementation:U51_PushTTeacher_run_selected_is_none_008",
+        "U51_PushTTeacher_run_selected_is_none_009": "skills.motion.implementation:U51_PushTTeacher_run_selected_is_none_009",
+        "U51_PushTTeacher_run_first_is_not_none_and_second_is_not_none_010": "skills.motion.implementation:U51_PushTTeacher_run_first_is_not_none_and_second_is_not_none_010",
+        "U51_PushTTeacher_run_first_is_not_none_and_second_is_not_none_011": "skills.motion.implementation:U51_PushTTeacher_run_first_is_not_none_and_second_is_not_none_011",
+        "U51_PushTTeacher_run_route_is_none_012": "skills.motion.implementation:U51_PushTTeacher_run_route_is_none_012",
+        "U51_PushTTeacher_run_route_is_none_013": "skills.motion.implementation:U51_PushTTeacher_run_route_is_none_013",
+        "U51_PushTTeacher_run_selected_is_none_014": "skills.motion.implementation:U51_PushTTeacher_run_selected_is_none_014",
+        "U51_PushTTeacher_run_selected_is_none_015": "skills.motion.implementation:U51_PushTTeacher_run_selected_is_none_015",
+        "U51_PushTTeacher_run_selected_is_none_016": "skills.motion.implementation:U51_PushTTeacher_run_selected_is_none_016",
+        "U51_PushTTeacher_run_selected_is_none_017": "skills.motion.implementation:U51_PushTTeacher_run_selected_is_none_017",
+        "U51_PushTTeacher_run_selected_is_none_018": "skills.motion.implementation:U51_PushTTeacher_run_selected_is_none_018",
+        "U51_PushTTeacher_run_selected_is_none_019": "skills.motion.implementation:U51_PushTTeacher_run_selected_is_none_019",
+        "U51_PushTTeacher_run_motion_020": "skills.motion.implementation:U51_PushTTeacher_run_motion_020",
+        "U51_PushTTeacher_run_motion_021": "skills.motion.implementation:U51_PushTTeacher_run_motion_021",
+        "U51_PushTTeacher_run_motion_022": "skills.motion.implementation:U51_PushTTeacher_run_motion_022",
+        "U51_PushTTeacher_run_motion_023": "skills.motion.implementation:U51_PushTTeacher_run_motion_023"
+      },
+      "errors": {},
+      "steps": [
+        {
+          "call": "U51_PushTTeacher_run_motion_001"
+        },
+        {
+          "call": "U51_PushTTeacher_run_motion_002"
+        },
+        {
+          "call": "U51_PushTTeacher_run_selected_is_none_003",
+          "store": "condition_3"
+        },
+        {
+          "if": {
+            "var": "condition_3"
+          },
+          "then": [
+            {
+              "call": "U51_PushTTeacher_run_selected_is_none_004"
+            },
+            {
+              "call": "U51_PushTTeacher_run_selected_is_none_005"
+            },
+            {
+              "for_each": [
+                0.5,
+                0.25,
+                0.75,
+                0.0,
+                1.0
+              ],
+              "as": "loop_item_6",
+              "max_items": 4096,
+              "do": [
+                {
+                  "call": "U51_PushTTeacher_run_selected_is_none_006",
+                  "args": {
+                    "__workflow_item": {
+                      "var": "loop_item_6"
+                    }
+                  }
+                },
+                {
+                  "call": "U51_PushTTeacher_run_selected_is_none_007"
+                },
+                {
+                  "call": "U51_PushTTeacher_run_selected_is_none_008"
+                },
+                {
+                  "call": "U51_PushTTeacher_run_selected_is_none_009"
+                },
+                {
+                  "call": "U51_PushTTeacher_run_first_is_not_none_and_second_is_not_none_010",
+                  "store": "condition_10"
+                },
+                {
+                  "if": {
+                    "var": "condition_10"
+                  },
+                  "then": [
+                    {
+                      "call": "U51_PushTTeacher_run_first_is_not_none_and_second_is_not_none_011"
+                    },
+                    {
+                      "break": true
+                    }
+                  ],
+                  "else": []
+                }
+              ]
+            },
+            {
+              "call": "U51_PushTTeacher_run_route_is_none_012",
+              "store": "condition_12"
+            },
+            {
+              "if": {
+                "var": "condition_12"
+              },
+              "then": [
+                {
+                  "call": "U51_PushTTeacher_run_route_is_none_013"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U51_PushTTeacher_run_selected_is_none_014"
+            },
+            {
+              "call": "U51_PushTTeacher_run_selected_is_none_015"
+            },
+            {
+              "call": "U51_PushTTeacher_run_selected_is_none_016"
+            },
+            {
+              "call": "U51_PushTTeacher_run_selected_is_none_017"
+            },
+            {
+              "call": "U51_PushTTeacher_run_selected_is_none_018",
+              "store": "condition_18"
+            },
+            {
+              "if": {
+                "var": "condition_18"
+              },
+              "then": [
+                {
+                  "call": "U51_PushTTeacher_run_selected_is_none_019"
+                }
+              ],
+              "else": []
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U51_PushTTeacher_run_motion_020"
+        },
+        {
+          "call": "U51_PushTTeacher_run_motion_021"
+        },
+        {
+          "call": "U51_PushTTeacher_run_motion_022"
+        },
+        {
+          "call": "U51_PushTTeacher_run_motion_023",
+          "store": "result_23"
+        },
+        {
+          "return": {
+            "var": "result_23"
+          }
+        }
+      ]
+    },
+    "U52_VisionPushTTeacher_refresh_vision": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 600,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U52_VisionPushTTeacher_refresh_vision_motion_001": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_motion_001",
+        "U52_VisionPushTTeacher_refresh_vision_len_frames_self_vision_frame_count_002": "skills.perception.implementation:U52_VisionPushTTeacher_refresh_vision_len_frames_self_vision_frame_count_002",
+        "U52_VisionPushTTeacher_refresh_vision_len_frames_self_vision_frame_count_003": "skills.perception.implementation:U52_VisionPushTTeacher_refresh_vision_len_frames_self_vision_frame_count_003",
+        "U52_VisionPushTTeacher_refresh_vision_motion_004": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_motion_004",
+        "U52_VisionPushTTeacher_refresh_vision_self_approach_anchor_is_not_none_and_self_contac_005": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_self_approach_anchor_is_not_none_and_self_contac_005",
+        "U52_VisionPushTTeacher_refresh_vision_self_approach_anchor_is_not_none_and_self_contac_006": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_self_approach_anchor_is_not_none_and_self_contac_006",
+        "U52_VisionPushTTeacher_refresh_vision_self_approach_anchor_is_not_none_and_self_contac_007": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_self_approach_anchor_is_not_none_and_self_contac_007",
+        "U52_VisionPushTTeacher_refresh_vision_self_approach_anchor_is_not_none_and_self_contac_008": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_self_approach_anchor_is_not_none_and_self_contac_008",
+        "U52_VisionPushTTeacher_refresh_vision_motion_009": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_motion_009",
+        "U52_VisionPushTTeacher_refresh_vision_predicted_is_not_none_and_self_wrist_camera_name_010": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_predicted_is_not_none_and_self_wrist_camera_name_010",
+        "U52_VisionPushTTeacher_refresh_vision_predicted_is_not_none_and_self_wrist_camera_name_011": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_predicted_is_not_none_and_self_wrist_camera_name_011",
+        "U52_VisionPushTTeacher_refresh_vision_wrist_frames_012": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_wrist_frames_012",
+        "U52_VisionPushTTeacher_refresh_vision_wrist_frames_013": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_wrist_frames_013",
+        "U52_VisionPushTTeacher_refresh_vision_isinstance_exc_u52_wristcontactslip_014": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_isinstance_exc_u52_wristcontactslip_014",
+        "U52_VisionPushTTeacher_refresh_vision_isinstance_exc_u52_wristcontactslip_015": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_isinstance_exc_u52_wristcontactslip_015",
+        "U52_VisionPushTTeacher_refresh_vision_wrist_frames_016": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_wrist_frames_016",
+        "U52_VisionPushTTeacher_refresh_vision_wrist_frames_017": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_wrist_frames_017",
+        "U52_VisionPushTTeacher_refresh_vision_wrist_frames_018": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_wrist_frames_018",
+        "U52_VisionPushTTeacher_refresh_vision_wrist_frames_019": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_wrist_frames_019",
+        "U52_VisionPushTTeacher_refresh_vision_wrist_frames_020": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_wrist_frames_020",
+        "U52_VisionPushTTeacher_refresh_vision_self_wrist_slip_count_2_021": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_self_wrist_slip_count_2_021",
+        "U52_VisionPushTTeacher_refresh_vision_self_wrist_slip_count_2_022": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_self_wrist_slip_count_2_022",
+        "U52_VisionPushTTeacher_refresh_vision_motion_023": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_motion_023",
+        "U52_VisionPushTTeacher_refresh_vision_predicted_is_not_none_024": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_predicted_is_not_none_024",
+        "U52_VisionPushTTeacher_refresh_vision_predicted_is_not_none_025": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_predicted_is_not_none_025",
+        "U52_VisionPushTTeacher_refresh_vision_predicted_is_not_none_026": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_predicted_is_not_none_026",
+        "U52_VisionPushTTeacher_refresh_vision_motion_027": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_motion_027",
+        "U52_VisionPushTTeacher_refresh_vision_motion_028": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_motion_028",
+        "U52_VisionPushTTeacher_refresh_vision_self_missing_frames_12_if_descending_else_3_029": "skills.pickup.implementation:U52_VisionPushTTeacher_refresh_vision_self_missing_frames_12_if_descending_else_3_029",
+        "U52_VisionPushTTeacher_refresh_vision_self_missing_frames_12_if_descending_else_3_030": "skills.pickup.implementation:U52_VisionPushTTeacher_refresh_vision_self_missing_frames_12_if_descending_else_3_030",
+        "U52_VisionPushTTeacher_refresh_vision_motion_031": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_motion_031",
+        "U52_VisionPushTTeacher_refresh_vision_motion_032": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_motion_032",
+        "U52_VisionPushTTeacher_refresh_vision_diagnostics_area_px_0_95_reset_area_033": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_diagnostics_area_px_0_95_reset_area_033",
+        "U52_VisionPushTTeacher_refresh_vision_diagnostics_area_px_0_95_reset_area_034": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_diagnostics_area_px_0_95_reset_area_034",
+        "U52_VisionPushTTeacher_refresh_vision_predicted_is_none_035": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_predicted_is_none_035",
+        "U52_VisionPushTTeacher_refresh_vision_predicted_is_none_036": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_predicted_is_none_036",
+        "U52_VisionPushTTeacher_refresh_vision_angle_step_35_0_037": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_angle_step_35_0_037",
+        "U52_VisionPushTTeacher_refresh_vision_angle_step_35_0_038": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_angle_step_35_0_038",
+        "U52_VisionPushTTeacher_refresh_vision_predicted_is_not_none_039": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_predicted_is_not_none_039",
+        "U52_VisionPushTTeacher_refresh_vision_predicted_is_not_none_040": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_predicted_is_not_none_040",
+        "U52_VisionPushTTeacher_refresh_vision_predicted_is_not_none_041": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_predicted_is_not_none_041",
+        "U52_VisionPushTTeacher_refresh_vision_predicted_is_not_none_042": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_predicted_is_not_none_042",
+        "U52_VisionPushTTeacher_refresh_vision_distance_max_distance_or_angle_max_angle_043": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_distance_max_distance_or_angle_max_angle_043",
+        "U52_VisionPushTTeacher_refresh_vision_distance_max_distance_or_angle_max_angle_044": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_distance_max_distance_or_angle_max_angle_044",
+        "U52_VisionPushTTeacher_refresh_vision_motion_045": "skills.motion.implementation:U52_VisionPushTTeacher_refresh_vision_motion_045"
+      },
+      "errors": {
+        "RuntimeError": "skills.state.implementation:RuntimeError"
+      },
+      "steps": [
+        {
+          "call": "U52_VisionPushTTeacher_refresh_vision_motion_001"
+        },
+        {
+          "call": "U52_VisionPushTTeacher_refresh_vision_len_frames_self_vision_frame_count_002",
+          "store": "condition_2"
+        },
+        {
+          "if": {
+            "var": "condition_2"
+          },
+          "then": [
+            {
+              "call": "U52_VisionPushTTeacher_refresh_vision_len_frames_self_vision_frame_count_003",
+              "store": "result_3"
+            },
+            {
+              "return": {
+                "var": "result_3"
+              }
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U52_VisionPushTTeacher_refresh_vision_motion_004"
+        },
+        {
+          "call": "U52_VisionPushTTeacher_refresh_vision_self_approach_anchor_is_not_none_and_self_contac_005",
+          "store": "condition_5"
+        },
+        {
+          "if": {
+            "var": "condition_5"
+          },
+          "then": [
+            {
+              "call": "U52_VisionPushTTeacher_refresh_vision_self_approach_anchor_is_not_none_and_self_contac_006"
+            },
+            {
+              "call": "U52_VisionPushTTeacher_refresh_vision_self_approach_anchor_is_not_none_and_self_contac_007"
+            },
+            {
+              "call": "U52_VisionPushTTeacher_refresh_vision_self_approach_anchor_is_not_none_and_self_contac_008",
+              "store": "result_8"
+            },
+            {
+              "return": {
+                "var": "result_8"
+              }
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U52_VisionPushTTeacher_refresh_vision_motion_009"
+        },
+        {
+          "call": "U52_VisionPushTTeacher_refresh_vision_predicted_is_not_none_and_self_wrist_camera_name_010",
+          "store": "condition_10"
+        },
+        {
+          "if": {
+            "var": "condition_10"
+          },
+          "then": [
+            {
+              "call": "U52_VisionPushTTeacher_refresh_vision_predicted_is_not_none_and_self_wrist_camera_name_011"
+            },
+            {
+              "call": "U52_VisionPushTTeacher_refresh_vision_wrist_frames_012",
+              "store": "condition_12"
+            },
+            {
+              "if": {
+                "var": "condition_12"
+              },
+              "then": [
+                {
+                  "try": [
+                    {
+                      "call": "U52_VisionPushTTeacher_refresh_vision_wrist_frames_018"
+                    },
+                    {
+                      "call": "U52_VisionPushTTeacher_refresh_vision_wrist_frames_019"
+                    },
+                    {
+                      "call": "U52_VisionPushTTeacher_refresh_vision_wrist_frames_020"
+                    },
+                    {
+                      "call": "U52_VisionPushTTeacher_refresh_vision_self_wrist_slip_count_2_021",
+                      "store": "condition_21"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_21"
+                      },
+                      "then": [
+                        {
+                          "call": "U52_VisionPushTTeacher_refresh_vision_self_wrist_slip_count_2_022"
+                        }
+                      ],
+                      "else": []
+                    }
+                  ],
+                  "catch": [
+                    {
+                      "errors": [
+                        "RuntimeError"
+                      ],
+                      "as": "caught_error",
+                      "do": [
+                        {
+                          "call": "U52_VisionPushTTeacher_refresh_vision_wrist_frames_013",
+                          "args": {
+                            "__workflow_error": {
+                              "var": "caught_error"
+                            }
+                          }
+                        },
+                        {
+                          "call": "U52_VisionPushTTeacher_refresh_vision_isinstance_exc_u52_wristcontactslip_014",
+                          "store": "condition_14"
+                        },
+                        {
+                          "if": {
+                            "var": "condition_14"
+                          },
+                          "then": [
+                            {
+                              "call": "U52_VisionPushTTeacher_refresh_vision_isinstance_exc_u52_wristcontactslip_015"
+                            }
+                          ],
+                          "else": []
+                        },
+                        {
+                          "call": "U52_VisionPushTTeacher_refresh_vision_wrist_frames_016"
+                        },
+                        {
+                          "call": "U52_VisionPushTTeacher_refresh_vision_wrist_frames_017"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "else": []
+            }
+          ],
+          "else": []
+        },
+        {
+          "try": [
+            {
+              "call": "U52_VisionPushTTeacher_refresh_vision_motion_031"
+            },
+            {
+              "call": "U52_VisionPushTTeacher_refresh_vision_motion_032"
+            },
+            {
+              "call": "U52_VisionPushTTeacher_refresh_vision_diagnostics_area_px_0_95_reset_area_033",
+              "store": "condition_33"
+            },
+            {
+              "if": {
+                "var": "condition_33"
+              },
+              "then": [
+                {
+                  "call": "U52_VisionPushTTeacher_refresh_vision_diagnostics_area_px_0_95_reset_area_034"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U52_VisionPushTTeacher_refresh_vision_predicted_is_none_035",
+              "store": "condition_35"
+            },
+            {
+              "if": {
+                "var": "condition_35"
+              },
+              "then": [
+                {
+                  "call": "U52_VisionPushTTeacher_refresh_vision_predicted_is_none_036"
+                },
+                {
+                  "call": "U52_VisionPushTTeacher_refresh_vision_angle_step_35_0_037",
+                  "store": "condition_37"
+                },
+                {
+                  "if": {
+                    "var": "condition_37"
+                  },
+                  "then": [
+                    {
+                      "call": "U52_VisionPushTTeacher_refresh_vision_angle_step_35_0_038"
+                    }
+                  ],
+                  "else": []
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U52_VisionPushTTeacher_refresh_vision_predicted_is_not_none_039",
+              "store": "condition_39"
+            },
+            {
+              "if": {
+                "var": "condition_39"
+              },
+              "then": [
+                {
+                  "call": "U52_VisionPushTTeacher_refresh_vision_predicted_is_not_none_040"
+                },
+                {
+                  "call": "U52_VisionPushTTeacher_refresh_vision_predicted_is_not_none_041"
+                },
+                {
+                  "call": "U52_VisionPushTTeacher_refresh_vision_predicted_is_not_none_042"
+                },
+                {
+                  "call": "U52_VisionPushTTeacher_refresh_vision_distance_max_distance_or_angle_max_angle_043",
+                  "store": "condition_43"
+                },
+                {
+                  "if": {
+                    "var": "condition_43"
+                  },
+                  "then": [
+                    {
+                      "call": "U52_VisionPushTTeacher_refresh_vision_distance_max_distance_or_angle_max_angle_044"
+                    }
+                  ],
+                  "else": []
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U52_VisionPushTTeacher_refresh_vision_motion_045"
+            }
+          ],
+          "catch": [
+            {
+              "errors": [
+                "RuntimeError"
+              ],
+              "as": "caught_error",
+              "do": [
+                {
+                  "call": "U52_VisionPushTTeacher_refresh_vision_motion_023",
+                  "args": {
+                    "__workflow_error": {
+                      "var": "caught_error"
+                    }
+                  }
+                },
+                {
+                  "call": "U52_VisionPushTTeacher_refresh_vision_predicted_is_not_none_024",
+                  "store": "condition_24"
+                },
+                {
+                  "if": {
+                    "var": "condition_24"
+                  },
+                  "then": [
+                    {
+                      "call": "U52_VisionPushTTeacher_refresh_vision_predicted_is_not_none_025"
+                    },
+                    {
+                      "call": "U52_VisionPushTTeacher_refresh_vision_predicted_is_not_none_026"
+                    }
+                  ],
+                  "else": [
+                    {
+                      "call": "U52_VisionPushTTeacher_refresh_vision_motion_027"
+                    },
+                    {
+                      "call": "U52_VisionPushTTeacher_refresh_vision_motion_028"
+                    },
+                    {
+                      "call": "U52_VisionPushTTeacher_refresh_vision_self_missing_frames_12_if_descending_else_3_029",
+                      "store": "condition_29"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_29"
+                      },
+                      "then": [
+                        {
+                          "call": "U52_VisionPushTTeacher_refresh_vision_self_missing_frames_12_if_descending_else_3_030"
+                        }
+                      ],
+                      "else": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "U52_VisionPushTTeacher_establish": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 600,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U52_VisionPushTTeacher_establish_motion_001": "skills.motion.implementation:U52_VisionPushTTeacher_establish_motion_001",
+        "U52_VisionPushTTeacher_establish_motion_002": "skills.motion.implementation:U52_VisionPushTTeacher_establish_motion_002",
+        "U52_VisionPushTTeacher_establish_motion_003": "skills.motion.implementation:U52_VisionPushTTeacher_establish_motion_003",
+        "U52_VisionPushTTeacher_establish_motion_004": "skills.motion.implementation:U52_VisionPushTTeacher_establish_motion_004",
+        "U52_VisionPushTTeacher_establish_wrist_frames_005": "skills.motion.implementation:U52_VisionPushTTeacher_establish_wrist_frames_005",
+        "U52_VisionPushTTeacher_establish_wrist_frames_006": "skills.motion.implementation:U52_VisionPushTTeacher_establish_wrist_frames_006",
+        "U52_VisionPushTTeacher_establish_wrist_frames_007": "skills.motion.implementation:U52_VisionPushTTeacher_establish_wrist_frames_007",
+        "U52_VisionPushTTeacher_establish_wrist_frames_008": "skills.motion.implementation:U52_VisionPushTTeacher_establish_wrist_frames_008",
+        "U52_VisionPushTTeacher_establish_wrist_frames_009": "skills.motion.implementation:U52_VisionPushTTeacher_establish_wrist_frames_009"
+      },
+      "errors": {
+        "RuntimeError": "skills.state.implementation:RuntimeError"
+      },
+      "steps": [
+        {
+          "call": "U52_VisionPushTTeacher_establish_motion_001"
+        },
+        {
+          "call": "U52_VisionPushTTeacher_establish_motion_002"
+        },
+        {
+          "call": "U52_VisionPushTTeacher_establish_motion_003"
+        },
+        {
+          "call": "U52_VisionPushTTeacher_establish_motion_004"
+        },
+        {
+          "call": "U52_VisionPushTTeacher_establish_wrist_frames_005",
+          "store": "condition_5"
+        },
+        {
+          "if": {
+            "var": "condition_5"
+          },
+          "then": [
+            {
+              "try": [
+                {
+                  "call": "U52_VisionPushTTeacher_establish_wrist_frames_008"
+                },
+                {
+                  "call": "U52_VisionPushTTeacher_establish_wrist_frames_009"
+                }
+              ],
+              "catch": [
+                {
+                  "errors": [
+                    "RuntimeError"
+                  ],
+                  "as": "caught_error",
+                  "do": [
+                    {
+                      "call": "U52_VisionPushTTeacher_establish_wrist_frames_006",
+                      "args": {
+                        "__workflow_error": {
+                          "var": "caught_error"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U52_VisionPushTTeacher_establish_wrist_frames_007"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "else": []
+        }
+      ]
+    },
+    "U52_VisionPushTTeacher_release_home": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 600,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U52_VisionPushTTeacher_release_home_motion_001": "skills.motion.implementation:U52_VisionPushTTeacher_release_home_motion_001",
+        "U52_VisionPushTTeacher_release_home_motion_002": "skills.motion.implementation:U52_VisionPushTTeacher_release_home_motion_002",
+        "U52_VisionPushTTeacher_release_home_motion_003": "skills.motion.implementation:U52_VisionPushTTeacher_release_home_motion_003"
+      },
+      "errors": {},
+      "steps": [
+        {
+          "call": "U52_VisionPushTTeacher_release_home_motion_001"
+        },
+        {
+          "call": "U52_VisionPushTTeacher_release_home_motion_002"
+        },
+        {
+          "call": "U52_VisionPushTTeacher_release_home_motion_003"
+        }
+      ]
+    },
+    "U52_VisionPushTTeacher_run": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 600,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U52_VisionPushTTeacher_run_motion_001": "skills.motion.implementation:U52_VisionPushTTeacher_run_motion_001",
+        "U52_VisionPushTTeacher_run_motion_002": "skills.motion.implementation:U52_VisionPushTTeacher_run_motion_002",
+        "U52_VisionPushTTeacher_run_int_self_env_take_action_cnt_0_430_and_result_xy_003": "skills.motion.implementation:U52_VisionPushTTeacher_run_int_self_env_take_action_cnt_0_430_and_result_xy_003",
+        "U52_VisionPushTTeacher_run_int_self_env_take_action_cnt_0_430_and_result_xy_004": "skills.motion.implementation:U52_VisionPushTTeacher_run_int_self_env_take_action_cnt_0_430_and_result_xy_004",
+        "U52_VisionPushTTeacher_run_motion_005": "skills.motion.implementation:U52_VisionPushTTeacher_run_motion_005"
+      },
+      "errors": {},
+      "steps": [
+        {
+          "call": "U52_VisionPushTTeacher_run_motion_001"
+        },
+        {
+          "call": "U52_VisionPushTTeacher_run_motion_002"
+        },
+        {
+          "call": "U52_VisionPushTTeacher_run_int_self_env_take_action_cnt_0_430_and_result_xy_003",
+          "store": "condition_3"
+        },
+        {
+          "if": {
+            "var": "condition_3"
+          },
+          "then": [
+            {
+              "call": "U52_VisionPushTTeacher_run_int_self_env_take_action_cnt_0_430_and_result_xy_004",
+              "store": "result_4"
+            },
+            {
+              "return": {
+                "var": "result_4"
+              }
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U52_VisionPushTTeacher_run_motion_005",
+          "store": "result_5"
+        },
+        {
+          "return": {
+            "var": "result_5"
+          }
+        }
+      ]
+    }
+  }
+}

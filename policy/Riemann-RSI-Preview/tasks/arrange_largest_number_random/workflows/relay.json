@@ -1,0 +1,24 @@
+{
+  "schema": "riemann-declarative-generator-workflow-v1",
+  "mode": "rule_only",
+  "official_action_horizon": 1050,
+  "wam_reselection": false,
+  "max_operations": 16384,
+  "bindings": {
+    "select_relay": "tasks.arrange_largest_number_random.skills.placement_state.implementation:select_relay",
+    "relay_source": "tasks.arrange_largest_number_random.skills.placement_state.implementation:relay_source",
+    "relay_receiver": "tasks.arrange_largest_number_random.skills.placement_state.implementation:relay_receiver"
+  },
+  "errors": {},
+  "steps": [
+    {
+      "call": "select_relay"
+    },
+    {
+      "call": "relay_source"
+    },
+    {
+      "call": "relay_receiver"
+    }
+  ]
+}

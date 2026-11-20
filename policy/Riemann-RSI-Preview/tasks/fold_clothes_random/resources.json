@@ -1,0 +1,32 @@
+{
+  "schema": "fold-public-static-resources-v1",
+  "files": {
+    "assets/robots/x5/X5A.urdf": {
+      "sha256": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423"
+    },
+    "assets/perception/garments/geometry.npz": {
+      "sha256": "c87904b5080d03731390b13d0da62c302b014496419a4096b5b78dfde7944875"
+    },
+    "assets/perception/garments/metadata.json": {
+      "sha256": "0f29479f304876c7a5d08fd6246e5febfc8acf511b9679c3d01a5644e5f299d8"
+    },
+    "configs/models/sam3.json": {
+      "sha256": "430c9fbaef421fe94830c18134bb7cd59f0a47d4875effde2c5ea640cc9eb374"
+    },
+    "assets/robots/x5/curobo.yml": {
+      "sha256": "9c1dd642e8df23d199b0ff88676da4d8e4455255997012470ea154e2fab3dac8"
+    },
+    "configs/mature-trajectory.json": {
+      "sha256": "2c1442a0d246b01f746c41061d20cca09894bce4bb9269edf2c0e0fb8db12349"
+    },
+    "configs/native-perception.json": {
+      "sha256": "2224acc374953c0545af2323e1243ec250152fd234cd0395c54023f0260ca8bd"
+    },
+    "skills/shared/motion/garment_joint_sampling/resources/fixed_x5_arm_bounds.json": {
+      "sha256": "4f8b966967759a74b52fd0349c1092d35c07623f2e85435a05901295283c7f9e"
+    },
+    "skills/shared/motion/garment_joint_sampling/resources/fixed_x5_rigid_hulls.npz": {
+      "sha256": "a0e7d2d86c3622d70618046a8eacf6bfb4a74bd1d0bb4de23d2e4a416af84e97"
+    }
+  }
+}

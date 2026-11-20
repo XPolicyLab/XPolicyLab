@@ -1,0 +1,79 @@
+{
+  "schema": "riemann-static-public-rule-models-v1",
+  "default_root": "resource://rule_assets/a6-mature-original-20261029-r2",
+  "files": {
+    "toolbox_public_hull.npy": {
+      "path": "toolbox_public_hull.npy",
+      "sha256": "3c5692584a8ac705461eaddb0a87477ecfd42cdd357697b4c548e51ad67468ab",
+      "bytes": 86504,
+      "source": "resource://intake_b_assets/store_tools_in_toolbox/baselines/official-chain-20261019b/bundle/source/scripts/data_engine/toolbox_public_hull.npy",
+      "source_sha256": "3c5692584a8ac705461eaddb0a87477ecfd42cdd357697b4c548e51ad67468ab",
+      "sample_annotations_removed": false
+    },
+    "hammer_public_hull.npy": {
+      "path": "hammer_public_hull.npy",
+      "sha256": "c5b2ed4ca3e9824c4924ebea82326bf8caa066e8efc93f3514175f51e78213e4",
+      "bytes": 45176,
+      "source": "resource://intake_b_assets/store_tools_in_toolbox/baselines/official-chain-20261019b/bundle/source/scripts/data_engine/hammer_public_hull.npy",
+      "source_sha256": "c5b2ed4ca3e9824c4924ebea82326bf8caa066e8efc93f3514175f51e78213e4",
+      "sample_annotations_removed": false
+    },
+    "wrench_public_hull.npy": {
+      "path": "wrench_public_hull.npy",
+      "sha256": "1310753bb6b20e06b9bba940439e68b8ebed99b9b6cde2f11d7cd3d1df6f86e4",
+      "bytes": 64304,
+      "source": "resource://intake_b_assets/store_tools_in_toolbox/baselines/official-chain-20261019b/bundle/source/scripts/data_engine/wrench_public_hull.npy",
+      "source_sha256": "1310753bb6b20e06b9bba940439e68b8ebed99b9b6cde2f11d7cd3d1df6f86e4",
+      "sample_annotations_removed": false
+    },
+    "pliers_public_hull.npy": {
+      "path": "pliers_public_hull.npy",
+      "sha256": "c3670c8fab6f0ba41aa0ddaa1fe1087522917d6eeb28f81cbce9a4fd7ee1ed01",
+      "bytes": 68840,
+      "source": "resource://intake_b_assets/store_tools_in_toolbox/baselines/official-chain-20261019b/bundle/source/scripts/data_engine/pliers_public_hull.npy",
+      "source_sha256": "c3670c8fab6f0ba41aa0ddaa1fe1087522917d6eeb28f81cbce9a4fd7ee1ed01",
+      "sample_annotations_removed": false
+    },
+    "tape_measure_public_hull.npy": {
+      "path": "tape_measure_public_hull.npy",
+      "sha256": "486a38ce21c62f4de44b0e9733ad0017405d93144e20b3764fcf305ffde1994b",
+      "bytes": 291272,
+      "source": "resource://intake_b_assets/store_tools_in_toolbox/baselines/official-chain-20261019b/bundle/source/scripts/data_engine/tape_measure_public_hull.npy",
+      "source_sha256": "486a38ce21c62f4de44b0e9733ad0017405d93144e20b3764fcf305ffde1994b",
+      "sample_annotations_removed": false
+    },
+    "Geometry/toolbox/00000/metadata.json": {
+      "path": "Geometry/toolbox/00000/metadata.json",
+      "sha256": "f48177b93f66e8a7fb9a4d0d05673dde43159dfb01ea3e03bb31112d9c183b42",
+      "bytes": 987,
+      "source": "resource://official_assets/Object/RoboDojo/Geometry/toolbox/00000/metadata.json",
+      "source_sha256": "912d88a5aeb67c757713d3c4c3d80b96543eed54536d9846cc24406e6493e804",
+      "geometry_only_slot_frames": true
+    },
+    "X5A.urdf": {
+      "path": "resource://rule_assets/a12-original-pour-20261030/pour_balls_into_vase/X5A.urdf",
+      "sha256": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423",
+      "bytes": 9218,
+      "provenance": "Original hash-pinned static X5/model-local geometry; independent fixed USD audit. No runtime scene/object pose."
+    },
+    "curobo.yml": {
+      "path": "resource://rule_assets/a12-original-pour-20261030/pour_balls_into_vase/curobo.yml",
+      "sha256": "7e28b2a617369d0b4b381d77224ccb43069816acb24c5c6c49235126f8fc459a",
+      "bytes": 12536,
+      "provenance": "Original hash-pinned static X5/model-local geometry; independent fixed USD audit. No runtime scene/object pose."
+    },
+    "finger_link7.STL": {
+      "path": "resource://official_assets/Robots/x5/meshes/link7.STL",
+      "sha256": "ec3d40b39cccde0075ca3d16603f14f180fce41a46b446473d384def7a1b0be0",
+      "bytes": 65284,
+      "provenance": "Current authenticated static X5 visual geometry; complete finger sweep is unmeasured and independent of command echo"
+    },
+    "finger_link8.STL": {
+      "path": "resource://official_assets/Robots/x5/meshes/link8.STL",
+      "sha256": "29f7a8379cad81797e82e4ba099455cc275ac6ac5bb9e264ce46719fd7d2bb60",
+      "bytes": 65284,
+      "provenance": "Current authenticated static X5 visual geometry; complete finger sweep is unmeasured and independent of command echo"
+    }
+  },
+  "scope": "Declared fixed asset shape and offline learned/calibrated priors; no current layout or simulator state. Recorded sample annotations are excluded."
+}

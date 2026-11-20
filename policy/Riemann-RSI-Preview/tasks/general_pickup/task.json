@@ -1,0 +1,8 @@
+{
+  "task": "general_pickup",
+  "backend": "rule",
+  "entry": "tasks/general_pickup/entry.py",
+  "native_evaluation_profile": "workflow.json",
+  "evaluation_enabled": true,
+  "runtime_config": "configs/official-rule-evaluation.json"
+}

@@ -1,0 +1,22 @@
+{
+  "schema": "riemann-public-arrange-v23-resources-v1",
+  "default_root": "resource://number_assets",
+  "resources": {
+    "skill/X5A.urdf": {
+      "source_sha256": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423",
+      "bytes": 9218
+    },
+    "skill/assets/digits.json": {
+      "source_sha256": "5e99bd51deaa06991163e10e87de92c021846145e803dde9121c1e168ddcf193",
+      "bytes": 17930
+    },
+    "skill/assets/digits.npz": {
+      "source_sha256": "6ab5ed845c674022654966f2560fda53239faadb34d5a8eb5e10d71d25218623",
+      "bytes": 11574
+    },
+    "skill/assets/fingers.npz": {
+      "source_sha256": "7899b0ea3d37c0cf2934c5ad9c46a1aca1a319a14af44c66690c90cbe6457ab7",
+      "bytes": 16489
+    }
+  }
+}

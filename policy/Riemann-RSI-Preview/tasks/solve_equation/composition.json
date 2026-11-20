@@ -1,0 +1,40 @@
+{
+  "schema": "riemann-rule-composition-v1",
+  "task_mode": "solve_equation",
+  "backend": "rule",
+  "selection": "current_public_evidence",
+  "bindings": {},
+  "controller_entry_slots": [],
+  "native_workflow": "workflow.json",
+  "native_action_tools": {
+    "equation_rule_boundary": "tasks/solve_equation/skills/equation_rule_boundary/implementation.py"
+  },
+  "task_skills": {
+    "current_equation_row": "skills/current_equation_row/implementation.py",
+    "equation_command_sampling": "skills/equation_command_sampling/implementation.py",
+    "equation_rule_boundary": "skills/equation_rule_boundary/implementation.py",
+    "equation_rule_geometry": "skills/equation_rule_geometry/implementation.py",
+    "execute_original_equation": "skills/execute_original_equation/implementation.py",
+    "grasp_equation_token": "skills/grasp_equation_token/implementation.py",
+    "original_equation_motion": "skills/original_equation_motion/implementation.py",
+    "original_equation_workflow": "skills/original_equation_workflow/implementation.py",
+    "place_equation_token": "skills/place_equation_token/implementation.py",
+    "read_digit_glyph": "skills/read_digit_glyph/implementation.py",
+    "read_equation": "skills/read_equation/implementation.py",
+    "read_equation_scene_rule": "skills/read_equation_scene_rule/implementation.py",
+    "relay_equation_token": "skills/relay_equation_token/implementation.py",
+    "select_equation_carry": "skills/select_equation_carry/implementation.py"
+  },
+  "shared_action_tools": [],
+  "dispatch": "Frozen deterministic native workflow; public tool boundaries and declared bounded rule recovery only.",
+  "official_action_budget_changed": false,
+  "runtime_layout": "repository-flat-native-skills-v1",
+  "python_entry_files": [
+    "tasks/solve_equation/bindings/official_policy.py",
+    "tasks/solve_equation/controller.py",
+    "tasks/solve_equation/entry.py"
+  ],
+  "source_versioning": "git",
+  "graph_files": [],
+  "resource_files": []
+}

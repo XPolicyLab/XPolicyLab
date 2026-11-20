@@ -1,0 +1,33 @@
+{
+  "schema": "hang-mature-required-public-input-contract-v1",
+  "qualified": false,
+  "public_factory": "controller.create_public_environment",
+  "observations": [
+    "current_public_three_RGB",
+    "current_public_measured_arm_joints_and_EE_poses",
+    "current_public_normalized_applied_gripper_target",
+    "own_issued_command_history"
+  ],
+  "allowed_fixed_robot_descriptors": [
+    "hash-pinned X5 URDF limits and affine gripper command mapping",
+    "own cuRobo planner"
+  ],
+  "forbidden_inputs": [
+    "scene object poses",
+    "layout IDs",
+    "scorer or reward",
+    "actual double-finger positions",
+    "unrestricted simulator objects"
+  ],
+  "actual_finger_geometry_substitution": "Independent public-model finger ranges for geometry only; normalized channel used for command progress, never doubled into total opening",
+  "runtime_activation": true,
+  "standard_observation_only": true,
+  "measured_finger_joints_required": false,
+  "CPU_binding_qualified": true,
+  "current_total_aperture_known": false,
+  "contact_measured": false,
+  "native_public_boundary_verified": true,
+  "performance_qualified": false,
+  "RGB_visibility_fallback": "Original static 5mm visual template after conservative fits fail, issued closed command only; not measured aperture/contact or physical collision/exit geometry",
+  "release_wait": "Retain original minimum and maximum holds. Own issued open command plus current normalized applied open target may end the command wait; physical aperture/contact stay unknown and full independent exit geometry remains. Incomplete command progress retains all four holds."
+}

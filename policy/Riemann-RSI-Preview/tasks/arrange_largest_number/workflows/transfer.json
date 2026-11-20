@@ -1,0 +1,202 @@
+{
+  "schema": "riemann-declarative-generator-workflow-v1",
+  "mode": "rule_only",
+  "official_action_horizon": 1050,
+  "wam_reselection": false,
+  "max_operations": 16384,
+  "bindings": {
+    "pending": "skills.transfer.implementation:pending",
+    "begin_attempt": "skills.transfer.implementation:begin_attempt",
+    "hold_phase": "skills.transfer.implementation:hold_phase",
+    "move_phase": "skills.transfer.implementation:move_phase",
+    "record_grasp": "skills.transfer.implementation:record_grasp",
+    "may_lift": "skills.transfer.implementation:may_lift",
+    "record_lift": "skills.transfer.implementation:record_lift",
+    "accepted": "skills.transfer.implementation:accepted",
+    "register_failure": "skills.transfer.implementation:register_failure",
+    "home_phase": "skills.transfer.implementation:home_phase",
+    "retry_reidentify": "skills.transfer.implementation:retry_reidentify",
+    "retry_selection": "skills.transfer.implementation:retry_selection",
+    "prepare_midpoint": "skills.transfer.implementation:prepare_midpoint",
+    "predict_placement": "skills.transfer.implementation:predict_placement",
+    "release_reidentify": "skills.transfer.implementation:release_reidentify"
+  },
+  "errors": {},
+  "steps": [
+    {
+      "while": {
+        "call": "pending"
+      },
+      "max_iterations": 1051,
+      "do": [
+        {
+          "call": "begin_attempt"
+        },
+        {
+          "call": "hold_phase",
+          "args": {
+            "grip": 1.0,
+            "count": 2,
+            "suffix": "_open"
+          }
+        },
+        {
+          "call": "move_phase",
+          "args": {
+            "waypoint": "approach",
+            "grip": 1.0,
+            "suffix": "_approach",
+            "contact": false
+          }
+        },
+        {
+          "call": "move_phase",
+          "args": {
+            "waypoint": "grasp",
+            "grip": 1.0,
+            "suffix": "_descend",
+            "contact": true
+          }
+        },
+        {
+          "call": "hold_phase",
+          "args": {
+            "grip": 0.0,
+            "count": 8,
+            "suffix": "_close"
+          }
+        },
+        {
+          "call": "record_grasp"
+        },
+        {
+          "call": "may_lift",
+          "store": "may_lift_value"
+        },
+        {
+          "if": {
+            "var": "may_lift_value"
+          },
+          "then": [
+            {
+              "call": "move_phase",
+              "args": {
+                "waypoint": "lift",
+                "grip": 0.0,
+                "suffix": "_lift",
+                "contact": true
+              }
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "record_lift"
+        },
+        {
+          "call": "accepted",
+          "store": "accepted_value"
+        },
+        {
+          "if": {
+            "var": "accepted_value"
+          },
+          "then": [],
+          "else": [
+            {
+              "call": "register_failure"
+            },
+            {
+              "call": "hold_phase",
+              "args": {
+                "grip": 1.0,
+                "count": 7,
+                "suffix": "_retry_open"
+              }
+            },
+            {
+              "call": "move_phase",
+              "args": {
+                "waypoint": "approach",
+                "grip": 1.0,
+                "suffix": "_retry_clear",
+                "contact": false
+              }
+            },
+            {
+              "call": "home_phase",
+              "args": {
+                "suffix": "_retry_home"
+              }
+            },
+            {
+              "call": "retry_reidentify"
+            },
+            {
+              "call": "retry_selection"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "call": "prepare_midpoint"
+    },
+    {
+      "call": "move_phase",
+      "args": {
+        "waypoint": "midpoint",
+        "grip": 0.0,
+        "suffix": "_carry_mid",
+        "contact": false
+      }
+    },
+    {
+      "call": "move_phase",
+      "args": {
+        "waypoint": "carry",
+        "grip": 0.0,
+        "suffix": "_carry_end",
+        "contact": false
+      }
+    },
+    {
+      "call": "move_phase",
+      "args": {
+        "waypoint": "place",
+        "grip": 0.0,
+        "suffix": "_place",
+        "contact": true
+      }
+    },
+    {
+      "call": "hold_phase",
+      "args": {
+        "grip": 1.0,
+        "count": 6,
+        "suffix": "_release"
+      }
+    },
+    {
+      "call": "move_phase",
+      "args": {
+        "waypoint": "carry",
+        "grip": 1.0,
+        "suffix": "_retreat",
+        "contact": false
+      }
+    },
+    {
+      "call": "predict_placement"
+    },
+    {
+      "call": "home_phase",
+      "args": {
+        "suffix": "_home"
+      }
+    },
+    {
+      "call": "release_reidentify"
+    }
+  ]
+}

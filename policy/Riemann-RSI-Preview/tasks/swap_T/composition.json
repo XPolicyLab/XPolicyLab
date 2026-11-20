@@ -1,0 +1,33 @@
+{
+  "schema": "riemann-rule-composition-v1",
+  "task_mode": "swap_T",
+  "backend": "rule",
+  "selection": "current_public_evidence",
+  "bindings": {},
+  "controller_entry_slots": [],
+  "native_workflow": "workflow.json",
+  "native_action_tools": {
+    "t_scene_view": "tasks/swap_T/skills/t_scene_view/implementation.py",
+    "t_transfer_stage": "tasks/swap_T/skills/t_transfer_stage/implementation.py"
+  },
+  "task_skills": {
+    "plan_t_transfer": "skills/plan_t_transfer/implementation.py",
+    "read_t_scene": "skills/read_t_scene/implementation.py",
+    "resolve_t_sequence": "skills/resolve_t_sequence/implementation.py",
+    "select_t_grasp": "skills/select_t_grasp/implementation.py",
+    "t_scene_view": "skills/t_scene_view/implementation.py",
+    "t_transfer_stage": "skills/t_transfer_stage/implementation.py"
+  },
+  "shared_action_tools": [],
+  "dispatch": "Qualified public rules run first; unresolved predicates permit bounded learned recovery.",
+  "official_action_budget_changed": false,
+  "runtime_layout": "repository-flat-native-skills-v1",
+  "python_entry_files": [
+    "tasks/swap_T/bindings/official_policy.py",
+    "tasks/swap_T/controller.py",
+    "tasks/swap_T/entry.py"
+  ],
+  "source_versioning": "git",
+  "graph_files": [],
+  "resource_files": []
+}

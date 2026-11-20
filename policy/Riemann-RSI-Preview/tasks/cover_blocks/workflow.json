@@ -1,0 +1,20 @@
+{
+  "schema": "riemann-public-command-workflow-v1",
+  "instruction_predicate": "cover_blocks_with_cups_then_uncover",
+  "stages": [
+    {"id": "cover_first", "skill": "cover_cup_transfer"},
+    {"id": "cover_second", "skill": "cover_cup_transfer"},
+    {"id": "cover_third", "skill": "cover_cup_transfer"},
+    {"id": "uncover_red", "skill": "cover_cup_transfer"},
+    {"id": "uncover_green", "skill": "cover_cup_transfer"},
+    {"id": "uncover_blue", "skill": "cover_cup_transfer"},
+    {"id": "home_left", "skill": "cover_cup_transfer"},
+    {"id": "home_right", "skill": "cover_cup_transfer"},
+    {"id": "settle", "skill": "cover_cup_transfer"}
+  ],
+  "view_skill": "cover_scene_view",
+  "maximum_uncertain_attempts": 2,
+  "preference": "public_grounded_mature_rule_before_learned_recovery",
+  "completion_is_official_success": false,
+  "official_action_budget_changed": false
+}

@@ -1,0 +1,22 @@
+{
+  "schema": "a18-original-v19-native-parameters-v1",
+  "parameters": {
+    "task": "push_T_random",
+    "motion_speed": 1.0,
+    "full_curobo_warmup": false,
+    "head_camera_pitch": null,
+    "stem_offset": 0.0,
+    "contact_z_offset": 0.0,
+    "slide_step": 0.018,
+    "yaw_step": 6.0,
+    "servo_steps": 3,
+    "max_contact_updates": 100,
+    "max_contact_joint_jump": 0.8,
+    "position_tolerance": 0.003,
+    "angle_tolerance": 3.0,
+    "gripper_forward_offset": 0.154,
+    "gripper_settle_seconds": 0.28
+  },
+  "source_entry_sha256": "439cb265b3a3334ddf15465a5ebe242eab92306ce7bbd3e53ccd4ceffdec5791",
+  "native_activation": "Fixed50 predeclared official layouts; policy and workflow equal successful layouts0/1/2 probes at3fc8585; no performance acceptance claim"
+}

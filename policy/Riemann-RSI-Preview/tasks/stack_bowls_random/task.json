@@ -1,0 +1,6 @@
+{
+  "task": "stack_bowls_random",
+  "backend": "rule",
+  "entry": "entry.py",
+  "runtime_config": "configs/official-rule-evaluation.json"
+}

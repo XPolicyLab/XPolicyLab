@@ -1,0 +1,31 @@
+{
+  "schema": "a12-public-observation-contract-v1",
+  "task": "pour_balls_into_vase",
+  "standard_observation_only": true,
+  "measured_finger_joints_required": false,
+  "public_factory": "controller.create_public_environment",
+  "allowed_fields": {
+    "vision": [
+      "cam_head.color",
+      "cam_left_wrist.color",
+      "cam_right_wrist.color"
+    ],
+    "state": [
+      "left_arm_joint_state",
+      "left_ee_joint_state",
+      "left_ee_pose",
+      "right_arm_joint_state",
+      "right_ee_joint_state",
+      "right_ee_pose"
+    ]
+  },
+  "gripper_observation_semantics": "Normalized previous command echo only. Not physical finger width or contact.",
+  "unobservable_contact": "unknown; retain original motion and existing original RGB checks; do not claim original measured-contact branches are physically equivalent",
+  "native_action_horizon": 600,
+  "gpu_review_hold": false,
+  "formal_gt_free_or_performance_certified": false,
+  "shared_runtime_owner_commit": "49340e23723e5d20bd4ddde5085e13127d056a3c",
+  "evaluation_enabled": true,
+  "status": "fixed0 compatibility probe only",
+  "native_runtime_contract": "NATIVE_RUNTIME_LOCK.json"
+}

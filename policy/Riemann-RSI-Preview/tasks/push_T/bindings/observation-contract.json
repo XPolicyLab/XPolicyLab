@@ -1,0 +1,12 @@
+{
+  "schema": "a18-push-standard-observation-contract-v1",
+  "standard_observation_only": true,
+  "measured_finger_joints_required": false,
+  "public_factory": "controller.create_public_environment",
+  "own_arm_joints": "current measured six-joint public observation",
+  "own_ee_pose": "current measured seven-value public observation",
+  "gripper_feedback": "SDK-limited normalized public applied target; no physical width/contact claim",
+  "object_and_goal_pose": "current head/wrist RGB plus observation-inferred robot mounting and public static model",
+  "private_manager_retained": false,
+  "depth_layout_reward_scene_queries_used": false
+}

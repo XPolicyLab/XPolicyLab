@@ -1,0 +1,104 @@
+{
+  "schema": "riemann-declarative-skill-workflow-v1",
+  "mode": "rule_only",
+  "official_action_horizon": 500,
+  "wam_reselection": false,
+  "max_operations": 128,
+  "bindings": {
+    "pick_and_lift": "skills.pickup.implementation:pick_and_lift",
+    "grasp_only": "skills.motion.implementation:grasp_only",
+    "diagnostic_stop": "skills.motion.implementation:diagnostic_stop",
+    "prepare_transport": "skills.transport.implementation:prepare_transport",
+    "strike_key": "skills.stroke.implementation:strike_key",
+    "note_failure": "skills.motion.implementation:note_failure",
+    "result": "skills.motion.implementation:result"
+  },
+  "errors": {
+    "ControllerFailure": "skills.motion.implementation:ControllerFailure",
+    "PosePlanningError": "skills.motion.implementation:PosePlanningError",
+    "PoseFeedbackError": "skills.motion.implementation:PoseFeedbackError"
+  },
+  "steps": [
+    {
+      "try": [
+        {
+          "call": "pick_and_lift",
+          "id": "continuous_pick_and_lift"
+        },
+        {
+          "call": "grasp_only",
+          "store": "diagnostic"
+        },
+        {
+          "if": {
+            "var": "diagnostic"
+          },
+          "then": [
+            {
+              "call": "diagnostic_stop"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "prepare_transport",
+          "id": "continuous_transport_setup"
+        },
+        {
+          "for_each": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "as": "index",
+          "max_items": 8,
+          "do": [
+            {
+              "call": "strike_key",
+              "args": {
+                "index": {
+                  "var": "index"
+                }
+              },
+              "id": "original_key_stroke"
+            }
+          ]
+        }
+      ],
+      "catch": [
+        {
+          "errors": [
+            "ControllerFailure",
+            "PosePlanningError",
+            "PoseFeedbackError"
+          ],
+          "as": "exc",
+          "do": [
+            {
+              "call": "note_failure",
+              "args": {
+                "exc": {
+                  "var": "exc"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "call": "result",
+      "store": "result"
+    },
+    {
+      "return": {
+        "var": "result"
+      }
+    }
+  ]
+}

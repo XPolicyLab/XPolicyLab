@@ -1,0 +1,33 @@
+{
+  "schema": "riemann-rule-composition-v1",
+  "task_mode": "cover_blocks",
+  "backend": "rule",
+  "selection": "current_public_evidence",
+  "bindings": {},
+  "controller_entry_slots": [],
+  "native_workflow": "workflow.json",
+  "native_action_tools": {
+    "cover_cup_transfer": "tasks/cover_blocks/skills/cover_cup_transfer/implementation.py",
+    "cover_scene_view": "tasks/cover_blocks/skills/cover_scene_view/implementation.py"
+  },
+  "task_skills": {
+    "cover_cup_transfer": "skills/cover_cup_transfer/implementation.py",
+    "cover_scene_view": "skills/cover_scene_view/implementation.py",
+    "plan_cup_transfer": "skills/plan_cup_transfer/implementation.py",
+    "read_cover_scene": "skills/read_cover_scene/implementation.py",
+    "resolve_cover_sequence": "skills/resolve_cover_sequence/implementation.py",
+    "verify_cup_release": "skills/verify_cup_release/implementation.py"
+  },
+  "shared_action_tools": [],
+  "dispatch": "Qualified public rules run first; unresolved predicates permit bounded learned recovery.",
+  "official_action_budget_changed": false,
+  "runtime_layout": "repository-flat-native-skills-v1",
+  "python_entry_files": [
+    "tasks/cover_blocks/bindings/official_policy.py",
+    "tasks/cover_blocks/controller.py",
+    "tasks/cover_blocks/entry.py"
+  ],
+  "source_versioning": "git",
+  "graph_files": [],
+  "resource_files": []
+}

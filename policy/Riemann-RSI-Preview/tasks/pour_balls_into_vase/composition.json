@@ -1,0 +1,30 @@
+{
+  "schema": "riemann-rule-composition-v1",
+  "task_mode": "pour_balls_into_vase",
+  "backend": "rule",
+  "workflow": "workflow.json",
+  "task_skills": {
+    "geometry": "skills/geometry/implementation.py",
+    "home": "skills/home/implementation.py",
+    "motion": "skills/motion/implementation.py",
+    "perception": "skills/perception/implementation.py",
+    "pickup": "skills/pickup/implementation.py",
+    "public_feedback": "skills/public_feedback/implementation.py",
+    "public_robot": "skills/public_robot/implementation.py",
+    "recovery": "skills/recovery/implementation.py",
+    "state": "skills/state/implementation.py",
+    "native_binding": "skills/native_binding/implementation.py"
+  },
+  "validation": "public_factory_CPU_and_exact_runtime_binding_before_fixed_probe",
+  "python_entry_files": [
+    "harness/runtime/mature_teacher_boundary.py",
+    "harness/runtime/mature_teacher_clock.py",
+    "tasks/pour_balls_into_vase/controller.py",
+    "tasks/pour_balls_into_vase/entry.py",
+    "tasks/pour_balls_into_vase/resources.py"
+  ],
+  "source_versioning": "git",
+  "native_workflow": "workflow.json",
+  "graph_files": [],
+  "resource_files": []
+}

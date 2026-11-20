@@ -1,0 +1,67 @@
+{
+  "schema": "b21-public-imitation-native-contract-v1",
+  "official_root": "resource://official_runtime",
+  "official_python": "resource://eval_environment/bin/python",
+  "official_commit": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
+  "official_files": {
+    "env/planner_manager/curobo_planner.py": "3cd830c002901959409ef6f64d54106d8106b48471b266409abc2199f3cb33e1",
+    "env/robot_manager/robot_manager.py": "1306cb6d17b58a04ad8fc298edb6eb9122469048dbc9717dcf246f4f985d9974",
+    "env/robot_manager/control_manager.py": "81b7ecc3bed8248c16aa1517e686682d8e28ccfa9e550d45011b579a9219caab",
+    "env/global_configs.py": "e96f6141b42e635d69bba5b4727fb1fec54f8965431b3a70d95fe5dcd3d0ee45",
+    "src/eval_client/eval_env.py": "3ae75304d8a840ede2589441f987824f50b2a89cc2ef37f4d43ce0a8dbc4fd88",
+    "env/observation_manager/obs_manager.py": "771d6cda443b591f3e7850b901a06b4e653a2feefcbabd23608042377fe9be4b",
+    "task/RoboDojo/task_registry.py": "11218028f772d9253ee709a7d85aa72d1e1fd87e4f8d33ee3787d6064438f9ab",
+    "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41",
+    "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
+    "env/seed_manager/seed_manager.py": "292eee4003de1c22b288ec3bc1d04d95c7aee5368f30991679ea1cc4c37247b3",
+    "env_cfg/arx_x5.yml": "7691350159fdeca92fd1b0b2da36913464ccdea3f3251eefb0176aa51db0807f",
+    "env_cfg/sim/sim_config.yml": "e442ede1c3d90fcfb50b9461c854d31b22dad9bfbb23397db228b27a6a486963",
+    "env_cfg/robot/dual_x5.yml": "4eefaccc75c5f83443b7bb85ef1de68ee7a3772e27af2b04a5e8d8769ab9baa1",
+    "env_cfg/robot/dual_x5_and_franka_competition.yml": "ec893f9fde577d0d1209e7dcb85ec2dd74288b636d0c68316cb07bc817b743ab",
+    "env_cfg/scene/default.yml": "729df024b9707a55449da94f980c1ca116035e09a1284e2fe071f1b38efd061a",
+    "env_cfg/camera/camera_config.yml": "c1752170da855e735beba27fddbf78dad16f2395e4ef8b24e9827a768e616a62",
+    "deployment/runtime.sh": "2b3b96528a795f22990e2688c44a6084caf5228b123c074c8ace460c1e69bf07",
+    "env/camera_manager/capture/render_sync.py": "48d70e9a95f3445ae464ab7ea00a00c0d4829752eb55c4ce52ef73ab1f453cae",
+    "env/scene_manager/layout_manager.py": "7f244bec972e09236a94d8b4761b248ba19ec3f61c631d3c83c00b82912a14b8",
+    "utils/load_file.py": "ef3a6dc96aa1a7442cfd24f7be9671052a98d2f20783c3e71032332704132943",
+    "env/robot_manager/robot_config/x5.py": "13d35630f833d1b0a1e3df0bea05f843e88aae1248b59af8aadfefa9cad29bbb",
+    "env/camera_manager/camera_manager.py": "1a4250cb3bdc7305fe362a7c6b113f57e6f3e9e4983b69bd61e2c84e8e995471",
+    "env/environment/task_env.py": "ac816cf26efabbb8ac4276d2a2a09fbd557e3db805514db0c3dd7ac22b58e931",
+    "task/RoboDojo/config/_task.yml": "655a87cd59fa6272bf352d32deb8ade162737b49a9824e16d428fecf0803380b",
+    "task/RoboDojo/config/imitate_sorting_sequence.yml": "d9e194d8c742288601c641ccb75052a67da46e536c0b06c7fb7311d9e2c61a42",
+    "task/RoboDojo/tasks/imitate_sorting_sequence.py": "18400cb3c5f5103492819df2dcdf05a77916106e8a503cb62b4ee6cdbaa9305b"
+  },
+  "native_clock": {
+    "horizon": 1600,
+    "dt": 0.004,
+    "frequency_hz": 25,
+    "substeps": 10
+  },
+  "entry": "tools/b21_public_imitation_native.py",
+  "actor_entry": "tasks.imitate_sorting_sequence.entry:run_task",
+  "planner_entry": "tasks.imitate_sorting_sequence.evaluation.binding:bind_actor",
+  "support": "request_only; no progress or returned trajectory data",
+  "completion": "all five original RGB corroborated removals on two fresh samples",
+  "excluded_cases": "Actual pinned canonical support checker and mark_env_unstable call; excluded score is null",
+  "reviewed_rgb_refusals": [
+    "scene.refresh_object_from_rgb: original confidence raise",
+    "scene.refresh_handoff_from_rgb: original confidence raise",
+    "pickup.pick: exact frozen terminal RGB refusal after original physical attempts, finite wrist evidence and public possession FAIL"
+  ],
+  "refusal_continuation": "Existing last-target native hold until actual terminal; no SDK errors or unknown refusals admitted",
+  "exclusion_evidence_to_actor": false,
+  "declared_difference": "visual endpoint replaces private queue endpoint; decoder duration input may differ",
+  "official_scorer_modified": false,
+  "layout_constructor_hook_installed": false,
+  "global_pose_reader_changed": false,
+  "native_performance_verified": false,
+  "official_cloud_verified": false,
+  "sdk_representation_source": {
+    "archive_support_sha256": "cbe3c8c51a67404d062190b9ff11d1fd81bf6b9926e9869a2673ea398e26fb7f",
+    "definition": "patch_isaac_cuda_dof_properties",
+    "lines": [
+      1962,
+      1993
+    ]
+  }
+}

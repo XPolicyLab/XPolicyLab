@@ -1,0 +1,18 @@
+{
+  "schema": "riemann-public-observation-contract-v1",
+  "task": "match_and_pick_from_conveyor",
+  "standard_observation_only": true,
+  "measured_finger_joints_required": false,
+  "public_factory": "controller.create_public_environment",
+  "evaluation_enabled": true,
+  "gpu_review_hold": false,
+  "status": "development callable; public adapter CPU/profile qualification; no new performance",
+  "base_pose_source": "reset public own joints and EEF plus static model FK",
+  "forbidden": [
+    "real fingers",
+    "scene manager",
+    "reward manager",
+    "layout object poses",
+    "raw manager fallback"
+  ]
+}

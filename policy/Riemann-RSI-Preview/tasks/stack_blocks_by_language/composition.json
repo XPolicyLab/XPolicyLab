@@ -1,0 +1,38 @@
+{
+  "backend": "rule",
+  "context": "controller:LanguageStackContext",
+  "dispatch": "Frozen original continuous rule sequence; no WAM/Qwen/resolver or learned fallback",
+  "executor": "harness.runtime.declarative_workflow:execute",
+  "native_adapter": "bindings.official_policy:run",
+  "native_workflow": "workflow.json",
+  "schema": "riemann-rule-composition-v1",
+  "shared_skills": [
+    "skills/shared/motion/public_dense_execution/implementation.py"
+  ],
+  "task_mode": "stack_blocks_by_language",
+  "task_skills": {
+    "calibration": "skills/calibration/implementation.py",
+    "camera_geometry": "skills/camera_geometry/implementation.py",
+    "carry": "skills/carry/implementation.py",
+    "motion": "skills/motion/implementation.py",
+    "motion_math": "skills/motion_math/implementation.py",
+    "observation": "skills/observation/implementation.py",
+    "perception": "skills/perception/implementation.py",
+    "pickup": "skills/pickup/implementation.py",
+    "public_state": "skills/public_state/implementation.py",
+    "selection": "skills/selection/implementation.py"
+  },
+  "python_entry_files": [
+    "harness/runtime/mature_teacher_boundary.py",
+    "harness/runtime/mature_teacher_clock.py",
+    "harness/runtime/native_rule_evaluation/binding.py",
+    "harness/runtime/native_rule_evaluation/planner.py",
+    "tasks/stack_blocks_by_language/bindings/official_policy.py",
+    "tasks/stack_blocks_by_language/controller.py",
+    "tasks/stack_blocks_by_language/entry.py",
+    "tasks/stack_blocks_by_language/resources.py"
+  ],
+  "source_versioning": "git",
+  "graph_files": [],
+  "resource_files": []
+}

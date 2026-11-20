@@ -1,0 +1,7 @@
+{
+  "task": "match_and_pick_from_conveyor",
+  "entry": "entry.py",
+  "backend": "rule",
+  "evaluation_enabled": true,
+  "runtime_config": "configs/official-rule-evaluation.json"
+}

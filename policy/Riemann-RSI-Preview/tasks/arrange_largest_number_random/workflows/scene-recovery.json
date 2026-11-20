@@ -1,0 +1,107 @@
+{
+  "schema": "riemann-declarative-generator-workflow-v1",
+  "mode": "rule_only",
+  "official_action_horizon": 1050,
+  "wam_reselection": false,
+  "max_operations": 16384,
+  "bindings": {
+    "park_arm": "tasks.arrange_largest_number_random.skills.scene_recovery.implementation:park_arm",
+    "initial_read": "tasks.arrange_largest_number_random.skills.scene_recovery.implementation:initial_read",
+    "remember_error": "tasks.arrange_largest_number_random.skills.scene_recovery.implementation:remember_error",
+    "pending": "tasks.arrange_largest_number_random.skills.scene_recovery.implementation:pending",
+    "prepare_region": "tasks.arrange_largest_number_random.skills.scene_recovery.implementation:prepare_region",
+    "observe_region": "tasks.arrange_largest_number_random.skills.scene_recovery.implementation:observe_region",
+    "read_region": "tasks.arrange_largest_number_random.skills.scene_recovery.implementation:read_region",
+    "restore_arms": "tasks.arrange_largest_number_random.skills.scene_recovery.implementation:restore_arms"
+  },
+  "errors": {
+    "RecognitionNeedsObservation": "skills.shared.perception.material_glyph_outline.implementation:RecognitionNeedsObservation"
+  },
+  "steps": [
+    {
+      "for_each": [
+        "left",
+        "right"
+      ],
+      "as": "arm",
+      "max_items": 64,
+      "do": [
+        {
+          "call": "park_arm",
+          "args": {
+            "arm": {
+              "var": "arm"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "try": [
+        {
+          "call": "initial_read"
+        }
+      ],
+      "catch": [
+        {
+          "errors": [
+            "RecognitionNeedsObservation"
+          ],
+          "as": "rgb_error",
+          "do": [
+            {
+              "call": "remember_error",
+              "args": {
+                "error": {
+                  "var": "rgb_error"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "while": {
+        "call": "pending"
+      },
+      "max_iterations": 1051,
+      "do": [
+        {
+          "call": "prepare_region"
+        },
+        {
+          "call": "observe_region"
+        },
+        {
+          "try": [
+            {
+              "call": "read_region"
+            }
+          ],
+          "catch": [
+            {
+              "errors": [
+                "RecognitionNeedsObservation"
+              ],
+              "as": "rgb_error",
+              "do": [
+                {
+                  "call": "remember_error",
+                  "args": {
+                    "error": {
+                      "var": "rgb_error"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "call": "restore_arms"
+    }
+  ]
+}

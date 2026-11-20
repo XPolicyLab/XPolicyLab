@@ -1,0 +1,59 @@
+{
+  "schema": "riemann-static-public-rule-models-v1",
+  "default_root": "resource://rule_assets/a12-original-pour-20261030",
+  "files": {
+    "X5A.urdf": {
+      "path": "X5A.urdf",
+      "sha256": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423",
+      "bytes": 9218,
+      "provenance": "Original hash-pinned static X5/model-local geometry; independent fixed USD audit. No runtime scene/object pose."
+    },
+    "collision_spheres.json": {
+      "path": "collision_spheres.json",
+      "sha256": "4f26a5d91fbd9d9b5d2706b303a002a5e68826e5de492f94db6bec67b7daab4a",
+      "bytes": 7448,
+      "provenance": "Original hash-pinned static X5/model-local geometry; independent fixed USD audit. No runtime scene/object pose."
+    },
+    "self_collision_ignore.json": {
+      "path": "self_collision_ignore.json",
+      "sha256": "ab469bb3dc02c826e534362d7f343b93c955c8eacf93879c7ad0380d1f9d8a85",
+      "bytes": 478,
+      "provenance": "Original hash-pinned static X5/model-local geometry; independent fixed USD audit. No runtime scene/object pose."
+    },
+    "finger_hulls.npz": {
+      "path": "finger_hulls.npz",
+      "sha256": "b8207dc80715db6204c34c60fd707f1cebd47510f4ac580320ab67c5a80ce634",
+      "bytes": 26594,
+      "provenance": "Original hash-pinned static X5/model-local geometry; independent fixed USD audit. No runtime scene/object pose."
+    },
+    "shapes.json": {
+      "path": "shapes.json",
+      "sha256": "e84831dbeee43cbb3499c779fd88e679d50e989dd4dc94139bc8cc5f39e4eda3",
+      "bytes": 6369,
+      "provenance": "Original hash-pinned static X5/model-local geometry; independent fixed USD audit. No runtime scene/object pose."
+    },
+    "shapes.npz": {
+      "path": "shapes.npz",
+      "sha256": "4d46ce3838243d9c0c12497947f3886d136e977d28ce8d4ac3ebaec811522350",
+      "bytes": 537614,
+      "provenance": "Original hash-pinned static X5/model-local geometry; independent fixed USD audit. No runtime scene/object pose."
+    },
+    "provenance.json": {
+      "path": "provenance.json",
+      "sha256": "b8478501e66d6362f15ec6fdcd3d33835fe3649382e3dd36c59d187dad71b561",
+      "bytes": 3319,
+      "provenance": "Original hash-pinned static X5/model-local geometry; independent fixed USD audit. No runtime scene/object pose."
+    },
+    "sam3-provenance.json": {
+      "path": "sam3-provenance.json",
+      "sha256": "2b8d1afb5feacc813cf0ac971b522ed23a7e4bd5b32a6271e99ea63bf6439cda",
+      "bytes": 18530,
+      "provenance": "Original hash-pinned static X5/model-local geometry; independent fixed USD audit. No runtime scene/object pose."
+    }
+  },
+  "sam3": {
+    "default_root": "resource://models/sam3-robodojo-v21",
+    "checkpoint_sha256": "9999e2341ceef5e136daa386eecb55cb414446a00ac2b55eb2dfd2f7c3cf8c9e",
+    "requires_original_dependency_manifest": true
+  }
+}

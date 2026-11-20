@@ -1,0 +1,15 @@
+"""Assemble the source functional capabilities; sequencing stays in task graphs."""
+from tasks.arrange_largest_number_random.skills.action_commands.implementation import ActionCommands
+from tasks.arrange_largest_number_random.skills.execution_state.implementation import ExecutionState
+from skills.shared.motion.feedback_joint_transport.implementation import Motion
+from skills.shared.perception.glyph_scene_observation.implementation import SceneObservation
+from tasks.arrange_largest_number_random.skills.source_recovery.implementation import SourceRecovery
+from tasks.arrange_largest_number_random.skills.target_selection.implementation import TargetSelection
+from tasks.arrange_largest_number_random.skills.transfer.implementation import execute_transfer
+from tasks.arrange_largest_number_random.skills.identity_recovery.implementation import execute_recovery as execute_identity_recovery
+from tasks.arrange_largest_number_random.skills.scene_recovery.implementation import execute_recovery as execute_scene_recovery
+
+class ArrangeContext(ActionCommands,Motion,SceneObservation,SourceRecovery,TargetSelection,ExecutionState):
+    transfer=execute_transfer
+    reidentify=execute_identity_recovery
+    recover_scene=execute_scene_recovery

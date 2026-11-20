@@ -1,0 +1,25 @@
+{
+  "schema": "riemann-static-public-rule-models-v1",
+  "default_root": "resource://rule_assets/a9-pack-pen-public-models-20261030-r1",
+  "files": {
+    "fill_pen_public_templates_v1.npz": {
+      "path": "fill_pen_public_templates_v1.npz",
+      "sha256": "31a05c4ccbf102076e8179bbba678cc9048aabd7207df4c9fe68bcd2f731b619",
+      "bytes": 9398039,
+      "provenance": "Original v79 fixed public RGB/CAD appearance templates; no episode state"
+    },
+    "X5A.urdf": {
+      "path": "X5A.urdf",
+      "sha256": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423",
+      "bytes": 9218,
+      "provenance": "Read-only official public X5 robot model; no episode or scene state"
+    },
+    "curobo.yml": {
+      "path": "curobo.yml",
+      "sha256": "7e28b2a617369d0b4b381d77224ccb43069816acb24c5c6c49235126f8fc459a",
+      "bytes": 12536,
+      "provenance": "Read-only official public X5 robot model; no episode or scene state"
+    }
+  },
+  "scope": "Existing public CAD/RGB models plus pinned public X5 URDF/YAML; no layouts or episode state"
+}

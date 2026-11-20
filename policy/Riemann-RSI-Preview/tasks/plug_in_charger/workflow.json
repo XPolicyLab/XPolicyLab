@@ -1,0 +1,169 @@
+{
+  "schema": "riemann-declarative-skill-workflow-v1",
+  "mode": "rule_only",
+  "official_action_horizon": 400,
+  "wam_reselection": false,
+  "max_operations": 256,
+  "bindings": {
+    "prepare_scene": "skills.perception.implementation:prepare_scene",
+    "result": "skills.perception.implementation:episode_result",
+    "official_guard": "skills.motion.implementation:require_official_bridge",
+    "open_both": "skills.motion.implementation:open_both",
+    "note_incomplete": "skills.motion.implementation:note_incomplete",
+    "set_phase": "skills.motion.implementation:set_phase",
+    "delivery_candidates": "skills.planning.implementation:delivery_candidates",
+    "table_regrasp_allowed": "skills.planning.implementation:table_regrasp_allowed",
+    "pickup": "skills.pickup.implementation:grasp",
+    "table_regrasp": "skills.transport.implementation:table_regrasp",
+    "park_other_arm": "skills.transport.implementation:park_other_arm",
+    "insert": "skills.insertion.implementation:insert",
+    "home_order": "skills.home.implementation:return_order",
+    "return_arm": "skills.home.implementation:return_arm"
+  },
+  "errors": {
+    "grasp_failure": "skills.motion.implementation:GraspFailure",
+    "planning_failure": "skills.motion.implementation:PosePlanningError",
+    "feedback_failure": "skills.motion.implementation:PoseFeedbackError",
+    "home_budget": "skills.motion.implementation:HomeBudgetReached"
+  },
+  "steps": [
+    {
+      "call": "prepare_scene",
+      "id": "qualify_current_rgb"
+    },
+    {
+      "call": "official_guard",
+      "id": "require_native_execution"
+    },
+    {
+      "call": "open_both",
+      "id": "initial_open",
+      "args": {
+        "value": 1.0,
+        "phase": "initial_open",
+        "seconds": 0.16
+      }
+    },
+    {
+      "id": "grasp_transport_insert",
+      "try": [
+        {
+          "call": "delivery_candidates",
+          "args": {
+            "require_delivery": true
+          },
+          "store": "candidates"
+        },
+        {
+          "id": "choose_direct_or_table_regrasp",
+          "if": {
+            "var": "candidates"
+          },
+          "then": [
+            {
+              "call": "pickup",
+              "args": {
+                "require_delivery": true
+              }
+            }
+          ],
+          "else": [
+            {
+              "call": "table_regrasp_allowed",
+              "store": "allow_table"
+            },
+            {
+              "if": {
+                "var": "allow_table"
+              },
+              "then": [
+                {
+                  "call": "pickup",
+                  "args": {
+                    "require_delivery": false
+                  }
+                },
+                {
+                  "call": "table_regrasp"
+                }
+              ],
+              "else": [
+                {
+                  "raise": "grasp_failure",
+                  "message": "No single-arm insertion route; table regrasp disabled"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "call": "park_other_arm",
+          "id": "park_idle_arm"
+        },
+        {
+          "call": "insert",
+          "id": "rgb_refined_insertion"
+        }
+      ],
+      "catch": [
+        {
+          "errors": [
+            "grasp_failure",
+            "planning_failure",
+            "feedback_failure",
+            "home_budget"
+          ],
+          "as": "error",
+          "do": [
+            {
+              "call": "note_incomplete",
+              "args": {
+                "error": {
+                  "var": "error"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "call": "home_order",
+      "id": "begin_return_home",
+      "store": "home_arms"
+    },
+    {
+      "id": "return_each_own_arm",
+      "for_each": {
+        "var": "home_arms"
+      },
+      "as": "arm",
+      "max_items": 2,
+      "do": [
+        {
+          "call": "return_arm",
+          "args": {
+            "arm": {
+              "var": "arm"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "call": "set_phase",
+      "args": {
+        "phase": "await_native_terminal"
+      }
+    },
+    {
+      "call": "result",
+      "store": "episode_result"
+    },
+    {
+      "return": {
+        "var": "episode_result"
+      }
+    }
+  ]
+}

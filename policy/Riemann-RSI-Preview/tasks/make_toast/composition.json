@@ -1,0 +1,43 @@
+{
+  "schema": "riemann-rule-composition-v1",
+  "task_mode": "make_toast",
+  "backend": "rule",
+  "selection": "fixed_original_standard_workflow",
+  "bindings": {},
+  "task_skills": {
+    "arm_motion": "skills/arm_motion/implementation.py",
+    "gripper_motion": "skills/gripper_motion/implementation.py",
+    "insertion": "skills/insertion/implementation.py",
+    "jaw_command_bounds": "skills/jaw_command_bounds/implementation.py",
+    "lever_press": "skills/lever_press/implementation.py",
+    "object_tracking": "skills/object_tracking/implementation.py",
+    "pickup": "skills/pickup/implementation.py",
+    "pose_math": "skills/pose_math/implementation.py",
+    "public_execution": "skills/public_execution/implementation.py",
+    "public_initialization": "skills/public_initialization/implementation.py",
+    "rgb_geometry": "skills/rgb_geometry/implementation.py",
+    "rgb_scene_fit": "skills/rgb_scene_fit/implementation.py",
+    "transport_motion": "skills/transport_motion/implementation.py",
+    "press_applied_jaw_feedback": "skills/press_applied_jaw_feedback/implementation.py",
+    "press_rest_command": "skills/press_rest_command/implementation.py",
+    "toaster_slider_bounds": "skills/toaster_slider_bounds/implementation.py"
+  },
+  "native_workflow": "workflow.json",
+  "controller": "tasks/make_toast/controller.py:MatureToastContext",
+  "dispatch": "One mature fixed workflow; no per-segment resolver, model or WAM selection.",
+  "official_action_budget_changed": false,
+  "runtime_layout": "repository-flat-native-skills-v1",
+  "native_performance_acceptance": "pending_same50",
+  "python_entry_files": [
+    "harness/runtime/mature_teacher_boundary.py",
+    "harness/runtime/mature_teacher_clock.py",
+    "harness/runtime/native_rule_evaluation/binding.py",
+    "harness/runtime/native_rule_evaluation/planner.py",
+    "tasks/make_toast/bindings/official_policy.py",
+    "tasks/make_toast/controller.py",
+    "tasks/make_toast/entry.py"
+  ],
+  "source_versioning": "git",
+  "graph_files": [],
+  "resource_files": []
+}

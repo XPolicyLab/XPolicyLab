@@ -1,0 +1,31 @@
+{
+  "schema": "riemann-rule-composition-v1",
+  "task_mode": "fill_egg_holder",
+  "backend": "rule",
+  "workflow": "workflow.json",
+  "task_skills": {
+    "geometry": "skills/geometry/implementation.py",
+    "home": "skills/home/implementation.py",
+    "insertion": "skills/insertion/implementation.py",
+    "lid": "skills/lid/implementation.py",
+    "motion": "skills/motion/implementation.py",
+    "perception": "skills/perception/implementation.py",
+    "pickup": "skills/pickup/implementation.py",
+    "planning": "skills/planning/implementation.py",
+    "recovery": "skills/recovery/implementation.py",
+    "state": "skills/state/implementation.py",
+    "public_robot": "skills/public_robot/implementation.py"
+  },
+  "validation": "public_v107_binding_and_R3_runtime_integration_pending",
+  "python_entry_files": [
+    "harness/runtime/mature_teacher_boundary.py",
+    "tasks/fill_egg_holder/controller.py",
+    "tasks/fill_egg_holder/entry.py",
+    "tasks/fill_egg_holder/resources.py",
+    "tasks/fill_egg_holder/skills/finalization/implementation.py"
+  ],
+  "source_versioning": "git",
+  "native_workflow": "workflow.json",
+  "graph_files": [],
+  "resource_files": []
+}

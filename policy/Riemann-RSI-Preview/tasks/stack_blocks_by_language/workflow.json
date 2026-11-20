@@ -1,0 +1,24 @@
+{
+  "schema": "riemann-declarative-skill-workflow-v1",
+  "mode": "rule_only",
+  "official_action_horizon": 400,
+  "wam_reselection": false,
+  "max_operations": 32,
+  "bindings": {
+    "initial_open": "skills.motion.implementation:initial_open",
+    "select_destination": "skills.selection.implementation:select_destination",
+    "ordered_layers": "skills.selection.implementation:ordered_layers",
+    "pick_layer": "skills.pickup.implementation:pick_layer",
+    "finish": "skills.motion.implementation:finish"
+  },
+  "errors": {},
+  "steps": [
+    {"call": "initial_open", "id": "original_initial_open"},
+    {"call": "select_destination", "store": "destination", "id": "original_central_target"},
+    {"call": "ordered_layers", "store": "layers"},
+    {"for_each": {"var": "layers"}, "as": "item", "max_items": 3,
+      "do": [{"call": "pick_layer", "args": {"item": {"var": "item"}, "destination": {"var": "destination"}}, "id": "original_continuous_pick_place"}]},
+    {"call": "finish", "store": "completed"},
+    {"return": {"var": "completed"}}
+  ]
+}

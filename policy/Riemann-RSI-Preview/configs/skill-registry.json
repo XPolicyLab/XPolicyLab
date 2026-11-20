@@ -1,0 +1,165 @@
+{
+  "schema": "riemann-executable-skill-library-v1",
+  "modes": {
+    "build_tower": {
+      "composition": "tasks/build_tower/composition.json",
+      "backend": "learned_policy"
+    },
+    "hang_mugs_random": {
+      "composition": "tasks/hang_mugs_random/composition.json",
+      "backend": "learned_policy"
+    },
+    "pack_objects_into_box_random": {
+      "composition": "tasks/pack_objects_into_box_random/composition.json",
+      "backend": "learned_policy"
+    },
+    "put_bottles_into_dustbin": {
+      "composition": "tasks/put_bottles_into_dustbin/composition.json",
+      "backend": "learned_policy"
+    },
+    "stack_bowls": {
+      "composition": "tasks/stack_bowls/composition.json",
+      "backend": "learned_policy"
+    },
+    "store_laptop_and_headphones": {
+      "composition": "tasks/store_laptop_and_headphones/composition.json",
+      "backend": "learned_policy"
+    },
+    "store_laptop_and_headphones_random": {
+      "composition": "tasks/store_laptop_and_headphones_random/composition.json",
+      "backend": "learned_policy"
+    },
+    "sweep_blocks": {
+      "composition": "tasks/sweep_blocks/composition.json",
+      "backend": "learned_policy"
+    },
+    "sweep_blocks_random": {
+      "composition": "tasks/sweep_blocks_random/composition.json",
+      "backend": "learned_policy"
+    },
+    "align_blocks": {
+      "composition": "tasks/align_blocks/composition.json",
+      "backend": "learned_policy"
+    }
+  },
+  "skills": {
+    "policy_checkpoint_resolution": {
+      "owner": "",
+      "symbol": "_resolve_model_path",
+      "qualname": "_resolve_model_path",
+      "future_flags": 0,
+      "interface_sha256": "80a10f1bdfba0b51729528c2fc5973383fc49c52e7b8e560e430d5073ef3540a",
+      "ast_sha256": "2e1e1b85e4b273d8bbd17ab4e07706f39f677043277a9235e60575b31b3d020b",
+      "implementation": "skills/shared/support/policy_checkpoint_resolution/implementation.py"
+    },
+    "policy_action_batch": {
+      "owner": "Model",
+      "symbol": "get_action_batch",
+      "qualname": "Model.get_action_batch",
+      "future_flags": 0,
+      "interface_sha256": "4268b21ccf87c9b1046c9665d11c8671266fb3b4a7f9faca0b0df5350861b0e0",
+      "ast_sha256": "dc52955fe2a5734e3b7aaacadaf9adf6ac0e3b7f648cb722a872f69131ea9498",
+      "implementation": "skills/shared/orchestration/policy_action_batch/implementation.py",
+      "workflow": "skills/shared/orchestration/policy_action_batch/workflow.json",
+      "workflow_nodes": 1
+    },
+    "policy_model_initialization": {
+      "owner": "Model",
+      "symbol": "__init__",
+      "qualname": "Model.__init__",
+      "future_flags": 0,
+      "interface_sha256": "706a8e63534e556697fe212dd7b4b616555d013b7d551dbf8af9dfe2567625ef",
+      "ast_sha256": "165d2f3b0604428e70c29268512a556d3a0021ec6c4cc3f2309fde644d4f538c",
+      "implementation": "skills/shared/support/policy_model_initialization/implementation.py"
+    },
+    "policy_inference_configuration": {
+      "owner": "",
+      "symbol": "_load_train_config",
+      "qualname": "_load_train_config",
+      "future_flags": 0,
+      "interface_sha256": "9ffb6ed43f1f4f98f397583ac1d8c1265700a428d6e9e3f0965a3bf8773a39ae",
+      "ast_sha256": "a1edc7c8fe004bdea6eba55be9c63fd2c69788770f84d8f36fa32cf4783a0685",
+      "implementation": "skills/shared/support/policy_inference_configuration/implementation.py"
+    },
+    "policy_action_step": {
+      "owner": "Model",
+      "symbol": "get_action",
+      "qualname": "Model.get_action",
+      "future_flags": 0,
+      "interface_sha256": "673815fbdf3dcdd8c260e3fb7591c4d35cfb3f11a29123474db4bffa76fd9654",
+      "ast_sha256": "177b11a8fc004730c2b954c3cf7a9592501a1c553e28434bffde41e50d1de229",
+      "implementation": "skills/shared/orchestration/policy_action_step/implementation.py",
+      "workflow": "skills/shared/orchestration/policy_action_step/workflow.json",
+      "workflow_nodes": 14
+    },
+    "policy_observation_update": {
+      "owner": "Model",
+      "symbol": "update_obs",
+      "qualname": "Model.update_obs",
+      "future_flags": 0,
+      "interface_sha256": "9d18e2b3e249864257c050405368378a07b9521ebb4823693c9279e1a64b310c",
+      "ast_sha256": "f4f4c3350903c112a401905640908f65cb9f8eda90ad6010b25771fa7a06320c",
+      "implementation": "skills/shared/orchestration/policy_observation_update/implementation.py",
+      "workflow": "skills/shared/orchestration/policy_observation_update/workflow.json",
+      "workflow_nodes": 6
+    },
+    "policy_instruction_text": {
+      "owner": "Model",
+      "symbol": "_task_text",
+      "qualname": "Model._task_text",
+      "future_flags": 0,
+      "interface_sha256": "032c46e67d8da4f0253fee2e831d4abbffd8cccc8559aa95ae0fe6be5f5f486f",
+      "ast_sha256": "0c9cecc3dd009999cb68db55b19f77c5594ead3038b2a84289827c6c692c74b5",
+      "implementation": "skills/shared/support/policy_instruction_text/implementation.py"
+    },
+    "policy_robot_state_encoding": {
+      "owner": "Model",
+      "symbol": "_state_from_obs",
+      "qualname": "Model._state_from_obs",
+      "future_flags": 0,
+      "interface_sha256": "4d9e4d02a27000d6579fd58cfa9d022418db7d4431369cb28c1de66c1ae9f1fa",
+      "ast_sha256": "10426859dac20cc351dd98f4d861dcadd5a46ea773335601a3b0042bf8c93ad4",
+      "implementation": "skills/shared/support/policy_robot_state_encoding/implementation.py"
+    },
+    "policy_observation_batch_update": {
+      "owner": "Model",
+      "symbol": "update_obs_batch",
+      "qualname": "Model.update_obs_batch",
+      "future_flags": 0,
+      "interface_sha256": "5d6fc99f4600c66df633b4ef3d7ea08e9812eaa85b95eb476439eadf0a7be888",
+      "ast_sha256": "89ff186f5bfa85dbf00b8cfa56bc248f5d99dc5372270b722be3aa3e0d337a2e",
+      "implementation": "skills/shared/orchestration/policy_observation_batch_update/implementation.py",
+      "workflow": "skills/shared/orchestration/policy_observation_batch_update/workflow.json",
+      "workflow_nodes": 3
+    },
+    "policy_camera_composition": {
+      "owner": "Model",
+      "symbol": "_stitch_image",
+      "qualname": "Model._stitch_image",
+      "future_flags": 0,
+      "interface_sha256": "c7cd4db951aedc80347b88840de5d1bad15298fdf0bee7bd25895256b4d547af",
+      "ast_sha256": "51d12ea38b40d16bef05decf75db74ae258468718978794c3c19922cb5bc11b8",
+      "implementation": "skills/shared/support/policy_camera_composition/implementation.py"
+    },
+    "policy_normalization_validation": {
+      "owner": "",
+      "symbol": "_verify_norm_stats",
+      "qualname": "_verify_norm_stats",
+      "future_flags": 0,
+      "interface_sha256": "04f55bbad217d144141bc122b50825dd08306921fa997730801fc12c62376c0a",
+      "ast_sha256": "6908deced811ada0bbc87cbdf0e760236e25582044aa9153d1fc12fb03f8f263",
+      "implementation": "skills/shared/verification/policy_normalization_validation/implementation.py"
+    },
+    "policy_episode_reset": {
+      "owner": "Model",
+      "symbol": "reset",
+      "qualname": "Model.reset",
+      "future_flags": 0,
+      "interface_sha256": "701f1d2d047361710e074a1c424c4053319fa4c8e458a4d6b2dcde359d097140",
+      "ast_sha256": "6ece7eb69f897050f43f30e79e2b0613ba314ff34c6ddd5e7a224836d94c7aa0",
+      "implementation": "skills/shared/orchestration/policy_episode_reset/implementation.py",
+      "workflow": "skills/shared/orchestration/policy_episode_reset/workflow.json",
+      "workflow_nodes": 3
+    }
+  }
+}

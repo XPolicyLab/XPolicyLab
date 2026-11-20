@@ -1,0 +1,212 @@
+{
+  "schema": "a18-public-x5-static-resources-v1",
+  "root": "resource://official_assets/Robots/x5",
+  "source": "Official static X5 robot model, not episode or scene state",
+  "official_commit": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
+  "files": {
+    "X5A.urdf": {
+      "sha256": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423",
+      "bytes": 9218,
+      "resolved_path": "resource://official_assets/Robots/x5/X5A.urdf"
+    },
+    "curobo.yml": {
+      "sha256": "ffcdc4fde61d3a0aa15550d519ee4f727888d225bf7b6e6b72d59398153efa62",
+      "bytes": 12566,
+      "resolved_path": "resource://official_assets/Robots/x5/curobo.yml"
+    },
+    "meshes/base_link.STL": {
+      "sha256": "898dbe3af3a98857358ac5a3d74e085ec9c69946737e767dad139776761cbd92",
+      "bytes": 1611284,
+      "resolved_path": "resource://official_assets/Robots/x5/meshes/base_link.STL"
+    },
+    "meshes/camera.glb": {
+      "sha256": "9833e436988bcd83f3113ab1071428427c80d6a1392d9e0b7cf35d2b6e949d7c",
+      "bytes": 15899328,
+      "resolved_path": "resource://official_assets/Robots/x5/meshes/camera.glb"
+    },
+    "meshes/camera_base.glb": {
+      "sha256": "d771a24ab886166536ffe4a0719af1163e44fac4067e07110cf72a7a01d260b0",
+      "bytes": 62332,
+      "resolved_path": "resource://official_assets/Robots/x5/meshes/camera_base.glb"
+    },
+    "meshes/link1.STL": {
+      "sha256": "04a52b86a5b28c847377a9167e7effab0478fa591052e83b0b32cf8709bb3885",
+      "bytes": 162184,
+      "resolved_path": "resource://official_assets/Robots/x5/meshes/link1.STL"
+    },
+    "meshes/link2.STL": {
+      "sha256": "2865da6a962c814abaf9251497bcf5f5e3b67610e3b657ddcaa9de8b3d45e83e",
+      "bytes": 4353884,
+      "resolved_path": "resource://official_assets/Robots/x5/meshes/link2.STL"
+    },
+    "meshes/link3.STL": {
+      "sha256": "3ac2411b0cbffcf4808cae4c215cfeab607f240cd124eeba209ac7986ac047c0",
+      "bytes": 1052684,
+      "resolved_path": "resource://official_assets/Robots/x5/meshes/link3.STL"
+    },
+    "meshes/link4.STL": {
+      "sha256": "3447ddef920c22e4607b887e1cc588037dfb51c37825c4cac86a5391425469c4",
+      "bytes": 142784,
+      "resolved_path": "resource://official_assets/Robots/x5/meshes/link4.STL"
+    },
+    "meshes/link5.STL": {
+      "sha256": "934b3e70ce2987f8de999de29d8ef72c8370dced8e9fdf6f9ddd3e7e24c1e464",
+      "bytes": 679584,
+      "resolved_path": "resource://official_assets/Robots/x5/meshes/link5.STL"
+    },
+    "meshes/link6.STL": {
+      "sha256": "32dca4ededcf3215163207b9aea1046114ae59921555d1e068ee46fa6e53915e",
+      "bytes": 643784,
+      "resolved_path": "resource://official_assets/Robots/x5/meshes/link6.STL"
+    },
+    "meshes/link7.STL": {
+      "sha256": "ec3d40b39cccde0075ca3d16603f14f180fce41a46b446473d384def7a1b0be0",
+      "bytes": 65284,
+      "resolved_path": "resource://official_assets/Robots/x5/meshes/link7.STL"
+    },
+    "meshes/link8.STL": {
+      "sha256": "29f7a8379cad81797e82e4ba099455cc275ac6ac5bb9e264ce46719fd7d2bb60",
+      "bytes": 65284,
+      "resolved_path": "resource://official_assets/Robots/x5/meshes/link8.STL"
+    },
+    "ARX.usd": {
+      "sha256": "5723a835bf5627a935a8dabb3a44447725bd1465243ce791e221b3e990121d63",
+      "bytes": 28300821,
+      "resolved_path": "resource://official_assets/Robots/x5/ARX.usd"
+    },
+    "robot_config.yml": {
+      "sha256": "9de4f63b84c0f730623c09af7a2d530d84973981397280b6e4b626b50ba6f1c9",
+      "bytes": 794,
+      "resolved_path": "resource://official_assets/Robots/x5/robot_config.yml"
+    }
+  },
+  "arm_joint_limits": [
+    [
+      -9.999999046325684,
+      9.999999046325684
+    ],
+    [
+      -9.999999046325684,
+      9.999999046325684
+    ],
+    [
+      -9.999999046325684,
+      9.999999046325684
+    ],
+    [
+      -9.999999046325684,
+      9.999999046325684
+    ],
+    [
+      -9.999999046325684,
+      9.999999046325684
+    ],
+    [
+      -3.1399998664855957,
+      3.1399998664855957
+    ]
+  ],
+  "joint_limit_source": {
+    "resource": "ARX.usd",
+    "units": "authored revolute degrees converted to float32 radians",
+    "public_asset_CPU_audit": {
+      "joint1": {
+        "prim": "/X5A/joints/joint1",
+        "type": "PhysicsRevoluteJoint",
+        "authored_limits": {
+          "physics:lowerLimit": -572.957763671875,
+          "physics:upperLimit": 572.957763671875
+        },
+        "limits_radians_or_m": [
+          -9.999999046325684,
+          9.999999046325684
+        ]
+      },
+      "joint2": {
+        "prim": "/X5A/joints/joint2",
+        "type": "PhysicsRevoluteJoint",
+        "authored_limits": {
+          "physics:lowerLimit": -572.957763671875,
+          "physics:upperLimit": 572.957763671875
+        },
+        "limits_radians_or_m": [
+          -9.999999046325684,
+          9.999999046325684
+        ]
+      },
+      "joint3": {
+        "prim": "/X5A/joints/joint3",
+        "type": "PhysicsRevoluteJoint",
+        "authored_limits": {
+          "physics:lowerLimit": -572.957763671875,
+          "physics:upperLimit": 572.957763671875
+        },
+        "limits_radians_or_m": [
+          -9.999999046325684,
+          9.999999046325684
+        ]
+      },
+      "joint4": {
+        "prim": "/X5A/joints/joint4",
+        "type": "PhysicsRevoluteJoint",
+        "authored_limits": {
+          "physics:lowerLimit": -572.957763671875,
+          "physics:upperLimit": 572.957763671875
+        },
+        "limits_radians_or_m": [
+          -9.999999046325684,
+          9.999999046325684
+        ]
+      },
+      "joint5": {
+        "prim": "/X5A/joints/joint5",
+        "type": "PhysicsRevoluteJoint",
+        "authored_limits": {
+          "physics:lowerLimit": -572.957763671875,
+          "physics:upperLimit": 572.957763671875
+        },
+        "limits_radians_or_m": [
+          -9.999999046325684,
+          9.999999046325684
+        ]
+      },
+      "joint6": {
+        "prim": "/X5A/joints/joint6",
+        "type": "PhysicsRevoluteJoint",
+        "authored_limits": {
+          "physics:lowerLimit": -179.9087371826172,
+          "physics:upperLimit": 179.9087371826172
+        },
+        "limits_radians_or_m": [
+          -3.1399998664855957,
+          3.1399998664855957
+        ]
+      },
+      "joint7": {
+        "prim": "/X5A/joints/joint7",
+        "type": "PhysicsPrismaticJoint",
+        "authored_limits": {
+          "physics:lowerLimit": 0.0,
+          "physics:upperLimit": 0.04399999976158142
+        },
+        "limits_radians_or_m": [
+          0.0,
+          0.04399999976158142
+        ]
+      },
+      "joint8": {
+        "prim": "/X5A/joints/joint8",
+        "type": "PhysicsPrismaticJoint",
+        "authored_limits": {
+          "physics:lowerLimit": 0.0,
+          "physics:upperLimit": 0.04399999976158142
+        },
+        "limits_radians_or_m": [
+          0.0,
+          0.04399999976158142
+        ]
+      }
+    },
+    "episode_or_scene_state_read": false
+  }
+}

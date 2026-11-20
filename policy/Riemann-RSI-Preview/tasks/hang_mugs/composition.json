@@ -1,0 +1,33 @@
+{
+  "schema": "riemann-rule-composition-v1",
+  "task_mode": "hang_mugs",
+  "backend": "rule",
+  "workflow": "workflow.json",
+  "context": "controller:U05_VisionHangMugsTeacher",
+  "task_skills": {
+    "state": "skills/state/implementation.py",
+    "geometry": "skills/geometry/implementation.py",
+    "motion": "skills/motion/implementation.py",
+    "perception": "skills/perception/implementation.py",
+    "insertion": "skills/insertion/implementation.py",
+    "release": "skills/release/implementation.py",
+    "planning": "skills/planning/implementation.py",
+    "transport": "skills/transport/implementation.py",
+    "pickup": "skills/pickup/implementation.py",
+    "recovery": "skills/recovery/implementation.py",
+    "home": "skills/home/implementation.py",
+    "public_contract": "skills/public_contract/implementation.py",
+    "public_jaw": "skills/public_jaw/implementation.py"
+  },
+  "validation": "public_native_bounded_probe_development; actual frozen closure and resources required; no task-performance approval",
+  "python_entry_files": [
+    "harness/runtime/mature_teacher_boundary.py",
+    "tasks/hang_mugs/controller.py",
+    "tasks/hang_mugs/entry.py",
+    "tasks/hang_mugs/resources.py"
+  ],
+  "source_versioning": "git",
+  "native_workflow": "workflow.json",
+  "graph_files": [],
+  "resource_files": []
+}

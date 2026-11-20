@@ -1,0 +1,7 @@
+{
+  "task": "arrange_largest_number",
+  "backend": "rule",
+  "entry": "entry.py",
+  "evaluation_enabled": true,
+  "runtime_config": "configs/official-rule-evaluation.json"
+}

@@ -1,0 +1,39 @@
+{
+  "schema": "riemann-rule-composition-v1",
+  "task_mode": "play_tic_tac_toe",
+  "backend": "rule",
+  "selection": "current_public_evidence",
+  "bindings": {},
+  "controller_entry_slots": [],
+  "native_workflow": "workflow.json",
+  "native_action_tools": {
+    "board_return_idle_wrist": "tasks/play_tic_tac_toe/skills/board_return_idle_wrist/implementation.py",
+    "board_scene_view": "tasks/play_tic_tac_toe/skills/board_scene_view/implementation.py",
+    "board_turn_stage": "tasks/play_tic_tac_toe/skills/board_turn_stage/implementation.py",
+    "board_wait_opponent": "tasks/play_tic_tac_toe/skills/wait_opponent/implementation.py"
+  },
+  "task_skills": {
+    "board_return_idle_wrist": "skills/board_return_idle_wrist/implementation.py",
+    "board_scene_view": "skills/board_scene_view/implementation.py",
+    "board_turn_stage": "skills/board_turn_stage/implementation.py",
+    "choose_turn": "skills/choose_turn/implementation.py",
+    "execute_board_workflow": "skills/execute_board_workflow/implementation.py",
+    "plan_token_transfer": "skills/plan_token_transfer/implementation.py",
+    "read_board_geometry": "skills/read_board_geometry/implementation.py",
+    "read_token_surfaces": "skills/read_token_surfaces/implementation.py",
+    "resolve_board_sequence": "skills/resolve_board_sequence/implementation.py",
+    "wait_opponent": "skills/wait_opponent/implementation.py"
+  },
+  "shared_action_tools": [],
+  "dispatch": "Frozen deterministic native workflow; public tool boundaries and declared bounded rule recovery only.",
+  "official_action_budget_changed": false,
+  "runtime_layout": "repository-flat-native-skills-v1",
+  "python_entry_files": [
+    "tasks/play_tic_tac_toe/bindings/official_policy.py",
+    "tasks/play_tic_tac_toe/controller.py",
+    "tasks/play_tic_tac_toe/entry.py"
+  ],
+  "source_versioning": "git",
+  "graph_files": [],
+  "resource_files": []
+}

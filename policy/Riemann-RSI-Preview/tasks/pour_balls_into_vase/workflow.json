@@ -1,0 +1,1230 @@
+{
+  "schema": "riemann-mature-teacher-programs-v1",
+  "package": "tasks.pour_balls_into_vase",
+  "task": "pour_balls_into_vase",
+  "official_action_horizon": 600,
+  "mode": "rule_only",
+  "wam_reselection": false,
+  "programs": {
+    "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 600,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_001": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_001",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_002": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_002",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_not_candidates_003": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_not_candidates_003",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_not_candidates_004": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_not_candidates_004",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_005": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_005",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_006": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_006",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_007": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_007",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_008": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_008",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_009": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_009",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_010": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_010",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_011": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_011",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_012": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_012",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_013": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_013",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_wrist_candidates_014": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_wrist_candidates_014",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_015": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_015",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_all_np_linalg_norm_np_asarray_candidate_centre_2_016": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_all_np_linalg_norm_np_asarray_candidate_centre_2_016",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_all_np_linalg_norm_np_asarray_candidate_centre_2_017": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_all_np_linalg_norm_np_asarray_candidate_centre_2_017",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_018": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_018"
+      },
+      "errors": {},
+      "steps": [
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_001"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_002",
+          "args": {
+            "phase_0": "recovery_detection"
+          }
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_not_candidates_003",
+          "store": "condition_3"
+        },
+        {
+          "if": {
+            "var": "condition_3"
+          },
+          "then": [
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_not_candidates_004",
+              "store": "result_4"
+            },
+            {
+              "return": {
+                "var": "result_4"
+              }
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_005"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_006"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_007"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_008"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_009"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_010"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_011"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_012",
+          "args": {
+            "phase_0": "recovery_wrist_detection"
+          }
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_013"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_wrist_candidates_014",
+          "store": "items_14"
+        },
+        {
+          "for_each": {
+            "var": "items_14"
+          },
+          "as": "loop_item_15",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_015",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_15"
+                }
+              }
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_all_np_linalg_norm_np_asarray_candidate_centre_2_016",
+              "store": "condition_16"
+            },
+            {
+              "if": {
+                "var": "condition_16"
+              },
+              "then": [
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_all_np_linalg_norm_np_asarray_candidate_centre_2_017"
+                }
+              ],
+              "else": []
+            }
+          ]
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_recover_visible_balls_motion_018"
+        }
+      ]
+    },
+    "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 600,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_motion_001": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_motion_001",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_motion_002": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_motion_002",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_motion_003": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_motion_003",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_motion_004": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_motion_004",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_not_candidates_005": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_not_candidates_005",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_not_candidates_006": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_not_candidates_006",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_not_candidates_007": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_not_candidates_007",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_not_candidates_008": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_not_candidates_008",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_not_candidates_009": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_not_candidates_009",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_not_candidates_010": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_not_candidates_010",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_not_candidates_011": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_not_candidates_011",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_not_candidates_012": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_not_candidates_012",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_not_candidates_013": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_not_candidates_013",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_candidates_014": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_candidates_014",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_candidates_015": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_candidates_015",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_scan_robot_is_not_none_and_scan_robot_arm_name_r_016": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_scan_robot_is_not_none_and_scan_robot_arm_name_r_016",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_scan_robot_is_not_none_and_scan_robot_arm_name_r_017": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_scan_robot_is_not_none_and_scan_robot_arm_name_r_017",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_scan_robot_is_not_none_018": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_scan_robot_is_not_none_018",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_scan_robot_is_not_none_019": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_scan_robot_is_not_none_019"
+      },
+      "errors": {},
+      "steps": [
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_motion_001"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_motion_002"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_motion_003",
+          "args": {
+            "phase_0": "postpour_detection"
+          }
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_motion_004"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_not_candidates_005",
+          "store": "condition_5"
+        },
+        {
+          "if": {
+            "var": "condition_5"
+          },
+          "then": [
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_not_candidates_006"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_not_candidates_007"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_not_candidates_008"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_not_candidates_009"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_not_candidates_010"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_not_candidates_011"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_not_candidates_012"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_not_candidates_013",
+              "args": {
+                "phase_0": "postpour_scan_detection"
+              }
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_candidates_014",
+          "store": "condition_14"
+        },
+        {
+          "if": {
+            "var": "condition_14"
+          },
+          "then": [
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_candidates_015"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_scan_robot_is_not_none_and_scan_robot_arm_name_r_016",
+              "store": "condition_16"
+            },
+            {
+              "if": {
+                "var": "condition_16"
+              },
+              "then": [
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_scan_robot_is_not_none_and_scan_robot_arm_name_r_017",
+                  "args": {
+                    "phase_0": "postpour_scan_home"
+                  }
+                }
+              ],
+              "else": []
+            }
+          ],
+          "else": [
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_scan_robot_is_not_none_018",
+              "store": "condition_18"
+            },
+            {
+              "if": {
+                "var": "condition_18"
+              },
+              "then": [
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_recover_spilled_ball_scan_robot_is_not_none_019",
+                  "args": {
+                    "phase_0": "postpour_scan_home"
+                  }
+                }
+              ],
+              "else": []
+            }
+          ]
+        }
+      ]
+    },
+    "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 600,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_001": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_001",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_enumerate_candidates_2_002": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_enumerate_candidates_2_002",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_003": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_003",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_004": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_004",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_005": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_005",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_006": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_006",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_007": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_007",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_008": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_008",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_near_base_009": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_near_base_009",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_near_base_010": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_near_base_010",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_near_base_011": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_near_base_011",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_012": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_012",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_013": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_013",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_014": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_014",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_015": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_015",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_016": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_016",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_017": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_017",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_018": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_018",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_019": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_019",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_020": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_020",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_nearby_021": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_nearby_021",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_nearby_022": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_nearby_022",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_nearby_023": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_nearby_023",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_024": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_024",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_025": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_025",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_026": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_026",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_np_linalg_norm_self_actual_ee_pose_robot_3_targe_027": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_np_linalg_norm_self_actual_ee_pose_robot_3_targe_027",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_np_linalg_norm_self_actual_ee_pose_robot_3_targe_028": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_np_linalg_norm_self_actual_ee_pose_robot_3_targe_028",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_029": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_029",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_030": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_030",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_031": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_031",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_032": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_032",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_033": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_033",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_034": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_034",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_035": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_035",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_lifted_width_absent_036": "skills.pickup.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_lifted_width_absent_036",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_lifted_width_absent_037": "skills.pickup.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_lifted_width_absent_037",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_near_base_or_postpour_038": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_near_base_or_postpour_038",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_near_base_or_postpour_039": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_near_base_or_postpour_039",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_near_base_or_postpour_040": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_near_base_or_postpour_040",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_near_base_or_postpour_041": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_near_base_or_postpour_041",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_near_base_or_postpour_042": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_near_base_or_postpour_042",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_043": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_043",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_044": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_044",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_np_linalg_norm_self_actual_ee_pose_robot_3_drop__045": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_np_linalg_norm_self_actual_ee_pose_robot_3_drop__045",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_np_linalg_norm_self_actual_ee_pose_robot_3_drop__046": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_np_linalg_norm_self_actual_ee_pose_robot_3_drop__046",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_047": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_047",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_048": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_048",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_049": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_049",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_050": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_050",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_051": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_051",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_postpour_or_next_robot_arm_name_robot_arm_name_052": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_postpour_or_next_robot_arm_name_robot_arm_name_052",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_postpour_or_next_robot_arm_name_robot_arm_name_053": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_postpour_or_next_robot_arm_name_robot_arm_name_053",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_054": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_054",
+        "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_055": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_055"
+      },
+      "errors": {},
+      "steps": [
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_001"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_enumerate_candidates_2_002",
+          "store": "items_2"
+        },
+        {
+          "for_each": {
+            "var": "items_2"
+          },
+          "as": "loop_item_3",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_003",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_3"
+                }
+              }
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_004"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_005"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_006"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_007"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_008"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_near_base_009",
+              "store": "condition_9"
+            },
+            {
+              "if": {
+                "var": "condition_9"
+              },
+              "then": [
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_near_base_010"
+                },
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_near_base_011"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_012"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_013"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_014"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_015"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_016"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_017"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_018"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_019"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_020"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_nearby_021",
+              "store": "condition_21"
+            },
+            {
+              "if": {
+                "var": "condition_21"
+              },
+              "then": [
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_nearby_022"
+                },
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_nearby_023"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_024"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_025"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_026"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_np_linalg_norm_self_actual_ee_pose_robot_3_targe_027",
+              "store": "condition_27"
+            },
+            {
+              "if": {
+                "var": "condition_27"
+              },
+              "then": [
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_np_linalg_norm_self_actual_ee_pose_robot_3_targe_028"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_029"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_030"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_031"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_032"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_033"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_034"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_035"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_lifted_width_absent_036",
+              "store": "condition_36"
+            },
+            {
+              "if": {
+                "var": "condition_36"
+              },
+              "then": [
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_lifted_width_absent_037"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_near_base_or_postpour_038",
+              "store": "condition_38"
+            },
+            {
+              "if": {
+                "var": "condition_38"
+              },
+              "then": [
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_near_base_or_postpour_039"
+                },
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_near_base_or_postpour_040"
+                },
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_near_base_or_postpour_041"
+                },
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_near_base_or_postpour_042"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_043"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_044"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_np_linalg_norm_self_actual_ee_pose_robot_3_drop__045",
+              "store": "condition_45"
+            },
+            {
+              "if": {
+                "var": "condition_45"
+              },
+              "then": [
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_np_linalg_norm_self_actual_ee_pose_robot_3_drop__046"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_047"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_048"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_049"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_050"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_051"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_postpour_or_next_robot_arm_name_robot_arm_name_052",
+              "store": "condition_52"
+            },
+            {
+              "if": {
+                "var": "condition_52"
+              },
+              "then": [
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_postpour_or_next_robot_arm_name_robot_arm_name_053"
+                }
+              ],
+              "else": []
+            }
+          ]
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_054",
+          "args": {
+            "phase_0": "recovery_complete_open"
+          }
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_recover_detected_balls_motion_055",
+          "store": "result_55"
+        },
+        {
+          "return": {
+            "var": "result_55"
+          }
+        }
+      ]
+    },
+    "U04_VisionPourBallsIntoVaseTeacher_run": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 600,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_001": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_001",
+        "U04_VisionPourBallsIntoVaseTeacher_run_self_args_inspect_only_002": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_self_args_inspect_only_002",
+        "U04_VisionPourBallsIntoVaseTeacher_run_self_args_inspect_only_003": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_self_args_inspect_only_003",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_004": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_004",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_005": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_005",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_006": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_006",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_007": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_007",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_008": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_008",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_009": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_009",
+        "U04_VisionPourBallsIntoVaseTeacher_run_direct_010": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_direct_010",
+        "U04_VisionPourBallsIntoVaseTeacher_run_direct_011": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_direct_011",
+        "U04_VisionPourBallsIntoVaseTeacher_run_direct_012": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_direct_012",
+        "U04_VisionPourBallsIntoVaseTeacher_run_direct_013": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_direct_013",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_014": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_014",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_015": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_015",
+        "U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_016": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_016",
+        "U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_017": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_017",
+        "U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_018": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_018",
+        "U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_019": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_019",
+        "U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_020": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_020",
+        "U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_021": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_021",
+        "U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_022": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_022",
+        "U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_023": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_023",
+        "U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_024": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_024",
+        "U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_025": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_025",
+        "U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_026": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_026",
+        "U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_027": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_027",
+        "U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_028": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_028",
+        "U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_029": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_029",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_030": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_030",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_031": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_031",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_032": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_032",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_033": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_033",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_034": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_034",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_035": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_035",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_036": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_036",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_037": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_037",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_038": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_038",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_039": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_039",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_040": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_040",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_041": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_041",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_042": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_042",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_043": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_043",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_044": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_044",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_045": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_045",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_046": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_046",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_047": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_047",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_048": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_048",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_049": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_049",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_050": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_050",
+        "U04_VisionPourBallsIntoVaseTeacher_run_not_str_error_startswith_multi_view_051": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_not_str_error_startswith_multi_view_051",
+        "U04_VisionPourBallsIntoVaseTeacher_run_not_str_error_startswith_multi_view_052": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_not_str_error_startswith_multi_view_052",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_053": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_053",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_054": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_054",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_055": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_055",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_056": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_056",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_057": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_057",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_058": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_058",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_059": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_059",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_060": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_060",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_061": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_061",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_062": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_062",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_063": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_063",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_064": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_064",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_065": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_065",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_066": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_066",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_067": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_067",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_068": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_068",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_069": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_069",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_070": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_070",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_071": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_071",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_072": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_072",
+        "U04_VisionPourBallsIntoVaseTeacher_run_range_0_121_15_073": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_range_0_121_15_073",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_074": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_074",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_075": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_075",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_076": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_076",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_077": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_077",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_078": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_078",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_079": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_079",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_080": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_080",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_081": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_081",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_082": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_082",
+        "U04_VisionPourBallsIntoVaseTeacher_run_degrees_90_083": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_degrees_90_083",
+        "U04_VisionPourBallsIntoVaseTeacher_run_degrees_90_084": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_degrees_90_084",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_085": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_085",
+        "U04_VisionPourBallsIntoVaseTeacher_run_enumerate_reversed_pour_poses_1_086": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_enumerate_reversed_pour_poses_1_086",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_087": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_087",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_088": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_088",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_089": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_089",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_090": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_090",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_091": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_091",
+        "U04_VisionPourBallsIntoVaseTeacher_run_not_clear_candidates_092": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_not_clear_candidates_092",
+        "U04_VisionPourBallsIntoVaseTeacher_run_not_clear_candidates_093": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_not_clear_candidates_093",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_094": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_094",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_095": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_095",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_096": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_096",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_097": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_097",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_098": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_098",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_099": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_099",
+        "U04_VisionPourBallsIntoVaseTeacher_run_correction_length_1e_06_100": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_correction_length_1e_06_100",
+        "U04_VisionPourBallsIntoVaseTeacher_run_correction_length_1e_06_101": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_correction_length_1e_06_101",
+        "U04_VisionPourBallsIntoVaseTeacher_run_correction_length_1e_06_102": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_correction_length_1e_06_102",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_103": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_103",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_104": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_104",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_105": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_105",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_106": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_106",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_107": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_107",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_108": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_108",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_109": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_109",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_110": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_110",
+        "U04_VisionPourBallsIntoVaseTeacher_run_motion_111": "skills.motion.implementation:U04_VisionPourBallsIntoVaseTeacher_run_motion_111"
+      },
+      "errors": {
+        "RuntimeError": "skills.state.implementation:RuntimeError"
+      },
+      "steps": [
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_001"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_self_args_inspect_only_002",
+          "store": "condition_2"
+        },
+        {
+          "if": {
+            "var": "condition_2"
+          },
+          "then": [
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_self_args_inspect_only_003"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_004",
+          "args": {
+            "phase_0": "initial_open"
+          }
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_005"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_006"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_007"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_008"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_009"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_direct_010",
+          "store": "condition_10"
+        },
+        {
+          "if": {
+            "var": "condition_10"
+          },
+          "then": [
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_direct_011"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_direct_012"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_direct_013"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_014"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_015"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_016",
+          "store": "condition_16"
+        },
+        {
+          "if": {
+            "var": "condition_16"
+          },
+          "then": [
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_017"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_018"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_019"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_020"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_021",
+              "args": {
+                "phase_0": "relay_lower"
+              }
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_022",
+              "args": {
+                "phase_0": "relay_release"
+              }
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_023"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_024",
+              "args": {
+                "phase_0": "relay_retreat"
+              }
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_025",
+              "args": {
+                "phase_0": "relay_source_home"
+              }
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_026"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_027",
+              "args": {
+                "phase_0": "relay_rgb"
+              }
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_028"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_robot_arm_name_destination_robot_arm_name_029"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_030"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_031"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_032"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_033"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_034"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_035"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_036"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_037"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_038"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_039"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_040"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_041"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_042"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_043"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_044"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_045",
+          "args": {
+            "phase_0": "observe_cup_rim"
+          }
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_046"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_047"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_048"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_049"
+        },
+        {
+          "try": [
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_068"
+            }
+          ],
+          "catch": [
+            {
+              "errors": [
+                "RuntimeError"
+              ],
+              "as": "caught_error",
+              "do": [
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_050",
+                  "args": {
+                    "__workflow_error": {
+                      "var": "caught_error"
+                    }
+                  }
+                },
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_run_not_str_error_startswith_multi_view_051",
+                  "store": "condition_51"
+                },
+                {
+                  "if": {
+                    "var": "condition_51"
+                  },
+                  "then": [
+                    {
+                      "call": "U04_VisionPourBallsIntoVaseTeacher_run_not_str_error_startswith_multi_view_052"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_053",
+                  "args": {
+                    "phase_0": "observe_cup_retry"
+                  }
+                },
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_054",
+                  "args": {
+                    "phase_0": "observe_cup_retry_restore"
+                  }
+                },
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_055"
+                },
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_056"
+                },
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_057"
+                },
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_058"
+                },
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_059"
+                },
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_060"
+                },
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_061",
+                  "args": {
+                    "phase_0": "observe_cup_retry_rim"
+                  }
+                },
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_062"
+                },
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_063"
+                },
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_064"
+                },
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_065"
+                },
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_066"
+                },
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_067"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_069",
+          "args": {
+            "phase_0": "observe_cup_restore"
+          }
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_070"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_071"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_072"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_range_0_121_15_073",
+          "store": "items_73"
+        },
+        {
+          "for_each": {
+            "var": "items_73"
+          },
+          "as": "loop_item_74",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_074",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_74"
+                }
+              }
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_075"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_076"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_077"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_078"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_079"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_080"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_081"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_082"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_degrees_90_083",
+              "store": "condition_83"
+            },
+            {
+              "if": {
+                "var": "condition_83"
+              },
+              "then": [
+                {
+                  "call": "U04_VisionPourBallsIntoVaseTeacher_run_degrees_90_084",
+                  "args": {
+                    "phase_0": "horizontal_drain_hold"
+                  }
+                }
+              ],
+              "else": []
+            }
+          ]
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_085",
+          "args": {
+            "phase_0": "drain_hold"
+          }
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_enumerate_reversed_pour_poses_1_086",
+          "store": "items_86"
+        },
+        {
+          "for_each": {
+            "var": "items_86"
+          },
+          "as": "loop_item_87",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_087",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_87"
+                }
+              }
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_088"
+            }
+          ]
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_089"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_090"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_091"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_not_clear_candidates_092",
+          "store": "condition_92"
+        },
+        {
+          "if": {
+            "var": "condition_92"
+          },
+          "then": [
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_not_clear_candidates_093"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_094"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_095"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_096"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_097"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_098"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_099"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_correction_length_1e_06_100",
+          "store": "condition_100"
+        },
+        {
+          "if": {
+            "var": "condition_100"
+          },
+          "then": [
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_correction_length_1e_06_101"
+            },
+            {
+              "call": "U04_VisionPourBallsIntoVaseTeacher_run_correction_length_1e_06_102"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_103"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_104"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_105",
+          "args": {
+            "phase_0": "return_cup_lower"
+          }
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_106",
+          "args": {
+            "phase_0": "cup_release"
+          }
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_107"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_108",
+          "args": {
+            "phase_0": "cup_retreat"
+          }
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_109",
+          "args": {
+            "phase_0": "both_home"
+          }
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_110"
+        },
+        {
+          "call": "U04_VisionPourBallsIntoVaseTeacher_run_motion_111"
+        }
+      ]
+    }
+  },
+  "parameters": {
+    "motion_speed": 1.8,
+    "motion_speedup": 1.0,
+    "planner_pose_frame": "world",
+    "gripper_forward_offset": 0.14,
+    "full_curobo_warmup": false,
+    "inspect_only": false
+  },
+  "environment": {
+    "python_prefix": "resource://eval_environment",
+    "physics_dt": 0.004,
+    "control_frequency_hz": 25,
+    "native_action_budget": 600
+  }
+}

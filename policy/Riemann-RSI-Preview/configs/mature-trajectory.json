@@ -1,0 +1,9 @@
+{
+  "schema": "riemann-mature-trajectory-v1",
+  "robot_yaml": "assets/robots/x5/curobo.yml",
+  "robot_urdf": "assets/robots/x5/X5A.urdf",
+  "robot_urdf_sha256": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423",
+  "physics_dt": 0.004,
+  "official_action_hz": 25,
+  "official_substeps": 10
+}

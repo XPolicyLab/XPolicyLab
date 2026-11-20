@@ -1,0 +1,18 @@
+{
+  "schema": "riemann-public-static-resources-v1",
+  "robot_urdf": "assets/robots/x5/X5A.urdf",
+  "repository_files": {
+    "assets/robots/x5/X5A.urdf": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423"
+  },
+  "geometry_contract": {
+    "source": "Object scale and shape estimated from public multiview RGB; class assumptions and controller margins disclosed",
+    "raw_object_poses_read_by_actor": false,
+    "camera": "Declared head/wrist calibration and current3RGB; no sensor depth",
+    "fixed_object_template_fallback": false
+  },
+  "object_asset_dependencies": [],
+  "official_files": {
+    "env_cfg/camera/template.py": "68287ed1daec3b8ed7f053bf97a4d48bbddeb8b5757b53e438ac3c4240a9e61b",
+    "env_cfg/camera/camera_config.yml": "c1752170da855e735beba27fddbf78dad16f2395e4ef8b24e9827a768e616a62"
+  }
+}

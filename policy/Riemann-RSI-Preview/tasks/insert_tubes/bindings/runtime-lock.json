@@ -1,0 +1,102 @@
+{
+  "schema": "tube-direct-native-installed-lock-v1",
+  "python_prefix": "resource://eval_environment",
+  "python_version": "3.11.15",
+  "official_root": "resource://official_runtime",
+  "official_commit": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
+  "official_files": {
+    "deployment/runtime.sh": "2b3b96528a795f22990e2688c44a6084caf5228b123c074c8ace460c1e69bf07",
+    "env/camera_manager/camera_manager.py": "1a4250cb3bdc7305fe362a7c6b113f57e6f3e9e4983b69bd61e2c84e8e995471",
+    "env/camera_manager/capture/camera_view.py": "364cd10dfd2be164efb4adf7a52adf2e7b38e49f4da90e70575d2ceaa7a6cada",
+    "env/camera_manager/capture/render_sync.py": "48d70e9a95f3445ae464ab7ea00a00c0d4829752eb55c4ce52ef73ab1f453cae",
+    "env/camera_manager/capture/tiled_capture_manager.py": "9e70ba9165130d6adf4b63989a447db269b741597bcff7f9095a577f084ff126",
+    "env/description_manager/desc_manager.py": "bb566028b523a4cc27363cee2e526c2d3e008e671c9773d4f0b8401f58f0388e",
+    "env/environment/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "env/environment/base_env.py": "ade58ebc19c79bdbf720def30786a0c397b1c7d2141fb6a1bfd63c80f8a3db8e",
+    "env/environment/isaac/__init__.py": "123023ddc75a0f9b1139c7322bee64a27f0e756b6e84242f43a1481428596126",
+    "env/environment/isaac/direct_rl_env.py": "151096897a8da352aed474dc840a74a02164af422af7fa9cae38a9681871b0ca",
+    "env/environment/isaac/isaac_rl_env.py": "144af40adc2113751bc1bd72caadab145e918b316de53ef3e4e42358c01a1fbb",
+    "env/environment/task_env.py": "ac816cf26efabbb8ac4276d2a2a09fbd557e3db805514db0c3dd7ac22b58e931",
+    "env/global_configs.py": "e96f6141b42e635d69bba5b4727fb1fec54f8965431b3a70d95fe5dcd3d0ee45",
+    "env/observation_manager/obs_manager.py": "771d6cda443b591f3e7850b901a06b4e653a2feefcbabd23608042377fe9be4b",
+    "env/planner_manager/curobo_planner.py": "3cd830c002901959409ef6f64d54106d8106b48471b266409abc2199f3cb33e1",
+    "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
+    "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41",
+    "env/robot_manager/control_manager.py": "81b7ecc3bed8248c16aa1517e686682d8e28ccfa9e550d45011b579a9219caab",
+    "env/robot_manager/robot_class/franka.py": "1f8ed55431863fd633baa8dbe67bd7ba3a0e85c9c4bbbb7ff2d31f436691caf7",
+    "env/robot_manager/robot_class/x5.py": "107274d0944a4416a1b5216b3ebf05e5f6e96c17eb8a50e4bcd3e134db20ce0f",
+    "env/robot_manager/robot_config/franka.py": "8bf57a07913573e74dad97aec6c50e58b67746fa90875915d74ce213856ce35a",
+    "env/robot_manager/robot_config/x5.py": "13d35630f833d1b0a1e3df0bea05f843e88aae1248b59af8aadfefa9cad29bbb",
+    "env/robot_manager/robot_manager.py": "1306cb6d17b58a04ad8fc298edb6eb9122469048dbc9717dcf246f4f985d9974",
+    "env/scene_manager/layout_manager.py": "7f244bec972e09236a94d8b4761b248ba19ec3f61c631d3c83c00b82912a14b8",
+    "env/scene_manager/objects/articulation.py": "dd8f43ad3dfb3beca2944e76537f540bfbbdd86ed2816b747ece368819b42442",
+    "env/scene_manager/objects/background.py": "04afea9b5c4e21a105ba3b08ce0e5b6692c082cf17ec1053fdffd5dba1c9511b",
+    "env/scene_manager/objects/dynamic.py": "7a4652c649f503681914e37c50c959c7ca8457918bb00628413f4288993f8ea7",
+    "env/scene_manager/objects/fluid.py": "12b183d4d798d6b7188fd42747ee1927747318c386a91135551d1fa0561c41b5",
+    "env/scene_manager/objects/garment.py": "85f38bd85b52da8dd2ce34ce3692d45848016a9f0f14ecf13114705d4a1ff46a",
+    "env/scene_manager/objects/geometry.py": "3100d61b152b894b3b59be0b3be1d2708f2d8f363ddb8311dabfb5411c731f3d",
+    "env/scene_manager/objects/ground.py": "12dd51addae6f5b7c6ad410b4ae7248231d216cf63513c564057d577a09a2972",
+    "env/scene_manager/objects/light.py": "ba8c8529c6608592d4d0eb9638820b70ae6b3c0cd616631bc6dabdb1c20e421a",
+    "env/scene_manager/objects/physics_material.py": "a1ac0dc9928e9253e644ceb9a604aed262514aaad0473aff303bfae448e76c29",
+    "env/scene_manager/objects/primitives.py": "848f4ab08d86307812ebaea18cc86a51638395f0e6ea194b412d45a699ced926",
+    "env/scene_manager/objects/rigid.py": "ac50a7792b43be99e2f4362b946e9319a6aeb9c26be2766ebca6b780296cfa9b",
+    "env/scene_manager/objects/room.py": "946aa1afc23ab9b8fd17394517a5f54605bbbc609582d0854fed2078b3b2d8ee",
+    "env/scene_manager/objects/table.py": "c0e71396b0d53a250f74c75490e91086d67962237400a49f886a13ec07875308",
+    "env/scene_manager/scene_manager.py": "87776a7803ec5b1666dd3478295978986f8ecec7ef989aa45e697da9854556df",
+    "env/seed_manager/seed_manager.py": "292eee4003de1c22b288ec3bc1d04d95c7aee5368f30991679ea1cc4c37247b3",
+    "env/seeding.py": "2d7286b78c8060c6e838b55be025f51d09262a4a63bcb3884077a1492e66400a",
+    "env_cfg/arx_x5.yml": "7691350159fdeca92fd1b0b2da36913464ccdea3f3251eefb0176aa51db0807f",
+    "env_cfg/camera/camera_config.yml": "c1752170da855e735beba27fddbf78dad16f2395e4ef8b24e9827a768e616a62",
+    "env_cfg/camera/template.py": "68287ed1daec3b8ed7f053bf97a4d48bbddeb8b5757b53e438ac3c4240a9e61b",
+    "env_cfg/robot/_robot_info.json": "4c9de628bc1572502fc48d876c023fc63e02760e1a11a2a5258dea30ffa330e8",
+    "env_cfg/robot/dual_x5.yml": "4eefaccc75c5f83443b7bb85ef1de68ee7a3772e27af2b04a5e8d8769ab9baa1",
+    "env_cfg/robot/dual_x5_and_franka_competition.yml": "ec893f9fde577d0d1209e7dcb85ec2dd74288b636d0c68316cb07bc817b743ab",
+    "env_cfg/scene/conveyor.yml": "c1dfd27faf978f90dfc4825cd83bd203823547c46793f4f9201ce9f4b43beee7",
+    "env_cfg/scene/default.yml": "729df024b9707a55449da94f980c1ca116035e09a1284e2fe071f1b38efd061a",
+    "env_cfg/sim/sim_config.yml": "e442ede1c3d90fcfb50b9461c854d31b22dad9bfbb23397db228b27a6a486963",
+    "src/eval_client/eval_env.py": "3ae75304d8a840ede2589441f987824f50b2a89cc2ef37f4d43ce0a8dbc4fd88",
+    "src/eval_client/main.py": "ca6ba652b6f123506370f1907b1d88060d83f56c9e91ce6e6930f63d9f2b71a8",
+    "src/eval_client/physx_warning_monitor.py": "6a9f8e8d75b1031d2cf2feb6dd72d37370d85d5bd80c4bea798622e23ce8dae6",
+    "task/RoboDojo/task_registry.py": "11218028f772d9253ee709a7d85aa72d1e1fd87e4f8d33ee3787d6064438f9ab",
+    "utils/cluttered_generator.py": "f59cfcfed2b4cce5ae9aeaf3339c86d17e237874e3526bded3cb05136dbcbd50",
+    "utils/ensure_usd_path.py": "7c8e71cf91636e630b1b174098fe0b38740857daeaf207e2fae772c4727b11bf",
+    "utils/load_file.py": "ef3a6dc96aa1a7442cfd24f7be9671052a98d2f20783c3e71032332704132943",
+    "utils/path.py": "1d427c7cf33e748e01d0d083c9432d8be8b5c3a1f35c5fb0f6ebb0714098f1d1",
+    "utils/pipeline_utils.py": "d5d8da29e6ca84ab04323a2f79130f930572785b4399634e06a42834ed4087ae",
+    "utils/rotations.py": "8e814f79938bdb9e85f1c024825617cc08d281b61728c6410b23ef1bd852c340",
+    "utils/save_file.py": "6cff5950f73bf7a1ed404f804d6f08af712974f22c3955de4cdf142f211aaf00",
+    "utils/transformer.py": "73de4f5e1e0ff60d4f2e1aaf6104368e8f919269facb68b4fa0344d35bc08cbe",
+    "utils/update_embodiment_config_path.py": "6a8252e1dcb3fa7aba15fbbecf4408a908beb324f11624d979e867d2ea332259",
+    "utils/usd_schema.py": "260d30b0ada2976136cad3e49e810b4409304eb4a2bc60bd9ed710864d3953ac",
+    "task/RoboDojo/tasks/insert_tubes.py": "9a68795ddbd0b816ffd7627e673390ecd83594c0e9d374d4e3abf3435ad439e1",
+    "task/RoboDojo/config/insert_tubes.yml": "5c070e5c764a2ea93f8de0b52e6a664a23c717963fe09fe3af17918a4a1ee9ef"
+  },
+  "packages": {
+    "numpy": {
+      "origin": "resource://eval_environment/lib/python3.11/site-packages/numpy/__init__.py",
+      "sha256": "11a9455eb4297e45351657f5a60f198c21831c7a395f8c59a7361fb2edf785e5"
+    },
+    "scipy": {
+      "origin": "resource://eval_environment/lib/python3.11/site-packages/scipy/__init__.py",
+      "sha256": "185913aa107512fafd5cf89dfd452a8719b45a6eba833e2dcee2cbfd18b4bbe5"
+    },
+    "cv2": {
+      "origin": "resource://eval_environment/lib/python3.11/site-packages/cv2/__init__.py",
+      "sha256": "936bd94c5a5debf0212fc751af79d3a163652f3e850259df2159db6aa3ed8ad8"
+    },
+    "curobo": {
+      "origin": "resource://official_runtime/third_party/curobo/curobo/__init__.py",
+      "sha256": "f1141c8054044fb61d26925cc2ededf58f11c53bde6d36cea02421573e11b872"
+    },
+    "isaaclab": {
+      "origin": "resource://official_runtime/third_party/IsaacLab/source/isaaclab/isaaclab/__init__.py",
+      "sha256": "9031fe4e7dc80d02d78a26f408e276fb457b7d28bc06ef459227adab6cb431fe"
+    }
+  },
+  "robot_resources": {
+    "configs/mature-trajectory.json": "2c1442a0d246b01f746c41061d20cca09894bce4bb9269edf2c0e0fb8db12349",
+    "assets/robots/x5/curobo.yml": "9c1dd642e8df23d199b0ff88676da4d8e4455255997012470ea154e2fab3dac8",
+    "assets/robots/x5/X5A.urdf": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423"
+  },
+  "official_cloud_verified": false
+}

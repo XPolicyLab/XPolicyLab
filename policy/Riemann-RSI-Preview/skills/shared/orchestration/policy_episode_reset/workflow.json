@@ -1,0 +1,19 @@
+{
+  "schema": "riemann-executable-workflow-v1",
+  "symbol": "Model.reset",
+  "nodes": [
+    {
+      "kind": "operation",
+      "code": "self._pending_reset = True"
+    },
+    {
+      "kind": "operation",
+      "code": "self._latest = None"
+    },
+    {
+      "kind": "operation",
+      "code": "print('[SkyRobot_WAM] Model reset')"
+    }
+  ],
+  "scope": "frozen trusted policy control flow; never interpreted from observations or external logs"
+}

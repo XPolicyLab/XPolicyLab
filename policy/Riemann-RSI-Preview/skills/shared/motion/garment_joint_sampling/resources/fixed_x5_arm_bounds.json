@@ -1,0 +1,93 @@
+[
+  {
+    "source": "resource://official_assets/Robots/x5/meshes/link2.STL",
+    "source_sha256": "2865da6a962c814abaf9251497bcf5f5e3b67610e3b657ddcaa9de8b3d45e83e",
+    "link": "link2",
+    "vertices": 43421,
+    "bounding_box_m": [
+      [
+        -0.2919999957084656,
+        -0.030249999836087227,
+        -0.02800000086426735
+      ],
+      [
+        0.02800000086426735,
+        0.036250002682209015,
+        0.02800000086426735
+      ]
+    ]
+  },
+  {
+    "source": "resource://official_assets/Robots/x5/meshes/link3.STL",
+    "source_sha256": "3ac2411b0cbffcf4808cae4c215cfeab607f240cd124eeba209ac7986ac047c0",
+    "link": "link3",
+    "vertices": 10498,
+    "bounding_box_m": [
+      [
+        -0.017500000074505806,
+        -0.03824999928474426,
+        -0.08457363396883011
+      ],
+      [
+        0.2735999822616577,
+        0.03824999928474426,
+        0.017500000074505806
+      ]
+    ]
+  },
+  {
+    "source": "resource://official_assets/Robots/x5/meshes/link4.STL",
+    "source_sha256": "3447ddef920c22e4607b887e1cc588037dfb51c37825c4cac86a5391425469c4",
+    "link": "link4",
+    "vertices": 1405,
+    "bounding_box_m": [
+      [
+        -0.01738167181611061,
+        -0.03125,
+        -0.08649999648332596
+      ],
+      [
+        0.09875000268220901,
+        0.03147206827998161,
+        0.017500000074505806
+      ]
+    ]
+  },
+  {
+    "source": "resource://official_assets/Robots/x5/meshes/link5.STL",
+    "source_sha256": "934b3e70ce2987f8de999de29d8ef72c8370dced8e9fdf6f9ddd3e7e24c1e464",
+    "link": "link5",
+    "vertices": 6757,
+    "bounding_box_m": [
+      [
+        -0.030950156971812248,
+        -0.03090592660009861,
+        0.001999999862164259
+      ],
+      [
+        0.031950000673532486,
+        0.030997827649116516,
+        0.11509999632835388
+      ]
+    ]
+  },
+  {
+    "source": "resource://official_assets/Robots/x5/meshes/link6.STL",
+    "source_sha256": "32dca4ededcf3215163207b9aea1046114ae59921555d1e068ee46fa6e53915e",
+    "link": "link6",
+    "geometry": "fixed public X5 URDF collision mesh, origin0; no scene/garment state",
+    "triangles": 12874,
+    "bounding_box_m": [
+      [
+        -9.499911968191554e-11,
+        -0.08699999749660492,
+        -0.029999999329447746
+      ],
+      [
+        0.08399999886751175,
+        0.08699999749660492,
+        0.030304791405797005
+      ]
+    ]
+  }
+]

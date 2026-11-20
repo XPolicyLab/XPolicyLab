@@ -1,0 +1,38 @@
+{
+  "schema": "riemann-rule-composition-v1",
+  "task_mode": "press_by_number",
+  "backend": "rule",
+  "selection": "current_public_evidence",
+  "bindings": {},
+  "controller_entry_slots": [],
+  "native_workflow": "workflow.json",
+  "native_action_tools": {
+    "button_view": "tasks/press_by_number/skills/button_view/implementation.py",
+    "press_card_button": "tasks/press_by_number/skills/press_card_button/implementation.py",
+    "return_episode_home": "skills/shared/motion/return_episode_home_observed_start/implementation.py"
+  },
+  "task_skills": {
+    "button_view": "skills/button_view/implementation.py",
+    "press_card_button": "skills/press_card_button/implementation.py",
+    "press_sequence_guard": "skills/press_sequence_guard/implementation.py",
+    "press_stroke": "skills/press_stroke/implementation.py",
+    "read_button_counts": "skills/read_button_counts/implementation.py",
+    "read_number_cards": "skills/read_number_cards/implementation.py",
+    "resolve_press_sequence": "skills/resolve_press_sequence/implementation.py"
+  },
+  "shared_action_tools": [
+    "return_episode_home"
+  ],
+  "dispatch": "Qualified public rules run first; unresolved predicates permit bounded learned recovery.",
+  "official_action_budget_changed": false,
+  "runtime_layout": "repository-flat-native-skills-v1",
+  "python_entry_files": [
+    "skills/shared/motion/return_episode_home_observed_start/implementation.py",
+    "tasks/press_by_number/bindings/official_policy.py",
+    "tasks/press_by_number/controller.py",
+    "tasks/press_by_number/entry.py"
+  ],
+  "source_versioning": "git",
+  "graph_files": [],
+  "resource_files": []
+}

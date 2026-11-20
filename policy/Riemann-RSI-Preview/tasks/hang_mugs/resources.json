@@ -1,0 +1,287 @@
+{
+  "schema": "hang-original-external-resource-reference-v1",
+  "archive_sha256": "00480702dfebe1e93fe239f5b5bd3f0d806630fced0a3caa64a29a00b3ffd961",
+  "files": {
+    "x5_tracking_limits.urdf": {
+      "archive_member": "./scripts/data_engine/hang_mugs_vision_assets/x5_tracking_limits.urdf",
+      "bytes": 9992,
+      "sha256": "d3bc6d5ef832e8c4bdf820cb0e2aa7c0fa1a068993f923d7c7b8a02d96c4ec07",
+      "original_archive_sha256": "84c7cd2829153fe9003f70a5621b0262790c86dbbacebd9d416303e2daa7b75f"
+    },
+    "x5_tool_visuals.json": {
+      "archive_member": "./scripts/data_engine/hang_mugs_vision_assets/x5_tool_visuals.json",
+      "bytes": 901,
+      "sha256": "c67c48b7aa071bb934215a9be5174046b9f082fe3be4c78e568bf1556cea5dc1",
+      "original_archive_sha256": "c67c48b7aa071bb934215a9be5174046b9f082fe3be4c78e568bf1556cea5dc1"
+    },
+    "hang_mugs_public_shapes.npz": {
+      "archive_member": "./scripts/data_engine/hang_mugs_vision_assets/hang_mugs_public_shapes.npz",
+      "bytes": 8994811,
+      "sha256": "f2cb9aef95fa907568f54d7b531448a0271e8bfce9fd9037776954136302a350",
+      "original_archive_sha256": "f2cb9aef95fa907568f54d7b531448a0271e8bfce9fd9037776954136302a350"
+    },
+    "mug_visual_meshes.npz": {
+      "archive_member": "./scripts/data_engine/hang_mugs_vision_assets/mug_visual_meshes.npz",
+      "bytes": 62338492,
+      "sha256": "9736c525cd80e6f87f1f9bdc91b8141f7e992e6e6bf845dbc95b86e6314de23c",
+      "original_archive_sha256": "9736c525cd80e6f87f1f9bdc91b8141f7e992e6e6bf845dbc95b86e6314de23c"
+    },
+    "x5_tracking_limits.json": {
+      "archive_member": "./scripts/data_engine/hang_mugs_vision_assets/x5_tracking_limits.json",
+      "bytes": 597,
+      "sha256": "b234337b4ed574a471fc312c5a23f8a37425e2b7ee52d1e493aa6aa674a439af",
+      "original_archive_sha256": "4ebb682457a3c708f9803be618f0466c64e54ea709f041f9dd42b9402741063e"
+    },
+    "mug_visual_meshes.json": {
+      "archive_member": "./scripts/data_engine/hang_mugs_vision_assets/mug_visual_meshes.json",
+      "bytes": 1285,
+      "sha256": "7d45563ac70c57134bf585a7d0650557b88e3e78de26147b1ec6a8cca4879af0",
+      "original_archive_sha256": "7d45563ac70c57134bf585a7d0650557b88e3e78de26147b1ec6a8cca4879af0"
+    },
+    "x5_tool_visuals.npz": {
+      "archive_member": "./scripts/data_engine/hang_mugs_vision_assets/x5_tool_visuals.npz",
+      "bytes": 3210807,
+      "sha256": "50ef6649ef67f851217389111430bbb5f163814a1c22189226fe36def2ec38b2",
+      "original_archive_sha256": "50ef6649ef67f851217389111430bbb5f163814a1c22189226fe36def2ec38b2"
+    },
+    "mug_collision_meshes.npz": {
+      "archive_member": "./scripts/data_engine/hang_mugs_vision_assets/mug_collision_meshes.npz",
+      "bytes": 230261,
+      "sha256": "ec8d97423cef1905ced3f1e8e174cff0cccd6dde4d0691c46358995f1389460d",
+      "original_archive_sha256": "ec8d97423cef1905ced3f1e8e174cff0cccd6dde4d0691c46358995f1389460d"
+    },
+    "mug_appearance.json": {
+      "archive_member": "./scripts/data_engine/hang_mugs_vision_assets/mug_appearance.json",
+      "bytes": 5200,
+      "sha256": "8388350eff5e5f51078c28427eff42098fce0ddf27d84234ede1370e21785d60",
+      "original_archive_sha256": "8388350eff5e5f51078c28427eff42098fce0ddf27d84234ede1370e21785d60"
+    },
+    "hang_mugs_public_geometry.json": {
+      "archive_member": "./scripts/data_engine/hang_mugs_vision_assets/hang_mugs_public_geometry.json",
+      "bytes": 87605,
+      "sha256": "813e0163385bf22033622464f0dcec0c912db0b7f2cd705b44e1b693a4078738",
+      "original_archive_sha256": "813e0163385bf22033622464f0dcec0c912db0b7f2cd705b44e1b693a4078738"
+    },
+    "mug_collision_meshes.json": {
+      "archive_member": "./scripts/data_engine/hang_mugs_vision_assets/mug_collision_meshes.json",
+      "bytes": 4803,
+      "sha256": "5261e887b13933dd30c923b3e336054e5717412cf787099f86d125bb7a034da8",
+      "original_archive_sha256": "5261e887b13933dd30c923b3e336054e5717412cf787099f86d125bb7a034da8"
+    }
+  },
+  "independent_public_origin_verified": true,
+  "root": "resource://rule_assets/a18-hang-original-public-verified-r6-20261031",
+  "public_provenance_sha256": "8569408237efbb86904dd26fca65762dd09dc732b5ce2b96081095fe91e9564e",
+  "robot": {
+    "schema": "a18-public-x5-static-resources-v1",
+    "root": "resource://official_assets/Robots/x5",
+    "source": "Official static X5 robot model, not episode or scene state",
+    "official_commit": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
+    "files": {
+      "X5A.urdf": {
+        "sha256": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423",
+        "bytes": 9218,
+        "resolved_path": "resource://official_assets/Robots/x5/X5A.urdf"
+      },
+      "curobo.yml": {
+        "sha256": "ffcdc4fde61d3a0aa15550d519ee4f727888d225bf7b6e6b72d59398153efa62",
+        "bytes": 12566,
+        "resolved_path": "resource://official_assets/Robots/x5/curobo.yml"
+      },
+      "meshes/base_link.STL": {
+        "sha256": "898dbe3af3a98857358ac5a3d74e085ec9c69946737e767dad139776761cbd92",
+        "bytes": 1611284,
+        "resolved_path": "resource://official_assets/Robots/x5/meshes/base_link.STL"
+      },
+      "meshes/camera.glb": {
+        "sha256": "9833e436988bcd83f3113ab1071428427c80d6a1392d9e0b7cf35d2b6e949d7c",
+        "bytes": 15899328,
+        "resolved_path": "resource://official_assets/Robots/x5/meshes/camera.glb"
+      },
+      "meshes/camera_base.glb": {
+        "sha256": "d771a24ab886166536ffe4a0719af1163e44fac4067e07110cf72a7a01d260b0",
+        "bytes": 62332,
+        "resolved_path": "resource://official_assets/Robots/x5/meshes/camera_base.glb"
+      },
+      "meshes/link1.STL": {
+        "sha256": "04a52b86a5b28c847377a9167e7effab0478fa591052e83b0b32cf8709bb3885",
+        "bytes": 162184,
+        "resolved_path": "resource://official_assets/Robots/x5/meshes/link1.STL"
+      },
+      "meshes/link2.STL": {
+        "sha256": "2865da6a962c814abaf9251497bcf5f5e3b67610e3b657ddcaa9de8b3d45e83e",
+        "bytes": 4353884,
+        "resolved_path": "resource://official_assets/Robots/x5/meshes/link2.STL"
+      },
+      "meshes/link3.STL": {
+        "sha256": "3ac2411b0cbffcf4808cae4c215cfeab607f240cd124eeba209ac7986ac047c0",
+        "bytes": 1052684,
+        "resolved_path": "resource://official_assets/Robots/x5/meshes/link3.STL"
+      },
+      "meshes/link4.STL": {
+        "sha256": "3447ddef920c22e4607b887e1cc588037dfb51c37825c4cac86a5391425469c4",
+        "bytes": 142784,
+        "resolved_path": "resource://official_assets/Robots/x5/meshes/link4.STL"
+      },
+      "meshes/link5.STL": {
+        "sha256": "934b3e70ce2987f8de999de29d8ef72c8370dced8e9fdf6f9ddd3e7e24c1e464",
+        "bytes": 679584,
+        "resolved_path": "resource://official_assets/Robots/x5/meshes/link5.STL"
+      },
+      "meshes/link6.STL": {
+        "sha256": "32dca4ededcf3215163207b9aea1046114ae59921555d1e068ee46fa6e53915e",
+        "bytes": 643784,
+        "resolved_path": "resource://official_assets/Robots/x5/meshes/link6.STL"
+      },
+      "meshes/link7.STL": {
+        "sha256": "ec3d40b39cccde0075ca3d16603f14f180fce41a46b446473d384def7a1b0be0",
+        "bytes": 65284,
+        "resolved_path": "resource://official_assets/Robots/x5/meshes/link7.STL"
+      },
+      "meshes/link8.STL": {
+        "sha256": "29f7a8379cad81797e82e4ba099455cc275ac6ac5bb9e264ce46719fd7d2bb60",
+        "bytes": 65284,
+        "resolved_path": "resource://official_assets/Robots/x5/meshes/link8.STL"
+      },
+      "ARX.usd": {
+        "sha256": "5723a835bf5627a935a8dabb3a44447725bd1465243ce791e221b3e990121d63",
+        "bytes": 28300821,
+        "resolved_path": "resource://official_assets/Robots/x5/ARX.usd"
+      },
+      "robot_config.yml": {
+        "sha256": "9de4f63b84c0f730623c09af7a2d530d84973981397280b6e4b626b50ba6f1c9",
+        "bytes": 794,
+        "resolved_path": "resource://official_assets/Robots/x5/robot_config.yml"
+      }
+    },
+    "arm_joint_limits": [
+      [
+        -9.999999046325684,
+        9.999999046325684
+      ],
+      [
+        -9.999999046325684,
+        9.999999046325684
+      ],
+      [
+        -9.999999046325684,
+        9.999999046325684
+      ],
+      [
+        -9.999999046325684,
+        9.999999046325684
+      ],
+      [
+        -9.999999046325684,
+        9.999999046325684
+      ],
+      [
+        -3.1399998664855957,
+        3.1399998664855957
+      ]
+    ],
+    "joint_limit_source": {
+      "resource": "ARX.usd",
+      "units": "authored revolute degrees converted to float32 radians",
+      "public_asset_CPU_audit": {
+        "joint1": {
+          "prim": "/X5A/joints/joint1",
+          "type": "PhysicsRevoluteJoint",
+          "authored_limits": {
+            "physics:lowerLimit": -572.957763671875,
+            "physics:upperLimit": 572.957763671875
+          },
+          "limits_radians_or_m": [
+            -9.999999046325684,
+            9.999999046325684
+          ]
+        },
+        "joint2": {
+          "prim": "/X5A/joints/joint2",
+          "type": "PhysicsRevoluteJoint",
+          "authored_limits": {
+            "physics:lowerLimit": -572.957763671875,
+            "physics:upperLimit": 572.957763671875
+          },
+          "limits_radians_or_m": [
+            -9.999999046325684,
+            9.999999046325684
+          ]
+        },
+        "joint3": {
+          "prim": "/X5A/joints/joint3",
+          "type": "PhysicsRevoluteJoint",
+          "authored_limits": {
+            "physics:lowerLimit": -572.957763671875,
+            "physics:upperLimit": 572.957763671875
+          },
+          "limits_radians_or_m": [
+            -9.999999046325684,
+            9.999999046325684
+          ]
+        },
+        "joint4": {
+          "prim": "/X5A/joints/joint4",
+          "type": "PhysicsRevoluteJoint",
+          "authored_limits": {
+            "physics:lowerLimit": -572.957763671875,
+            "physics:upperLimit": 572.957763671875
+          },
+          "limits_radians_or_m": [
+            -9.999999046325684,
+            9.999999046325684
+          ]
+        },
+        "joint5": {
+          "prim": "/X5A/joints/joint5",
+          "type": "PhysicsRevoluteJoint",
+          "authored_limits": {
+            "physics:lowerLimit": -572.957763671875,
+            "physics:upperLimit": 572.957763671875
+          },
+          "limits_radians_or_m": [
+            -9.999999046325684,
+            9.999999046325684
+          ]
+        },
+        "joint6": {
+          "prim": "/X5A/joints/joint6",
+          "type": "PhysicsRevoluteJoint",
+          "authored_limits": {
+            "physics:lowerLimit": -179.9087371826172,
+            "physics:upperLimit": 179.9087371826172
+          },
+          "limits_radians_or_m": [
+            -3.1399998664855957,
+            3.1399998664855957
+          ]
+        },
+        "joint7": {
+          "prim": "/X5A/joints/joint7",
+          "type": "PhysicsPrismaticJoint",
+          "authored_limits": {
+            "physics:lowerLimit": 0.0,
+            "physics:upperLimit": 0.04399999976158142
+          },
+          "limits_radians_or_m": [
+            0.0,
+            0.04399999976158142
+          ]
+        },
+        "joint8": {
+          "prim": "/X5A/joints/joint8",
+          "type": "PhysicsPrismaticJoint",
+          "authored_limits": {
+            "physics:lowerLimit": 0.0,
+            "physics:upperLimit": 0.04399999976158142
+          },
+          "limits_radians_or_m": [
+            0.0,
+            0.04399999976158142
+          ]
+        }
+      },
+      "episode_or_scene_state_read": false
+    }
+  }
+}

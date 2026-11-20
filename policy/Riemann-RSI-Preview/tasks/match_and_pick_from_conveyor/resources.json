@@ -1,0 +1,92 @@
+{
+  "schema": "riemann-static-public-rule-models-v1",
+  "default_root": "resource://rule_assets/a6-mature-original-20261029-r5",
+  "files": {
+    "conveyor_priors.json": {
+      "path": "conveyor_priors.json",
+      "sha256": "f0d72d7fc8e86f7d5541462b76d150b6d19c484fa6263cf0aaee9ded361ddf13",
+      "bytes": 22497,
+      "source": "resource://intake_assets/match_and_pick_from_conveyor/baselines/official-chain-20261019/bundle/source/data/conveyor_priors.json",
+      "source_sha256": "7bd3eba49dbd7afadcd4c6c997f3022d4591fc7ce787ea703072802b0f0f0d37",
+      "sample_annotations_removed": true
+    },
+    "conveyor_classifier.pt": {
+      "path": "conveyor_classifier.pt",
+      "sha256": "084e18fed9ffc8fd1e3c873510474b016cde0fab7144dc6fda360e5c9b2bb3e8",
+      "bytes": 674745,
+      "source": "resource://intake_assets/match_and_pick_from_conveyor/baselines/official-chain-20261019/bundle/source/data/conveyor_classifier.pt",
+      "source_sha256": "084e18fed9ffc8fd1e3c873510474b016cde0fab7144dc6fda360e5c9b2bb3e8",
+      "sample_annotations_removed": false
+    },
+    "conveyor_background.png": {
+      "path": "conveyor_background.png",
+      "sha256": "09a837fe347695c3debf4902941fa4fa987471344a22ddb7f7e6bb7b7a34280f",
+      "bytes": 361348,
+      "source": "resource://intake_assets/match_and_pick_from_conveyor/baselines/official-chain-20261019/bundle/source/data/conveyor_background.png",
+      "source_sha256": "09a837fe347695c3debf4902941fa4fa987471344a22ddb7f7e6bb7b7a34280f",
+      "sample_annotations_removed": false
+    },
+    "puppet_modes.json": {
+      "path": "puppet_modes.json",
+      "sha256": "02770da6f59826a82832a75ba99b4110e8356c537470c91b774d7b50768cffa3",
+      "bytes": 886,
+      "source": "resource://intake_assets/match_and_pick_from_conveyor/baselines/official-chain-20261019/bundle/source/scripts/data_engine/puppet_modes.json",
+      "source_sha256": "476f6da72ccc3596f758a5b4b8cc0bd713df7dff42eba809e75c3cbb9e8b0fa2",
+      "sample_annotations_removed": true,
+      "sample_counts_retained": true
+    },
+    "conveyor_shape_models.json": {
+      "path": "conveyor_shape_models.json",
+      "sha256": "772cc751a4d16b46f69657006aafd6e5d76347a673f69648acf9178e13ecb99f",
+      "bytes": 993098,
+      "source": "resource://intake_assets/match_and_pick_from_conveyor/baselines/official-chain-20261019/bundle/source/scripts/data_engine/conveyor_shape_models.json",
+      "source_sha256": "d9a10d37be3b550ab7b49a2ab0ff7d3fc155bda645591528042f437f58b6685d",
+      "sample_annotations_removed": true,
+      "base_declared_model_sha256": "18ded34a634785199843254de5f45adbd116000e043d7f155b832cbc78fbffb2",
+      "additional_public_geometry": {
+        "public_asset": "resource://official_assets/Object/RoboDojo/Rigid/ice_cream/00000/object.usdz",
+        "public_asset_sha256": "d5af056d6435b57d65708360bf199463bb2fe9f90f946308f0bb9aa28755b461",
+        "output_sha256": "2b2e1f6088840d29a1059c8b3a1eba60106748ee22af4766ecb72d353ee7b9b0",
+        "points": 5092,
+        "method": "Convex hull of public visual USD mesh in the asset root frame; no episode/scene/layout input",
+        "min": [
+          -0.052058715373277664,
+          -0.05194506049156189,
+          -0.05029113590717316
+        ],
+        "max": [
+          0.05193386971950531,
+          0.05205494165420532,
+          0.05019121617078781
+        ]
+      },
+      "derivation": "Existing declared puppet/bottle parts plus convex hull of public ice_cream/00000 visual mesh. No episode, layout or simulator input."
+    },
+    "garage_head_priors.json": {
+      "path": "garage_head_priors.json",
+      "sha256": "c2f41b7f7e28f3ef04cc8453662e8a6126536159c10d5c36eb05b8231fa5269a",
+      "bytes": 858,
+      "source": "resource://intake_assets/match_and_pick_from_conveyor/baselines/official-chain-20261019/bundle/source/scripts/data_engine/garage_head_priors.json",
+      "source_sha256": "c2f41b7f7e28f3ef04cc8453662e8a6126536159c10d5c36eb05b8231fa5269a",
+      "sample_annotations_removed": true
+    },
+    "plate_side_priors.json": {
+      "path": "plate_side_priors.json",
+      "sha256": "f9e88b2f486f9c85caffece90846d9be6d271993e65f26d9423f4e0b4dc3a68c",
+      "bytes": 23305,
+      "source": "resource://intake_assets/match_and_pick_from_conveyor/baselines/official-chain-20261019/bundle/source/scripts/data_engine/plate_side_priors.json",
+      "source_sha256": "f9e88b2f486f9c85caffece90846d9be6d271993e65f26d9423f4e0b4dc3a68c",
+      "sample_annotations_removed": true
+    },
+    "ice_cream_body_priors.json": {
+      "path": "ice_cream_body_priors.json",
+      "sha256": "dbd0494375ed28f18f63a6fb6aea6d63e33804f934322189c16c98c841c9ee62",
+      "bytes": 2344,
+      "source": "resource://official_assets/Object/RoboDojo/Rigid/ice_cream/00000/object.usdz",
+      "source_sha256": "d5af056d6435b57d65708360bf199463bb2fe9f90f946308f0bb9aa28755b461",
+      "sample_annotations_removed": false,
+      "derivation": "Convex hull section widths at local z=-.04,-.03,-.02; body pinch centered z=-.03 with 65-degree side approach. No episode or scene input."
+    }
+  },
+  "scope": "Declared fixed asset shape and offline learned/calibrated priors; no current layout or simulator state. Recorded sample annotations are excluded."
+}

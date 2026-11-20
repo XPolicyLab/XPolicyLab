@@ -1,0 +1,25 @@
+{
+  "schema": "riemann-public-native-fold-observation-v1",
+  "standard_observation_only": true,
+  "measured_finger_joints_required": false,
+  "public_factory": "controller.create_public_environment",
+  "state": {
+    "left_arm_joint_state": 6,
+    "left_ee_joint_state": 1,
+    "left_ee_pose": 7,
+    "right_arm_joint_state": 6,
+    "right_ee_joint_state": 1,
+    "right_ee_pose": 7
+  },
+  "RGB": [
+    "cam_head",
+    "cam_left_wrist",
+    "cam_right_wrist"
+  ],
+  "garment_geometry": "current_publicRGB_segmentation_and_declared_template_fit",
+  "support": "explicit_v45_public_own_robot_mounting_datum_not_an_observed_plane_actual_surface_error_unknown",
+  "own_base_inference": "current_public_EEF_plus6arm_joints_and_declared_URDF_FK_two_root_5mm_consistency",
+  "gripper": "normalized_scalar_not_physical_width_or_contact",
+  "official_eval": true,
+  "action_horizon": 500
+}

@@ -1,0 +1,310 @@
+{
+  "schema": "riemann-static-public-rule-models-v1",
+  "default_root": "resource://rule_assets/a6-mature-original-20261029-r3",
+  "files": {
+    "pick_conveyor_visual_assets/background.png": {
+      "path": "pick_conveyor_visual_assets/background.png",
+      "sha256": "dfb242252a948cabe72caae050bef54327e3bc16149a4d9ef687ad7d6351210f",
+      "bytes": 384718,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/background.png",
+      "source_sha256": "dfb242252a948cabe72caae050bef54327e3bc16149a4d9ef687ad7d6351210f",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/basket_grasp_00002.npz": {
+      "path": "pick_conveyor_visual_assets/basket_grasp_00002.npz",
+      "sha256": "545ae7c864817daa5a5d657a79e338e2d456b25378131102332a4b1b9b1bfc56",
+      "bytes": 1201037,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/basket_grasp_00002.npz",
+      "source_sha256": "545ae7c864817daa5a5d657a79e338e2d456b25378131102332a4b1b9b1bfc56",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/can_00000.npz": {
+      "path": "pick_conveyor_visual_assets/can_00000.npz",
+      "sha256": "0ebb03a188edc8db6f13e831f6df1a678c9026abd867c07416acbb14ebee6a6f",
+      "bytes": 1268562,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/can_00000.npz",
+      "source_sha256": "0ebb03a188edc8db6f13e831f6df1a678c9026abd867c07416acbb14ebee6a6f",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/car_00009.npz": {
+      "path": "pick_conveyor_visual_assets/car_00009.npz",
+      "sha256": "251520d6ff1b652b538f4dd66ff0d46cef3d160a53f4b844e5fbb6b2ea7e19ff",
+      "bytes": 1344168,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/car_00009.npz",
+      "source_sha256": "251520d6ff1b652b538f4dd66ff0d46cef3d160a53f4b844e5fbb6b2ea7e19ff",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/car_00010.npz": {
+      "path": "pick_conveyor_visual_assets/car_00010.npz",
+      "sha256": "0184ded55f7d308266b4ff58d476293c82da540b96ede76df5e6299771ddfd88",
+      "bytes": 1303861,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/car_00010.npz",
+      "source_sha256": "0184ded55f7d308266b4ff58d476293c82da540b96ede76df5e6299771ddfd88",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/correction_tape_00000.npz": {
+      "path": "pick_conveyor_visual_assets/correction_tape_00000.npz",
+      "sha256": "37fbe3386245cb92b61250e6812f93f7c6a8fa3643753c52971f296ef18a7f99",
+      "bytes": 1310491,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/correction_tape_00000.npz",
+      "source_sha256": "37fbe3386245cb92b61250e6812f93f7c6a8fa3643753c52971f296ef18a7f99",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/cup_00007.npz": {
+      "path": "pick_conveyor_visual_assets/cup_00007.npz",
+      "sha256": "44e1d9b0e681c205c214ecca7d74ba79fc7032b0c52642307074b19bceb14d8a",
+      "bytes": 1204909,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/cup_00007.npz",
+      "source_sha256": "44e1d9b0e681c205c214ecca7d74ba79fc7032b0c52642307074b19bceb14d8a",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/donut_00000.npz": {
+      "path": "pick_conveyor_visual_assets/donut_00000.npz",
+      "sha256": "0c80d65dc7cddfbede54ac110063d5fde7acb7bf8e07e4f9783315644bbcfee3",
+      "bytes": 1361867,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/donut_00000.npz",
+      "source_sha256": "0c80d65dc7cddfbede54ac110063d5fde7acb7bf8e07e4f9783315644bbcfee3",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/figurine_00000.npz": {
+      "path": "pick_conveyor_visual_assets/figurine_00000.npz",
+      "sha256": "f7d9c3bc91c24949caa0224215b8622fda3695238f22dbedd31cba76dc07dd5c",
+      "bytes": 1374298,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/figurine_00000.npz",
+      "source_sha256": "f7d9c3bc91c24949caa0224215b8622fda3695238f22dbedd31cba76dc07dd5c",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/glue_00000.npz": {
+      "path": "pick_conveyor_visual_assets/glue_00000.npz",
+      "sha256": "f1527982d2b5a8ca3f8dfae5bbd8870045a05fab253837076d7052665dc2e6e6",
+      "bytes": 1214152,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/glue_00000.npz",
+      "source_sha256": "f1527982d2b5a8ca3f8dfae5bbd8870045a05fab253837076d7052665dc2e6e6",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/manifest.json": {
+      "path": "pick_conveyor_visual_assets/manifest.json",
+      "sha256": "c3a3584870518c1e0693f305d4c1fdb8b4e5e0baa3324c6a43dcbfbbdf26379e",
+      "bytes": 18167,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/manifest.json",
+      "source_sha256": "c3a3584870518c1e0693f305d4c1fdb8b4e5e0baa3324c6a43dcbfbbdf26379e",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/noodles_00000.npz": {
+      "path": "pick_conveyor_visual_assets/noodles_00000.npz",
+      "sha256": "0aa1716d321c9f1b72827a05ebb17899b723cc90866b4ed431d8fda8383d977d",
+      "bytes": 1386170,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/noodles_00000.npz",
+      "source_sha256": "0aa1716d321c9f1b72827a05ebb17899b723cc90866b4ed431d8fda8383d977d",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/peeler_00000.npz": {
+      "path": "pick_conveyor_visual_assets/peeler_00000.npz",
+      "sha256": "7a88a3129257e550a1221d0e36c6aea2bdf0d18cdb15599918372a38e27f7069",
+      "bytes": 1289781,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/peeler_00000.npz",
+      "source_sha256": "7a88a3129257e550a1221d0e36c6aea2bdf0d18cdb15599918372a38e27f7069",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/photo_can_00000.png": {
+      "path": "pick_conveyor_visual_assets/photo_can_00000.png",
+      "sha256": "a5ae6b63930599a7871a18ec0b078d7c52ee9f74ae756e7870ae32b18afe1a0d",
+      "bytes": 243771,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/photo_can_00000.png",
+      "source_sha256": "a5ae6b63930599a7871a18ec0b078d7c52ee9f74ae756e7870ae32b18afe1a0d",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/photo_car_00009.png": {
+      "path": "pick_conveyor_visual_assets/photo_car_00009.png",
+      "sha256": "00b58e76268c758c6daa4d3db623e02d89970eca4ae59468a494e42af415fb18",
+      "bytes": 259146,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/photo_car_00009.png",
+      "source_sha256": "00b58e76268c758c6daa4d3db623e02d89970eca4ae59468a494e42af415fb18",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/photo_car_00010.png": {
+      "path": "pick_conveyor_visual_assets/photo_car_00010.png",
+      "sha256": "a31afe68129e2de17c91543cb6695b2bba110aafb1f74a141d13c15d8e26ad9a",
+      "bytes": 233564,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/photo_car_00010.png",
+      "source_sha256": "a31afe68129e2de17c91543cb6695b2bba110aafb1f74a141d13c15d8e26ad9a",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/photo_correction_tape_00000.png": {
+      "path": "pick_conveyor_visual_assets/photo_correction_tape_00000.png",
+      "sha256": "c7f922b480f2d3bdb165a46cc6afb95b507fbc4a38e09482893c2ae02bb8f81c",
+      "bytes": 255166,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/photo_correction_tape_00000.png",
+      "source_sha256": "c7f922b480f2d3bdb165a46cc6afb95b507fbc4a38e09482893c2ae02bb8f81c",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/photo_cup_00007.png": {
+      "path": "pick_conveyor_visual_assets/photo_cup_00007.png",
+      "sha256": "cbf76f5d35b3bcc145cdba8ea714e2bdd17621ad355b7f50d7efb6153d375bb9",
+      "bytes": 179445,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/photo_cup_00007.png",
+      "source_sha256": "cbf76f5d35b3bcc145cdba8ea714e2bdd17621ad355b7f50d7efb6153d375bb9",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/photo_donut_00000.png": {
+      "path": "pick_conveyor_visual_assets/photo_donut_00000.png",
+      "sha256": "7bd0892e1b984e10bd43cb0ec3d0257f5e31ee8310ca3e0a84892b604355dbc2",
+      "bytes": 272561,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/photo_donut_00000.png",
+      "source_sha256": "7bd0892e1b984e10bd43cb0ec3d0257f5e31ee8310ca3e0a84892b604355dbc2",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/photo_figurine_00000.png": {
+      "path": "pick_conveyor_visual_assets/photo_figurine_00000.png",
+      "sha256": "6e64c6e2f09fcd2773ffeed84d1cbc03dda85794d5d0f126cb06ed73303045f5",
+      "bytes": 207677,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/photo_figurine_00000.png",
+      "source_sha256": "6e64c6e2f09fcd2773ffeed84d1cbc03dda85794d5d0f126cb06ed73303045f5",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/photo_glue_00000.png": {
+      "path": "pick_conveyor_visual_assets/photo_glue_00000.png",
+      "sha256": "101a442b60017b33c4f64c987ef98646705f66b8f2771e6a5de7c6a32559eea0",
+      "bytes": 194842,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/photo_glue_00000.png",
+      "source_sha256": "101a442b60017b33c4f64c987ef98646705f66b8f2771e6a5de7c6a32559eea0",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/photo_noodles_00000.png": {
+      "path": "pick_conveyor_visual_assets/photo_noodles_00000.png",
+      "sha256": "ff6d6794ecb4186d3d1c95dce6d8116fc4f64f449b62b2468583cbd344eb146b",
+      "bytes": 267334,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/photo_noodles_00000.png",
+      "source_sha256": "ff6d6794ecb4186d3d1c95dce6d8116fc4f64f449b62b2468583cbd344eb146b",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/photo_peeler_00000.png": {
+      "path": "pick_conveyor_visual_assets/photo_peeler_00000.png",
+      "sha256": "abf1c9a5c88bb33b2aa7aa6dbbfeb6a93731f2e5c78717fcd252229d10900ca3",
+      "bytes": 195549,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/photo_peeler_00000.png",
+      "source_sha256": "abf1c9a5c88bb33b2aa7aa6dbbfeb6a93731f2e5c78717fcd252229d10900ca3",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/photo_remote_00000.png": {
+      "path": "pick_conveyor_visual_assets/photo_remote_00000.png",
+      "sha256": "46291c66e8c116d8c81cbcf0809ebea3ae03320badc9166a2130bd0322077347",
+      "bytes": 197556,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/photo_remote_00000.png",
+      "source_sha256": "46291c66e8c116d8c81cbcf0809ebea3ae03320badc9166a2130bd0322077347",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/photo_remote_00001.png": {
+      "path": "pick_conveyor_visual_assets/photo_remote_00001.png",
+      "sha256": "0cf6e2ea0de592980dccafa645b3496144982aacd8863c21f46b7a12f79a4c1c",
+      "bytes": 210620,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/photo_remote_00001.png",
+      "source_sha256": "0cf6e2ea0de592980dccafa645b3496144982aacd8863c21f46b7a12f79a4c1c",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/photo_sachet_00000.png": {
+      "path": "pick_conveyor_visual_assets/photo_sachet_00000.png",
+      "sha256": "7013bb0744e13bc51e8e0714131faa70187f3c2f3a25c9214acd6c471f21eda3",
+      "bytes": 315095,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/photo_sachet_00000.png",
+      "source_sha256": "7013bb0744e13bc51e8e0714131faa70187f3c2f3a25c9214acd6c471f21eda3",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/photo_toy_00001.png": {
+      "path": "pick_conveyor_visual_assets/photo_toy_00001.png",
+      "sha256": "67033461b59fda05ebc82bd0d604f33f8950974eb08c650a7cecf13c80d856c4",
+      "bytes": 321807,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/photo_toy_00001.png",
+      "source_sha256": "67033461b59fda05ebc82bd0d604f33f8950974eb08c650a7cecf13c80d856c4",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/photo_yogurt_00001.png": {
+      "path": "pick_conveyor_visual_assets/photo_yogurt_00001.png",
+      "sha256": "cc3ec25f516b51e7079a07fcd2473617e205c5073489e7dadd8c401de4c0ebf2",
+      "bytes": 236537,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/photo_yogurt_00001.png",
+      "source_sha256": "cc3ec25f516b51e7079a07fcd2473617e205c5073489e7dadd8c401de4c0ebf2",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/remote_00000.npz": {
+      "path": "pick_conveyor_visual_assets/remote_00000.npz",
+      "sha256": "0d8e1a57a6ddf84131170812b44939e237fd11d2b6973defd636d1678405b1a7",
+      "bytes": 1127721,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/remote_00000.npz",
+      "source_sha256": "0d8e1a57a6ddf84131170812b44939e237fd11d2b6973defd636d1678405b1a7",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/remote_00001.npz": {
+      "path": "pick_conveyor_visual_assets/remote_00001.npz",
+      "sha256": "8f8066bd216e857c3121f2149742aef53967af120e3b9818aa7eca93bed41fdf",
+      "bytes": 1291057,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/remote_00001.npz",
+      "source_sha256": "8f8066bd216e857c3121f2149742aef53967af120e3b9818aa7eca93bed41fdf",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/sachet_00000.npz": {
+      "path": "pick_conveyor_visual_assets/sachet_00000.npz",
+      "sha256": "dd9a943ce607b3ee6dd81129b46c532309c0023fc8607be0c15d0437fdb6ff00",
+      "bytes": 1336311,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/sachet_00000.npz",
+      "source_sha256": "dd9a943ce607b3ee6dd81129b46c532309c0023fc8607be0c15d0437fdb6ff00",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/toy_00001.npz": {
+      "path": "pick_conveyor_visual_assets/toy_00001.npz",
+      "sha256": "9b2d78a4a20d16fde7427e646509f7a2a9c3b7c56357f8ba107c9debe8292940",
+      "bytes": 1328988,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/toy_00001.npz",
+      "source_sha256": "9b2d78a4a20d16fde7427e646509f7a2a9c3b7c56357f8ba107c9debe8292940",
+      "sample_annotations_removed": false
+    },
+    "pick_conveyor_visual_assets/yogurt_00001.npz": {
+      "path": "pick_conveyor_visual_assets/yogurt_00001.npz",
+      "sha256": "7a9c190eab03f590904a0f86ec49c1943e68ea6429b098e60ca0865de9fa93e3",
+      "bytes": 1370441,
+      "source": "resource://intake_b_assets/pick_from_conveyor_by_image/baselines/official-chain-20261019b/bundle/RoboDojo/scripts/data_engine/pick_conveyor_visual_assets/yogurt_00001.npz",
+      "source_sha256": "7a9c190eab03f590904a0f86ec49c1943e68ea6429b098e60ca0865de9fa93e3",
+      "sample_annotations_removed": false
+    },
+    "Robots/x5/meshes/link7.STL": {
+      "path": "Robots/x5/meshes/link7.STL",
+      "sha256": "ec3d40b39cccde0075ca3d16603f14f180fce41a46b446473d384def7a1b0be0",
+      "bytes": 65284,
+      "source": "resource://official_assets/Robots/x5/meshes/link7.STL",
+      "source_sha256": "ec3d40b39cccde0075ca3d16603f14f180fce41a46b446473d384def7a1b0be0",
+      "sample_annotations_removed": false,
+      "public_geometry": "Own X5 robot finger or fixed wrist camera mount geometry; no task object state"
+    },
+    "Robots/x5/meshes/link8.STL": {
+      "path": "Robots/x5/meshes/link8.STL",
+      "sha256": "29f7a8379cad81797e82e4ba099455cc275ac6ac5bb9e264ce46719fd7d2bb60",
+      "bytes": 65284,
+      "source": "resource://official_assets/Robots/x5/meshes/link8.STL",
+      "source_sha256": "29f7a8379cad81797e82e4ba099455cc275ac6ac5bb9e264ce46719fd7d2bb60",
+      "sample_annotations_removed": false,
+      "public_geometry": "Own X5 robot finger or fixed wrist camera mount geometry; no task object state"
+    },
+    "Robots/x5/X5A.urdf": {
+      "path": "Robots/x5/X5A.urdf",
+      "sha256": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423",
+      "bytes": 9218,
+      "source": "resource://official_assets/Robots/x5/X5A.urdf",
+      "source_sha256": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423",
+      "sample_annotations_removed": false,
+      "public_geometry": "Own X5 robot finger or fixed wrist camera mount geometry; no task object state"
+    },
+    "X5A.urdf": {
+      "path": "resource://rule_assets/a12-original-pour-20261030/pour_balls_into_vase/X5A.urdf",
+      "sha256": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423",
+      "bytes": 9218,
+      "provenance": "Original hash-pinned static X5/model-local geometry; independent fixed USD audit. No runtime scene/object pose."
+    },
+    "curobo.yml": {
+      "path": "resource://rule_assets/a12-original-pour-20261030/pour_balls_into_vase/curobo.yml",
+      "sha256": "7e28b2a617369d0b4b381d77224ccb43069816acb24c5c6c49235126f8fc459a",
+      "bytes": 12536,
+      "provenance": "Original hash-pinned static X5/model-local geometry; independent fixed USD audit. No runtime scene/object pose."
+    }
+  },
+  "scope": "Declared fixed asset shape and offline learned/calibrated priors; no current layout or simulator state. Recorded sample annotations are excluded."
+}

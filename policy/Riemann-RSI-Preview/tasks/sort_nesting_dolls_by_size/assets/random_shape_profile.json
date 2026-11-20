@@ -1,0 +1,31 @@
+{
+  "schema": "riemann-public-nesting-profile-v1",
+  "profile": "random",
+  "families": [
+    "family3",
+    "family4"
+  ],
+  "path": "assets/random_public_shapes",
+  "files": {
+    "nesting_dolls_random_public_shapes.json": "0cb895102e13c60ade926b965bfceff2a4485fa7562dbff4df536de113a3affb",
+    "nesting_dolls_random_public_shapes.npz": "0ce2510d16e5d703446ade34cba177c4f79112bbbb384d1ec88f55aafe5b4ef3"
+  },
+  "height_banks": {
+    "family3": [
+      0.0503,
+      0.0686,
+      0.0914,
+      0.1097,
+      0.128
+    ],
+    "family4": [
+      0.0503,
+      0.0686,
+      0.0914,
+      0.1075,
+      0.128
+    ]
+  },
+  "scope": "Static public mesh and metadata only; no episode state, layouts, rewards or images",
+  "builder_sha256": "9f3a55a45107bcc8677f4c23b7291efebdfc594ce8034b7eae3e688a6be3cbff"
+}

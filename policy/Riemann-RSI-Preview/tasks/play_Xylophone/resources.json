@@ -1,0 +1,107 @@
+{
+  "official_runtime": {
+    "commit": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
+    "path": "resource://official_runtime"
+  },
+  "official_support_files": {
+    "XPolicyLab/model_template.py": {
+      "bytes": 3478,
+      "path": "resource://official_runtime/XPolicyLab/model_template.py",
+      "sha256": "4f8d1eeb8073aa7ae6093abf0f395cd5fef70ff4a4bd1fa6b2d83b356a90754a"
+    },
+    "XPolicyLab/utils/load_file.py": {
+      "bytes": 997,
+      "path": "resource://official_runtime/XPolicyLab/utils/load_file.py",
+      "sha256": "488590d76084f419a36c2fb3e658eeb240ae554678899e9f2ce0cc10da5c4b57"
+    },
+    "XPolicyLab/utils/process_data.py": {
+      "bytes": 29589,
+      "path": "resource://official_runtime/XPolicyLab/utils/process_data.py",
+      "sha256": "593b72c64b5a897f2388e6a937d08ff4fc22b51af3bc0a8a0d2b221c235020bd"
+    }
+  },
+  "public_robot_assets": {
+    "ARX.usd": {
+      "bytes": 28300821,
+      "path": "resource://official_assets/Robots/x5/ARX.usd",
+      "sha256": "5723a835bf5627a935a8dabb3a44447725bd1465243ce791e221b3e990121d63"
+    },
+    "X5A.urdf": {
+      "bytes": 9218,
+      "path": "resource://official_assets/Robots/x5/X5A.urdf",
+      "sha256": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423"
+    },
+    "curobo.yml": {
+      "bytes": 12566,
+      "path": "resource://official_assets/Robots/x5/curobo.yml",
+      "sha256": "ffcdc4fde61d3a0aa15550d519ee4f727888d225bf7b6e6b72d59398153efa62"
+    },
+    "curobo_tmp.yml": {
+      "bytes": 12526,
+      "path": "resource://official_assets/Robots/x5/curobo_tmp.yml",
+      "sha256": "5eea08bf7ef276bf9dfd078ef9f69221e9a67c8cf6cd19fce5ef66d42e96b3f2"
+    },
+    "meshes/base_link.STL": {
+      "bytes": 1611284,
+      "path": "resource://official_assets/Robots/x5/meshes/base_link.STL",
+      "sha256": "898dbe3af3a98857358ac5a3d74e085ec9c69946737e767dad139776761cbd92"
+    },
+    "meshes/camera.glb": {
+      "bytes": 15899328,
+      "path": "resource://official_assets/Robots/x5/meshes/camera.glb",
+      "sha256": "9833e436988bcd83f3113ab1071428427c80d6a1392d9e0b7cf35d2b6e949d7c"
+    },
+    "meshes/camera_base.glb": {
+      "bytes": 62332,
+      "path": "resource://official_assets/Robots/x5/meshes/camera_base.glb",
+      "sha256": "d771a24ab886166536ffe4a0719af1163e44fac4067e07110cf72a7a01d260b0"
+    },
+    "meshes/link1.STL": {
+      "bytes": 162184,
+      "path": "resource://official_assets/Robots/x5/meshes/link1.STL",
+      "sha256": "04a52b86a5b28c847377a9167e7effab0478fa591052e83b0b32cf8709bb3885"
+    },
+    "meshes/link2.STL": {
+      "bytes": 4353884,
+      "path": "resource://official_assets/Robots/x5/meshes/link2.STL",
+      "sha256": "2865da6a962c814abaf9251497bcf5f5e3b67610e3b657ddcaa9de8b3d45e83e"
+    },
+    "meshes/link3.STL": {
+      "bytes": 1052684,
+      "path": "resource://official_assets/Robots/x5/meshes/link3.STL",
+      "sha256": "3ac2411b0cbffcf4808cae4c215cfeab607f240cd124eeba209ac7986ac047c0"
+    },
+    "meshes/link4.STL": {
+      "bytes": 142784,
+      "path": "resource://official_assets/Robots/x5/meshes/link4.STL",
+      "sha256": "3447ddef920c22e4607b887e1cc588037dfb51c37825c4cac86a5391425469c4"
+    },
+    "meshes/link5.STL": {
+      "bytes": 679584,
+      "path": "resource://official_assets/Robots/x5/meshes/link5.STL",
+      "sha256": "934b3e70ce2987f8de999de29d8ef72c8370dced8e9fdf6f9ddd3e7e24c1e464"
+    },
+    "meshes/link6.STL": {
+      "bytes": 643784,
+      "path": "resource://official_assets/Robots/x5/meshes/link6.STL",
+      "sha256": "32dca4ededcf3215163207b9aea1046114ae59921555d1e068ee46fa6e53915e"
+    },
+    "meshes/link7.STL": {
+      "bytes": 65284,
+      "path": "resource://official_assets/Robots/x5/meshes/link7.STL",
+      "sha256": "ec3d40b39cccde0075ca3d16603f14f180fce41a46b446473d384def7a1b0be0"
+    },
+    "meshes/link8.STL": {
+      "bytes": 65284,
+      "path": "resource://official_assets/Robots/x5/meshes/link8.STL",
+      "sha256": "29f7a8379cad81797e82e4ba099455cc275ac6ac5bb9e264ce46719fd7d2bb60"
+    },
+    "robot_config.yml": {
+      "bytes": 794,
+      "path": "resource://official_assets/Robots/x5/robot_config.yml",
+      "sha256": "9de4f63b84c0f730623c09af7a2d530d84973981397280b6e4b626b50ba6f1c9"
+    }
+  },
+  "python_prefix": "resource://eval_environment",
+  "schema": "original-instrument-public-resources-v1"
+}

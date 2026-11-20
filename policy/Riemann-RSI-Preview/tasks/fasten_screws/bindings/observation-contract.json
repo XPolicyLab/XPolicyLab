@@ -1,0 +1,31 @@
+{
+  "schema": "a15-public-observation-contract-v1",
+  "task": "fasten_screws",
+  "standard_observation_only": true,
+  "measured_finger_joints_required": false,
+  "public_factory": "controller.create_public_environment",
+  "allowed_fields": {
+    "vision": [
+      "cam_head.color",
+      "cam_left_wrist.color",
+      "cam_right_wrist.color"
+    ],
+    "state": [
+      "left_arm_joint_state",
+      "left_ee_joint_state",
+      "left_ee_pose",
+      "right_arm_joint_state",
+      "right_ee_joint_state",
+      "right_ee_pose"
+    ]
+  },
+  "gripper_observation_semantics": "Normalized prior command echo only; not actual finger aperture/contact.",
+  "unobservable_contact": "unknown; original requested motion/minimum waits and existing RGB/own-EE checks retained. Fixed URDF offsets are explicitly nominal geometry, not measurements.",
+  "native_action_horizon": 1900,
+  "gpu_review_hold": false,
+  "formal_gt_free_or_performance_certified": false,
+  "shared_runtime_owner_commit": "e882ef2853600dce54b91addcd49b6377db5decb",
+  "evaluation_enabled": true,
+  "native_runtime_contract": "NATIVE_RUNTIME_LOCK.json",
+  "status": "fixed0 compatibility probe only"
+}

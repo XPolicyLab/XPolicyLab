@@ -1,0 +1,104 @@
+{
+  "family3": {
+    "public_asset": "resource://official_assets/Object/RoboDojo/Rigid/matryoshka_dolls/00015/object.usdz",
+    "sha256": "b77ceec4ee10bb43affb158cf0f8d59853af5f086a58f1704dc61cdb4b3915bb",
+    "hull_vertices": 26573,
+    "original_bounds": [
+      [
+        -0.04286367818713188,
+        -0.04265197739005089,
+        -0.06400800496339798
+      ],
+      [
+        0.042718902230262756,
+        0.042786046862602234,
+        0.06400800496339798
+      ]
+    ],
+    "height_bank": [
+      0.0503,
+      0.0686,
+      0.0914,
+      0.1097,
+      0.128
+    ],
+    "metadata_inputs": [
+      {
+        "path": "resource://official_assets/Object/RoboDojo/Rigid/matryoshka_dolls/00015/metadata.json",
+        "sha256": "d17e5ecbea8312bb7be801a49971d1ee776553909fe6f13a500d083a8896234c",
+        "height": 0.128
+      },
+      {
+        "path": "resource://official_assets/Object/RoboDojo/Rigid/matryoshka_dolls/00016/metadata.json",
+        "sha256": "382d702660d8af46e62b1976cdcd81be1ffdf311c24d45331a6a6e7db0ea3a6b",
+        "height": 0.1097
+      },
+      {
+        "path": "resource://official_assets/Object/RoboDojo/Rigid/matryoshka_dolls/00017/metadata.json",
+        "sha256": "c1108731abadc67ded2eda7da6e37318ce6ded051684b981cc1980300d8b8f3a",
+        "height": 0.0914
+      },
+      {
+        "path": "resource://official_assets/Object/RoboDojo/Rigid/matryoshka_dolls/00018/metadata.json",
+        "sha256": "c9e8325928fb3c85b6d415c381eb87fdf5cadd88351bd51a219481a6b694ca16",
+        "height": 0.0686
+      },
+      {
+        "path": "resource://official_assets/Object/RoboDojo/Rigid/matryoshka_dolls/00019/metadata.json",
+        "sha256": "4afae59fa28d1265290f83837a363beca023d38cffe8763a4fbb885f737d4f9c",
+        "height": 0.0503
+      }
+    ]
+  },
+  "family4": {
+    "public_asset": "resource://official_assets/Object/RoboDojo/Rigid/matryoshka_dolls/00020/object.usdz",
+    "sha256": "bc5bf47f390643cb1c48af6a802f76af7e7de3ea519c5f79705187489e33dcbc",
+    "hull_vertices": 39158,
+    "original_bounds": [
+      [
+        -0.044982265681028366,
+        -0.043660130351781845,
+        -0.06400801241397858
+      ],
+      [
+        0.044853199273347855,
+        0.04376797750592232,
+        0.06400800496339798
+      ]
+    ],
+    "height_bank": [
+      0.0503,
+      0.0686,
+      0.0914,
+      0.1075,
+      0.128
+    ],
+    "metadata_inputs": [
+      {
+        "path": "resource://official_assets/Object/RoboDojo/Rigid/matryoshka_dolls/00020/metadata.json",
+        "sha256": "f59efce15bffbb4700266737409c5ba71c3991121a0c3ad81e72eafcd13d2d43",
+        "height": 0.128
+      },
+      {
+        "path": "resource://official_assets/Object/RoboDojo/Rigid/matryoshka_dolls/00021/metadata.json",
+        "sha256": "dcbd3036c4cdec33f9bab825664f6f419bd05caa0c81c39f07d8f729c13b8808",
+        "height": 0.1075
+      },
+      {
+        "path": "resource://official_assets/Object/RoboDojo/Rigid/matryoshka_dolls/00022/metadata.json",
+        "sha256": "02cfd8cdea6d13f7bdf1715faec48fc83b050cda4e56b70321b1b686063f3ccb",
+        "height": 0.0914
+      },
+      {
+        "path": "resource://official_assets/Object/RoboDojo/Rigid/matryoshka_dolls/00023/metadata.json",
+        "sha256": "8f267b434b9cf0210bcfc33f4588b823b7209400fec92732500da9565dd4dfbe",
+        "height": 0.0686
+      },
+      {
+        "path": "resource://official_assets/Object/RoboDojo/Rigid/matryoshka_dolls/00024/metadata.json",
+        "sha256": "9a242853d75cd0136d81f1f2bbac33f9ef277b05fe1aaca994f97d7fc3f4cbac",
+        "height": 0.0503
+      }
+    ]
+  }
+}

@@ -1,0 +1,139 @@
+{
+  "schema": "riemann-declarative-generator-workflow-v1",
+  "mode": "rule_only",
+  "official_action_horizon": 800,
+  "wam_reselection": false,
+  "max_operations": 1024,
+  "bindings": {
+    "parse": "skills.language.implementation:resolve",
+    "surface": "skills.surface_geometry.implementation:initialize",
+    "plan": "skills.pour_geometry.implementation:plan_episode",
+    "bind_job": "skills.path_execution.implementation:bind_job",
+    "approach": "skills.grasp.implementation:approach",
+    "close": "skills.grasp.implementation:close",
+    "lift": "skills.grasp.implementation:lift",
+    "carry": "skills.pour.implementation:carry",
+    "tilt": "skills.pour.implementation:tilt",
+    "drain": "skills.pour.implementation:drain",
+    "upright": "skills.return_bottle.implementation:upright",
+    "replace": "skills.return_bottle.implementation:replace",
+    "home": "skills.return_bottle.implementation:home",
+    "refusal": "skills.recovery.implementation:record",
+    "recover": "skills.recovery.implementation:recover",
+    "final_hold": "skills.recovery.implementation:final_hold",
+    "survey": "skills.observed_geometry.implementation:survey"
+  },
+  "errors": {
+    "SceneError": "skills.surface_geometry.implementation:SceneError",
+    "PlanError": "skills.pour_geometry.implementation:PlanError",
+    "ExecutionError": "skills.path_execution.implementation:ExecutionError"
+  },
+  "steps": [
+    {
+      "id": "ordered_public_pouring",
+      "try": [
+        {
+          "id": "parse_actual_public_instruction",
+          "call": "parse"
+        },
+        {
+          "id": "observe_table",
+          "call": "surface"
+        },
+        {
+          "id": "observe_vessel_dimensions_with_bounded_camera_motion",
+          "call": "survey"
+        },
+        {
+          "id": "freeze_original_planned_jobs",
+          "call": "plan",
+          "store": "jobs"
+        },
+        {
+          "id": "ordered_pair_loop",
+          "for_each": {
+            "var": "jobs"
+          },
+          "as": "job",
+          "max_items": 3,
+          "do": [
+            {
+              "id": "reobserve_named_source",
+              "call": "bind_job",
+              "args": {
+                "job": {
+                  "var": "job"
+                }
+              }
+            },
+            {
+              "id": "original_approach",
+              "call": "approach"
+            },
+            {
+              "id": "original_close",
+              "call": "close"
+            },
+            {
+              "id": "original_lift",
+              "call": "lift"
+            },
+            {
+              "id": "original_carry",
+              "call": "carry"
+            },
+            {
+              "id": "original_tilt",
+              "call": "tilt"
+            },
+            {
+              "id": "original_drain",
+              "call": "drain"
+            },
+            {
+              "id": "original_upright",
+              "call": "upright"
+            },
+            {
+              "id": "original_replace",
+              "call": "replace"
+            },
+            {
+              "id": "original_home",
+              "call": "home"
+            }
+          ]
+        }
+      ],
+      "catch": [
+        {
+          "errors": [
+            "SceneError",
+            "PlanError",
+            "ExecutionError"
+          ],
+          "as": "failure",
+          "do": [
+            {
+              "id": "record_public_rejection",
+              "call": "refusal",
+              "args": {
+                "error": {
+                  "var": "failure"
+                }
+              }
+            },
+            {
+              "id": "original_history_recovery",
+              "call": "recover"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "await_actual_official_terminal",
+      "call": "final_hold"
+    }
+  ]
+}

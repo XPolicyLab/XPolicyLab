@@ -1,0 +1,3742 @@
+{
+  "schema": "riemann-mature-teacher-programs-v1",
+  "package": "tasks.pack_objects_into_box",
+  "task": "pack_objects_into_box",
+  "official_action_horizon": 1300,
+  "mode": "rule_only",
+  "wam_reselection": false,
+  "programs": {
+    "U07_VisionPackTeacher_run_impl": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 1300,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U07_VisionPackTeacher_run_impl_motion_001": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_001",
+        "U07_VisionPackTeacher_run_impl_self_robots_items_002": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_self_robots_items_002",
+        "U07_VisionPackTeacher_run_impl_motion_003": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_003",
+        "U07_VisionPackTeacher_run_impl_motion_004": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_004",
+        "U07_VisionPackTeacher_run_impl_motion_005": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_005",
+        "U07_VisionPackTeacher_run_impl_motion_006": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_006",
+        "U07_VisionPackTeacher_run_impl_motion_007": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_007",
+        "U07_VisionPackTeacher_run_impl_perception_only_in_sys_argv_008": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_perception_only_in_sys_argv_008",
+        "U07_VisionPackTeacher_run_impl_perception_only_in_sys_argv_009": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_perception_only_in_sys_argv_009",
+        "U07_VisionPackTeacher_run_impl_motion_010": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_010",
+        "U07_VisionPackTeacher_run_impl_motion_011": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_011",
+        "U07_VisionPackTeacher_run_impl_motion_012": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_012",
+        "U07_VisionPackTeacher_run_impl_motion_013": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_013",
+        "U07_VisionPackTeacher_run_impl_motion_014": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_014",
+        "U07_VisionPackTeacher_run_impl_motion_015": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_015",
+        "U07_VisionPackTeacher_run_impl_motion_016": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_016",
+        "U07_VisionPackTeacher_run_impl_motion_017": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_017",
+        "U07_VisionPackTeacher_run_impl_motion_018": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_018",
+        "U07_VisionPackTeacher_run_impl_motion_019": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_019",
+        "U07_VisionPackTeacher_run_impl_grasp_proposals_car_geo_self_gripper_forward_off_020": "skills.pickup.implementation:U07_VisionPackTeacher_run_impl_grasp_proposals_car_geo_self_gripper_forward_off_020",
+        "U07_VisionPackTeacher_run_impl_motion_021": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_021",
+        "U07_VisionPackTeacher_run_impl_motion_022": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_022",
+        "U07_VisionPackTeacher_run_impl_motion_023": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_023",
+        "U07_VisionPackTeacher_run_impl_motion_024": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_024",
+        "U07_VisionPackTeacher_run_impl_motion_025": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_025",
+        "U07_VisionPackTeacher_run_impl_motion_026": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_026",
+        "U07_VisionPackTeacher_run_impl_motion_027": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_027",
+        "U07_VisionPackTeacher_run_impl_self_robots_values_028": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_self_robots_values_028",
+        "U07_VisionPackTeacher_run_impl_motion_029": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_029",
+        "U07_VisionPackTeacher_run_impl_all_self_ik_robot_p_for_p_in_g_low_g_high_g_lift_030": "skills.pickup.implementation:U07_VisionPackTeacher_run_impl_all_self_ik_robot_p_for_p_in_g_low_g_high_g_lift_030",
+        "U07_VisionPackTeacher_run_impl_all_self_ik_robot_p_for_p_in_g_low_g_high_g_lift_031": "skills.pickup.implementation:U07_VisionPackTeacher_run_impl_all_self_ik_robot_p_for_p_in_g_low_g_high_g_lift_031",
+        "U07_VisionPackTeacher_run_impl_feasible_032": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_feasible_032",
+        "U07_VisionPackTeacher_run_impl_feasible_033": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_feasible_033",
+        "U07_VisionPackTeacher_run_impl_motion_034": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_034",
+        "U07_VisionPackTeacher_run_impl_motion_035": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_035",
+        "U07_VisionPackTeacher_run_impl_motion_036": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_036",
+        "U07_VisionPackTeacher_run_impl_motion_037": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_037",
+        "U07_VisionPackTeacher_run_impl_motion_038": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_038",
+        "U07_VisionPackTeacher_run_impl_not_feasible_or_flap_overlap_or_rear_access_039": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_not_feasible_or_flap_overlap_or_rear_access_039",
+        "U07_VisionPackTeacher_run_impl_not_feasible_or_flap_overlap_or_rear_access_040": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_not_feasible_or_flap_overlap_or_rear_access_040",
+        "U07_VisionPackTeacher_run_impl_motion_041": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_041",
+        "U07_VisionPackTeacher_run_impl_motion_042": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_042",
+        "U07_VisionPackTeacher_run_impl_abs_hp_0_0_28_and_hp_1_0_1_043": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_abs_hp_0_0_28_and_hp_1_0_1_043",
+        "U07_VisionPackTeacher_run_impl_abs_hp_0_0_28_and_hp_1_0_1_044": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_abs_hp_0_0_28_and_hp_1_0_1_044",
+        "U07_VisionPackTeacher_run_impl_abs_hp_0_0_28_and_hp_1_0_1_045": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_abs_hp_0_0_28_and_hp_1_0_1_045",
+        "U07_VisionPackTeacher_run_impl_list_self_scene_objects_046": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_list_self_scene_objects_046",
+        "U07_VisionPackTeacher_run_impl_motion_047": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_047",
+        "U07_VisionPackTeacher_run_impl_motion_048": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_048",
+        "U07_VisionPackTeacher_run_impl_motion_049": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_049",
+        "U07_VisionPackTeacher_run_impl_motion_050": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_050",
+        "U07_VisionPackTeacher_run_impl_motion_051": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_051",
+        "U07_VisionPackTeacher_run_impl_np_all_hi_2_self_box_goal_0_16_0_105_and_np_all__052": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_np_all_hi_2_self_box_goal_0_16_0_105_and_np_all__052",
+        "U07_VisionPackTeacher_run_impl_np_all_hi_2_self_box_goal_0_16_0_105_and_np_all__053": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_np_all_hi_2_self_box_goal_0_16_0_105_and_np_all__053",
+        "U07_VisionPackTeacher_run_impl_np_all_hi_2_self_box_goal_0_16_0_105_and_np_all__054": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_np_all_hi_2_self_box_goal_0_16_0_105_and_np_all__054",
+        "U07_VisionPackTeacher_run_impl_motion_055": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_055",
+        "U07_VisionPackTeacher_run_impl_motion_056": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_056",
+        "U07_VisionPackTeacher_run_impl_motion_057": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_057",
+        "U07_VisionPackTeacher_run_impl_motion_058": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_058",
+        "U07_VisionPackTeacher_run_impl_motion_059": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_059",
+        "U07_VisionPackTeacher_run_impl_abs_delta_0_0_12_and_0_0_delta_1_0_25_060": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_abs_delta_0_0_12_and_0_0_delta_1_0_25_060",
+        "U07_VisionPackTeacher_run_impl_abs_delta_0_0_12_and_0_0_delta_1_0_25_061": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_abs_delta_0_0_12_and_0_0_delta_1_0_25_061",
+        "U07_VisionPackTeacher_run_impl_abs_delta_0_0_12_and_0_0_delta_1_0_25_062": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_abs_delta_0_0_12_and_0_0_delta_1_0_25_062",
+        "U07_VisionPackTeacher_run_impl_abs_delta_0_0_12_and_0_0_delta_1_0_25_063": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_abs_delta_0_0_12_and_0_0_delta_1_0_25_063",
+        "U07_VisionPackTeacher_run_impl_abs_delta_0_0_12_and_0_0_delta_1_0_25_064": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_abs_delta_0_0_12_and_0_0_delta_1_0_25_064",
+        "U07_VisionPackTeacher_run_impl_abs_delta_0_0_12_and_0_0_delta_1_0_25_065": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_abs_delta_0_0_12_and_0_0_delta_1_0_25_065",
+        "U07_VisionPackTeacher_run_impl_motion_066": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_066",
+        "U07_VisionPackTeacher_run_impl_motion_067": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_067",
+        "U07_VisionPackTeacher_run_impl_motion_068": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_068",
+        "U07_VisionPackTeacher_run_impl_motion_069": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_069",
+        "U07_VisionPackTeacher_run_impl_motion_070": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_070",
+        "U07_VisionPackTeacher_run_impl_motion_071": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_071",
+        "U07_VisionPackTeacher_run_impl_self_robots_values_072": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_self_robots_values_072",
+        "U07_VisionPackTeacher_run_impl_motion_073": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_073",
+        "U07_VisionPackTeacher_run_impl_motion_074": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_074",
+        "U07_VisionPackTeacher_run_impl_motion_075": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_075",
+        "U07_VisionPackTeacher_run_impl_motion_076": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_076",
+        "U07_VisionPackTeacher_run_impl_motion_077": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_077",
+        "U07_VisionPackTeacher_run_impl_motion_078": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_078",
+        "U07_VisionPackTeacher_run_impl_motion_079": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_079",
+        "U07_VisionPackTeacher_run_impl_motion_080": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_080",
+        "U07_VisionPackTeacher_run_impl_motion_081": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_081",
+        "U07_VisionPackTeacher_run_impl_range_max_map_len_home_paths_082": "skills.home.implementation:U07_VisionPackTeacher_run_impl_range_max_map_len_home_paths_082",
+        "U07_VisionPackTeacher_run_impl_motion_083": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_083",
+        "U07_VisionPackTeacher_run_impl_motion_084": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_084",
+        "U07_VisionPackTeacher_run_impl_home_paths_085": "skills.home.implementation:U07_VisionPackTeacher_run_impl_home_paths_085",
+        "U07_VisionPackTeacher_run_impl_motion_086": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_086",
+        "U07_VisionPackTeacher_run_impl_motion_087": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_087",
+        "U07_VisionPackTeacher_run_impl_motion_088": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_088",
+        "U07_VisionPackTeacher_run_impl_motion_089": "skills.motion.implementation:U07_VisionPackTeacher_run_impl_motion_089"
+      },
+      "errors": {
+        "RuntimeError": "skills.state.implementation:RuntimeError"
+      },
+      "steps": [
+        {
+          "call": "U07_VisionPackTeacher_run_impl_motion_001",
+          "args": {
+            "phase_0": "initial_open"
+          }
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_self_robots_items_002",
+          "store": "items_2"
+        },
+        {
+          "for_each": {
+            "var": "items_2"
+          },
+          "as": "loop_item_3",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U07_VisionPackTeacher_run_impl_motion_003",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_3"
+                }
+              }
+            },
+            {
+              "call": "U07_VisionPackTeacher_run_impl_motion_004"
+            },
+            {
+              "call": "U07_VisionPackTeacher_run_impl_motion_005"
+            },
+            {
+              "call": "U07_VisionPackTeacher_run_impl_motion_006"
+            }
+          ]
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_motion_007"
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_perception_only_in_sys_argv_008",
+          "store": "condition_8"
+        },
+        {
+          "if": {
+            "var": "condition_8"
+          },
+          "then": [
+            {
+              "call": "U07_VisionPackTeacher_run_impl_perception_only_in_sys_argv_009"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_motion_010"
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_motion_011"
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_motion_012"
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_motion_013"
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_motion_014"
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_motion_015"
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_motion_016"
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_motion_017"
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_motion_018"
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_motion_019"
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_grasp_proposals_car_geo_self_gripper_forward_off_020",
+          "store": "items_20"
+        },
+        {
+          "for_each": {
+            "var": "items_20"
+          },
+          "as": "loop_item_21",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U07_VisionPackTeacher_run_impl_motion_021",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_21"
+                }
+              }
+            },
+            {
+              "for_each": [
+                0.0,
+                -30.0,
+                30.0
+              ],
+              "as": "loop_item_22",
+              "max_items": 4096,
+              "do": [
+                {
+                  "call": "U07_VisionPackTeacher_run_impl_motion_022",
+                  "args": {
+                    "__workflow_item": {
+                      "var": "loop_item_22"
+                    }
+                  }
+                },
+                {
+                  "call": "U07_VisionPackTeacher_run_impl_motion_023"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_run_impl_motion_024"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_run_impl_motion_025"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_run_impl_motion_026"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_run_impl_motion_027"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_run_impl_self_robots_values_028",
+                  "store": "items_28"
+                },
+                {
+                  "for_each": {
+                    "var": "items_28"
+                  },
+                  "as": "loop_item_29",
+                  "max_items": 4096,
+                  "do": [
+                    {
+                      "call": "U07_VisionPackTeacher_run_impl_motion_029",
+                      "args": {
+                        "__workflow_item": {
+                          "var": "loop_item_29"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_run_impl_all_self_ik_robot_p_for_p_in_g_low_g_high_g_lift_030",
+                      "store": "condition_30"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_30"
+                      },
+                      "then": [
+                        {
+                          "call": "U07_VisionPackTeacher_run_impl_all_self_ik_robot_p_for_p_in_g_low_g_high_g_lift_031"
+                        },
+                        {
+                          "break": true
+                        }
+                      ],
+                      "else": []
+                    }
+                  ]
+                },
+                {
+                  "call": "U07_VisionPackTeacher_run_impl_feasible_032",
+                  "store": "condition_32"
+                },
+                {
+                  "if": {
+                    "var": "condition_32"
+                  },
+                  "then": [
+                    {
+                      "break": true
+                    }
+                  ],
+                  "else": []
+                }
+              ]
+            },
+            {
+              "call": "U07_VisionPackTeacher_run_impl_feasible_033",
+              "store": "condition_33"
+            },
+            {
+              "if": {
+                "var": "condition_33"
+              },
+              "then": [
+                {
+                  "break": true
+                }
+              ],
+              "else": []
+            }
+          ]
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_motion_034"
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_motion_035"
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_motion_036"
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_motion_037"
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_motion_038"
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_not_feasible_or_flap_overlap_or_rear_access_039",
+          "store": "condition_39"
+        },
+        {
+          "if": {
+            "var": "condition_39"
+          },
+          "then": [
+            {
+              "call": "U07_VisionPackTeacher_run_impl_not_feasible_or_flap_overlap_or_rear_access_040"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_motion_041"
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_motion_042"
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_abs_hp_0_0_28_and_hp_1_0_1_043",
+          "store": "condition_43"
+        },
+        {
+          "if": {
+            "var": "condition_43"
+          },
+          "then": [
+            {
+              "call": "U07_VisionPackTeacher_run_impl_abs_hp_0_0_28_and_hp_1_0_1_044"
+            },
+            {
+              "call": "U07_VisionPackTeacher_run_impl_abs_hp_0_0_28_and_hp_1_0_1_045"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_list_self_scene_objects_046",
+          "store": "items_46"
+        },
+        {
+          "for_each": {
+            "var": "items_46"
+          },
+          "as": "loop_item_47",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U07_VisionPackTeacher_run_impl_motion_047",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_47"
+                }
+              }
+            },
+            {
+              "call": "U07_VisionPackTeacher_run_impl_motion_048"
+            },
+            {
+              "call": "U07_VisionPackTeacher_run_impl_motion_049"
+            },
+            {
+              "call": "U07_VisionPackTeacher_run_impl_motion_050"
+            },
+            {
+              "call": "U07_VisionPackTeacher_run_impl_motion_051"
+            },
+            {
+              "call": "U07_VisionPackTeacher_run_impl_np_all_hi_2_self_box_goal_0_16_0_105_and_np_all__052",
+              "store": "condition_52"
+            },
+            {
+              "if": {
+                "var": "condition_52"
+              },
+              "then": [
+                {
+                  "call": "U07_VisionPackTeacher_run_impl_np_all_hi_2_self_box_goal_0_16_0_105_and_np_all__053"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_run_impl_np_all_hi_2_self_box_goal_0_16_0_105_and_np_all__054"
+                }
+              ],
+              "else": []
+            }
+          ]
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_motion_055"
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_motion_056"
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_motion_057"
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_motion_058"
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_motion_059"
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_abs_delta_0_0_12_and_0_0_delta_1_0_25_060",
+          "store": "condition_60"
+        },
+        {
+          "if": {
+            "var": "condition_60"
+          },
+          "then": [
+            {
+              "call": "U07_VisionPackTeacher_run_impl_abs_delta_0_0_12_and_0_0_delta_1_0_25_061"
+            },
+            {
+              "call": "U07_VisionPackTeacher_run_impl_abs_delta_0_0_12_and_0_0_delta_1_0_25_062"
+            },
+            {
+              "call": "U07_VisionPackTeacher_run_impl_abs_delta_0_0_12_and_0_0_delta_1_0_25_063"
+            },
+            {
+              "call": "U07_VisionPackTeacher_run_impl_abs_delta_0_0_12_and_0_0_delta_1_0_25_064"
+            },
+            {
+              "call": "U07_VisionPackTeacher_run_impl_abs_delta_0_0_12_and_0_0_delta_1_0_25_065"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_motion_066"
+        },
+        {
+          "for_each": [
+            "shoe",
+            "hammer",
+            "electric_toothbrush",
+            "car"
+          ],
+          "as": "loop_item_67",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U07_VisionPackTeacher_run_impl_motion_067",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_67"
+                }
+              }
+            },
+            {
+              "call": "U07_VisionPackTeacher_run_impl_motion_068"
+            },
+            {
+              "call": "U07_VisionPackTeacher_run_impl_motion_069"
+            }
+          ]
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_motion_070",
+          "args": {
+            "phase_0": "final_open"
+          }
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_motion_071"
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_self_robots_values_072",
+          "store": "items_72"
+        },
+        {
+          "for_each": {
+            "var": "items_72"
+          },
+          "as": "loop_item_73",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U07_VisionPackTeacher_run_impl_motion_073",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_73"
+                }
+              }
+            },
+            {
+              "call": "U07_VisionPackTeacher_run_impl_motion_074"
+            },
+            {
+              "try": [
+                {
+                  "call": "U07_VisionPackTeacher_run_impl_motion_079"
+                }
+              ],
+              "catch": [
+                {
+                  "errors": [
+                    "RuntimeError"
+                  ],
+                  "as": "caught_error",
+                  "do": [
+                    {
+                      "call": "U07_VisionPackTeacher_run_impl_motion_075"
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_run_impl_motion_076"
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_run_impl_motion_077"
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_run_impl_motion_078"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "call": "U07_VisionPackTeacher_run_impl_motion_080"
+            }
+          ]
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_motion_081"
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_range_max_map_len_home_paths_082",
+          "store": "items_82"
+        },
+        {
+          "for_each": {
+            "var": "items_82"
+          },
+          "as": "loop_item_83",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U07_VisionPackTeacher_run_impl_motion_083",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_83"
+                }
+              }
+            },
+            {
+              "call": "U07_VisionPackTeacher_run_impl_motion_084"
+            },
+            {
+              "call": "U07_VisionPackTeacher_run_impl_home_paths_085",
+              "store": "items_85"
+            },
+            {
+              "for_each": {
+                "var": "items_85"
+              },
+              "as": "loop_item_86",
+              "max_items": 4096,
+              "do": [
+                {
+                  "call": "U07_VisionPackTeacher_run_impl_motion_086",
+                  "args": {
+                    "__workflow_item": {
+                      "var": "loop_item_86"
+                    }
+                  }
+                },
+                {
+                  "call": "U07_VisionPackTeacher_run_impl_motion_087"
+                }
+              ]
+            },
+            {
+              "call": "U07_VisionPackTeacher_run_impl_motion_088"
+            }
+          ]
+        },
+        {
+          "call": "U07_VisionPackTeacher_run_impl_motion_089",
+          "args": {
+            "phase_0": "return_home"
+          }
+        }
+      ]
+    },
+    "U07_VisionPackTeacher_relocate_box": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 1300,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U07_VisionPackTeacher_relocate_box_motion_001": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_001",
+        "U07_VisionPackTeacher_relocate_box_motion_002": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_002",
+        "U07_VisionPackTeacher_relocate_box_motion_003": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_003",
+        "U07_VisionPackTeacher_relocate_box_motion_004": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_004",
+        "U07_VisionPackTeacher_relocate_box_motion_005": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_005",
+        "U07_VisionPackTeacher_relocate_box_motion_006": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_006",
+        "U07_VisionPackTeacher_relocate_box_sorted_walls_key_lambda_value_box_3_rb_value_0_1_007": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_sorted_walls_key_lambda_value_box_3_rb_value_0_1_007",
+        "U07_VisionPackTeacher_relocate_box_motion_008": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_008",
+        "U07_VisionPackTeacher_relocate_box_motion_009": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_009",
+        "U07_VisionPackTeacher_relocate_box_motion_010": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_010",
+        "U07_VisionPackTeacher_relocate_box_motion_011": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_011",
+        "U07_VisionPackTeacher_relocate_box_preferred_arm_right_arm_if_preferred_arm_left_ar_012": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_preferred_arm_right_arm_if_preferred_arm_left_ar_012",
+        "U07_VisionPackTeacher_relocate_box_motion_013": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_013",
+        "U07_VisionPackTeacher_relocate_box_motion_014": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_014",
+        "U07_VisionPackTeacher_relocate_box_wall_options_015": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_wall_options_015",
+        "U07_VisionPackTeacher_relocate_box_motion_016": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_016",
+        "U07_VisionPackTeacher_relocate_box_motion_017": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_017",
+        "U07_VisionPackTeacher_relocate_box_jaw_preferred_0_018": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_jaw_preferred_0_018",
+        "U07_VisionPackTeacher_relocate_box_jaw_preferred_0_019": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_jaw_preferred_0_019",
+        "U07_VisionPackTeacher_relocate_box_motion_020": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_020",
+        "U07_VisionPackTeacher_relocate_box_motion_021": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_021",
+        "U07_VisionPackTeacher_relocate_box_motion_022": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_022",
+        "U07_VisionPackTeacher_relocate_box_motion_023": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_023",
+        "U07_VisionPackTeacher_relocate_box_motion_024": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_024",
+        "U07_VisionPackTeacher_relocate_box_not_self_ik_robot_carry_025": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_not_self_ik_robot_carry_025",
+        "U07_VisionPackTeacher_relocate_box_motion_026": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_026",
+        "U07_VisionPackTeacher_relocate_box_motion_027": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_027",
+        "U07_VisionPackTeacher_relocate_box_motion_028": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_028",
+        "U07_VisionPackTeacher_relocate_box_motion_029": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_029",
+        "U07_VisionPackTeacher_relocate_box_front_high_low_lift_carry_030": "skills.pickup.implementation:U07_VisionPackTeacher_relocate_box_front_high_low_lift_carry_030",
+        "U07_VisionPackTeacher_relocate_box_motion_031": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_031",
+        "U07_VisionPackTeacher_relocate_box_motion_032": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_032",
+        "U07_VisionPackTeacher_relocate_box_result_get_status_success_033": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_result_get_status_success_033",
+        "U07_VisionPackTeacher_relocate_box_result_get_status_success_034": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_result_get_status_success_034",
+        "U07_VisionPackTeacher_relocate_box_motion_035": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_035",
+        "U07_VisionPackTeacher_relocate_box_not_2_0_wrist_1_6_036": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_not_2_0_wrist_1_6_036",
+        "U07_VisionPackTeacher_relocate_box_not_2_0_wrist_1_6_037": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_not_2_0_wrist_1_6_037",
+        "U07_VisionPackTeacher_relocate_box_not_safe_wrist_038": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_not_safe_wrist_038",
+        "U07_VisionPackTeacher_relocate_box_motion_039": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_039",
+        "U07_VisionPackTeacher_relocate_box_not_self_chain_reachable_robot_plan_front_high_h_040": "skills.pickup.implementation:U07_VisionPackTeacher_relocate_box_not_self_chain_reachable_robot_plan_front_high_h_040",
+        "U07_VisionPackTeacher_relocate_box_motion_041": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_041",
+        "U07_VisionPackTeacher_relocate_box_selected_is_not_none_042": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_selected_is_not_none_042",
+        "U07_VisionPackTeacher_relocate_box_selected_is_not_none_043": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_selected_is_not_none_043",
+        "U07_VisionPackTeacher_relocate_box_selected_is_none_044": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_selected_is_none_044",
+        "U07_VisionPackTeacher_relocate_box_selected_is_none_045": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_selected_is_none_045",
+        "U07_VisionPackTeacher_relocate_box_motion_046": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_046",
+        "U07_VisionPackTeacher_relocate_box_motion_047": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_047",
+        "U07_VisionPackTeacher_relocate_box_motion_048": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_048",
+        "U07_VisionPackTeacher_relocate_box_motion_049": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_049",
+        "U07_VisionPackTeacher_relocate_box_motion_050": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_050",
+        "U07_VisionPackTeacher_relocate_box_motion_051": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_051",
+        "U07_VisionPackTeacher_relocate_box_motion_052": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_052",
+        "U07_VisionPackTeacher_relocate_box_motion_053": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_053",
+        "U07_VisionPackTeacher_relocate_box_motion_054": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_054",
+        "U07_VisionPackTeacher_relocate_box_motion_055": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_055",
+        "U07_VisionPackTeacher_relocate_box_grasp_absent_056": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_grasp_absent_056",
+        "U07_VisionPackTeacher_relocate_box_width_0_0005_057": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_width_0_0005_057",
+        "U07_VisionPackTeacher_relocate_box_motion_058": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_058",
+        "U07_VisionPackTeacher_relocate_box_motion_059": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_059",
+        "U07_VisionPackTeacher_relocate_box_motion_060": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_060",
+        "U07_VisionPackTeacher_relocate_box_motion_061": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_061",
+        "U07_VisionPackTeacher_relocate_box_motion_062": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_062",
+        "U07_VisionPackTeacher_relocate_box_motion_063": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_063",
+        "U07_VisionPackTeacher_relocate_box_motion_064": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_064",
+        "U07_VisionPackTeacher_relocate_box_motion_065": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_065",
+        "U07_VisionPackTeacher_relocate_box_motion_066": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_066",
+        "U07_VisionPackTeacher_relocate_box_motion_067": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_067",
+        "U07_VisionPackTeacher_relocate_box_motion_068": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_068",
+        "U07_VisionPackTeacher_relocate_box_motion_069": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_069",
+        "U07_VisionPackTeacher_relocate_box_motion_070": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_070",
+        "U07_VisionPackTeacher_relocate_box_motion_071": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_071",
+        "U07_VisionPackTeacher_relocate_box_motion_072": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_072",
+        "U07_VisionPackTeacher_relocate_box_motion_073": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_073",
+        "U07_VisionPackTeacher_relocate_box_motion_074": "skills.motion.implementation:U07_VisionPackTeacher_relocate_box_motion_074",
+        "public_begin_box": "skills.grasp_evidence.implementation:begin_box",
+        "public_attach": "skills.grasp_evidence.implementation:attach"
+      },
+      "errors": {
+        "RuntimeError": "skills.state.implementation:RuntimeError"
+      },
+      "steps": [
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_001"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_002"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_003"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_004"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_005"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_006"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_sorted_walls_key_lambda_value_box_3_rb_value_0_1_007",
+          "store": "items_7"
+        },
+        {
+          "for_each": {
+            "var": "items_7"
+          },
+          "as": "loop_item_8",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U07_VisionPackTeacher_relocate_box_motion_008",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_8"
+                }
+              }
+            },
+            {
+              "call": "U07_VisionPackTeacher_relocate_box_motion_009"
+            },
+            {
+              "for_each": [
+                0.0,
+                -0.025,
+                0.025
+              ],
+              "as": "loop_item_10",
+              "max_items": 4096,
+              "do": [
+                {
+                  "call": "U07_VisionPackTeacher_relocate_box_motion_010",
+                  "args": {
+                    "__workflow_item": {
+                      "var": "loop_item_10"
+                    }
+                  }
+                },
+                {
+                  "call": "U07_VisionPackTeacher_relocate_box_motion_011"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_relocate_box_preferred_arm_right_arm_if_preferred_arm_left_ar_012",
+                  "store": "items_12"
+                },
+                {
+                  "for_each": {
+                    "var": "items_12"
+                  },
+                  "as": "loop_item_13",
+                  "max_items": 4096,
+                  "do": [
+                    {
+                      "call": "U07_VisionPackTeacher_relocate_box_motion_013",
+                      "args": {
+                        "__workflow_item": {
+                          "var": "loop_item_13"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_relocate_box_motion_014"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_wall_options_015",
+          "store": "items_15"
+        },
+        {
+          "for_each": {
+            "var": "items_15"
+          },
+          "as": "loop_item_16",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U07_VisionPackTeacher_relocate_box_motion_016",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_16"
+                }
+              }
+            },
+            {
+              "call": "U07_VisionPackTeacher_relocate_box_motion_017"
+            },
+            {
+              "call": "U07_VisionPackTeacher_relocate_box_jaw_preferred_0_018",
+              "store": "condition_18"
+            },
+            {
+              "if": {
+                "var": "condition_18"
+              },
+              "then": [
+                {
+                  "call": "U07_VisionPackTeacher_relocate_box_jaw_preferred_0_019"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U07_VisionPackTeacher_relocate_box_motion_020"
+            },
+            {
+              "for_each": [
+                1.0,
+                -1.0
+              ],
+              "as": "loop_item_21",
+              "max_items": 4096,
+              "do": [
+                {
+                  "call": "U07_VisionPackTeacher_relocate_box_motion_021",
+                  "args": {
+                    "__workflow_item": {
+                      "var": "loop_item_21"
+                    }
+                  }
+                },
+                {
+                  "call": "U07_VisionPackTeacher_relocate_box_motion_022"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_relocate_box_motion_023"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_relocate_box_motion_024"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_relocate_box_not_self_ik_robot_carry_025",
+                  "store": "condition_25"
+                },
+                {
+                  "if": {
+                    "var": "condition_25"
+                  },
+                  "then": [
+                    {
+                      "continue": true
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "for_each": [
+                    0.05,
+                    0.025,
+                    0.08
+                  ],
+                  "as": "loop_item_26",
+                  "max_items": 4096,
+                  "do": [
+                    {
+                      "call": "U07_VisionPackTeacher_relocate_box_motion_026",
+                      "args": {
+                        "__workflow_item": {
+                          "var": "loop_item_26"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_relocate_box_motion_027"
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_relocate_box_motion_028"
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_relocate_box_motion_029"
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_relocate_box_front_high_low_lift_carry_030",
+                      "store": "items_30"
+                    },
+                    {
+                      "for_each": {
+                        "var": "items_30"
+                      },
+                      "as": "loop_item_31",
+                      "max_items": 4096,
+                      "do": [
+                        {
+                          "call": "U07_VisionPackTeacher_relocate_box_motion_031",
+                          "args": {
+                            "__workflow_item": {
+                              "var": "loop_item_31"
+                            }
+                          }
+                        },
+                        {
+                          "call": "U07_VisionPackTeacher_relocate_box_motion_032"
+                        },
+                        {
+                          "call": "U07_VisionPackTeacher_relocate_box_result_get_status_success_033",
+                          "store": "condition_33"
+                        },
+                        {
+                          "if": {
+                            "var": "condition_33"
+                          },
+                          "then": [
+                            {
+                              "call": "U07_VisionPackTeacher_relocate_box_result_get_status_success_034"
+                            },
+                            {
+                              "break": true
+                            }
+                          ],
+                          "else": []
+                        },
+                        {
+                          "call": "U07_VisionPackTeacher_relocate_box_motion_035"
+                        },
+                        {
+                          "call": "U07_VisionPackTeacher_relocate_box_not_2_0_wrist_1_6_036",
+                          "store": "condition_36"
+                        },
+                        {
+                          "if": {
+                            "var": "condition_36"
+                          },
+                          "then": [
+                            {
+                              "call": "U07_VisionPackTeacher_relocate_box_not_2_0_wrist_1_6_037"
+                            },
+                            {
+                              "break": true
+                            }
+                          ],
+                          "else": []
+                        }
+                      ]
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_relocate_box_not_safe_wrist_038",
+                      "store": "condition_38"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_38"
+                      },
+                      "then": [
+                        {
+                          "continue": true
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "try": [
+                        {
+                          "call": "U07_VisionPackTeacher_relocate_box_motion_039"
+                        }
+                      ],
+                      "catch": [
+                        {
+                          "errors": [
+                            "RuntimeError"
+                          ],
+                          "as": "caught_error",
+                          "do": [
+                            {
+                              "continue": true
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_relocate_box_not_self_chain_reachable_robot_plan_front_high_h_040",
+                      "store": "condition_40"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_40"
+                      },
+                      "then": [
+                        {
+                          "continue": true
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_relocate_box_motion_041"
+                    },
+                    {
+                      "break": true
+                    }
+                  ]
+                },
+                {
+                  "call": "U07_VisionPackTeacher_relocate_box_selected_is_not_none_042",
+                  "store": "condition_42"
+                },
+                {
+                  "if": {
+                    "var": "condition_42"
+                  },
+                  "then": [
+                    {
+                      "break": true
+                    }
+                  ],
+                  "else": []
+                }
+              ]
+            },
+            {
+              "call": "U07_VisionPackTeacher_relocate_box_selected_is_not_none_043",
+              "store": "condition_43"
+            },
+            {
+              "if": {
+                "var": "condition_43"
+              },
+              "then": [
+                {
+                  "break": true
+                }
+              ],
+              "else": []
+            }
+          ]
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_selected_is_none_044",
+          "store": "condition_44"
+        },
+        {
+          "if": {
+            "var": "condition_44"
+          },
+          "then": [
+            {
+              "call": "U07_VisionPackTeacher_relocate_box_selected_is_none_045"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_046"
+        },
+        {
+          "call": "public_begin_box"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_047"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_048",
+          "args": {
+            "phase_0": "box_approach"
+          }
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_049"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_050"
+        },
+        {
+          "call": "public_attach"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_051",
+          "args": {
+            "phase_0": "box_close"
+          }
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_052"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_053"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_054"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_055"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_grasp_absent_056",
+          "store": "condition_56"
+        },
+        {
+          "if": {
+            "var": "condition_56"
+          },
+          "then": [
+            {
+              "call": "U07_VisionPackTeacher_relocate_box_width_0_0005_057"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_058"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_059"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_060"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_061"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_062"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_063"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_064",
+          "args": {
+            "phase_0": "box_release"
+          }
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_065"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_066"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_067"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_068"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_069"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_070"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_071"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_072"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_073"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relocate_box_motion_074"
+        }
+      ]
+    },
+    "U07_VisionPackTeacher_pack": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 1300,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U07_VisionPackTeacher_pack_motion_001": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_001",
+        "U07_VisionPackTeacher_pack_motion_002": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_002",
+        "U07_VisionPackTeacher_pack_motion_003": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_003",
+        "U07_VisionPackTeacher_pack_item_category_shoe_004": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_category_shoe_004",
+        "U07_VisionPackTeacher_pack_item_category_shoe_005": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_category_shoe_005",
+        "U07_VisionPackTeacher_pack_item_category_electric_toothbrush_006": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_category_electric_toothbrush_006",
+        "U07_VisionPackTeacher_pack_item_category_electric_toothbrush_007": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_category_electric_toothbrush_007",
+        "U07_VisionPackTeacher_pack_item_category_hammer_and_geo_upper_2_geo_lower_2_008": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_category_hammer_and_geo_upper_2_geo_lower_2_008",
+        "U07_VisionPackTeacher_pack_item_category_hammer_and_geo_upper_2_geo_lower_2_009": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_category_hammer_and_geo_upper_2_geo_lower_2_009",
+        "U07_VisionPackTeacher_pack_motion_010": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_010",
+        "U07_VisionPackTeacher_pack_0_0_if_item_category_hammer_else_0_0_30_0_30_0_011": "skills.motion.implementation:U07_VisionPackTeacher_pack_0_0_if_item_category_hammer_else_0_0_30_0_30_0_011",
+        "U07_VisionPackTeacher_pack_motion_012": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_012",
+        "U07_VisionPackTeacher_pack_motion_013": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_013",
+        "U07_VisionPackTeacher_pack_motion_014": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_014",
+        "U07_VisionPackTeacher_pack_motion_015": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_015",
+        "U07_VisionPackTeacher_pack_motion_016": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_016",
+        "U07_VisionPackTeacher_pack_options_017": "skills.motion.implementation:U07_VisionPackTeacher_pack_options_017",
+        "U07_VisionPackTeacher_pack_motion_018": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_018",
+        "U07_VisionPackTeacher_pack_motion_019": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_019",
+        "U07_VisionPackTeacher_pack_motion_020": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_020",
+        "U07_VisionPackTeacher_pack_motion_021": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_021",
+        "U07_VisionPackTeacher_pack_motion_022": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_022",
+        "U07_VisionPackTeacher_pack_item_category_hammer_and_geo_upper_2_geo_lower_2_023": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_category_hammer_and_geo_upper_2_geo_lower_2_023",
+        "U07_VisionPackTeacher_pack_item_category_hammer_and_geo_upper_2_geo_lower_2_024": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_category_hammer_and_geo_upper_2_geo_lower_2_024",
+        "U07_VisionPackTeacher_pack_self_robots_items_025": "skills.motion.implementation:U07_VisionPackTeacher_pack_self_robots_items_025",
+        "U07_VisionPackTeacher_pack_motion_026": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_026",
+        "U07_VisionPackTeacher_pack_motion_027": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_027",
+        "U07_VisionPackTeacher_pack_zip_grasp_approach_lift_place_above_grasp_low_gr_028": "skills.pickup.implementation:U07_VisionPackTeacher_pack_zip_grasp_approach_lift_place_above_grasp_low_gr_028",
+        "U07_VisionPackTeacher_pack_motion_029": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_029",
+        "U07_VisionPackTeacher_pack_motion_030": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_030",
+        "U07_VisionPackTeacher_pack_not_reachable_031": "skills.motion.implementation:U07_VisionPackTeacher_pack_not_reachable_031",
+        "U07_VisionPackTeacher_pack_not_reachable_032": "skills.motion.implementation:U07_VisionPackTeacher_pack_not_reachable_032",
+        "U07_VisionPackTeacher_pack_not_reachable_033": "skills.motion.implementation:U07_VisionPackTeacher_pack_not_reachable_033",
+        "U07_VisionPackTeacher_pack_failed_034": "skills.motion.implementation:U07_VisionPackTeacher_pack_failed_034",
+        "U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__035": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__035",
+        "U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__036": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__036",
+        "U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__037": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__037",
+        "U07_VisionPackTeacher_pack_sites_038": "skills.motion.implementation:U07_VisionPackTeacher_pack_sites_038",
+        "U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__039": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__039",
+        "U07_VisionPackTeacher_pack_self_x5_base_z_0_4_self_x5_base_z_0_36_self_x5_b_040": "skills.motion.implementation:U07_VisionPackTeacher_pack_self_x5_base_z_0_4_self_x5_base_z_0_36_self_x5_b_040",
+        "U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__041": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__041",
+        "U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__042": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__042",
+        "U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__043": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__043",
+        "U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__044": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__044",
+        "U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__045": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__045",
+        "U07_VisionPackTeacher_pack_raised_oriented_046": "skills.insertion.implementation:U07_VisionPackTeacher_pack_raised_oriented_046",
+        "U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__047": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__047",
+        "U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__048": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__048",
+        "U07_VisionPackTeacher_pack_result_get_status_success_049": "skills.motion.implementation:U07_VisionPackTeacher_pack_result_get_status_success_049",
+        "U07_VisionPackTeacher_pack_result_get_status_success_050": "skills.motion.implementation:U07_VisionPackTeacher_pack_result_get_status_success_050",
+        "U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__051": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__051",
+        "U07_VisionPackTeacher_pack_not_2_0_wrist_1_6_052": "skills.motion.implementation:U07_VisionPackTeacher_pack_not_2_0_wrist_1_6_052",
+        "U07_VisionPackTeacher_pack_not_2_0_wrist_1_6_053": "skills.motion.implementation:U07_VisionPackTeacher_pack_not_2_0_wrist_1_6_053",
+        "U07_VisionPackTeacher_pack_safe_054": "skills.motion.implementation:U07_VisionPackTeacher_pack_safe_054",
+        "U07_VisionPackTeacher_pack_safe_055": "skills.motion.implementation:U07_VisionPackTeacher_pack_safe_055",
+        "U07_VisionPackTeacher_pack_safe_rotation_056": "skills.motion.implementation:U07_VisionPackTeacher_pack_safe_rotation_056",
+        "U07_VisionPackTeacher_pack_not_safe_rotation_057": "skills.motion.implementation:U07_VisionPackTeacher_pack_not_safe_rotation_057",
+        "U07_VisionPackTeacher_pack_not_safe_rotation_058": "skills.motion.implementation:U07_VisionPackTeacher_pack_not_safe_rotation_058",
+        "U07_VisionPackTeacher_pack_motion_059": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_059",
+        "U07_VisionPackTeacher_pack_max_grasp_high_2_self_x5_base_z_0_3_grasp_high_2_060": "skills.pickup.implementation:U07_VisionPackTeacher_pack_max_grasp_high_2_self_x5_base_z_0_3_grasp_high_2_060",
+        "U07_VisionPackTeacher_pack_motion_061": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_061",
+        "U07_VisionPackTeacher_pack_motion_062": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_062",
+        "U07_VisionPackTeacher_pack_reachable_cached_robot_over_063": "skills.motion.implementation:U07_VisionPackTeacher_pack_reachable_cached_robot_over_063",
+        "U07_VisionPackTeacher_pack_motion_064": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_064",
+        "U07_VisionPackTeacher_pack_motion_065": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_065",
+        "U07_VisionPackTeacher_pack_motion_066": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_066",
+        "U07_VisionPackTeacher_pack_motion_067": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_067",
+        "U07_VisionPackTeacher_pack_motion_068": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_068",
+        "U07_VisionPackTeacher_pack_motion_069": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_069",
+        "U07_VisionPackTeacher_pack_item_category_electric_toothbrush_070": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_category_electric_toothbrush_070",
+        "U07_VisionPackTeacher_pack_item_category_electric_toothbrush_071": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_category_electric_toothbrush_071",
+        "U07_VisionPackTeacher_pack_item_category_electric_toothbrush_072": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_category_electric_toothbrush_072",
+        "U07_VisionPackTeacher_pack_grasp_ik_get_status_success_and_delivery_ik_get__073": "skills.pickup.implementation:U07_VisionPackTeacher_pack_grasp_ik_get_status_success_and_delivery_ik_get__073",
+        "U07_VisionPackTeacher_pack_grasp_ik_get_status_success_and_delivery_ik_get__074": "skills.pickup.implementation:U07_VisionPackTeacher_pack_grasp_ik_get_status_success_and_delivery_ik_get__074",
+        "U07_VisionPackTeacher_pack_grasp_ik_get_status_success_and_delivery_ik_get__075": "skills.pickup.implementation:U07_VisionPackTeacher_pack_grasp_ik_get_status_success_and_delivery_ik_get__075",
+        "U07_VisionPackTeacher_pack_grasp_ik_get_status_success_and_delivery_ik_get__076": "skills.pickup.implementation:U07_VisionPackTeacher_pack_grasp_ik_get_status_success_and_delivery_ik_get__076",
+        "U07_VisionPackTeacher_pack_grasp_ik_get_status_success_and_delivery_ik_get__077": "skills.pickup.implementation:U07_VisionPackTeacher_pack_grasp_ik_get_status_success_and_delivery_ik_get__077",
+        "U07_VisionPackTeacher_pack_motion_078": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_078",
+        "U07_VisionPackTeacher_pack_item_category_hammer_and_geo_upper_2_geo_lower_2_079": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_category_hammer_and_geo_upper_2_geo_lower_2_079",
+        "U07_VisionPackTeacher_pack_item_category_hammer_and_geo_upper_2_geo_lower_2_080": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_category_hammer_and_geo_upper_2_geo_lower_2_080",
+        "U07_VisionPackTeacher_pack_item_category_hammer_and_geo_upper_2_geo_lower_2_081": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_category_hammer_and_geo_upper_2_geo_lower_2_081",
+        "U07_VisionPackTeacher_pack_item_category_hammer_and_geo_upper_2_geo_lower_2_082": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_category_hammer_and_geo_upper_2_geo_lower_2_082",
+        "U07_VisionPackTeacher_pack_item_category_electric_toothbrush_083": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_category_electric_toothbrush_083",
+        "U07_VisionPackTeacher_pack_item_category_electric_toothbrush_084": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_category_electric_toothbrush_084",
+        "U07_VisionPackTeacher_pack_motion_085": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_085",
+        "U07_VisionPackTeacher_pack_motion_086": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_086",
+        "U07_VisionPackTeacher_pack_not_candidates_087": "skills.motion.implementation:U07_VisionPackTeacher_pack_not_candidates_087",
+        "U07_VisionPackTeacher_pack_item_get_relayed_088": "skills.transport.implementation:U07_VisionPackTeacher_pack_item_get_relayed_088",
+        "U07_VisionPackTeacher_pack_item_get_relayed_089": "skills.transport.implementation:U07_VisionPackTeacher_pack_item_get_relayed_089",
+        "U07_VisionPackTeacher_pack_not_candidates_090": "skills.motion.implementation:U07_VisionPackTeacher_pack_not_candidates_090",
+        "U07_VisionPackTeacher_pack_not_candidates_091": "skills.motion.implementation:U07_VisionPackTeacher_pack_not_candidates_091",
+        "U07_VisionPackTeacher_pack_not_candidates_092": "skills.motion.implementation:U07_VisionPackTeacher_pack_not_candidates_092",
+        "U07_VisionPackTeacher_pack_not_candidates_093": "skills.motion.implementation:U07_VisionPackTeacher_pack_not_candidates_093",
+        "U07_VisionPackTeacher_pack_sorted_candidates_key_lambda_c_c_0_3_if_item_cat_094": "skills.transport.implementation:U07_VisionPackTeacher_pack_sorted_candidates_key_lambda_c_c_0_3_if_item_cat_094",
+        "U07_VisionPackTeacher_pack_motion_095": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_095",
+        "U07_VisionPackTeacher_pack_motion_096": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_096",
+        "U07_VisionPackTeacher_pack_signature_in_getattr_self_failed_pack_grasps_set_097": "skills.pickup.implementation:U07_VisionPackTeacher_pack_signature_in_getattr_self_failed_pack_grasps_set_097",
+        "U07_VisionPackTeacher_pack_motion_098": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_098",
+        "U07_VisionPackTeacher_pack_sites_099": "skills.motion.implementation:U07_VisionPackTeacher_pack_sites_099",
+        "U07_VisionPackTeacher_pack_motion_100": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_100",
+        "U07_VisionPackTeacher_pack_self_x5_base_z_0_36_self_x5_base_z_0_32_self_x5__101": "skills.motion.implementation:U07_VisionPackTeacher_pack_self_x5_base_z_0_36_self_x5_base_z_0_32_self_x5__101",
+        "U07_VisionPackTeacher_pack_motion_102": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_102",
+        "U07_VisionPackTeacher_pack_motion_103": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_103",
+        "U07_VisionPackTeacher_pack_motion_104": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_104",
+        "U07_VisionPackTeacher_pack_motion_105": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_105",
+        "U07_VisionPackTeacher_pack_motion_106": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_106",
+        "U07_VisionPackTeacher_pack_self_scene_box_canonical_pose_1_0_2_107": "skills.motion.implementation:U07_VisionPackTeacher_pack_self_scene_box_canonical_pose_1_0_2_107",
+        "U07_VisionPackTeacher_pack_self_scene_box_canonical_pose_1_0_2_108": "skills.motion.implementation:U07_VisionPackTeacher_pack_self_scene_box_canonical_pose_1_0_2_108",
+        "U07_VisionPackTeacher_pack_self_scene_box_canonical_pose_1_0_2_109": "skills.motion.implementation:U07_VisionPackTeacher_pack_self_scene_box_canonical_pose_1_0_2_109",
+        "U07_VisionPackTeacher_pack_self_scene_box_canonical_pose_1_0_2_110": "skills.motion.implementation:U07_VisionPackTeacher_pack_self_scene_box_canonical_pose_1_0_2_110",
+        "U07_VisionPackTeacher_pack_self_scene_box_canonical_pose_1_0_2_111": "skills.motion.implementation:U07_VisionPackTeacher_pack_self_scene_box_canonical_pose_1_0_2_111",
+        "U07_VisionPackTeacher_pack_motion_112": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_112",
+        "U07_VisionPackTeacher_pack_plan_is_not_none_113": "skills.motion.implementation:U07_VisionPackTeacher_pack_plan_is_not_none_113",
+        "U07_VisionPackTeacher_pack_plan_is_not_none_114": "skills.motion.implementation:U07_VisionPackTeacher_pack_plan_is_not_none_114",
+        "U07_VisionPackTeacher_pack_plan_is_not_none_115": "skills.motion.implementation:U07_VisionPackTeacher_pack_plan_is_not_none_115",
+        "U07_VisionPackTeacher_pack_plan_is_none_116": "skills.motion.implementation:U07_VisionPackTeacher_pack_plan_is_none_116",
+        "U07_VisionPackTeacher_pack_motion_117": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_117",
+        "U07_VisionPackTeacher_pack_item_get_delivery_retry_0_1_118": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_get_delivery_retry_0_1_118",
+        "U07_VisionPackTeacher_pack_item_get_delivery_retry_0_1_119": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_get_delivery_retry_0_1_119",
+        "U07_VisionPackTeacher_pack_motion_120": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_120",
+        "U07_VisionPackTeacher_pack_motion_121": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_121",
+        "U07_VisionPackTeacher_pack_motion_122": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_122",
+        "U07_VisionPackTeacher_pack_motion_123": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_123",
+        "U07_VisionPackTeacher_pack_motion_124": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_124",
+        "U07_VisionPackTeacher_pack_motion_125": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_125",
+        "U07_VisionPackTeacher_pack_not_any_reason_in_str_exc_for_reason_in_measured_126": "skills.pickup.implementation:U07_VisionPackTeacher_pack_not_any_reason_in_str_exc_for_reason_in_measured_126",
+        "U07_VisionPackTeacher_pack_not_any_reason_in_str_exc_for_reason_in_measured_127": "skills.pickup.implementation:U07_VisionPackTeacher_pack_not_any_reason_in_str_exc_for_reason_in_measured_127",
+        "U07_VisionPackTeacher_pack_not_hasattr_self_failed_pack_grasps_128": "skills.pickup.implementation:U07_VisionPackTeacher_pack_not_hasattr_self_failed_pack_grasps_128",
+        "U07_VisionPackTeacher_pack_not_hasattr_self_failed_pack_grasps_129": "skills.pickup.implementation:U07_VisionPackTeacher_pack_not_hasattr_self_failed_pack_grasps_129",
+        "U07_VisionPackTeacher_pack_motion_130": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_130",
+        "U07_VisionPackTeacher_pack_motion_131": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_131",
+        "U07_VisionPackTeacher_pack_motion_132": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_132",
+        "U07_VisionPackTeacher_pack_motion_133": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_133",
+        "U07_VisionPackTeacher_pack_motion_134": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_134",
+        "U07_VisionPackTeacher_pack_motion_135": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_135",
+        "U07_VisionPackTeacher_pack_motion_136": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_136",
+        "U07_VisionPackTeacher_pack_motion_137": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_137",
+        "U07_VisionPackTeacher_pack_motion_138": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_138",
+        "U07_VisionPackTeacher_pack_motion_139": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_139",
+        "U07_VisionPackTeacher_pack_motion_140": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_140",
+        "U07_VisionPackTeacher_pack_motion_141": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_141",
+        "U07_VisionPackTeacher_pack_motion_142": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_142",
+        "U07_VisionPackTeacher_pack_motion_143": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_143",
+        "U07_VisionPackTeacher_pack_motion_144": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_144",
+        "U07_VisionPackTeacher_pack_grasp_absent_145": "skills.motion.implementation:U07_VisionPackTeacher_pack_grasp_absent_145",
+        "U07_VisionPackTeacher_pack_item_get_empty_retry_0_2_146": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_get_empty_retry_0_2_146",
+        "U07_VisionPackTeacher_pack_item_get_empty_retry_0_2_147": "skills.motion.implementation:U07_VisionPackTeacher_pack_item_get_empty_retry_0_2_147",
+        "U07_VisionPackTeacher_pack_not_hasattr_self_failed_pack_grasps_148": "skills.pickup.implementation:U07_VisionPackTeacher_pack_not_hasattr_self_failed_pack_grasps_148",
+        "U07_VisionPackTeacher_pack_not_hasattr_self_failed_pack_grasps_149": "skills.pickup.implementation:U07_VisionPackTeacher_pack_not_hasattr_self_failed_pack_grasps_149",
+        "U07_VisionPackTeacher_pack_width_0_003_150": "skills.motion.implementation:U07_VisionPackTeacher_pack_width_0_003_150",
+        "U07_VisionPackTeacher_pack_width_0_003_151": "skills.motion.implementation:U07_VisionPackTeacher_pack_width_0_003_151",
+        "U07_VisionPackTeacher_pack_width_0_003_152": "skills.motion.implementation:U07_VisionPackTeacher_pack_width_0_003_152",
+        "U07_VisionPackTeacher_pack_width_0_003_153": "skills.motion.implementation:U07_VisionPackTeacher_pack_width_0_003_153",
+        "U07_VisionPackTeacher_pack_width_0_003_154": "skills.motion.implementation:U07_VisionPackTeacher_pack_width_0_003_154",
+        "U07_VisionPackTeacher_pack_width_0_003_155": "skills.motion.implementation:U07_VisionPackTeacher_pack_width_0_003_155",
+        "U07_VisionPackTeacher_pack_name_in_item_156": "skills.motion.implementation:U07_VisionPackTeacher_pack_name_in_item_156",
+        "U07_VisionPackTeacher_pack_name_in_item_157": "skills.motion.implementation:U07_VisionPackTeacher_pack_name_in_item_157",
+        "U07_VisionPackTeacher_pack_width_0_003_158": "skills.motion.implementation:U07_VisionPackTeacher_pack_width_0_003_158",
+        "U07_VisionPackTeacher_pack_width_0_003_159": "skills.motion.implementation:U07_VisionPackTeacher_pack_width_0_003_159",
+        "U07_VisionPackTeacher_pack_motion_160": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_160",
+        "U07_VisionPackTeacher_pack_false_161": "skills.motion.implementation:U07_VisionPackTeacher_pack_false_161",
+        "U07_VisionPackTeacher_pack_false_162": "skills.motion.implementation:U07_VisionPackTeacher_pack_false_162",
+        "U07_VisionPackTeacher_pack_false_163": "skills.motion.implementation:U07_VisionPackTeacher_pack_false_163",
+        "U07_VisionPackTeacher_pack_false_164": "skills.motion.implementation:U07_VisionPackTeacher_pack_false_164",
+        "U07_VisionPackTeacher_pack_false_165": "skills.motion.implementation:U07_VisionPackTeacher_pack_false_165",
+        "U07_VisionPackTeacher_pack_carry_route_in_grasp_166": "skills.pickup.implementation:U07_VisionPackTeacher_pack_carry_route_in_grasp_166",
+        "U07_VisionPackTeacher_pack_carry_route_in_grasp_167": "skills.pickup.implementation:U07_VisionPackTeacher_pack_carry_route_in_grasp_167",
+        "U07_VisionPackTeacher_pack_zip_grasp_carry_route_suffixes_168": "skills.pickup.implementation:U07_VisionPackTeacher_pack_zip_grasp_carry_route_suffixes_168",
+        "U07_VisionPackTeacher_pack_carry_route_in_grasp_169": "skills.pickup.implementation:U07_VisionPackTeacher_pack_carry_route_in_grasp_169",
+        "U07_VisionPackTeacher_pack_carry_route_in_grasp_170": "skills.pickup.implementation:U07_VisionPackTeacher_pack_carry_route_in_grasp_170",
+        "U07_VisionPackTeacher_pack_motion_171": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_171",
+        "U07_VisionPackTeacher_pack_motion_172": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_172",
+        "U07_VisionPackTeacher_pack_motion_173": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_173",
+        "U07_VisionPackTeacher_pack_motion_174": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_174",
+        "U07_VisionPackTeacher_pack_motion_175": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_175",
+        "U07_VisionPackTeacher_pack_motion_176": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_176",
+        "U07_VisionPackTeacher_pack_motion_177": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_177",
+        "U07_VisionPackTeacher_pack_motion_178": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_178",
+        "U07_VisionPackTeacher_pack_motion_179": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_179",
+        "U07_VisionPackTeacher_pack_holder_active_180": "skills.motion.implementation:U07_VisionPackTeacher_pack_holder_active_180",
+        "U07_VisionPackTeacher_pack_holder_active_181": "skills.motion.implementation:U07_VisionPackTeacher_pack_holder_active_181",
+        "U07_VisionPackTeacher_pack_len_self_completed_4_182": "skills.motion.implementation:U07_VisionPackTeacher_pack_len_self_completed_4_182",
+        "U07_VisionPackTeacher_pack_len_self_completed_4_183": "skills.motion.implementation:U07_VisionPackTeacher_pack_len_self_completed_4_183",
+        "U07_VisionPackTeacher_pack_motion_184": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_184",
+        "U07_VisionPackTeacher_pack_motion_185": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_185",
+        "U07_VisionPackTeacher_pack_motion_186": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_186",
+        "U07_VisionPackTeacher_pack_motion_187": "skills.motion.implementation:U07_VisionPackTeacher_pack_motion_187",
+        "public_begin_item": "skills.grasp_evidence.implementation:begin_item",
+        "public_attach": "skills.grasp_evidence.implementation:attach"
+      },
+      "errors": {
+        "RuntimeError": "skills.state.implementation:RuntimeError"
+      },
+      "steps": [
+        {
+          "call": "U07_VisionPackTeacher_pack_motion_001"
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_motion_002"
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_motion_003"
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_item_category_shoe_004",
+          "store": "condition_4"
+        },
+        {
+          "if": {
+            "var": "condition_4"
+          },
+          "then": [
+            {
+              "call": "U07_VisionPackTeacher_pack_item_category_shoe_005"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_item_category_electric_toothbrush_006",
+          "store": "condition_6"
+        },
+        {
+          "if": {
+            "var": "condition_6"
+          },
+          "then": [
+            {
+              "call": "U07_VisionPackTeacher_pack_item_category_electric_toothbrush_007"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_item_category_hammer_and_geo_upper_2_geo_lower_2_008",
+          "store": "condition_8"
+        },
+        {
+          "if": {
+            "var": "condition_8"
+          },
+          "then": [
+            {
+              "call": "U07_VisionPackTeacher_pack_item_category_hammer_and_geo_upper_2_geo_lower_2_009"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_motion_010"
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_0_0_if_item_category_hammer_else_0_0_30_0_30_0_011",
+          "store": "items_11"
+        },
+        {
+          "for_each": {
+            "var": "items_11"
+          },
+          "as": "loop_item_12",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U07_VisionPackTeacher_pack_motion_012",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_12"
+                }
+              }
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_motion_013"
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_motion_014"
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_motion_015"
+            }
+          ]
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_motion_016"
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_options_017",
+          "store": "items_17"
+        },
+        {
+          "for_each": {
+            "var": "items_17"
+          },
+          "as": "loop_item_18",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U07_VisionPackTeacher_pack_motion_018",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_18"
+                }
+              }
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_motion_019"
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_motion_020"
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_motion_021"
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_motion_022"
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_item_category_hammer_and_geo_upper_2_geo_lower_2_023",
+              "store": "condition_23"
+            },
+            {
+              "if": {
+                "var": "condition_23"
+              },
+              "then": [
+                {
+                  "call": "U07_VisionPackTeacher_pack_item_category_hammer_and_geo_upper_2_geo_lower_2_024"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_self_robots_items_025",
+              "store": "items_25"
+            },
+            {
+              "for_each": {
+                "var": "items_25"
+              },
+              "as": "loop_item_26",
+              "max_items": 4096,
+              "do": [
+                {
+                  "call": "U07_VisionPackTeacher_pack_motion_026",
+                  "args": {
+                    "__workflow_item": {
+                      "var": "loop_item_26"
+                    }
+                  }
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_motion_027"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_zip_grasp_approach_lift_place_above_grasp_low_gr_028",
+                  "store": "items_28"
+                },
+                {
+                  "for_each": {
+                    "var": "items_28"
+                  },
+                  "as": "loop_item_29",
+                  "max_items": 4096,
+                  "do": [
+                    {
+                      "call": "U07_VisionPackTeacher_pack_motion_029",
+                      "args": {
+                        "__workflow_item": {
+                          "var": "loop_item_29"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_pack_motion_030"
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_pack_not_reachable_031",
+                      "store": "condition_31"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_31"
+                      },
+                      "then": [
+                        {
+                          "call": "U07_VisionPackTeacher_pack_not_reachable_032"
+                        },
+                        {
+                          "call": "U07_VisionPackTeacher_pack_not_reachable_033"
+                        },
+                        {
+                          "break": true
+                        }
+                      ],
+                      "else": []
+                    }
+                  ]
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_failed_034",
+                  "store": "condition_34"
+                },
+                {
+                  "if": {
+                    "var": "condition_34"
+                  },
+                  "then": [
+                    {
+                      "continue": true
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__035",
+                  "store": "condition_35"
+                },
+                {
+                  "if": {
+                    "var": "condition_35"
+                  },
+                  "then": [
+                    {
+                      "call": "U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__036"
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__037"
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_pack_sites_038",
+                      "store": "items_38"
+                    },
+                    {
+                      "for_each": {
+                        "var": "items_38"
+                      },
+                      "as": "loop_item_39",
+                      "max_items": 4096,
+                      "do": [
+                        {
+                          "call": "U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__039",
+                          "args": {
+                            "__workflow_item": {
+                              "var": "loop_item_39"
+                            }
+                          }
+                        },
+                        {
+                          "call": "U07_VisionPackTeacher_pack_self_x5_base_z_0_4_self_x5_base_z_0_36_self_x5_b_040",
+                          "store": "items_40"
+                        },
+                        {
+                          "for_each": {
+                            "var": "items_40"
+                          },
+                          "as": "loop_item_41",
+                          "max_items": 4096,
+                          "do": [
+                            {
+                              "call": "U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__041",
+                              "args": {
+                                "__workflow_item": {
+                                  "var": "loop_item_41"
+                                }
+                              }
+                            },
+                            {
+                              "call": "U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__042"
+                            },
+                            {
+                              "call": "U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__043"
+                            },
+                            {
+                              "call": "U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__044"
+                            },
+                            {
+                              "call": "U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__045"
+                            },
+                            {
+                              "call": "U07_VisionPackTeacher_pack_raised_oriented_046",
+                              "store": "items_46"
+                            },
+                            {
+                              "for_each": {
+                                "var": "items_46"
+                              },
+                              "as": "loop_item_47",
+                              "max_items": 4096,
+                              "do": [
+                                {
+                                  "call": "U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__047",
+                                  "args": {
+                                    "__workflow_item": {
+                                      "var": "loop_item_47"
+                                    }
+                                  }
+                                },
+                                {
+                                  "call": "U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__048"
+                                },
+                                {
+                                  "call": "U07_VisionPackTeacher_pack_result_get_status_success_049",
+                                  "store": "condition_49"
+                                },
+                                {
+                                  "if": {
+                                    "var": "condition_49"
+                                  },
+                                  "then": [
+                                    {
+                                      "call": "U07_VisionPackTeacher_pack_result_get_status_success_050"
+                                    },
+                                    {
+                                      "break": true
+                                    }
+                                  ],
+                                  "else": []
+                                },
+                                {
+                                  "call": "U07_VisionPackTeacher_pack_item_category_in_car_electric_toothbrush_hammer__051"
+                                },
+                                {
+                                  "call": "U07_VisionPackTeacher_pack_not_2_0_wrist_1_6_052",
+                                  "store": "condition_52"
+                                },
+                                {
+                                  "if": {
+                                    "var": "condition_52"
+                                  },
+                                  "then": [
+                                    {
+                                      "call": "U07_VisionPackTeacher_pack_not_2_0_wrist_1_6_053"
+                                    },
+                                    {
+                                      "break": true
+                                    }
+                                  ],
+                                  "else": []
+                                }
+                              ]
+                            },
+                            {
+                              "call": "U07_VisionPackTeacher_pack_safe_054",
+                              "store": "condition_54"
+                            },
+                            {
+                              "if": {
+                                "var": "condition_54"
+                              },
+                              "then": [
+                                {
+                                  "call": "U07_VisionPackTeacher_pack_safe_055"
+                                },
+                                {
+                                  "break": true
+                                }
+                              ],
+                              "else": []
+                            }
+                          ]
+                        },
+                        {
+                          "call": "U07_VisionPackTeacher_pack_safe_rotation_056",
+                          "store": "condition_56"
+                        },
+                        {
+                          "if": {
+                            "var": "condition_56"
+                          },
+                          "then": [
+                            {
+                              "break": true
+                            }
+                          ],
+                          "else": []
+                        }
+                      ]
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_pack_not_safe_rotation_057",
+                      "store": "condition_57"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_57"
+                      },
+                      "then": [
+                        {
+                          "call": "U07_VisionPackTeacher_pack_not_safe_rotation_058"
+                        },
+                        {
+                          "continue": true
+                        }
+                      ],
+                      "else": []
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_motion_059"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_max_grasp_high_2_self_x5_base_z_0_3_grasp_high_2_060",
+                  "store": "items_60"
+                },
+                {
+                  "for_each": {
+                    "var": "items_60"
+                  },
+                  "as": "loop_item_61",
+                  "max_items": 4096,
+                  "do": [
+                    {
+                      "call": "U07_VisionPackTeacher_pack_motion_061",
+                      "args": {
+                        "__workflow_item": {
+                          "var": "loop_item_61"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_pack_motion_062"
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_pack_reachable_cached_robot_over_063",
+                      "store": "condition_63"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_63"
+                      },
+                      "then": [
+                        {
+                          "break": true
+                        }
+                      ],
+                      "else": []
+                    }
+                  ],
+                  "else": [
+                    {
+                      "call": "U07_VisionPackTeacher_pack_motion_064"
+                    },
+                    {
+                      "continue": true
+                    }
+                  ]
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_motion_065"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_motion_066"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_motion_067"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_motion_068"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_motion_069"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_item_category_electric_toothbrush_070",
+                  "store": "condition_70"
+                },
+                {
+                  "if": {
+                    "var": "condition_70"
+                  },
+                  "then": [
+                    {
+                      "call": "U07_VisionPackTeacher_pack_item_category_electric_toothbrush_071"
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_pack_item_category_electric_toothbrush_072"
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_pack_grasp_ik_get_status_success_and_delivery_ik_get__073",
+                      "store": "condition_73"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_73"
+                      },
+                      "then": [
+                        {
+                          "call": "U07_VisionPackTeacher_pack_grasp_ik_get_status_success_and_delivery_ik_get__074"
+                        },
+                        {
+                          "call": "U07_VisionPackTeacher_pack_grasp_ik_get_status_success_and_delivery_ik_get__075"
+                        },
+                        {
+                          "call": "U07_VisionPackTeacher_pack_grasp_ik_get_status_success_and_delivery_ik_get__076"
+                        },
+                        {
+                          "call": "U07_VisionPackTeacher_pack_grasp_ik_get_status_success_and_delivery_ik_get__077"
+                        }
+                      ],
+                      "else": []
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_motion_078"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_item_category_hammer_and_geo_upper_2_geo_lower_2_079",
+                  "store": "condition_79"
+                },
+                {
+                  "if": {
+                    "var": "condition_79"
+                  },
+                  "then": [
+                    {
+                      "call": "U07_VisionPackTeacher_pack_item_category_hammer_and_geo_upper_2_geo_lower_2_080"
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_pack_item_category_hammer_and_geo_upper_2_geo_lower_2_081"
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_pack_item_category_hammer_and_geo_upper_2_geo_lower_2_082"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_item_category_electric_toothbrush_083",
+                  "store": "condition_83"
+                },
+                {
+                  "if": {
+                    "var": "condition_83"
+                  },
+                  "then": [
+                    {
+                      "call": "U07_VisionPackTeacher_pack_item_category_electric_toothbrush_084"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_motion_085"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_motion_086"
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_not_candidates_087",
+          "store": "condition_87"
+        },
+        {
+          "if": {
+            "var": "condition_87"
+          },
+          "then": [
+            {
+              "call": "U07_VisionPackTeacher_pack_item_get_relayed_088",
+              "store": "condition_88"
+            },
+            {
+              "if": {
+                "var": "condition_88"
+              },
+              "then": [
+                {
+                  "call": "U07_VisionPackTeacher_pack_item_get_relayed_089"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_not_candidates_090"
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_not_candidates_091"
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_not_candidates_092"
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_not_candidates_093",
+              "store": "result_93"
+            },
+            {
+              "return": {
+                "var": "result_93"
+              }
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_sorted_candidates_key_lambda_c_c_0_3_if_item_cat_094",
+          "store": "items_94"
+        },
+        {
+          "for_each": {
+            "var": "items_94"
+          },
+          "as": "loop_item_95",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U07_VisionPackTeacher_pack_motion_095",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_95"
+                }
+              }
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_motion_096"
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_signature_in_getattr_self_failed_pack_grasps_set_097",
+              "store": "condition_97"
+            },
+            {
+              "if": {
+                "var": "condition_97"
+              },
+              "then": [
+                {
+                  "continue": true
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_motion_098"
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_sites_099",
+              "store": "items_99"
+            },
+            {
+              "for_each": {
+                "var": "items_99"
+              },
+              "as": "loop_item_100",
+              "max_items": 4096,
+              "do": [
+                {
+                  "call": "U07_VisionPackTeacher_pack_motion_100",
+                  "args": {
+                    "__workflow_item": {
+                      "var": "loop_item_100"
+                    }
+                  }
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_self_x5_base_z_0_36_self_x5_base_z_0_32_self_x5__101",
+                  "store": "items_101"
+                },
+                {
+                  "for_each": {
+                    "var": "items_101"
+                  },
+                  "as": "loop_item_102",
+                  "max_items": 4096,
+                  "do": [
+                    {
+                      "call": "U07_VisionPackTeacher_pack_motion_102",
+                      "args": {
+                        "__workflow_item": {
+                          "var": "loop_item_102"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_pack_motion_103"
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_pack_motion_104"
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_pack_motion_105"
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_pack_motion_106"
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_pack_self_scene_box_canonical_pose_1_0_2_107",
+                      "store": "condition_107"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_107"
+                      },
+                      "then": [
+                        {
+                          "call": "U07_VisionPackTeacher_pack_self_scene_box_canonical_pose_1_0_2_108"
+                        },
+                        {
+                          "call": "U07_VisionPackTeacher_pack_self_scene_box_canonical_pose_1_0_2_109"
+                        },
+                        {
+                          "call": "U07_VisionPackTeacher_pack_self_scene_box_canonical_pose_1_0_2_110"
+                        },
+                        {
+                          "call": "U07_VisionPackTeacher_pack_self_scene_box_canonical_pose_1_0_2_111"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_pack_motion_112"
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_pack_plan_is_not_none_113",
+                      "store": "condition_113"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_113"
+                      },
+                      "then": [
+                        {
+                          "call": "U07_VisionPackTeacher_pack_plan_is_not_none_114"
+                        },
+                        {
+                          "break": true
+                        }
+                      ],
+                      "else": []
+                    }
+                  ]
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_plan_is_not_none_115",
+                  "store": "condition_115"
+                },
+                {
+                  "if": {
+                    "var": "condition_115"
+                  },
+                  "then": [
+                    {
+                      "break": true
+                    }
+                  ],
+                  "else": []
+                }
+              ]
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_plan_is_none_116",
+              "store": "condition_116"
+            },
+            {
+              "if": {
+                "var": "condition_116"
+              },
+              "then": [
+                {
+                  "continue": true
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_motion_117"
+            },
+            {
+              "break": true
+            }
+          ],
+          "else": [
+            {
+              "call": "U07_VisionPackTeacher_pack_item_get_delivery_retry_0_1_118",
+              "store": "condition_118"
+            },
+            {
+              "if": {
+                "var": "condition_118"
+              },
+              "then": [
+                {
+                  "call": "U07_VisionPackTeacher_pack_item_get_delivery_retry_0_1_119"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_motion_120"
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_motion_121"
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_motion_122"
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_motion_123",
+              "store": "result_123"
+            },
+            {
+              "return": {
+                "var": "result_123"
+              }
+            }
+          ]
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_motion_124"
+        },
+        {
+          "try": [
+            {
+              "call": "public_begin_item"
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_motion_139"
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_motion_140"
+            }
+          ],
+          "catch": [
+            {
+              "errors": [
+                "RuntimeError"
+              ],
+              "as": "caught_error",
+              "do": [
+                {
+                  "call": "U07_VisionPackTeacher_pack_motion_125",
+                  "args": {
+                    "__workflow_error": {
+                      "var": "caught_error"
+                    }
+                  }
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_not_any_reason_in_str_exc_for_reason_in_measured_126",
+                  "store": "condition_126"
+                },
+                {
+                  "if": {
+                    "var": "condition_126"
+                  },
+                  "then": [
+                    {
+                      "call": "U07_VisionPackTeacher_pack_not_any_reason_in_str_exc_for_reason_in_measured_127"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_not_hasattr_self_failed_pack_grasps_128",
+                  "store": "condition_128"
+                },
+                {
+                  "if": {
+                    "var": "condition_128"
+                  },
+                  "then": [
+                    {
+                      "call": "U07_VisionPackTeacher_pack_not_hasattr_self_failed_pack_grasps_129"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_motion_130"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_motion_131"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_motion_132"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_motion_133"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_motion_134"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_motion_135"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_motion_136"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_motion_137"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_motion_138",
+                  "store": "result_138"
+                },
+                {
+                  "return": {
+                    "var": "result_138"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "call": "public_attach"
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_motion_141"
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_motion_142"
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_motion_143"
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_motion_144"
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_grasp_absent_145",
+          "store": "condition_145"
+        },
+        {
+          "if": {
+            "var": "condition_145"
+          },
+          "then": [
+            {
+              "call": "U07_VisionPackTeacher_pack_item_get_empty_retry_0_2_146",
+              "store": "condition_146"
+            },
+            {
+              "if": {
+                "var": "condition_146"
+              },
+              "then": [
+                {
+                  "call": "U07_VisionPackTeacher_pack_item_get_empty_retry_0_2_147"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_not_hasattr_self_failed_pack_grasps_148",
+              "store": "condition_148"
+            },
+            {
+              "if": {
+                "var": "condition_148"
+              },
+              "then": [
+                {
+                  "call": "U07_VisionPackTeacher_pack_not_hasattr_self_failed_pack_grasps_149"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_width_0_003_150"
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_width_0_003_151"
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_width_0_003_152"
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_width_0_003_153"
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_width_0_003_154"
+            },
+            {
+              "for_each": [
+                "relayed",
+                "_delivery_retry",
+                "_grasp_retry"
+              ],
+              "as": "loop_item_155",
+              "max_items": 4096,
+              "do": [
+                {
+                  "call": "U07_VisionPackTeacher_pack_width_0_003_155",
+                  "args": {
+                    "__workflow_item": {
+                      "var": "loop_item_155"
+                    }
+                  }
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_name_in_item_156",
+                  "store": "condition_156"
+                },
+                {
+                  "if": {
+                    "var": "condition_156"
+                  },
+                  "then": [
+                    {
+                      "call": "U07_VisionPackTeacher_pack_name_in_item_157"
+                    }
+                  ],
+                  "else": []
+                }
+              ]
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_width_0_003_158"
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_width_0_003_159",
+              "store": "result_159"
+            },
+            {
+              "return": {
+                "var": "result_159"
+              }
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_motion_160"
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_false_161",
+          "store": "condition_161"
+        },
+        {
+          "if": {
+            "var": "condition_161"
+          },
+          "then": [
+            {
+              "try": [
+                {
+                  "call": "U07_VisionPackTeacher_pack_false_164"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_false_165"
+                }
+              ],
+              "catch": [
+                {
+                  "errors": [
+                    "RuntimeError"
+                  ],
+                  "as": "caught_error",
+                  "do": [
+                    {
+                      "call": "U07_VisionPackTeacher_pack_false_162",
+                      "args": {
+                        "__workflow_error": {
+                          "var": "caught_error"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_pack_false_163"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_carry_route_in_grasp_166",
+          "store": "condition_166"
+        },
+        {
+          "if": {
+            "var": "condition_166"
+          },
+          "then": [
+            {
+              "call": "U07_VisionPackTeacher_pack_carry_route_in_grasp_167"
+            },
+            {
+              "call": "U07_VisionPackTeacher_pack_zip_grasp_carry_route_suffixes_168",
+              "store": "items_168"
+            },
+            {
+              "for_each": {
+                "var": "items_168"
+              },
+              "as": "loop_item_169",
+              "max_items": 4096,
+              "do": [
+                {
+                  "call": "U07_VisionPackTeacher_pack_carry_route_in_grasp_169",
+                  "args": {
+                    "__workflow_item": {
+                      "var": "loop_item_169"
+                    }
+                  }
+                },
+                {
+                  "call": "U07_VisionPackTeacher_pack_carry_route_in_grasp_170"
+                }
+              ]
+            }
+          ],
+          "else": [
+            {
+              "call": "U07_VisionPackTeacher_pack_motion_171"
+            }
+          ]
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_motion_172"
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_motion_173"
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_motion_174"
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_motion_175"
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_motion_176"
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_motion_177"
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_motion_178"
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_motion_179"
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_holder_active_180",
+          "store": "condition_180"
+        },
+        {
+          "if": {
+            "var": "condition_180"
+          },
+          "then": [
+            {
+              "call": "U07_VisionPackTeacher_pack_holder_active_181"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_len_self_completed_4_182",
+          "store": "condition_182"
+        },
+        {
+          "if": {
+            "var": "condition_182"
+          },
+          "then": [
+            {
+              "call": "U07_VisionPackTeacher_pack_len_self_completed_4_183",
+              "store": "result_183"
+            },
+            {
+              "return": {
+                "var": "result_183"
+              }
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_motion_184"
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_motion_185"
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_motion_186"
+        },
+        {
+          "call": "U07_VisionPackTeacher_pack_motion_187"
+        }
+      ]
+    },
+    "U07_VisionPackTeacher_relay": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 1300,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U07_VisionPackTeacher_relay_motion_001": "skills.motion.implementation:U07_VisionPackTeacher_relay_motion_001",
+        "U07_VisionPackTeacher_relay_range_3_002": "skills.motion.implementation:U07_VisionPackTeacher_relay_range_3_002",
+        "U07_VisionPackTeacher_relay_motion_003": "skills.motion.implementation:U07_VisionPackTeacher_relay_motion_003",
+        "U07_VisionPackTeacher_relay_motion_004": "skills.motion.implementation:U07_VisionPackTeacher_relay_motion_004",
+        "U07_VisionPackTeacher_relay_motion_005": "skills.motion.implementation:U07_VisionPackTeacher_relay_motion_005",
+        "U07_VisionPackTeacher_relay_not_empty_relay_grasp_in_str_exc_or_approach_blo_006": "skills.transport.implementation:U07_VisionPackTeacher_relay_not_empty_relay_grasp_in_str_exc_or_approach_blo_006",
+        "U07_VisionPackTeacher_relay_not_empty_relay_grasp_in_str_exc_or_approach_blo_007": "skills.transport.implementation:U07_VisionPackTeacher_relay_not_empty_relay_grasp_in_str_exc_or_approach_blo_007",
+        "U07_VisionPackTeacher_relay_motion_008": "skills.motion.implementation:U07_VisionPackTeacher_relay_motion_008",
+        "U07_VisionPackTeacher_relay_motion_009": "skills.motion.implementation:U07_VisionPackTeacher_relay_motion_009",
+        "U07_VisionPackTeacher_relay_approach_blocked_010": "skills.motion.implementation:U07_VisionPackTeacher_relay_approach_blocked_010",
+        "U07_VisionPackTeacher_relay_approach_blocked_011": "skills.motion.implementation:U07_VisionPackTeacher_relay_approach_blocked_011",
+        "U07_VisionPackTeacher_relay_approach_blocked_012": "skills.motion.implementation:U07_VisionPackTeacher_relay_approach_blocked_012",
+        "U07_VisionPackTeacher_relay_motion_013": "skills.motion.implementation:U07_VisionPackTeacher_relay_motion_013",
+        "U07_VisionPackTeacher_relay_motion_014": "skills.motion.implementation:U07_VisionPackTeacher_relay_motion_014",
+        "U07_VisionPackTeacher_relay_motion_015": "skills.motion.implementation:U07_VisionPackTeacher_relay_motion_015",
+        "U07_VisionPackTeacher_relay_motion_016": "skills.motion.implementation:U07_VisionPackTeacher_relay_motion_016",
+        "U07_VisionPackTeacher_relay_not_fits_017": "skills.motion.implementation:U07_VisionPackTeacher_relay_not_fits_017",
+        "U07_VisionPackTeacher_relay_not_fits_018": "skills.motion.implementation:U07_VisionPackTeacher_relay_not_fits_018",
+        "U07_VisionPackTeacher_relay_motion_019": "skills.motion.implementation:U07_VisionPackTeacher_relay_motion_019",
+        "U07_VisionPackTeacher_relay_updated_iou_0_6_020": "skills.motion.implementation:U07_VisionPackTeacher_relay_updated_iou_0_6_020",
+        "U07_VisionPackTeacher_relay_updated_iou_0_6_021": "skills.motion.implementation:U07_VisionPackTeacher_relay_updated_iou_0_6_021",
+        "U07_VisionPackTeacher_relay_motion_022": "skills.motion.implementation:U07_VisionPackTeacher_relay_motion_022",
+        "U07_VisionPackTeacher_relay_motion_023": "skills.motion.implementation:U07_VisionPackTeacher_relay_motion_023",
+        "U07_VisionPackTeacher_relay_motion_024": "skills.motion.implementation:U07_VisionPackTeacher_relay_motion_024"
+      },
+      "errors": {
+        "RuntimeError": "skills.state.implementation:RuntimeError",
+        "PublicGraspUncertain": "skills.grasp_evidence.implementation:PublicGraspUncertain"
+      },
+      "steps": [
+        {
+          "call": "U07_VisionPackTeacher_relay_motion_001"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_range_3_002",
+          "store": "items_2"
+        },
+        {
+          "for_each": {
+            "var": "items_2"
+          },
+          "as": "loop_item_3",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U07_VisionPackTeacher_relay_motion_003",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_3"
+                }
+              }
+            },
+            {
+              "try": [
+                {
+                  "call": "U07_VisionPackTeacher_relay_motion_024",
+                  "store": "result_24"
+                },
+                {
+                  "return": {
+                    "var": "result_24"
+                  }
+                }
+              ],
+              "catch": [
+                {
+                  "errors": [
+                    "RuntimeError",
+                    "PublicGraspUncertain"
+                  ],
+                  "as": "caught_error",
+                  "do": [
+                    {
+                      "call": "U07_VisionPackTeacher_relay_motion_004",
+                      "args": {
+                        "__workflow_error": {
+                          "var": "caught_error"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_relay_motion_005"
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_relay_not_empty_relay_grasp_in_str_exc_or_approach_blo_006",
+                      "store": "condition_6"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_6"
+                      },
+                      "then": [
+                        {
+                          "call": "U07_VisionPackTeacher_relay_not_empty_relay_grasp_in_str_exc_or_approach_blo_007"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_relay_motion_008"
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_relay_motion_009",
+                      "args": {
+                        "phase_0": "relay_retry_open"
+                      }
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_relay_approach_blocked_010",
+                      "store": "condition_10"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_10"
+                      },
+                      "then": [
+                        {
+                          "call": "U07_VisionPackTeacher_relay_approach_blocked_011"
+                        },
+                        {
+                          "call": "U07_VisionPackTeacher_relay_approach_blocked_012"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_relay_motion_013"
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_relay_motion_014"
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_relay_motion_015"
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_relay_motion_016"
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_relay_not_fits_017",
+                      "store": "condition_17"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_17"
+                      },
+                      "then": [
+                        {
+                          "call": "U07_VisionPackTeacher_relay_not_fits_018"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_relay_motion_019"
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_relay_updated_iou_0_6_020",
+                      "store": "condition_20"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_20"
+                      },
+                      "then": [
+                        {
+                          "call": "U07_VisionPackTeacher_relay_updated_iou_0_6_021"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_relay_motion_022"
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_relay_motion_023"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "U07_VisionPackTeacher_relay_once": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 1300,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U07_VisionPackTeacher_relay_once_motion_001": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_001",
+        "U07_VisionPackTeacher_relay_once_not_hasattr_self_failed_relay_grasps_002": "skills.transport.implementation:U07_VisionPackTeacher_relay_once_not_hasattr_self_failed_relay_grasps_002",
+        "U07_VisionPackTeacher_relay_once_not_hasattr_self_failed_relay_grasps_003": "skills.transport.implementation:U07_VisionPackTeacher_relay_once_not_hasattr_self_failed_relay_grasps_003",
+        "U07_VisionPackTeacher_relay_once_motion_004": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_004",
+        "U07_VisionPackTeacher_relay_once_motion_005": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_005",
+        "U07_VisionPackTeacher_relay_once_motion_006": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_006",
+        "U07_VisionPackTeacher_relay_once_staging_and_item_category_in_electric_toothbrush_007": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_staging_and_item_category_in_electric_toothbrush_007",
+        "U07_VisionPackTeacher_relay_once_staging_and_item_category_in_electric_toothbrush_008": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_staging_and_item_category_in_electric_toothbrush_008",
+        "U07_VisionPackTeacher_relay_once_grasp_proposals_item_geo_self_gripper_forward_of_009": "skills.pickup.implementation:U07_VisionPackTeacher_relay_once_grasp_proposals_item_geo_self_gripper_forward_of_009",
+        "U07_VisionPackTeacher_relay_once_motion_010": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_010",
+        "U07_VisionPackTeacher_relay_once_motion_011": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_011",
+        "U07_VisionPackTeacher_relay_once_item_category_car_012": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_item_category_car_012",
+        "U07_VisionPackTeacher_relay_once_item_category_car_013": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_item_category_car_013",
+        "U07_VisionPackTeacher_relay_once_np_linalg_norm_delta_0_3_014": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_np_linalg_norm_delta_0_3_014",
+        "U07_VisionPackTeacher_relay_once_np_linalg_norm_delta_0_3_015": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_np_linalg_norm_delta_0_3_015",
+        "U07_VisionPackTeacher_relay_once_item_category_hammer_and_geo_upper_2_geo_lower_2_016": "skills.pickup.implementation:U07_VisionPackTeacher_relay_once_item_category_hammer_and_geo_upper_2_geo_lower_2_016",
+        "U07_VisionPackTeacher_relay_once_motion_017": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_017",
+        "U07_VisionPackTeacher_relay_once_item_category_car_018": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_item_category_car_018",
+        "U07_VisionPackTeacher_relay_once_item_category_car_019": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_item_category_car_019",
+        "U07_VisionPackTeacher_relay_once_motion_020": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_020",
+        "U07_VisionPackTeacher_relay_once_motion_021": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_021",
+        "U07_VisionPackTeacher_relay_once_self_robots_items_022": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_self_robots_items_022",
+        "U07_VisionPackTeacher_relay_once_motion_023": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_023",
+        "U07_VisionPackTeacher_relay_once_motion_024": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_024",
+        "U07_VisionPackTeacher_relay_once_motion_025": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_025",
+        "U07_VisionPackTeacher_relay_once_item_category_car_026": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_item_category_car_026",
+        "U07_VisionPackTeacher_relay_once_item_category_car_027": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_item_category_car_027",
+        "U07_VisionPackTeacher_relay_once_item_category_car_028": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_item_category_car_028",
+        "U07_VisionPackTeacher_relay_once_motion_029": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_029",
+        "U07_VisionPackTeacher_relay_once_signature_in_self_failed_relay_grasps_030": "skills.transport.implementation:U07_VisionPackTeacher_relay_once_signature_in_self_failed_relay_grasps_030",
+        "U07_VisionPackTeacher_relay_once_not_all_reachable_robot_p_for_p_in_grasp_low_gra_031": "skills.pickup.implementation:U07_VisionPackTeacher_relay_once_not_all_reachable_robot_p_for_p_in_grasp_low_gra_031",
+        "U07_VisionPackTeacher_relay_once_motion_032": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_032",
+        "U07_VisionPackTeacher_relay_once_motion_033": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_033",
+        "U07_VisionPackTeacher_relay_once_item_category_hammer_and_grasp_tilt_0_034": "skills.pickup.implementation:U07_VisionPackTeacher_relay_once_item_category_hammer_and_grasp_tilt_0_034",
+        "U07_VisionPackTeacher_relay_once_item_category_hammer_and_grasp_tilt_0_035": "skills.pickup.implementation:U07_VisionPackTeacher_relay_once_item_category_hammer_and_grasp_tilt_0_035",
+        "U07_VisionPackTeacher_relay_once_item_category_hammer_and_geo_upper_2_geo_lower_2_036": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_item_category_hammer_and_geo_upper_2_geo_lower_2_036",
+        "U07_VisionPackTeacher_relay_once_item_category_hammer_and_geo_upper_2_geo_lower_2_037": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_item_category_hammer_and_geo_upper_2_geo_lower_2_037",
+        "U07_VisionPackTeacher_relay_once_max_grasp_high_2_self_x5_base_z_0_3_grasp_high_2_038": "skills.pickup.implementation:U07_VisionPackTeacher_relay_once_max_grasp_high_2_self_x5_base_z_0_3_grasp_high_2_038",
+        "U07_VisionPackTeacher_relay_once_motion_039": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_039",
+        "U07_VisionPackTeacher_relay_once_motion_040": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_040",
+        "U07_VisionPackTeacher_relay_once_motion_041": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_041",
+        "U07_VisionPackTeacher_relay_once_not_reachable_robot_over_042": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_not_reachable_robot_over_042",
+        "U07_VisionPackTeacher_relay_once_motion_043": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_043",
+        "U07_VisionPackTeacher_relay_once_motion_044": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_044",
+        "U07_VisionPackTeacher_relay_once_motion_045": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_045",
+        "U07_VisionPackTeacher_relay_once_not_choices_046": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_not_choices_046",
+        "U07_VisionPackTeacher_relay_once_not_choices_047": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_not_choices_047",
+        "U07_VisionPackTeacher_relay_once_sorted_choices_key_lambda_c_c_0_048": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_sorted_choices_key_lambda_c_c_0_048",
+        "U07_VisionPackTeacher_relay_once_motion_049": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_049",
+        "U07_VisionPackTeacher_relay_once_motion_050": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_050",
+        "U07_VisionPackTeacher_relay_once_motion_051": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_051",
+        "U07_VisionPackTeacher_relay_once_item_category_car_052": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_item_category_car_052",
+        "U07_VisionPackTeacher_relay_once_item_category_car_053": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_item_category_car_053",
+        "U07_VisionPackTeacher_relay_once_item_category_car_054": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_item_category_car_054",
+        "U07_VisionPackTeacher_relay_once_item_category_car_055": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_item_category_car_055",
+        "U07_VisionPackTeacher_relay_once_item_category_car_056": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_item_category_car_056",
+        "U07_VisionPackTeacher_relay_once_motion_057": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_057",
+        "U07_VisionPackTeacher_relay_once_plan_is_none_058": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_plan_is_none_058",
+        "U07_VisionPackTeacher_relay_once_motion_059": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_059",
+        "U07_VisionPackTeacher_relay_once_motion_060": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_060",
+        "U07_VisionPackTeacher_relay_once_motion_061": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_061",
+        "U07_VisionPackTeacher_relay_once_item_category_car_062": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_item_category_car_062",
+        "U07_VisionPackTeacher_relay_once_item_category_car_063": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_item_category_car_063",
+        "U07_VisionPackTeacher_relay_once_motion_064": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_064",
+        "U07_VisionPackTeacher_relay_once_motion_065": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_065",
+        "U07_VisionPackTeacher_relay_once_motion_066": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_066",
+        "U07_VisionPackTeacher_relay_once_motion_067": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_067",
+        "U07_VisionPackTeacher_relay_once_motion_068": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_068",
+        "U07_VisionPackTeacher_relay_once_motion_069": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_069",
+        "U07_VisionPackTeacher_relay_once_motion_070": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_070",
+        "U07_VisionPackTeacher_relay_once_grasp_absent_071": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_grasp_absent_071",
+        "U07_VisionPackTeacher_relay_once_width_0_003_072": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_width_0_003_072",
+        "U07_VisionPackTeacher_relay_once_motion_073": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_073",
+        "U07_VisionPackTeacher_relay_once_motion_074": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_074",
+        "U07_VisionPackTeacher_relay_once_motion_075": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_075",
+        "U07_VisionPackTeacher_relay_once_motion_076": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_076",
+        "U07_VisionPackTeacher_relay_once_motion_077": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_077",
+        "U07_VisionPackTeacher_relay_once_motion_078": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_078",
+        "U07_VisionPackTeacher_relay_once_motion_079": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_079",
+        "U07_VisionPackTeacher_relay_once_motion_080": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_080",
+        "U07_VisionPackTeacher_relay_once_motion_081": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_081",
+        "U07_VisionPackTeacher_relay_once_motion_082": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_082",
+        "U07_VisionPackTeacher_relay_once_motion_083": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_083",
+        "U07_VisionPackTeacher_relay_once_motion_084": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_084",
+        "U07_VisionPackTeacher_relay_once_motion_085": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_085",
+        "U07_VisionPackTeacher_relay_once_motion_086": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_086",
+        "U07_VisionPackTeacher_relay_once_motion_087": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_087",
+        "U07_VisionPackTeacher_relay_once_motion_088": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_088",
+        "U07_VisionPackTeacher_relay_once_motion_089": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_089",
+        "U07_VisionPackTeacher_relay_once_item_key_electric_toothbrush_2_090": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_item_key_electric_toothbrush_2_090",
+        "U07_VisionPackTeacher_relay_once_item_key_electric_toothbrush_2_091": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_item_key_electric_toothbrush_2_091",
+        "U07_VisionPackTeacher_relay_once_item_key_electric_toothbrush_2_092": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_item_key_electric_toothbrush_2_092",
+        "U07_VisionPackTeacher_relay_once_motion_093": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_093",
+        "U07_VisionPackTeacher_relay_once_motion_094": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_094",
+        "U07_VisionPackTeacher_relay_once_not_valid_095": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_not_valid_095",
+        "U07_VisionPackTeacher_relay_once_not_valid_096": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_not_valid_096",
+        "U07_VisionPackTeacher_relay_once_not_valid_097": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_not_valid_097",
+        "U07_VisionPackTeacher_relay_once_not_alternatives_098": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_not_alternatives_098",
+        "U07_VisionPackTeacher_relay_once_not_alternatives_099": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_not_alternatives_099",
+        "U07_VisionPackTeacher_relay_once_not_valid_100": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_not_valid_100",
+        "U07_VisionPackTeacher_relay_once_recovered_iou_0_65_101": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_recovered_iou_0_65_101",
+        "U07_VisionPackTeacher_relay_once_recovered_iou_0_65_102": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_recovered_iou_0_65_102",
+        "U07_VisionPackTeacher_relay_once_not_valid_103": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_not_valid_103",
+        "U07_VisionPackTeacher_relay_once_staging_104": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_staging_104",
+        "U07_VisionPackTeacher_relay_once_staging_105": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_staging_105",
+        "U07_VisionPackTeacher_relay_once_recovered_relay_attempt_2_106": "skills.transport.implementation:U07_VisionPackTeacher_relay_once_recovered_relay_attempt_2_106",
+        "U07_VisionPackTeacher_relay_once_recovered_relay_attempt_2_107": "skills.transport.implementation:U07_VisionPackTeacher_relay_once_recovered_relay_attempt_2_107",
+        "U07_VisionPackTeacher_relay_once_staging_108": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_staging_108",
+        "U07_VisionPackTeacher_relay_once_staging_109": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_staging_109",
+        "U07_VisionPackTeacher_relay_once_not_valid_110": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_not_valid_110",
+        "U07_VisionPackTeacher_relay_once_not_valid_111": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_not_valid_111",
+        "U07_VisionPackTeacher_relay_once_motion_112": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_112",
+        "U07_VisionPackTeacher_relay_once_motion_113": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_113",
+        "U07_VisionPackTeacher_relay_once_motion_114": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_114",
+        "U07_VisionPackTeacher_relay_once_motion_115": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_115",
+        "U07_VisionPackTeacher_relay_once_motion_116": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_116",
+        "U07_VisionPackTeacher_relay_once_motion_117": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_117",
+        "U07_VisionPackTeacher_relay_once_updated_iou_0_55_118": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_updated_iou_0_55_118",
+        "U07_VisionPackTeacher_relay_once_updated_iou_0_55_119": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_updated_iou_0_55_119",
+        "U07_VisionPackTeacher_relay_once_updated_iou_0_55_120": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_updated_iou_0_55_120",
+        "U07_VisionPackTeacher_relay_once_updated_iou_0_55_121": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_updated_iou_0_55_121",
+        "U07_VisionPackTeacher_relay_once_recovered_is_none_or_recovered_iou_0_65_122": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_recovered_is_none_or_recovered_iou_0_65_122",
+        "U07_VisionPackTeacher_relay_once_recovered_is_none_or_recovered_iou_0_65_123": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_recovered_is_none_or_recovered_iou_0_65_123",
+        "U07_VisionPackTeacher_relay_once_updated_iou_0_55_124": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_updated_iou_0_55_124",
+        "U07_VisionPackTeacher_relay_once_staging_125": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_staging_125",
+        "U07_VisionPackTeacher_relay_once_staging_126": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_staging_126",
+        "U07_VisionPackTeacher_relay_once_recovered_relay_attempt_2_127": "skills.transport.implementation:U07_VisionPackTeacher_relay_once_recovered_relay_attempt_2_127",
+        "U07_VisionPackTeacher_relay_once_recovered_relay_attempt_2_128": "skills.transport.implementation:U07_VisionPackTeacher_relay_once_recovered_relay_attempt_2_128",
+        "U07_VisionPackTeacher_relay_once_staging_129": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_staging_129",
+        "U07_VisionPackTeacher_relay_once_staging_130": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_staging_130",
+        "U07_VisionPackTeacher_relay_once_updated_iou_0_55_131": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_updated_iou_0_55_131",
+        "U07_VisionPackTeacher_relay_once_updated_iou_0_55_132": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_updated_iou_0_55_132",
+        "U07_VisionPackTeacher_relay_once_motion_133": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_133",
+        "U07_VisionPackTeacher_relay_once_staging_134": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_staging_134",
+        "U07_VisionPackTeacher_relay_once_staging_135": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_staging_135",
+        "U07_VisionPackTeacher_relay_once_staging_136": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_staging_136",
+        "U07_VisionPackTeacher_relay_once_motion_137": "skills.motion.implementation:U07_VisionPackTeacher_relay_once_motion_137",
+        "public_begin_item": "skills.grasp_evidence.implementation:begin_item",
+        "public_attach": "skills.grasp_evidence.implementation:attach"
+      },
+      "errors": {},
+      "steps": [
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_001"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_not_hasattr_self_failed_relay_grasps_002",
+          "store": "condition_2"
+        },
+        {
+          "if": {
+            "var": "condition_2"
+          },
+          "then": [
+            {
+              "call": "U07_VisionPackTeacher_relay_once_not_hasattr_self_failed_relay_grasps_003"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_004"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_005"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_006"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_staging_and_item_category_in_electric_toothbrush_007",
+          "store": "condition_7"
+        },
+        {
+          "if": {
+            "var": "condition_7"
+          },
+          "then": [
+            {
+              "call": "U07_VisionPackTeacher_relay_once_staging_and_item_category_in_electric_toothbrush_008"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_grasp_proposals_item_geo_self_gripper_forward_of_009",
+          "store": "items_9"
+        },
+        {
+          "for_each": {
+            "var": "items_9"
+          },
+          "as": "loop_item_10",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U07_VisionPackTeacher_relay_once_motion_010",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_10"
+                }
+              }
+            },
+            {
+              "call": "U07_VisionPackTeacher_relay_once_motion_011"
+            },
+            {
+              "call": "U07_VisionPackTeacher_relay_once_item_category_car_012",
+              "store": "condition_12"
+            },
+            {
+              "if": {
+                "var": "condition_12"
+              },
+              "then": [
+                {
+                  "call": "U07_VisionPackTeacher_relay_once_item_category_car_013"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_relay_once_np_linalg_norm_delta_0_3_014",
+                  "store": "condition_14"
+                },
+                {
+                  "if": {
+                    "var": "condition_14"
+                  },
+                  "then": [
+                    {
+                      "call": "U07_VisionPackTeacher_relay_once_np_linalg_norm_delta_0_3_015"
+                    }
+                  ],
+                  "else": []
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U07_VisionPackTeacher_relay_once_item_category_hammer_and_geo_upper_2_geo_lower_2_016",
+              "store": "condition_16"
+            },
+            {
+              "if": {
+                "var": "condition_16"
+              },
+              "then": [
+                {
+                  "continue": true
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U07_VisionPackTeacher_relay_once_motion_017"
+            },
+            {
+              "call": "U07_VisionPackTeacher_relay_once_item_category_car_018",
+              "store": "condition_18"
+            },
+            {
+              "if": {
+                "var": "condition_18"
+              },
+              "then": [
+                {
+                  "call": "U07_VisionPackTeacher_relay_once_item_category_car_019"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U07_VisionPackTeacher_relay_once_motion_020"
+            },
+            {
+              "call": "U07_VisionPackTeacher_relay_once_motion_021"
+            },
+            {
+              "call": "U07_VisionPackTeacher_relay_once_self_robots_items_022",
+              "store": "items_22"
+            },
+            {
+              "for_each": {
+                "var": "items_22"
+              },
+              "as": "loop_item_23",
+              "max_items": 4096,
+              "do": [
+                {
+                  "call": "U07_VisionPackTeacher_relay_once_motion_023",
+                  "args": {
+                    "__workflow_item": {
+                      "var": "loop_item_23"
+                    }
+                  }
+                },
+                {
+                  "call": "U07_VisionPackTeacher_relay_once_motion_024"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_relay_once_motion_025"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_relay_once_item_category_car_026",
+                  "store": "condition_26"
+                },
+                {
+                  "if": {
+                    "var": "condition_26"
+                  },
+                  "then": [
+                    {
+                      "call": "U07_VisionPackTeacher_relay_once_item_category_car_027"
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_relay_once_item_category_car_028"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U07_VisionPackTeacher_relay_once_motion_029"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_relay_once_signature_in_self_failed_relay_grasps_030",
+                  "store": "condition_30"
+                },
+                {
+                  "if": {
+                    "var": "condition_30"
+                  },
+                  "then": [
+                    {
+                      "continue": true
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U07_VisionPackTeacher_relay_once_not_all_reachable_robot_p_for_p_in_grasp_low_gra_031",
+                  "store": "condition_31"
+                },
+                {
+                  "if": {
+                    "var": "condition_31"
+                  },
+                  "then": [
+                    {
+                      "continue": true
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U07_VisionPackTeacher_relay_once_motion_032"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_relay_once_motion_033"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_relay_once_item_category_hammer_and_grasp_tilt_0_034",
+                  "store": "condition_34"
+                },
+                {
+                  "if": {
+                    "var": "condition_34"
+                  },
+                  "then": [
+                    {
+                      "call": "U07_VisionPackTeacher_relay_once_item_category_hammer_and_grasp_tilt_0_035"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U07_VisionPackTeacher_relay_once_item_category_hammer_and_geo_upper_2_geo_lower_2_036",
+                  "store": "condition_36"
+                },
+                {
+                  "if": {
+                    "var": "condition_36"
+                  },
+                  "then": [
+                    {
+                      "call": "U07_VisionPackTeacher_relay_once_item_category_hammer_and_geo_upper_2_geo_lower_2_037"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U07_VisionPackTeacher_relay_once_max_grasp_high_2_self_x5_base_z_0_3_grasp_high_2_038",
+                  "store": "items_38"
+                },
+                {
+                  "for_each": {
+                    "var": "items_38"
+                  },
+                  "as": "loop_item_39",
+                  "max_items": 4096,
+                  "do": [
+                    {
+                      "call": "U07_VisionPackTeacher_relay_once_motion_039",
+                      "args": {
+                        "__workflow_item": {
+                          "var": "loop_item_39"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_relay_once_motion_040"
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_relay_once_motion_041"
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_relay_once_not_reachable_robot_over_042",
+                      "store": "condition_42"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_42"
+                      },
+                      "then": [
+                        {
+                          "continue": true
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_relay_once_motion_043"
+                    },
+                    {
+                      "call": "U07_VisionPackTeacher_relay_once_motion_044"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_045"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_not_choices_046",
+          "store": "condition_46"
+        },
+        {
+          "if": {
+            "var": "condition_46"
+          },
+          "then": [
+            {
+              "call": "U07_VisionPackTeacher_relay_once_not_choices_047"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_sorted_choices_key_lambda_c_c_0_048",
+          "store": "items_48"
+        },
+        {
+          "for_each": {
+            "var": "items_48"
+          },
+          "as": "loop_item_49",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U07_VisionPackTeacher_relay_once_motion_049",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_49"
+                }
+              }
+            },
+            {
+              "call": "U07_VisionPackTeacher_relay_once_motion_050"
+            },
+            {
+              "call": "U07_VisionPackTeacher_relay_once_motion_051"
+            },
+            {
+              "call": "U07_VisionPackTeacher_relay_once_item_category_car_052",
+              "store": "condition_52"
+            },
+            {
+              "if": {
+                "var": "condition_52"
+              },
+              "then": [
+                {
+                  "call": "U07_VisionPackTeacher_relay_once_item_category_car_053"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_relay_once_item_category_car_054"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_relay_once_item_category_car_055"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_relay_once_item_category_car_056"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U07_VisionPackTeacher_relay_once_motion_057"
+            },
+            {
+              "call": "U07_VisionPackTeacher_relay_once_plan_is_none_058",
+              "store": "condition_58"
+            },
+            {
+              "if": {
+                "var": "condition_58"
+              },
+              "then": [
+                {
+                  "continue": true
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U07_VisionPackTeacher_relay_once_motion_059"
+            },
+            {
+              "break": true
+            }
+          ],
+          "else": [
+            {
+              "call": "U07_VisionPackTeacher_relay_once_motion_060"
+            }
+          ]
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_061"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_item_category_car_062",
+          "store": "condition_62"
+        },
+        {
+          "if": {
+            "var": "condition_62"
+          },
+          "then": [
+            {
+              "call": "U07_VisionPackTeacher_relay_once_item_category_car_063"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_064"
+        },
+        {
+          "call": "public_begin_item"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_065"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_066"
+        },
+        {
+          "call": "public_attach"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_067"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_068"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_069"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_070"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_grasp_absent_071",
+          "store": "condition_71"
+        },
+        {
+          "if": {
+            "var": "condition_71"
+          },
+          "then": [
+            {
+              "call": "U07_VisionPackTeacher_relay_once_width_0_003_072"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_073"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_074"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_075"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_076"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_077"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_078"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_079"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_080"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_081"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_082"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_083"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_084"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_085"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_086"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_087"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_088"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_089"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_item_key_electric_toothbrush_2_090",
+          "store": "condition_90"
+        },
+        {
+          "if": {
+            "var": "condition_90"
+          },
+          "then": [
+            {
+              "call": "U07_VisionPackTeacher_relay_once_item_key_electric_toothbrush_2_091"
+            },
+            {
+              "call": "U07_VisionPackTeacher_relay_once_item_key_electric_toothbrush_2_092"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_093"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_094"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_not_valid_095",
+          "store": "condition_95"
+        },
+        {
+          "if": {
+            "var": "condition_95"
+          },
+          "then": [
+            {
+              "call": "U07_VisionPackTeacher_relay_once_not_valid_096"
+            },
+            {
+              "call": "U07_VisionPackTeacher_relay_once_not_valid_097"
+            },
+            {
+              "call": "U07_VisionPackTeacher_relay_once_not_alternatives_098",
+              "store": "condition_98"
+            },
+            {
+              "if": {
+                "var": "condition_98"
+              },
+              "then": [
+                {
+                  "call": "U07_VisionPackTeacher_relay_once_not_alternatives_099"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U07_VisionPackTeacher_relay_once_not_valid_100"
+            },
+            {
+              "call": "U07_VisionPackTeacher_relay_once_recovered_iou_0_65_101",
+              "store": "condition_101"
+            },
+            {
+              "if": {
+                "var": "condition_101"
+              },
+              "then": [
+                {
+                  "call": "U07_VisionPackTeacher_relay_once_recovered_iou_0_65_102"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U07_VisionPackTeacher_relay_once_not_valid_103"
+            },
+            {
+              "call": "U07_VisionPackTeacher_relay_once_staging_104",
+              "store": "condition_104"
+            },
+            {
+              "if": {
+                "var": "condition_104"
+              },
+              "then": [
+                {
+                  "call": "U07_VisionPackTeacher_relay_once_staging_105"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_relay_once_recovered_relay_attempt_2_106",
+                  "store": "condition_106"
+                },
+                {
+                  "if": {
+                    "var": "condition_106"
+                  },
+                  "then": [
+                    {
+                      "call": "U07_VisionPackTeacher_relay_once_recovered_relay_attempt_2_107"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U07_VisionPackTeacher_relay_once_staging_108"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_relay_once_staging_109",
+                  "store": "result_109"
+                },
+                {
+                  "return": {
+                    "var": "result_109"
+                  }
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U07_VisionPackTeacher_relay_once_not_valid_110"
+            },
+            {
+              "call": "U07_VisionPackTeacher_relay_once_not_valid_111",
+              "store": "result_111"
+            },
+            {
+              "return": {
+                "var": "result_111"
+              }
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_112"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_113"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_114"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_115"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_116"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_117"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_updated_iou_0_55_118",
+          "store": "condition_118"
+        },
+        {
+          "if": {
+            "var": "condition_118"
+          },
+          "then": [
+            {
+              "call": "U07_VisionPackTeacher_relay_once_updated_iou_0_55_119"
+            },
+            {
+              "call": "U07_VisionPackTeacher_relay_once_updated_iou_0_55_120"
+            },
+            {
+              "call": "U07_VisionPackTeacher_relay_once_updated_iou_0_55_121"
+            },
+            {
+              "call": "U07_VisionPackTeacher_relay_once_recovered_is_none_or_recovered_iou_0_65_122",
+              "store": "condition_122"
+            },
+            {
+              "if": {
+                "var": "condition_122"
+              },
+              "then": [
+                {
+                  "call": "U07_VisionPackTeacher_relay_once_recovered_is_none_or_recovered_iou_0_65_123"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U07_VisionPackTeacher_relay_once_updated_iou_0_55_124"
+            },
+            {
+              "call": "U07_VisionPackTeacher_relay_once_staging_125",
+              "store": "condition_125"
+            },
+            {
+              "if": {
+                "var": "condition_125"
+              },
+              "then": [
+                {
+                  "call": "U07_VisionPackTeacher_relay_once_staging_126"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_relay_once_recovered_relay_attempt_2_127",
+                  "store": "condition_127"
+                },
+                {
+                  "if": {
+                    "var": "condition_127"
+                  },
+                  "then": [
+                    {
+                      "call": "U07_VisionPackTeacher_relay_once_recovered_relay_attempt_2_128"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U07_VisionPackTeacher_relay_once_staging_129"
+                },
+                {
+                  "call": "U07_VisionPackTeacher_relay_once_staging_130",
+                  "store": "result_130"
+                },
+                {
+                  "return": {
+                    "var": "result_130"
+                  }
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U07_VisionPackTeacher_relay_once_updated_iou_0_55_131"
+            },
+            {
+              "call": "U07_VisionPackTeacher_relay_once_updated_iou_0_55_132",
+              "store": "result_132"
+            },
+            {
+              "return": {
+                "var": "result_132"
+              }
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_133"
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_staging_134",
+          "store": "condition_134"
+        },
+        {
+          "if": {
+            "var": "condition_134"
+          },
+          "then": [
+            {
+              "call": "U07_VisionPackTeacher_relay_once_staging_135"
+            },
+            {
+              "call": "U07_VisionPackTeacher_relay_once_staging_136",
+              "store": "result_136"
+            },
+            {
+              "return": {
+                "var": "result_136"
+              }
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U07_VisionPackTeacher_relay_once_motion_137"
+        }
+      ]
+    }
+  },
+  "parameters": {
+    "seed": 0,
+    "eval_seed": 0,
+    "num_episodes": 1,
+    "episode_index": 0,
+    "device_id": 0,
+    "output_dir": "policy",
+    "motion_speed": 1.6,
+    "motion_speedup": 1.0,
+    "planner_pose_frame": "world",
+    "gripper_forward_offset": 0.154,
+    "grasp_style": "rim",
+    "full_curobo_warmup": false,
+    "no_video": false,
+    "save_npz": false,
+    "images_in_hdf5": false,
+    "official_eval": true,
+    "compact_physx": false,
+    "feedback_servo": false,
+    "debug_fk": false,
+    "headless": true,
+    "enable_cameras": true,
+    "kit_args": " --enable isaacsim.replicator.behavior --enable isaacsim.sensors.camera --/app/settings/persistent=false --/renderer/multiGpu/enabled=false --/renderer/multiGpu/autoEnable=false",
+    "staging_candidate_strategy": "balanced_existing_safe_regions_v1"
+  },
+  "environment": {},
+  "public_grasp_adaptation": {
+    "states": [
+      "present",
+      "absent",
+      "unknown"
+    ],
+    "source": "current RGB instance track and public EE co-motion; normalized target is command echo only",
+    "unknown": "Continue original motion with payload explicitly unverified; do not classify as held or empty. Confirmed absence invokes original recovery; invalid commands/histories abort.",
+    "physical_finger_feedback": false,
+    "holder_regrasp_probe_m": null,
+    "native_evaluation_enabled": true
+  }
+}

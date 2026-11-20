@@ -1,0 +1,72 @@
+{
+  "schema": "riemann-declarative-generator-workflow-v1",
+  "mode": "rule_only",
+  "official_action_horizon": 1050,
+  "wam_reselection": false,
+  "max_operations": 16384,
+  "bindings": {
+    "pending": "tasks.arrange_largest_number_random.skills.identity_recovery.implementation:pending",
+    "reacquire": "tasks.arrange_largest_number_random.skills.identity_recovery.implementation:reacquire",
+    "remember_error": "tasks.arrange_largest_number_random.skills.identity_recovery.implementation:remember_error",
+    "observe_identity": "tasks.arrange_largest_number_random.skills.identity_recovery.implementation:observe_identity",
+    "advance_attempt": "tasks.arrange_largest_number_random.skills.identity_recovery.implementation:advance_attempt",
+    "restore_arms": "tasks.arrange_largest_number_random.skills.identity_recovery.implementation:restore_arms",
+    "result": "tasks.arrange_largest_number_random.skills.identity_recovery.implementation:result"
+  },
+  "errors": {
+    "RecognitionNeedsObservation": "skills.shared.perception.material_glyph_outline.implementation:RecognitionNeedsObservation"
+  },
+  "steps": [
+    {
+      "while": {
+        "call": "pending"
+      },
+      "max_iterations": 1051,
+      "do": [
+        {
+          "try": [
+            {
+              "call": "reacquire"
+            }
+          ],
+          "catch": [
+            {
+              "errors": [
+                "RecognitionNeedsObservation"
+              ],
+              "as": "rgb_error",
+              "do": [
+                {
+                  "call": "remember_error",
+                  "args": {
+                    "error": {
+                      "var": "rgb_error"
+                    }
+                  }
+                },
+                {
+                  "call": "observe_identity"
+                },
+                {
+                  "call": "advance_attempt"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "call": "restore_arms"
+    },
+    {
+      "call": "result",
+      "store": "identity"
+    },
+    {
+      "return": {
+        "var": "identity"
+      }
+    }
+  ]
+}

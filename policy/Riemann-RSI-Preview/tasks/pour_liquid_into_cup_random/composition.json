@@ -1,0 +1,33 @@
+{
+  "schema": "riemann-rule-composition-v1",
+  "task_mode": "pour_liquid_into_cup_random",
+  "backend": "rule",
+  "workflow": "workflow.json",
+  "task_skills": {
+    "command_execution": "skills/command_execution/implementation.py",
+    "geometry": "skills/geometry/implementation.py",
+    "kinematics": "skills/kinematics/implementation.py",
+    "motion": "skills/motion/implementation.py",
+    "perception": "skills/perception/implementation.py",
+    "pickup": "skills/pickup/implementation.py",
+    "planning": "skills/planning/implementation.py",
+    "pouring": "skills/pouring/implementation.py",
+    "public_observation": "skills/public_observation/implementation.py",
+    "public_robot": "skills/public_robot/implementation.py",
+    "state": "skills/state/implementation.py",
+    "support": "skills/support/implementation.py",
+    "native_binding": "skills/native_binding/implementation.py"
+  },
+  "validation": "public_factory_CPU_and_exact_runtime_binding_before_fixed_probe",
+  "python_entry_files": [
+    "harness/runtime/mature_teacher_boundary.py",
+    "harness/runtime/mature_teacher_clock.py",
+    "tasks/pour_liquid_into_cup_random/controller.py",
+    "tasks/pour_liquid_into_cup_random/entry.py",
+    "tasks/pour_liquid_into_cup_random/resources.py"
+  ],
+  "source_versioning": "git",
+  "native_workflow": "workflow.json",
+  "graph_files": [],
+  "resource_files": []
+}

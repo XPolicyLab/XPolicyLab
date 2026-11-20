@@ -1,0 +1,75 @@
+{
+  "schema": "riemann-rule-composition-v1",
+  "task_mode": "arrange_largest_number_random",
+  "backend": "rule",
+  "selection": "fixed_original_rule_graph_random_material",
+  "controller_assembly_only": true,
+  "controller_factory": "tasks.arrange_largest_number_random.controller:create_actor",
+  "task_skills": {
+    "action_commands": "skills/action_commands/implementation.py",
+    "context": "skills/context/implementation.py",
+    "execution_state": "skills/execution_state/implementation.py",
+    "identity_recovery": "skills/identity_recovery/implementation.py",
+    "placement_state": "skills/placement_state/implementation.py",
+    "scene_recovery": "skills/scene_recovery/implementation.py",
+    "source_recovery": "skills/source_recovery/implementation.py",
+    "target_selection": "skills/target_selection/implementation.py",
+    "transfer": "skills/transfer/implementation.py",
+    "workflow_routing": "skills/workflow_routing/implementation.py"
+  },
+  "graph_files": [
+    "workflows/identity-recovery.json",
+    "workflows/relay.json",
+    "workflows/scene-recovery.json",
+    "workflows/transfer.json"
+  ],
+  "shared_runtime_files": [
+    "harness/__init__.py",
+    "harness/runtime/__init__.py",
+    "harness/runtime/declarative_workflow.py",
+    "harness/runtime/declarative_generator_workflow.py"
+  ],
+  "official_action_horizon": 1050,
+  "official_action_budget_changed": false,
+  "original_run_tool_exposed": false,
+  "wam_reselection": false,
+  "material_profile": "random",
+  "native_adapter_protocol": "b21-canonical-task-reuse-v1",
+  "source_dependency_tasks": [
+    "tasks/arrange_largest_number"
+  ],
+  "dependency_tasks": [],
+  "source_borrowed_task_skills": [
+    "tasks/arrange_largest_number/skills/robot_geometry",
+    "tasks/arrange_largest_number/skills/robot_calibration",
+    "tasks/arrange_largest_number/skills/digit_templates",
+    "tasks/arrange_largest_number/skills/digit_outline",
+    "tasks/arrange_largest_number/skills/outline_search",
+    "tasks/arrange_largest_number/skills/scene_reader",
+    "tasks/arrange_largest_number/skills/public_planner",
+    "tasks/arrange_largest_number/skills/motion_math",
+    "tasks/arrange_largest_number/skills/action_commands",
+    "tasks/arrange_largest_number/skills/motion",
+    "tasks/arrange_largest_number/skills/source_recovery",
+    "tasks/arrange_largest_number/skills/target_selection",
+    "tasks/arrange_largest_number/skills/execution_state",
+    "tasks/arrange_largest_number/skills/public_observation",
+    "tasks/arrange_largest_number/skills/public_assets",
+    "tasks/arrange_largest_number/skills/transfer",
+    "tasks/arrange_largest_number/skills/placement_state",
+    "tasks/arrange_largest_number/skills/scene_recovery",
+    "tasks/arrange_largest_number/skills/identity_recovery"
+  ],
+  "python_entry_files": [
+    "harness/runtime/mature_teacher_boundary.py",
+    "harness/runtime/mature_teacher_clock.py",
+    "harness/runtime/native_rule_evaluation/binding.py",
+    "harness/runtime/native_rule_evaluation/planner.py",
+    "tasks/arrange_largest_number_random/bindings/official_policy.py",
+    "tasks/arrange_largest_number_random/controller.py",
+    "tasks/arrange_largest_number_random/entry.py"
+  ],
+  "source_versioning": "git",
+  "native_workflow": "workflow.json",
+  "resource_files": []
+}

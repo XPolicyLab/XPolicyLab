@@ -1,0 +1,22 @@
+{
+  "schema": "riemann-original-language-native-profile-v1",
+  "workflow": "workflow.json",
+  "parameters": {
+    "motion_speed": 1.0,
+    "public_instruction_source": "official_observation",
+    "own_robot_root": "resource://official_assets/Robots/x5",
+    "public_model_root": "resource://category_models",
+    "full_curobo_warmup": false
+  },
+  "official_runtime_commit": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
+  "python": "resource://eval_environment/bin/python",
+  "action_transport": "already_sampled_official_normalized_single_action",
+  "original_dense_arm_time_scale": 2.2,
+  "original_dense_gripper_time_scale": 1.0,
+  "contact_measurement": "unknown_public_jaw_is_indirect_applied_target_feedback",
+  "public_opening_skill": "current_rgb_opening",
+  "opening_is_visual_hypothesis_not_contact": true,
+  "official_cloud_verified": false,
+  "full_performance_accepted": false,
+  "native_environment_lock": "bindings/runtime-lock.json"
+}

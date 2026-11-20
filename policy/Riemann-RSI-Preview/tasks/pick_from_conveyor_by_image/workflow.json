@@ -1,0 +1,1901 @@
+{
+  "schema": "riemann-mature-teacher-programs-v1",
+  "package": "tasks.pick_from_conveyor_by_image",
+  "task": "pick_from_conveyor_by_image",
+  "official_action_horizon": 700,
+  "mode": "rule_only",
+  "wam_reselection": false,
+  "parameters": {
+    "seed": 0,
+    "eval_seed": 0,
+    "device_id": 0,
+    "min_free_gpu_mib": 12000,
+    "num_episodes": 1,
+    "episode_index": 0,
+    "no_video": false,
+    "full_curobo_warmup": false,
+    "basket_lift": 0.1,
+    "max_grasp_width": 0.085,
+    "motion_speed": 1.0,
+    "gripper_forward_offset": 0.154,
+    "gripper_settle_seconds": 0.28,
+    "max_contact_joint_jump": 0.8,
+    "conveyor_collision_mode": "native",
+    "physics_backend": "cpu",
+    "headless": true,
+    "enable_cameras": true,
+    "images_in_hdf5": false,
+    "save_npz": false,
+    "planner_pose_frame": "world",
+    "motion_speedup": 1.0,
+    "debug_fk": false,
+    "task": "pick_from_conveyor_by_image",
+    "official_eval": true
+  },
+  "environment": {},
+  "programs": {
+    "U66_ConveyorTeacher_pick_target": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 700,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U66_ConveyorTeacher_pick_target_motion_001": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_001",
+        "U66_ConveyorTeacher_pick_target_hasattr_self_standby_option_002": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_hasattr_self_standby_option_002",
+        "U66_ConveyorTeacher_pick_target_hasattr_self_standby_option_003": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_hasattr_self_standby_option_003",
+        "U66_ConveyorTeacher_pick_target_int_self_env_take_action_cnt_0_430_004": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_int_self_env_take_action_cnt_0_430_004",
+        "U66_ConveyorTeacher_pick_target_motion_005": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_005",
+        "U66_ConveyorTeacher_pick_target_motion_006": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_006",
+        "U66_ConveyorTeacher_pick_target_motion_007": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_007",
+        "U66_ConveyorTeacher_pick_target_options_008": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_options_008",
+        "U66_ConveyorTeacher_pick_target_motion_009": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_009",
+        "U66_ConveyorTeacher_pick_target_motion_010": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_010",
+        "U66_ConveyorTeacher_pick_target_motion_011": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_011",
+        "U66_ConveyorTeacher_pick_target_motion_012": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_012",
+        "U66_ConveyorTeacher_pick_target_motion_013": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_013",
+        "U66_ConveyorTeacher_pick_target_motion_014": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_014",
+        "U66_ConveyorTeacher_pick_target_motion_015": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_015",
+        "U66_ConveyorTeacher_pick_target_motion_016": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_016",
+        "U66_ConveyorTeacher_pick_target_motion_017": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_017",
+        "U66_ConveyorTeacher_pick_target_not_high_ok_or_not_low_ok_018": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_not_high_ok_or_not_low_ok_018",
+        "U66_ConveyorTeacher_pick_target_motion_019": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_019",
+        "U66_ConveyorTeacher_pick_target_motion_020": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_020",
+        "U66_ConveyorTeacher_pick_target_not_self_placement_reachable_arm_pose_low_basket_021": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_not_self_placement_reachable_arm_pose_low_basket_021",
+        "U66_ConveyorTeacher_pick_target_motion_022": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_022",
+        "U66_ConveyorTeacher_pick_target_motion_023": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_023",
+        "U66_ConveyorTeacher_pick_target_motion_024": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_024",
+        "U66_ConveyorTeacher_pick_target_int_self_env_take_action_cnt_0_before_approach_025": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_int_self_env_take_action_cnt_0_before_approach_025",
+        "U66_ConveyorTeacher_pick_target_int_self_env_take_action_cnt_0_before_approach_026": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_int_self_env_take_action_cnt_0_before_approach_026",
+        "U66_ConveyorTeacher_pick_target_motion_027": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_027",
+        "U66_ConveyorTeacher_pick_target_motion_028": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_028",
+        "U66_ConveyorTeacher_pick_target_motion_029": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_029",
+        "U66_ConveyorTeacher_pick_target_selected_is_not_none_030": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_selected_is_not_none_030",
+        "U66_ConveyorTeacher_pick_target_motion_031": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_031",
+        "U66_ConveyorTeacher_pick_target_motion_032": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_032",
+        "U66_ConveyorTeacher_pick_target_motion_033": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_033",
+        "U66_ConveyorTeacher_pick_target_motion_034": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_034",
+        "U66_ConveyorTeacher_pick_target_np_linspace_0_9_selected_get_approach_clearance__035": "skills.pickup.implementation:U66_ConveyorTeacher_pick_target_np_linspace_0_9_selected_get_approach_clearance__035",
+        "U66_ConveyorTeacher_pick_target_motion_036": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_036",
+        "U66_ConveyorTeacher_pick_target_motion_037": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_037",
+        "U66_ConveyorTeacher_pick_target_motion_038": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_038",
+        "U66_ConveyorTeacher_pick_target_range_7_039": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_range_7_039",
+        "U66_ConveyorTeacher_pick_target_motion_040": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_040",
+        "U66_ConveyorTeacher_pick_target_motion_041": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_041",
+        "U66_ConveyorTeacher_pick_target_motion_042": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_042",
+        "U66_ConveyorTeacher_pick_target_q_is_none_043": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_q_is_none_043",
+        "U66_ConveyorTeacher_pick_target_q_is_none_044": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_q_is_none_044",
+        "U66_ConveyorTeacher_pick_target_motion_045": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_045",
+        "U66_ConveyorTeacher_pick_target_np_max_np_abs_q_current_q_self_args_max_contact__046": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_np_max_np_abs_q_current_q_self_args_max_contact__046",
+        "U66_ConveyorTeacher_pick_target_np_max_np_abs_q_current_q_self_args_max_contact__047": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_np_max_np_abs_q_current_q_self_args_max_contact__047",
+        "U66_ConveyorTeacher_pick_target_motion_048": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_048",
+        "U66_ConveyorTeacher_pick_target_motion_049": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_049",
+        "U66_ConveyorTeacher_pick_target_motion_050": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_050",
+        "U66_ConveyorTeacher_pick_target_motion_051": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_051",
+        "U66_ConveyorTeacher_pick_target_motion_052": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_052",
+        "U66_ConveyorTeacher_pick_target_motion_053": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_053",
+        "U66_ConveyorTeacher_pick_target_motion_054": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_054",
+        "U66_ConveyorTeacher_pick_target_after_2_before_2_0_08_055": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_after_2_before_2_0_08_055",
+        "U66_ConveyorTeacher_pick_target_after_2_before_2_0_08_056": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_after_2_before_2_0_08_056",
+        "U66_ConveyorTeacher_pick_target_motion_057": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_057",
+        "U66_ConveyorTeacher_pick_target_motion_058": "skills.motion.implementation:U66_ConveyorTeacher_pick_target_motion_058"
+      },
+      "errors": {
+        "ValueError": "skills.state.implementation:ValueError",
+        "EpisodeTerminated": "skills.state.implementation:EpisodeTerminated",
+        "RuntimeError": "skills.state.implementation:RuntimeError"
+      },
+      "steps": [
+        {
+          "call": "U66_ConveyorTeacher_pick_target_motion_001"
+        },
+        {
+          "call": "U66_ConveyorTeacher_pick_target_hasattr_self_standby_option_002",
+          "store": "condition_2"
+        },
+        {
+          "if": {
+            "var": "condition_2"
+          },
+          "then": [
+            {
+              "call": "U66_ConveyorTeacher_pick_target_hasattr_self_standby_option_003"
+            }
+          ],
+          "else": []
+        },
+        {
+          "while": "U66_ConveyorTeacher_pick_target_int_self_env_take_action_cnt_0_430_004",
+          "args": {},
+          "max_iterations": 4096,
+          "do": [
+            {
+              "call": "U66_ConveyorTeacher_pick_target_motion_005"
+            },
+            {
+              "call": "U66_ConveyorTeacher_pick_target_motion_006"
+            },
+            {
+              "call": "U66_ConveyorTeacher_pick_target_motion_007"
+            },
+            {
+              "call": "U66_ConveyorTeacher_pick_target_options_008",
+              "store": "items_8"
+            },
+            {
+              "for_each": {
+                "var": "items_8"
+              },
+              "as": "loop_item_9",
+              "max_items": 4096,
+              "do": [
+                {
+                  "call": "U66_ConveyorTeacher_pick_target_motion_009",
+                  "args": {
+                    "__workflow_item": {
+                      "var": "loop_item_9"
+                    }
+                  }
+                },
+                {
+                  "try": [
+                    {
+                      "call": "U66_ConveyorTeacher_pick_target_motion_010"
+                    }
+                  ],
+                  "catch": [
+                    {
+                      "errors": [
+                        "ValueError"
+                      ],
+                      "as": "caught_error",
+                      "do": [
+                        {
+                          "continue": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "call": "U66_ConveyorTeacher_pick_target_motion_011"
+                },
+                {
+                  "call": "U66_ConveyorTeacher_pick_target_motion_012"
+                },
+                {
+                  "call": "U66_ConveyorTeacher_pick_target_motion_013"
+                },
+                {
+                  "call": "U66_ConveyorTeacher_pick_target_motion_014"
+                },
+                {
+                  "call": "U66_ConveyorTeacher_pick_target_motion_015"
+                },
+                {
+                  "call": "U66_ConveyorTeacher_pick_target_motion_016"
+                },
+                {
+                  "call": "U66_ConveyorTeacher_pick_target_motion_017"
+                },
+                {
+                  "call": "U66_ConveyorTeacher_pick_target_not_high_ok_or_not_low_ok_018",
+                  "store": "condition_18"
+                },
+                {
+                  "if": {
+                    "var": "condition_18"
+                  },
+                  "then": [
+                    {
+                      "continue": true
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U66_ConveyorTeacher_pick_target_motion_019"
+                },
+                {
+                  "call": "U66_ConveyorTeacher_pick_target_motion_020"
+                },
+                {
+                  "call": "U66_ConveyorTeacher_pick_target_not_self_placement_reachable_arm_pose_low_basket_021",
+                  "store": "condition_21"
+                },
+                {
+                  "if": {
+                    "var": "condition_21"
+                  },
+                  "then": [
+                    {
+                      "continue": true
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U66_ConveyorTeacher_pick_target_motion_022"
+                },
+                {
+                  "try": [
+                    {
+                      "call": "U66_ConveyorTeacher_pick_target_motion_028",
+                      "args": {
+                        "phase_0": "target_intercept"
+                      }
+                    },
+                    {
+                      "call": "U66_ConveyorTeacher_pick_target_motion_029"
+                    },
+                    {
+                      "break": true
+                    }
+                  ],
+                  "catch": [
+                    {
+                      "errors": [
+                        "EpisodeTerminated"
+                      ],
+                      "as": "caught_error",
+                      "do": [
+                        {
+                          "call": "U66_ConveyorTeacher_pick_target_motion_023"
+                        }
+                      ]
+                    },
+                    {
+                      "errors": [
+                        "RuntimeError"
+                      ],
+                      "as": "caught_error",
+                      "do": [
+                        {
+                          "call": "U66_ConveyorTeacher_pick_target_motion_024",
+                          "args": {
+                            "__workflow_error": {
+                              "var": "caught_error"
+                            }
+                          }
+                        },
+                        {
+                          "call": "U66_ConveyorTeacher_pick_target_int_self_env_take_action_cnt_0_before_approach_025",
+                          "store": "condition_25"
+                        },
+                        {
+                          "if": {
+                            "var": "condition_25"
+                          },
+                          "then": [
+                            {
+                              "call": "U66_ConveyorTeacher_pick_target_int_self_env_take_action_cnt_0_before_approach_026"
+                            }
+                          ],
+                          "else": []
+                        },
+                        {
+                          "call": "U66_ConveyorTeacher_pick_target_motion_027"
+                        },
+                        {
+                          "continue": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "call": "U66_ConveyorTeacher_pick_target_selected_is_not_none_030",
+              "store": "condition_30"
+            },
+            {
+              "if": {
+                "var": "condition_30"
+              },
+              "then": [
+                {
+                  "break": true
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U66_ConveyorTeacher_pick_target_motion_031"
+            },
+            {
+              "call": "U66_ConveyorTeacher_pick_target_motion_032",
+              "args": {
+                "phase_0": "wait_for_reachable_target"
+              }
+            }
+          ],
+          "else": [
+            {
+              "call": "U66_ConveyorTeacher_pick_target_motion_033"
+            }
+          ]
+        },
+        {
+          "call": "U66_ConveyorTeacher_pick_target_motion_034"
+        },
+        {
+          "call": "U66_ConveyorTeacher_pick_target_np_linspace_0_9_selected_get_approach_clearance__035",
+          "store": "items_35"
+        },
+        {
+          "for_each": {
+            "var": "items_35"
+          },
+          "as": "loop_item_36",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U66_ConveyorTeacher_pick_target_motion_036",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_36"
+                }
+              }
+            },
+            {
+              "call": "U66_ConveyorTeacher_pick_target_motion_037"
+            },
+            {
+              "call": "U66_ConveyorTeacher_pick_target_motion_038",
+              "args": {
+                "phase_0": "target_track_descend"
+              }
+            }
+          ]
+        },
+        {
+          "call": "U66_ConveyorTeacher_pick_target_range_7_039",
+          "store": "items_39"
+        },
+        {
+          "for_each": {
+            "var": "items_39"
+          },
+          "as": "loop_item_40",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U66_ConveyorTeacher_pick_target_motion_040",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_40"
+                }
+              }
+            },
+            {
+              "call": "U66_ConveyorTeacher_pick_target_motion_041"
+            },
+            {
+              "call": "U66_ConveyorTeacher_pick_target_motion_042"
+            },
+            {
+              "call": "U66_ConveyorTeacher_pick_target_q_is_none_043",
+              "store": "condition_43"
+            },
+            {
+              "if": {
+                "var": "condition_43"
+              },
+              "then": [
+                {
+                  "call": "U66_ConveyorTeacher_pick_target_q_is_none_044"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U66_ConveyorTeacher_pick_target_motion_045"
+            },
+            {
+              "call": "U66_ConveyorTeacher_pick_target_np_max_np_abs_q_current_q_self_args_max_contact__046",
+              "store": "condition_46"
+            },
+            {
+              "if": {
+                "var": "condition_46"
+              },
+              "then": [
+                {
+                  "call": "U66_ConveyorTeacher_pick_target_np_max_np_abs_q_current_q_self_args_max_contact__047"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U66_ConveyorTeacher_pick_target_motion_048"
+            },
+            {
+              "call": "U66_ConveyorTeacher_pick_target_motion_049"
+            },
+            {
+              "call": "U66_ConveyorTeacher_pick_target_motion_050",
+              "args": {
+                "phase_0": "target_track_close"
+              }
+            }
+          ]
+        },
+        {
+          "call": "U66_ConveyorTeacher_pick_target_motion_051"
+        },
+        {
+          "call": "U66_ConveyorTeacher_pick_target_motion_052"
+        },
+        {
+          "call": "U66_ConveyorTeacher_pick_target_motion_053",
+          "args": {
+            "phase_0": "target_lift"
+          }
+        },
+        {
+          "call": "U66_ConveyorTeacher_pick_target_motion_054"
+        },
+        {
+          "call": "U66_ConveyorTeacher_pick_target_after_2_before_2_0_08_055",
+          "store": "condition_55"
+        },
+        {
+          "if": {
+            "var": "condition_55"
+          },
+          "then": [
+            {
+              "call": "U66_ConveyorTeacher_pick_target_after_2_before_2_0_08_056"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U66_ConveyorTeacher_pick_target_motion_057"
+        },
+        {
+          "call": "U66_ConveyorTeacher_pick_target_motion_058",
+          "args": {
+            "phase_0": "target_grasped"
+          }
+        }
+      ]
+    },
+    "U66_ConveyorTeacher_place_target": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 700,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U66_ConveyorTeacher_place_target_motion_001": "skills.motion.implementation:U66_ConveyorTeacher_place_target_motion_001",
+        "U66_ConveyorTeacher_place_target_motion_002": "skills.motion.implementation:U66_ConveyorTeacher_place_target_motion_002",
+        "U66_ConveyorTeacher_place_target_needs_clearance_003": "skills.pickup.implementation:U66_ConveyorTeacher_place_target_needs_clearance_003",
+        "U66_ConveyorTeacher_place_target_needs_clearance_004": "skills.pickup.implementation:U66_ConveyorTeacher_place_target_needs_clearance_004",
+        "U66_ConveyorTeacher_place_target_motion_005": "skills.motion.implementation:U66_ConveyorTeacher_place_target_motion_005",
+        "U66_ConveyorTeacher_place_target_motion_006": "skills.motion.implementation:U66_ConveyorTeacher_place_target_motion_006",
+        "U66_ConveyorTeacher_place_target_motion_007": "skills.motion.implementation:U66_ConveyorTeacher_place_target_motion_007",
+        "U66_ConveyorTeacher_place_target_motion_008": "skills.motion.implementation:U66_ConveyorTeacher_place_target_motion_008",
+        "U66_ConveyorTeacher_place_target_motion_009": "skills.motion.implementation:U66_ConveyorTeacher_place_target_motion_009",
+        "U66_ConveyorTeacher_place_target_motion_010": "skills.motion.implementation:U66_ConveyorTeacher_place_target_motion_010",
+        "U66_ConveyorTeacher_place_target_not_self_placement_reachable_arm_current_self_ac_011": "skills.motion.implementation:U66_ConveyorTeacher_place_target_not_self_placement_reachable_arm_current_self_ac_011",
+        "U66_ConveyorTeacher_place_target_not_self_placement_reachable_arm_current_self_ac_012": "skills.motion.implementation:U66_ConveyorTeacher_place_target_not_self_placement_reachable_arm_current_self_ac_012",
+        "U66_ConveyorTeacher_place_target_motion_013": "skills.motion.implementation:U66_ConveyorTeacher_place_target_motion_013",
+        "U66_ConveyorTeacher_place_target_motion_014": "skills.motion.implementation:U66_ConveyorTeacher_place_target_motion_014",
+        "U66_ConveyorTeacher_place_target_motion_015": "skills.motion.implementation:U66_ConveyorTeacher_place_target_motion_015",
+        "U66_ConveyorTeacher_place_target_motion_016": "skills.motion.implementation:U66_ConveyorTeacher_place_target_motion_016",
+        "U66_ConveyorTeacher_place_target_needed_0_017": "skills.motion.implementation:U66_ConveyorTeacher_place_target_needed_0_017",
+        "U66_ConveyorTeacher_place_target_needed_0_018": "skills.motion.implementation:U66_ConveyorTeacher_place_target_needed_0_018",
+        "U66_ConveyorTeacher_place_target_needed_0_019": "skills.motion.implementation:U66_ConveyorTeacher_place_target_needed_0_019",
+        "U66_ConveyorTeacher_place_target_needed_0_020": "skills.motion.implementation:U66_ConveyorTeacher_place_target_needed_0_020",
+        "U66_ConveyorTeacher_place_target_needed_0_021": "skills.motion.implementation:U66_ConveyorTeacher_place_target_needed_0_021",
+        "U66_ConveyorTeacher_place_target_motion_022": "skills.motion.implementation:U66_ConveyorTeacher_place_target_motion_022",
+        "U66_ConveyorTeacher_place_target_motion_023": "skills.motion.implementation:U66_ConveyorTeacher_place_target_motion_023",
+        "U66_ConveyorTeacher_place_target_motion_024": "skills.motion.implementation:U66_ConveyorTeacher_place_target_motion_024",
+        "U66_ConveyorTeacher_place_target_motion_025": "skills.motion.implementation:U66_ConveyorTeacher_place_target_motion_025",
+        "U66_ConveyorTeacher_place_target_motion_026": "skills.motion.implementation:U66_ConveyorTeacher_place_target_motion_026",
+        "U66_ConveyorTeacher_place_target_motion_027": "skills.motion.implementation:U66_ConveyorTeacher_place_target_motion_027",
+        "U66_ConveyorTeacher_place_target_motion_028": "skills.motion.implementation:U66_ConveyorTeacher_place_target_motion_028",
+        "U66_ConveyorTeacher_place_target_motion_029": "skills.motion.implementation:U66_ConveyorTeacher_place_target_motion_029",
+        "U66_ConveyorTeacher_place_target_motion_030": "skills.motion.implementation:U66_ConveyorTeacher_place_target_motion_030",
+        "U66_ConveyorTeacher_place_target_motion_031": "skills.motion.implementation:U66_ConveyorTeacher_place_target_motion_031",
+        "U66_ConveyorTeacher_place_target_motion_032": "skills.motion.implementation:U66_ConveyorTeacher_place_target_motion_032",
+        "U66_ConveyorTeacher_place_target_motion_033": "skills.motion.implementation:U66_ConveyorTeacher_place_target_motion_033",
+        "U66_ConveyorTeacher_place_target_motion_034": "skills.motion.implementation:U66_ConveyorTeacher_place_target_motion_034"
+      },
+      "errors": {},
+      "steps": [
+        {
+          "call": "U66_ConveyorTeacher_place_target_motion_001"
+        },
+        {
+          "call": "U66_ConveyorTeacher_place_target_motion_002"
+        },
+        {
+          "call": "U66_ConveyorTeacher_place_target_needs_clearance_003",
+          "store": "condition_3"
+        },
+        {
+          "if": {
+            "var": "condition_3"
+          },
+          "then": [
+            {
+              "call": "U66_ConveyorTeacher_place_target_needs_clearance_004",
+              "args": {
+                "phase_0": "target_clear_basket_path"
+              }
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U66_ConveyorTeacher_place_target_motion_005"
+        },
+        {
+          "call": "U66_ConveyorTeacher_place_target_motion_006",
+          "args": {
+            "phase_0": "basket_center_for_placement"
+          }
+        },
+        {
+          "call": "U66_ConveyorTeacher_place_target_motion_007"
+        },
+        {
+          "call": "U66_ConveyorTeacher_place_target_motion_008"
+        },
+        {
+          "call": "U66_ConveyorTeacher_place_target_motion_009"
+        },
+        {
+          "call": "U66_ConveyorTeacher_place_target_motion_010"
+        },
+        {
+          "call": "U66_ConveyorTeacher_place_target_not_self_placement_reachable_arm_current_self_ac_011",
+          "store": "condition_11"
+        },
+        {
+          "if": {
+            "var": "condition_11"
+          },
+          "then": [
+            {
+              "call": "U66_ConveyorTeacher_place_target_not_self_placement_reachable_arm_current_self_ac_012"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U66_ConveyorTeacher_place_target_motion_013"
+        },
+        {
+          "call": "U66_ConveyorTeacher_place_target_motion_014"
+        },
+        {
+          "call": "U66_ConveyorTeacher_place_target_motion_015"
+        },
+        {
+          "call": "U66_ConveyorTeacher_place_target_motion_016"
+        },
+        {
+          "call": "U66_ConveyorTeacher_place_target_needed_0_017",
+          "store": "condition_17"
+        },
+        {
+          "if": {
+            "var": "condition_17"
+          },
+          "then": [
+            {
+              "call": "U66_ConveyorTeacher_place_target_needed_0_018"
+            },
+            {
+              "call": "U66_ConveyorTeacher_place_target_needed_0_019",
+              "args": {
+                "phase_0": "basket_raise_for_placement"
+              }
+            },
+            {
+              "call": "U66_ConveyorTeacher_place_target_needed_0_020"
+            },
+            {
+              "call": "U66_ConveyorTeacher_place_target_needed_0_021"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U66_ConveyorTeacher_place_target_motion_022"
+        },
+        {
+          "call": "U66_ConveyorTeacher_place_target_motion_023"
+        },
+        {
+          "call": "U66_ConveyorTeacher_place_target_motion_024",
+          "args": {
+            "phase_0": "target_side_approach"
+          }
+        },
+        {
+          "call": "U66_ConveyorTeacher_place_target_motion_025"
+        },
+        {
+          "call": "U66_ConveyorTeacher_place_target_motion_026"
+        },
+        {
+          "call": "U66_ConveyorTeacher_place_target_motion_027",
+          "args": {
+            "phase_0": "target_transfer"
+          }
+        },
+        {
+          "call": "U66_ConveyorTeacher_place_target_motion_028",
+          "args": {
+            "phase_0": "target_lower_into_basket"
+          }
+        },
+        {
+          "call": "U66_ConveyorTeacher_place_target_motion_029"
+        },
+        {
+          "call": "U66_ConveyorTeacher_place_target_motion_030"
+        },
+        {
+          "call": "U66_ConveyorTeacher_place_target_motion_031"
+        },
+        {
+          "call": "U66_ConveyorTeacher_place_target_motion_032"
+        },
+        {
+          "call": "U66_ConveyorTeacher_place_target_motion_033",
+          "args": {
+            "phase_0": "target_settle_in_held_basket"
+          }
+        },
+        {
+          "call": "U66_ConveyorTeacher_place_target_motion_034"
+        }
+      ]
+    },
+    "U66_ConveyorTeacher_run": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 700,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U66_ConveyorTeacher_run_motion_001": "skills.motion.implementation:U66_ConveyorTeacher_run_motion_001",
+        "U66_ConveyorTeacher_run_motion_002": "skills.motion.implementation:U66_ConveyorTeacher_run_motion_002",
+        "U66_ConveyorTeacher_run_motion_003": "skills.motion.implementation:U66_ConveyorTeacher_run_motion_003",
+        "U66_ConveyorTeacher_run_motion_004": "skills.motion.implementation:U66_ConveyorTeacher_run_motion_004",
+        "U66_ConveyorTeacher_run_motion_005": "skills.motion.implementation:U66_ConveyorTeacher_run_motion_005",
+        "U66_ConveyorTeacher_run_motion_006": "skills.motion.implementation:U66_ConveyorTeacher_run_motion_006",
+        "U66_ConveyorTeacher_run_motion_007": "skills.motion.implementation:U66_ConveyorTeacher_run_motion_007"
+      },
+      "errors": {},
+      "steps": [
+        {
+          "call": "U66_ConveyorTeacher_run_motion_001",
+          "args": {
+            "phase_0": "observe_conveyor_motion"
+          }
+        },
+        {
+          "call": "U66_ConveyorTeacher_run_motion_002"
+        },
+        {
+          "call": "U66_ConveyorTeacher_run_motion_003"
+        },
+        {
+          "call": "U66_ConveyorTeacher_run_motion_004"
+        },
+        {
+          "call": "U66_ConveyorTeacher_run_motion_005"
+        },
+        {
+          "call": "U66_ConveyorTeacher_run_motion_006"
+        },
+        {
+          "call": "U66_ConveyorTeacher_run_motion_007",
+          "store": "result_7"
+        },
+        {
+          "return": {
+            "var": "result_7"
+          }
+        }
+      ]
+    },
+    "U67_VisionImageConveyorTeacher_pick_target": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 700,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U67_VisionImageConveyorTeacher_pick_target_motion_001": "skills.motion.implementation:U67_VisionImageConveyorTeacher_pick_target_motion_001",
+        "U67_VisionImageConveyorTeacher_pick_target_self_step_400_002": "skills.motion.implementation:U67_VisionImageConveyorTeacher_pick_target_self_step_400_002",
+        "U67_VisionImageConveyorTeacher_pick_target_self_target_seen_and_self_gt_pose_target_0_0_65__003": "skills.motion.implementation:U67_VisionImageConveyorTeacher_pick_target_self_target_seen_and_self_gt_pose_target_0_0_65__003",
+        "U67_VisionImageConveyorTeacher_pick_target_motion_004": "skills.motion.implementation:U67_VisionImageConveyorTeacher_pick_target_motion_004",
+        "U67_VisionImageConveyorTeacher_pick_target_motion_005": "skills.motion.implementation:U67_VisionImageConveyorTeacher_pick_target_motion_005",
+        "U67_VisionImageConveyorTeacher_pick_target_not_self_target_seen_006": "skills.motion.implementation:U67_VisionImageConveyorTeacher_pick_target_not_self_target_seen_006",
+        "U67_VisionImageConveyorTeacher_pick_target_not_self_target_seen_007": "skills.motion.implementation:U67_VisionImageConveyorTeacher_pick_target_not_self_target_seen_007",
+        "U67_VisionImageConveyorTeacher_pick_target_motion_008": "skills.motion.implementation:U67_VisionImageConveyorTeacher_pick_target_motion_008",
+        "U67_VisionImageConveyorTeacher_pick_target_motion_009": "skills.motion.implementation:U67_VisionImageConveyorTeacher_pick_target_motion_009",
+        "U67_VisionImageConveyorTeacher_pick_target_motion_010": "skills.motion.implementation:U67_VisionImageConveyorTeacher_pick_target_motion_010",
+        "U67_VisionImageConveyorTeacher_pick_target_self_tracks_target_samples_011": "skills.motion.implementation:U67_VisionImageConveyorTeacher_pick_target_self_tracks_target_samples_011",
+        "U67_VisionImageConveyorTeacher_pick_target_motion_012": "skills.motion.implementation:U67_VisionImageConveyorTeacher_pick_target_motion_012",
+        "U67_VisionImageConveyorTeacher_pick_target_motion_013": "skills.motion.implementation:U67_VisionImageConveyorTeacher_pick_target_motion_013",
+        "U67_VisionImageConveyorTeacher_pick_target_motion_014": "skills.motion.implementation:U67_VisionImageConveyorTeacher_pick_target_motion_014",
+        "U67_VisionImageConveyorTeacher_pick_target_motion_015": "skills.motion.implementation:U67_VisionImageConveyorTeacher_pick_target_motion_015",
+        "U67_VisionImageConveyorTeacher_pick_target_motion_016": "skills.motion.implementation:U67_VisionImageConveyorTeacher_pick_target_motion_016",
+        "U67_VisionImageConveyorTeacher_pick_target_motion_017": "skills.motion.implementation:U67_VisionImageConveyorTeacher_pick_target_motion_017",
+        "U67_VisionImageConveyorTeacher_pick_target_motion_018": "skills.motion.implementation:U67_VisionImageConveyorTeacher_pick_target_motion_018",
+        "U67_VisionImageConveyorTeacher_pick_target_motion_019": "skills.motion.implementation:U67_VisionImageConveyorTeacher_pick_target_motion_019",
+        "U67_VisionImageConveyorTeacher_pick_target_self_perception_match_target_self_head_self_targ_020": "skills.motion.implementation:U67_VisionImageConveyorTeacher_pick_target_self_perception_match_target_self_head_self_targ_020",
+        "U67_VisionImageConveyorTeacher_pick_target_motion_021": "skills.motion.implementation:U67_VisionImageConveyorTeacher_pick_target_motion_021",
+        "U67_VisionImageConveyorTeacher_pick_target_motion_022": "skills.motion.implementation:U67_VisionImageConveyorTeacher_pick_target_motion_022",
+        "U67_VisionImageConveyorTeacher_pick_target_np_linalg_norm_candidate_pose_2_belt_pose_2_0_06_023": "skills.motion.implementation:U67_VisionImageConveyorTeacher_pick_target_np_linalg_norm_candidate_pose_2_belt_pose_2_0_06_023",
+        "U67_VisionImageConveyorTeacher_pick_target_np_linalg_norm_candidate_pose_2_belt_pose_2_0_06_024": "skills.motion.implementation:U67_VisionImageConveyorTeacher_pick_target_np_linalg_norm_candidate_pose_2_belt_pose_2_0_06_024",
+        "U67_VisionImageConveyorTeacher_pick_target_np_linalg_norm_candidate_pose_2_belt_pose_2_0_06_025": "skills.motion.implementation:U67_VisionImageConveyorTeacher_pick_target_np_linalg_norm_candidate_pose_2_belt_pose_2_0_06_025",
+        "U67_VisionImageConveyorTeacher_pick_target_motion_026": "skills.motion.implementation:U67_VisionImageConveyorTeacher_pick_target_motion_026"
+      },
+      "errors": {},
+      "steps": [
+        {
+          "call": "U67_VisionImageConveyorTeacher_pick_target_motion_001"
+        },
+        {
+          "while": "U67_VisionImageConveyorTeacher_pick_target_self_step_400_002",
+          "args": {},
+          "max_iterations": 4096,
+          "do": [
+            {
+              "call": "U67_VisionImageConveyorTeacher_pick_target_self_target_seen_and_self_gt_pose_target_0_0_65__003",
+              "store": "condition_3"
+            },
+            {
+              "if": {
+                "var": "condition_3"
+              },
+              "then": [
+                {
+                  "break": true
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U67_VisionImageConveyorTeacher_pick_target_motion_004"
+            },
+            {
+              "call": "U67_VisionImageConveyorTeacher_pick_target_motion_005",
+              "args": {
+                "phase_0": "wait_for_visual_target"
+              }
+            }
+          ]
+        },
+        {
+          "call": "U67_VisionImageConveyorTeacher_pick_target_not_self_target_seen_006",
+          "store": "condition_6"
+        },
+        {
+          "if": {
+            "var": "condition_6"
+          },
+          "then": [
+            {
+              "call": "U67_VisionImageConveyorTeacher_pick_target_not_self_target_seen_007"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U67_VisionImageConveyorTeacher_pick_target_motion_008"
+        },
+        {
+          "call": "U67_VisionImageConveyorTeacher_pick_target_motion_009"
+        },
+        {
+          "call": "U67_VisionImageConveyorTeacher_pick_target_motion_010"
+        },
+        {
+          "call": "U67_VisionImageConveyorTeacher_pick_target_self_tracks_target_samples_011",
+          "store": "items_11"
+        },
+        {
+          "for_each": {
+            "var": "items_11"
+          },
+          "as": "loop_item_12",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U67_VisionImageConveyorTeacher_pick_target_motion_012",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_12"
+                }
+              }
+            },
+            {
+              "call": "U67_VisionImageConveyorTeacher_pick_target_motion_013"
+            }
+          ]
+        },
+        {
+          "call": "U67_VisionImageConveyorTeacher_pick_target_motion_014",
+          "args": {
+            "phase_0": "freeze_target_orientation_keep_rgb_translation"
+          }
+        },
+        {
+          "call": "U67_VisionImageConveyorTeacher_pick_target_motion_015"
+        },
+        {
+          "call": "U67_VisionImageConveyorTeacher_pick_target_motion_016"
+        },
+        {
+          "call": "U67_VisionImageConveyorTeacher_pick_target_motion_017"
+        },
+        {
+          "call": "U67_VisionImageConveyorTeacher_pick_target_motion_018"
+        },
+        {
+          "call": "U67_VisionImageConveyorTeacher_pick_target_motion_019"
+        },
+        {
+          "call": "U67_VisionImageConveyorTeacher_pick_target_self_perception_match_target_self_head_self_targ_020",
+          "store": "items_20"
+        },
+        {
+          "for_each": {
+            "var": "items_20"
+          },
+          "as": "loop_item_21",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U67_VisionImageConveyorTeacher_pick_target_motion_021",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_21"
+                }
+              }
+            },
+            {
+              "call": "U67_VisionImageConveyorTeacher_pick_target_motion_022"
+            },
+            {
+              "call": "U67_VisionImageConveyorTeacher_pick_target_np_linalg_norm_candidate_pose_2_belt_pose_2_0_06_023",
+              "store": "condition_23"
+            },
+            {
+              "if": {
+                "var": "condition_23"
+              },
+              "then": [
+                {
+                  "call": "U67_VisionImageConveyorTeacher_pick_target_np_linalg_norm_candidate_pose_2_belt_pose_2_0_06_024",
+                  "args": {
+                    "phase_0": "target_hold_rgb_contradiction"
+                  }
+                },
+                {
+                  "call": "U67_VisionImageConveyorTeacher_pick_target_np_linalg_norm_candidate_pose_2_belt_pose_2_0_06_025"
+                }
+              ],
+              "else": []
+            }
+          ]
+        },
+        {
+          "call": "U67_VisionImageConveyorTeacher_pick_target_motion_026"
+        }
+      ]
+    },
+    "U67_VisionImageConveyorTeacher_recover_loaded_basket": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 700,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U67_VisionImageConveyorTeacher_recover_loaded_basket_motion_001": "skills.motion.implementation:U67_VisionImageConveyorTeacher_recover_loaded_basket_motion_001",
+        "U67_VisionImageConveyorTeacher_recover_loaded_basket_motion_002": "skills.motion.implementation:U67_VisionImageConveyorTeacher_recover_loaded_basket_motion_002",
+        "U67_VisionImageConveyorTeacher_recover_loaded_basket_motion_003": "skills.motion.implementation:U67_VisionImageConveyorTeacher_recover_loaded_basket_motion_003",
+        "U67_VisionImageConveyorTeacher_recover_loaded_basket_motion_004": "skills.motion.implementation:U67_VisionImageConveyorTeacher_recover_loaded_basket_motion_004",
+        "U67_VisionImageConveyorTeacher_recover_loaded_basket_motion_005": "skills.motion.implementation:U67_VisionImageConveyorTeacher_recover_loaded_basket_motion_005",
+        "U67_VisionImageConveyorTeacher_recover_loaded_basket_motion_006": "skills.motion.implementation:U67_VisionImageConveyorTeacher_recover_loaded_basket_motion_006",
+        "U67_VisionImageConveyorTeacher_recover_loaded_basket_motion_007": "skills.motion.implementation:U67_VisionImageConveyorTeacher_recover_loaded_basket_motion_007"
+      },
+      "errors": {},
+      "steps": [
+        {
+          "call": "U67_VisionImageConveyorTeacher_recover_loaded_basket_motion_001"
+        },
+        {
+          "call": "U67_VisionImageConveyorTeacher_recover_loaded_basket_motion_002"
+        },
+        {
+          "for_each": [
+            [
+              0.06,
+              "basket_final_lift"
+            ],
+            [
+              0.08,
+              "basket_final_lift_margin"
+            ]
+          ],
+          "as": "loop_item_3",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U67_VisionImageConveyorTeacher_recover_loaded_basket_motion_003",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_3"
+                }
+              }
+            },
+            {
+              "call": "U67_VisionImageConveyorTeacher_recover_loaded_basket_motion_004"
+            },
+            {
+              "call": "U67_VisionImageConveyorTeacher_recover_loaded_basket_motion_005"
+            },
+            {
+              "call": "U67_VisionImageConveyorTeacher_recover_loaded_basket_motion_006"
+            },
+            {
+              "call": "U67_VisionImageConveyorTeacher_recover_loaded_basket_motion_007",
+              "args": {
+                "phase_0": "loaded_basket_rgb_settle"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "U15_CenterWallTeacher_pick_basket": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 700,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U15_CenterWallTeacher_pick_basket_motion_001": "skills.motion.implementation:U15_CenterWallTeacher_pick_basket_motion_001",
+        "U15_CenterWallTeacher_pick_basket_self_gt_pose_basket_0_0_15_002": "skills.motion.implementation:U15_CenterWallTeacher_pick_basket_self_gt_pose_basket_0_0_15_002",
+        "U15_CenterWallTeacher_pick_basket_self_step_150_003": "skills.motion.implementation:U15_CenterWallTeacher_pick_basket_self_step_150_003",
+        "U15_CenterWallTeacher_pick_basket_self_step_150_004": "skills.motion.implementation:U15_CenterWallTeacher_pick_basket_self_step_150_004",
+        "U15_CenterWallTeacher_pick_basket_motion_005": "skills.motion.implementation:U15_CenterWallTeacher_pick_basket_motion_005",
+        "U15_CenterWallTeacher_pick_basket_motion_006": "skills.motion.implementation:U15_CenterWallTeacher_pick_basket_motion_006",
+        "U15_CenterWallTeacher_pick_basket_motion_007": "skills.motion.implementation:U15_CenterWallTeacher_pick_basket_motion_007",
+        "U15_CenterWallTeacher_pick_basket_options_008": "skills.motion.implementation:U15_CenterWallTeacher_pick_basket_options_008",
+        "U15_CenterWallTeacher_pick_basket_motion_009": "skills.motion.implementation:U15_CenterWallTeacher_pick_basket_motion_009",
+        "U15_CenterWallTeacher_pick_basket_motion_010": "skills.motion.implementation:U15_CenterWallTeacher_pick_basket_motion_010",
+        "U15_CenterWallTeacher_pick_basket_motion_011": "skills.motion.implementation:U15_CenterWallTeacher_pick_basket_motion_011",
+        "U15_CenterWallTeacher_pick_basket_reference_is_none_012": "skills.motion.implementation:U15_CenterWallTeacher_pick_basket_reference_is_none_012",
+        "U15_CenterWallTeacher_pick_basket_motion_013": "skills.motion.implementation:U15_CenterWallTeacher_pick_basket_motion_013",
+        "U15_CenterWallTeacher_pick_basket_motion_014": "skills.motion.implementation:U15_CenterWallTeacher_pick_basket_motion_014",
+        "U15_CenterWallTeacher_pick_basket_motion_015": "skills.motion.implementation:U15_CenterWallTeacher_pick_basket_motion_015",
+        "U15_CenterWallTeacher_pick_basket_motion_016": "skills.motion.implementation:U15_CenterWallTeacher_pick_basket_motion_016",
+        "U15_CenterWallTeacher_pick_basket_motion_017": "skills.motion.implementation:U15_CenterWallTeacher_pick_basket_motion_017",
+        "U15_CenterWallTeacher_pick_basket_self_step_before_018": "skills.motion.implementation:U15_CenterWallTeacher_pick_basket_self_step_before_018",
+        "U15_CenterWallTeacher_pick_basket_self_step_before_019": "skills.motion.implementation:U15_CenterWallTeacher_pick_basket_self_step_before_019",
+        "U15_CenterWallTeacher_pick_basket_motion_020": "skills.motion.implementation:U15_CenterWallTeacher_pick_basket_motion_020",
+        "U15_CenterWallTeacher_pick_basket_motion_021": "skills.motion.implementation:U15_CenterWallTeacher_pick_basket_motion_021",
+        "U15_CenterWallTeacher_pick_basket_motion_022": "skills.motion.implementation:U15_CenterWallTeacher_pick_basket_motion_022",
+        "U15_CenterWallTeacher_pick_basket_motion_023": "skills.motion.implementation:U15_CenterWallTeacher_pick_basket_motion_023",
+        "U15_CenterWallTeacher_pick_basket_motion_024": "skills.motion.implementation:U15_CenterWallTeacher_pick_basket_motion_024"
+      },
+      "errors": {
+        "EpisodeTerminated": "skills.state.implementation:EpisodeTerminated",
+        "RuntimeError": "skills.state.implementation:RuntimeError"
+      },
+      "steps": [
+        {
+          "call": "U15_CenterWallTeacher_pick_basket_motion_001"
+        },
+        {
+          "while": "U15_CenterWallTeacher_pick_basket_self_gt_pose_basket_0_0_15_002",
+          "args": {},
+          "max_iterations": 4096,
+          "do": [
+            {
+              "call": "U15_CenterWallTeacher_pick_basket_self_step_150_003",
+              "store": "condition_3"
+            },
+            {
+              "if": {
+                "var": "condition_3"
+              },
+              "then": [
+                {
+                  "call": "U15_CenterWallTeacher_pick_basket_self_step_150_004"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U15_CenterWallTeacher_pick_basket_motion_005",
+              "args": {
+                "phase_0": "wait_for_basket_window"
+              }
+            }
+          ]
+        },
+        {
+          "call": "U15_CenterWallTeacher_pick_basket_motion_006"
+        },
+        {
+          "call": "U15_CenterWallTeacher_pick_basket_motion_007"
+        },
+        {
+          "call": "U15_CenterWallTeacher_pick_basket_options_008",
+          "store": "items_8"
+        },
+        {
+          "for_each": {
+            "var": "items_8"
+          },
+          "as": "loop_item_9",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U15_CenterWallTeacher_pick_basket_motion_009",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_9"
+                }
+              }
+            },
+            {
+              "call": "U15_CenterWallTeacher_pick_basket_motion_010"
+            },
+            {
+              "call": "U15_CenterWallTeacher_pick_basket_motion_011"
+            },
+            {
+              "call": "U15_CenterWallTeacher_pick_basket_reference_is_none_012",
+              "store": "condition_12"
+            },
+            {
+              "if": {
+                "var": "condition_12"
+              },
+              "then": [
+                {
+                  "continue": true
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U15_CenterWallTeacher_pick_basket_motion_013"
+            },
+            {
+              "call": "U15_CenterWallTeacher_pick_basket_motion_014"
+            },
+            {
+              "call": "U15_CenterWallTeacher_pick_basket_motion_015",
+              "args": {
+                "phase_0": "try_center_wall_grasp"
+              }
+            },
+            {
+              "try": [
+                {
+                  "call": "U15_CenterWallTeacher_pick_basket_motion_021",
+                  "args": {
+                    "phase_0": "basket_approach"
+                  }
+                }
+              ],
+              "catch": [
+                {
+                  "errors": [
+                    "EpisodeTerminated"
+                  ],
+                  "as": "caught_error",
+                  "do": [
+                    {
+                      "call": "U15_CenterWallTeacher_pick_basket_motion_016"
+                    }
+                  ]
+                },
+                {
+                  "errors": [
+                    "RuntimeError"
+                  ],
+                  "as": "caught_error",
+                  "do": [
+                    {
+                      "call": "U15_CenterWallTeacher_pick_basket_motion_017",
+                      "args": {
+                        "__workflow_error": {
+                          "var": "caught_error"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U15_CenterWallTeacher_pick_basket_self_step_before_018",
+                      "store": "condition_18"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_18"
+                      },
+                      "then": [
+                        {
+                          "call": "U15_CenterWallTeacher_pick_basket_self_step_before_019"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U15_CenterWallTeacher_pick_basket_motion_020",
+                      "args": {
+                        "phase_0": "reject_center_wall_grasp"
+                      }
+                    },
+                    {
+                      "continue": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "call": "U15_CenterWallTeacher_pick_basket_motion_022"
+            },
+            {
+              "call": "U15_CenterWallTeacher_pick_basket_motion_023",
+              "store": "result_23"
+            },
+            {
+              "return": {
+                "var": "result_23"
+              }
+            }
+          ]
+        },
+        {
+          "call": "U15_CenterWallTeacher_pick_basket_motion_024"
+        }
+      ]
+    },
+    "U42_RegraspTeacher_pick_target": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 700,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U42_RegraspTeacher_pick_target_motion_001": "skills.motion.implementation:U42_RegraspTeacher_pick_target_motion_001",
+        "U42_RegraspTeacher_pick_target_range_3_002": "skills.motion.implementation:U42_RegraspTeacher_pick_target_range_3_002",
+        "U42_RegraspTeacher_pick_target_motion_003": "skills.motion.implementation:U42_RegraspTeacher_pick_target_motion_003",
+        "U42_RegraspTeacher_pick_target_motion_004": "skills.motion.implementation:U42_RegraspTeacher_pick_target_motion_004",
+        "U42_RegraspTeacher_pick_target_motion_005": "skills.motion.implementation:U42_RegraspTeacher_pick_target_motion_005",
+        "U42_RegraspTeacher_pick_target_motion_006": "skills.motion.implementation:U42_RegraspTeacher_pick_target_motion_006",
+        "U42_RegraspTeacher_pick_target_not_retryable_or_attempt_2_007": "skills.motion.implementation:U42_RegraspTeacher_pick_target_not_retryable_or_attempt_2_007",
+        "U42_RegraspTeacher_pick_target_not_retryable_or_attempt_2_008": "skills.motion.implementation:U42_RegraspTeacher_pick_target_not_retryable_or_attempt_2_008",
+        "U42_RegraspTeacher_pick_target_motion_009": "skills.motion.implementation:U42_RegraspTeacher_pick_target_motion_009",
+        "U42_RegraspTeacher_pick_target_motion_010": "skills.motion.implementation:U42_RegraspTeacher_pick_target_motion_010",
+        "U42_RegraspTeacher_pick_target_motion_011": "skills.motion.implementation:U42_RegraspTeacher_pick_target_motion_011"
+      },
+      "errors": {
+        "EpisodeTerminated": "skills.state.implementation:EpisodeTerminated",
+        "RuntimeError": "skills.state.implementation:RuntimeError"
+      },
+      "steps": [
+        {
+          "call": "U42_RegraspTeacher_pick_target_motion_001"
+        },
+        {
+          "call": "U42_RegraspTeacher_pick_target_range_3_002",
+          "store": "items_2"
+        },
+        {
+          "for_each": {
+            "var": "items_2"
+          },
+          "as": "loop_item_3",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U42_RegraspTeacher_pick_target_motion_003",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_3"
+                }
+              }
+            },
+            {
+              "try": [
+                {
+                  "call": "U42_RegraspTeacher_pick_target_motion_011",
+                  "store": "result_11"
+                },
+                {
+                  "return": {
+                    "var": "result_11"
+                  }
+                }
+              ],
+              "catch": [
+                {
+                  "errors": [
+                    "EpisodeTerminated"
+                  ],
+                  "as": "caught_error",
+                  "do": [
+                    {
+                      "call": "U42_RegraspTeacher_pick_target_motion_004"
+                    }
+                  ]
+                },
+                {
+                  "errors": [
+                    "RuntimeError"
+                  ],
+                  "as": "caught_error",
+                  "do": [
+                    {
+                      "call": "U42_RegraspTeacher_pick_target_motion_005",
+                      "args": {
+                        "__workflow_error": {
+                          "var": "caught_error"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U42_RegraspTeacher_pick_target_motion_006"
+                    },
+                    {
+                      "call": "U42_RegraspTeacher_pick_target_not_retryable_or_attempt_2_007",
+                      "store": "condition_7"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_7"
+                      },
+                      "then": [
+                        {
+                          "call": "U42_RegraspTeacher_pick_target_not_retryable_or_attempt_2_008"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U42_RegraspTeacher_pick_target_motion_009",
+                      "args": {
+                        "phase_0": "retry_target_grasp"
+                      }
+                    },
+                    {
+                      "call": "U42_RegraspTeacher_pick_target_motion_010"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "U36_PayloadHoldTeacher_place_target": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 700,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U36_PayloadHoldTeacher_place_target_motion_001": "skills.motion.implementation:U36_PayloadHoldTeacher_place_target_motion_001",
+        "U36_PayloadHoldTeacher_place_target_self_target_asset_category_toy_002": "skills.motion.implementation:U36_PayloadHoldTeacher_place_target_self_target_asset_category_toy_002",
+        "U36_PayloadHoldTeacher_place_target_self_target_asset_category_toy_003": "skills.motion.implementation:U36_PayloadHoldTeacher_place_target_self_target_asset_category_toy_003",
+        "U36_PayloadHoldTeacher_place_target_self_target_asset_category_toy_004": "skills.motion.implementation:U36_PayloadHoldTeacher_place_target_self_target_asset_category_toy_004",
+        "U36_PayloadHoldTeacher_place_target_self_target_asset_category_toy_005": "skills.motion.implementation:U36_PayloadHoldTeacher_place_target_self_target_asset_category_toy_005",
+        "U36_PayloadHoldTeacher_place_target_self_target_asset_category_toy_006": "skills.motion.implementation:U36_PayloadHoldTeacher_place_target_self_target_asset_category_toy_006",
+        "U36_PayloadHoldTeacher_place_target_motion_007": "skills.motion.implementation:U36_PayloadHoldTeacher_place_target_motion_007"
+      },
+      "errors": {},
+      "steps": [
+        {
+          "call": "U36_PayloadHoldTeacher_place_target_motion_001"
+        },
+        {
+          "call": "U36_PayloadHoldTeacher_place_target_self_target_asset_category_toy_002",
+          "store": "condition_2"
+        },
+        {
+          "if": {
+            "var": "condition_2"
+          },
+          "then": [
+            {
+              "call": "U36_PayloadHoldTeacher_place_target_self_target_asset_category_toy_003"
+            },
+            {
+              "call": "U36_PayloadHoldTeacher_place_target_self_target_asset_category_toy_004",
+              "args": {
+                "phase_0": "toy_hold_before_transport"
+              }
+            },
+            {
+              "call": "U36_PayloadHoldTeacher_place_target_self_target_asset_category_toy_005"
+            },
+            {
+              "call": "U36_PayloadHoldTeacher_place_target_self_target_asset_category_toy_006",
+              "args": {
+                "phase_0": "toy_hold_probe_complete"
+              }
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U36_PayloadHoldTeacher_place_target_motion_007",
+          "store": "result_7"
+        },
+        {
+          "return": {
+            "var": "result_7"
+          }
+        }
+      ]
+    },
+    "U50_SlipFinishTeacher_place_target": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 700,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U50_SlipFinishTeacher_place_target_motion_001": "skills.motion.implementation:U50_SlipFinishTeacher_place_target_motion_001",
+        "U50_SlipFinishTeacher_place_target_motion_002": "skills.motion.implementation:U50_SlipFinishTeacher_place_target_motion_002",
+        "U50_SlipFinishTeacher_place_target_motion_003": "skills.motion.implementation:U50_SlipFinishTeacher_place_target_motion_003",
+        "U50_SlipFinishTeacher_place_target_motion_004": "skills.motion.implementation:U50_SlipFinishTeacher_place_target_motion_004",
+        "U50_SlipFinishTeacher_place_target_len_trace_2_005": "skills.motion.implementation:U50_SlipFinishTeacher_place_target_len_trace_2_005",
+        "U50_SlipFinishTeacher_place_target_len_trace_2_006": "skills.motion.implementation:U50_SlipFinishTeacher_place_target_len_trace_2_006",
+        "U50_SlipFinishTeacher_place_target_motion_007": "skills.motion.implementation:U50_SlipFinishTeacher_place_target_motion_007",
+        "U50_SlipFinishTeacher_place_target_motion_008": "skills.motion.implementation:U50_SlipFinishTeacher_place_target_motion_008",
+        "U50_SlipFinishTeacher_place_target_motion_009": "skills.motion.implementation:U50_SlipFinishTeacher_place_target_motion_009",
+        "U50_SlipFinishTeacher_place_target_motion_010": "skills.motion.implementation:U50_SlipFinishTeacher_place_target_motion_010",
+        "U50_SlipFinishTeacher_place_target_motion_011": "skills.motion.implementation:U50_SlipFinishTeacher_place_target_motion_011",
+        "U50_SlipFinishTeacher_place_target_motion_012": "skills.motion.implementation:U50_SlipFinishTeacher_place_target_motion_012"
+      },
+      "errors": {
+        "U50_SettledSlip": "skills.state.implementation:U50_SettledSlip"
+      },
+      "steps": [
+        {
+          "call": "U50_SlipFinishTeacher_place_target_motion_001"
+        },
+        {
+          "try": [
+            {
+              "call": "U50_SlipFinishTeacher_place_target_motion_012",
+              "store": "result_12"
+            },
+            {
+              "return": {
+                "var": "result_12"
+              }
+            }
+          ],
+          "catch": [
+            {
+              "errors": [
+                "U50_SettledSlip"
+              ],
+              "as": "caught_error",
+              "do": [
+                {
+                  "call": "U50_SlipFinishTeacher_place_target_motion_002"
+                },
+                {
+                  "call": "U50_SlipFinishTeacher_place_target_motion_003"
+                },
+                {
+                  "call": "U50_SlipFinishTeacher_place_target_motion_004"
+                },
+                {
+                  "call": "U50_SlipFinishTeacher_place_target_len_trace_2_005",
+                  "store": "condition_5"
+                },
+                {
+                  "if": {
+                    "var": "condition_5"
+                  },
+                  "then": [
+                    {
+                      "call": "U50_SlipFinishTeacher_place_target_len_trace_2_006"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U50_SlipFinishTeacher_place_target_motion_007",
+                  "args": {
+                    "phase_0": "slip_finish_release"
+                  }
+                },
+                {
+                  "call": "U50_SlipFinishTeacher_place_target_motion_008"
+                },
+                {
+                  "call": "U50_SlipFinishTeacher_place_target_motion_009"
+                },
+                {
+                  "call": "U50_SlipFinishTeacher_place_target_motion_010",
+                  "args": {
+                    "phase_0": "slip_finish_settle"
+                  }
+                },
+                {
+                  "call": "U50_SlipFinishTeacher_place_target_motion_011",
+                  "store": "result_11"
+                },
+                {
+                  "return": {
+                    "var": "result_11"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "U17_CloserBasketTeacher_place_target": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 700,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U17_CloserBasketTeacher_place_target_motion_001": "skills.motion.implementation:U17_CloserBasketTeacher_place_target_motion_001",
+        "U17_CloserBasketTeacher_place_target_self_closer_basket_enabled_002": "skills.pickup.implementation:U17_CloserBasketTeacher_place_target_self_closer_basket_enabled_002",
+        "U17_CloserBasketTeacher_place_target_self_closer_basket_enabled_003": "skills.pickup.implementation:U17_CloserBasketTeacher_place_target_self_closer_basket_enabled_003",
+        "U17_CloserBasketTeacher_place_target_self_closer_basket_enabled_004": "skills.pickup.implementation:U17_CloserBasketTeacher_place_target_self_closer_basket_enabled_004",
+        "U17_CloserBasketTeacher_place_target_needs_clearance_005": "skills.pickup.implementation:U17_CloserBasketTeacher_place_target_needs_clearance_005",
+        "U17_CloserBasketTeacher_place_target_needs_clearance_006": "skills.pickup.implementation:U17_CloserBasketTeacher_place_target_needs_clearance_006",
+        "U17_CloserBasketTeacher_place_target_needs_clearance_007": "skills.pickup.implementation:U17_CloserBasketTeacher_place_target_needs_clearance_007",
+        "U17_CloserBasketTeacher_place_target_needs_clearance_008": "skills.pickup.implementation:U17_CloserBasketTeacher_place_target_needs_clearance_008",
+        "U17_CloserBasketTeacher_place_target_motion_009": "skills.motion.implementation:U17_CloserBasketTeacher_place_target_motion_009"
+      },
+      "errors": {},
+      "steps": [
+        {
+          "call": "U17_CloserBasketTeacher_place_target_motion_001"
+        },
+        {
+          "call": "U17_CloserBasketTeacher_place_target_self_closer_basket_enabled_002",
+          "store": "condition_2"
+        },
+        {
+          "if": {
+            "var": "condition_2"
+          },
+          "then": [
+            {
+              "call": "U17_CloserBasketTeacher_place_target_self_closer_basket_enabled_003"
+            },
+            {
+              "call": "U17_CloserBasketTeacher_place_target_self_closer_basket_enabled_004"
+            },
+            {
+              "call": "U17_CloserBasketTeacher_place_target_needs_clearance_005",
+              "store": "condition_5"
+            },
+            {
+              "if": {
+                "var": "condition_5"
+              },
+              "then": [
+                {
+                  "call": "U17_CloserBasketTeacher_place_target_needs_clearance_006"
+                },
+                {
+                  "call": "U17_CloserBasketTeacher_place_target_needs_clearance_007",
+                  "args": {
+                    "phase_0": "target_clear_shifted_basket_path"
+                  }
+                },
+                {
+                  "call": "U17_CloserBasketTeacher_place_target_needs_clearance_008"
+                }
+              ],
+              "else": []
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U17_CloserBasketTeacher_place_target_motion_009",
+          "store": "result_9"
+        },
+        {
+          "return": {
+            "var": "result_9"
+          }
+        }
+      ]
+    },
+    "U49_SeparatedBasketTeacher_pick_target": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 700,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U49_SeparatedBasketTeacher_pick_target_motion_001": "skills.motion.implementation:U49_SeparatedBasketTeacher_pick_target_motion_001",
+        "U49_SeparatedBasketTeacher_pick_target_enabled_and_basket_in_self_attachments_and_not_g_002": "skills.motion.implementation:U49_SeparatedBasketTeacher_pick_target_enabled_and_basket_in_self_attachments_and_not_g_002",
+        "U49_SeparatedBasketTeacher_pick_target_enabled_and_basket_in_self_attachments_and_not_g_003": "skills.motion.implementation:U49_SeparatedBasketTeacher_pick_target_enabled_and_basket_in_self_attachments_and_not_g_003",
+        "U49_SeparatedBasketTeacher_pick_target_sign_original_0_0_32_004": "skills.motion.implementation:U49_SeparatedBasketTeacher_pick_target_sign_original_0_0_32_004",
+        "U49_SeparatedBasketTeacher_pick_target_sign_original_0_0_32_005": "skills.motion.implementation:U49_SeparatedBasketTeacher_pick_target_sign_original_0_0_32_005",
+        "U49_SeparatedBasketTeacher_pick_target_sign_original_0_0_32_006": "skills.motion.implementation:U49_SeparatedBasketTeacher_pick_target_sign_original_0_0_32_006",
+        "U49_SeparatedBasketTeacher_pick_target_sign_original_0_0_32_007": "skills.motion.implementation:U49_SeparatedBasketTeacher_pick_target_sign_original_0_0_32_007",
+        "U49_SeparatedBasketTeacher_pick_target_self_canonical_ik_self_basket_arm_tool_is_none_008": "skills.motion.implementation:U49_SeparatedBasketTeacher_pick_target_self_canonical_ik_self_basket_arm_tool_is_none_008",
+        "U49_SeparatedBasketTeacher_pick_target_self_canonical_ik_self_basket_arm_tool_is_none_009": "skills.motion.implementation:U49_SeparatedBasketTeacher_pick_target_self_canonical_ik_self_basket_arm_tool_is_none_009",
+        "U49_SeparatedBasketTeacher_pick_target_sign_original_0_0_32_010": "skills.motion.implementation:U49_SeparatedBasketTeacher_pick_target_sign_original_0_0_32_010",
+        "U49_SeparatedBasketTeacher_pick_target_sign_original_0_0_32_011": "skills.motion.implementation:U49_SeparatedBasketTeacher_pick_target_sign_original_0_0_32_011",
+        "U49_SeparatedBasketTeacher_pick_target_sign_original_0_0_32_012": "skills.motion.implementation:U49_SeparatedBasketTeacher_pick_target_sign_original_0_0_32_012",
+        "U49_SeparatedBasketTeacher_pick_target_self_step_start_013": "skills.motion.implementation:U49_SeparatedBasketTeacher_pick_target_self_step_start_013",
+        "U49_SeparatedBasketTeacher_pick_target_self_step_start_014": "skills.motion.implementation:U49_SeparatedBasketTeacher_pick_target_self_step_start_014",
+        "U49_SeparatedBasketTeacher_pick_target_sign_original_0_0_32_015": "skills.motion.implementation:U49_SeparatedBasketTeacher_pick_target_sign_original_0_0_32_015",
+        "U49_SeparatedBasketTeacher_pick_target_sign_original_0_0_32_016": "skills.motion.implementation:U49_SeparatedBasketTeacher_pick_target_sign_original_0_0_32_016",
+        "U49_SeparatedBasketTeacher_pick_target_sign_original_0_0_32_017": "skills.motion.implementation:U49_SeparatedBasketTeacher_pick_target_sign_original_0_0_32_017",
+        "U49_SeparatedBasketTeacher_pick_target_motion_018": "skills.motion.implementation:U49_SeparatedBasketTeacher_pick_target_motion_018"
+      },
+      "errors": {
+        "RuntimeError": "skills.state.implementation:RuntimeError"
+      },
+      "steps": [
+        {
+          "call": "U49_SeparatedBasketTeacher_pick_target_motion_001"
+        },
+        {
+          "call": "U49_SeparatedBasketTeacher_pick_target_enabled_and_basket_in_self_attachments_and_not_g_002",
+          "store": "condition_2"
+        },
+        {
+          "if": {
+            "var": "condition_2"
+          },
+          "then": [
+            {
+              "call": "U49_SeparatedBasketTeacher_pick_target_enabled_and_basket_in_self_attachments_and_not_g_003"
+            },
+            {
+              "call": "U49_SeparatedBasketTeacher_pick_target_sign_original_0_0_32_004",
+              "store": "condition_4"
+            },
+            {
+              "if": {
+                "var": "condition_4"
+              },
+              "then": [
+                {
+                  "for_each": [
+                    0.36,
+                    0.32
+                  ],
+                  "as": "loop_item_5",
+                  "max_items": 4096,
+                  "do": [
+                    {
+                      "call": "U49_SeparatedBasketTeacher_pick_target_sign_original_0_0_32_005",
+                      "args": {
+                        "__workflow_item": {
+                          "var": "loop_item_5"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U49_SeparatedBasketTeacher_pick_target_sign_original_0_0_32_006"
+                    },
+                    {
+                      "call": "U49_SeparatedBasketTeacher_pick_target_sign_original_0_0_32_007"
+                    },
+                    {
+                      "call": "U49_SeparatedBasketTeacher_pick_target_self_canonical_ik_self_basket_arm_tool_is_none_008",
+                      "store": "condition_8"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_8"
+                      },
+                      "then": [
+                        {
+                          "call": "U49_SeparatedBasketTeacher_pick_target_self_canonical_ik_self_basket_arm_tool_is_none_009",
+                          "args": {
+                            "phase_0": "basket_separation_rejected"
+                          }
+                        },
+                        {
+                          "continue": true
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U49_SeparatedBasketTeacher_pick_target_sign_original_0_0_32_010"
+                    },
+                    {
+                      "try": [
+                        {
+                          "call": "U49_SeparatedBasketTeacher_pick_target_sign_original_0_0_32_015",
+                          "args": {
+                            "phase_0": "basket_separate_for_flat_grasp"
+                          }
+                        }
+                      ],
+                      "catch": [
+                        {
+                          "errors": [
+                            "RuntimeError"
+                          ],
+                          "as": "caught_error",
+                          "do": [
+                            {
+                              "call": "U49_SeparatedBasketTeacher_pick_target_sign_original_0_0_32_011",
+                              "args": {
+                                "__workflow_error": {
+                                  "var": "caught_error"
+                                }
+                              }
+                            },
+                            {
+                              "call": "U49_SeparatedBasketTeacher_pick_target_sign_original_0_0_32_012",
+                              "args": {
+                                "phase_0": "basket_separation_rejected"
+                              }
+                            },
+                            {
+                              "call": "U49_SeparatedBasketTeacher_pick_target_self_step_start_013",
+                              "store": "condition_13"
+                            },
+                            {
+                              "if": {
+                                "var": "condition_13"
+                              },
+                              "then": [
+                                {
+                                  "call": "U49_SeparatedBasketTeacher_pick_target_self_step_start_014"
+                                }
+                              ],
+                              "else": []
+                            },
+                            {
+                              "continue": true
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "call": "U49_SeparatedBasketTeacher_pick_target_sign_original_0_0_32_016"
+                    },
+                    {
+                      "call": "U49_SeparatedBasketTeacher_pick_target_sign_original_0_0_32_017",
+                      "args": {
+                        "phase_0": "basket_separated_before_grasp"
+                      }
+                    },
+                    {
+                      "break": true
+                    }
+                  ]
+                }
+              ],
+              "else": []
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U49_SeparatedBasketTeacher_pick_target_motion_018",
+          "store": "result_18"
+        },
+        {
+          "return": {
+            "var": "result_18"
+          }
+        }
+      ]
+    },
+    "U33_LoadedCarLiftMarginTeacher_recover_loaded_basket": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 700,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_motion_001": "skills.motion.implementation:U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_motion_001",
+        "U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_self_target_asset_category_car_index_9_002": "skills.motion.implementation:U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_self_target_asset_category_car_index_9_002",
+        "U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_self_target_asset_category_car_index_9_003": "skills.motion.implementation:U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_self_target_asset_category_car_index_9_003",
+        "U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_not_self_release_started_or_basket_not_in_self_a_004": "skills.motion.implementation:U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_not_self_release_started_or_basket_not_in_self_a_004",
+        "U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_not_self_release_started_or_basket_not_in_self_a_005": "skills.motion.implementation:U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_not_self_release_started_or_basket_not_in_self_a_005",
+        "U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_motion_006": "skills.motion.implementation:U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_motion_006",
+        "U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_motion_007": "skills.motion.implementation:U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_motion_007",
+        "U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_motion_008": "skills.motion.implementation:U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_motion_008",
+        "U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_motion_009": "skills.motion.implementation:U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_motion_009",
+        "U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_motion_010": "skills.motion.implementation:U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_motion_010",
+        "U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_motion_011": "skills.motion.implementation:U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_motion_011",
+        "U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_motion_012": "skills.motion.implementation:U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_motion_012",
+        "U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_motion_013": "skills.motion.implementation:U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_motion_013",
+        "U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_motion_014": "skills.motion.implementation:U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_motion_014"
+      },
+      "errors": {},
+      "steps": [
+        {
+          "call": "U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_motion_001"
+        },
+        {
+          "call": "U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_self_target_asset_category_car_index_9_002",
+          "store": "condition_2"
+        },
+        {
+          "if": {
+            "var": "condition_2"
+          },
+          "then": [
+            {
+              "call": "U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_self_target_asset_category_car_index_9_003",
+              "store": "result_3"
+            },
+            {
+              "return": {
+                "var": "result_3"
+              }
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_not_self_release_started_or_basket_not_in_self_a_004",
+          "store": "condition_4"
+        },
+        {
+          "if": {
+            "var": "condition_4"
+          },
+          "then": [
+            {
+              "call": "U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_not_self_release_started_or_basket_not_in_self_a_005"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_motion_006"
+        },
+        {
+          "call": "U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_motion_007"
+        },
+        {
+          "call": "U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_motion_008",
+          "args": {
+            "phase_0": "loaded_car_additional_lift"
+          }
+        },
+        {
+          "for_each": [
+            0.04,
+            0.08
+          ],
+          "as": "loop_item_9",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_motion_009",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_9"
+                }
+              }
+            },
+            {
+              "call": "U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_motion_010"
+            },
+            {
+              "call": "U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_motion_011",
+              "args": {
+                "phase_0": "loaded_car_basket_extra_lift"
+              }
+            },
+            {
+              "call": "U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_motion_012"
+            },
+            {
+              "call": "U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_motion_013",
+              "args": {
+                "phase_0": "loaded_car_basket_extra_settle"
+              }
+            }
+          ]
+        },
+        {
+          "call": "U33_LoadedCarLiftMarginTeacher_recover_loaded_basket_motion_014",
+          "store": "result_14"
+        },
+        {
+          "return": {
+            "var": "result_14"
+          }
+        }
+      ]
+    },
+    "U60_ValidatedLoadRecoveryTeacher_pick_basket": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 700,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U60_ValidatedLoadRecoveryTeacher_pick_basket_motion_001": "skills.motion.implementation:U60_ValidatedLoadRecoveryTeacher_pick_basket_motion_001",
+        "U60_ValidatedLoadRecoveryTeacher_pick_basket_self_reinforced_toy_basket_002": "skills.motion.implementation:U60_ValidatedLoadRecoveryTeacher_pick_basket_self_reinforced_toy_basket_002",
+        "U60_ValidatedLoadRecoveryTeacher_pick_basket_self_reinforced_toy_basket_003": "skills.motion.implementation:U60_ValidatedLoadRecoveryTeacher_pick_basket_self_reinforced_toy_basket_003",
+        "U60_ValidatedLoadRecoveryTeacher_pick_basket_motion_004": "skills.motion.implementation:U60_ValidatedLoadRecoveryTeacher_pick_basket_motion_004"
+      },
+      "errors": {},
+      "steps": [
+        {
+          "call": "U60_ValidatedLoadRecoveryTeacher_pick_basket_motion_001"
+        },
+        {
+          "call": "U60_ValidatedLoadRecoveryTeacher_pick_basket_self_reinforced_toy_basket_002",
+          "store": "condition_2"
+        },
+        {
+          "if": {
+            "var": "condition_2"
+          },
+          "then": [
+            {
+              "call": "U60_ValidatedLoadRecoveryTeacher_pick_basket_self_reinforced_toy_basket_003",
+              "args": {
+                "phase_0": "validated_toy_basket_band"
+              }
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U60_ValidatedLoadRecoveryTeacher_pick_basket_motion_004",
+          "store": "result_4"
+        },
+        {
+          "return": {
+            "var": "result_4"
+          }
+        }
+      ]
+    }
+  }
+}
