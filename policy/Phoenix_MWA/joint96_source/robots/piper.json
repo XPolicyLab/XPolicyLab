@@ -1,0 +1,32 @@
+{
+  "robot_type": "piper",
+  "embodiment_id": 4,
+  "registry_name": "piper100",
+  "action_type": "joint",
+  "dataset_stats": "normalization/stats_slot4.json",
+  "native_action_dim": 14,
+  "canonical_valid_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    16,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    56
+  ],
+  "camera_order": [
+    "cam_high",
+    "cam_left_wrist",
+    "cam_right_wrist"
+  ],
+  "dataset_fps": 30,
+  "action_hz": 25.0,
+  "checkpoint_posttrained": true
+}
