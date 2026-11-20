@@ -30,3 +30,4 @@ Offline wiring validated (see §3). Official per-task scores are produced by the
 
 ## 6. External models and services
 - Anthropic Claude Fable 5.2 (`claude-fable-5-2`) via a third-party-hosted OpenAI-compatible endpoint. Provider, model id, and inference parameters (effort `high`) are disclosed; the endpoint URL and access token are provided to evaluators in the evaluation application (Section 7, closed-source foundation-model API exception).
+- **Version consistency.** The model is addressed by the stable id `claude-fable-5-2`; a dated immutable snapshot id is not exposed by the provider, so exact snapshot pinning is unavailable. To keep evaluation consistent, the same id, endpoint, inference parameters (effort `high`, no sampling overrides), and tool/prompt assembly are used for every task and every episode throughout the official run; the endpoint applies no model routing of its own for this id.
