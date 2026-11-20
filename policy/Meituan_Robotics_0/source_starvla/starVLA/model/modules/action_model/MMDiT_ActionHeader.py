@@ -12,52 +12,19 @@ Key differences from GR00T's cross-attention DiT:
   - ObservationProjection: VL proj + state token + sinusoidal pos encoding + dropout
 """
 
-from dataclasses import dataclass, field
 from typing import Optional
 
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.distributions import Beta
-from transformers import PretrainedConfig
 
 
 # ─── Config ──────────────────────────────────────────────────────────────────
 
 MMDiTConfig = {
     "MMDiT-Psi0": {"hidden_dim": 1536, "num_heads": 24, "num_blocks": 6},
-    "MMDiT-B": {"hidden_dim": 768, "num_heads": 12, "num_blocks": 6},
-    "MMDiT-L": {"hidden_dim": 1024, "num_heads": 16, "num_blocks": 12},
-    "MMDiT-H": {"hidden_dim": 1536, "num_heads": 24, "num_blocks": 12},
-    "MMDiT-XL": {"hidden_dim": 1536, "num_heads": 24, "num_blocks": 18},
 }
-
-
-def masked_velocity_mse(
-    pred_velocity: torch.Tensor,
-    velocity_target: torch.Tensor,
-    action_mask: Optional[torch.Tensor] = None,
-) -> torch.Tensor:
-    """Compute velocity MSE with optional per-dimension or per-timestep masking."""
-    squared_diff = (pred_velocity - velocity_target) ** 2
-    if action_mask is None:
-        return squared_diff.mean()
-
-    action_mask = action_mask.to(device=pred_velocity.device, dtype=torch.bool)
-    if action_mask.ndim == 2:
-        action_mask_expanded = action_mask[:, None, :].expand_as(squared_diff)
-    elif action_mask.ndim == 3:
-        if action_mask.shape != squared_diff.shape:
-            raise ValueError(
-                f"Per-timestep action mask must match {tuple(squared_diff.shape)}, got {tuple(action_mask.shape)}"
-            )
-        action_mask_expanded = action_mask
-    else:
-        raise ValueError(f"action_mask must have 2 or 3 dimensions, got {action_mask.ndim}")
-    return (squared_diff * action_mask_expanded.float()).sum() / (
-        action_mask_expanded.sum().clamp_min(1).float()
-    )
 
 
 # ─── Building Blocks ─────────────────────────────────────────────────────────
@@ -275,11 +242,21 @@ class _PositionalEncoding(nn.Module):
         pe = pe.unsqueeze(0).transpose(0, 1)  # (max_len, 1, d_model)
         self.pe = nn.Parameter(pe, requires_grad=False)
 
-    def forward(self, x):
-        """x: (seq_len, batch_size, d_model) → returns (seq_len, batch_size, d_model)"""
-        pe = self.pe[:x.shape[0]]
-        pe = pe.repeat((1, x.shape[1], 1))
-        return pe.detach().clone()
+    def forward(self, x, position_ids=None):
+        """Preserve checkpoint PE shape; extend the sinusoid for history inputs."""
+        if position_ids is None:
+            pe = self.pe[:x.shape[0]]
+            return pe.repeat((1, x.shape[1], 1)).detach().clone()
+        table = self.pe[:, 0]
+        if x.shape[0] > table.shape[0]:
+            position = torch.arange(table.shape[0], x.shape[0], device=x.device, dtype=torch.float32)[:, None]
+            div_term = torch.exp(torch.arange(0, x.shape[-1], 2, device=x.device, dtype=torch.float32)
+                                 * -(np.log(10000.0) / x.shape[-1]))
+            extra = torch.empty(x.shape[0] - table.shape[0], x.shape[-1], device=x.device, dtype=torch.float32)
+            extra[:, 0::2] = torch.sin(position * div_term)
+            extra[:, 1::2] = torch.cos(position * div_term)
+            table = torch.cat([table, extra.to(table.dtype)], dim=0)
+        return table[position_ids].detach()
 
 
 class _TimeNetwork(nn.Module):
@@ -382,7 +359,7 @@ class ObservationProjection(nn.Module):
         # Post-processing dropout (matches Psi0's post_proc with dropout=0.1)
         self.post_proc = nn.Dropout(0.1)
 
-    def forward(self, vl_features: torch.Tensor, state: Optional[torch.Tensor] = None):
+    def forward(self, vl_features: torch.Tensor, state: Optional[torch.Tensor] = None, attention_mask=None):
         """
         vl_features: (B, S, vl_feature_dim)
         state: (B, 1, state_dim) or None
@@ -399,40 +376,19 @@ class ObservationProjection(nn.Module):
 
         # Sinusoidal positional encoding (Psi0: s_t.T(0,1) → enc_pos → add → T(0,1))
         s_t = tokens.transpose(0, 1)  # (S, B, D)
-        pos = self.enc_pos(s_t)       # (S, B, D)
+        position_ids = None
+        if attention_mask is not None:
+            mask = attention_mask.to(device=tokens.device, dtype=torch.long)
+            if self.has_state and state is not None:
+                mask = torch.cat([mask, torch.ones(mask.shape[0], 1, device=mask.device, dtype=mask.dtype)], dim=1)
+            position_ids = (mask.cumsum(-1) - 1).clamp_min(0).transpose(0, 1)
+        pos = self.enc_pos(s_t, position_ids=position_ids)  # (S, B, D)
         tokens = (s_t + pos).transpose(0, 1)  # (B, S, D)
 
         return tokens
 
 
 # ─── Main Module ─────────────────────────────────────────────────────────────
-
-
-@dataclass
-class MMDiTActionHeadConfig(PretrainedConfig):
-    hidden_dim: int = field(default=1536, metadata={"help": "MM-DiT hidden dimension"})
-    num_heads: int = field(default=24, metadata={"help": "Number of attention heads"})
-    num_blocks: int = field(default=12, metadata={"help": "Number of MM-DiT blocks"})
-    action_dim: int = field(default=None, metadata={"help": "Action dimension"})
-    action_horizon: int = field(default=None, metadata={"help": "Action horizon (chunk size)"})
-    state_dim: int = field(default=None, metadata={"help": "State/proprioception dim"})
-    vl_feature_dim: int = field(default=2048, metadata={"help": "VLM hidden dim (input)"})
-    num_target_vision_tokens: int = field(default=32, metadata={"help": "Unused, kept for config compat"})
-    add_pos_embed: bool = field(default=True, metadata={"help": "Unused, kept for config compat"})
-    noise_beta_alpha: float = field(default=1.5)
-    noise_beta_beta: float = field(default=1.0)
-    noise_s: float = field(default=0.999)
-    num_timestep_buckets: int = field(default=1000)
-    num_inference_timesteps: int = field(default=10, metadata={"help": "Euler steps at inference"})
-    state_placement: str = field(default="condition", metadata={"help": "Where to place state: 'condition' or 'noise'"})
-    state_dropout_ratio: float = field(default=0.0)
-    prediction_type: str = field(default="velocity", metadata={"help": "'velocity' (flow matching) or 'sample' (JiT-style x0 prediction with v-space loss)"})
-    t_eps: float = field(default=5e-2, metadata={"help": "Clamp min for (1-t) in sample mode to avoid division explosion"})
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        for key, value in kwargs.items():
-            setattr(self, key, value)
 
 
 class MMDiTFlowmatchingActionHead(nn.Module):
@@ -451,6 +407,7 @@ class MMDiTFlowmatchingActionHead(nn.Module):
         super().__init__()
         config = full_config.framework.action_model
         self.full_config = full_config
+        self.compute_dtype = torch.float32
 
         action_model_type = config.action_model_type
         mmdit_cfg = MMDiTConfig[action_model_type]
@@ -477,26 +434,11 @@ class MMDiTFlowmatchingActionHead(nn.Module):
         # Observation projection (Psi0: ObservationProjection)
         vl_feature_dim = getattr(config, "vl_feature_dim", 2048)
         state_dim = getattr(config, "state_dim", 0) or 0
-        self.state_placement = getattr(config, "state_placement", "condition")
-        if self.state_placement not in {"condition", "noise"}:
-            raise ValueError(
-                f"state_placement must be 'condition' or 'noise', got '{self.state_placement}'"
-            )
-
-        # For condition placement, ObservationProjection handles state internally
-        # For noise placement, state goes to action side via separate projection
-        obs_state_dim = state_dim if self.state_placement == "condition" else 0
         self.obs_proj = ObservationProjection(
             vl_feature_dim=vl_feature_dim,
             output_dim=hidden_dim,
-            state_dim=obs_state_dim,
+            state_dim=state_dim,
         )
-
-        if self.state_placement == "noise" and state_dim > 0:
-            self.state_noise_proj = nn.Sequential(
-                nn.Dropout(p=0.2),
-                nn.Linear(state_dim, hidden_dim),
-            )
 
         # MM-DiT transformer blocks
         self.transformer_blocks = nn.ModuleList([
@@ -511,17 +453,7 @@ class MMDiTFlowmatchingActionHead(nn.Module):
         # Action output projection (Psi0: ActionProjectionOut)
         self.action_proj_out = ActionProjectionOut(hidden_dim, config.action_dim)
 
-        # Noise schedule (flow matching)
-        self.beta_dist = Beta(config.noise_beta_alpha, config.noise_beta_beta)
         self.num_timestep_buckets = config.num_timestep_buckets
-
-        self.state_dropout_ratio = getattr(config, "state_dropout_ratio", 0.0)
-        self.prediction_type = getattr(config, "prediction_type", "velocity")
-        if self.prediction_type not in {"velocity", "sample"}:
-            raise ValueError(
-                f"prediction_type must be 'velocity' or 'sample', got '{self.prediction_type}'"
-            )
-        self.t_eps = getattr(config, "t_eps", 5e-2)
 
         total_params = sum(p.numel() for p in self.parameters())
         print(f"Total MMDiT Action Head parameters: {total_params:,}")
@@ -558,87 +490,14 @@ class MMDiTFlowmatchingActionHead(nn.Module):
             f"({encoder_attention_mask.shape[1]} vs {obs_seq_len})"
         )
 
-    def sample_time(self, batch_size, device, dtype):
-        sample = self.beta_dist.sample([batch_size]).to(device, dtype=dtype).clamp(max=self.config.noise_s)
-        return (self.config.noise_s - sample) / self.config.noise_s
-
-    def forward(
-        self, vl_embs: torch.Tensor, actions: torch.Tensor, state: torch.Tensor = None,
-        encoder_attention_mask=None,
-        action_mask: Optional[torch.Tensor] = None,
-    ):
-        """
-        Training forward: compute flow-matching loss.
-
-        vl_embs: (B, S, vl_feature_dim) — VLM hidden states
-        actions: (B, T, action_dim) — ground truth action chunk
-        state: (B, 1, state_dim) — proprioception (optional)
-        action_mask: (B, action_dim) — True for real action dims, False for padded dims.
-        """
-        device = vl_embs.device
-        B = actions.shape[0]
-
-        # Sample noise and time
-        noise = torch.randn_like(actions)
-        t = self.sample_time(B, device=device, dtype=actions.dtype)
-        t_broadcast = t[:, None, None]
-
-        noisy_actions = (1 - t_broadcast) * noise + t_broadcast * actions
-        velocity_target = actions - noise        # Time embedding (scale to [0, 1000] for proper sinusoidal frequency activation)
-        temb = self.time_embed(t * self.num_timestep_buckets)  # (B, D)
-
-        # Action tokens (no timestep mixed in — matches Psi0)
-        action_hidden_states = self.action_proj_in(noisy_actions)  # (B, T, D)
-
-        # State dropout (applied regardless of placement)
-        if self.training and self.state_dropout_ratio > 0 and state is not None:
-            drop_mask = torch.rand(B, 1, 1, device=device) < self.state_dropout_ratio
-            state = state.masked_fill(drop_mask, 0.0)
-
-        # Place state on noise side or condition side
-        if self.state_placement == "noise" and state is not None:
-            obs_hidden_states = self.obs_proj(vl_embs, None)
-            state_token = self.state_noise_proj(state)  # (B, 1, D)
-            action_hidden_states = torch.cat([state_token, action_hidden_states], dim=1)
-        else:
-            obs_hidden_states = self.obs_proj(vl_embs, state)
-
-        obs_attention_mask = self._build_obs_attention_mask(
-            encoder_attention_mask, obs_hidden_states,
-            state if self.state_placement == "condition" else None,
+    def compute_autocast(self, device):
+        """Keep the native FP32 action-head boundary inside outer BF16 inference."""
+        return torch.autocast(
+            device_type=torch.device(device).type,
+            dtype=self.compute_dtype,
+            enabled=True,
         )
 
-        # Run MM-DiT blocks
-        for block in self.transformer_blocks:
-            action_hidden_states, obs_hidden_states = block(
-                action_hidden_states=action_hidden_states,
-                obs_hidden_states=obs_hidden_states,
-                temb=temb,
-                obs_attention_mask=obs_attention_mask,
-            )
-
-        # Strip prepended state token if noise placement
-        if self.state_placement == "noise" and state is not None:
-            action_hidden_states = action_hidden_states[:, 1:]
-
-        # Output projection
-        model_out = self.action_proj_out(action_hidden_states, temb)  # (B, T, action_dim)
-
-        if self.prediction_type == "sample":
-            # JiT-style: model outputs predicted x0, then convert to velocity.
-            # Loss is still in v-space (AML A1): ‖v̂ - v‖² with v̂ = (x̂0 - z_t)/(1-t).
-            # Apply the same clamped denominator to BOTH pred and target so that
-            # a perfect x̂0 == actions yields exactly zero loss even when 1-t < t_eps.
-            one_minus_t = (1 - t_broadcast).clamp_min(self.t_eps)
-            pred_velocity = (model_out - noisy_actions) / one_minus_t
-            velocity_target = (actions - noisy_actions) / one_minus_t
-        else:
-            pred_velocity = model_out
-
-        # MSE loss on velocity. When mixing embodiments with different action
-        # widths, padded dimensions must not train the model toward zeros.
-        loss = masked_velocity_mse(pred_velocity, velocity_target, action_mask)
-        return loss
 
     @torch.no_grad()
     def predict_action(
@@ -651,9 +510,10 @@ class MMDiTFlowmatchingActionHead(nn.Module):
         """Inference: denoise actions via Euler integration from optional explicit noise."""
         B = vl_embs.shape[0]
         device = vl_embs.device
+        integration_dtype = vl_embs.dtype
         expected_shape = (B, self.action_horizon, self.action_dim)
         if noise is None:
-            actions = torch.randn(expected_shape, device=device, dtype=vl_embs.dtype)
+            actions = torch.randn(expected_shape, device=device, dtype=integration_dtype)
         else:
             if tuple(noise.shape) != expected_shape:
                 raise ValueError(f"noise must have shape {expected_shape}, got {tuple(noise.shape)}")
@@ -662,41 +522,29 @@ class MMDiTFlowmatchingActionHead(nn.Module):
             if noise.dtype != vl_embs.dtype:
                 raise ValueError(f"noise must have dtype {vl_embs.dtype}, got {noise.dtype}")
             actions = noise.clone()
-        # Integrate in fp32 no matter what dtype the blocks run in, matching openpi
-        # (pi0_pytorch casts the transformer output to fp32 before action_out_proj and
-        # keeps dt/time/x_t fp32). Until now this held only by accident: the velocity came
-        # back fp32 from a hard-coded fp32 autocast and promoted the accumulator on the
-        # first Euler step. It is also what lets the caller do .numpy(), which has no bf16.
+        # Preserve native noise precision, then integrate in FP32.
         actions = actions.to(torch.float32)
         num_steps = self.num_inference_timesteps
         dt = 1.0 / num_steps
 
         # Pre-compute obs tokens (constant across denoising steps)
-        if self.state_placement == "noise" and state is not None:
-            obs_hidden_states_base = self.obs_proj(vl_embs, None)
-            state_token = self.state_noise_proj(state)  # (B, 1, D)
-        else:
-            obs_hidden_states_base = self.obs_proj(vl_embs, state)
-            state_token = None
-
+        obs_hidden_states_base = self.obs_proj(
+            vl_embs, state,
+            attention_mask=encoder_attention_mask if getattr(self, "history_position_ids", False) else None,
+        )
         obs_attention_mask = self._build_obs_attention_mask(
-            encoder_attention_mask, obs_hidden_states_base,
-            state if self.state_placement == "condition" else None,
+            encoder_attention_mask, obs_hidden_states_base, state,
         )
 
         for step in range(num_steps):
             t_val = step / float(num_steps)
-            t_tensor = torch.full((B,), t_val, device=device, dtype=vl_embs.dtype)
+            t_tensor = torch.full((B,), t_val, device=device, dtype=integration_dtype)
 
             # Time embedding (scale to [0, 1000])
             temb = self.time_embed(t_tensor * self.num_timestep_buckets)  # (B, D)
 
             # Action tokens
             action_hidden_states = self.action_proj_in(actions)
-
-            # Prepend state token to action side if noise placement
-            if state_token is not None:
-                action_hidden_states = torch.cat([state_token, action_hidden_states], dim=1)
 
             # Run through transformer blocks
             obs_hidden_states = obs_hidden_states_base.clone()
@@ -708,19 +556,9 @@ class MMDiTFlowmatchingActionHead(nn.Module):
                     obs_attention_mask=obs_attention_mask,
                 )
 
-            # Strip state token before output
-            if state_token is not None:
-                action_hidden_states = action_hidden_states[:, 1:]
-
-            # Predict velocity and Euler step. fp32 from here on: the blocks may be bf16,
-            # but the velocity and the accumulator are not (see the cast above).
+            # The checkpoint predicts the sample; convert it to Euler velocity.
             model_out = self.action_proj_out(action_hidden_states, temb).to(torch.float32)
-            if self.prediction_type == "sample":
-                # JiT-style: model_out is x̂0; convert to velocity.
-                # (1 - t_val) is a scalar in (0, 1] for t_val in [0, (N-1)/N], no clamp needed.
-                pred_velocity = (model_out - actions) / (1.0 - t_val)
-            else:
-                pred_velocity = model_out
+            pred_velocity = (model_out - actions) / (1.0 - t_val)
             actions = actions + dt * pred_velocity
 
         return actions
@@ -737,52 +575,3 @@ class MMDiTFlowmatchingActionHead(nn.Module):
 def get_mmdit_action_model(config=None):
     """Factory: build MMDiTFlowmatchingActionHead from global framework config."""
     return MMDiTFlowmatchingActionHead(full_config=config)
-
-
-if __name__ == "__main__":
-    from omegaconf import OmegaConf
-
-    B = 2
-    vl_embs = torch.randn(B, 80, 2048)
-    actions = torch.randn(B, 50, 14)
-    state = torch.randn(B, 1, 14)
-
-    for placement in ["condition", "noise"]:
-        for pred_type in ["velocity", "sample"]:
-            print(f"\n{'='*60}")
-            print(f"Testing state_placement = '{placement}', prediction_type = '{pred_type}'")
-            print(f"{'='*60}")
-
-            cfg = OmegaConf.create({
-                "framework": {
-                    "action_model": {
-                        "action_model_type": "MMDiT-B",
-                        "action_dim": 14,
-                        "state_dim": 14,
-                        "action_horizon": 50,
-                        "num_inference_timesteps": 10,
-                        "vl_feature_dim": 2048,
-                        "num_target_vision_tokens": 32,
-                        "add_pos_embed": True,
-                        "noise_beta_alpha": 1.5,
-                        "noise_beta_beta": 1.0,
-                        "noise_s": 0.999,
-                        "num_timestep_buckets": 1000,
-                        "state_placement": placement,
-                        "state_dropout_ratio": 0.2,
-                        "prediction_type": pred_type,
-                    }
-                }
-            })
-
-            model = MMDiTFlowmatchingActionHead(full_config=cfg)
-            print(f"Model params: {sum(p.numel() for p in model.parameters()):,}")
-
-            loss = model(vl_embs, actions, state)
-            print(f"Training loss: {loss.item():.4f}")
-
-            model.eval()
-            pred = model.predict_action(vl_embs, state)
-            print(f"Predicted actions shape: {pred.shape}")
-            assert pred.shape == (B, 50, 14), f"Shape mismatch: {pred.shape}"
-            print("PASSED")
