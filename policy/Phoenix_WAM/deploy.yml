@@ -1,0 +1,56 @@
+policy_name: Phoenix_WAM
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+# Selects the matching posttrained checkpoint, robot profile, statistics and soft prompt.
+env_cfg_type: null
+seed: null
+action_type: null
+gpu_id: null
+eval_batch: true
+
+# Weights are prepared by download_checkpoint.sh. Shared ckpt_name resolution
+# is used unless checkpoint_path is explicitly supplied.
+checkpoint_path: null
+
+# Checkpoint inference contract.
+device: cuda
+mixed_precision: bf16
+action_horizon: 32
+replan_steps: 32
+num_inference_steps: 10
+action_hz: null
+text_cfg_scale: 1.0
+negative_prompt: ""
+rand_device: cpu
+tiled: false
+timing_enabled: false
+default_instruction: follow the instruction
+allow_dummy_policy: false
+
+# Exact training instruction features ship in phoenix_source/text.pt.
+# Use online_t5 for arbitrary instructions (loads the pinned T5 encoder).
+text_mode: training_cache
+
+# Each robot uses its own released H5 no-crop paired-cache posttraining checkpoint.
+runtime_mode: joint96_real_phoenix
+current_visual_mode: repeat9_full_joint96
+expected_step: 30000
+audit_dir: logs/phoenix
+
+# Temporary head-camera black cover after sustained measured inactivity.
+# This patch enables cover. Set fix=none or steps=0 for the original behavior.
+phoenix_stall_fix: cover
+phoenix_stall_seconds: 3.0
+# null derives ceil(seconds * action_hz); native fallback is 30/30/25 Hz.
+# Set action_hz to the actual client control rate, or set an explicit step count.
+phoenix_stall_steps: null
+phoenix_stall_cover_chunks: 2
+# -1 draws a fresh seed for EVERY stalled chunk (including real-image chunks).
+# null keeps the normal seed for the previous cover-only behavior.
+phoenix_stall_seed: -1
+phoenix_stall_arm_threshold: 0.02
+phoenix_stall_gripper_threshold: 0.05
