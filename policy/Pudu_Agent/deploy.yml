@@ -1,0 +1,19 @@
+policy_name: Pudu_Agent
+protocol: ws
+host: localhost
+port: 6000
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+action_type: joint
+gpu_id: null
+eval_batch: false
+
+# The model chooses EEF poses, but the local planner sends joint paths through
+# RoboDojo's protocol boundary. The policy server itself loads no VLA; it only
+# satisfies the harness. Borrow the Pi_05/openpi uv tree for that process.
+policy_uv_env_path: ../Pi_05/openpi
+result_dir: "./results/robodojo_agent_l4_inspect_eef/"
+obs_transform_pipeline: "xspark-v1.0"
