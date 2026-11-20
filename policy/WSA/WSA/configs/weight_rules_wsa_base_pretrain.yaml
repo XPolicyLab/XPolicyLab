@@ -1,0 +1,40 @@
+# Example sampling budgets for WSA_Base multi-source training.
+#
+# Edit the regexes so they match your real dataset paths. When dataset.repo_id is
+# an absolute local path, matching is done against the full path string.
+#
+# First match wins.
+
+groups:
+  - name: interndata_a1
+    match: "(?i)(interndata|(^|/)a1(/|$))"
+    total_weight: 0.47
+    inside: frames_pow
+    gamma: 0.9
+
+  - name: robotwin
+    match: "(?i)robotwin"
+    total_weight: 0.07
+    inside: uniform
+
+  - name: robochallenge
+    match: "(?i)robochallenge"
+    total_weight: 0.19
+    inside: uniform
+
+  - name: agibot
+    match: "(?i)(agibot|agibotworld|a2d|r1lite)"
+    total_weight: 0.17
+    inside: frames_pow
+    gamma: 0.8
+
+  - name: egodex
+    match: "(?i)(^|[\\\\/])egodex[^\\\\/]*([\\\\/]|$)"
+    total_weight: 0.10
+    inside: frames_pow
+    gamma: 1.0
+
+default:
+  total_weight: 0.1
+  inside: frames_pow
+  gamma: 1.0
