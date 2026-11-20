@@ -6,7 +6,8 @@ import pytest
 pytest.importorskip("sana_robot")
 
 from sana_robot.data.format.robot80 import ROBOT_FIELDS  # noqa: E402
-from sana_robot.data.utils.convert_robodojo import flange_poses  # noqa: E402
+from sana_robot.data.utils.convert_robodojo import ARX_X5_JOINTS  # noqa: E402
+from sana_robot.data.utils.kinematics import flange_poses  # noqa: E402
 
 from XPolicyLab.policy.SANA_Robot import robodojo  # noqa: E402
 
@@ -28,7 +29,7 @@ def test_state_row_holds_joints_flange_pose_and_closedness():
     assert row.shape == (80,)
     np.testing.assert_allclose(row[ROBOT_FIELDS["left_joints"]][:6], LEFT, atol=1e-6)
     np.testing.assert_allclose(row[ROBOT_FIELDS["right_joints"]][:6], RIGHT, atol=1e-6)
-    np.testing.assert_allclose(row[ROBOT_FIELDS["left_eef_position"]], flange_poses(LEFT[None])[0, :3, 3], atol=1e-6)
+    np.testing.assert_allclose(row[ROBOT_FIELDS["left_eef_position"]], flange_poses(ARX_X5_JOINTS, LEFT[None])[0, :3, 3], atol=1e-6)
     assert row[ROBOT_FIELDS["left_gripper"]][0] == pytest.approx(0.0)
     assert row[ROBOT_FIELDS["right_gripper"]][0] == pytest.approx(0.75)
 
@@ -71,7 +72,7 @@ def test_ee_actions_are_the_link6_pose_in_the_environment_frame():
     (action,) = robodojo.actions_from_rows(row[None], "ee", world_from_base)
     assert sorted(action) == ["left_ee_joint_state", "left_ee_pose", "right_ee_joint_state", "right_ee_pose"]
     for side, joints in (("left", LEFT), ("right", RIGHT)):
-        flange = flange_poses(joints[None])[0]
+        flange = flange_poses(ARX_X5_JOINTS, joints[None])[0]
         flange[:3, :3] = flange[:3, :3] @ robodojo.FLANGE_AXES.T
         expected = world_from_base[side] @ flange
         pose = action[f"{side}_ee_pose"]

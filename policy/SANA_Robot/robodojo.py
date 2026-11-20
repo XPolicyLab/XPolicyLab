@@ -1,3 +1,7 @@
+# Copyright 2026 NVIDIA CORPORATION & AFFILIATES
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The RoboDojo ARX-X5 side of the adapter: observations into SANA-Robot robot rows and robot rows into actions.
 
 A SANA-Robot policy reads and writes robot rows of 80 slots in the units of its training dataset. For RoboDojo
@@ -5,31 +9,31 @@ that dataset is the one ``sana_robot.data.utils.convert_robodojo`` builds from t
 six joint angles, the pose of the flange in the arm's base frame (from the forward kinematics of the joints, with
 the axes +X approach, +Y down, +Z left) and the gripper closedness. The functions here apply the same conversion
 to an observation and undo it for the actions the environment client takes.
+
+``CAMERA_OF_VIEW`` names the camera of an observation that each view of the dataset was recorded from: the official
+LeRobot export stores ``vision/cam_head`` as ``observation.images.cam_high`` and keeps the names of the wrist
+cameras. ``ARX_X5_ROOT_POSES`` holds the pose [x, y, z, qw, qx, qy, qz] of each arm's base in the frame the
+environment reports ``*_ee_pose`` in: ``default_root_pos`` and ``default_root_rot`` of RoboDojo's
+``env_cfg/robot/dual_x5.yml``.
 """
 
 from __future__ import annotations
 
 import numpy as np
+
 from sana_robot.data.format.robot80 import ROBOT_FIELDS, rot6d_to_rotation
-from sana_robot.data.utils.convert_robodojo import (
-    ARM_JOINTS,
-    FLANGE_AXES,
-    GRIPPER_CLOSED,
-    GRIPPER_OPEN,
-    robot_rows,
-)
+from sana_robot.data.utils.convert_robodojo import ARX_X5_JOINTS, GRIPPER_CLOSED, GRIPPER_OPEN
+from sana_robot.data.utils.kinematics import FLANGE_AXES, dual_arm_rows
+
+ARM_JOINTS = len(ARX_X5_JOINTS)
 
 SIDES = ("left", "right")
 ACTION_TYPE_JOINT = "joint"
 ACTION_TYPE_EE = "ee"
 ACTION_TYPES = (ACTION_TYPE_JOINT, ACTION_TYPE_EE)
 
-# The camera of an observation that each view of the dataset was recorded from: the official LeRobot export stores
-# ``vision/cam_head`` as ``observation.images.cam_high`` and keeps the names of the wrist cameras.
 CAMERA_OF_VIEW = {"cam_high": "cam_head", "cam_left_wrist": "cam_left_wrist", "cam_right_wrist": "cam_right_wrist"}
 
-# The pose [x, y, z, qw, qx, qy, qz] of each arm's base in the frame the environment reports ``*_ee_pose`` in:
-# ``default_root_pos`` and ``default_root_rot`` of RoboDojo's ``env_cfg/robot/dual_x5.yml``.
 ARX_X5_ROOT_POSES = {
     "left": (-0.3, -0.45, 0.765, 0.707, 0.0, 0.0, 0.707),
     "right": (0.3, -0.45, 0.765, 0.707, 0.0, 0.0, 0.707),
@@ -118,7 +122,7 @@ def state_row(state: dict) -> np.ndarray:
     values = np.concatenate(values)
     if not np.isfinite(values).all():
         raise ValueError(f"the observed joint state must be finite, got {values}")
-    rows, _mask = robot_rows(values[None])
+    rows, _mask = dual_arm_rows(values[None], ARX_X5_JOINTS, GRIPPER_OPEN, GRIPPER_CLOSED)
     return rows[0]
 
 

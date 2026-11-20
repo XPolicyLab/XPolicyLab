@@ -1,3 +1,7 @@
+# Copyright 2026 NVIDIA CORPORATION & AFFILIATES
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """SANA-Robot in XPolicyLab: one ``sana_robot`` deployment, driven as the control loop of the environment client.
 
 The policy code is the ``sana_robot`` package of the SANA repository. Its ``ChunkRunner`` takes the first frame and
@@ -10,11 +14,11 @@ from __future__ import annotations
 import warnings
 from pathlib import Path
 
+import torch
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.policy.SANA_Robot import robodojo, runtime
 from XPolicyLab.utils.checkpoint_resolver import resolve_checkpoint_root
 from XPolicyLab.utils.process_data import get_robot_action_dim_info
-
-from . import runtime
 
 TAG = "[SANA_Robot]"
 POLICY_DIR = Path(__file__).resolve().parent
@@ -33,21 +37,13 @@ class Model(ModelTemplate):
         self.env_cfg_type = model_cfg["env_cfg_type"]
         self.seed = model_cfg.get("seed")
 
-        repository = runtime.sana_root(model_cfg)
-        runtime.import_sana_robot(repository)
-        import torch
-
-        from . import robodojo
-
-        self.torch = torch
-        self.robodojo = robodojo
         if self.action_type not in robodojo.ACTION_TYPES:
             raise ValueError(f"action_type must be one of {robodojo.ACTION_TYPES}, got {self.action_type!r}")
         robodojo.check_robot(get_robot_action_dim_info(self.env_cfg_type))
         self.world_from_base = robodojo.root_transforms(model_cfg.get("robot_root_poses"))
 
         checkpoint = resolve_checkpoint_root(model_cfg, POLICY_DIR / "checkpoints", policy_dir=POLICY_DIR)
-        run = runtime.resolve_run(model_cfg, checkpoint, repository)
+        run = runtime.resolve_run(model_cfg, checkpoint, runtime.sana_root(model_cfg))
         self._dataset = runtime.description_dataset(run.meta)
         self.deployment = runtime.build_deployment(model_cfg, run, self._dataset.name)
         views = [view.name for view in self.deployment.robot.info.views]
@@ -62,14 +58,11 @@ class Model(ModelTemplate):
         config = self.deployment.config
         print(
             f"{TAG} ready: SANA-Robot-{config.policy_type} from {run.weights}, action_type={self.action_type}, "
-            f"cameras={self.cameras}, steps={config.steps}, "
-            f"n_action_steps={runtime.setting(config, 'n_action_steps')}, "
-            f"async_delay_steps={runtime.setting(config, 'async_delay_steps')}, optimized={config.optimized}, "
-            f"precision={config.precision}",
+            f"cameras={self.cameras}, steps={config.steps}, video_cfg_scale={config.video_cfg_scale}, "
+            f"n_action_steps={config.n_action_steps}, async_delay_steps={config.async_delay_steps}, "
+            f"optimized={config.optimized}, precision={config.precision}",
             flush=True,
         )
-
-    # -- observations --------------------------------------------------------------------------------------------
 
     def update_obs(self, obs):
         self._obs = obs
@@ -87,10 +80,8 @@ class Model(ModelTemplate):
 
     def _frame(self, obs) -> tuple:
         """Return what the runner reads of an observation: the frame of every camera and the robot row [80]."""
-        images = self.robodojo.camera_images(obs["vision"], self.cameras)
-        return images, self.robodojo.state_row(obs["state"])
-
-    # -- actions -------------------------------------------------------------------------------------------------
+        images = robodojo.camera_images(obs["vision"], self.cameras)
+        return images, robodojo.state_row(obs["state"])
 
     def get_action(self):
         if self._obs is None:
@@ -99,8 +90,7 @@ class Model(ModelTemplate):
             plan = self._open_episode(self._obs)
         else:
             controller = self._runner.controller
-            period = runtime.setting(controller, "n_action_steps")
-            due = self._plans * period + runtime.setting(controller, "async_delay_steps")
+            due = self._plans * controller.n_action_steps + controller.async_delay_steps
             if self._step != due:
                 raise RuntimeError(
                     f"SANA_Robot hands out the next actions after {due} executed actions of this episode, asked "
@@ -115,7 +105,7 @@ class Model(ModelTemplate):
             + (f", generated in {generate[-1]:.0f} ms" if generate else ""),
             flush=True,
         )
-        return self.robodojo.actions_from_rows(plan.targets, self.action_type, self.world_from_base)
+        return robodojo.actions_from_rows(plan.targets, self.action_type, self.world_from_base)
 
     def get_action_batch(self, env_idx_list=None):
         if env_idx_list is not None and len(list(env_idx_list)) != 1:
@@ -135,9 +125,9 @@ class Model(ModelTemplate):
             print(f"{TAG} instruction: {instruction!r}", flush=True)
         self._episode += 1
         if self.seed is not None:
-            self.torch.manual_seed(SEED_STRIDE * int(self.seed) + self._episode)
+            torch.manual_seed(SEED_STRIDE * int(self.seed) + self._episode)
         images, row = self._frame(obs)
-        if self.action_type == self.robodojo.ACTION_TYPE_EE:
+        if self.action_type == robodojo.ACTION_TYPE_EE:
             self._check_reported_pose(obs["state"], row)
         self._runner.timings.clear()
         self._step = 0
@@ -145,7 +135,7 @@ class Model(ModelTemplate):
 
     def _check_reported_pose(self, state, row) -> None:
         """Compare the end-effector pose the environment reports with the one the policy reads, once per episode: they differ when the arms' root poses or the flange axes are not the simulator's, and then the pose targets are wrong too."""
-        errors = self.robodojo.flange_pose_errors(state, row, self.world_from_base)
+        errors = robodojo.flange_pose_errors(state, row, self.world_from_base)
         if not errors:
             return
         text = ", ".join(
@@ -156,8 +146,6 @@ class Model(ModelTemplate):
             warnings.warn(
                 f"{TAG} the reported end-effector pose disagrees with the joints' pose ({text}); check robot_root_poses"
             )
-
-    # -- episodes ------------------------------------------------------------------------------------------------
 
     def reset(self):
         """Forget the episode; the next observation starts a new one."""

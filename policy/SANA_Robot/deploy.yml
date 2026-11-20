@@ -10,52 +10,31 @@ seed: null
 action_type: null
 gpu_id: null
 eval_batch: false
-
-# The first requests of a server load, compile and capture; later ones take well under a second.
 request_timeout_s: 900
 
-# -- the policy ----------------------------------------------------------------------------------------------------
-# ar: SANA-Robot-AR, the policy with memory. base: SANA-Robot-base, one observation in, one chunk out.
 policy_type: ar
-# The checkout of the SANA repository; null: $SANA_ROBOT_ROOT, else Sana/ in this directory (install.sh).
 sana_robot_root: null
-
-# -- the checkpoint (see "Model Assets" in the README) -------------------------------------------------------------
-# The checkpoint directory; null: resolved from ckpt_name under checkpoints/.
 checkpoint_path: null
-# The weights inside it; null: checkpoints/latest/model_ema.pth, else its only *.pth file.
 checkpoint_file: null
-# The training step of a run directory to serve instead of the latest.
 checkpoint_step: null
-# null: normalization.json and meta.json of the checkpoint directory.
 normalization_path: null
 dataset_meta_path: null
-# null: $SANA_ROBOT_VAE / $SANA_ROBOT_TEXT_ENCODER, else the paths of the training config.
 vae_path: null
 text_encoder_path: null
-# null: read from the checkpoint's config.yaml (the arguments of the policy class and the data settings).
 policy: null
 view_sizes: null
 chunk_size: null
 video_frame_stride: null
 
-# -- inference (the fields of sana_robot's DeployConfig; null keeps its default) ------------------------------------
-# Denoising steps per chunk.
 steps: 10
 video_flow_shift: 5.0
 action_flow_shift: 1.0
-# Actions run of every chunk before the next one is generated; null: the whole chunk.
+video_cfg_scale: 6.0
 n_action_steps: null
-# Actions the robot runs from the running chunk while the next one is generated; 0: it waits for every chunk.
 async_delay_steps: 0
-# The inference kernels of the GPU and CUDA graphs for the policy; false: the plain eager path.
 optimized: true
-# bf16 | fp8 | nvfp4: the precision of the large matrix products of an optimized policy.
 precision: bf16
 device: cuda
 
-# -- the environment -----------------------------------------------------------------------------------------------
-# The observation's camera of every view of the dataset, in the dataset's order; null: the official LeRobot naming.
 cameras: null
-# {left: [x, y, z, qw, qx, qy, qz], right: [...]}: the arms' base poses for action_type ee; null: RoboDojo's ARX-X5.
 robot_root_poses: null

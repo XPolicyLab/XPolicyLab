@@ -12,7 +12,7 @@ from sana_robot.data.format.episode import View  # noqa: E402
 from sana_robot.deploy.async_exec.runner import ChunkRunner  # noqa: E402
 
 import XPolicyLab.policy.SANA_Robot.model as adapter  # noqa: E402
-from XPolicyLab.policy.SANA_Robot import runtime  # noqa: E402
+from XPolicyLab.policy.SANA_Robot import robodojo, runtime  # noqa: E402
 
 CHUNK_ROWS, FRAME_STRIDE = 32, 4
 
@@ -21,10 +21,10 @@ class CountingController:
     """A controller whose chunk generated at step r holds, in the first two joints of row i, the episode step r + i and the chunk's index. Its attributes carry the names the package's ``ChunkRunner`` reads."""
 
     def __init__(self, n_action_steps, async_delay_steps):
-        self.chunk_rows, self.frame_stride = CHUNK_ROWS, FRAME_STRIDE
-        self.delay_rows = async_delay_steps
-        self.period_rows = CHUNK_ROWS - async_delay_steps if n_action_steps is None else n_action_steps
-        self.window_rows = int(np.gcd(CHUNK_ROWS, self.period_rows))
+        self.chunk_size, self.frame_stride = CHUNK_ROWS, FRAME_STRIDE
+        self.async_delay_steps = async_delay_steps
+        self.n_action_steps = CHUNK_ROWS - async_delay_steps if n_action_steps is None else n_action_steps
+        self.window_steps = int(np.gcd(CHUNK_ROWS, self.n_action_steps))
         self.events = []
         self.chunks = 0
 
@@ -69,8 +69,8 @@ class CountingRobot:
 class CountingDeployment:
     def __init__(self, n_action_steps, async_delay_steps):
         self.robot = CountingRobot()
-        fields = dict(policy_type="ar", steps=10, optimized=False, precision="bf16")
-        fields.update(period_rows=n_action_steps, delay_rows=async_delay_steps)
+        fields = dict(policy_type="ar", steps=10, video_cfg_scale=1.0, optimized=False, precision="bf16")
+        fields.update(n_action_steps=n_action_steps, async_delay_steps=async_delay_steps)
         self.config = type("Config", (), fields)
         self.runners = []
         self.arguments = (n_action_steps, async_delay_steps)
@@ -237,9 +237,9 @@ def test_end_effector_actions_and_the_reported_pose_check(build, capsys):
     model, _deployment = build(action_type="ee")
     model.reset()
     first = observation(0)
-    row = model.robodojo.state_row(first["state"])
+    row = robodojo.state_row(first["state"])
     for side in ("left", "right"):
-        first["state"][f"{side}_ee_pose"] = model.robodojo.transform_to_pose(model.world_from_base[side] @ model.robodojo.flange_transform(row, side))
+        first["state"][f"{side}_ee_pose"] = robodojo.transform_to_pose(model.world_from_base[side] @ robodojo.flange_transform(row, side))
     model.update_obs(first)
     with pytest.raises(ValueError, match="finite"):      # the counting chunk holds no rotation
         model.get_action()

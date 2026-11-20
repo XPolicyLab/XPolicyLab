@@ -27,19 +27,18 @@ TRAIN_CONFIG = {
     "vae": "checkpoints/LTX-2.3-Diffusers",
     "text_encoder": "checkpoints/gemma-2-2b-it",
     "policy": {"spatial_layout": "t_shape", "actions_per_chunk": 32, "sliding_window_chunks": 1},
-    "data": {"view_sizes": [[384, 480], [192, 256], [192, 256]], "chunk_rows": 32, "video_frame_stride": 4},
+    "data": {"view_sizes": [[384, 480], [192, 256], [192, 256]], "chunk_size": 32, "video_frame_stride": 4},
 }
 
 
 @pytest.fixture
 def repository(tmp_path) -> Path:
-    """A checkout with the two public models and the RoboDojo recipes."""
+    """A checkout with the two public models and the RoboDojo recipe."""
     root = tmp_path / "Sana"
-    for folder in ("checkpoints/LTX-2.3-Diffusers", "checkpoints/gemma-2-2b-it", "configs/sana_robot"):
+    for folder in ("checkpoints/LTX-2.3-Diffusers", "checkpoints/gemma-2-2b-it", "configs"):
         (root / folder).mkdir(parents=True)
-    for policy_type, recipe in runtime.RECIPES.items():
-        config = dict(TRAIN_CONFIG, policy=dict(TRAIN_CONFIG["policy"], recipe=policy_type))
-        (root / recipe).write_text(yaml.safe_dump(config))
+    config = dict(TRAIN_CONFIG, policy=dict(TRAIN_CONFIG["policy"], recipe="ar"))
+    (root / runtime.RECIPE).write_text(yaml.safe_dump(config))
     return root
 
 
@@ -84,13 +83,14 @@ def test_a_released_directory_holds_one_weights_file(tmp_path, repository):
     (root / "sana_robot_ar.pth").write_text("weights")
     (root / "meta.json").write_text(json.dumps(META))
     (root / "normalization.json").write_text("{}")
-    run = runtime.resolve_run({"policy_type": "base"}, root, repository)
+    run = runtime.resolve_run({"policy_type": "ar"}, root, repository)
     assert run.weights == root / "sana_robot_ar.pth"
-    assert run.policy["recipe"] == "base"          # no config.yaml: the repository's recipe of the policy type
+    assert run.policy["recipe"] == "ar"            # no config.yaml: the repository's RoboDojo recipe
     assert runtime.resolve_run({"policy_type": "ar"}, root / "sana_robot_ar.pth", repository).weights == root / "sana_robot_ar.pth"
+    with pytest.raises(FileNotFoundError, match="vae_path"):  # no recipe ships for SANA-Robot-base: nothing names its models
+        runtime.resolve_run({"policy_type": "base"}, root, repository)
     (root / "second.pth").write_text("weights")
-    with pytest.raises(FileNotFoundError, match="exactly one"):
-        runtime.resolve_run({}, root, repository)
+    assert runtime.resolve_run({"checkpoint_file": "second.pth"}, root, repository).weights == root / "second.pth"
 
 
 def test_deploy_keys_come_before_the_directory_and_the_training_config(tmp_path, repository, monkeypatch):
@@ -140,7 +140,7 @@ def test_missing_pieces_are_named(tmp_path, repository):
 
 def test_no_policy_arguments_anywhere_is_an_error(tmp_path):
     root = run_directory(tmp_path, config=None)
-    with pytest.raises(FileNotFoundError, match="policy key"):
+    with pytest.raises(KeyError, match="policy"):
         runtime.resolve_run({"vae_path": str(root), "text_encoder_path": str(root)}, root, tmp_path / "no_checkout")
 
 
@@ -162,40 +162,31 @@ def test_the_description_dataset_opens_as_a_dataset_without_episodes(tmp_path):
 def test_build_deployment_passes_the_keys_that_are_set(tmp_path, repository, monkeypatch):
     import sana_robot.deploy.runtime.deployment as deployment
 
-    built, streams = [], []
-    monkeypatch.setattr(deployment, "Deployment", lambda config: built.append(config) or config)
-    monkeypatch.setattr(runtime, "use_causal_vae", streams.append)
+    built = []
+    monkeypatch.setattr(runtime, "Deployment", lambda config: built.append(config) or config)
     run = runtime.resolve_run({}, run_directory(tmp_path), repository)
     cfg = {"policy_type": "ar", "steps": 10, "n_action_steps": 24, "async_delay_steps": 0, "optimized": False, "precision": None,
            "video_flow_shift": None, "action_flow_shift": 1.0, "device": None}
     config = runtime.build_deployment(cfg, run, "/dataset")
-    assert streams == built == [config]          # the deployment gets the stream of SANA's causal VAE
+    assert built == [config]
     defaults = deployment.DeployConfig()
     assert (config.policy_type, config.checkpoint, config.dataset) == ("ar", str(run.weights), "/dataset")
-    assert (config.steps, runtime.setting(config, "n_action_steps"), config.optimized) == (10, 24, False)
-    assert runtime.setting(config, "async_delay_steps") == 0
+    assert (config.steps, config.n_action_steps, config.optimized) == (10, 24, False)
+    assert config.async_delay_steps == 0 and config.video_cfg_scale == defaults.video_cfg_scale
     assert (config.precision, config.video_flow_shift, config.device) == (defaults.precision, defaults.video_flow_shift, defaults.device)
     assert config.policy == TRAIN_CONFIG["policy"] and config.video_frame_stride == 4
-    assert runtime.setting(config, "chunk_size") == 32
+    assert config.chunk_size == 32
     assert config.normalization == str(run.normalization) and config.vae == str(run.vae)
 
 
 def test_sana_root_reads_the_key_then_the_environment(tmp_path, monkeypatch):
     monkeypatch.delenv(runtime.SANA_ROOT_ENV, raising=False)
-    assert runtime.sana_root({}) == runtime.DEFAULT_SANA_ROOT.resolve()
+    assert (runtime.sana_root({}) / "sana_robot").is_dir()   # the checkout the package is installed from
     monkeypatch.setenv(runtime.SANA_ROOT_ENV, str(tmp_path / "env"))
     assert runtime.sana_root({}) == tmp_path / "env"
     assert runtime.sana_root({"sana_robot_root": str(tmp_path / "key")}) == tmp_path / "key"
 
 
-def test_settings_are_read_under_the_packages_names_before_and_after_its_renaming(tmp_path, repository):
-    earlier = type("Earlier", (), {"chunk_rows": 32, "period_rows": 24, "delay_rows": 8, "steps": 4})
-    renamed = type("Renamed", (), {"chunk_size": 32, "n_action_steps": 24, "async_delay_steps": 8, "steps": 4})
-    for owner in (earlier, renamed):
-        values = [runtime.setting(owner, name) for name in ("chunk_size", "n_action_steps", "async_delay_steps", "steps")]
-        assert values == [32, 24, 8, 4]
-    assert runtime.package_name(earlier, "n_action_steps") == "period_rows"
-    assert runtime.package_name(renamed, "n_action_steps") == "n_action_steps"
-    # a training config written after the renaming names the chunk's length chunk_size
+def test_the_chunk_length_comes_from_the_training_config(tmp_path, repository):
     config = dict(TRAIN_CONFIG, data={"view_sizes": [[384, 480]], "chunk_size": 16, "video_frame_stride": 4})
     assert runtime.resolve_run({}, run_directory(tmp_path, config=config), repository).chunk_size == 16
