@@ -87,3 +87,12 @@ removed from the published logs.
 
 The synthetic debug client reports `success_official=false` in the logs.
 Simulator task-score evaluation for this revision: not run.
+
+## Model API update — 2026-11-21
+
+All 24 CPU tests passed after configuring the ModelService examples and adding
+request tracing. The two new tests use local HTTP listeners to verify Bearer-key
+injection, a unique UUID `Trace-Id` for each request, replacement of caller-supplied
+credentials and trace IDs, unchanged request bodies, and robot route isolation.
+No real model API key is used in these tests. The full process debug results above
+were recorded on 2026-11-19.

@@ -1,5 +1,14 @@
 # Development record
 
+## 2026-11-21 — Model API access
+
+The installation examples now use the JD Cloud ModelService endpoint and the
+`joyai_vl_testing` serving model ID. API keys are available by email from either
+team contact listed in the README. The model egress proxy generates a fresh
+`Trace-Id` per HTTP request and records it in its request logs. The model request
+body, inference settings other than the serving model ID, and robot API routing
+are unchanged.
+
 ## 2026-11-19 — API-driven Agent release
 
 Source: the JoyAI-VL XPolicyLab adapter prepared at commit

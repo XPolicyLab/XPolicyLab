@@ -66,6 +66,8 @@ class Packaging(unittest.TestCase):
             with self.subTest(value=value), self.assertRaises(ValueError):
                 configure.split_api_base(value)
         self.assertEqual(configure.split_api_base("https://api.example.com"), ("https://api.example.com", "/"))
+        self.assertEqual(configure.split_api_base("https://modelservice.jdcloud.com/v1"),
+                         ("https://modelservice.jdcloud.com", "/v1"))
 
     def test_install_and_native_seed_layout_forwarding(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -215,7 +217,7 @@ class ActualRunner(unittest.TestCase):
                     module.main("Synthetic task; no environment or model is running.")
             self.assertEqual(len(captures), 2)
             first, second = captures
-            self.assertEqual(first["model"], "JoyAI-VL")
+            self.assertEqual(first["model"], "joyai_vl_testing")
             self.assertEqual(first["max_tokens"], 65536)
             self.assertEqual(first["temperature"], 0)
             self.assertFalse(first["stream"])

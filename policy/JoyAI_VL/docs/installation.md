@@ -26,6 +26,8 @@ Run the commands below from that policy directory.
 
 ## 2. Configure the model
 
+Request an API key from either [qizhangyang.1@jd.com](mailto:qizhangyang.1@jd.com)
+or [tiankanghui.1@jd.com](mailto:tiankanghui.1@jd.com).
 Create a private key file outside the repository, for example
 `$HOME/.config/joyai-vl/api-key`, with permissions `0600`. Use your endpoint's supplied
 API key; do not place it in command-line arguments, configuration JSON, or Git.
@@ -34,15 +36,17 @@ API key; do not place it in command-line arguments, configuration JSON, or Git.
 python3 tools/configure.py \
   --robodojo-repo /path/to/RoboDojo \
   --isaac-python /path/to/isaac-env/bin/python \
-  --api-base https://api.example.com/v1 \
-  --model JoyAI-VL \
+  --api-base https://modelservice.jdcloud.com/v1 \
+  --model joyai_vl_testing \
   --key-file "$HOME/.config/joyai-vl/api-key" \
   --sam3-url http://127.0.0.1:18300
 ```
 
-`JoyAI-VL` is the public model name. Set `--model` to the actual ID accepted by your serving
-endpoint. The base URL ends before `/chat/completions`; it may use a prefix other than `/v1`.
+`JoyAI-VL` is the public model name; `joyai_vl_testing` is the serving model ID.
+The base URL ends before `/chat/completions`; both the URL and model ID remain configurable.
 The key file is read by the egress proxy and is not mounted in the model's agent container.
+The proxy adds `Authorization: Bearer ...` and a fresh `Trace-Id` to each model request.
+See the [API request example](../README.md#model-api-access).
 For a server without authentication, provide a separate empty key file.
 
 The generated `config.env` is private, mode `0600`, and is never overwritten automatically.

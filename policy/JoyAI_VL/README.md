@@ -14,27 +14,27 @@ Shared conventions — argument meanings, checkpoint naming, split-machine deplo
 
 Use XPolicyLab inside a working RoboDojo workspace with Isaac Sim 5.1 and cuRobo. The policy server uses that Isaac Python environment. Docker runs the agent and its API proxy; a separate SAM3 service supplies segmentation masks. See [installation details](docs/installation.md) for dependencies and service setup.
 
-From `RoboDojo/XPolicyLab/policy/JoyAI_VL`, configure your own endpoint and an API-key file outside the checkout, then build the agent:
+Request an API key as described under [Model API access](#model-api-access). From `RoboDojo/XPolicyLab/policy/JoyAI_VL`, configure the endpoint and an API-key file outside the checkout, then build the agent:
 
 ```bash
 python3 tools/configure.py \
   --robodojo-repo /path/to/RoboDojo \
   --isaac-python /path/to/isaac-env/bin/python \
-  --api-base https://api.example.com/v1 \
-  --model JoyAI-VL \
+  --api-base https://modelservice.jdcloud.com/v1 \
+  --model joyai_vl_testing \
   --key-file "$HOME/.config/joyai-vl/api-key" \
   --sam3-url http://127.0.0.1:18300
 bash install.sh
 ```
 
-Replace the example paths and model ID with your deployment values. The key file must already exist; keep it private with mode `0600`. The setup writes a private `config.env` without copying key contents. Start the shared segmentation service in another terminal:
+Replace the example paths with your deployment paths. The key file must already exist; keep it private with mode `0600`. The setup writes a private `config.env` without copying key contents. Start the shared segmentation service in another terminal:
 
 ```bash
 CUDA_VISIBLE_DEVICES=0 /path/to/sam3-env/bin/python services/sam3_server.py \
   --checkpoint /path/to/sam3.pt --port 18300 --cache-images 24
 ```
 
-The model endpoint must support image inputs, tool calls, reasoning history, and the configured chat-template fields. API access and SAM3 weights are obtained separately.
+The model endpoint supports image inputs, tool calls, reasoning history, and the configured chat-template fields. SAM3 weights are obtained separately.
 
 ## Data Processing
 
@@ -63,8 +63,42 @@ Version history and validation status are recorded in [development history](docs
 
 ## Model Assets
 
-JoyAI-VL inference uses the configured API. Model access is coordinated separately with
-the evaluators; configure your endpoint, serving model ID and external key file locally.
+### Model API access
+
+Request an API key by emailing **either** [qizhangyang.1@jd.com](mailto:qizhangyang.1@jd.com)
+or [tiankanghui.1@jd.com](mailto:tiankanghui.1@jd.com).
+
+| Parameter | Value |
+| --- | --- |
+| Base URL for `tools/configure.py` | `https://modelservice.jdcloud.com/v1` |
+| Chat Completions URL | `https://modelservice.jdcloud.com/v1/chat/completions` |
+| Serving model ID | `joyai_vl_testing` |
+| Authorization | `Bearer {{API_KEY}}` |
+| Content type | `application/json` |
+| Request tracing | `Trace-Id: {{TRACE_ID}}` (a fresh UUID for each HTTP request) |
+| Streaming | `false` |
+
+Minimal connectivity example; replace the two placeholders before running:
+
+```bash
+curl -X POST "https://modelservice.jdcloud.com/v1/chat/completions" \
+  -H "Authorization: Bearer {{API_KEY}}" \
+  -H "Content-Type: application/json" \
+  -H "Trace-Id: {{TRACE_ID}}" \
+  -d '{
+    "model": "joyai_vl_testing",
+    "messages": [{"role": "user", "content": "你好"}],
+    "stream": false
+  }'
+```
+
+For evaluation, the egress proxy reads the external key file and automatically adds
+the Bearer token and a new `Trace-Id` to each model request, including retries.
+Trace IDs are recorded in the proxy log for request lookup. Evaluation requests use
+the inference settings in `configs/model_api.example.json`.
+
+### Additional assets
+
 SAM3 checkpoints and RoboDojo assets are obtained under their respective access and
 license terms. Runtime identities and hashes are in [runtime references](metadata/runtime_reference.json).
 

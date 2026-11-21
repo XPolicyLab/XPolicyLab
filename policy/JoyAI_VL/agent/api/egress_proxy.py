@@ -13,6 +13,7 @@ import http.client
 import os
 import sys
 import threading
+import uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlsplit
 
@@ -70,10 +71,15 @@ class Proxy(BaseHTTPRequestHandler):
                 with open(target, "wb") as handle:
                     handle.write(f"{self.headers.get('Content-Encoding', 'identity')}\n".encode() + body)
         headers = {k: v for k, v in self.headers.items() if k.lower() not in HOP_BY_HOP}
+        trace_suffix = ""
         if self.key_file:
-            headers = {k: v for k, v in headers.items() if k.lower() not in ("authorization", "api-key", "x-api-key")}
+            headers = {k: v for k, v in headers.items()
+                       if k.lower() not in ("authorization", "api-key", "x-api-key", "trace-id")}
             with open(self.key_file) as handle:
                 headers["Authorization"] = "Bearer " + handle.read().strip()
+            headers["Trace-Id"] = str(uuid.uuid4())
+            trace_suffix = f" trace_id={headers['Trace-Id']}"
+            log(f"TRACE {self.command} {self.path.split('?')[0]}{trace_suffix}")
         headers["Host"] = self.upstream.netloc
         connect = http.client.HTTPSConnection if self.upstream.scheme == "https" else http.client.HTTPConnection
         connection = connect(self.upstream.hostname, self.upstream.port, timeout=self.timeout_s)
@@ -82,7 +88,7 @@ class Proxy(BaseHTTPRequestHandler):
             response = connection.getresponse()
         except (OSError, http.client.HTTPException) as err:
             connection.close()
-            log(f"FAIL {self.command} {self.path.split('?')[0]}: {err}")
+            log(f"FAIL {self.command} {self.path.split('?')[0]}{trace_suffix}: {err}")
             return self.refuse(502, f"upstream error: {err}\n")
         self.send_response(response.status, response.reason)
         for key, value in response.getheaders():
@@ -102,11 +108,11 @@ class Proxy(BaseHTTPRequestHandler):
             self.wfile.write(b"0\r\n\r\n")
             self.wfile.flush()
         except OSError as err:
-            log(f"ABORT {self.path.split('?')[0]}: {err}")
+            log(f"ABORT {self.path.split('?')[0]}{trace_suffix}: {err}")
             self.close_connection = True
         finally:
             connection.close()
-        log(f"{response.status} {self.command} {self.path.split('?')[0]} in={len(body)} out={sent}")
+        log(f"{response.status} {self.command} {self.path.split('?')[0]} in={len(body)} out={sent}{trace_suffix}")
 
     do_GET = do_POST = do_PUT = do_DELETE = forward
 
