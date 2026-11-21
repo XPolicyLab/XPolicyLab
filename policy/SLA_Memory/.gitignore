@@ -1,0 +1,5 @@
+# Datasets, norm stats and logs written by process_data.sh / train.sh (checkpoints/ is ignored at the repo root).
+Data/
+assets/
+wandb/
+logs/
