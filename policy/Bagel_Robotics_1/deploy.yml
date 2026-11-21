@@ -1,0 +1,26 @@
+policy_name: Bagel_Robotics_1
+protocol: ws
+host: localhost
+port: null
+bench_name: RoboDojo
+task_name: null
+ckpt_name: cp1000
+env_cfg_type: arx_x5
+action_type: ee
+seed: 1
+gpu_id: null
+eval_batch: false
+bundle_path: null
+wan_model_dir: null
+deployment_adapter: robodojo_ee16
+device: cuda
+mixed_precision: bf16
+action_horizon: 32
+replan_steps: 16
+num_inference_steps: 10
+sigma_shift: 1.0
+default_instruction: follow the instruction
+temporal_ensemble:
+  enabled: true
+  new_weight: 0.9
+  old_weight: 0.1
