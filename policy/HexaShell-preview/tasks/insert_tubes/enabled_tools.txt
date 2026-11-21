@@ -1,0 +1,7 @@
+# tools enabled for this task, one per line (shared tools/<name> or tasks/insert_tubes/tools/<name>)
+rigid_place
+axis_grasp
+return_home
+stereo_feature
+table_plane
+surface_circles

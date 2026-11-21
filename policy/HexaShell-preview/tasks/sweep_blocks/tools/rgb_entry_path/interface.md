@@ -1,0 +1,8 @@
+`robo rgb_entry_path --u U --v V --a_u AU --a_v AV --b_u BU --b_v BV --inside_u IU --inside_v IV --radius R --inside_distance D` computes a planar translation path through a finite entrance; read-only and free.
+Select a footprint center U/V, entrance endpoints A/B, and a reference on the interior side I in one current RGB image. `[--camera head|wrist_l|wrist_r]` defaults to head.
+Supply exactly one of `--plane_z Z` or `--table_offset H` (RGB table height plus H). All four pixels are intersected with that same stated horizontal plane; their actual heights and identities are not measured.
+R is a caller-measured bounding footprint radius (.001.. .15 m); D is a caller-chosen interior travel distance (.005.. .20 m), at least R plus margin. Interior depth is not measured.
+`[--backoff .03 --margin .005]` extends the path behind the source by 0.. .15 m and adds .003.. .03 m entrance clearance. The endpoint is D inside the entrance midpoint.
+Returns plan_ok/plan_fail_reason, start_world, end_world, entrance_crossing_world, inward_normal_world, heading_deg, entrance_width_m, clearance_margin_m and measurement evidence. Coordinates describe the footprint center, not TCP or attached contact geometry.
+Rejects ambiguous interior sign, source on the interior side or too close to the entrance, narrow entrance, path length outside .02.. .50 m, or insufficient distance from either entrance endpoint along the entire path. A rejected clearance candidate has path_clear=false and must not be executed.
+No motion, grasp, IK, lip-height, interior-boundary, moving-geometry or other obstacle checks; containment_verified=false. Invalid RGB/calibration, missing plane height or invalid arguments fail without motion.

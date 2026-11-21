@@ -1,0 +1,8 @@
+# tools enabled for this task, one per line (shared tools/<name> or tasks/swap_blocks/tools/<name>)
+
+cartesian_actions
+
+press_surface
+table_plane
+
+rgb_point

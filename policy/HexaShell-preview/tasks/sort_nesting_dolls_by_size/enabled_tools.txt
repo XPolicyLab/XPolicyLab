@@ -1,0 +1,6 @@
+# tools enabled for this task
+table_plane
+rgb_geometry
+circle_geometry
+rgb_transfer
+tcp_route
