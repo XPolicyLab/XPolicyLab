@@ -1,0 +1,14 @@
+{
+  "schema": "r2si.harness-integration.v2",
+  "active_manifest": "harness/release.json",
+  "active_release_sha256": "f8b4924c606493bd28e50e0beca9cb64c42db92c819662d44d12ebe6b3d99926",
+  "architecture": "one inner Agent with WSP memory/no-memory WAM Skills",
+  "official_single_entry_eligible": false,
+  "eligibility_status": "unverified",
+  "runtime_sources": "harness/vendor/runtime_support",
+  "skill_selection": "shared_capabilities_selected_by_agent",
+  "revision": "generic-remediation-20261024",
+  "bundled_wam": "worldscape-policy/ and xpolicylab_adapter/; public Flash/Memory bindings retained",
+  "submission_policy_directory": "WorldScape_RSI",
+  "audit": "VALIDATION.json"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "lost-payload-recovery",
+  "version": "0.7.0-general-control-20261024",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "think",
+    "feedback"
+  ],
+  "dependencies": [],
+  "artifact_type": "skill",
+  "description": "失去载荷后的重新定位",
+  "implementation": "text",
+  "load_mode": "always"
+}

@@ -1,0 +1,132 @@
+# RoboDojo image augmentation, automatically included by posttrain/robodojo.yaml.
+# All sizes below are per camera. Edit this file, or append CLI overrides such as:
+#   data_loader.video_augmentation_config.gamma.enabled=false
+#   'data_loader.video_augmentation_config.gamma.range=[0.85,1.15]'
+#
+# Execution: crop/resize -> shuffled brightness/contrast/saturation/hue -> gamma
+# -> exposure -> temperature -> blur -> noise -> pixel AdaIN -> FFT -> uint8.
+# Each camera draws independently; draws are replayed for all its time steps.
+# Head history and head-only initial/goal/demo prompts use camera zero's draws.
+# All tasks use random augmentation (80% probability); skipped samples only resize.
+# Color-sensitive tasks also use saturation/temperature, but disable hue/AdaIN/FFT.
+# Evaluation (training=false) also only resizes.
+#
+# This implements the supplied screenshot's described operations, not a verified
+# reproduction of its paper. Screenshot-unspecified choices are marked below.
+data_loader:
+  # Master switch bypasses the augmentation pipeline; dataset cache resize remains.
+  augment_video: ${oc.decode:${oc.env:AUGMENT_VIDEO,true}}
+  # Crop and hue are OFF globally by default; explicit environment overrides remain available.
+  augment_crop: ${oc.decode:${oc.env:AUGMENT_CROP,false}}
+  augment_hue: ${oc.decode:${oc.env:AUGMENT_HUE,false}}
+  augmentation_hue: 0.08
+
+  video_augmentation_config:
+    width: 320
+    height: 160
+    probability: 0.8
+    independent_cameras: true
+    # Shared image decoding is RGB. Historical checkpoints explicitly opt in
+    # to BGR in the public recipe; augmentation uses the same selected order.
+    input_color_order: ${oc.env:ROBODOJO_INPUT_COLOR_ORDER,RGB}
+    frame_batch_size: 16
+
+    crop:
+      enabled: ${data_loader.augment_crop}
+      probability: 1.0
+      scale: 0.95
+
+    # Keep the existing photometric strengths.
+    brightness:
+      enabled: true
+      probability: 1.0
+      range: [0.7, 1.3]
+    contrast:
+      enabled: true
+      probability: 1.0
+      range: [0.6, 1.4]
+    saturation:
+      enabled: true
+      probability: 1.0
+      range: [0.5, 1.5]
+    hue:
+      enabled: ${data_loader.augment_hue}
+      probability: 1.0
+      # Fraction of a full turn; 0.1 corresponds to the screenshot's +/-36 degrees.
+      strength: ${data_loader.augmentation_hue}
+
+    gamma:
+      enabled: true
+      probability: 1.0
+      range: [0.7, 1.4]
+    exposure:
+      enabled: true
+      probability: 1.0
+      # Multiply pixel values by 2**stops; this is image-space exposure jitter.
+      stops: [-0.5, 0.5]
+    temperature:
+      enabled: true
+      probability: 1.0
+      # Approximate white-balance jitter, not a Kelvin-calibrated color transform.
+      # Red and blue gains are independently drawn; green is unchanged.
+      red_gain: [0.85, 1.15]
+      blue_gain: [0.85, 1.15]
+    blur:
+      enabled: true
+      probability: 0.3
+      # Kernel/sigma are implementation choices not specified in the screenshot.
+      kernel_size: 3
+      sigma: [0.1, 1.5]
+    noise:
+      enabled: true
+      probability: 1.0
+      # Std in [0,1] pixel units. One noise field per camera is shared over time.
+      std: 0.03
+    adain:
+      enabled: true
+      probability: 0.5
+      # Pixel-channel moment transfer, NOT a pretrained neural style-transfer model.
+      # Sample three target means/stds per camera, shared across time. Source
+      # moments are per frame; no future frames are used to transform the current.
+      # These target ranges and blend are choices absent from the screenshot.
+      mean: [0.3, 0.7]
+      std: [0.1, 0.3]
+      blend: 0.5
+      eps: 1.0e-6
+    fft:
+      enabled: true
+      probability: 0.5
+      amplitude: [0.5, 1.5]
+      # Uniform gain per channel/frequency conjugate pair; shared over time.
+      # Applies to all frequencies except DC. Phase is preserved before clipping.
+      # Mask granularity and preserving DC are screenshot-unspecified choices.
+      preserve_dc: true
+
+    # Exact task_id exceptions. All tasks inherit probability=0.8 and the same
+    # strengths, including saturation and temperature. Disable hue/AdaIN.
+    # FFT is also disabled: its independent RGB-channel masks can change colors.
+    # Retain brightness/contrast/saturation/gamma/exposure/temperature/blur/noise;
+    # these can still change
+    # pixel values, so this is not a guarantee of exact chromaticity preservation.
+    # Crop remains controlled by AUGMENT_CROP (default false).
+    # The YAML alias shares one exception recipe across all listed task names.
+    # Task definitions: https://robodojo-benchmark.com/doc/sim-tasks/
+    task_overrides:
+      # Remember red/green/blue identities:
+      # https://robodojo-benchmark.com/doc/sim-tasks/cover-blocks/
+      cover_blocks: &color_sensitive
+        hue: {enabled: false}
+        adain: {enabled: false}
+        fft: {enabled: false}
+      # Match screws and nuts by color:
+      # https://robodojo-benchmark.com/doc/sim-tasks/fasten-screws/
+      fasten_screws: *color_sensitive
+      # Red action buttons and a blue confirmation button:
+      # https://robodojo-benchmark.com/doc/sim-tasks/press-by-number/
+      press_by_number: *color_sensitive
+      # Language explicitly refers to block/container colors (official eval-only
+      # tasks; these exceptions also apply if training data is added later):
+      # https://robodojo-benchmark.com/doc/sim-tasks/stack-blocks-by-language/
+      # https://robodojo-benchmark.com/doc/sim-tasks/pour-by-language/
+      stack_blocks_by_language: *color_sensitive
+      pour_by_language: *color_sensitive
