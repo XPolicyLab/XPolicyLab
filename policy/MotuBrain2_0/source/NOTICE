@@ -1,0 +1,14 @@
+MotuBrain2.0-Robodojo evaluation.
+
+Existing source-file copyright and SPDX notices are retained.
+
+External components:
+- Depth-Anything-3 source: https://github.com/ByteDance-Seed/Depth-Anything-3
+  revision 3d835ec1a5802d64a8b8b15f817a1ab54809bfe4
+- DA3-LARGE model: https://huggingface.co/depth-anything/DA3-LARGE (CC BY-NC 4.0)
+- T5Gemma: https://huggingface.co/google/t5gemma-9b-9b-prefixlm-it (Gemma terms)
+- Wan2.2 VAE: https://huggingface.co/Wan-AI/Wan2.2-TI2V-5B (Apache 2.0)
+- XPolicyLab transport/integration: https://github.com/XPolicyLab/XPolicyLab
+  integration revision 6baccd57ff958570d0db1588370289ee36c8bb70
+
+These upstream components and assets retain their own terms.

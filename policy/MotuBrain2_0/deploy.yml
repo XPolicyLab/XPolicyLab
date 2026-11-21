@@ -1,0 +1,17 @@
+policy_name: MotuBrain2_0
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+action_type: null
+gpu_id: null
+eval_batch: false
+checkpoint_file: step-5000.safetensors  # Relative to ckpt_name's bundle.
+model_config_file: config.yaml
+action_stats_file: action_stats.json
+policy_config: null  # Optional Python policy config; relative to this adapter.
+query_seed_base: 42  # null leaves diffusion noise unseeded.
