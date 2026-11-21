@@ -1,0 +1,20 @@
+# A learned policy alone on development layouts: one scripted program hands it the
+# whole task from the start pose and lets it run to the end of the episode (run_policy
+# as RoboDojo's evaluation client runs it; no model calls). scripts/policy_card.py sorts
+# its per-task scores into the kinds its description in services/<name>.toml names:
+#   harness run configs/experiments/policy-alone-dev.toml --script configs/scripts/policy_alone.json --output runs/simate-alone-dev
+#   harness run configs/experiments/policy-alone-dev.toml --set 'agent.services.policies=["g05"]' --script configs/scripts/policy_alone.json --output runs/g05-alone-dev
+#   python scripts/policy_card.py runs/simate-alone-dev
+description = "a learned policy alone through run_policy (the agent's, Simate, unless set), every task, two development layouts"
+bench = "robodojo"
+tasks = "all"
+seeds = "0-1"
+layouts = "procedural"
+
+[budget]
+max_wall_seconds = 5400
+
+[overrides.agent]
+services = { world_models = [] }
+# The script hands the policy the task itself: no start step.
+runtime = { strategy_first = false }

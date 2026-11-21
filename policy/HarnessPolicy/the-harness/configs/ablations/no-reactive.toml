@@ -1,0 +1,12 @@
+# The reactive layer on moving objects, without it (the other arm of reflexes.toml): the
+# default agent with the reactive layer off and no learned policy, so the program catches
+# what moves with the tools by object id alone (pick looks the object up, then reaches).
+description = "Reactive layer A/B: programs without the reactive layer, no learned policy"
+include = ["../default.toml"]
+
+[skills]
+layers = { learned = true, reactive = false, handlers = true }
+
+[services]
+policies = []
+world_models = []

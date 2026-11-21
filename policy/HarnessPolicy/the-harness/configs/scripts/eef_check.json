@@ -1,0 +1,6 @@
+[
+ "Locate the bowls.\n<python>\nif 'start' in globals():\n    start('B', 'scripted check')\nr = locate('bowl')\nprint(r['text'])\no = r['objects'][0]\narm = 'left' if o['position'][0] < 0 else 'right'\nprint(arm, o['id'], o['reach'])\n</python>",
+ "Pick one and set it down 5 cm nearer the robot.\n<python>\np = pick(arm, o['id'])\nprint(p)\nif p['ok']:\n    print(release(arm, x=o['position'][0], y=o['position'][1] - 0.05))\n</python>",
+ "Push it back.\n<python>\nr = locate('bowl')\no = min(r['objects'], key=lambda item: abs(item['position'][0] - o['position'][0]))\nprint(push(arm, o['id'], o['position'][0], o['position'][1] + 0.04))\nprint(home())\n</python>",
+ "<finish>eef check</finish>"
+]

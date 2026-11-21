@@ -1,0 +1,14 @@
+# The reactive layer on moving objects, with reflexes (paper: Sec. "Reacting without the
+# model", Tab. reactive, with no-reactive.toml as the other arm): the default agent plus
+# the reflexes skill (intercept: a visual-servo controller that catches an object moving
+# past) and no learned policy, so the program itself catches what moves. Run both arms on
+# the conveyor tasks (match_and_pick_from_conveyor, pick_from_conveyor_by_image).
+description = "Reactive layer A/B: programs with the reactive layer and reflexes (intercept), no learned policy"
+include = ["../default.toml"]
+
+[skills]
+enable = ["reflexes"]
+
+[services]
+policies = []
+world_models = []

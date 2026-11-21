@@ -1,0 +1,16 @@
+kind = "kinematics"
+summary = "ARX X5 kinematics (fk, ik, plan_path) through RoboDojo's cuRobo planner, without the simulator"
+protocol = "http"
+command = ["{python}", "-u", "services/servers/serve_kinematics.py", "--robodojo", "{robodojo}",
+           "--embodiment", "{repo}/embodiments/arx_x5/embodiment.toml", "--port", "{port}"]
+port = 8840
+# cuRobo's planners for one arm model, with CUDA graphs.
+vram_gb = 2.0
+load_seconds = 180
+client = { url = "{url}" }
+needs_files = ["{robodojo}/env/planner_manager/curobo_planner.py", "{robodojo}/Assets/Robots/x5/curobo.yml"]
+notes = "For policies that run outside the simulator (the XPolicyLab connector); simulator workers answer fk, ik and plan themselves."
+
+[[weights]]
+dir = "kinematics"
+local = "no weights: the robot description and planner come from the RoboDojo checkout"

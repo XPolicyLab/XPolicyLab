@@ -1,0 +1,7 @@
+name = "vla"
+summary = "Learned visuomotor policies (VLAs) run as bounded executions, and start: the first motion, choosing whether to hand the task to one."
+layer = "learned"
+mixin = "skills.vla:LearnedPolicies"
+exports = ["start", "run_policy", "list_policies", "__policy_to_end__"]
+needs = ["policy"]
+order = 130

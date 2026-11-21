@@ -1,0 +1,11 @@
+# RoboTwin 2.0 evaluation as Harness VLA (Zhang et al. 2026a, Tab. 6) reports it: the 50
+# tasks, five randomized episodes each (demo_randomized, the official evaluation seeds of
+# group 0). The agent as in robotwin-dev.toml: the RoboTwin prompt pack, the manipulation
+# skill, no learned skill (none is served for this embodiment), the robot's own
+# observations.
+description = "the agent on RoboTwin 2.0, 50 tasks x 5 randomized evaluation episodes"
+include = ["robotwin-dev.toml"]
+tasks = "all"
+seeds = "0-4"
+layouts = "eval"
+layout_pack_seed = 0

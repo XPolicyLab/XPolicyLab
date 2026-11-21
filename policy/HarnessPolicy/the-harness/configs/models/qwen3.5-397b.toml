@@ -1,0 +1,11 @@
+# Qwen3.5-397B-A17B, open weights, writes programs and answers questions about images:
+# the open-weight model of the paper's comparison of language models.
+description = "Qwen3.5-397B-A17B (open weights) writes programs and answers questions about images; Molmo2 points"
+include = ["grok-medium.toml"]
+
+[main]
+model = "qwen/qwen3.5-397b-a17b"
+
+[vlm]
+model = "qwen/qwen3.5-397b-a17b"
+reasoning_effort = "medium"

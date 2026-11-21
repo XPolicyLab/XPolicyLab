@@ -1,0 +1,16 @@
+kind = "segmenter"
+summary = "SAM 3 instance segmentation from text or point prompts (segment_text, segment_point; inside pick and place)"
+protocol = "http"
+command = ["{python}", "-u", "services/servers/serve_sam3.py", "--checkpoint", "{weights}/sam3/sam3.pt",
+           "--port", "{port}"]
+port = 8810
+# Measured on a 3090: 7.2 GB.
+vram_gb = 7.2
+load_seconds = 60
+client = { url = "{url}" }
+needs_files = ["{weights}/sam3/sam3.pt"]
+notes = "The official sam3 package (CaP-X fork) installed editable in the project environment; sam3.pt is loaded with weights_only=True."
+
+[[weights]]
+dir = "sam3"
+modelscope_model = "facebook/sam3"

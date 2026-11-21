@@ -1,0 +1,21 @@
+# Learning from past episodes (paper Sec. 3.3, Tab. RSI) on the three tasks the agent does
+# with its own tools, where an entry of its library can change what its programs do
+# (general_pickup 68, solve_equation 18, arrange_largest_number 22 in the full local
+# evaluation of agent 1.6.3). The library grows on official layouts of pack 0 (explore
+# 0-3, validate 4-9) and is evaluated frozen on layouts 0-19 of pack 1, which it never saw
+# (pack 0 has only 25 layouts of arrange_largest_number). The agent as submitted.
+#   python scripts/self_improve.py --experiment configs/experiments/rsi-stable.toml --set layout_pack_seed=0 \
+#       --tasks general_pickup --explore-seeds 0-3 --validate-seeds 4-9 --min-gain 0.3 \
+#       --library runs/rsi/library-general_pickup --output runs/rsi/learn-general_pickup
+#   harness run configs/experiments/rsi-stable.toml --output runs/rsi/eval-none
+#   harness run configs/experiments/rsi-stable.toml --set 'agent.runtime.library.path="runs/rsi/library"' \
+#       --output runs/rsi/eval-library
+description = "self-improvement: the agent's own-tool tasks, frozen evaluation on layouts 0-19 of pack 1"
+include = ["eval.toml"]
+tasks = ["general_pickup", "solve_equation", "arrange_largest_number"]
+seeds = "0-19"
+layout_pack_seed = 1
+
+[overrides.agent]
+roles = ["main", "vlm", "verifier"]
+services = { world_models = [] }

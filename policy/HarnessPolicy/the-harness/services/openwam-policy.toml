@@ -1,0 +1,44 @@
+kind = "policy"
+summary = "OpenWAM-alpha world-action model run as a policy (end-effector actions), RoboDojo's own checkpoint, through XPolicyLab's OpenWAM adapter"
+protocol = "xpolicylab"
+port = 19010
+# XPolicyLab's server for the adapter would load the checkpoint whole on the GPU with the
+# pinned numpy; this one loads it as the openwam world-model service does (text encoder on
+# the CPU, the stats re-saved under numpy 1) and speaks XPolicyLab's websocket protocol.
+command = ["{python}", "-u", "services/servers/serve_openwam_policy.py", "--ckpt-dir", "{weights}/openwam",
+           "--port", "{port}"]
+env = { HARNESS_ROBODOJO_ROOT = "{robodojo}" }
+# Measured for the openwam world-model service, loaded the same way: 15.3 GB.
+vram_gb = 15.3
+load_seconds = 240
+needs_files = ["{weights}/openwam/config.yaml", "{xpolicylab}/policy/OpenWAM/model.py"]
+notes = """The same checkpoint as the openwam world-model service; run one of the two per GPU. Its actions are link6 \
+poses for both arms (action_type ee), which run_policy solves by IK every step, as RoboDojo's client does. The \
+description is generic until OpenWAM-alpha alone has run on development layouts (configs/experiments/\
+policy-alone-dev.toml) and scripts/policy_card.py has sorted its scores into kinds of manipulation."""
+
+[client]
+url = "{url}"
+description = """A world-action model trained on whole RoboDojo tasks: each demonstration starts at the start pose \
+and finishes the task, labelled with the task's own instruction; it predicts the end-effector motion of both arms. \
+It does best in exactly that setting: from the untouched start pose, with the task's own instruction, left to run. \
+It cannot pick one object out of several by reading what identifies it: a name, a number or label written on it, \
+or a picture shown as the target. Signs it has stopped helping: the arms stop moving while objects are not where the \
+task needs them; the same reach is repeated; an object is knocked over or off the table."""
+
+# The adapter's protocol (what run_policy sends and gets: ee actions, 16 values). ckpt_name
+# and the overrides apply only when XPolicyLab's own server is used (no command above).
+[xpolicylab]
+policy = "OpenWAM"
+ckpt_name = "{weights}/openwam"
+action_type = "ee"
+action_dim = 16
+
+[xpolicylab.overrides]
+ckpt_dir = "{weights}/openwam"
+# run_policy asks for one environment's chunk at a time.
+eval_batch = "false"
+
+[[weights]]
+dir = "openwam"
+hf_model = "OpenWAM/OpenWAM-Alpha-Sim-RoboDojo"

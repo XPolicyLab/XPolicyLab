@@ -1,0 +1,16 @@
+# Prompt pack of the AgileX ALOHA on RoboTwin 2.0: its own core section (frames,
+# reach, the API with RoboTwin's numbers), the other sections shared with RoboDojo.
+sections = [
+  { file = "core.md" },
+  { file = "../robodojo/learned.md", skills = ["vla", "wam"] },
+  { file = "../robodojo/reactive.md", skills = ["reactive"] },
+  { file = "../robodojo/events.md" },
+  { file = "../robodojo/handlers.md", skills = ["handlers"] },
+  { file = "../robodojo/rules.md" },
+  { file = "../robodojo/rules_learned.md", skills = ["vla"], optional = true },
+  { file = "../robodojo/rules_reactive.md", skills = ["reactive"], optional = true },
+  { file = "../robodojo/rules_handlers.md", skills = ["handlers"], optional = true },
+]
+# Names the skills export that this core section does not describe yet; programs can
+# still call them.
+undocumented = ["fingertip_of", "push", "press", "watch_scene", "home"]

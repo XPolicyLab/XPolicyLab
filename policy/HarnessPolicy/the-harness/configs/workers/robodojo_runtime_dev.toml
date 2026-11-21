@@ -1,0 +1,16 @@
+# Development worker: replays procedurally generated layouts that are disjoint
+# from the official eval packs (see benches/robodojo/devlayouts.py).
+# scripts/harness serve --factory benches.robodojo.runtime:create_environment \
+#   --options configs/workers/robodojo_runtime_dev.toml
+# reset(task, seed) replays <dev_layout_dir>/<task>_<seed>.json and generates it
+# on first use; pre-generate with scripts/robodojo_make_dev_layouts.py. dev_layout_dir
+# defaults to <RoboDojo>/harness_dev_layouts/arx_x5; set it to keep layouts elsewhere.
+task = "stack_bowls"
+layout_source = "procedural"
+record_video = false
+
+[shield]
+# Commands that are bugs are rejected (see benches/robodojo/runtime.py).
+max_joint_jump_rad = 0.3
+max_cartesian_jump_m = 0.25
+workspace = { x = [-1.1, 1.1], y = [-1.25, 0.35], z = [0.70, 1.565] }

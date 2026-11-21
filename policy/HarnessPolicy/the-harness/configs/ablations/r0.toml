@@ -1,0 +1,21 @@
+# R0 direct control (interface ladder, Tab. 3): one action per model call (move the
+# fingertips, open or close a gripper, observe, wait), no perception models, no
+# programs. It reimplements the direct-control interface of Zhang et al. (2026b).
+description = "R0: direct control, one action per call"
+include = ["../default.toml"]
+mode = "direct"
+prompt = "../../prompts/robodojo_direct.md"
+roles = ["main"]
+
+[skills]
+layers = { learned = false, reactive = false, handlers = false }
+
+[services]
+segmenter = false
+policies = []
+world_models = []
+
+[runtime]
+cell_timeout_seconds = 120
+default_max_seconds = 10.0
+verifier = false

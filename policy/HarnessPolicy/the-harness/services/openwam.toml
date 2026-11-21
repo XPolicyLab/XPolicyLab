@@ -1,0 +1,16 @@
+kind = "world_model"
+summary = "OpenWAM world-action model trained on RoboDojo (predict_future): predicted camera views and end-effector motion"
+protocol = "http"
+command = ["{python}", "-u", "services/servers/serve_openwam.py", "--ckpt-dir", "{weights}/openwam", "--port", "{port}"]
+port = 8820
+# Measured on a 3090 with the UMT5-XXL text encoder on the CPU: 15.3 GB.
+vram_gb = 15.3
+load_seconds = 240
+env = { HARNESS_ROBODOJO_ROOT = "{robodojo}" }
+client = { url = "{url}", description = "OpenWAM world-action model trained on RoboDojo: predicts the camera views and end-effector motion for an instruction" }
+needs_files = ["{weights}/openwam/config.yaml", "{xpolicylab}/policy/OpenWAM/model.py"]
+notes = "Uses XPolicyLab's OpenWAM adapter (policy/OpenWAM/model.py) to convert the predicted actions."
+
+[[weights]]
+dir = "openwam"
+hf_model = "OpenWAM/OpenWAM-Alpha-Sim-RoboDojo"

@@ -1,0 +1,110 @@
+# The Harness documentation site (MkDocs + Material).
+#   mkdocs serve -a 127.0.0.1:8000      preview (source environment/activate.sh first)
+#   mkdocs build --strict               what CI runs; a broken link or reference fails it
+# The navigation is docs/SUMMARY.md; pages under docs/reference/ that describe skills,
+# services, the agent, the CLI and configuration keys are generated from the code at build
+# time (scripts/gen_docs_reference.py), so they cannot fall behind it.
+# MkDocs is pinned to 1.6 (environment/requirements-docs.txt): MkDocs 2.0 drops the plugin
+# system. ProperDocs, a continuation of 1.x, builds this site unchanged if ever needed
+# (`properdocs build -f mkdocs.yml`). DISABLE_MKDOCS_2_WARNING=true quiets the plugins' notice.
+site_name: The Harness
+site_description: Models write programs that call robot skills; the program is the policy.
+site_url: https://evolvinglmms-lab.github.io/the-harness/
+repo_url: https://github.com/EvolvingLMMs-Lab/the-harness
+repo_name: EvolvingLMMs-Lab/the-harness
+edit_uri: edit/main/docs/
+docs_dir: docs
+copyright: The Harness authors
+# The navigation files are read by literate-nav, not pages of their own.
+exclude_docs: |
+  SUMMARY.md
+  */SUMMARY.md
+
+theme:
+  name: material
+  features:
+    - navigation.indexes
+    - navigation.top
+    - navigation.footer
+    - navigation.tracking
+    - navigation.instant
+    - search.suggest
+    - search.highlight
+    - toc.follow
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - content.action.edit
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: amber
+      toggle:
+        icon: material/weather-night
+        name: Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: amber
+      toggle:
+        icon: material/weather-sunny
+        name: Light mode
+  icon:
+    repo: fontawesome/brands/github
+    logo: material/robot-industrial
+
+plugins:
+  - search
+  - gen-files:
+      scripts:
+        - scripts/gen_docs_reference.py
+  - literate-nav:
+      nav_file: SUMMARY.md
+  - section-index
+  - mkdocstrings:
+      handlers:
+        python:
+          # Static analysis (griffe): the reference is built without importing torch,
+          # Isaac or any simulator.
+          paths: [src, .]
+          options:
+            docstring_style: google
+            show_source: false
+            show_root_heading: true
+            show_root_full_path: true
+            show_signature_annotations: true
+            separate_signature: true
+            merge_init_into_class: true
+            members_order: source
+            filters: ["!^_"]
+            heading_level: 2
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets:
+      # Real files shown in the docs: --8<-- "configs/default.toml"
+      base_path: ["."]
+      check_paths: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+
+extra:
+  version:
+    provider: mike

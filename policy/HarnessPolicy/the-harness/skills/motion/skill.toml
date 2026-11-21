@@ -1,0 +1,7 @@
+name = "motion"
+summary = "Bounded arm and gripper motions: planned and retimed paths, arrival checks, home."
+layer = "base"
+mixin = "skills.motion:Motion"
+exports = ["move_joints", "move_eef", "open_gripper", "close_gripper", "holding", "hold", "home"]
+required = true
+order = 90
