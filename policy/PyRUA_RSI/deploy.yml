@@ -1,0 +1,48 @@
+policy_name: PyRUA_RSI
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+action_type: joint
+gpu_id: null
+eval_batch: false
+
+# The robot the programs are written against, as `pyrualean play --robot` names it:
+# RoboDojo's default observation, three colour images and the robot's state.  A depth image
+# or camera matrices, should a client send them, are not read.
+robot: robodojo_xpl_rgb
+primitives: no-vla
+
+# Where the code of an episode comes from: PyRUA-Lean's openai runtime, pointed by model.py at
+# offline_programs.py's endpoint on 127.0.0.1, which answers with programs/<task>.py as one
+# `python` call and then `finish`.  No language model, no API key, no outside service.
+runtime: openai
+model: offline-program
+max_turns: 100
+budget_s: 5400
+images: on-demand
+feedback: pure
+# Sent with every request and ignored by the local endpoint (kept as in the online adapter;
+# `nudges` is the runtime's own limit on text-only replies, which the endpoint never gives).
+openai_options:
+  max_tokens: 8192
+  tool_choice: required
+  temperature: 1.0
+  nudges: 20
+  extra_body:
+    top_p: 0.95
+    top_k: 20
+
+# One conversation drives one environment.  The policy server answers get_action within
+# poll_s seconds whether or not the program has stepped (deploy.py asks again), so the
+# client never waits on one request for as long as a model thinks.
+poll_s: 20.0
+# The verdict is acknowledged when the episode's record is written, at most this long (keep it
+# far below the client's 120 s request timeout): the client exits after its last trial, and
+# the policy server is stopped with it.
+wrap_up_s: 30.0
+result_dir: ./results
