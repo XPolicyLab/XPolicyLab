@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "assets": {
+    "model.safetensors": {
+      "url": "https://huggingface.co/SIPAILab/sipai-robodojo-eval-ae/resolve/0738aab54e0c873db76d4d2aec7a467ca1b04120/model.safetensors",
+      "repository": "SIPAILab/sipai-robodojo-eval-ae",
+      "revision": "0738aab54e0c873db76d4d2aec7a467ca1b04120",
+      "size": 13497777232,
+      "sha256": "11424ad091c37d6192d8fb18228c11b5f5d1fff30436ad8d20bbfebc89d00e3a"
+    },
+    "tokenizer.model": {
+      "url": "https://storage.googleapis.com/big_vision/paligemma_tokenizer.model",
+      "size": 4264023,
+      "sha256": "8986bb4f423f07f8c7f70d0dbe3526fb2316056c17bae71b1ea975e77a168fc6"
+    }
+  }
+}

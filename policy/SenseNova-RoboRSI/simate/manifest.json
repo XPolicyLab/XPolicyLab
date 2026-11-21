@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "resources": {
+    "requirements.in": "43ed8fe83355b7e34895abb6ea279f7ad2d1f815afb6247fc43456644168a82a",
+    "requirements.lock": "a7ebc0fb9586891cc491231733072c772cc136131aa279ba17a099eb6bdb71bc",
+    "assets.json": "b03350dcb2240fabb219387afa54dca6a6a5ec5d66ec04e4ffbe7c37c089a961",
+    "source.json": "eb766acb09eb2988a0208d26a27d797401e6af4b77579cf571495f830a23454e"
+  },
+  "torch": "Reuse a CUDA build of PyTorch 2.6, 2.7 or 2.8 from the official RoboDojo Python 3.11 environment; do not modify the simulator environment."
+}

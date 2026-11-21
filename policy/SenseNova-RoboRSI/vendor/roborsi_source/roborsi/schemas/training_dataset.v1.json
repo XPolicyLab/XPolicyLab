@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:roborsi:schemas:training_dataset:v1",
+  "title": "RoboRSI agent training dataset manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "episode_schema_version", "dataset_id", "dataset_version", "status", "created_at", "updated_at", "sealed_at", "split_policy", "producer", "metadata", "episodes"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "episode_schema_version": {"const": 1},
+    "dataset_id": {"type": "string", "minLength": 1},
+    "dataset_version": {"type": "string", "minLength": 1},
+    "status": {"enum": ["draft", "sealed"]},
+    "created_at": {"type": "string", "format": "date-time"},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "sealed_at": {"oneOf": [{"type": "string", "format": "date-time"}, {"type": "null"}]},
+    "split_policy": {"const": "task_disjoint"},
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "git_commit"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "version": {"type": "string", "minLength": 1},
+        "git_commit": {"type": ["string", "null"]}
+      }
+    },
+    "metadata": {"type": "object"},
+    "episodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256", "episode_id", "split", "benchmark", "benchmark_version", "task_id", "seed", "status", "success", "score"],
+        "properties": {
+          "path": {"type": "string", "pattern": "^episodes/(train|validation|test)/[^/]+/[^/]+/[^/]+/episode\\.json$"},
+          "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+          "episode_id": {"type": "string", "minLength": 1},
+          "split": {"enum": ["train", "validation", "test"]},
+          "benchmark": {"type": "string", "minLength": 1},
+          "benchmark_version": {"type": ["string", "null"]},
+          "task_id": {"type": "string", "minLength": 1},
+          "seed": {"type": ["integer", "null"]},
+          "status": {"enum": ["success", "failure", "error", "incomplete", "unknown"]},
+          "success": {"type": ["boolean", "null"]},
+          "score": {"type": ["number", "null"]}
+        }
+      }
+    }
+  }
+}

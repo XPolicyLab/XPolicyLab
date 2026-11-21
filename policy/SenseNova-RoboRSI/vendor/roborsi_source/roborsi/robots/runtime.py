@@ -1,0 +1,93 @@
+# Copyright 2026 The HEART Authors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+"""Shared spawn/wait/stop helpers for robot runtime components.
+
+These orchestrate the lifecycle of subprocess-backed servers (env, vla,
+sam3) selected through the ``init_runtime`` contract on
+:class:`~roborsi.robots.robot_spec.RobotSpec`. Each helper reports state
+transitions to a :class:`~roborsi.dashboard.events.DashboardEventSink` so
+the dashboard UI stays in sync with the actual processes.
+"""
+
+from __future__ import annotations
+
+from collections.abc import Callable
+from typing import TYPE_CHECKING, Any
+
+from roborsi.dashboard.events import DashboardEventSink, RuntimeStatusEvent
+from roborsi.utils.daemon import ProcessDaemon
+from roborsi.utils.rpc import wait_for_ready
+
+if TYPE_CHECKING:
+    from roborsi.utils.rpc import RpcClient
+
+
+def stop_owned_daemons(
+    daemons: dict[str, ProcessDaemon],
+    dashboard_events: DashboardEventSink,
+) -> None:
+    """Stop owned daemons in reverse insertion order, marking each killed
+    component ``pending`` on the dashboard so the UI doesn't keep showing
+    ``ready``/``starting`` for processes that no longer exist.
+    """
+    for component, daemon in reversed(list(daemons.items())):
+        try:
+            daemon.stop()
+        except Exception:
+            pass
+        dashboard_events.emit(RuntimeStatusEvent(component, "pending"))
+
+
+def try_spawn_server(
+    daemons: dict[str, ProcessDaemon],
+    dashboard_events: DashboardEventSink,
+    component: str,
+    spawn_fn: Callable[[], tuple[ProcessDaemon | None, RpcClient]],
+) -> tuple[ProcessDaemon | None, RpcClient]:
+    dashboard_events.emit(RuntimeStatusEvent(component, "starting"))
+    try:
+        daemon, rpc = spawn_fn()
+        if daemon is not None:
+            daemons[component] = daemon
+        return daemon, rpc
+    except Exception as exc:
+        stop_owned_daemons(daemons, dashboard_events)
+        dashboard_events.emit(RuntimeStatusEvent(component, "failed", error=exc))
+        raise RuntimeError(f"[{component}] spawn failed: {exc}") from exc
+
+
+def try_wait_server(
+    daemons: dict[str, ProcessDaemon],
+    dashboard_events: DashboardEventSink,
+    component: str,
+    rpc: RpcClient,
+    daemon: ProcessDaemon | None,
+    timeout_s: float,
+    *,
+    post_fn: Callable[[], Any] | None = None,
+):
+    try:
+        wait_for_ready(rpc, daemon=daemon, timeout_s=timeout_s)
+        result = None
+        if post_fn is not None:
+            result = post_fn()
+    except Exception as exc:
+        stop_owned_daemons(daemons, dashboard_events)
+        dashboard_events.emit(RuntimeStatusEvent(component, "failed", error=exc))
+        raise RuntimeError(
+            f"[{component}] wait / client connect failed: {exc}"
+        ) from exc
+    dashboard_events.emit(RuntimeStatusEvent(component, "ready"))
+    return result
