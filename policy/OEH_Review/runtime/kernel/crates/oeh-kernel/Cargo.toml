@@ -1,0 +1,24 @@
+[package]
+name = "oeh-kernel"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+oeh-proto = { path = "../oeh-proto" }
+serde.workspace = true
+serde_json.workspace = true
+serde_yaml_ng.workspace = true
+bytes.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+inventory.workspace = true
+parking_lot.workspace = true
+tracing.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
+# 反向的 dev-dependency（两个 crate 都依赖 oeh-kernel）：只有集成测试需要把蒸馏器和
+# 准入链的插件链进来（`profiles/dev-mock.yaml` 用得到它们），Cargo 允许这种 dev 循环。
+oeh-distill = { path = "../oeh-distill" }
+oeh-admission = { path = "../oeh-admission" }

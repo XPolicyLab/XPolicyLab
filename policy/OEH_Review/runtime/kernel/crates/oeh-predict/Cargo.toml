@@ -1,0 +1,12 @@
+[package]
+name = "oeh-predict"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+oeh-kernel = { path = "../oeh-kernel" }
+oeh-proto = { path = "../oeh-proto" }
+serde.workspace = true
+serde_json.workspace = true
+inventory.workspace = true

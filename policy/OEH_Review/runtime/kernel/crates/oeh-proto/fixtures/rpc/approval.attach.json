@@ -1,0 +1,4 @@
+{
+  "request": { "jsonrpc": "2.0", "id": 1, "method": "approval/attach", "params": { "name": "console-operator" } },
+  "response": { "jsonrpc": "2.0", "id": 1, "result": {} }
+}

@@ -1,0 +1,4 @@
+{
+  "request": { "jsonrpc": "2.0", "id": 1, "method": "brain/cursor", "params": { "brain_id": "fast" } },
+  "response": { "jsonrpc": "2.0", "id": 1, "result": { "cursor": 118, "status": "idle" } }
+}

@@ -1,0 +1,43 @@
+[
+  {
+    "files": [
+      {
+        "path": "checkpoint_step_60000.safetensors",
+        "sha256": "78ca4ef5d2f6c8fa877bcae8b40c36b3d8700547fd5a708b472c4564e5f40abb",
+        "size": 24813767464
+      },
+      {
+        "path": "config.yaml",
+        "sha256": null,
+        "size": 3395
+      },
+      {
+        "path": "normalization_stats.npy",
+        "sha256": "48bc266e0390f341c86dc3712501788c2bfdb75e44f005e41cc3e5820ace36a3",
+        "size": 2190
+      },
+      {
+        "path": "tokenizer/google/umt5-xxl/special_tokens_map.json",
+        "sha256": null,
+        "size": 6623
+      },
+      {
+        "path": "tokenizer/google/umt5-xxl/spiece.model",
+        "sha256": "e3909a67b780650b35cf529ac782ad2b6b26e6d1f849d3fbb6a872905f452458",
+        "size": 4548313
+      },
+      {
+        "path": "tokenizer/google/umt5-xxl/tokenizer.json",
+        "sha256": "6e197b4d3dbd71da14b4eb255f4fa91c9c1f2068b20a2de2472967ca3d22602b",
+        "size": 16837417
+      },
+      {
+        "path": "tokenizer/google/umt5-xxl/tokenizer_config.json",
+        "sha256": null,
+        "size": 61728
+      }
+    ],
+    "repo": "OpenWAM/OpenWAM-Alpha-Sim-RoboDojo",
+    "revision": "2c1302294e3ba8319bbdb2c803b7a27de9292d03"
+  }
+]
