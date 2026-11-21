@@ -1,0 +1,10 @@
+{
+  "name": "ablate-no-delegation",
+  "description": "Task agent alone: the Local Interaction Agent is unavailable.",
+  "experiments": [
+    "E11"
+  ],
+  "switches": {
+    "agent.delegation": false
+  }
+}

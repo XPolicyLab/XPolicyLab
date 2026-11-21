@@ -1,0 +1,10 @@
+{
+  "name": "ablate-no-review",
+  "description": "Full system without the reviewer merging practice experience.",
+  "experiments": [
+    "E2"
+  ],
+  "switches": {
+    "evolution.review_merge": false
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "ablate-tools-only",
+  "description": "Task agent acts only by tool calls (no program submission).",
+  "experiments": [
+    "E12"
+  ],
+  "switches": {
+    "agent.action_mode": "tools"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "clean-submission",
+  "description": "Official submission: object models and task source off, summarised scoring notes only, constant camera calibration, learned depth service (training data stated).",
+  "experiments": [
+    "E1",
+    "E10"
+  ],
+  "switches": {
+    "knowledge.object_models": false,
+    "knowledge.task_source": false,
+    "knowledge.scoring": "docs",
+    "perception.calibration": "constant",
+    "perception.depth": "service"
+  }
+}

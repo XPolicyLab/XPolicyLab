@@ -1,0 +1,10 @@
+{
+  "name": "ablate-no-async",
+  "description": "Arms move one at a time: no asynchronous per-arm tracks.",
+  "experiments": [
+    "E7"
+  ],
+  "switches": {
+    "motion.bimanual_async": false
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "full",
+  "description": "Preview framework defaults: simulator calibration and task source on; learned shared library off.",
+  "experiments": [
+    "E1",
+    "E3",
+    "E5",
+    "E10"
+  ],
+  "switches": {}
+}
