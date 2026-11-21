@@ -1,0 +1,27 @@
+test_bridge_assembles_runtime_context (test_agent_context.AgentContext.test_bridge_assembles_runtime_context) ... ok
+test_fixed_context_configuration (test_agent_context.AgentContext.test_fixed_context_configuration) ... ok
+test_manual_is_shared_and_builds_without_task_files (test_agent_context.AgentContext.test_manual_is_shared_and_builds_without_task_files) ... ok
+test_shared_tools_for_known_random_and_unseen_tasks (test_agent_context.AgentContext.test_shared_tools_for_known_random_and_unseen_tasks) ... ok
+test_task_card_keeps_runtime_instruction_and_ignores_legacy_switches (test_agent_context.AgentContext.test_task_card_keeps_runtime_instruction_and_ignores_legacy_switches) ... ok
+test_internal_decoder_does_not_accept_official_jpeg_buffers (test_image_transport.Images.test_internal_decoder_does_not_accept_official_jpeg_buffers) ... ok
+test_official_formats_reach_internal_png_and_arrays_as_rgb (test_image_transport.Images.test_official_formats_reach_internal_png_and_arrays_as_rgb) ... ok
+test_sam3_mask_keeps_small_components_and_rejects_wrong_shape (test_image_transport.Images.test_sam3_mask_keeps_small_components_and_rejects_wrong_shape) ... ok
+test_scene_colour_names_and_overlay_preserve_rgb (test_image_transport.Images.test_scene_colour_names_and_overlay_preserve_rgb) ... ok
+test_tool_pictures_preserve_rgb_pixels (test_image_transport.Images.test_tool_pictures_preserve_rgb_pixels) ... ok
+test_agent_launcher_exports_evaluated_settings (test_release.ActualRunner.test_agent_launcher_exports_evaluated_settings) ... ok
+test_request_and_reasoning_history (test_release.ActualRunner.test_request_and_reasoning_history) ... ok
+test_api_base_validation (test_release.Packaging.test_api_base_validation) ... ok
+test_configuration_quotes_model_and_never_reads_key (test_release.Packaging.test_configuration_quotes_model_and_never_reads_key) ... ok
+test_install_and_native_seed_layout_forwarding (test_release.Packaging.test_install_and_native_seed_layout_forwarding) ... ok
+test_variant_source_relationship (test_release.Packaging.test_variant_source_relationship) ... ok
+test_exhausted_address_pool_creates_explicit_gateways (test_runtime_startup.Startup.test_exhausted_address_pool_creates_explicit_gateways) ... ok
+test_missing_gateway_stops_before_starting_agent (test_runtime_startup.Startup.test_missing_gateway_stops_before_starting_agent) ... ok
+test_selected_checkout_precedes_other_benchmark_checkout (test_runtime_startup.Startup.test_selected_checkout_precedes_other_benchmark_checkout) ... ok
+test_actual_model_contract (test_xpolicylab_boundary.Boundary.test_actual_model_contract) ... ok
+test_shared_server_decode_reaches_model_as_rgb (test_xpolicylab_boundary.Boundary.test_shared_server_decode_reaches_model_as_rgb) ... ok
+test_wait_does_not_step_environment_and_verdict_is_forwarded (test_xpolicylab_boundary.Boundary.test_wait_does_not_step_environment_and_verdict_is_forwarded) ... ok
+
+----------------------------------------------------------------------
+Ran 22 tests in 3.640s
+
+OK

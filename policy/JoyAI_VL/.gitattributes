@@ -1,0 +1,2 @@
+# Preserve the native summarize output byte for byte, including its final blank line.
+results/local_seed2_summary.md whitespace=-blank-at-eof

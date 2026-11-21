@@ -1,0 +1,16 @@
+{
+  "model": "joyai_vl_testing",
+  "reasoning_effort": "max",
+  "chat_template_kwargs": {
+    "thinking_mode": "thinking",
+    "reasoning_effort": "max",
+    "drop_thinking": false
+  },
+  "max_tokens": 65536,
+  "temperature": 0.0,
+  "stream": false,
+  "history_reasoning": true,
+  "max_turns": 100,
+  "request_timeout_s": 900,
+  "skills": false
+}

@@ -1,0 +1,286 @@
+bash: <policy-env>/lib/libtinfo.so.6: no version information available (required by bash)
+bash: <policy-env>/lib/libtinfo.so.6: no version information available (required by bash)
+[INFO] Using socket port: 50569
+[MAIN] start server, policy_server_port=50569
+bash: <policy-env>/lib/libtinfo.so.6: no version information available (required by bash)
+bash: <policy-env>/lib/libtinfo.so.6: no version information available (required by bash)
+[CONNECTING] Policy server -> localhost:50569 (PID=572821, timeout=1200s)
+[SERVER] policy=JoyAI_VL task=stack_bowls port=50569 gpu=0
+[robo-server] observation: RGB and camera matrices only, no depth
+[robo-server] profile: shared generic tools
+[robo-server] tools for stack_bowls: ['boundary_candidates', 'bounded-rotate', 'fit-rim', 'grasp_point', 'grasp_pose', 'locate', 'pixel_world', 'place_point', 'press_feature', 'press_pose', 'rgb_point', 'rgb_quad', 'rgb_ray', 'segment', 'table_plane', 'timed_pick']
+[robo-server] bridge ready: agent 10.202.20.1:29400, task stack_bowls, run root <validation-workspace>/validation/runs/encoded
+[CONNECTED] Policy server ready on localhost:50569 (PID=572821)
+[MAIN] start client, server=localhost:50569
+bash: <policy-env>/lib/libtinfo.so.6: no version information available (required by bash)
+[CLIENT] policy=JoyAI_VL, task=stack_bowls, server=localhost:50569
+bash: <policy-env>/lib/libtinfo.so.6: no version information available (required by bash)
+[CLIENT] EVAL_ENV_TYPE=debug -> debug
+bash: <policy-env>/lib/libtinfo.so.6: no version information available (required by bash)
+[CLIENT] Activating Conda environment: RoboDojo
+[CLIENT] Connecting to server localhost:50569...
+[CLIENT] Watch for green [CONNECTED]; yellow [RECONNECT] means the client is retrying.
+[CONNECTING] websocket policy server ws://localhost:50569 (attempt 1/180, timeout=30s)
+[CONNECTED] websocket policy server connected: ws://localhost:50569
+[robo-server] reset
+[robo-server] reset
+[robo-server] episode stack_bowls_ep01_20261119T085908: agent started, instruction 'language instruction'
+[robo-server] episode finished: {"task": "stack_bowls", "seed": 0, "layout": null, "success_official": false, "success_at_done": null, "done_called": true, "end_reason": "done", "progress_score": null, "commands": 2, "budget": 0, "action_steps": 6, "step_lim": 800, "sim_time_s": 0.24, "wall_s": 5.0, "contract": "0.0.1", "mode": "bridge"}
+[robo-server] reset
+[robo-server] reset
+[robo-server] episode stack_bowls_ep02_20261119T085933: agent started, instruction 'language instruction'
+[robo-server] episode finished: {"task": "stack_bowls", "seed": 0, "layout": null, "success_official": false, "success_at_done": null, "done_called": true, "end_reason": "done", "progress_score": null, "commands": 2, "budget": 0, "action_steps": 6, "step_lim": 800, "sim_time_s": 0.24, "wall_s": 4.5, "contract": "0.0.1", "mode": "bridge"}
+[robo-server] reset
+[robo-server] reset
+[robo-server] episode stack_bowls_ep03_20261119T085958: agent started, instruction 'language instruction'
+[robo-server] episode finished: {"task": "stack_bowls", "seed": 0, "layout": null, "success_official": false, "success_at_done": null, "done_called": true, "end_reason": "done", "progress_score": null, "commands": 2, "budget": 0, "action_steps": 6, "step_lim": 800, "sim_time_s": 0.24, "wall_s": 4.6, "contract": "0.0.1", "mode": "bridge"}
+[robo-server] reset
+[robo-server] reset
+[robo-server] episode stack_bowls_ep04_20261119T090022: agent started, instruction 'language instruction'
+[robo-server] episode finished: {"task": "stack_bowls", "seed": 0, "layout": null, "success_official": false, "success_at_done": null, "done_called": true, "end_reason": "done", "progress_score": null, "commands": 2, "budget": 0, "action_steps": 6, "step_lim": 800, "sim_time_s": 0.24, "wall_s": 5.1, "contract": "0.0.1", "mode": "bridge"}
+[robo-server] reset
+[robo-server] reset
+[robo-server] episode stack_bowls_ep05_20261119T090047: agent started, instruction 'language instruction'
+[robo-server] episode finished: {"task": "stack_bowls", "seed": 0, "layout": null, "success_official": false, "success_at_done": null, "done_called": true, "end_reason": "done", "progress_score": null, "commands": 2, "budget": 0, "action_steps": 6, "step_lim": 800, "sim_time_s": 0.24, "wall_s": 4.8, "contract": "0.0.1", "mode": "bridge"}
+[robo-server] reset
+[robo-server] reset
+[robo-server] episode stack_bowls_ep06_20261119T090112: agent started, instruction 'language instruction'
+[robo-server] episode finished: {"task": "stack_bowls", "seed": 0, "layout": null, "success_official": false, "success_at_done": null, "done_called": true, "end_reason": "done", "progress_score": null, "commands": 2, "budget": 0, "action_steps": 6, "step_lim": 800, "sim_time_s": 0.24, "wall_s": 5.4, "contract": "0.0.1", "mode": "bridge"}
+[robo-server] reset
+[robo-server] reset
+[robo-server] episode stack_bowls_ep07_20261119T090138: agent started, instruction 'language instruction'
+[robo-server] episode finished: {"task": "stack_bowls", "seed": 0, "layout": null, "success_official": false, "success_at_done": null, "done_called": true, "end_reason": "done", "progress_score": null, "commands": 2, "budget": 0, "action_steps": 6, "step_lim": 800, "sim_time_s": 0.24, "wall_s": 5.3, "contract": "0.0.1", "mode": "bridge"}
+[robo-server] reset
+[robo-server] reset
+[robo-server] episode stack_bowls_ep08_20261119T090203: agent started, instruction 'language instruction'
+[robo-server] episode finished: {"task": "stack_bowls", "seed": 0, "layout": null, "success_official": false, "success_at_done": null, "done_called": true, "end_reason": "done", "progress_score": null, "commands": 2, "budget": 0, "action_steps": 6, "step_lim": 800, "sim_time_s": 0.24, "wall_s": 5.4, "contract": "0.0.1", "mode": "bridge"}
+[robo-server] reset
+[robo-server] reset
+[robo-server] episode stack_bowls_ep09_20261119T090229: agent started, instruction 'language instruction'
+[robo-server] episode finished: {"task": "stack_bowls", "seed": 0, "layout": null, "success_official": false, "success_at_done": null, "done_called": true, "end_reason": "done", "progress_score": null, "commands": 2, "budget": 0, "action_steps": 6, "step_lim": 800, "sim_time_s": 0.24, "wall_s": 5.1, "contract": "0.0.1", "mode": "bridge"}
+[robo-server] reset
+[robo-server] reset
+[robo-server] episode stack_bowls_ep10_20261119T090254: agent started, instruction 'language instruction'
+[robo-server] episode finished: {"task": "stack_bowls", "seed": 0, "layout": null, "success_official": false, "success_at_done": null, "done_called": true, "end_reason": "done", "progress_score": null, "commands": 2, "budget": 0, "action_steps": 6, "step_lim": 800, "sim_time_s": 0.24, "wall_s": 5.3, "contract": "0.0.1", "mode": "bridge"}
+🚀 Running Episode 0
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 0 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 1 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 2 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 3 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 4 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 5 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Episode finished
+🚀 Running Episode 1
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 0 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 1 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 2 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 3 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 4 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 5 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Episode finished
+🚀 Running Episode 2
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 0 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 1 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 2 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 3 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 4 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 5 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Episode finished
+🚀 Running Episode 3
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 0 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 1 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 2 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 3 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 4 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 5 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Episode finished
+🚀 Running Episode 4
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 0 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 1 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 2 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 3 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 4 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 5 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Episode finished
+🚀 Running Episode 5
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 0 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 1 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 2 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 3 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 4 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 5 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Episode finished
+🚀 Running Episode 6
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 0 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 1 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 2 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 3 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 4 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 5 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Episode finished
+🚀 Running Episode 7
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 0 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 1 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 2 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 3 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 4 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 5 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Episode finished
+🚀 Running Episode 8
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 0 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 1 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 2 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 3 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 4 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 5 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Episode finished
+🚀 Running Episode 9
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 0 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 1 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 2 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 3 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 4 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 5 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Check Episode End: False
+[TestEnv] Episode finished
+[MAIN] eval finished
+[MAIN] kill server 572821

@@ -1,0 +1,66 @@
+2026-11-19 08:53:38 starting: pid 556051, CUDA_VISIBLE_DEVICES=0, port 19401, checkpoint <runtime-root>/weights/sam3.pt
+2026-11-19 08:53:53 CPU memory 2988 MB after load, 1295 MB after giving back freed memory
+2026-11-19 08:53:55 model ready in 16s on NVIDIA GeForce RTX 5090: 764M weight values in bf16, 1918 MB after load, {'torch_alloc_mb': 1927, 'torch_reserved_mb': 2526, 'torch_peak_mb': 1927} after warm-up
+2026-11-19 08:53:55 listening on http://127.0.0.1:19401; process GPU memory 3146 MB
+2026-11-19 08:54:34 200 POST /image 50ms 72384bc05a 640x480 encoded
+2026-11-19 08:54:34 200 POST /segment 64ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 08:54:34 200 POST /segment 47ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 08:54:59 200 POST /image 5ms 72384bc05a 640x480 cached
+2026-11-19 08:54:59 200 POST /segment 53ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 08:54:59 200 POST /segment 69ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 08:55:23 200 POST /image 4ms 72384bc05a 640x480 cached
+2026-11-19 08:55:23 200 POST /segment 50ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 08:55:24 200 POST /segment 46ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 08:55:48 200 POST /image 4ms 72384bc05a 640x480 cached
+2026-11-19 08:55:48 200 POST /segment 51ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 08:55:48 200 POST /segment 47ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 08:56:13 200 POST /image 4ms 72384bc05a 640x480 cached
+2026-11-19 08:56:13 200 POST /segment 52ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 08:56:13 200 POST /segment 47ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 08:56:37 200 POST /image 4ms 72384bc05a 640x480 cached
+2026-11-19 08:56:37 200 POST /segment 52ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 08:56:38 200 POST /segment 49ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 08:57:02 200 POST /image 4ms 72384bc05a 640x480 cached
+2026-11-19 08:57:02 200 POST /segment 52ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 08:57:02 200 POST /segment 47ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 08:57:27 200 POST /image 4ms 72384bc05a 640x480 cached
+2026-11-19 08:57:27 200 POST /segment 51ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 08:57:27 200 POST /segment 47ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 08:57:51 200 POST /image 4ms 72384bc05a 640x480 cached
+2026-11-19 08:57:51 200 POST /segment 53ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 08:57:52 200 POST /segment 49ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 08:58:16 200 POST /image 4ms 72384bc05a 640x480 cached
+2026-11-19 08:58:16 200 POST /segment 52ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 08:58:16 200 POST /segment 47ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 08:59:13 200 POST /image 4ms 72384bc05a 640x480 cached
+2026-11-19 08:59:13 200 POST /segment 49ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 08:59:13 200 POST /segment 47ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 08:59:37 200 POST /image 5ms 72384bc05a 640x480 cached
+2026-11-19 08:59:37 200 POST /segment 51ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 08:59:38 200 POST /segment 47ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 09:00:02 200 POST /image 4ms 72384bc05a 640x480 cached
+2026-11-19 09:00:02 200 POST /segment 60ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 09:00:02 200 POST /segment 47ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 09:00:27 200 POST /image 5ms 72384bc05a 640x480 cached
+2026-11-19 09:00:27 200 POST /segment 57ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 09:00:27 200 POST /segment 50ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 09:00:52 200 POST /image 4ms 72384bc05a 640x480 cached
+2026-11-19 09:00:52 200 POST /segment 51ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 09:00:52 200 POST /segment 49ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 09:01:17 200 POST /image 4ms 72384bc05a 640x480 cached
+2026-11-19 09:01:17 200 POST /segment 52ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 09:01:18 200 POST /segment 63ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 09:01:43 200 POST /image 4ms 72384bc05a 640x480 cached
+2026-11-19 09:01:43 200 POST /segment 55ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 09:01:43 200 POST /segment 47ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 09:02:08 200 POST /image 5ms 72384bc05a 640x480 cached
+2026-11-19 09:02:08 200 POST /segment 51ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 09:02:08 200 POST /segment 48ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 09:02:33 200 POST /image 4ms 72384bc05a 640x480 cached
+2026-11-19 09:02:33 200 POST /segment 52ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 09:02:34 200 POST /segment 48ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 09:02:58 200 POST /image 5ms 72384bc05a 640x480 cached
+2026-11-19 09:02:58 200 POST /segment 67ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 09:02:59 200 POST /segment 49ms 72384bc05a 'object' -> 8 masks top 0.022
+2026-11-19 09:03:20 signal 15: shutting down
+2026-11-19 09:03:20 stopped
