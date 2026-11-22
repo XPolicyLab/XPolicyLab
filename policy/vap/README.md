@@ -1,10 +1,17 @@
 # WALL-WM-2.0 (VAP adapter, evaluation-only)
 
-**Model / leaderboard name:** **WALL-WM-2.0**. `vap` is the XPolicyLab adapter ID used in paths, `policy_name` and result layout; it is not the public model name. The published checkpoint is the VAPv2 history5 architecture and is served through this adapter.
+**Model / leaderboard name:** **WALL-WM-2.0**.
 
-**Contributor:** local VAP integration team; public maintainer identity pending | **Paper:** not supplied | **arXiv:** not supplied | **Original code:** vendored release f3pt150000_history5_v16a32 under upstream/.
+**Contributor:** x-square-robot | **Paper:** not supplied | **arXiv:** not supplied | **Original code:** vendored release f3pt150000_history5_v16a32 under upstream/.
 
-This adapter evaluates the specified WALL-WM-2.0 (VAPv2 history5) checkpoint on RoboDojo, with arx_x5, ee, and eval_batch=false. It uses XPolicyLab's unmodified WebSocket protocol. Model construction and inference share one owner thread, as required by the model's CUDA Graphs.
+This adapter evaluates the specified WALL-WM-2.0 checkpoint on RoboDojo-Sim.
+
+- Robot configuration: `arx_x5`
+- Action space: `ee`
+- Transport: XPolicyLab's unmodified WebSocket protocol
+- Training support: evaluation-only
+
+Model construction and inference are executed on the same owner thread to satisfy the model's CUDA Graph requirements.
 
 For shared conventions, see the [root README](../../README.md). Official evaluation results are published on the [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
 

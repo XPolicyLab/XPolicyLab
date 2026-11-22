@@ -1,7 +1,6 @@
 # WALL-WM-2.0：公开依赖安装
 
-对外模型及打榜展示名称为 **WALL-WM-2.0**。`vap` 仅为 XPolicyLab adapter ID，用于
-`policy/vap/`、`policy_name`、运行路径和动作协议，不是对外模型名称。
+项目名称： **WALL-WM-2.0**
 
 本说明只安装 **WALL-WM-2.0 的 VAP policy server**。RoboDojo / Isaac Sim 仿真环境使用官方 RoboDojo
 安装流程单独创建；两套 Python/CUDA 环境不能合并。
