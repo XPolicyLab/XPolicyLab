@@ -8,7 +8,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 UPSTREAM_DIR="${SCRIPT_DIR}/ResWAM"
-RESWAM_COMMIT=c079dbf1908544ae2815fdee0ef0eba3985e3c54
+RESWAM_COMMIT=c8564aa33ca1a039cbe7b1ec2ac27d203adb136f
 VENV_DIR="$(realpath -m "${1:-${SCRIPT_DIR}/.venv}")"
 
 if [[ ! -d "${UPSTREAM_DIR}/.git" ]]; then

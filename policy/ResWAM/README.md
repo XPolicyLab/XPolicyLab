@@ -8,7 +8,7 @@ Shared conventions — argument meanings, checkpoint naming, split-machine deplo
 
 ## Installation
 
-Clones ResWAM at commit `c079dbf` and builds its Python 3.10 environment (PyTorch 2.6.0 / CUDA 12.4, transformers 5.2.0) with [uv](https://docs.astral.sh/uv/), then installs XPolicyLab into it:
+Clones ResWAM at commit `c8564aa` and builds its Python 3.10 environment (PyTorch 2.6.0 / CUDA 12.4, transformers 5.2.0) with [uv](https://docs.astral.sh/uv/), then installs XPolicyLab into it:
 
 ```bash
 cd XPolicyLab/policy/ResWAM
