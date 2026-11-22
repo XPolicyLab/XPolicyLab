@@ -1,0 +1,36 @@
+{
+  "format": 1,
+  "platform": "Linux x86_64, CPython 3.11",
+  "python": {
+    "official": "https://www.python.org/downloads/release/python-31114/",
+    "supported_versions": "3.11.x",
+    "tested_version": "3.11.14 (old environment), 3.11.18 (new environment)",
+    "source_or_package_manager": "Install CPython 3.11 with your OS package manager, python.org, or conda-forge; the adapter does not bundle a Python interpreter."
+  },
+  "python_packages": {
+    "index": "https://pypi.org/simple",
+    "lock": "requirements.lock",
+    "installation": "Bootstrap a hash-verified pip wheel from PyPI, then pip install --require-hashes --only-binary :all:",
+    "direct_wheel_exceptions": [
+      "https://download-r2.pytorch.org/whl/cu130/torch-2.12.1%2Bcu130-cp311-cp311-manylinux_2_28_x86_64.whl",
+      "https://download-r2.pytorch.org/whl/cu130/torchvision-0.27.1%2Bcu130-cp311-cp311-manylinux_2_28_x86_64.whl",
+      "https://download-r2.pytorch.org/whl/triton-3.7.1-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl"
+    ]
+  },
+  "wall_x_constants": {
+    "repository": "https://github.com/X-Square-Robot/wall-x",
+    "commit": "ce2a1ae31d9ee1028b97ca40e3f66034cf8c0e5f",
+    "path": "wall_x/utils/constant.py",
+    "license": "Apache-2.0",
+    "license_path": "https://github.com/X-Square-Robot/wall-x/blob/ce2a1ae31d9ee1028b97ca40e3f66034cf8c0e5f/LICENSE",
+    "source_sha256": "61f7b19ea3bd6c87c9c879a57d6f726e5018590cbd12c3f8ad52122b5c98ae2d",
+    "local_change": "The module docstring records its source and explicit-checkpoint statistics; public code and constants are unchanged.",
+    "reason": "The proprietary x2robot_utils package is not redistributed. Its private default catalogues are not used by this checkpoint: explicit packaged statistics and checkpoint normalizer state are authoritative."
+  },
+  "excluded_from_policy_environment": [
+    "Isaac Sim, IsaacLab and cuRobo (belong to the separately installed simulator environment)",
+    "x2robot_utils, x2robot_dataset, x2robot_dataset_v2, xcompute, dmuon",
+    "FlashAttention, SageAttention, DeepSpeed, WandB, TensorBoard, Ray",
+    "checkpoints, Qwen/Wan model assets, RoboDojo Assets, compiled runtime caches"
+  ]
+}
