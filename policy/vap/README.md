@@ -2,7 +2,7 @@
 
 **Model / leaderboard name:** **WALL-WM-2.0**.
 
-**Contributor:** x-square-robot | **Paper:** not supplied | **arXiv:** not supplied | **Original code:** vendored release f3pt150000_history5_v16a32 under upstream/.
+**Contributor:** x-square-robot | **Paper:** not supplied | **arXiv:** not supplied | **Original code:** https://huggingface.co/x-square-robot/wall-wm-2.0-robodojo/tree/main.
 
 This adapter evaluates the specified WALL-WM-2.0 checkpoint on RoboDojo-Sim.
 
