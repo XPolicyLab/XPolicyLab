@@ -13,6 +13,7 @@ import torch
 from scipy.spatial.transform import Rotation
 
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.utils.batch_indices import observation_env_ids, observation_rows
 from XPolicyLab.policy.Spirit_v15.spirit_v15.model import SpiritVLAPolicy
 
 _POLICY_DIR = Path(__file__).resolve().parent
@@ -457,7 +458,8 @@ class Model(ModelTemplate):
         self.update_obs_batch([obs])
 
     def update_obs_batch(self, obs_list):
-        self._latest_env_idx_list = [obs.get("env_idx", index) for index, obs in enumerate(obs_list)]
+        env_ids = observation_env_ids(obs_list)
+        self._latest_env_idx_list = env_ids
         self._latest_obs_list = list(obs_list)
 
     def get_action(self, **kwargs):
@@ -468,10 +470,10 @@ class Model(ModelTemplate):
         if self._latest_obs_list is None:
             raise AssertionError("update_obs or update_obs_batch first!")
 
-        env_idx_list = env_idx_list or self._latest_env_idx_list
+        rows = observation_rows(self._latest_env_idx_list, env_idx_list)
         action_list = []
 
-        for batch_index, _ in enumerate(env_idx_list):
+        for batch_index in rows:
             observation = self._latest_obs_list[batch_index]
             result = self.infer(
                 observation=observation,

@@ -1,5 +1,7 @@
 import time
 
+from XPolicyLab.utils.action_chunks import validate_action_batch, validate_action_chunk
+
 
 def _has_valid_images(obs):
     vision = obs.get("vision", {})
@@ -33,6 +35,7 @@ def eval_one_episode(TASK_ENV, model_client):
         obs = _get_valid_obs(TASK_ENV)
         model_client.call(func_name="update_obs", obs=obs)
         actions = model_client.call(func_name="get_action")
+        validate_action_chunk(actions)
 
         for action_idx, action in enumerate(actions):
             TASK_ENV.take_action(action)
@@ -49,12 +52,14 @@ def eval_one_episode_batch(TASK_ENV, model_client):
 
     while not TASK_ENV.is_episode_end():
         env_idx_list = TASK_ENV.get_running_env_idx_list()
+        if len(env_idx_list) == 0:
+            break
         obs_list = TASK_ENV.get_obs_batch(env_idx_list)
 
         model_client.call(func_name="update_obs_batch", obs=obs_list)
         actions = model_client.call(func_name="get_action_batch", obs=env_idx_list)
+        chunk_size = validate_action_batch(actions, len(env_idx_list))
 
-        chunk_size = len(actions[0])
         for action_idx in range(chunk_size):
             current_action_list = [env_actions[action_idx] for env_actions in actions]
             TASK_ENV.take_action_batch(current_action_list, env_idx_list)
@@ -67,6 +72,8 @@ def eval_one_episode_batch(TASK_ENV, model_client):
 
             actions = [actions[i] for i in active_batch_idx]
             env_idx_list = [env_idx_list[i] for i in active_batch_idx]
+            if not env_idx_list:
+                break
             model_client.call(
                 func_name="update_obs_batch",
                 obs=TASK_ENV.get_obs_batch(env_idx_list),

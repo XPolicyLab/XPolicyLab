@@ -10,6 +10,7 @@ import numpy as np
 import torch
 
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.utils.batch_indices import selected_env_ids, validate_observed_ids
 from XPolicyLab.utils.checkpoint_resolver import resolve_checkpoint_root
 from XPolicyLab.utils.process_data import (
     get_robot_action_dim_info,
@@ -161,21 +162,19 @@ class Model(ModelTemplate):
         self.update_obs_batch([obs])
 
     def update_obs_batch(self, obs_list):
-        self._latest_env_idx_list = []
-        for obs in obs_list:
-            env_idx = int(obs.get("env_idx", 0))
-            self._latest_env_idx_list.append(env_idx)
-            self.obs_by_env[env_idx] = self._convert_obs(obs)
+        env_ids = [int(obs.get("env_idx", index)) for index, obs in enumerate(obs_list)]
+        validate_observed_ids(env_ids)
+        self.obs_by_env = {env_id: self._convert_obs(obs) for env_id, obs in zip(env_ids, obs_list)}
+        self._latest_env_idx_list = env_ids
 
     def get_action(self):
         return self.get_action_batch([self._latest_env_idx_list[0]])[0]
 
     def get_action_batch(self, env_idx_list=None):
-        env_idx_list = env_idx_list or self._latest_env_idx_list
-        missing = [int(index) for index in env_idx_list if int(index) not in self.obs_by_env]
-        if missing:
-            raise AssertionError(f"update_obs_batch must be called first for envs {missing}.")
-        examples = [self.obs_by_env[int(index)] for index in env_idx_list]
+        ids = selected_env_ids(self._latest_env_idx_list, None if env_idx_list is None else map(int, env_idx_list))
+        if not ids:
+            return []
+        examples = [self.obs_by_env[i] for i in ids]
         prediction = self.model.predict_action(examples=examples)["normalized_actions"]
         actions = _unnormalize_q99(np.asarray(prediction, dtype=np.float32), self.action_stats)
         actions = actions[:, : self.execute_horizon]

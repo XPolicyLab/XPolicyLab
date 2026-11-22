@@ -11,9 +11,8 @@ import numpy as np
 import torch
 
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.utils.batch_indices import observation_rows, validate_observed_ids
 from XPolicyLab.utils.process_data import (
-    decode_image_bit,
-    get_batch_size,
     get_robot_action_dim_info,
     pack_robot_state,
     unpack_robot_state,
@@ -50,10 +49,9 @@ class Model(ModelTemplate):
         )
 
         self.robot_action_dim_info = self._resolve_robot_action_dim_info()
-        self.batch_size = self._resolve_batch_size()
-        self._obs: dict[str, Any] | None = None
-        self._obs_batch: list[dict[str, Any]] = []
-        self._obs_batch_env_keys: list[Any] | None = None
+        self._obs_batch: list[dict[str, Any]] | None = None
+        self._obs_batch_env_keys = []
+        self._single_observation = False
         self._history_buffers: dict[Any, dict[str, Any]] = {}
 
         raw_g05_root = (
@@ -162,12 +160,6 @@ class Model(ModelTemplate):
                 return {"arm_dim": [6, 6], "ee_dim": [1, 1]}
             raise
 
-    def _resolve_batch_size(self) -> int:
-        try:
-            return int(get_batch_size(self.env_cfg_type))
-        except Exception:
-            return 1
-
     def _resolve_ckpt_path(self, model_cfg) -> Path:
         raw = model_cfg.get("ckpt_path") or os.environ.get("G05_CKPT_PATH")
         if not raw:
@@ -197,80 +189,57 @@ class Model(ModelTemplate):
             observations = obs[BATCH_OBSERVATIONS_KEY]
             if not isinstance(observations, (list, tuple)):
                 raise TypeError(f"{BATCH_OBSERVATIONS_KEY} must contain a list")
-            self._obs = None
-            self._obs_batch = list(observations)
-            env_keys = obs.get(BATCH_ENV_INDICES_KEY)
-            if env_keys is not None:
-                if not isinstance(env_keys, (list, tuple)):
-                    raise TypeError(f"{BATCH_ENV_INDICES_KEY} must contain a list")
-                if len(env_keys) != len(self._obs_batch):
-                    raise ValueError(
-                        f"{BATCH_ENV_INDICES_KEY} length={len(env_keys)} does not match "
-                        f"batch size={len(self._obs_batch)}"
-                    )
-                self._obs_batch_env_keys = list(env_keys)
-            else:
-                self._obs_batch_env_keys = None
+            self.update_obs_batch(observations, obs.get(BATCH_ENV_INDICES_KEY))
             return
-        self._obs = obs
-        self._obs_batch = []
-        self._obs_batch_env_keys = None
+        self.update_obs_batch([obs])
+        self._single_observation = True
 
-    def update_obs_batch(self, obs_list):
-        self._obs_batch = list(obs_list)
-        self._obs_batch_env_keys = [
-            self._env_key_from_obs(obs, fallback_idx=i) for i, obs in enumerate(self._obs_batch)
-        ]
+    def update_obs_batch(self, obs_list, env_keys=None):
+        observations = list(obs_list)
+        if env_keys is None:
+            keys = [self._env_key_from_obs(obs, i) for i, obs in enumerate(observations)]
+        else:
+            if not isinstance(env_keys, (list, tuple)) or len(env_keys) != len(observations):
+                raise ValueError("Batch environment IDs must match the observation count")
+            keys = list(env_keys)
+            if any(self._env_key_from_obs(obs, key) != key for obs, key in zip(observations, keys)):
+                raise ValueError("Batch environment IDs disagree with the observations")
+        validate_observed_ids(keys)
+        self._obs_batch = observations
+        self._obs_batch_env_keys = keys
+        self._single_observation = False
 
     def get_action(self):
-        if self._obs_batch:
-            return self.get_action_batch()
-        if self._obs is None:
-            raise RuntimeError("update_obs must be called before get_action")
-        return self._predict_chunk(self._obs)
+        chunks = self.get_action_batch()
+        return chunks[0] if self._single_observation else chunks
 
     def get_action_batch(self, env_idx_list=None):
-        obs_list = self._obs_batch
-        if env_idx_list is not None:
-            obs_list = obs_list[: len(env_idx_list)]
-        if not obs_list:
-            size = len(env_idx_list) if env_idx_list is not None else self.batch_size
-            return [self.get_action() for _ in range(size)]
-        env_keys = (
-            list(env_idx_list)
-            if env_idx_list is not None
-            else self._obs_batch_env_keys
+        if self._obs_batch is None:
+            raise RuntimeError("Call update_obs or update_obs_batch before requesting actions")
+        rows = observation_rows(self._obs_batch_env_keys, env_idx_list)
+        if not rows:
+            return []
+        return self._predict_chunks(
+            [self._obs_batch[row] for row in rows],
+            env_keys=[self._obs_batch_env_keys[row] for row in rows],
         )
-        if env_keys is None:
-            env_keys = [
-                self._env_key_from_obs(obs, fallback_idx=i) for i, obs in enumerate(obs_list)
-            ]
-        else:
-            env_keys = list(env_keys)[: len(obs_list)]
-        return self._predict_chunks(obs_list, env_keys=env_keys)
 
     def reset(self):
-        self._obs = None
-        self._obs_batch = []
-        self._obs_batch_env_keys = None
+        self._obs_batch = None
+        self._obs_batch_env_keys = []
+        self._single_observation = False
         self._history_buffers.clear()
 
-    def _predict_chunk(self, obs: dict[str, Any]) -> list[dict[str, np.ndarray]]:
-        return self._predict_chunks([obs], env_keys=[self._env_key_from_obs(obs, fallback_idx=0)])[0]
-
     def _predict_chunks(
-        self, observations: list[dict[str, Any]], env_keys: list[Any] | None = None
+        self, observations: list[dict[str, Any]], env_keys: list[Any]
     ) -> list[list[dict[str, np.ndarray]]]:
-        if env_keys is None:
-            env_keys = [
-                self._env_key_from_obs(obs, fallback_idx=i) for i, obs in enumerate(observations)
-            ]
+        pending_history = {}
         obs_dicts = []
-        for i, obs in enumerate(observations):
+        for env_key, obs in zip(env_keys, observations):
             raw_obs = self._to_g05_raw_obs(obs)
             explicit_history = self._explicit_history_buffers_from_obs(obs, raw_obs)
             if explicit_history is None:
-                frame_buffers, state_buffers = self._update_history_buffers(env_keys[i], raw_obs)
+                frame_buffers, state_buffers = self._update_history_buffers(env_key, raw_obs, pending_history)
             else:
                 frame_buffers, state_buffers = explicit_history
             if self._build_obs_accepts_buffers:
@@ -293,8 +262,13 @@ class Model(ModelTemplate):
         batch_size = max(1, int(getattr(self, "inference_batch_size", len(obs_dicts))))
         actions = []
         for start in range(0, len(obs_dicts), batch_size):
-            actions.extend(self.inferencer.infer(obs_dicts[start : start + batch_size]))
-        return [self._format_action_chunk(action) for action in actions]
+            inputs = obs_dicts[start : start + batch_size]
+            predictions = [self._format_action_chunk(action) for action in self.inferencer.infer(inputs)]
+            if len(predictions) != len(inputs):
+                raise ValueError("G05 inference returned the wrong number of action chunks")
+            actions.extend(predictions)
+        self._history_buffers.update(pending_history)
+        return actions
 
     def _explicit_history_buffers_from_obs(
         self, obs: dict[str, Any], current_raw_obs: dict[str, Any]
@@ -332,7 +306,7 @@ class Model(ModelTemplate):
             return None
         return frames, states
 
-    def _env_key_from_obs(self, obs: dict[str, Any], fallback_idx: int | None = None) -> Any:
+    def _env_key_from_obs(self, obs: dict[str, Any], fallback_idx: Any) -> Any:
         for key in ("env_idx", "env_id", "env_index"):
             if isinstance(obs, dict) and key in obs:
                 return obs[key]
@@ -341,10 +315,10 @@ class Model(ModelTemplate):
             for key in ("env_idx", "env_id", "env_index"):
                 if key in additional_info:
                     return additional_info[key]
-        return "single" if fallback_idx is None else f"batch:{fallback_idx}"
+        return fallback_idx
 
     def _update_history_buffers(
-        self, env_key: Any, raw_obs: dict[str, Any]
+        self, env_key: Any, raw_obs: dict[str, Any], pending_history: dict
     ) -> tuple[dict[str, collections.deque] | None, dict[str, collections.deque] | None]:
         num_obs_steps = int(getattr(self.processor, "num_obs_steps", 1))
         if num_obs_steps <= 1:
@@ -357,7 +331,7 @@ class Model(ModelTemplate):
             return None, None
 
         entry = self._history_buffers.get(env_key)
-        if entry is None:
+        if entry is None or entry["num_obs_steps"] != num_obs_steps:
             entry = {
                 "frames": {
                     k: collections.deque(maxlen=num_obs_steps) for k in expected_img_keys
@@ -368,16 +342,12 @@ class Model(ModelTemplate):
                 "initialized": False,
                 "num_obs_steps": num_obs_steps,
             }
-            self._history_buffers[env_key] = entry
-        elif entry.get("num_obs_steps") != num_obs_steps:
-            entry["frames"] = {
-                k: collections.deque(maxlen=num_obs_steps) for k in expected_img_keys
-            }
-            entry["states"] = {
-                k: collections.deque(maxlen=num_obs_steps) for k in expected_state_keys
-            }
-            entry["initialized"] = False
-            entry["num_obs_steps"] = num_obs_steps
+        else:
+            # Stage only the deque containers. Prior tensors are read-only here.
+            entry = dict(entry)
+            entry["frames"] = {k: frames.copy() for k, frames in entry["frames"].items()}
+            entry["states"] = {k: states.copy() for k, states in entry["states"].items()}
+        pending_history[env_key] = entry
 
         img_tensors = {
             k: torch.from_numpy(np.array(v, copy=True))
@@ -538,14 +508,6 @@ def _call_accepts_history_buffers(fn) -> bool:
 
 
 def _as_chw_uint8(value) -> np.ndarray:
-    # Load-bearing exception to "model.py never decodes": history frames that
-    # deploy.py nests under G05_HISTORY_OBSERVATIONS_KEY reach the model still
-    # encoded, because the server's decode_obs_images only walks the top-level
-    # obs["vision"]. decode_image_bit returns already-decoded arrays unchanged,
-    # so the unconditional call covers bytes and 1-D uint8 buffers alike; an
-    # isinstance(np.ndarray) guard would skip encoded buffers that arrive as
-    # 1-D uint8 arrays and fail below with "image must be 3D".
-    value = decode_image_bit(value)
     arr = np.asarray(value)
     if arr.ndim == 4:
         arr = arr[0]

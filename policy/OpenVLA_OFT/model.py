@@ -24,6 +24,7 @@ from .openvla_oft.experiments.robot.openvla_utils import (
 )
 
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.utils.batch_indices import observation_env_ids, observation_rows
 from XPolicyLab.utils.checkpoint_resolver import build_run_dir_name, candidate_checkpoint_roots
 from XPolicyLab.utils.process_data import (
     get_robot_action_dim_info,
@@ -418,11 +419,12 @@ class Model(ModelTemplate):
         self.update_obs_batch([obs])
 
     def update_obs_batch(self, obs_list):
-        self._latest_env_idx_list = [obs.get("env_idx", index) for index, obs in enumerate(obs_list)]
+        env_ids = observation_env_ids(obs_list)
         encoded_obs_list = [
             encode_obs(obs, self.action_type, self.robot_action_dim_info, self.default_prompt) for obs in obs_list
         ]
         self.observation_window = encoded_obs_list
+        self._latest_env_idx_list = env_ids
 
     def infer(self, observation: dict):
         actions = get_vla_action(
@@ -445,11 +447,11 @@ class Model(ModelTemplate):
         if self.observation_window is None:
             raise AssertionError("update_obs or update_obs_batch first!")
 
-        env_idx_list = env_idx_list or self._latest_env_idx_list
+        rows = observation_rows(self._latest_env_idx_list, env_idx_list)
 
         action_list = []
 
-        for batch_index, _ in enumerate(env_idx_list):
+        for batch_index in rows:
             action_chunk = self.infer(self.observation_window[batch_index])
             if self.robot_action_dim_info is None:
                 action_list.append(action_chunk)

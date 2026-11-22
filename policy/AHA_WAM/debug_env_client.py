@@ -132,7 +132,6 @@ class TestEnv:
         eval_one_episode_batch(TASK_ENV=self, model_client=self.model_client)
 
     def reset(self):
-        self.model_client.call(func_name="reset")
         self.episode_step = 0
 
     def take_action(self, action):

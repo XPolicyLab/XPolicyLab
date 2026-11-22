@@ -8,6 +8,7 @@ from typing import Any
 import numpy as np
 
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.utils.batch_indices import observation_rows, validate_observed_ids
 
 
 CURRENT_DIR = Path(__file__).resolve().parent
@@ -527,12 +528,23 @@ class Model(ModelTemplate):
         return self.model.norm_stats[unnorm_key].get("state")
 
     def update_obs(self, obs):
-        self._last_example = self.encode_obs(obs)
-        self._last_examples = [self._last_example]
+        self.update_obs_batch([obs])
 
     def update_obs_batch(self, obs_list):
-        self._last_examples = [self.encode_obs(obs) for obs in obs_list]
+        env_ids = [obs.get("env_idx", obs.get("env_id", i)) for i, obs in enumerate(obs_list)]
+        validate_observed_ids(env_ids)
+        # Give the history encoder the same ID used later to select this row.
+        try:
+            self._last_examples = [
+                self.encode_obs(obs if "env_idx" in obs else dict(obs, env_idx=env_id))
+                for obs, env_id in zip(obs_list, env_ids)
+            ]
+        except Exception:
+            # Encoding advances temporal buffers. Drop partial history before the next update.
+            self.reset()
+            raise
         self._last_example = self._last_examples[0] if self._last_examples else None
+        self._latest_env_idx_list = env_ids
 
     def encode_obs(self, observation):
         env_idx = int(observation.get("env_idx", 0))
@@ -639,11 +651,14 @@ class Model(ModelTemplate):
             source_type="obs",
         )
 
-    def get_action_batch(self, env_idx_list):
+    def get_action_batch(self, env_idx_list=None):
         if self._last_examples is None:
             raise RuntimeError("No batch observation has been provided. Call update_obs_batch() first.")
 
-        actions = self._predict(self._last_examples)
+        rows = observation_rows(self._latest_env_idx_list, env_idx_list)
+        if not rows:
+            return []
+        actions = self._predict([self._last_examples[row] for row in rows])
         _, _, unpack_robot_state = _process_data_helpers()
         return [
             unpack_robot_state(env_actions, self.action_type, self.robot_action_dim_info, source_type="obs")

@@ -11,6 +11,7 @@ from typing import Any
 import numpy as np
 import torch
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.utils.batch_indices import observation_rows, validate_observed_ids
 from XPolicyLab.utils.checkpoint_resolver import candidate_checkpoint_roots
 from XPolicyLab.utils.process_data import (
     get_robot_action_dim_info,
@@ -102,7 +103,8 @@ class Model(ModelTemplate):
         self.update_obs_batch([obs])
 
     def update_obs_batch(self, obs_list: list[dict[str, Any]]) -> None:
-        self.latest_env_indices = [int(obs.get("env_idx", index)) for index, obs in enumerate(obs_list)]
+        env_ids = [int(obs.get("env_idx", index)) for index, obs in enumerate(obs_list)]
+        validate_observed_ids(env_ids)
         encoded: list[dict[str, Any]] = []
         for observation in obs_list:
             item = encode_observation(
@@ -116,7 +118,8 @@ class Model(ModelTemplate):
                 raise ValueError("Missing client-stamped history; use the supplied deploy.py")
             item.update(stamped_history)
             encoded.append(item)
-        self.observation_window = stack_observations(encoded)
+        self.observation_window = stack_observations(encoded) if encoded else {}
+        self.latest_env_indices = env_ids
 
     def get_action(self, **kwargs: Any) -> Any:
         return self.get_action_batch(env_idx_list=[self.latest_env_indices[0]], **kwargs)[0]
@@ -124,10 +127,9 @@ class Model(ModelTemplate):
     def get_action_batch(self, env_idx_list: list[int] | None = None, **kwargs: Any) -> list[Any]:
         if self.observation_window is None:
             raise AssertionError("update_obs or update_obs_batch must be called before get_action")
-        env_idx_list = env_idx_list or self.latest_env_indices
+        rows = observation_rows(self.latest_env_indices, env_idx_list)
         action_chunks: list[Any] = []
-        for env_index in env_idx_list:
-            batch_index = self.latest_env_indices.index(env_index)
+        for batch_index in rows:
             observation = slice_stacked_observation(self.observation_window, batch_index)
             actions = self.policy.infer(observation, **kwargs)["actions"]
             if self.robot_action_dim_info is not None:

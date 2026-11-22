@@ -8,6 +8,7 @@ import numpy as np
 import torch
 
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.utils.batch_indices import observation_env_ids, observation_rows
 from XPolicyLab.utils.process_data import (
     get_robot_action_dim_info,
     pack_robot_state,
@@ -226,9 +227,10 @@ class Model(ModelTemplate):
         self.update_obs_batch([obs])
 
     def update_obs_batch(self, obs_list):
-        self._latest_env_idx_list = [obs.get("env_idx", idx) for idx, obs in enumerate(obs_list)]
+        env_ids = observation_env_ids(obs_list)
         samples = [self._encode_obs(obs) for obs in obs_list]
-        self._sample_batch = self._collate(samples)
+        self._sample_batch = self._collate(samples) if samples else {}
+        self._latest_env_idx_list = env_ids
 
     def _encode_obs(self, observation) -> dict:
         images = {}
@@ -290,19 +292,28 @@ class Model(ModelTemplate):
 
         if self._sample_batch is None:
             raise AssertionError(self._error_msg("update_obs or update_obs_batch first!"))
-        env_idx_list = env_idx_list if env_idx_list is not None else self._latest_env_idx_list
+        rows = observation_rows(self._latest_env_idx_list, env_idx_list)
+        if not rows:
+            return []
 
+        sample_batch = self._sample_batch
+        if rows != list(range(len(self._latest_env_idx_list))):
+            # _collate stores each field as a batched tensor or a list of per-env values.
+            sample_batch = {
+                key: value[rows] if isinstance(value, torch.Tensor) else [value[i] for i in rows]
+                for key, value in sample_batch.items()
+            }
         with torch.no_grad():
             param_dtype = next(self.policy.parameters()).dtype
             use_bf16 = param_dtype == torch.bfloat16
             with torch.autocast(device_type="cuda", dtype=torch.bfloat16, enabled=use_bf16):
-                batch = self.policy.predict_action(self._sample_batch)
+                batch = self.policy.predict_action(sample_batch)
         batch = dict_apply(batch, lambda x: x.cpu() if isinstance(x, torch.Tensor) else x)
         batch = self.processor.postprocess(batch)
         action_dict = dict_apply(batch["action"], lambda x: x.cpu().numpy())
 
         result = []
-        for batch_index in range(len(env_idx_list)):
+        for batch_index in range(len(rows)):
             parts = [action_dict[meta["key"]][batch_index] for meta in self.action_shape_meta]
             flat = np.concatenate(parts, axis=-1).astype(np.float32)
             steps = unpack_robot_state(

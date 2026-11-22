@@ -14,11 +14,10 @@ import numpy as np
 
 from client_server.tcp.model_client import ModelClient
 from XPolicyLab.utils.process_data import (
-    encode_image_bit, get_robot_action_dim_info, get_robot_state_schema,
+    encode_image_bit, get_batch_size, get_robot_action_dim_info, get_robot_state_schema,
     normalize_robot_state_keys,
 )
 
-Batch_Size = 10
 
 class TestEnv:
     def __init__(self, deploy_cfg):
@@ -29,6 +28,9 @@ class TestEnv:
         self.episode_step_limit = 20
         self.obs_encoded = deploy_cfg.get('obs_encoded', False)
         env_cfg_type = deploy_cfg['env_cfg_type']
+        self.batch_size = get_batch_size(env_cfg_type) if deploy_cfg.get("eval_batch") else 1
+        if type(self.batch_size) is not int or self.batch_size < 1:
+            raise ValueError(f"Expected scene.num_envs to be a positive integer, got {self.batch_size!r}")
         self.robot_action_dim_info = get_robot_action_dim_info(env_cfg_type)
 
         if deploy_cfg.get("protocol", "ws") == "ws":
@@ -199,7 +201,6 @@ class TestEnv:
         eval_module.eval_one_episode_batch(TASK_ENV=self, model_client=self.model_client)
 
     def reset(self):
-        self.model_client.call(func_name="reset")
         self.episode_step = 0
 
     def take_action(self, action):
@@ -226,8 +227,7 @@ class TestEnv:
         print("[TestEnv] Episode finished")
 
     def get_running_env_idx_list(self):
-        # For demonstration, we assume all envs are running. Replace with actual logic if needed.
-        return list(range(Batch_Size))
+        return list(range(self.batch_size))
 
 
 def validate_robot_state_dict(state_dict: dict, robot_action_dim_info: dict, action_type: str = "joint") -> None:
@@ -320,7 +320,7 @@ if __name__ == "__main__":
         # Load XPolicyLab
         for idx in range(deploy_cfg["eval_episode_num"]):
             print(f"\033[94m🚀 Running Episode {idx}\033[0m")
-            test_env.reset() # reset model, robot, and environment
+            test_env.reset()
             if not eval_batch:
                 test_env.eval_one_episode()
             else:

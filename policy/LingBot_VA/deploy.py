@@ -1,3 +1,6 @@
+from XPolicyLab.utils.action_chunks import validate_action_chunk
+
+
 def eval_one_episode(TASK_ENV, model_client):
 
     model_client.call(func_name="reset") # reset policy
@@ -6,6 +9,7 @@ def eval_one_episode(TASK_ENV, model_client):
         obs = TASK_ENV.get_obs() # Get Observation
         model_client.call(func_name="update_obs", obs=obs)  # Update Observation
         actions = model_client.call(func_name="get_action") # Get Action according to observation chunk
+        validate_action_chunk(actions)
 
         for action_idx, action in enumerate(actions):
             TASK_ENV.take_action(action)

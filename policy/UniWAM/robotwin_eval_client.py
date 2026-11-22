@@ -135,6 +135,8 @@ def standard_action_to_qpos(action: dict[str, Any]) -> np.ndarray:
 
 
 def build_policy_shim(model_client):
+    from XPolicyLab.utils.action_chunks import validate_action_chunk
+
     shim = types.ModuleType("UNIWAM_XPL_BRIDGE")
 
     def get_model(_usr_args):
@@ -150,6 +152,7 @@ def build_policy_shim(model_client):
             obs=native_to_standard(observation, instruction),
         )
         actions = client.call(func_name="get_action")
+        validate_action_chunk(actions)
         for action_idx, action in enumerate(actions):
             if TASK_ENV.eval_success or TASK_ENV.take_action_cnt >= TASK_ENV.step_lim:
                 break

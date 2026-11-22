@@ -612,6 +612,12 @@ def decode_obs_images(obs):
     if not isinstance(obs, dict):
         return obs
 
+    # These wire fields contain complete observations too. Other metadata
+    # (including depth, state vectors and arbitrary RPC arguments) is opaque.
+    for key in ("__xpolicylab_batch_observations__", "__g05_history_observations__"):
+        if key in obs:
+            decode_obs_images(obs[key])
+
     vision = obs.get("vision")
     if not isinstance(vision, dict):
         return obs

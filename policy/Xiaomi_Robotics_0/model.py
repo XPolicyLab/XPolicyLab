@@ -12,6 +12,7 @@ from PIL import Image
 from transformers import AutoProcessor
 
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.utils.batch_indices import observation_env_ids, observation_rows
 from XPolicyLab.utils.checkpoint_resolver import resolve_checkpoint_root
 from XPolicyLab.utils.process_data import get_robot_action_dim_info
 
@@ -379,7 +380,7 @@ class Model(ModelTemplate):
         )
         self.processor.tokenizer.padding_side = "right"
 
-        self._obs_list: list[dict[str, Any]] = []
+        self._obs_list: list[dict[str, Any]] | None = None
         self._latest_env_idx_list: list[int] = [0]
 
         print(f"[Xiaomi_Robotics_0] Loaded checkpoint from {model_dir} ({checkpoint_tag})")
@@ -455,8 +456,9 @@ class Model(ModelTemplate):
         self.update_obs_batch([obs])
 
     def update_obs_batch(self, obs_list):
-        self._latest_env_idx_list = [obs.get("env_idx", index) for index, obs in enumerate(obs_list)]
+        env_ids = observation_env_ids(obs_list)
         self._obs_list = [self._encode_observation(obs) for obs in obs_list]
+        self._latest_env_idx_list = env_ids
 
     def get_action(self, **kwargs):
         if not self._obs_list:
@@ -464,10 +466,11 @@ class Model(ModelTemplate):
         return self._predict_action_chunk(self._obs_list[0])
 
     def get_action_batch(self, env_idx_list=None, **kwargs):
-        if not self._obs_list:
+        if self._obs_list is None:
             raise AssertionError("update_obs or update_obs_batch first!")
-        return [self._predict_action_chunk(encoded_obs) for encoded_obs in self._obs_list]
+        rows = observation_rows(self._latest_env_idx_list, env_idx_list)
+        return [self._predict_action_chunk(self._obs_list[row]) for row in rows]
 
     def reset(self):
-        self._obs_list = []
+        self._obs_list = None
         self._latest_env_idx_list = [0]

@@ -53,6 +53,7 @@ from PIL import Image
 from scipy.spatial.transform import Rotation
 
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.utils.batch_indices import observation_rows, validate_observed_ids
 
 _SUPPORTED_BENCH_NAMES = ("RoboDojo", "RoboDojo_real")
 
@@ -240,7 +241,7 @@ class Model(ModelTemplate):
         self.processor = self._build_processor(model_cfg)
 
         # Internal state
-        self._encoded_obs_list: list[dict[str, Any]] = []
+        self._encoded_obs_list: list[dict[str, Any]] | None = None
 
         print(
             f"[Xiaomi_Robotics_1] Model loaded. action_shape={self.action_shape}, "
@@ -615,7 +616,10 @@ class Model(ModelTemplate):
         self.update_obs_batch([obs])
 
     def update_obs_batch(self, obs_list):
+        env_ids = [obs.get("env_idx", obs.get("env_id", i)) for i, obs in enumerate(obs_list)]
+        validate_observed_ids(env_ids)
         self._encoded_obs_list = [self._encode_observation(obs) for obs in obs_list]
+        self._latest_env_idx_list = env_ids
 
     def get_action(self, **kwargs):
         if not self._encoded_obs_list:
@@ -625,11 +629,14 @@ class Model(ModelTemplate):
         return self._predict_action_chunks(self._encoded_obs_list[:1])[0]
 
     def get_action_batch(self, env_idx_list=None, **kwargs):
-        if not self._encoded_obs_list:
+        if self._encoded_obs_list is None:
             raise AssertionError(
                 "[Xiaomi_Robotics_1] Call update_obs_batch before get_action_batch."
             )
-        return self._predict_action_chunks(self._encoded_obs_list)
+        rows = observation_rows(self._latest_env_idx_list, env_idx_list)
+        if not rows:
+            return []
+        return self._predict_action_chunks([self._encoded_obs_list[row] for row in rows])
 
     def _predict_action_chunks(
         self, encoded_obs_list: list[dict[str, Any]]
@@ -647,5 +654,5 @@ class Model(ModelTemplate):
         return chunks
 
     def reset(self):
-        self._encoded_obs_list = []
+        self._encoded_obs_list = None
         print("[Xiaomi_Robotics_1] Model reset.", flush=True)

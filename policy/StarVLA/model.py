@@ -8,6 +8,7 @@ import cv2
 import numpy as np
 
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.utils.batch_indices import selected_env_ids, validate_observed_ids
 from XPolicyLab.utils.process_data import (
     get_robot_action_dim_info,
     pack_robot_state,
@@ -196,11 +197,10 @@ class Model(ModelTemplate):
         self.update_obs_batch([obs])
 
     def update_obs_batch(self, obs_list):
-        self._latest_env_idx_list = []
-        for obs in obs_list:
-            env_idx = int(obs.get("env_idx", 0))
-            self._latest_env_idx_list.append(env_idx)
-            self.obs_by_env[env_idx] = self._convert_obs(obs)
+        env_ids = [int(obs.get("env_idx", index)) for index, obs in enumerate(obs_list)]
+        validate_observed_ids(env_ids)
+        self.obs_by_env = {env_id: self._convert_obs(obs) for env_id, obs in zip(env_ids, obs_list)}
+        self._latest_env_idx_list = env_ids
 
     def _infer_chunk(self, env_idx: int) -> np.ndarray:
         if env_idx not in self.obs_by_env:
@@ -219,7 +219,7 @@ class Model(ModelTemplate):
             raise RuntimeError(f"StarVLA inference failed: {response.get('error', response)}")
         return np.asarray(response["data"]["actions"][0], dtype=np.float32)
 
-    def _next_action_vector(self, env_idx: int) -> np.ndarray:
+    def _current_action_vector(self, env_idx: int) -> np.ndarray:
         step = self.step_by_env.get(env_idx, 0)
         chunk = self.action_chunks_by_env.get(env_idx)
         if chunk is None or step % self.execute_horizon == 0:
@@ -227,7 +227,6 @@ class Model(ModelTemplate):
             self.action_chunks_by_env[env_idx] = chunk
 
         action_idx = min(step % self.execute_horizon, len(chunk) - 1)
-        self.step_by_env[env_idx] = step + 1
         action = np.asarray(chunk[action_idx], dtype=np.float32)
         if action.shape[-1] != self.action_dim:
             raise ValueError(f"Expected action dim {self.action_dim}, got {action.shape[-1]}.")
@@ -237,18 +236,16 @@ class Model(ModelTemplate):
         return self.get_action_batch(env_idx_list=[self._latest_env_idx_list[0]])[0]
 
     def get_action_batch(self, env_idx_list=None):
-        env_idx_list = env_idx_list or self._latest_env_idx_list
-        return [
-            [
-                unpack_robot_state(
-                    self._next_action_vector(int(env_idx)),
-                    self.action_type,
-                    self.robot_action_dim_info,
-                    source_type="obs",
-                )
-            ]
-            for env_idx in env_idx_list
+        ids = selected_env_ids(self._latest_env_idx_list, None if env_idx_list is None else map(int, env_idx_list))
+        actions = [
+            [unpack_robot_state(self._current_action_vector(env_idx), self.action_type,
+                                self.robot_action_dim_info, source_type="obs")]
+            for env_idx in ids
         ]
+        # Only consume cached steps once the whole reply is ready to return.
+        for env_idx in ids:
+            self.step_by_env[env_idx] = self.step_by_env.get(env_idx, 0) + 1
+        return actions
 
     def reset(self):
         self.obs_by_env.clear()

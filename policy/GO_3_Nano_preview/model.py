@@ -10,6 +10,7 @@ import cv2
 import numpy as np
 
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.utils.batch_indices import observation_rows, validate_observed_ids
 from XPolicyLab.utils.process_data import get_robot_action_dim_info
 from XPolicyLab.utils.checkpoint_resolver import resolve_checkpoint_root
 
@@ -76,7 +77,10 @@ class Model(ModelTemplate):
         self.obs = self._prepare(obs)
 
     def update_obs_batch(self, obs_list):
+        env_ids = [obs.get("env_idx", obs.get("env_id", i)) for i, obs in enumerate(obs_list)]
+        validate_observed_ids(env_ids)
         self.batch = [self._prepare(obs) for obs in obs_list]
+        self._latest_env_idx_list = env_ids
 
     def _infer(self, request):
         import torch
@@ -102,10 +106,8 @@ class Model(ModelTemplate):
     def get_action_batch(self, env_idx_list=None):
         if self.batch is None:
             raise RuntimeError('Call update_obs_batch before get_action_batch')
-        if env_idx_list is not None and len(env_idx_list)!=len(self.batch):
-            raise ValueError('Active environment IDs must match the compact observation batch')
-        # The released checkpoint is stateless; each environment gets its own request.
-        return [self._infer(request) for request in self.batch]
+        rows = observation_rows(self._latest_env_idx_list, env_idx_list)
+        return [self._infer(self.batch[row]) for row in rows]
 
     def reset(self):
         self.obs=None

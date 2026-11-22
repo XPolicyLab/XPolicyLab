@@ -9,6 +9,7 @@ import time
 import numpy as np
 
 from client_server.ws import WsModelClient
+from XPolicyLab.utils.action_chunks import validate_action_batch
 from XPolicyLab.utils.process_data import encode_image_bit
 
 from mopa.data import mobile
@@ -91,9 +92,8 @@ def _run_batch(client: WsModelClient, source: SyntheticMobile, limit: int, key_s
     while t < limit:
         client.call(func_name="update_obs_batch", obs=[source.obs(i) for i in envs])
         chunks = client.call(func_name="get_action_batch", obs=envs)
-        if len(chunks) != len(envs) or any(not chunk for chunk in chunks):
-            raise ValueError("get_action_batch returned an invalid batch")
-        for step in range(min(len(chunk) for chunk in chunks)):
+        chunk_size = validate_action_batch(chunks, len(envs))
+        for step in range(chunk_size):
             for chunk in chunks:
                 _validate_action(chunk[step], key_style)
             t += 1

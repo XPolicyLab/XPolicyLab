@@ -10,10 +10,11 @@ import subprocess
 import sys
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 import numpy as np
 
+from XPolicyLab.policy.demo_policy import deploy
 from XPolicyLab.utils import process_data
 from XPolicyLab.utils.debug_env_client import TestEnv, validate_robot_state_dict
 from XPolicyLab.policy.AHA_WAM import debug_env_client as aha_debug
@@ -87,6 +88,25 @@ class ActionContractTests(unittest.TestCase):
                         process_data.pack_robot_state({"state": action}, action_type, robot), values
                     )
         validate_robot_state_dict({"joint_state": [0] * 6, "ee_joint_state": [0]}, SINGLE)
+
+    def test_reference_loop_rejects_invalid_chunks_before_taking_any_step(self):
+        action = {"arm_joint_state": np.zeros(6), "ee_joint_state": np.zeros(1)}
+        for batch, chunks in (
+            (False, []), (True, []), (True, [[], []]),
+            (True, [[action]]), (True, [[action], [action], [action]]),
+            (True, [[action, action], [action]]), (True, [[action], [action, action]]),
+        ):
+            with self.subTest(batch=batch, lengths=[len(chunk) for chunk in chunks]):
+                env = Mock()
+                env.is_episode_end.side_effect = [False, True]
+                env.get_running_env_idx_list.return_value = [0, 1]
+                client = Mock()
+                client.call.return_value = chunks
+                loop = deploy.eval_one_episode_batch if batch else deploy.eval_one_episode
+                with self.assertRaisesRegex(ValueError, "chunk"):
+                    loop(env, client)
+                env.take_action.assert_not_called()
+                env.take_action_batch.assert_not_called()
 
     def test_invalid_actions_cannot_pass_debug_validation(self):
         valid = {"arm_joint_state": np.zeros(6), "ee_joint_state": np.zeros(1)}

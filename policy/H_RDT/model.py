@@ -11,6 +11,7 @@ import yaml
 from PIL import Image
 
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.utils.batch_indices import observation_env_ids, selected_env_ids
 from XPolicyLab.utils.process_data import (
     get_robot_action_dim_info,
     pack_robot_state,
@@ -308,15 +309,14 @@ class Model(ModelTemplate):
         self.update_obs_batch([obs])
 
     def update_obs_batch(self, obs_list):
-        self._latest_env_idx_list = []
-        for obs in obs_list:
-            env_idx = obs.get("env_idx", 0)
-            self._latest_env_idx_list.append(env_idx)
-            encoded_obs = self._encode_obs(obs)
+        env_ids = observation_env_ids(obs_list)
+        encoded = [self._encode_obs(obs) for obs in obs_list]
+        for env_idx, encoded_obs in zip(env_ids, encoded):
             obs_cache = self.obs_cache_by_env.setdefault(env_idx, [])
             obs_cache.append(encoded_obs)
             if len(obs_cache) > self.max_img_cache_size:
                 obs_cache.pop(0)
+        self._latest_env_idx_list = env_ids
 
     def _build_image_tokens(self, current_obs):
         camera_images = [
@@ -364,7 +364,7 @@ class Model(ModelTemplate):
         return self.get_action_batch(env_idx_list=[self._latest_env_idx_list[0]], **kwargs)[0]
 
     def get_action_batch(self, env_idx_list=None, **kwargs):
-        env_idx_list = env_idx_list or self._latest_env_idx_list
+        env_idx_list = selected_env_ids(self._latest_env_idx_list, env_idx_list)
         return [
             unpack_robot_state(
                 self._infer(env_idx),

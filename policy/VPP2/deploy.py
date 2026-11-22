@@ -2,6 +2,9 @@ import os
 import socket
 import uuid
 
+from XPolicyLab.utils.action_chunks import validate_action_chunk
+
+
 # VPP2 keeps per-episode observation history on the policy server.  Every
 # executed action records exactly one observation through update_obs, and each
 # call carries this process's client id so one server can serve several
@@ -26,6 +29,7 @@ def eval_one_episode(TASK_ENV, model_client):
         model_client.call(func_name="update_obs", obs=_with_client_id(obs))
 
         actions = model_client.call(func_name="get_action", obs={_CLIENT_ID_FIELD: _CLIENT_ID})
+        validate_action_chunk(actions)
         for action_idx, action in enumerate(actions):
             TASK_ENV.take_action(action)
 

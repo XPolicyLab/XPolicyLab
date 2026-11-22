@@ -1,3 +1,6 @@
+from XPolicyLab.utils.action_chunks import validate_action_batch, validate_action_chunk
+
+
 # EWAM conditions only on the observation at chunk start, so observations are sent to the
 # policy server once per chunk. Mid-chunk observations are rendered every VIDEO_FRAME_STRIDE
 # env steps only to feed the eval video; they are never sent to the server.
@@ -12,6 +15,7 @@ def eval_one_episode(TASK_ENV, model_client):
         obs = TASK_ENV.get_obs() # Get Observation
         model_client.call(func_name="update_obs", obs=obs)  # Update Observation
         actions = model_client.call(func_name="get_action") # Get Action according to observation chunk
+        validate_action_chunk(actions)
 
         for action_idx, action in enumerate(actions):
             TASK_ENV.take_action(action)
@@ -28,11 +32,13 @@ def eval_one_episode_batch(TASK_ENV, model_client):
 
     while not TASK_ENV.is_episode_end(): # Check whether the episode ends
         env_idx_list = TASK_ENV.get_running_env_idx_list() # Get Running Environment Index List
+        if len(env_idx_list) == 0:
+            break
         obs_list = TASK_ENV.get_obs_batch(env_idx_list) # Get Observation
         model_client.call(func_name="update_obs_batch", obs=obs_list)
         actions = model_client.call(func_name="get_action_batch", obs=env_idx_list)  # Get Action according to observation chunk
+        chunk_size = validate_action_batch(actions, len(env_idx_list))
 
-        chunk_size = len(actions[0]) # Get the chunk size
         for action_idx in range(chunk_size): # Iterate over the action chunk
             current_action_list = [env_actions[action_idx] for env_actions in actions] # Get the current action list
             TASK_ENV.take_action_batch(current_action_list, env_idx_list) # Take the action

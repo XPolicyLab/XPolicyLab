@@ -87,6 +87,8 @@ The reason is that stored image bits come in **two byte formats**, and only thes
 
 No channel conversion belongs in conversion, training, or eval code; only `utils/process_data.py`, which owns the format distinction, may convert. Two exceptions: medium adapters — `COLOR_RGB2BGR` immediately before `cv2.VideoWriter.write(...)` and `COLOR_BGR2RGB` immediately after `cv2.VideoCapture.read()` — and a deliberate RGB→BGR conversion for a checkpoint trained on BGR data, which must be opt-in through a documented `deploy.yml` key that defaults to RGB (see `policy/Dexora_1B`'s `input_color_order`).
 
+The reference deployment loop calls `reset()` on entry. For `get_action_batch(env_idx_list)`, return one non-empty chunk per requested environment in the order of `env_idx_list`. For example, after observations for `[7, 2, 9]`, a request for `[9, 7]` returns the chunks for 9 and 7 in that order. Chunks in a batch must have the same length so the loop can step the environments together. Adapters with an explicit wait or end-of-episode message handle it in their own deployment loop.
+
 ### `deploy.yml`
 
 `policy_name` must equal the directory name — the server imports `XPolicyLab.policy.<policy_name>.model`, and the setup scripts derive the name from the directory. Keep `protocol: ws` (`legacy_tcp` is for unmigrated legacy adapters only). Per-run fields are overridden by the setup scripts; put stable defaults here. Reference (`policy/demo_policy/deploy.yml`):

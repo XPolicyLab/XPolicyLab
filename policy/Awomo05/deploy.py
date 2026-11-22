@@ -9,6 +9,8 @@ exact. Dropping observations to save a round trip would silently stretch the his
 
 import time
 
+from XPolicyLab.utils.action_chunks import validate_action_batch, validate_action_chunk
+
 
 CAMERA_GROUPS = (
     ("cam_head", "cam_high", "head_camera"),
@@ -49,7 +51,7 @@ def _get_valid_obs_batch(task_env, env_idx_list, timeout=2.0, interval=0.05):
     last_obs_list = None
     while time.monotonic() < deadline:
         last_obs_list = task_env.get_obs_batch(env_idx_list)
-        if all(_has_valid_images(obs) for obs in last_obs_list):
+        if len(last_obs_list) == len(env_idx_list) and all(_has_valid_images(obs) for obs in last_obs_list):
             return last_obs_list
         time.sleep(interval)
     raise RuntimeError(
@@ -69,6 +71,7 @@ def eval_one_episode(TASK_ENV, model_client):
         if actions is None:
             raise RuntimeError("Awomo05 policy server returned None for get_action. "
                                "Check the server-side traceback above.")
+        validate_action_chunk(actions)
         for action_idx, action in enumerate(actions):
             TASK_ENV.take_action(action)
 
@@ -84,6 +87,8 @@ def eval_one_episode_batch(TASK_ENV, model_client):
 
     while not TASK_ENV.is_episode_end():
         env_idx_list = TASK_ENV.get_running_env_idx_list()
+        if len(env_idx_list) == 0:
+            break
         obs_list = _get_valid_obs_batch(TASK_ENV, env_idx_list)
 
         model_client.call(func_name="update_obs_batch", obs=obs_list)
@@ -91,8 +96,8 @@ def eval_one_episode_batch(TASK_ENV, model_client):
         if actions is None:
             raise RuntimeError("Awomo05 policy server returned None for get_action_batch. "
                                "Check the server-side traceback above.")
+        chunk_size = validate_action_batch(actions, len(env_idx_list))
 
-        chunk_size = len(actions[0])
         for action_idx in range(chunk_size):
             current_action_list = [env_actions[action_idx] for env_actions in actions]
 
@@ -106,4 +111,6 @@ def eval_one_episode_batch(TASK_ENV, model_client):
 
             actions = [actions[i] for i in active_batch_idx]
             env_idx_list = [env_idx_list[i] for i in active_batch_idx]
+            if not env_idx_list:
+                break
             model_client.call(func_name="update_obs_batch", obs=_get_valid_obs_batch(TASK_ENV, env_idx_list))
