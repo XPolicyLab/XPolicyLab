@@ -13,6 +13,13 @@ No model files are included in Git.
 
 ## Current native evaluation
 
-The [unmodified official SDK summary](EVALUATION_RESULTS.md) reports partial Overview Score **43.00 ± 0.68**, SR **37.61 ± 0.88%**, and **123/126** complete task–seed cells. Saved episode count is **6,255/6,300**. Only `make_toast_random` remains incomplete: seeds 0/1/2 each lack 15 episodes. Missing trajectories are not scored as failures.
+The [official SDK summary](EVALUATION_RESULTS.md) reports **Score 44.54 ± 0.91**, **SR 39.18 ± 1.13%**, with **122/126** task–seed cells complete and **6,215/6,300** episodes saved. These are partial local results; incomplete cells are excluded.
 
-The SDK video inventory check reports mismatches in all **159** checked directories because the available videos combine camera views rather than using separate camera files. This is a partial local result.
+Incomplete task–seed cells:
+
+- seed 0: `make_toast_random` (5/25)
+- seed 0: `store_laptop_and_headphones` (0/25)
+- seed 1: `make_toast_random` (5/25)
+- seed 2: `make_toast_random` (5/25)
+
+Results use the official SDK summarizer. Missing trajectories are not scored as failures.

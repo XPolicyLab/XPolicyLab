@@ -60,7 +60,7 @@ For a small diagnostic run, add `--seeds 0 --eval-num 2 --num-envs 2 --tasks-fil
 
 ## Local results
 
-The [official SDK summary](EVALUATION_RESULTS.md) reports **Score 43.00 ± 0.68** and **SR 37.61 ± 0.88%**, with **123/126** task–seed cells complete and **6,255/6,300** episodes saved.
+The [official SDK summary](EVALUATION_RESULTS.md) reports **Score 44.54 ± 0.91**, **SR 39.18 ± 1.13%**, with **122/126** task–seed cells complete and **6,215/6,300** episodes saved. Incomplete cells are excluded.
 
 These are partial local results, not official leaderboard scores. See the [RoboDojo leaderboard](https://robodojo-benchmark.com/LeaderBoard) for official results. Current validation evidence: [checks](PREPARATION_CHECKS.md).
 
