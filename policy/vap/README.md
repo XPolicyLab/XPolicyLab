@@ -2,7 +2,11 @@
 
 **Model / leaderboard name:** **WALL-WM-2.0**.
 
-**Contributor:** x-square-robot | **Paper:** not supplied | **arXiv:** not supplied | **Original code:** https://huggingface.co/x-square-robot/wall-wm-2.0-robodojo/tree/main.
+**Contributor:** X-Square-Robot  
+**Paper:** Not supplied  
+**arXiv:** Not supplied  
+**Original code:** Vendored model implementation under `upstream/`.  
+**Checkpoint:** https://huggingface.co/x-square-robot/wall-wm-2.0-robodojo/tree/main
 
 This adapter evaluates the specified WALL-WM-2.0 checkpoint on RoboDojo-Sim.
 
@@ -48,9 +52,6 @@ The official combined entrypoint runs without parent-repository patches. The pin
 
 Evaluation-only: process_data.sh is intentionally absent. No training data conversion is performed. Inputs are official RGB observations; transport decoding uses the shared helpers. The environment-side history collector and recorder use decode_image_bit / encode_image_bit. Normalization uses the packaged training statistics and this checkpoint's own verified normalizer.
 
-## Training
-
-Evaluation-only: train.sh is intentionally absent. Training publication date and maintainer agreement have not been supplied. They must be completed before requesting formal acceptance of an eval-only public submission; this deployment makes no publication commitment.
 
 ## Evaluation
 
@@ -116,7 +117,7 @@ Native scores and three-camera videos remain under RoboDojo/eval_result/RoboDojo
 
 Pass the checkpoint as an explicit directory, or use the standard resolver with a `checkpoints/` directory in this adapter. The example above uses an explicit checkpoint directory. Required files: `model.safetensors`, `config.yml`, `normalizer_action.pth`. Do not put checkpoint files or model assets in the policy environment.
 
-The public repository is [`x-square-robot/wall-wm-2.0-robodojo`](https://huggingface.co/x-square-robot/wall-wm-2.0-robodojo). [`environment/CHECKPOINT_SOURCES.json`](environment/CHECKPOINT_SOURCES.json) fixes that repository, `revision: "main"` and the three required filenames. It deliberately has no predetermined payload sizes or SHA256 values, so replacing files on Hugging Face `main` requires no PR, script or manifest change.
+The public repository is [`x-square-robot/wall-wm-2.0-robodojo`](https://huggingface.co/x-square-robot/wall-wm-2.0-robodojo). [`environment/CHECKPOINT_SOURCES.json`](environment/CHECKPOINT_SOURCES.json) fixes that repository, `revision: "main"` and the three required filenames. 
 
 Preparation verifies training recipe, normalizer statistics and Qwen identity before writing a per-run config view; it never modifies the local source checkpoint directory. `VAP_QWEN_MODEL` names Qwen3.5-9B. Online Qwen uses the checkpoint's HEAD truncation + EOS recipe. This pure VAP adapter makes no GPT/judge calls.
 
@@ -188,7 +189,7 @@ Completed chunks are verified again before assembly. The downloader reads the cu
 
 Download provenance is written beside the checkpoint as `<destination-name>.provenance.json`. It records the actual size and SHA256 of each downloaded file for traceability, not as a preconfigured release allowlist. `--verify-only` recomputes these values and requires the local payload and its provenance to agree.
 
-Replacing files on Hugging Face `main` needs no PR, script or manifest update. Run the downloader again with a **new output directory** to get the then-current `main`; existing directories are never overwritten or updated automatically. Because `main` is mutable, this no longer verifies a historical commit or historical byte identity, and an old download or score does not automatically represent the new files. Changes to model structure, config, normalizer, Qwen or action semantics still require compatible adapter changes and regression/simulator validation. Use a fresh evaluation run for any new official score.
+Run the downloader again with a **new output directory** to get the then-current `main`; existing directories are never overwritten or updated automatically. 
 
 ## Configuration
 
@@ -255,7 +256,7 @@ The implementation comes from the deployed history5 numerical baseline, now
 packaged as `server_acceleration.py`, `exact_acceleration.py` and
 `prefill_acceleration.py`. The latter retains the full seven-field prefix-cache
 ABI, original attention masks/GEMM shapes and FP32 action-head/accumulation path.
-A800 and B300 must compile their own kernels; cross-GPU bitwise identity or equal
+Kernels must be compiled separately for each hardware platform; cross-GPU bitwise identity or equal
 speedups are not claimed. Numerical validation is performed on the same hardware.
 
 The generic V16 checkpoint preparer records, but does not require fixed values
