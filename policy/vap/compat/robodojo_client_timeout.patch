@@ -14,8 +14,8 @@
 +        "request_timeout_s", "max_connect_seconds",
 +        "ws_ping_interval_s", "ws_ping_timeout_s",
 +    ) if key in data}
- 
- 
+
+
  def _resume_manifest_path(eval_cfg, run_id):
 @@ -269,7 +279,7 @@
      eval_cfg["seed"] = args_cli.seed
