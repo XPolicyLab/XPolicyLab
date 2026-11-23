@@ -30,9 +30,9 @@ steps: 10
 video_flow_shift: 5.0
 action_flow_shift: 1.0
 video_cfg_scale: 6.0
-n_action_steps: null
+n_action_steps: 16
 async_delay_steps: 0
-optimized: true
+optimized: false
 precision: bf16
 device: cuda
 
