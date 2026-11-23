@@ -216,7 +216,7 @@ def eval_one_episode(TASK_ENV, model_client):
         obs = TASK_ENV.get_obs()
         _update_obs(model_client, schedule, obs)
         actions = model_client.call(func_name="get_action")
-        validate_action_chunk(actions)
+        validate_action_chunk(actions, TASK_ENV)
         if schedule is not None:
             schedule.advance(_env_idx(obs))
 
@@ -241,7 +241,7 @@ def eval_one_episode_batch(TASK_ENV, model_client):
         obs_list = TASK_ENV.get_obs_batch(env_idx_list)
         _update_obs_batch(model_client, schedule, env_idx_list, obs_list)
         actions = model_client.call(func_name="get_action_batch", obs=env_idx_list)
-        chunk_size = validate_action_batch(actions, len(env_idx_list))
+        chunk_size = validate_action_batch(actions, len(env_idx_list), TASK_ENV)
         if schedule is not None:
             for env_idx in env_idx_list:
                 schedule.advance(env_idx)

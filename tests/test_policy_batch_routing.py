@@ -29,7 +29,7 @@ from XPolicyLab.utils.process_data import unpack_robot_state
 POLICIES = Path(__file__).resolve().parents[1] / "policy"
 NAMES = """
 Being_H05 Dexora_1B G05 GO_3_Nano_preview GR00T_N17 GalaxeaVLA GigaWorldPolicy
-H_RDT InternVLA_A1 InternVLA_A1_5 LDA_1B LingBot_VLA ME_Brain_1 Meituan_Robotics_0
+H_RDT InternVLA_A1 InternVLA_A1_5 KinRT LDA_1B LingBot_VLA ME_Brain_1 Meituan_Robotics_0
 OpenVLA_OFT Pi_0 Pi_05 Pi_0_Fast RDT_1B Rex_M1_preview Spatial_Forcing Spirit_v15
 StarVLA X_VLA Xiaomi_Robotics_0 Xiaomi_Robotics_1
 """.split()
@@ -97,6 +97,14 @@ def make_model(name):
     model._predict_action_chunks = model._predict = lambda observations: [predict(o) for o in observations]
     model._infer = model.infer = predict
     model.policy = SimpleNamespace(infer=lambda obs: {"actions": predict(obs)}, get_action=predict)
+    if name == "KinRT":
+        model.action_chunk_size = 2
+        ns["_CAMERA_CANDIDATES"] = ("cam_high", "cam_left_wrist", "cam_right_wrist")
+    elif name == "LDA_1B":
+        model._image_history, model._state_history = {}, {}
+    elif name == "Rex_M1_preview":
+        model._hist_by_env = {}
+
     if name == "G05":
         def predict_with_history(observations, env_keys):
             if [o["env_idx"] for o in observations] != list(env_keys):
@@ -319,28 +327,30 @@ class PolicyBatchRoutingTests(unittest.TestCase):
         model.inferencer.infer.side_effect = iter
         self.assertEqual(model.get_action_batch(), [[1, 2]])
 
-    def test_failed_stateful_encoder_discards_partial_history(self):
+    def test_failed_stateful_encoder_preserves_history_on_retry(self):
         for name, encoder in (("LDA_1B", "encode_obs"), ("Rex_M1_preview", "_encode_observation")):
             with self.subTest(policy=name):
                 model = make_model(name)
-                model._image_history, model._state_history, model._hist_by_env = {}, {}, {}
-                model.update_obs_batch([observation(7, 0)])
-                history = model._image_history if name == "LDA_1B" else model._hist_by_env
 
-                def encode(obs):
-                    history[obs["env_idx"]] = obs["state"]
-                    if obs["env_idx"] == 2:
+                def encode(obs, *histories):
+                    for history in histories:
+                        frames = history.setdefault(obs["env_idx"], [])
+                        frames.append(int(obs["state"][0]))
+                    if obs.get("invalid"):
                         raise ValueError("incomplete camera data")
                     return obs
 
-                with patch.object(model, encoder, encode), patch("builtins.print"):
+                corrected = [observation(i, 1) for i in (7, 2)]
+                with patch.object(model, encoder, encode):
+                    model.update_obs_batch([observation(7, 0)])
                     with self.assertRaisesRegex(ValueError, "camera data"):
-                        model.update_obs_batch([observation(i, 1) for i in (7, 2)])
-                self.assertFalse(model._image_history or model._state_history or model._hist_by_env)
-                with self.assertRaises((AssertionError, RuntimeError)):
-                    model.get_action_batch([7])
-                model.update_obs_batch([observation(7, 2)])
-                self.assertEqual(markers(model.get_action_batch([7]))[0][0], 702)
+                        model.update_obs_batch([corrected[0], dict(corrected[1], invalid=True)])
+                    self.assertEqual(markers(model.get_action_batch()), [[700, 701]])
+                    model.update_obs_batch(corrected)
+                histories = ([model._image_history, model._state_history]
+                             if name == "LDA_1B" else [model._hist_by_env])
+                for history in histories:
+                    self.assertEqual(history, {7: [700, 701], 2: [201]})
 
     def test_legacy_batch_without_ids_keeps_separate_observations(self):
         for name in ("H_RDT", "StarVLA", "Meituan_Robotics_0"):

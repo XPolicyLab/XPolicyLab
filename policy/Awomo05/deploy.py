@@ -71,7 +71,7 @@ def eval_one_episode(TASK_ENV, model_client):
         if actions is None:
             raise RuntimeError("Awomo05 policy server returned None for get_action. "
                                "Check the server-side traceback above.")
-        validate_action_chunk(actions)
+        validate_action_chunk(actions, TASK_ENV)
         for action_idx, action in enumerate(actions):
             TASK_ENV.take_action(action)
 
@@ -96,7 +96,7 @@ def eval_one_episode_batch(TASK_ENV, model_client):
         if actions is None:
             raise RuntimeError("Awomo05 policy server returned None for get_action_batch. "
                                "Check the server-side traceback above.")
-        chunk_size = validate_action_batch(actions, len(env_idx_list))
+        chunk_size = validate_action_batch(actions, len(env_idx_list), TASK_ENV)
 
         for action_idx in range(chunk_size):
             current_action_list = [env_actions[action_idx] for env_actions in actions]

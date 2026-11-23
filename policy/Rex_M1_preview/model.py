@@ -436,25 +436,25 @@ class Model(ModelTemplate):
         msgs[0]["content"] = head + msgs[0]["content"]
         return msgs
 
-    def _push_history(self, env_key, head_img: np.ndarray) -> None:
+    def _push_history(self, env_key, head_img: np.ndarray, history) -> None:
         from mibot.utils.io import resize_image
-        buf = self._hist_by_env.get(env_key)
+        buf = history.get(env_key)
         if buf is None:
             buf = deque(maxlen=self.history_stride * self.history_frames + 1)  # +1: current frame included
-            self._hist_by_env[env_key] = buf
+            history[env_key] = buf
         buf.append(resize_image(Image.fromarray(head_img), factor=self.image_factor,
                                 max_pixels=self.history_res * self.history_res))
 
-    def _history_for(self, env_key):
+    def _history_for(self, env_key, history):
         """Anchors t - stride*k, k = N..1 (oldest first), N = min(N_max, floor((len-1)/stride))."""
-        buf = self._hist_by_env.get(env_key)
+        buf = history.get(env_key)
         if not buf:
             return []
         last = len(buf) - 1
         n = min(self.history_frames, last // self.history_stride)
         return [buf[last - self.history_stride * k] for k in range(n, 0, -1)]
 
-    def _encode_observation(self, obs: dict[str, Any]) -> dict[str, Any]:
+    def _encode_observation(self, obs: dict[str, Any], history=None) -> dict[str, Any]:
         """Encode a single XPolicyLab obs into the model's input representation.
 
         Returns the tokenized payload plus the absolute current pose needed to
@@ -536,8 +536,10 @@ class Model(ModelTemplate):
         n_hist = 0
         if self.history_frames:
             env_key = obs.get("env_idx", obs.get("env_id", 0))
-            self._push_history(env_key, head_img)
-            hist_images = self._history_for(env_key)
+            if history is None:
+                history = self._hist_by_env
+            self._push_history(env_key, head_img, history)
+            hist_images = self._history_for(env_key, history)
             n_hist = len(hist_images)
             messages = self._messages_with_history(instruction, hist_images, *pil_images)
         else:
@@ -782,16 +784,12 @@ class Model(ModelTemplate):
     def update_obs_batch(self, obs_list):
         env_ids = [obs.get("env_idx", obs.get("env_id", i)) for i, obs in enumerate(obs_list)]
         validate_observed_ids(env_ids)
-        # Give the history encoder the same ID used later to select this row.
-        try:
-            self._encoded_obs_list = [
-                self._encode_observation(obs if "env_idx" in obs else dict(obs, env_idx=env_id))
-                for obs, env_id in zip(obs_list, env_ids)
-            ]
-        except Exception:
-            # Encoding advances temporal buffers. Drop partial history before the next update.
-            self.reset()
-            raise
+        history = {key: frames.copy() for key, frames in self._hist_by_env.items()}
+        self._encoded_obs_list = [
+            self._encode_observation(obs if "env_idx" in obs else dict(obs, env_idx=env_id), history)
+            for obs, env_id in zip(obs_list, env_ids)
+        ]
+        self._hist_by_env = history
         self._latest_env_idx_list = env_ids
 
     def get_action(self, **kwargs):

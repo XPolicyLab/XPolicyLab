@@ -116,6 +116,36 @@ class AdapterDeployTests(unittest.TestCase):
                     for args, _ in env.get_obs_batch.call_args_list:
                         self.assertEqual(args[0], [3])
 
+    def test_invalid_late_action_never_advances_the_environment(self):
+        good = {"arm_joint_state": [0., 1.], "ee_joint_state": [0.]}
+        for bad in (dict(good, arm_joint_state=[0., np.nan]),
+                    dict(good, ee_joint_state=[np.inf]), dict(good, arm_joint_state=[1.]),
+                    dict(good, unexpected=[0]), {"arm_joint_state": [0., 1.]}):
+            for batch in (False, True):
+                with self.subTest(bad=bad, batch=batch):
+                    env = Environment()
+                    env.robot_action_dim_info = {"arm_dim": [2], "ee_dim": [1]}
+                    env.action_type = "joint"
+                    chunk = [good, bad]
+                    if batch:
+                        loop = self.loops["demo_policy"]["eval_one_episode_batch"]
+                        client = Client([[good, good], chunk])
+                    else:
+                        loop = self.loops["demo_policy"]["eval_one_episode"]
+                        client = Client(chunk)
+                    with self.assertRaises((KeyError, ValueError)):
+                        loop(env, client)
+                    self.assertEqual(env.steps, [])
+
+        invalid_dict = [{"arm_joint_state": [0.]}, {"arm_joint_state": ["bad"]}]
+        packed = np.array([[0., 0.], [0., np.inf]])
+        for chunks in ([invalid_dict] * 2, [packed.tolist()] * 2,
+                       [packed] * 2, np.stack([packed, packed])):
+            env = Environment()
+            with self.assertRaises(ValueError):
+                self.loops["demo_policy"]["eval_one_episode_batch"](env, Client(chunks))
+            self.assertEqual(env.steps, [])
+
     def test_reference_loop_preserves_packed_numpy_batches(self):
         env = Environment(ids=(7, 3))
         chunks = np.arange(12).reshape(2, 3, 2)
@@ -127,6 +157,21 @@ class AdapterDeployTests(unittest.TestCase):
                       chunks.astype(str)):
             with self.subTest(shape=array.shape, dtype=array.dtype), self.assertRaises(ValueError):
                 validate_action_batch(array, 2)
+
+    def test_mobile_chunk_uses_complete_native_fields(self):
+        env = Environment()
+        env.robot_action_dim_info = {"arm_dim": [7, 7], "ee_dim": [12, 12]}
+        env.deploy_cfg = {"env_cfg_type": "m92uw", "action_type": "joint"}
+        good = {"root_linear_velocity": [0., 0., 0.]}
+        bad = {"root_linear_velocity": [0.]}
+
+        def validate_dict(step):
+            if len(step["root_linear_velocity"]) != 3:
+                raise ValueError("invalid base velocity")
+        env.validate_action_dict = validate_dict
+        with self.assertRaisesRegex(ValueError, "base velocity"):
+            self.loops["MoPA"]["eval_one_episode"](env, Client([good, bad]))
+        self.assertEqual(env.steps, [])
 
     def test_aha_debug_resets_the_model_once_per_episode(self):
         env = AhaDebugEnv.__new__(AhaDebugEnv)

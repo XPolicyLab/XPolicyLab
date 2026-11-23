@@ -9,7 +9,7 @@ def eval_one_episode(TASK_ENV, model_client):
         obs = TASK_ENV.get_obs()
         model_client.call(func_name="update_obs", obs=obs)
         actions = model_client.call(func_name="get_action")
-        validate_action_chunk(actions)
+        validate_action_chunk(actions, TASK_ENV)
         for action_idx, action in enumerate(actions):
             TASK_ENV.take_action(action)
             if TASK_ENV.is_episode_end() or action_idx + 1 == len(actions):
@@ -28,7 +28,7 @@ def eval_one_episode_batch(TASK_ENV, model_client):
         actions = model_client.call(func_name="get_action_batch", obs=env_idx_list)
         if not actions:
             break
-        chunk_size = validate_action_batch(actions, len(env_idx_list))
+        chunk_size = validate_action_batch(actions, len(env_idx_list), TASK_ENV)
         for action_idx in range(chunk_size):
             current = [env_actions[action_idx] for env_actions in actions]
             TASK_ENV.take_action_batch(current, env_idx_list)

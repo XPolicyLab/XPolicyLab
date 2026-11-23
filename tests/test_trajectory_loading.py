@@ -31,3 +31,17 @@ class TrajectoryLoadingTests(unittest.TestCase):
         colors = episode["vision"]["head"]["colors"]
         self.assertEqual(colors.shape, (1,))
         np.testing.assert_allclose(decode_image_bit(colors[0]), rgb, atol=3)
+
+    def test_scalar_jpeg_roundtrips_alongside_utf8_instruction(self):
+        rgb = np.full((8, 12, 3), [220, 30, 10], np.uint8)
+        jpeg = encode_image_bit(rgb)
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "episode.hdf5"
+            with h5py.File(path, "w") as file:
+                file["vision/head/colors"] = np.bytes_(jpeg)
+                file["instruction"] = "拿杯子"
+            episode = load_hdf5(path)
+        self.assertEqual(episode["instruction"], "拿杯子")
+        stored = episode["vision"]["head"]["colors"]
+        self.assertEqual(stored, jpeg)
+        np.testing.assert_allclose(decode_image_bit(stored), rgb, atol=3)

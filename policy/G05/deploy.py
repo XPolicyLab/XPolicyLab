@@ -67,7 +67,7 @@ def eval_one_episode(TASK_ENV, model_client):
             obs=_obs_with_g05_history(obs, history_by_env["single"], offsets),
         )
         actions = model_client.call(func_name="get_action")
-        validate_action_chunk(actions)
+        validate_action_chunk(actions, TASK_ENV)
 
         for action_idx, action in enumerate(actions):
             TASK_ENV.take_action(action)
@@ -102,7 +102,7 @@ def eval_one_episode_batch(TASK_ENV, model_client):
             ],
         )
         actions = model_client.call(func_name="get_action_batch", obs=env_idx_list)
-        chunk_size = validate_action_batch(actions, len(env_idx_list))
+        chunk_size = validate_action_batch(actions, len(env_idx_list), TASK_ENV)
 
         for action_idx in range(chunk_size):
             current_action_list = [env_actions[action_idx] for env_actions in actions]

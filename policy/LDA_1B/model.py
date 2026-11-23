@@ -533,20 +533,23 @@ class Model(ModelTemplate):
     def update_obs_batch(self, obs_list):
         env_ids = [obs.get("env_idx", obs.get("env_id", i)) for i, obs in enumerate(obs_list)]
         validate_observed_ids(env_ids)
-        # Give the history encoder the same ID used later to select this row.
-        try:
-            self._last_examples = [
-                self.encode_obs(obs if "env_idx" in obs else dict(obs, env_idx=env_id))
-                for obs, env_id in zip(obs_list, env_ids)
-            ]
-        except Exception:
-            # Encoding advances temporal buffers. Drop partial history before the next update.
-            self.reset()
-            raise
+        image_history = {key: frames.copy() for key, frames in self._image_history.items()}
+        state_history = {key: states.copy() for key, states in self._state_history.items()}
+        self._last_examples = [
+            self.encode_obs(obs if "env_idx" in obs else dict(obs, env_idx=env_id),
+                            image_history, state_history)
+            for obs, env_id in zip(obs_list, env_ids)
+        ]
+        self._image_history = image_history
+        self._state_history = state_history
         self._last_example = self._last_examples[0] if self._last_examples else None
         self._latest_env_idx_list = env_ids
 
-    def encode_obs(self, observation):
+    def encode_obs(self, observation, image_history=None, state_history=None):
+        if image_history is None:
+            image_history = self._image_history
+        if state_history is None:
+            state_history = self._state_history
         env_idx = int(observation.get("env_idx", 0))
         # Build the flat (V*T) image list in the order `predict_action` expects:
         # `rearrange(curr_imgs, "b (v t) c h w -> b v t c h w", v=num_views)` consumes
@@ -554,7 +557,7 @@ class Model(ModelTemplate):
         # [v0_t0, v0_t1, ..., v0_t(T-1), v1_t0, ..., v(V-1)_t(T-1)]. T==obs_horizon.
         flat_images: list[np.ndarray] = []
         for cam_name in self.active_camera_names:
-            buf = self._image_history.setdefault((env_idx, cam_name), [])
+            buf = image_history.setdefault((env_idx, cam_name), [])
             buf.append(_extract_camera(observation, cam_name))
             # Bound the rolling buffer; older frames beyond what obs_indices needs are dropped.
             if len(buf) > self._obs_history_keep:
@@ -583,7 +586,7 @@ class Model(ModelTemplate):
                 source_type="obs",
             ).astype(np.float32)
 
-            state_buf = self._state_history.setdefault(env_idx, [])
+            state_buf = state_history.setdefault(env_idx, [])
             state_buf.append(raw_state)
             if len(state_buf) > self._obs_history_keep:
                 del state_buf[: len(state_buf) - self._obs_history_keep]

@@ -45,7 +45,7 @@ def eval_one_episode(TASK_ENV, model_client):
             obs = _scope_obs(_get_valid_obs(TASK_ENV), scope)
             model_client.call(func_name="update_obs", obs=obs)
             actions = model_client.call(func_name="get_action", obs=scope)
-            validate_action_chunk(actions)
+            validate_action_chunk(actions, TASK_ENV)
 
             for action_idx, action in enumerate(actions):
                 TASK_ENV.take_action(action)
@@ -74,7 +74,7 @@ def eval_one_episode_batch(TASK_ENV, model_client):
                 func_name="get_action_batch",
                 obs={**scope, "env_idx_list": env_idx_list},
             )
-            chunk_size = validate_action_batch(actions, len(env_idx_list))
+            chunk_size = validate_action_batch(actions, len(env_idx_list), TASK_ENV)
 
             for action_idx in range(chunk_size):
                 TASK_ENV.take_action_batch(

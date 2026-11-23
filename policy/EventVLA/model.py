@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 import ast
+from copy import copy
 import logging
 import sys
 from collections import deque
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from random import Random
 from typing import Any, Sequence
@@ -13,6 +14,7 @@ import cv2
 import numpy as np
 
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.utils.batch_indices import selected_env_ids, validate_observed_ids
 from XPolicyLab.utils.process_data import (
     get_robot_action_dim_info,
     pack_robot_state,
@@ -255,7 +257,7 @@ class Model(ModelTemplate):
         self.client = self._connect_client()
         self.obs_by_env: dict[int, dict[str, Any]] = {}
         self.runtime_by_env: dict[int, RuntimeState] = {}
-        self._latest_env_idx_list = [0]
+        self._latest_env_idx_list = []
 
         print(
             f"[EventVLA] connected to EventVLA server, action_dim={self.action_dim}, "
@@ -288,11 +290,6 @@ class Model(ModelTemplate):
         runtime.image_history = deque(maxlen=self.temporal_history_capacity)
         runtime.first_chunk_random_replan_rng = Random(self.first_chunk_random_replan_seed)
         return runtime
-
-    def _get_runtime(self, env_idx: int) -> RuntimeState:
-        if env_idx not in self.runtime_by_env:
-            self.runtime_by_env[env_idx] = self._new_runtime()
-        return self.runtime_by_env[env_idx]
 
     def _convert_obs(self, observation: dict[str, Any]) -> dict[str, Any]:
         images = [
@@ -327,11 +324,10 @@ class Model(ModelTemplate):
         self.update_obs_batch([obs])
 
     def update_obs_batch(self, obs_list):
-        self._latest_env_idx_list = []
-        for obs in obs_list:
-            env_idx = int(obs.get("env_idx", 0))
-            self._latest_env_idx_list.append(env_idx)
-            self.obs_by_env[env_idx] = self._convert_obs(obs)
+        ids = [int(obs.get("env_idx", i)) for i, obs in enumerate(obs_list)]
+        validate_observed_ids(ids)
+        self.obs_by_env = {i: self._convert_obs(obs) for i, obs in zip(ids, obs_list)}
+        self._latest_env_idx_list = ids
 
     def _step_runtime(self, runtime: RuntimeState, obs: dict[str, Any], step: int) -> np.ndarray:
         state = obs.get("state", None)
@@ -424,11 +420,7 @@ class Model(ModelTemplate):
             runtime.prev_action = current_action.copy()
         return current_action
 
-    def _next_action_vector(self, env_idx: int) -> np.ndarray:
-        if env_idx not in self.obs_by_env:
-            raise AssertionError("update_obs must be called before get_action.")
-
-        runtime = self._get_runtime(env_idx)
+    def _next_action_vector(self, env_idx: int, runtime: RuntimeState) -> np.ndarray:
         raw_action = self._step_runtime(runtime, self.obs_by_env[env_idx], runtime.step)
         runtime.step += 1
         action = self._eventvla_raw_to_xpolicy(raw_action)
@@ -437,27 +429,36 @@ class Model(ModelTemplate):
         return action.astype(np.float32)
 
     def get_action(self):
+        if not self._latest_env_idx_list:
+            raise AssertionError("update_obs must be called before get_action.")
         return self.get_action_batch(env_idx_list=[self._latest_env_idx_list[0]])[0]
 
     def get_action_batch(self, env_idx_list=None):
-        if env_idx_list is None:
-            env_idx_list = self._latest_env_idx_list
-        return [
-            [
-                unpack_robot_state(
-                    self._next_action_vector(int(env_idx)),
-                    self.action_type,
-                    self.robot_action_dim_info,
-                    source_type="obs",
-                )
-            ]
-            for env_idx in env_idx_list
-        ]
+        requested = None if env_idx_list is None else map(int, env_idx_list)
+        ids = selected_env_ids(self._latest_env_idx_list, requested)
+        pending = {}
+        chunks = []
+        for env_idx in ids:
+            previous = self.runtime_by_env.get(env_idx)
+            # Existing frame arrays and plans are read-only. Copy the containers
+            # and RNG that inference can advance before a later row fails.
+            runtime = self._new_runtime() if previous is None else replace(
+                previous,
+                image_history=previous.image_history.copy(),
+                keyframe_image_memory=previous.keyframe_image_memory.copy(),
+                first_chunk_random_replan_rng=copy(previous.first_chunk_random_replan_rng),
+            )
+            vector = self._next_action_vector(env_idx, runtime)
+            chunks.append([unpack_robot_state(vector, self.action_type, self.robot_action_dim_info,
+                                              source_type="obs")])
+            pending[env_idx] = runtime
+        self.runtime_by_env.update(pending)
+        return chunks
 
     def reset(self):
         self.obs_by_env.clear()
         self.runtime_by_env.clear()
-        self._latest_env_idx_list = [0]
+        self._latest_env_idx_list = []
         try:
             self._call_server_with_reconnect("reset_memory")
         except Exception as exc:

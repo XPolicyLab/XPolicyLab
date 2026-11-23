@@ -29,7 +29,7 @@ def eval_one_episode(TASK_ENV, model_client):
         model_client.call(func_name="update_obs", obs=_with_client_id(obs))
 
         actions = model_client.call(func_name="get_action", obs={_CLIENT_ID_FIELD: _CLIENT_ID})
-        validate_action_chunk(actions)
+        validate_action_chunk(actions, TASK_ENV)
         for action_idx, action in enumerate(actions):
             TASK_ENV.take_action(action)
 

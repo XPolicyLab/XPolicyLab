@@ -116,3 +116,42 @@ class PolicyBatchTests(unittest.TestCase):
         current = {"__g05_history_observations__": [history]}
         decode_obs_images({"__xpolicylab_batch_observations__": [current]})
         np.testing.assert_allclose(history["vision"]["head"]["color"], rgb, atol=3)
+
+
+    def test_eventvla_failed_batch_preserves_runtime_and_retry_step(self):
+        from XPolicyLab.policy.EventVLA.model import Model
+
+        model = Model.__new__(Model)
+        model.runtime_by_env = {}
+        model.temporal_history_capacity = 5
+        model.first_chunk_random_replan_seed = 123
+        model.action_dim = 14
+        model.action_type = "joint"
+        model.robot_action_dim_info = {"arm_dim": [6, 6], "ee_dim": [1, 1]}
+        model._convert_obs = lambda obs: obs
+        model.update_obs_batch([{"env_idx": 7}, {"env_idx": 2}])
+
+        def step(runtime, obs, tick):
+            runtime.image_history.append(tick)
+            runtime.keyframe_image_memory.append(tick)
+            runtime.first_chunk_random_replan_rng.random()
+            return np.full(14, tick, dtype=np.float32)
+
+        model._step_runtime = Mock(side_effect=step)
+        for ids in ([7, 99], [7, 7]):
+            with self.assertRaises(ValueError):
+                model.get_action_batch(ids)
+        model._step_runtime.assert_not_called()
+        model.get_action_batch()
+        old = model.runtime_by_env[7]
+        rng_state = old.first_chunk_random_replan_rng.getstate()
+        model._step_runtime.side_effect = lambda rt, obs, t: (
+            step(rt, obs, t) if obs["env_idx"] == 7 else np.zeros(1))
+        with self.assertRaisesRegex(ValueError, "raw action dim"):
+            model.get_action_batch()
+        self.assertEqual(old.step, 1)
+        self.assertEqual(list(old.image_history), [0])
+        self.assertEqual(old.keyframe_image_memory, [0])
+        self.assertEqual(old.first_chunk_random_replan_rng.getstate(), rng_state)
+        self.assertEqual(model.get_action_batch([7])[0][0]["left_arm_joint_state"][0], 1)
+        self.assertEqual(model.runtime_by_env[7].step, 2)

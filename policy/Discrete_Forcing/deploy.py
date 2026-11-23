@@ -6,7 +6,7 @@ def eval_one_episode(TASK_ENV, model_client):
     while not TASK_ENV.is_episode_end():
         model_client.call(func_name="update_obs", obs=TASK_ENV.get_obs())
         actions = model_client.call(func_name="get_action")
-        validate_action_chunk(actions)
+        validate_action_chunk(actions, TASK_ENV)
         for action_idx, action in enumerate(actions):
             TASK_ENV.take_action(action)
             if TASK_ENV.is_episode_end() or action_idx + 1 == len(actions):
@@ -22,7 +22,7 @@ def eval_one_episode_batch(TASK_ENV, model_client):
             break
         model_client.call(func_name="update_obs_batch", obs=TASK_ENV.get_obs_batch(env_idx_list))
         actions = model_client.call(func_name="get_action_batch", obs=env_idx_list)
-        chunk_size = validate_action_batch(actions, len(env_idx_list))
+        chunk_size = validate_action_batch(actions, len(env_idx_list), TASK_ENV)
         for action_idx in range(chunk_size):
             TASK_ENV.take_action_batch([chunk[action_idx] for chunk in actions], env_idx_list)
             if TASK_ENV.is_episode_end() or action_idx + 1 == chunk_size:

@@ -153,10 +153,11 @@ def build_policy_shim(model_client):
         )
         actions = client.call(func_name="get_action")
         validate_action_chunk(actions)
-        for action_idx, action in enumerate(actions):
+        qpos_chunk = [standard_action_to_qpos(action) for action in actions]
+        for action_idx, qpos in enumerate(qpos_chunk):
             if TASK_ENV.eval_success or TASK_ENV.take_action_cnt >= TASK_ENV.step_lim:
                 break
-            TASK_ENV.take_action(standard_action_to_qpos(action), action_type="qpos")
+            TASK_ENV.take_action(qpos, action_type="qpos")
             if action_idx + 1 < len(actions) and not TASK_ENV.eval_success:
                 feedback = TASK_ENV.get_obs()
                 client.call(
