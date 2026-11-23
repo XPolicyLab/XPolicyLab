@@ -14,8 +14,14 @@ server_host=${10:-localhost}
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 xpl_root="$(cd "${script_dir}/../.." && pwd -P)"
 : "${ACTWEAVE_ROOT:?Set ACTWEAVE_ROOT to the ActWeave runtime checkout}"
+: "${ACTWEAVE_REVISION:?Set ACTWEAVE_REVISION to the full ActWeave release commit ID}"
 : "${OPENAI_BASE_URL:?}"
 : "${OPENAI_API_KEY:?}"
+if [[ "$(git -C "${ACTWEAVE_ROOT}" rev-parse HEAD)" != "${ACTWEAVE_REVISION}" ||
+      -n "$(git -C "${ACTWEAVE_ROOT}" status --porcelain)" ]]; then
+    printf '%s\n' 'Evaluation requires a clean ACTWEAVE_ROOT at ACTWEAVE_REVISION.' >&2
+    exit 1
+fi
 
 if [[ -f "${policy_env}/bin/activate" ]]; then
     source "${policy_env}/bin/activate"

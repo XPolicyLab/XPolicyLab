@@ -1,6 +1,6 @@
-import json
 import os
 from pathlib import Path
+import select
 import signal
 import subprocess
 import sys
@@ -10,8 +10,27 @@ root = Path(os.environ['ACTWEAVE_ROOT']).resolve()
 xpl_root = Path(__file__).resolve().parents[2]
 config = (root / os.environ['EVO_CONFIG']).resolve()
 os.environ['EVO_CONFIG'] = str(config)
-settings = json.loads(config.read_text())
 children = []
+
+
+def start_bridge():
+    read_fd, write_fd = os.pipe()
+    with os.fdopen(read_fd, 'rb') as ready:
+        try:
+            bridge = subprocess.Popen(
+                ['node', '--import', 'tsx', root / 'src/main.ts'],
+                cwd=root, start_new_session=True, pass_fds=(write_fd,),
+                env={**os.environ, 'EVO_BRIDGE_READY_FD': str(write_fd)},
+            )
+            children.append(bridge)
+        finally:
+            os.close(write_fd)
+        if not select.select([ready], [], [], 60)[0]:
+            raise TimeoutError('ActWeave bridge did not bind within 60 seconds')
+        port = ready.readline()
+        if not port:
+            raise RuntimeError('ActWeave bridge exited before binding')
+        return 'http://127.0.0.1:' + str(int(port))
 
 
 def stop(signum, frame):
@@ -41,16 +60,7 @@ def terminate_children():
 for signum in (signal.SIGINT, signal.SIGTERM):
     signal.signal(signum, stop)
 try:
-    bridge = subprocess.Popen(
-        ['node', '--import', 'tsx', root / 'src/main.ts'],
-        cwd=root, start_new_session=True,
-    )
-    children.append(bridge)
-    subprocess.run(
-        ['bash', xpl_root / 'utils/wait_for_policy_server.sh', '127.0.0.1',
-         str(settings['ports']['bridge']), str(bridge.pid), 'ActWeave runtime', '60'],
-        check=True, timeout=65,
-    )
+    os.environ['EVO_BRIDGE_URL'] = start_bridge()
     server = subprocess.Popen(
         [sys.executable, xpl_root / 'setup_policy_server.py', *sys.argv[1:]],
         cwd=xpl_root, start_new_session=True,

@@ -1,7 +1,6 @@
 import base64
 import io
-import json
-from pathlib import Path
+import os
 import time
 import numpy as np
 from PIL import Image
@@ -15,15 +14,13 @@ class Model(ModelTemplate):
         super().__init__()
         if (config["bench_name"], config["env_cfg_type"], config["action_type"]) != ("RoboDojo", "arx_x5", "joint") or config["eval_batch"]:
             raise ValueError("ActWeave supports RoboDojo/arx_x5/joint with eval_batch=false")
-        runtime = json.loads(Path(config["ckpt_name"]).read_text())
-        self.http = httpx.Client(base_url="http://127.0.0.1:" + str(runtime["ports"]["bridge"]), timeout=30)
+        self.http = httpx.Client(base_url=os.environ["EVO_BRIDGE_URL"], timeout=30)
         dimensions = get_robot_action_dim_info(config["env_cfg_type"])
         self.action_dimensions = {
             f"{side}_{kind}_joint_state": dimensions[field][index]
             for index, side in enumerate(['left', 'right'])
             for kind, field in [('arm', 'arm_dim'), ('ee', 'ee_dim')]
         }
-        self.config = config
         self.final_observation = None
 
     def post(self, endpoint, value):
@@ -33,9 +30,12 @@ class Model(ModelTemplate):
 
     def reset(self):
         self.final_observation = None
-        return self.post("/reset", {"task": self.config["task_name"]})
+        return self.post("/reset", {})
 
     def encode_obs(self, obs):
+        instruction = obs["extra_info"]["detailed_instruction"]
+        if not isinstance(instruction, str) or not instruction.strip():
+            raise ValueError("Official detailed_instruction must be a nonempty string")
         images = {}
         for name, camera in obs["vision"].items():
             data = io.BytesIO()
@@ -43,7 +43,7 @@ class Model(ModelTemplate):
             images[name] = base64.b64encode(data.getvalue()).decode()
         state = {key: np.asarray(value).tolist() for key, value in obs["state"].items()}
         meta = {key: obs[key] for key in ['step', 'step_limit']}
-        return {"instruction": obs["instruction"], "images": images, "state": state, "env_idx": int(obs["env_idx"]), **meta}
+        return {"instruction": instruction, "images": images, "state": state, "env_idx": int(obs["env_idx"]), **meta}
 
     def update_obs(self, obs):
         return self.post("/observation", self.encode_obs(obs))

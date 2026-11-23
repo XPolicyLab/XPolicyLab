@@ -1,42 +1,40 @@
 # ActWeave
 
-**Contributor:** ZJU-OmniAI | **Original code:** [ZJU-OmniAI/ActWeave](https://github.com/ZJU-OmniAI/ActWeave/tree/main) (`main`)
+**Contributor:** ZJU-OmniAI | **Original code:** [ZJU-OmniAI/ActWeave](https://github.com/ZJU-OmniAI/ActWeave)
 
-Online Agent for RoboDojo `arx_x5 / joint`. Use `eval_batch: false`.
+Online Agent adapter for RoboDojo using `arx_x5 / joint` and `eval_batch: false`.
 
-Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md). 
+Shared argument and deployment conventions are documented in the [XPolicyLab README](../../README.md).
 
 ## Installation
 
-Requires Linux, Python 3.11.8 or newer in the 3.11 series, Node.js 22.19 or newer, Git, bubblewrap, ffmpeg and curl. Use the official RoboDojo workspace layout, with this checkout at `<RoboDojo>/XPolicyLab` and `env_cfg/` in its parent directory.
+Requires Linux, Python 3.11.8 or newer in the 3.11 series, Node.js 22.19 or newer, Git, and bubblewrap. Place this checkout at `<RoboDojo>/XPolicyLab`, with `env_cfg/` in its parent directory.
 
 Activate the policy Python environment and run from the XPolicyLab checkout:
 
 ```bash
 export ACTWEAVE_ROOT="$PWD/policy/ActWeave/runtime"
+export ACTWEAVE_REVISION="<full ActWeave release commit ID>"
 bash policy/ActWeave/install.sh
-bash policy/ActWeave/download_checkpoint.sh
 ```
 
-The installer clones `main` and installs dependencies. Existing checkouts are reused without pulling.
+Set `ACTWEAVE_REVISION` to the full release commit ID specified in the evaluation submission. The installer checks out this revision; existing checkouts must match it. Evaluation also requires a clean runtime working tree.
 
-`download_checkpoint.sh` downloads the required demonstration videos.
-
-Install [SAM3 and its weights](https://github.com/facebookresearch/sam3) in a separate CUDA-enabled environment. Activate that environment, then install the service dependencies:
+Install [SAM3 and its weights](https://github.com/facebookresearch/sam3) in a separate CUDA-enabled environment, then install the perception service dependencies:
 
 ```bash
 bash "$ACTWEAVE_ROOT/scripts/install_perception.sh"
 ```
 
-Prepare GPT 6 Astra and Jev API credentials.
+Prepare Astra and Jev API credentials. This adapter uses external model services and requires no ActWeave checkpoint download.
 
 ## Data Processing
 
-Not required; `process_data.sh` is unsupported.
+No data conversion is required.
 
 ## Training
 
-Not required; `train.sh` is unsupported.
+This adapter evaluates deployed models through their APIs.
 
 ## Evaluation
 
@@ -51,13 +49,13 @@ export OPENAI_API_KEY=your-astra-key
 export JEV_API_KEY=your-jev-key
 ```
 
-- Runtime JSON: set `model`, `jev.model`, `jev.endpoint` (full System One URL), and `policyPython`. Keep `maxRequests: null`.
-- Sandbox JSON: set `base`, `python` and NumPy/Pillow mount paths for your environment.
+- Runtime JSON: set `model`, `jev.model`, `jev.endpoint` (the full System One URL), and `policyPython`.
+- Sandbox JSON: set `base` to the base Python installation, `python` to its interpreter, and `mounts` to the NumPy, SciPy, OpenCV, and Pillow packages and their shared-library directories.
 - Relative runtime paths resolve against `ACTWEAVE_ROOT`.
 
 ### Run
 
-In the SAM3 environment, start the perception service:
+Start the perception service in the SAM3 environment:
 
 ```bash
 python "$ACTWEAVE_ROOT/python/perception/server.py" \
@@ -65,9 +63,9 @@ python "$ACTWEAVE_ROOT/python/perception/server.py" \
   --backend sam3 --runtime-config "$EVO_CONFIG"
 ```
 
-Keep this service running; its port must match `ports.perception`.
+Keep the perception service running; its port must match `ports.perception`.
 
-In another shell, export the variables above and run from the XPolicyLab checkout:
+In another terminal, export the environment variables above and run from the XPolicyLab checkout:
 
 ```bash
 bash policy/ActWeave/eval.sh \
@@ -78,4 +76,4 @@ EVAL_ENV_TYPE=sim bash policy/ActWeave/eval.sh \
   RoboDojo stack_bowls "$EVO_CONFIG" arx_x5 joint 0 0 1 actweave-policy robo-eval
 ```
 
-`ckpt_name` is the runtime JSON path. Use separate bridge/perception ports and output directories for concurrent instances.
+`ckpt_name` is the runtime JSON path. Each policy server starts its own bridge on an OS-assigned port; concurrent instances can share the same SAM3 service. The RoboDojo client must provide the official `extra_info.detailed_instruction`.
