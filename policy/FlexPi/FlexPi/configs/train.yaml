@@ -1,0 +1,53 @@
+# @package _global_
+
+defaults:
+  - _self_
+  - data: null
+  - model: null
+  - task: null
+
+
+output_dir: ./runs/train/${now:%Y-%m-%d}_${now:%H-%M-%S}
+
+batch_size: 2
+num_workers: 4
+
+learning_rate: 1.0e-4
+num_epochs: 1
+max_steps: null
+log_every: 10
+save_every: 100
+eval_every: 50
+eval_num_inference_steps: 10
+keep_last_n_states: 3
+keep_last_n_weights: 3
+
+eval_video: true
+share_pca_basis: true
+
+gradient_accumulation_steps: 1
+mixed_precision: "bf16"
+seed: 42
+max_grad_norm: 1.0
+weight_decay: 0.0
+resume: null
+resume_reanchor_lr_schedule: false
+resume_config_source: "current"
+
+pretrained_ckpt: null
+pretrained_ckpt_strict_shape: false
+
+wandb:
+  enabled: false            # launchers pass WANDB_ENABLED through to here
+  workspace: null
+  project: flex-pi
+  name: train
+  group: null
+  mode: online
+
+hydra:
+  job:
+    chdir: false
+  run:
+    dir: .
+  output_subdir: null

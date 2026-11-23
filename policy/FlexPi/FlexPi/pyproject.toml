@@ -1,0 +1,110 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "flexpi"
+version = "0.1.0"
+description = "FlexPi: standalone Wan2.2-TI2V-5B training/inference package"
+requires-python = ">=3.10"
+dependencies = [
+  "accelerate==1.12.0",
+  "av==16.0.1",
+  "boto3==1.35.99",
+  "datasets==3.6.0",
+  # Imports as `decord`, not `decord2` -- video_utils.py decodes both the
+  # libx264rgb depth pair and AV1 video through it, and it is the default
+  # path (LEROBOT_DEPTH_DECORD=0 falls back to the slower pyav branch).
+  "decord2==3.3.0",
+  "deepspeed==0.18.5",
+  "einops==0.8.1",
+  "gitpython==3.1.45",
+  "huggingface-hub==0.29.2",
+  "hydra-core==1.3.2",
+  "imageio==2.37.0",
+  "imageio-ffmpeg==0.6.0",
+  "jsonlines==4.0.0",
+  "modelscope==1.34.0",
+  "numpy==1.26.4",
+  "omegaconf==2.3.0",
+  "packaging==25.0",
+  "pandas==2.2.3",
+  "pillow==12.0.0",
+  "pyarrow==23.0.0",
+  "regex==2025.11.3",
+  "rich==14.2.0",
+  "safetensors==0.5.3",
+  "termcolor==2.5.0",
+  "torch==2.7.1+cu128",
+  "torchcodec==0.5",
+  "torchvision==0.22.1+cu128",
+  "tqdm==4.66.5",
+  "timm==1.0.26",
+  "transformers==4.49.0",
+  "typing-extensions==4.15.0",
+  "wandb==0.23.1",
+]
+
+[project.optional-dependencies]
+# LIBERO simulation. Install with:
+#
+#     pip install '.[libero]'
+#     pip install --no-deps robosuite==1.4.0
+#
+# robosuite is deliberately NOT listed here and MUST be installed with
+# --no-deps. Its own metadata requires `opencv-python` (which collides with the
+# headless build this pins) and `mujoco>=2.3.0` unpinned — pip would resolve
+# that to the latest release and silently break the 3.3.2 pin. 3.3.2 is not
+# cosmetic: it is the version that rendered the published dataset, and 3.8.0
+# shifts libero_object's agentview by ~35 RGB levels, putting eval out of
+# distribution.
+#
+# LIBERO itself is a submodule used via PYTHONPATH, never pip-installed — its
+# setup.py's find_packages() returns [], so `pip install -e` is a no-op.
+libero = [
+  "mujoco==3.3.2",
+  "opencv-python-headless==4.8.1.78",
+  "bddl==3.6.0",
+  "gym==0.26.2",
+  "easydict==1.13",
+  "numba==0.65.0",
+  # LIBERO imports this at envs/env_wrapper.py:4, so `import libero.libero.envs`
+  # -- and therefore every eval entry point -- dies without it.
+  "matplotlib",
+  # robosuite declares scipy but is installed --no-deps, so it would be absent.
+  # numba's linalg needs LAPACK through it: without scipy the FIRST env.reset()
+  # raises "scipy 0.16+ is required for linear algebra", after the model has
+  # already been loaded onto the GPU.
+  "scipy",
+  # robosuite/utils/camera_utils.py:12 imports h5py at module level, and the
+  # depth path (libero_utils.get_libero_per_cam_depth_uint16_mm) imports that
+  # module. Every depth preset needs it, and because that import is inside the
+  # function it fires mid-rollout rather than at startup.
+  "h5py",
+]
+
+# Everything the YAM websocket policy server needs on top of the base install.
+# osqp/scipy back the optional server-side temporal smoother.
+serve = [
+  "msgpack>=1.0.0",
+  "websockets>=13",
+  "dm-tree>=0.1.8",
+  "osqp>=0.6.5",
+  "scipy>=1.11",
+]
+
+# TensorRT KV-split serving (docs/YAM.md 6, docs/INFERENCE_OPTIMIZATION.md).
+# Pinned, not floated: an engine file is tied to the TensorRT minor that baked
+# it, and a mismatch fails at deserialize rather than at install. The imports
+# are lazy, so the base install stays TRT-free and only the engine path needs
+# this extra.
+trt = [
+  "tensorrt==10.16.1.11",
+]
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["flexpi*"]
