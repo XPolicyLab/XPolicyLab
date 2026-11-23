@@ -1,0 +1,24 @@
+# Copyright © 2026 Martingale. All Rights Reserved.
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "martingale"
+version = "1.0.0"
+description = "Martingale: one code-as-policy robot agent for RoboDojo tasks"
+readme = "README.md"
+license = "LicenseRef-Proprietary"
+license-files = ["LICENSE", "THIRD_PARTY_NOTICES.md", "licenses/*"]
+requires-python = ">=3.11"
+authors = [{name = "Martingale"}]
+dependencies = ["numpy", "scipy", "pillow", "opencv-python-headless", "shapely>=2,<3", "mcp>=1.8,<2", "uvicorn", "httpx", "websockets>=15,<16"]
+
+[project.scripts]
+martingale = "martingale.inference.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+martingale = ["knowledge/*.md", "inference/*.md", "inference/*.json", "inference/extensions/**/*.json", "inference/library/**/*.md", "inference/library/**/*.json", "inference/library/**/*.npz", "inference/library/**/*.png", "inference/library/**/*.jpg", "inference/library/*.md"]

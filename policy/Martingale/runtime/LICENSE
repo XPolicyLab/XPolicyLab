@@ -1,0 +1,20 @@
+Copyright © 2026 Martingale. All Rights Reserved.
+
+Permission to use this software is subject to Martingale's consent on a
+case-by-case basis. A request by Martingale to a benchmark organizer to evaluate
+this software constitutes consent for that organizer to install and run the
+submitted software, and to make copies reasonably necessary, solely to perform
+that requested evaluation. This permission does not authorize redistribution,
+sublicensing, modification, or use for any other purpose. Any additional rights
+require separate consent from Martingale.
+
+Except for the permission described above or rights separately granted by
+Martingale, no licence or right is granted by implication, estoppel or otherwise
+to use, copy, modify, distribute or create derivative works of this software.
+
+This repository is not submitted as a "Contribution" under section 5 of the
+Apache License, Version 2.0.
+
+Portions derived from third-party software remain under their own licences,
+listed in THIRD_PARTY_NOTICES.md. Nothing in this notice restricts rights granted
+under those third-party licences.

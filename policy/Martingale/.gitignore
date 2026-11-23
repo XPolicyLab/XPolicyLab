@@ -1,0 +1,3 @@
+*.token
+.env
+.env.*

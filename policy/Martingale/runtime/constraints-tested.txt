@@ -1,0 +1,35 @@
+# Tested Linux x86_64 / Python 3.11 inference dependency constraints.
+# SAM3, its CUDA/PyTorch runtime, XPolicyLab and Codex are separate host dependencies.
+# Use with pip install -c constraints-tested.txt .; this file does not install packages.
+annotated-types==0.8.0
+anyio==4.15.1
+attrs==26.1.0
+certifi==2026.10.23
+click==8.5.0
+h11==0.16.0
+httpcore==1.0.9
+httpx==0.28.1
+httpx-sse==0.4.3
+idna==3.20
+jsonschema==4.26.0
+jsonschema-specifications==2025.9.1
+mcp==1.30.0
+numpy==1.26.4
+opencv-python-headless==4.11.0.86
+pillow==13.0.0
+pydantic==2.14.1
+pydantic-core==2.50.1
+pydantic-settings==2.16.2
+pyjwt==2.15.1
+python-dotenv==1.2.4
+python-multipart==0.0.32
+referencing==0.37.0
+rpds-py==2026.9.1
+scipy==1.17.1
+shapely==2.1.2
+sse-starlette==3.6.0
+starlette==1.10.0
+typing-extensions==4.16.0
+typing-inspection==0.4.4
+uvicorn==0.54.0
+websockets==15.0.1

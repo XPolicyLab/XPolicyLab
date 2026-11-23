@@ -1,0 +1,19 @@
+# Derived from XPolicyLab (Apache License 2.0); see runtime/THIRD_PARTY_NOTICES.md.
+# Modifications Copyright © 2026 Martingale. All Rights Reserved.
+# This file has been modified by Martingale.
+policy_name: Martingale
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+action_type: joint
+gpu_id: null
+eval_batch: false
+poll_s: 2.0
+# Supply absolute paths at deployment. ONE configuration across all tasks.
+inference_config: null
+result_dir: null

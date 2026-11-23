@@ -1,0 +1,1 @@
+"""Hang mugs capability namespace."""

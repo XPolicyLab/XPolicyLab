@@ -1,0 +1,22 @@
+# sweep blocks
+
+## Object/scene geometry
+
+Object/scene geometry measurements and checks, where present, remain in [Procedures](#procedures) with the steps that use them.
+
+## Grasping/contact/other
+
+`--self-play mode`
+
+### Procedures
+
+Additional sweep_blocks execution guidance:
+1. Use the left hand first to make the brush accessible to the right hand. After securing the initial grasp, lift the brush straight up high enough that the entire brush and gripper clear the dustpan, including its rim and handle, with a visible clearance margin. Visually confirm clearance before moving sideways or rotating the brush. Then SET IT DOWN stably on a clear part of the table with its handle exposed and within the right hand's reach. Orient it so the right hand can approach the handle with both fingers clear.
+2. Transfer the brush by placement and regrasp, not by a direct hand-to-hand pass. The left hand must release the brush and withdraw before the right hand approaches. Verify the brush is stable, then let the right hand grasp its handle and verify the pickup. In the original instruction, "hand it over" means this set-down-and-regrasp sequence.
+3. Once the right hand has the brush, the left hand should grasp the dustpan handle and position the pan so the right hand has an unobstructed sweep path from the blocks into the entrance. Keep the pan stable and low at the tabletop, with its opening facing the blocks; keep the left forearm and fingers clear of the entrance and right-hand sweep path.
+4. Once both tools are grasped and the pan entrance is positioned, keep holding the dustpan and prefer to leave it low, level, and still while the brush does most of the repositioning and sweeping. Avoid repeatedly lifting, rotating, or releasing and regrasping the pan, especially once it contains blocks. Guide remaining blocks toward the entrance with short, gentle brush strokes. When only one or two blocks remain outside, prioritize keeping collected blocks inside: use small movements and inspect after each stroke. If needed for alignment, pause the brush and make a small, slow pan adjustment, keeping its orientation steady and its lip low against the tabletop. Gently advancing the pan toward the brush is optional, not required on every sweep. Let it settle and verify collected blocks remain inside before resuming. If blocks bounce, the pan catches, or anything spills, stop and inspect before continuing.
+5. Finish without knocking collected cubes out of the dustpan. Place the brush clear of the pan and cubes, and settle both tools in stable supported positions before releasing them. For each tool, hold the arm still while opening the gripper; verify the fingers have fully released the handle before withdrawing. Retreat in short, careful stages along a clear path so neither finger catches the handle, rim, brush, or cubes. Keep the other arm still during release. Inspect after opening and again after withdrawal: all collected cubes must remain in the pan and the pan must remain stable. If anything shifts or spills, stop and recover it before finishing. Do not call home until the gripper is clear of the tool and cubes.
+
+Geometry workflow: before picking up either tool, call observe_sweep(arm="left") with the empty hand to obtain the supporting view, then sweep_geometry(refit=True). Use its accepted pan handle, entrance and floor, and its separate block instances. Use ordinary locate for the brush. A rejected pan fit is not an instruction to grasp its coordinates: inspect or improve the view and retry, using ordinary locate only as a coarse fallback. The pan floor and lip are approximate, so verify contact and clearance in images.
+The pan fit assumes a resting pan. After visually confirming the left fingers have closed around the pan handle, call sweep_geometry(held_by="left") BEFORE lifting or moving the pan. This carries the fitted geometry with the hand; it is a prediction, not proof of attachment. Verify a small lift and inspect again after motion. Do not refit a held pan as if it were still on the table. After placing and releasing it, call sweep_geometry(held_by="", refit=True) only when it is resting flat again. Re-query sweep_geometry() after sweeping for fresh block locations; do not treat absent or rejected block candidates as proof that all blocks were collected.
+After sweeping, leave the tools and collected blocks stable, withdraw without disturbing them, and return both arms home before finishing.

@@ -1,0 +1,6 @@
+{
+  "model": "gpt-6.2-astra",
+  "effort": "xhigh",
+  "provider": "codex_subscription",
+  "serving": "default"
+}
