@@ -7,7 +7,7 @@
 - Model display name: **Era0-Preview**; policy directory: **Era0_Preview**.
 - Supported environment/action: **RoboDojo / arx_x5 / ee**.
 - Code: inference runtime and evaluation adapter included in this policy directory.
-- Assets: [model repository](https://huggingface.co/roboterax/Era0-5B-Preview-RoboDojo). Matching inference assets are published; download the pinned revision with `bash download_checkpoint.sh`.
+- Assets: [model repository](https://huggingface.co/roboterax/Era0-5B-RoboDojo). Matching inference assets are published; download the pinned revision with `bash download_checkpoint.sh`.
 
 ## Evaluation evidence
 

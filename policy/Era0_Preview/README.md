@@ -16,7 +16,7 @@ bash download_checkpoint.sh
 
 ## Model assets
 
-Model repository: [roboterax/Era0-5B-Preview-RoboDojo](https://huggingface.co/roboterax/Era0-5B-Preview-RoboDojo).
+Model repository: [roboterax/Era0-5B-RoboDojo](https://huggingface.co/roboterax/Era0-5B-RoboDojo).
 
 `bash download_checkpoint.sh` downloads the matching model assets to `checkpoints/era0-preview/`. The exact model revision and file checksums are pinned in `checkpoint_release.json`.
 
