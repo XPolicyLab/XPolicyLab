@@ -316,16 +316,16 @@ class PolicyBatchRoutingTests(unittest.TestCase):
         model._build_obs_accepts_buffers = True
         model._to_g05_raw_obs = lambda obs: {"images": {"head": obs["step"]}, "state": {"arm": obs["step"]}}
         model._build_obs_dict = lambda obs, processor, frame_buffers, state_buffers: list(frame_buffers["head"])
-        model._format_action_chunk = identity
+        model._format_action_chunk = lambda history: [[int(frame)] for frame in history]
         model.inferencer = SimpleNamespace(infer=Mock(side_effect=lambda inputs: inputs))
         model.update_obs_batch([dict(env_idx=7, step=1)])
-        self.assertEqual(model.get_action_batch(), [[1, 1]])
+        self.assertEqual(model.get_action_batch(), [[[1], [1]]])
         model.update_obs_batch([dict(env_idx=7, step=2)])
         model.inferencer.infer.side_effect = lambda inputs: []
         with self.assertRaisesRegex(ValueError, "number of action chunks"):
             model.get_action_batch()
         model.inferencer.infer.side_effect = iter
-        self.assertEqual(model.get_action_batch(), [[1, 2]])
+        self.assertEqual(model.get_action_batch(), [[[1], [2]]])
 
     def test_failed_stateful_encoder_preserves_history_on_retry(self):
         for name, encoder in (("LDA_1B", "encode_obs"), ("Rex_M1_preview", "_encode_observation")):

@@ -425,6 +425,9 @@ class Model(ModelTemplate):
     def infer(self, observation, center_crop=True):
         """Generates an action with the VLA policy."""
 
+        # Preprocessing replaces image/state entries; keep the cached raw observation reusable.
+        observation = dict(observation)
+
         # (If trained with image augmentations) Center crop image and then resize back up to original size.
         # IMPORTANT: Let's say crop scale == 0.9. To get the new height and width (post-crop), multiply
         #            the original height and width by sqrt(0.9) -- not 0.9!
@@ -524,6 +527,9 @@ class Model(ModelTemplate):
 
 
     def reset(self, checkpoint_path = None) -> None:
+
+        self.observation_window = None
+        self._latest_env_idx_list = [0]
 
         if checkpoint_path is not None:
             self.vla = self.get_model(checkpoint_path)

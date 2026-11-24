@@ -431,7 +431,8 @@ class Model(ModelTemplate):
             cfg=self.cfg,
             vla=self.vla,
             processor=self.processor,
-            obs=observation,
+            # The upstream helper replaces state with normalized proprioception.
+            obs=dict(observation),
             task_label=observation["instruction"],
             action_head=self.action_head,
             proprio_projector=self.proprio_projector,
@@ -468,8 +469,9 @@ class Model(ModelTemplate):
         return action_list
     
     def reset(self):
-        return
-    # TODO
+        self.observation_window = None
+        self._latest_env_idx_list = [0]
+
     def get_model(self, model_cfg: dict[str, Any]):
         finetune_dir = _resolve_finetune_dir(model_cfg)
         has_finetune_weights = finetune_dir is not None and (finetune_dir / "config.json").exists()

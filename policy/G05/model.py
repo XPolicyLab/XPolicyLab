@@ -11,6 +11,7 @@ import numpy as np
 import torch
 
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.utils.action_chunks import validate_action_batch
 from XPolicyLab.utils.batch_indices import observation_rows, validate_observed_ids
 from XPolicyLab.utils.process_data import (
     get_robot_action_dim_info,
@@ -267,6 +268,7 @@ class Model(ModelTemplate):
             if len(predictions) != len(inputs):
                 raise ValueError("G05 inference returned the wrong number of action chunks")
             actions.extend(predictions)
+        validate_action_batch(actions, len(obs_dicts), self)
         self._history_buffers.update(pending_history)
         return actions
 

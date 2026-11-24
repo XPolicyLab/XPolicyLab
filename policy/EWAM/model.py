@@ -31,6 +31,7 @@ import cv2
 import numpy as np
 
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.utils.batch_indices import observation_env_ids, selected_env_ids, validate_observed_ids
 from XPolicyLab.utils.checkpoint_resolver import resolve_checkpoint_root
 from XPolicyLab.utils.process_data import get_robot_action_dim_info
 
@@ -446,11 +447,14 @@ class Model(ModelTemplate):
         return [a[..., _VALID_ACTION_DIMS] for a in actions16]
 
     def update_obs(self, obs):
-        self._obs = obs
+        self.update_obs_batch([obs])
 
     def update_obs_batch(self, obs_list):
-        for i, obs in enumerate(obs_list):
-            self._obs_batch[int(obs.get("env_idx", i))] = obs
+        env_ids = [int(env_id) for env_id in observation_env_ids(obs_list)]
+        validate_observed_ids(env_ids)
+        observations = dict(zip(env_ids, obs_list))
+        self._obs_batch = observations
+        self._obs = obs_list[0] if obs_list else None
 
     def get_action(self):
         if self._obs is None:
@@ -458,10 +462,10 @@ class Model(ModelTemplate):
         return self._infer(self._obs)
 
     def get_action_batch(self, env_idx_list=None):
-        env_ids = list(self._obs_batch) if env_idx_list is None else [int(i) for i in env_idx_list]
-        missing = [i for i in env_ids if i not in self._obs_batch]
-        if missing:
-            raise RuntimeError(f"get_action_batch called before update_obs_batch for envs {missing}")
+        requested = None if env_idx_list is None else [int(i) for i in env_idx_list]
+        env_ids = selected_env_ids(list(self._obs_batch), requested)
+        if not env_ids:
+            return []
         return self._infer_batch([self._obs_batch[i] for i in env_ids])
 
     def reset(self):

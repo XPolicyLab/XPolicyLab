@@ -271,16 +271,44 @@ class Model(ModelTemplate):
     def _save_stage_image(self, rgb: np.ndarray, path: str) -> None:
         Image.fromarray(np.asarray(rgb, dtype=np.uint8)).save(path)
 
+    def _validated_action_prediction(self, result) -> np.ndarray:
+        """Reject missing predictions before the upstream smoother can fill them with zeros."""
+        if not isinstance(result, dict) or "normalized_actions" not in result:
+            raise ValueError("Mem_0 expected a normalized_actions prediction")
+        actions = np.asarray(result["normalized_actions"])
+        if actions.ndim == 3:
+            if actions.shape[0] != 1:
+                raise ValueError("Mem_0 requires exactly one prediction batch row")
+            actions = actions[0]
+        if actions.ndim != 2:
+            raise ValueError("Mem_0 predictions must have shape (steps, action_dim) or (1, steps, action_dim)")
+
+        steps = self.agent.action_strip
+        horizon = self.agent.action_horizon
+        action_dim = self.agent.executor.action_model.action_dim
+        if not 0 < steps <= horizon:
+            raise ValueError("Mem_0 action_strip must be positive and no greater than action_horizon")
+        if actions.shape[0] < steps or actions.shape[1] != action_dim or action_dim <= 0:
+            raise ValueError(
+                f"Mem_0 expected at least {steps} predicted steps of width {action_dim}; got {actions.shape}"
+            )
+        if actions.dtype.kind not in "iuf" or not np.isfinite(actions).all():
+            raise ValueError("Mem_0 predictions must contain finite real numbers")
+        # The existing postprocessor converts to float32; reject overflow before
+        # any predictions are appended to the agent's action history.
+        with np.errstate(over="ignore", invalid="ignore"):
+            if not np.isfinite(actions.astype(np.float32)).all():
+                raise ValueError("Mem_0 predictions must be representable as finite float32 values")
+        return actions
+
     def _start_macro_chunk(self, encoded: dict) -> None:
         if self.agent.action_count == 0:
             payload = {k: v for k, v in encoded.items() if not k.startswith("_")}
             self.agent.update_obs(payload)
 
         result = self.agent.get_action()
-        if result is None or len(result) == 0:
-            raise RuntimeError(self._error_msg("Empty actions from model; aborting eval."))
-
-        self.agent.accumulate_actions_chunk(result["normalized_actions"])
+        actions = self._validated_action_prediction(result)
+        self.agent.accumulate_actions_chunk(actions)
         smoothed = self.agent.get_smoothed_actions(self.agent.iter, self.agent.action_strip)
         steps_to_run = min(self.agent.action_strip, smoothed.shape[0])
         env_actions = self._postprocess_chunk(smoothed[:steps_to_run])
@@ -380,9 +408,7 @@ class Model(ModelTemplate):
         result = self.agent.get_action()
         if result is None:
             raise RuntimeError(self._error_msg("get_action called before update_obs."))
-        chunk = result["normalized_actions"]
-        if chunk.ndim == 3:
-            chunk = chunk[0]
+        chunk = self._validated_action_prediction(result)
         return self._postprocess_chunk(chunk)
 
     def update_obs_batch(self, obs_list):
