@@ -1,9 +1,4 @@
-"""History RGB history for RoboDojo LeRobot checkpoints.
-
-The client labels observations with completed control steps, independently of
-RPC/request counts. Prediction resets only the model's single-block KV state;
-the archive remains tied to the real simulator episode.
-"""
+"""RoboDojo observation history and inference."""
 from __future__ import annotations
 
 from collections.abc import Mapping

@@ -1,4 +1,4 @@
-"""Profile validation and source selection, shared by Python and shell entrypoints."""
+"""Deployment configuration and runtime paths."""
 from __future__ import annotations
 
 from collections.abc import Mapping
@@ -16,48 +16,22 @@ DEFAULT_SOURCE = POLICY_DIR / "worldscape-policy"
 def validate_config(config):
     cfg = dict(config)
     profile = cfg.setdefault("runtime_profile", "robodojo")
-    if profile not in {"robotwin2", "robodojo"}:
-        raise ValueError("runtime_profile must be robotwin2 or robodojo")
     if profile != "robodojo" or cfg.get("bench_name") not in (None, "RoboDojo", "robodojo"):
         raise ValueError("WorldScape Policy 2.5 Preview supports RoboDojo only")
-    if not (cfg.get("vlm_memory") and cfg.get("history_memory")
-            and cfg.get("checkpoint_format") == "lerobot_v21"
-            and cfg.get("vlm_conditioning") == "t5_vlm_concat"):
-        raise ValueError("Preview requires the joint T5 + VLM visual-memory checkpoint")
-    checkpoint_format = cfg.get("checkpoint_format", "native")
-    if checkpoint_format not in {"native", "lerobot_v21"}:
-        raise ValueError("checkpoint_format must be native or lerobot_v21")
-    if checkpoint_format == "lerobot_v21" and profile != "robodojo":
-        raise ValueError("checkpoint_format=lerobot_v21 requires runtime_profile=robodojo")
-    if type(cfg.get("history_memory", False)) is not bool:
-        raise ValueError("history_memory must be a boolean")
-    if cfg.get("history_memory", False) and (profile != "robodojo" or checkpoint_format != "lerobot_v21"):
-        raise ValueError("history_memory requires runtime_profile=robodojo and checkpoint_format=lerobot_v21")
-    if type(cfg.get("vlm_memory", False)) is not bool:
-        raise ValueError("vlm_memory must be boolean")
-    if cfg.get("vlm_input_color_order", "rgb") not in {"rgb", "bgr"}:
-        raise ValueError("vlm_input_color_order must be rgb or bgr")
-    if cfg.get("vlm_memory", False) and (
-            profile != "robodojo" or checkpoint_format != "lerobot_v21"
-            or not cfg.get("history_memory", False) or cfg.get("mode") != "auto"
-            or cfg.get("history_capture_mode", "dense") != "dense"):
-        raise ValueError("VLM memory requires Auto LeRobot history with dense capture")
-    if "vlm_conditioning" in cfg:
-        if not cfg.get("vlm_memory", False) or cfg["vlm_conditioning"] != "t5_vlm_concat":
-            raise ValueError("vlm_conditioning requires VLM memory and t5_vlm_concat")
-        if cfg.get("t5_prompt_template") is not None:
-            raise ValueError("T5 + VLM requires raw task instructions, without a T5 template")
-    if cfg.get("vlm_memory", False) and cfg.get("vlm_input_color_order", "rgb") != "bgr":
+    if cfg.get("history_memory") is not True or cfg.get("vlm_memory") is not True:
+        raise ValueError("Preview requires history_memory=true and vlm_memory=true")
+    if (cfg.get("checkpoint_format") != "lerobot_v21"
+            or cfg.get("vlm_conditioning") != "joint_t5_vlm"
+            or cfg.get("mode") != "auto"):
+        raise ValueError("Preview requires the Auto LeRobot joint T5 + VLM checkpoint")
+    if cfg.get("history_capture_mode", "dense") != "dense":
+        raise ValueError("Preview requires history_capture_mode=dense")
+    if cfg.get("t5_prompt_template") is not None:
+        raise ValueError("T5 + VLM requires raw task instructions, without a T5 template")
+    if cfg.get("vlm_input_color_order", "rgb") != "bgr":
         raise ValueError("This VLM checkpoint requires the explicit vlm_input_color_order=bgr opt-in")
-    capture_mode = cfg.get("history_capture_mode", "dense")
-    if not isinstance(capture_mode, str) or capture_mode not in {"dense", "chunk_boundary"}:
-        raise ValueError("history_capture_mode must be dense or chunk_boundary")
-    if capture_mode == "chunk_boundary" and not cfg.get("history_memory", False):
-        raise ValueError("history_capture_mode=chunk_boundary requires history_memory=true")
     generation = cfg.get("generation_overrides")
     if generation is not None:
-        if checkpoint_format != "lerobot_v21":
-            raise ValueError("generation_overrides requires checkpoint_format=lerobot_v21")
         if not isinstance(generation, Mapping) or set(generation) - {
             "num_inference_steps", "num_dit_steps", "dynamic_cache_schedule",
         }:
@@ -87,8 +61,8 @@ def validate_config(config):
                 "kv_cache_fifo", "observation_history_stride", "diffusion_concat_profile", "visual_prompt"):
         if key in cfg:
             raise ValueError(f"{key} is not supported; use the WorldScape_Policy_2.5-Preview profile configuration")
-    for key in ("action_horizon", "replan_steps", "observation_interval", "memory_window_chunks",
-                "ordinary_window_chunks", "observation_history_segments"):
+    for key in ("action_horizon", "replan_steps", "observation_interval",
+                "observation_history_segments"):
         value = cfg.get(key)
         if value is not None:
             if isinstance(value, bool) or not isinstance(value, Integral) or value < 1:
@@ -101,8 +75,8 @@ def validate_config(config):
     if type(width) is not int or width < 2 or width % 2:
         raise ValueError("diffusion_concat_width must be an even integer >= 2")
     for key in ("eval_batch", "constrain_action_padding", "use_observation_history",
-                "use_causal_memory", "reset_independent_blocks", "short_window_for_non_memory_tasks",
-                "allow_dummy_policy", "validate_checkpoint_artifacts", "log_inference"):
+                "use_causal_memory", "reset_independent_blocks",
+                "allow_dummy_policy", "log_inference"):
         if cfg.get(key) is not None and not isinstance(cfg[key], bool):
             raise ValueError(f"{key} must be a boolean")
     if cfg.get("input_color_order", "rgb") not in {"rgb", "bgr"}:
@@ -113,67 +87,42 @@ def validate_config(config):
         raise ValueError("diffusion_concat_view_order must be a permutation of [0, 1, 2]")
     if cfg.get("single_window_reference", "latest") not in {"first", "latest"}:
         raise ValueError("single_window_reference must be first or latest")
-    if profile == "robotwin2":
-        forbidden = {
-            "eval_batch": cfg.get("eval_batch", False),
-            "input_color_order": cfg.get("input_color_order", "rgb") != "rgb",
-            "wam_history_mode": cfg.get("wam_history_mode", "periodic") != "periodic",
-            "short_window_for_non_memory_tasks": cfg.get("short_window_for_non_memory_tasks", False),
-            "use_observation_history": cfg.get("use_observation_history", True) is False,
-            "use_causal_memory": cfg.get("use_causal_memory", True) is False,
-            "reset_independent_blocks": cfg.get("reset_independent_blocks", False),
-            "memory_window_chunks": cfg.get("memory_window_chunks") is not None,
-            "ordinary_window_chunks": cfg.get("ordinary_window_chunks") is not None,
-            "observation_history_segments": cfg.get("observation_history_segments", 8) != 8,
-        }
-        if any(forbidden.values()):
-            raise ValueError(f"RoboDojo-only options enabled for robotwin2: {[k for k, v in forbidden.items() if v]}")
-    else:
-        if cfg.get("allow_dummy_policy", False):
-            raise ValueError("allow_dummy_policy is only supported by robotwin2")
-        reset_chunks = cfg.get("memory_reset_chunks", 0)
-        if reset_chunks is None:
-            reset_chunks = 0
-        if isinstance(reset_chunks, bool) or not isinstance(reset_chunks, Integral) or int(reset_chunks) < 0:
-            raise ValueError("memory_reset_chunks must be a non-negative integer")
-        cfg["memory_reset_chunks"] = int(reset_chunks)
-        if cfg["memory_reset_chunks"] and cfg.get("wam_history_mode", "periodic") == "rolling":
-            raise ValueError("memory_reset_chunks requires wam_history_mode=periodic")
-        if not cfg.get("short_window_for_non_memory_tasks", False) and any(
-            cfg.get(key) is not None for key in ("memory_window_chunks", "ordinary_window_chunks")
-        ):
-            raise ValueError("Window overrides require short_window_for_non_memory_tasks=true")
-    if profile == "robodojo":
-        for name, default in {
-            "constrain_action_padding": True, "short_window_for_non_memory_tasks": False,
-            "use_observation_history": True, "use_causal_memory": True,
-            "reset_independent_blocks": False, "validate_checkpoint_artifacts": True,
-            "observation_history_segments": 8,
-        }.items():
-            if cfg.get(name) is None:
-                cfg[name] = default
+    if cfg.get("allow_dummy_policy", False):
+        raise ValueError("Preview does not support dummy policies")
+    reset_chunks = cfg.get("memory_reset_chunks", 0)
+    if reset_chunks is None:
+        reset_chunks = 0
+    if isinstance(reset_chunks, bool) or not isinstance(reset_chunks, Integral) or reset_chunks != 0:
+        raise ValueError("Preview requires memory_reset_chunks=0")
+    cfg["memory_reset_chunks"] = 0
+    # Each prediction uses an independent chunk; visual history is supplied
+    # explicitly by the episode archive, not by carrying KV across chunks.
+    for name, expected in {
+        "use_observation_history": False,
+        "use_causal_memory": False,
+        "reset_independent_blocks": True,
+        "wam_history_mode": "periodic",
+    }.items():
+        if cfg.get(name) != expected:
+            raise ValueError(f"Preview requires {name}={expected!r}")
+    for name, default in {
+        "constrain_action_padding": True,
+        "observation_history_segments": 8,
+    }.items():
+        if cfg.get(name) is None:
+            cfg[name] = default
     return cfg
 
 
-def resolve_rollout_config(config, checkpoint_model, provenance):
+def resolve_rollout_config(config, checkpoint_model):
     """Prefer checkpoint rollout metadata to deployment fallback values."""
     resolved = dict(config)
     horizon = getattr(checkpoint_model.shape, "action_horizon", None)
     resolved["action_horizon"] = horizon if horizon is not None else config.get("action_horizon")
-    keys = ["action_horizon"]
-    if config.get("short_window_for_non_memory_tasks", False):
-        capacity = checkpoint_model.wam.core.parameters.get("max_chunk_size")
-        memory = capacity if capacity is not None else config.get("memory_window_chunks")
-        resolved["memory_window_chunks"] = provenance.get("memory_window_chunks", memory)
-        resolved["ordinary_window_chunks"] = provenance.get(
-            "ordinary_window_chunks", config.get("ordinary_window_chunks"),
-        )
-        keys.extend(("memory_window_chunks", "ordinary_window_chunks"))
-    for key in keys:
-        value = resolved.get(key)
-        if isinstance(value, bool) or not isinstance(value, Integral) or value < 1:
-            raise ValueError(f"Resolved {key} must be a positive integer")
-        resolved[key] = int(value)
+    value = resolved["action_horizon"]
+    if isinstance(value, bool) or not isinstance(value, Integral) or value < 1:
+        raise ValueError("Resolved action_horizon must be a positive integer")
+    resolved["action_horizon"] = int(value)
     return resolved
 
 
@@ -212,15 +161,13 @@ ENV_KEYS = {
     "WORLDSCAPE_DEVICE": "device", "WSP_MODE": "mode", "ROBOTWIN_ACTION_HORIZON": "action_horizon",
     "ROBOTWIN_REPLAN_STEPS": "replan_steps", "ROBOTWIN_OBSERVATION_INTERVAL": "observation_interval",
     "ROBOTWIN_MEMORY_RESET_CHUNKS": "memory_reset_chunks",
-    "ROBOTWIN_VLM_HISTORY_NUM_FRAMES": "vlm_history_num_frames",
     "ROBOTWIN_DIFFUSION_VIEW_LAYOUT": "diffusion_view_layout",
-    "ROBOTWIN_VLM_COT_PROMPT": "vlm_cot_prompt", "ROBOTWIN_T5_PROMPT_TEMPLATE": "t5_prompt_template",
-    "WSP_VALIDATE_CHECKPOINT_ARTIFACTS": "validate_checkpoint_artifacts",
+    "ROBOTWIN_T5_PROMPT_TEMPLATE": "t5_prompt_template",
     "WSP_LOG_INFERENCE": "log_inference", "WORLDSCAPE_ALLOW_DUMMY_POLICY": "allow_dummy_policy",
 }
-BOOL_KEYS = {"validate_checkpoint_artifacts", "log_inference", "allow_dummy_policy"}
+BOOL_KEYS = {"log_inference", "allow_dummy_policy"}
 STRING_KEYS = {"worldscape_root", "checkpoint_path", "device", "mode", "diffusion_view_layout",
-               "vlm_cot_prompt", "t5_prompt_template"}
+               "t5_prompt_template"}
 
 
 def launch_config(path):
@@ -247,13 +194,8 @@ if __name__ == "__main__":
     cfg, root, overrides = launch_config(sys.argv[1])
     if len(sys.argv) > 2:
         gpu_ids = sys.argv[2].split(",")
-        enabled = (cfg.get("multi_gpu") or {}).get("enabled", False)
-        if enabled:
-            if (len(gpu_ids) < 2 or any(not gpu.isdecimal() for gpu in gpu_ids)
-                    or len({int(gpu) for gpu in gpu_ids}) != len(gpu_ids)):
-                raise ValueError("multi_gpu requires at least two distinct numeric policy GPU IDs")
-        elif len(gpu_ids) > 1:
-            raise ValueError("Multiple policy GPUs require multi_gpu.enabled=true in the selected YAML")
+        if len(gpu_ids) != 1:
+            raise ValueError("Use one policy server per GPU for this inference adapter")
     print(str(root))
     print(json.dumps({"profile": cfg["runtime_profile"], "source": str(root),
                       "input_color_order": cfg.get("input_color_order", "rgb"),

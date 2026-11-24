@@ -2,14 +2,7 @@
 #
 # See LICENSE for license information.
 
-"""
-Simplified wrapper around TransformerEngine's C++ pytorch backend.
-This supports torch.compile(fullgraph=True).
-Lowers to cudnn ultimately.
-Only bf16 / fp16 is supported.
-Only BSHD layout is supported.
-Currently, tensors are made contiguous -- packed th2d, th3d not supported yet.
-"""
+"""Compilable cuDNN attention for BF16/FP16 tensors in BSHD layout."""
 
 import math
 from typing import Any, List, Optional, Tuple, Union

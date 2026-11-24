@@ -181,7 +181,7 @@ class AutoConditionConfig:
                 f"{path} is missing field(s): {', '.join(missing)}"
             )
         feature_mode = raw.get("feature_mode", "perception_planning")
-        if feature_mode not in {"perception_planning", "direct_prefix", "t5_vlm_concat"}:
+        if feature_mode not in {"perception_planning", "direct_prefix", "joint_t5_vlm"}:
             raise ValueError("Unknown Auto feature_mode")
         context_length = raw.get("context_length")
         result = cls(
@@ -506,7 +506,7 @@ class NativeModel:
         if history:
             auto_prefix = (result.mode == "auto" and result.wam.plugin == "wan22"
                            and result.condition_router.auto is not None
-                           and result.condition_router.auto.feature_mode in {"direct_prefix", "t5_vlm_concat"})
+                           and result.condition_router.auto.feature_mode in {"direct_prefix", "joint_t5_vlm"})
             if (result.mode != "interactive" and not auto_prefix) or result.visual_memory.persistent_prompt != "none":
                 raise ValueError("visual history requires interactive mode and no goal/demo prompt")
             expected_layout = "mosaic_T"
@@ -517,14 +517,14 @@ class NativeModel:
             if result.shape.num_frames != 9 or result.shape.action_horizon != 24:
                 raise ValueError("visual history requires nine target frames and action_horizon=24")
         auto = result.condition_router.auto
-        if auto is not None and auto.feature_mode in {"direct_prefix", "t5_vlm_concat"}:
+        if auto is not None and auto.feature_mode in {"direct_prefix", "joint_t5_vlm"}:
             if (result.mode != "auto" or result.wam.plugin != "wan22"
-                    or auto.vlm.target not in {"worldscape_policy.conditioning.vlm.cached_features.CachedVLMFeatureEncoder", "worldscape_policy.conditioning.vlm.native_features.NativeVLMFeatureEncoder"}
+                    or auto.vlm.target not in {"worldscape_policy.conditioning.vlm.qwen_features.QwenFeatureEncoder"}
                     or auto.projector.kind != "linear" or auto.projector.input_dim != 7680
                     or auto.projector.output_dim != 4096 or auto.output_norm or auto.semantic_gate_only
                     or result.event_memory.enabled):
-                raise ValueError("cached prefix requires frozen VLM 7680->4096 Auto on Wan2.2 without Event Memory/norm/gating")
-        if auto is not None and auto.feature_mode in {"t5_vlm_concat"}:
+                raise ValueError("joint_t5_vlm requires Qwen features 7680->4096 with no event memory, norm or gate")
+        if auto is not None and auto.feature_mode in {"joint_t5_vlm"}:
             if auto.context_length != 512:
                 raise ValueError(f"{auto.feature_mode} requires context_length=512")
             if result.condition_router.interactive.t5.parameters.get("max_length", 512) != 512:

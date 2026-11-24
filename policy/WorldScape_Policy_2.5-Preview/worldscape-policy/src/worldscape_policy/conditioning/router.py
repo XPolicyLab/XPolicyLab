@@ -63,7 +63,7 @@ class ConditionRouter(nn.Module):
             if planning_supervision:
                 auto_kwargs["planning_supervision"] = True
             output = self.auto(**auto_kwargs)
-            if getattr(self.auto, "feature_mode", None) in {"t5_vlm_concat"}:
+            if getattr(self.auto, "feature_mode", None) in {"joint_t5_vlm"}:
                 from .joint_t5_vlm import fuse_t5_vlm
                 baseline = self.interactive(
                     observation=observation, prompts=prompts,

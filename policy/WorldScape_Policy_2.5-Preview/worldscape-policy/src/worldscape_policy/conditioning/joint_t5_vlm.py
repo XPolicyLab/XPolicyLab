@@ -1,8 +1,4 @@
-"""Fill unused T5 positions with vlm instruction/summary tokens.
-
-Keep the original 512-position, unmasked Wan condition, including its padding
-semantics. A zero-initialized bias-free vlm projector is exactly T5-only.
-"""
+"""Fill unused T5 positions with projected VLM tokens."""
 from dataclasses import replace
 
 import torch

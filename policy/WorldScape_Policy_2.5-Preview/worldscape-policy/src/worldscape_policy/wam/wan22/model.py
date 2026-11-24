@@ -1,5 +1,4 @@
-# Vendored Wan2.2 implementation with optional persistent-context conditioning;
-# see docs/provenance.md.
+# Wan2.2 backbone with persistent-context conditioning.
 from typing import Any, TypeAlias
 import logging
 

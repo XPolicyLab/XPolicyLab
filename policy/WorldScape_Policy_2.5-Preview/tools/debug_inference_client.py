@@ -10,8 +10,8 @@ import uuid
 
 POLICY_DIR = Path(__file__).resolve().parents[1]
 XPL_ROOT = POLICY_DIR.parents[1]
-BENCH_ROOT = Path(os.environ.get("BENCH_ROOT", str(XPL_ROOT.parent)))
-sys.path[:0] = [str(BENCH_ROOT), str(XPL_ROOT)]
+BENCH_ROOT = Path(os.environ.get("BENCH_ROOT") or XPL_ROOT.parent).expanduser().resolve()
+sys.path[:0] = [str(XPL_ROOT.parent), str(XPL_ROOT), str(BENCH_ROOT)]
 
 import numpy as np
 import yaml

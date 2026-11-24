@@ -45,7 +45,7 @@ class AutoConditioner(nn.Module):
             raise ValueError("max_history_steps must be positive")
         if not hasattr(vlm, "encode_planning"):
             raise TypeError("vlm must implement encode_planning(...)")
-        if feature_mode not in {"perception_planning", "direct_prefix", "t5_vlm_concat"}:
+        if feature_mode not in {"perception_planning", "direct_prefix", "joint_t5_vlm"}:
             raise ValueError("Unknown Auto feature_mode")
         self.feature_mode = feature_mode
         self.vlm = vlm
@@ -128,7 +128,7 @@ class AutoConditioner(nn.Module):
             "visual_input_range": self.visual_input_range,
             "planning_supervision": planning_supervision,
         }
-        if self.feature_mode in {"direct_prefix", "t5_vlm_concat"} and observation.head_view.dtype == torch.uint8:
+        if self.feature_mode in {"direct_prefix", "joint_t5_vlm"} and observation.head_view.dtype == torch.uint8:
             encode_kwargs["visual_input_range"] = "uint8"
         if observation.vlm_history_images is not None:
             encode_kwargs["history_images"] = observation.vlm_history_images
@@ -136,7 +136,7 @@ class AutoConditioner(nn.Module):
         if prompts.planning_labels_text is not None:
             encode_kwargs["planning_labels_text"] = prompts.planning_labels_text
         if observation.vlm_prefix_features is not None:
-            if self.feature_mode not in {"direct_prefix", "t5_vlm_concat"} or planning_supervision:
+            if self.feature_mode not in {"direct_prefix", "joint_t5_vlm"} or planning_supervision:
                 raise ValueError("Cached prefix features require direct_prefix without planning supervision")
             features = self.vlm.encode_cached(observation.vlm_prefix_features, observation.vlm_prefix_mask)
         else:
@@ -156,7 +156,7 @@ class AutoConditioner(nn.Module):
             if features.planning_features.shape[0] != observation.images.shape[0]:
                 raise ValueError("VLM planning batch size does not match observations")
 
-        if self.feature_mode in {"direct_prefix", "t5_vlm_concat"}:
+        if self.feature_mode in {"direct_prefix", "joint_t5_vlm"}:
             if planning_supervision:
                 raise ValueError("direct_prefix has no planning supervision")
             from .prefix_condition import build_prefix_condition

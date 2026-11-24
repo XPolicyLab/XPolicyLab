@@ -1,10 +1,4 @@
-"""WorldScape-owned Wan T5 text encoder.
-
-The numerical module and parameter names are copied from
-``groot.vla.model.dreamzero.modules.wan_video_text_encoder``. Only the
-raw-string tokenizer adapter is added here so legacy checkpoints retain their
-exact state-dict layout.
-"""
+"""Wan T5 encoder adapted from DreamZero, preserving checkpoint keys."""
 
 from __future__ import annotations
 

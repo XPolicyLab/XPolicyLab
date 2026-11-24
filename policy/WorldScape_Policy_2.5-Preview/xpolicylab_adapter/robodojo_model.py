@@ -1,9 +1,9 @@
+"""Batched RoboDojo execution and action conversion."""
 from __future__ import annotations
 
 from collections.abc import Mapping
-from dataclasses import dataclass, fields, is_dataclass, replace
-from functools import partial
-import json
+from abc import ABC, abstractmethod
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
 
@@ -11,15 +11,12 @@ import numpy as np
 import torch
 
 from XPolicyLab.model_template import ModelTemplate
-from .history_window import match_memory_task
 from XPolicyLab.utils.checkpoint_resolver import resolve_checkpoint_root
 from XPolicyLab.utils.process_data import get_robot_action_dim_info
 
 POLICY_DIR = Path(__file__).resolve().parents[1]
 SUPPORTED_ENV_CFG = "arx_x5"
 SUPPORTED_ACTION_TYPE = "joint"
-CHECKPOINT_EMBODIMENT = "arx_x5_joint"
-CAMERA_ORDER = ("cam_head", "cam_right_wrist", "cam_left_wrist")
 SUPPORTED_INPUT_COLOR_ORDERS = {"rgb", "bgr"}
 
 
@@ -35,15 +32,6 @@ def _boolean_config(value: Any, *, name: str, default: bool) -> bool:
         if normalized in {"0", "false", "no", "off"}:
             return False
     raise ValueError(f"{name} must be a boolean, got {value!r}")
-
-
-def _wam_history_mode_config(config: Mapping[str, Any]) -> str:
-    mode = config.get("wam_history_mode")
-    if mode is None:
-        mode = "periodic"
-    if mode not in ("periodic", "rolling"):
-        raise ValueError("wam_history_mode must be periodic or rolling")
-    return mode
 
 
 def _integer_config(value: Any, *, name: str, default: int, minimum: int) -> int:
@@ -135,82 +123,6 @@ def _stack_prompt_batches(prompts: list[Any]) -> Any:
     )
 
 
-def _select_signature(
-    signature: tuple[str, ...] | None,
-    positions: list[int],
-    previous_batch_size: int,
-) -> tuple[str, ...] | None:
-    if signature is None:
-        return None
-    if len(signature) % previous_batch_size:
-        raise ValueError(
-            f"Prompt signature length is not divisible by its batch size: {len(signature)} vs {previous_batch_size}"
-        )
-    selected: list[str] = []
-    for offset in range(0, len(signature), previous_batch_size):
-        block = signature[offset : offset + previous_batch_size]
-        selected.extend(block[position] for position in positions)
-    return tuple(selected)
-
-
-def _select_tensor_batch(
-    value: torch.Tensor,
-    positions: list[int],
-    previous_batch_size: int,
-    *,
-    batch_dim: int,
-) -> torch.Tensor:
-    if value.ndim <= batch_dim or value.shape[batch_dim] != previous_batch_size:
-        raise ValueError(
-            "Causal-state tensor has an unexpected batch dimension: "
-            f"shape={tuple(value.shape)}, dim={batch_dim}, expected={previous_batch_size}"
-        )
-    index = torch.tensor(positions, device=value.device, dtype=torch.long)
-    return value.index_select(batch_dim, index)
-
-
-def _select_runtime_cache(value: Any, positions: list[int], previous_batch_size: int) -> Any:
-    if value is None:
-        return None
-    if torch.is_tensor(value):
-        return _select_tensor_batch(value, positions, previous_batch_size, batch_dim=1)
-    if isinstance(value, list):
-        return [_select_runtime_cache(item, positions, previous_batch_size) for item in value]
-    if isinstance(value, tuple):
-        return tuple(_select_runtime_cache(item, positions, previous_batch_size) for item in value)
-    if isinstance(value, dict):
-        return {key: _select_runtime_cache(item, positions, previous_batch_size) for key, item in value.items()}
-    raise TypeError(f"Unsupported WAM runtime-cache value: {type(value).__name__}")
-
-
-def _select_causal_state(value: Any, positions: list[int], previous_batch_size: int) -> Any:
-    """Select active environments from WorldScape's explicit causal state."""
-
-    if value is None:
-        return None
-    if not is_dataclass(value):
-        raise TypeError(f"Unsupported causal-state value: {type(value).__name__}")
-    updates = {}
-    for state_field in fields(value):
-        item = getattr(value, state_field.name)
-        if state_field.name == "prompt_signature":
-            updates[state_field.name] = _select_signature(item, positions, previous_batch_size)
-        elif state_field.name in {
-            "positive_kv_cache",
-            "negative_kv_cache",
-            "positive_cross_attention_cache",
-            "negative_cross_attention_cache",
-        }:
-            updates[state_field.name] = _select_runtime_cache(item, positions, previous_batch_size)
-        elif torch.is_tensor(item):
-            updates[state_field.name] = _select_tensor_batch(item, positions, previous_batch_size, batch_dim=0)
-        elif is_dataclass(item):
-            updates[state_field.name] = _select_causal_state(item, positions, previous_batch_size)
-        else:
-            updates[state_field.name] = item
-    return replace(value, **updates)
-
-
 def _instruction(obs: Mapping[str, Any], fallback: str) -> str:
     value = obs.get("instruction", obs.get("instructions", fallback))
     if isinstance(value, (list, tuple)):
@@ -231,30 +143,6 @@ def _input_color_order_config(model_cfg: Mapping[str, Any]) -> str:
     return resolved
 
 
-def _t5_prompt_template_config(model_cfg: Mapping[str, Any]) -> str | None:
-    """Use raw instructions unless a checkpoint-specific template is explicit."""
-
-    template = model_cfg.get("t5_prompt_template")
-    if template is None or template == "":
-        return None
-    if not isinstance(template, str):
-        raise TypeError("t5_prompt_template must be a string or null")
-    if "{instruction}" not in template:
-        raise ValueError("t5_prompt_template must contain {instruction}")
-    return template
-
-
-def _format_policy_instruction(
-    instruction: str, *, mode: Any, t5_prompt_template: str | None = None
-) -> str:
-    """Preserve raw Interactive text; apply only explicitly requested templates."""
-
-    mode_value = getattr(mode, "value", mode)
-    if str(mode_value).strip().lower() != "interactive" or not t5_prompt_template:
-        return instruction
-    return t5_prompt_template.format(instruction=instruction.lower())
-
-
 def _rgb_camera(obs: Mapping[str, Any], camera_name: str) -> np.ndarray:
     vision = obs.get("vision")
     if not isinstance(vision, Mapping) or camera_name not in vision:
@@ -272,61 +160,6 @@ def _rgb_camera(obs: Mapping[str, Any], camera_name: str) -> np.ndarray:
     # Transport decoders can return read-only views backed by message bytes.
     # torch.from_numpy requires writable storage even when inference only reads.
     return image if image.flags.writeable else image.copy()
-
-
-def _resize_policy_image(
-    image: np.ndarray, *, width: int, height: int
-) -> np.ndarray:
-    """Match the post-training cache downsampling interpolation exactly."""
-
-    import cv2
-
-    return cv2.resize(image, (width, height), interpolation=cv2.INTER_AREA)
-
-
-def _resize_policy_camera(
-    obs: Mapping[str, Any],
-    camera_name: str,
-    *,
-    input_color_order: str,
-    resize_image: Any,
-) -> np.ndarray:
-    """Apply the checkpoint color order, then the native evaluation resize."""
-
-    image = _rgb_camera(obs, camera_name)
-    if input_color_order == "bgr":
-        image = np.ascontiguousarray(image[..., ::-1])
-    resized = np.asarray(resize_image(image))
-    if resized.ndim != 3 or resized.shape[-1] != 3:
-        raise ValueError(f"Resized camera {camera_name!r} must be HWC RGB/BGR, got {resized.shape}")
-    if resized.dtype != np.uint8:
-        raise TypeError(f"Resized camera {camera_name!r} must be uint8, got {resized.dtype}")
-    return np.ascontiguousarray(resized)
-
-
-def _compose_diffusion_history(
-    observations: list[Mapping[str, Any]], *, input_color_order: str,
-    view_order: tuple[int, ...], output_size: tuple[int, int],
-) -> np.ndarray:
-    """Match training's CPU resize, uint8 rounding and camera placement.
-
-    Compose at most eight native frames at once, as the training transform does.
-    Keep the small canvas in rolling history instead of retaining native views.
-    """
-    from worldscape_policy.visual_mosaic import compose_three_view_mosaic_T
-
-    parts = []
-    for start in range(0, len(observations), 8):
-        frames = np.stack([
-            np.stack([_rgb_camera(obs, CAMERA_ORDER[index]) for index in view_order])
-            for obs in observations[start:start + 8]
-        ])
-        if input_color_order == "bgr":
-            frames = np.ascontiguousarray(frames[..., ::-1])
-        views = torch.from_numpy(frames).permute(0, 1, 4, 2, 3).unsqueeze(0)
-        canvas = compose_three_view_mosaic_T(views, image_size=output_size)
-        parts.append(canvas.clamp_(0, 255).round().to(torch.uint8))
-    return torch.cat(parts, dim=1).squeeze(0).permute(0, 2, 3, 1).contiguous().numpy()
 
 
 def _state_fields(
@@ -380,49 +213,6 @@ def _relative_action_keys(transform: Any) -> set[str]:
     return keys
 
 
-def _action_fields(
-    output: Any,
-    bundle: Any,
-    current_state: Mapping[str, Any],
-) -> dict[str, np.ndarray]:
-    action = output.require_action().detach().float().cpu()
-    if action.ndim == 3:
-        if action.shape[0] != 1:
-            raise ValueError(f"WorldScape_Policy_2.5-Preview requires batch size 1, got {action.shape}")
-        action = action[0]
-    if action.ndim != 2:
-        raise ValueError(f"Expected action [H,D], got {tuple(action.shape)}")
-    transformed = bundle.transform.unapply({"action": action})
-    fields = {
-        str(key): np.asarray(value.detach().cpu() if torch.is_tensor(value) else value)
-        for key, value in transformed.items()
-        if str(key).startswith("action.")
-    }
-    required = {
-        "action.left_joint",
-        "action.left_gripper",
-        "action.right_joint",
-        "action.right_gripper",
-    }
-    missing = sorted(required.difference(fields))
-    if missing:
-        raise KeyError(f"Checkpoint action transform is missing fields: {missing}")
-    for key in _relative_action_keys(bundle.transform):
-        if key not in fields:
-            continue
-        state_key = f"state.{key.removeprefix('action.')}"
-        if state_key not in current_state:
-            raise KeyError(f"Relative action {key!r} requires {state_key!r}")
-        reference = np.asarray(current_state[state_key], dtype=np.float32).reshape(-1)
-        value = np.asarray(fields[key], dtype=np.float32)
-        if value.shape[-1] != reference.shape[-1]:
-            raise ValueError(
-                f"Relative action/state dimensions differ for {key}: {value.shape[-1]} != {reference.shape[-1]}"
-            )
-        fields[key] = value + reference
-    return fields
-
-
 def _fields_to_robodojo_actions(
     fields: Mapping[str, np.ndarray],
     *,
@@ -470,132 +260,36 @@ def _fields_to_robodojo_actions(
     ]
 
 
-def _validate_joint_transform_bundle(
-    bundle: Any, robot_action_dim_info: Mapping[str, Any]
-) -> None:
-    """Require the 14-D position/gripper training layout."""
-
-    arm_dims = [int(value) for value in robot_action_dim_info["arm_dim"]]
-    gripper_dims = [int(value) for value in robot_action_dim_info["ee_dim"]]
-    if arm_dims != [6, 6] or gripper_dims != [1, 1]:
-        raise ValueError(
-            "WorldScape_Policy_2.5-Preview arx_x5 joint checkpoints require "
-            f"arm_dim=[6, 6] and ee_dim=[1, 1], got {robot_action_dim_info}"
-        )
-    embodiment = getattr(bundle.transform, "embodiment", None)
-    state_fields = tuple(getattr(embodiment, "state_fields", ()))
-    action_fields = tuple(getattr(embodiment, "action_fields", ()))
-    expected_state = (
-        ("state.left_joint", 6, True),
-        ("state.left_gripper", 1, True),
-        ("state.right_joint", 6, True),
-        ("state.right_gripper", 1, True),
-    )
-    # Native RoboDojo exports use one relative_joint_action flag for both arms.
-    # State and grippers remain absolute in either representation.
-    expected_action_layouts = tuple(
-        (
-            ("action.left_joint", 6, absolute),
-            ("action.left_gripper", 1, True),
-            ("action.right_joint", 6, absolute),
-            ("action.right_gripper", 1, True),
-        )
-        for absolute in (False, True)
-    )
-
-    def signature(fields: tuple[Any, ...]) -> tuple[tuple[str, int, bool], ...]:
-        return tuple(
-            (str(field.key), int(field.size), bool(field.absolute)) for field in fields
-        )
-
-    if signature(state_fields) != expected_state:
-        raise ValueError(
-            "Joint checkpoint state layout does not match training: "
-            f"expected {expected_state}, got {signature(state_fields)}"
-        )
-    if signature(action_fields) not in expected_action_layouts:
-        raise ValueError(
-            "Joint checkpoint action layout does not match training: "
-            "expected both arms relative or both absolute, with absolute grippers "
-            "and widths [6, 1, 6, 1]; "
-            f"got {signature(action_fields)}"
-        )
-    non_q99 = [
-        field.key
-        for field in (*state_fields, *action_fields)
-        if getattr(field, "normalization", None) != "q99"
-    ]
-    if non_q99:
-        raise ValueError(
-            "Joint checkpoint must use q99 normalization for every state/action "
-            f"field; mismatched fields: {non_q99}"
-        )
-    if int(bundle.max_state_dim) < 14 or int(bundle.max_action_dim) < 14:
-        raise ValueError(
-            "Joint checkpoint padded widths must be at least state=14, action=14, got "
-            f"state={bundle.max_state_dim}, action={bundle.max_action_dim}"
-        )
-
-
-def _validate_joint_checkpoint_provenance(checkpoint: Path) -> dict[str, Any]:
-    provenance_path = checkpoint / "provenance.json"
-    if not provenance_path.is_file():
-        raise FileNotFoundError(
-            f"Joint checkpoint is missing provenance.json: {checkpoint}"
-        )
-    provenance = json.loads(provenance_path.read_text(encoding="utf-8"))
-    if provenance.get("action_space") != "robodojo_joint_14d":
-        raise ValueError(
-            "Joint checkpoint provenance must declare "
-            "action_space='robodojo_joint_14d', got "
-            f"{provenance.get('action_space')!r}"
-        )
-    return provenance
-
-
 @dataclass
 class _PendingPrediction:
     env_idx_list: list[int]
     horizons: dict[int, int]
-    event_memory: Any
-    visual_memory: Any
     history_start: dict[int, int]
-    rolling_cameras: dict[int, list[np.ndarray]]
 
 
-class RoboDojoModel(ModelTemplate):
-    """Multi-environment RoboDojo joint adapter for a native WorldScape checkpoint."""
+class RoboDojoModel(ModelTemplate, ABC):
+    """Shared batched execution for the Preview LeRobot adapter."""
 
     supports_batch = True
     requires_explicit_commit = True
-    _checkpoint_embodiment = CHECKPOINT_EMBODIMENT
-    _compose_diffusion_in_adapter = True
-    _reseed_independent_blocks = True
 
-    def _validate_checkpoint_provenance(self):
-        return _validate_joint_checkpoint_provenance(self.checkpoint)
-
+    @abstractmethod
     def _validate_checkpoint_contract(self, checkpoint_config):
-        _validate_joint_transform_bundle(self.bundle, self.robot_action_dim_info)
+        raise NotImplementedError
 
+    @abstractmethod
     def _checkpoint_builder_options(self):
-        return {"constrain_action_padding": self.constrain_action_padding}
+        raise NotImplementedError
 
+    @abstractmethod
     def _decode_actions(self, output, current_state):
-        return _fields_to_robodojo_actions(
-            _action_fields(output, self.bundle, current_state),
-            action_steps=self.action_steps,
-            robot_action_dim_info=self.robot_action_dim_info,
-        )
+        raise NotImplementedError
 
     def __init__(self, model_cfg: Mapping[str, Any]):
         from .runtime_config import validate_config
         self.model_cfg = validate_config({"runtime_profile": "robodojo", **model_cfg})
         self.constrain_action_padding = self.model_cfg["constrain_action_padding"]
-        self.wam_history_mode = _wam_history_mode_config(self.model_cfg)
-        self.short_window_for_non_memory_tasks = self.model_cfg["short_window_for_non_memory_tasks"]
-        if self.short_window_for_non_memory_tasks and self.wam_history_mode != "rolling":
-            raise ValueError("short_window_for_non_memory_tasks requires wam_history_mode=rolling")
+        self.wam_history_mode = self.model_cfg["wam_history_mode"]
         self.env_cfg_type = str(self.model_cfg.get("env_cfg_type"))
         self.action_type = str(self.model_cfg.get("action_type") or SUPPORTED_ACTION_TYPE)
         if self.env_cfg_type != SUPPORTED_ENV_CFG:
@@ -619,15 +313,11 @@ class RoboDojoModel(ModelTemplate):
             POLICY_DIR / "checkpoints",
             policy_dir=POLICY_DIR,
         )
-        for artifact in ("transform_bundle.json", "checkpoint_manifest.json"):
+        for artifact in ("transform_bundle.json", "model_config.yaml"):
             if not (self.checkpoint / artifact).is_file():
                 raise FileNotFoundError(f"Checkpoint is missing {artifact}: {self.checkpoint}")
 
-        from evals.agilex.observation_adapter import (
-            POLICY_VIDEO_NATIVE_H,
-            POLICY_VIDEO_NATIVE_W,
-            AgileXObservationAdapter,
-        )
+        from evals.agilex.observation_adapter import AgileXObservationAdapter
         from evals.common.checkpoint_runtime import load_checkpoint_transform_bundle
         from worldscape_policy.native_builder import (
             _load_native_model_config,
@@ -641,43 +331,8 @@ class RoboDojoModel(ModelTemplate):
         self.observation_history_segments = self.model_cfg["observation_history_segments"]
         self.use_observation_history = self.model_cfg["use_observation_history"]
         self.use_causal_memory = self.model_cfg["use_causal_memory"]
-        self.memory_reset_chunks = _integer_config(
-            self.model_cfg.get("memory_reset_chunks"),
-            name="memory_reset_chunks",
-            default=0,
-            minimum=0,
-        )
+        self.memory_reset_chunks = self.model_cfg["memory_reset_chunks"]
         self.reset_independent_blocks = self.model_cfg["reset_independent_blocks"]
-        if self.reset_independent_blocks and self.use_causal_memory:
-            raise ValueError(
-                "reset_independent_blocks requires use_causal_memory=false"
-            )
-        if self.memory_reset_chunks and self.wam_history_mode != "periodic":
-            raise ValueError("memory_reset_chunks requires wam_history_mode=periodic")
-        if self.memory_reset_chunks and (
-            not self.use_observation_history or not self.use_causal_memory
-            or self.reset_independent_blocks
-        ):
-            raise ValueError(
-                "memory_reset_chunks requires use_observation_history=true, "
-                "use_causal_memory=true, reset_independent_blocks=false"
-            )
-        if self.wam_history_mode == "rolling" and (
-            not self.use_observation_history or not self.use_causal_memory
-            or self.reset_independent_blocks
-            or self.observation_history_segments != 8
-        ):
-            raise ValueError(
-                "wam_history_mode=rolling requires use_observation_history=true, "
-                "use_causal_memory=true, reset_independent_blocks=false, "
-                "observation_history_segments=8"
-            )
-        self.policy_image_size = (int(POLICY_VIDEO_NATIVE_W), int(POLICY_VIDEO_NATIVE_H))
-        self._resize_image = partial(
-            _resize_policy_image,
-            width=self.policy_image_size[0],
-            height=self.policy_image_size[1],
-        )
         self.default_instruction = str(self.model_cfg.get("default_instruction") or "follow the instruction")
         from worldscape_policy.types import InteractionMode
         checkpoint_config = _load_native_model_config(self.checkpoint).model
@@ -690,9 +345,7 @@ class RoboDojoModel(ModelTemplate):
                 raise ValueError("Requested mode is incompatible with the checkpoint")
             self.mode = requested_mode
         from .runtime_config import resolve_rollout_config
-        provenance = self._validate_checkpoint_provenance()
-        self.model_cfg = resolve_rollout_config(self.model_cfg, checkpoint_config, provenance)
-        self.t5_prompt_template = _t5_prompt_template_config(self.model_cfg)
+        self.model_cfg = resolve_rollout_config(self.model_cfg, checkpoint_config)
         # Validate deployment geometry from metadata before allocating model weights.
         self.action_horizon = self.model_cfg["action_horizon"]
         self.action_steps = self.action_horizon if action_steps is None else int(action_steps)
@@ -711,25 +364,6 @@ class RoboDojoModel(ModelTemplate):
             raise ValueError("observation_interval must agree with replan_steps and observation_history_segments")
         self.observation_interval = interval
 
-        if self.wam_history_mode == "rolling" and self.action_steps != self.action_horizon:
-            raise ValueError(
-                "wam_history_mode=rolling requires action_steps to match checkpoint "
-                f"action_horizon={self.action_horizon}; got {self.action_steps}"
-            )
-        self.wam_max_chunk_size: int | None = None
-        self.task_window_chunks: tuple[int, int] | None = None
-        if self.wam_history_mode == "rolling":
-            self.wam_max_chunk_size = int(checkpoint_config.wam.core.parameters.get("max_chunk_size", -1))
-            if self.wam_max_chunk_size < 1:
-                raise ValueError("rolling history requires a finite checkpoint max_chunk_size")
-            self.task_window_chunks = (self.wam_max_chunk_size, self.wam_max_chunk_size)
-        if self.short_window_for_non_memory_tasks:
-            memory_chunks = self.model_cfg["memory_window_chunks"]
-            ordinary_chunks = self.model_cfg["ordinary_window_chunks"]
-            for name, count in (("memory_window_chunks", memory_chunks), ("ordinary_window_chunks", ordinary_chunks)):
-                if count > self.wam_max_chunk_size:
-                    raise ValueError(f"{name} exceeds checkpoint max_chunk_size={self.wam_max_chunk_size}")
-            self.task_window_chunks = (memory_chunks, ordinary_chunks)
         self.bundle = load_checkpoint_transform_bundle(self.checkpoint, self._checkpoint_embodiment)
         self._validate_checkpoint_contract(checkpoint_config)
         self.joint_action_representation = (
@@ -744,26 +378,11 @@ class RoboDojoModel(ModelTemplate):
             expected_action_horizon=self.action_horizon,
             training=False,
             diffusion_view_layout=self.model_cfg.get("diffusion_view_layout"),
-            validate_checkpoint_artifacts=self.model_cfg["validate_checkpoint_artifacts"],
             **self._checkpoint_builder_options(),
         )
         configure_policy_inputs(self.policy, self.model_cfg)
-        self._precompose_diffusion = (
-            self._compose_diffusion_in_adapter
-            and getattr(self.policy.visual_memory.codec, "diffusion_view_layout", None)
-            == "mosaic_T"
-        )
-        if self.wam_history_mode == "rolling":
-            configure = getattr(self.policy.wam, "set_observation_history_mode", None)
-            if not callable(configure):
-                raise RuntimeError("Selected WorldScape source does not support wam_history_mode=rolling")
-            if configure("rolling") != self.wam_max_chunk_size:
-                raise ValueError("Loaded history capacity does not match checkpoint max_chunk_size")
         self._observation_adapter_class = AgileXObservationAdapter
         self._generator: torch.Generator | None = None
-        self._event_memory: Any | None = None
-        self._visual_memory: Any | None = None
-        self._memory_env_idx_list: list[int] = []
         self._prediction_index = 0
         self._latest_obs_by_env: dict[int, Mapping[str, Any]] = {}
         self._obs_history_by_env: dict[int, list[Mapping[str, Any]]] = {}
@@ -798,111 +417,13 @@ class RoboDojoModel(ModelTemplate):
         self._observation_index_by_env[env_idx] = 0
         self._obs_history_by_env[env_idx] = []
 
+    @abstractmethod
     def _prepare_observation_cameras(self, env_idx: int) -> list[np.ndarray]:
-        stored = self._obs_history_by_env[env_idx]
-        # Same nine-frame window as RoboTwin: the client stores only the
-        # stride-aligned frames. The first prediction has just the current
-        # frame, so repeat it across the window instead of inventing motion.
-        # Periodic mode still receives all nine; a fresh KV writes only the anchor.
-        frames_per_window = self.observation_history_segments + 1
-        if len(stored) == 1:
-            history = stored * frames_per_window
-        elif len(stored) == frames_per_window:
-            history = list(stored)
-        else:
-            raise ValueError(
-                f"stride history expected 1 or {frames_per_window} observations "
-                f"for env {env_idx}, got {len(stored)}; send the current frame "
-                "once, then only frames at observation_interval"
-            )
-        cameras = [
-            np.stack(
-                [
-                    _resize_policy_camera(
-                        history_obs,
-                        name,
-                        input_color_order=self.input_color_order,
-                        resize_image=self._resize_image,
-                    )
-                    for history_obs in history
-                ]
-            )
-            for name in CAMERA_ORDER
-        ]
-        if getattr(self, "_precompose_diffusion", False):
-            # The first three streams remain thumbnails for the observation
-            # adapter/head view. The fourth is the training-resolution canvas;
-            # all four share exactly the same temporal sampling and eviction.
-            cameras.append(_compose_diffusion_history(
-                history,
-                input_color_order=self.input_color_order,
-                view_order=tuple(self.model_cfg.get("diffusion_concat_view_order", (0, 2, 1))),
-                output_size=self.policy.visual_memory.codec.diffusion_concat_size,
-            ))
-        return cameras
+        raise NotImplementedError
 
-    def _resolve_history_windows(self, env_idx_list: list[int]) -> None:
-        """Choose once per episode from raw prompts, before any model sampling."""
-        if not getattr(self, "short_window_for_non_memory_tasks", False):
-            return
-        memory_chunks, default_chunks = self.task_window_chunks
-        selected: dict[int, tuple[int, str | None]] = {}
-        for env in env_idx_list:
-            if env not in self._history_window_by_env:
-                # Missing/empty text must not match an unrelated configured
-                # default_instruction. This decision never formats the T5 input.
-                task = match_memory_task(_instruction(self._latest_obs_by_env[env], ""))
-                selected[env] = (memory_chunks if task is not None else default_chunks, task)
-        windows = {
-            env: selected[env][0] if env in selected else self._history_window_by_env[env]
-            for env in env_idx_list
-        }
-        if len(set(windows.values())) != 1:
-            raise ValueError(
-                f"Cannot mix {memory_chunks}- and {default_chunks}-chunk history windows in one inference batch; "
-                f"evaluate memory and non-memory tasks separately. Windows: {windows}"
-            )
-        for env, (window, task) in selected.items():
-            self._history_window_by_env[env] = window
-            print(
-                f"[WorldScape_Policy_2.5-Preview history] env_idx={env} "
-                f"short_window_for_non_memory_tasks=True "
-                f"matched_memory_task={task!r} checkpoint_max_chunk_size={self.wam_max_chunk_size} "
-                f"effective_chunk_size={window}",
-                flush=True,
-            )
-
+    @abstractmethod
     def _adapt_observation(self, env_idx: int, *, cameras: list[np.ndarray] | None = None) -> Any:
-        obs = self._latest_obs_by_env.get(env_idx)
-        if obs is None:
-            raise RuntimeError(f"Call update_obs_batch() for env {env_idx} before get_action_batch()")
-        if cameras is None:
-            cameras = self._prepare_observation_cameras(env_idx)
-        raw_state = _state_fields(
-            obs,
-            robot_action_dim_info=self.robot_action_dim_info,
-        )
-        instruction = _format_policy_instruction(
-            _instruction(obs, self.default_instruction),
-            mode=self.mode,
-            t5_prompt_template=self.t5_prompt_template,
-        )
-        adapter = self._observation_adapter_class(
-            self.bundle,
-            mode=self.mode,
-            instruction=instruction,
-            visual_input_range=self.visual_input_range,
-            device=self.device,
-            session_id=f"robodojo-{env_idx}",
-        )
-        adapted = adapter((*cameras[:3], raw_state, self._observation_index_by_env[env_idx]))
-        if getattr(self, "_precompose_diffusion", False):
-            canvas = torch.from_numpy(cameras[3]).permute(0, 3, 1, 2)
-            adapted.observation.images = (
-                adapter._convert_images(canvas).unsqueeze(0).unsqueeze(2).to(self.device)
-            )
-        adapted.prompts.visual_prompt = "none"
-        return adapted
+        raise NotImplementedError
 
     def get_action(self) -> list[dict[str, np.ndarray]]:
         env_idx = self._latest_env_idx_list[0] if self._latest_env_idx_list else 0
@@ -925,38 +446,10 @@ class RoboDojoModel(ModelTemplate):
 
         if self._generator is None:
             raise RuntimeError("WorldScape batch generator is not initialized")
-        if self._memory_env_idx_list:
-            unknown = sorted(set(env_idx_list).difference(self._memory_env_idx_list))
-            if unknown:
-                raise ValueError(f"A causal batch may only shrink until reset(); new environment indices: {unknown}")
-            positions = [self._memory_env_idx_list.index(env_idx) for env_idx in env_idx_list]
-            event_memory = _select_causal_state(
-                self._event_memory,
-                positions,
-                len(self._memory_env_idx_list),
-            )
-            visual_memory = _select_causal_state(
-                self._visual_memory,
-                positions,
-                len(self._memory_env_idx_list),
-            )
-        else:
-            event_memory = None
-            visual_memory = None
-
-        self._resolve_history_windows(env_idx_list)
         generator_state = self._generator.get_state()
         try:
-            if self.reset_independent_blocks:
-                self.policy.reset_episode()
-                if self._reseed_independent_blocks:
-                    self._generator.manual_seed(self.seed + self._prediction_index)
-            rolling_cameras = {}
-            if getattr(self, "wam_history_mode", "periodic") == "rolling":
-                rolling_cameras = {env: self._prepare_observation_cameras(env) for env in env_idx_list}
-                adapted_batch = [self._adapt_observation(env, cameras=rolling_cameras[env]) for env in env_idx_list]
-            else:
-                adapted_batch = [self._adapt_observation(env_idx) for env_idx in env_idx_list]
+            self.policy.reset_episode()
+            adapted_batch = [self._adapt_observation(env_idx) for env_idx in env_idx_list]
             observation = _stack_observation_batches([adapted.observation for adapted in adapted_batch])
             prompts = _stack_prompt_batches([adapted.prompts for adapted in adapted_batch])
             output = self.policy.sample(
@@ -964,8 +457,8 @@ class RoboDojoModel(ModelTemplate):
                 observation=observation,
                 prompts=prompts,
                 generator=self._generator,
-                event_memory=event_memory,
-                visual_memory=visual_memory,
+                event_memory=None,
+                visual_memory=None,
             )
             action = output.require_action()
             if action.ndim != 3 or action.shape[0] != len(env_idx_list):
@@ -973,15 +466,11 @@ class RoboDojoModel(ModelTemplate):
                     "WorldScape_Policy_2.5-Preview must return action [B,H,D] matching the request; "
                     f"got {tuple(action.shape)} for B={len(env_idx_list)}"
                 )
-            if rolling_cameras and action.shape[1] != self.action_steps:
-                raise ValueError(f"rolling history requires a complete {self.action_steps}-action prediction")
 
             action_batch = []
             for batch_index, (adapted, env_idx) in enumerate(zip(adapted_batch, env_idx_list)):
                 env_output = replace(output, action=action[batch_index : batch_index + 1])
                 env_actions = self._decode_actions(env_output, adapted.raw_state)
-                if rolling_cameras and len(env_actions) != self.action_steps:
-                    raise ValueError(f"rolling history requires {self.action_steps} executable actions after decoding")
                 action_batch.append(env_actions)
 
         except Exception:
@@ -991,10 +480,7 @@ class RoboDojoModel(ModelTemplate):
         self._pending_prediction = _PendingPrediction(
             env_idx_list=list(env_idx_list),
             horizons={env: len(actions) for env, actions in zip(env_idx_list, action_batch, strict=True)},
-            event_memory=output.next_memory if self.use_causal_memory else None,
-            visual_memory=output.next_visual_memory if self.use_causal_memory else None,
             history_start={env: len(self._obs_history_by_env[env]) - 1 for env in env_idx_list},
-            rolling_cameras=rolling_cameras,
         )
         return action_batch
 
@@ -1033,19 +519,6 @@ class RoboDojoModel(ModelTemplate):
                     "discard a partial chunk before continuing inference"
                 )
         active = [env for env in pending.env_idx_list if env not in finished]
-        event_memory = visual_memory = None
-        if self.use_causal_memory and active:
-            if active == pending.env_idx_list:
-                event_memory, visual_memory = pending.event_memory, pending.visual_memory
-            else:
-                positions = [pending.env_idx_list.index(env) for env in active]
-                event_memory = _select_causal_state(pending.event_memory, positions, len(pending.env_idx_list))
-                visual_memory = _select_causal_state(pending.visual_memory, positions, len(pending.env_idx_list))
-        self._event_memory, self._visual_memory = event_memory, visual_memory
-        self._memory_env_idx_list = active if self.use_causal_memory else []
-        self._rolling_history_by_env = {
-            env: pending.rolling_cameras[env] for env in active if env in pending.rolling_cameras
-        }
         for env in pending.env_idx_list:
             # The stored list is the stride window. Keep the frame that started
             # this prediction plus frames captured during execution; commit drops
@@ -1053,15 +526,6 @@ class RoboDojoModel(ModelTemplate):
             self._obs_history_by_env[env] = (
                 self._obs_history_by_env[env][pending.history_start[env]:] if env in active else []
             )
-        if active and self.memory_reset_chunks:
-            # RoboTwin keeps the image window and drops KV every N committed chunks.
-            self._memory_chunks_since_reset += 1
-            if self._memory_chunks_since_reset >= self.memory_reset_chunks:
-                self._event_memory = None
-                self._visual_memory = None
-                self._memory_env_idx_list = []
-                self.policy.reset_episode()
-                self._memory_chunks_since_reset = 0
         self._prediction_index += 1
         self._pending_prediction = None
 
@@ -1083,29 +547,18 @@ class RoboDojoModel(ModelTemplate):
         self._pending_prediction = None
         if execution_started:
             # Execution cannot be rolled back; restart context from a live observation.
-            self._event_memory = None
-            self._visual_memory = None
-            self._memory_env_idx_list = []
             self._latest_obs_by_env = {}
             self._latest_env_idx_list = []
             self._obs_history_by_env = {env: [] for env in self._observation_index_by_env}
-            self._rolling_history_by_env = {}
-            self._memory_chunks_since_reset = 0
             self.policy.reset_episode()
 
     def reset(self):
         self.policy.reset_episode()
         self._generator = torch.Generator(device=self.device)
         self._generator.manual_seed(self.seed)
-        self._event_memory = None
-        self._visual_memory = None
-        self._memory_env_idx_list = []
         self._prediction_index = 0
         self._pending_prediction: _PendingPrediction | None = None
         self._latest_obs_by_env = {}
         self._obs_history_by_env = {}
-        self._rolling_history_by_env: dict[int, list[np.ndarray]] = {}
-        self._history_window_by_env: dict[int, int] = {}
-        self._memory_chunks_since_reset = 0
         self._observation_index_by_env = {}
         self._latest_env_idx_list = []

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import hashlib
 import json
 from dataclasses import dataclass
 from pathlib import Path
@@ -13,20 +12,6 @@ import torch
 TRANSFORM_BUNDLE_FILENAME = "transform_bundle.json"
 TRANSFORM_BUNDLE_SCHEMA_VERSION = "1"
 _NORMALIZATION_MODES = {"q99", "mean_std", "min_max", "binary", "scale"}
-
-
-def _canonical_json(value: Mapping[str, Any]) -> bytes:
-    return json.dumps(
-        value, sort_keys=True, separators=(",", ":"), allow_nan=False
-    ).encode("utf-8")
-
-
-def _sha256_bytes(value: bytes) -> str:
-    return f"sha256:{hashlib.sha256(value).hexdigest()}"
-
-
-def _sha256_file(path: Path) -> str:
-    return _sha256_bytes(path.read_bytes())
 
 
 @dataclass(frozen=True)
@@ -215,7 +200,6 @@ class EmbodimentTransform:
 class CheckpointTransformArtifact:
     image_input_range: str
     embodiments: dict[str, EmbodimentTransform]
-    provenance: dict[str, Any]
 
     def __post_init__(self) -> None:
         if self.image_input_range not in {"uint8", "zero_one", "minus_one_one"}:
@@ -224,8 +208,6 @@ class CheckpointTransformArtifact:
             not isinstance(tag, str) or not tag for tag in self.embodiments
         ):
             raise ValueError("Transform bundle must contain named embodiments")
-        if not isinstance(self.provenance, dict) or not self.provenance:
-            raise ValueError("Transform bundle provenance is required")
 
     def _payload(self) -> dict[str, Any]:
         return {
@@ -237,12 +219,11 @@ class CheckpointTransformArtifact:
             "embodiments": {
                 tag: item.to_dict() for tag, item in sorted(self.embodiments.items())
             },
-            "provenance": self.provenance,
         }
 
     def to_dict(self) -> dict[str, Any]:
         payload = self._payload()
-        return {**payload, "checksum": _sha256_bytes(_canonical_json(payload))}
+        return payload
 
     def write(self, path: str | Path) -> None:
         Path(path).write_text(json.dumps(self.to_dict(), indent=2, sort_keys=True) + "\n")
@@ -260,8 +241,6 @@ class CheckpointTransformArtifact:
             "schema_version",
             "image",
             "embodiments",
-            "provenance",
-            "checksum",
         }
         if set(value) != expected:
             raise ValueError("Transform bundle has unknown or missing top-level fields")
@@ -269,10 +248,6 @@ class CheckpointTransformArtifact:
             raise ValueError(
                 f"Unsupported transform bundle schema {value['schema_version']!r}"
             )
-        checksum = value.pop("checksum")
-        actual = _sha256_bytes(_canonical_json(value))
-        if not isinstance(checksum, str) or checksum != actual:
-            raise ValueError("Transform bundle checksum mismatch")
         image = value["image"]
         if (
             not isinstance(image, dict)
@@ -283,15 +258,12 @@ class CheckpointTransformArtifact:
             raise ValueError("Transform bundle image schema is invalid")
         if not isinstance(value["embodiments"], dict):
             raise ValueError("Transform bundle embodiments must be an object")
-        if not isinstance(value["provenance"], dict):
-            raise ValueError("Transform bundle provenance must be an object")
         return cls(
             image_input_range=image["model_input_range"],
             embodiments={
                 tag: EmbodimentTransform.from_dict(item)
                 for tag, item in value["embodiments"].items()
             },
-            provenance=value["provenance"],
         )
 
 

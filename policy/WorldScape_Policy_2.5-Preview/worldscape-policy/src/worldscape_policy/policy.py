@@ -45,7 +45,7 @@ class WorldScapePolicy(nn.Module):
             if configured_mode is not None
             else None
         )
-        direct_prefix = getattr(condition_router.auto, "feature_mode", None) in {"direct_prefix", "t5_vlm_concat"}
+        direct_prefix = getattr(condition_router.auto, "feature_mode", None) in {"direct_prefix", "joint_t5_vlm"}
         self.training_supported_modes: tuple[InteractionMode, ...] = (
             (InteractionMode.AUTO,) if direct_prefix else
             (InteractionMode.AUTO, InteractionMode.INTERACTIVE)
@@ -125,7 +125,7 @@ class WorldScapePolicy(nn.Module):
             )
         history_prefix = None
         if self.history_prefix_encoder is not None:
-            auto_prefix = (parsed_mode is InteractionMode.AUTO and getattr(self.condition_router.auto, "feature_mode", None) in {"direct_prefix", "t5_vlm_concat"})
+            auto_prefix = (parsed_mode is InteractionMode.AUTO and getattr(self.condition_router.auto, "feature_mode", None) in {"direct_prefix", "joint_t5_vlm"})
             if (parsed_mode is not InteractionMode.INTERACTIVE and not auto_prefix) or prompts.visual_prompt != "none":
                 raise ValueError("visual history requires interactive mode and no goal/demo prompt")
             if observation.visual_history is None:

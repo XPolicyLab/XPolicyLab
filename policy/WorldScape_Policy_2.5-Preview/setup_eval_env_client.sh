@@ -15,11 +15,14 @@ policy_server_ip=${11:-localhost}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
-export BENCH_ROOT="${BENCH_ROOT:-$(cd "${XPL_ROOT}/.." && pwd)}"
 UTILS_DIR="${XPL_ROOT}/utils"
 policy_name="$(basename "${SCRIPT_DIR}")"
 source "${SCRIPT_DIR}/inference_launch_common.sh"
+wsp_select_bench_root
 wsp_select_deploy "${bench_name}"
+# Keep policy imports on this checkout when the benchmark lives elsewhere.
+export PYTHONPATH="${XPL_ROOT}/..:${XPL_ROOT}:${BENCH_ROOT}:${PYTHONPATH:-}"
+export ROBODOJO_XPOLICYLAB_ROOT="${XPL_ROOT}"
 
 if [[ "${action_type}" != joint ]]; then
     echo "[CLIENT][ERROR] ${policy_name} requires action_type=joint." >&2
@@ -31,7 +34,6 @@ echo "[CLIENT] policy=${policy_name} task=${task_name} config=${yaml_file} serve
 if [[ "${EVAL_ENV_TYPE:-sim}" == debug ]]; then
     wsp_select_python "${eval_env_conda_env}" "${WSP_CLIENT_PYTHON:-}"
     wsp_launch_or_print env CUDA_VISIBLE_DEVICES="${env_gpu_id}" \
-        PYTHONPATH="${BENCH_ROOT}:${XPL_ROOT}/..:${XPL_ROOT}:${PYTHONPATH:-}" \
         "${WSP_SELECTED_PYTHON}" "${SCRIPT_DIR}/tools/debug_inference_client.py" \
         --config_path "${yaml_file}" --bench_name "${bench_name}" \
         --task_name "${task_name}" --env_cfg_type "${env_cfg_type}" \

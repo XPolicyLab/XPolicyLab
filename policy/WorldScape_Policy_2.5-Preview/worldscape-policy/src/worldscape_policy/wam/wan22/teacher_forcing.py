@@ -1,11 +1,4 @@
-"""Optional Wan teacher-forcing execution paths, sharing the original backend.
-
-Ported from unified_vla 8379d078 (wsp-2-robodojo), preserving local FPA hooks
-and the independently encoded 14B history prefix at the model call sites.
-
-These helpers preserve token visibility and own no parameters or KV cache.
-The original attention path remains in model.py and is selected by default.
-"""
+"""Wan teacher-forcing attention adapted from unified_vla."""
 from __future__ import annotations
 
 import torch

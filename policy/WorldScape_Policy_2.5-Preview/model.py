@@ -1,4 +1,4 @@
-"""Public RoboDojo entrypoint for WorldScape Policy 2.5 Preview."""
+"""RoboDojo policy entrypoint."""
 import json
 
 from XPolicyLab.model_template import ModelTemplate
@@ -30,7 +30,6 @@ class Model(ModelTemplate):
             "single_window_reference": self.model_cfg.get("single_window_reference", "latest"),
             "wam_history_mode": self.model_cfg.get("wam_history_mode", "periodic"),
             "memory_reset_chunks": self.model_cfg.get("memory_reset_chunks", 0),
-            "history_window_chunks": getattr(self.backend, "task_window_chunks", None),
             "use_causal_memory": self.model_cfg.get("use_causal_memory", True),
             "joint_action_representation": getattr(self.backend, "joint_action_representation", "absolute"),
             "constrain_action_padding": self.model_cfg.get(
