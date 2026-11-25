@@ -1,84 +1,72 @@
-# ReStart on RoboTwin 2.0
+# ReStart
 
-- **Contributor** 黄伟达 (ReStart)
-- **Paper** [ReStart project and method description](https://github.com/ai-for-data/ReStart/tree/c4e3e8c25e5468df0d5b7c64d1c63787168f838c)
-- **arXiv** —
-- **Original code** [ai-for-data/ReStart](https://github.com/ai-for-data/ReStart)
+**Contributor:** 黄伟达 (ReStart) | **Paper:** — | **arXiv:** — | **Original code:** [ai-for-data/ReStart](https://github.com/ai-for-data/ReStart)
 
-ReStart inverts actions from official clean demonstrations into a context
-bank. A frozen TabICLv2 model predicts the starting action noise for frozen
-UniWAM-base. The inherited [UniWAM adapter](../UniWAM) owns images, measured
-14-D joint and gripper feedback, action chunks and resets. The policy retains
-its history center, four denoising steps and its original 0.02 noise scale.
+ReStart adapts frozen UniWAM-base at inference time using official clean demonstrations and TabICLv2. This adapter supports joint control on Aloha-AgileX in RoboTwin 2.0 and uses UniWAM's rollout interface.
 
-## Shared conventions
-
-See the [XPolicyLab README](../../README.md) for the shared policy interface
-and the [RoboTwin documentation](https://robotwin-platform.github.io/doc/usage/xpolicylab.html)
-for evaluation.
+Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md). Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
 
 ## Installation
 
-Use the [UniWAM setup](../UniWAM/README.md#installation), the
-[ReStart reproduction guide](https://github.com/ai-for-data/ReStart/blob/c4e3e8c25e5468df0d5b7c64d1c63787168f838c/docs/reproduction.md)
-and the [RoboTwin installation](https://robotwin-platform.github.io/doc/usage/robotwin-install.html).
-Use RoboTwin score-run revision `13c3c47ff4312dd62484bcd51be034af55c062d1`.
-Place the
-[official robot registry](https://github.com/RoboTwin-Platform/RoboTwin/tree/ea8b21121ebb3cd201ff5b3fe361944ac94eda3f/env_cfg)
-beside the XPolicyLab checkout, and select `aloha_agilex`.
+For the validated `lift_pot` run, start with the README in the review kit. It
+pins the sources and prepares the checkpoint, simulator assets and context.
+The reference run used Linux and four 80 GB NVIDIA GPUs on one host.
 
-```sh
+For an existing workspace, follow the [UniWAM setup](../UniWAM/README.md#installation)
+and the [official RoboTwin installation](https://robotwin-platform.github.io/doc/usage/robotwin-install.html).
+The policy and simulator use separate Conda environments in the launcher,
+and TabICLv2 uses its own Python environment. The adapter's installer delegates
+to UniWAM. From the XPolicyLab root, with the Hugging Face CLI installed, run:
+
+```bash
 bash policy/ReStart/install.sh uniwam
-bash policy/ReStart/download_checkpoints.sh /absolute/path/to/checkpoints
+bash policy/ReStart/download_checkpoints.sh /path/to/models
 ```
 
-The downloader verifies the UniWAM-base weights, author RoboTwin inference
-metadata and TabICLv2 weights. Set `UNIWAM_WAN_PATH`, `UNIWAM_VLM_PATH` and
-`UNIWAM_ROBOTWIN_ROOT` for the local assets and simulator checkout.
+Set `UNIWAM_WAN_PATH` and `UNIWAM_VLM_PATH` to the local Wan and Qwen
+assets. Set `UNIWAM_ROBOTWIN_ROOT` to the simulator checkout. The reference
+uses RoboTwin revision `13c3c47ff4312dd62484bcd51be034af55c062d1`
+and the [official Aloha-AgileX registry](https://github.com/RoboTwin-Platform/RoboTwin/tree/ea8b21121ebb3cd201ff5b3fe361944ac94eda3f/env_cfg)
+in the sibling `env_cfg/` directory.
 
 ## Data Processing
 
-The reviewer package contains a ready-made `lift_pot` example and a setup
-script that verifies the inputs and generates the task manifest. For a new
-task use ReStart's existing [offline context builder](https://github.com/ai-for-data/ReStart/blob/c4e3e8c25e5468df0d5b7c64d1c63787168f838c/docs/reproduction.md#data-and-labels)
-with the complete set of native replans from its 50 official clean expert
-trajectories. The same clean input corpus is used for both evaluation
-conditions. The existing reconstruction-MSE admission rule is applied to the
-whole bank.
+Use the review kit's prepared `lift_pot` context. For another task, follow
+the [context preparation guide](https://github.com/ai-for-data/ReStart/blob/c4e3e8c25e5468df0d5b7c64d1c63787168f838c/docs/reproduction.md#data-and-labels)
+with the task's 50 official clean demonstrations and all native replanning
+windows. Use the same clean context for both scene conditions.
 
-Set `RESTART_CONTEXT_DIR` to a directory of `<task_name>.json` manifests.
-Each manifest supplies `embodpfn_support`, `embodpfn_inverse_reference`,
-`embodpfn_policy_receipt`, `embodpfn_pfn_checkpoint`, `embodpfn_pfn_python`
-and `embodpfn_pfn_device`. Use `embodpfn_pfn_devices` for the existing
-multi-device execution. Path values may be relative to the manifest.
-`RESTART_METHOD_ARGS` remains available for an explicit single-task manifest.
-The server prepares its context before it accepts requests.
+Set `RESTART_CONTEXT_DIR` to the directory containing `<task_name>.json`.
+The review kit generates an example manifest with the context, checkpoint,
+and TabICLv2 environment. Paths in the manifest can be relative to that file.
 
 ## Training
 
-ReStart fits TabICLv2's context from the supplied demonstrations at evaluation
-time. Both model checkpoints remain frozen.
+This is an evaluation-only adapter. It builds context from demonstrations
+and keeps both model checkpoints frozen.
 
 ## Evaluation
 
-Use the upstream 10-argument `eval.sh` interface. The supported combination
-is RoboTwin, `aloha_agilex`, joint actions and seed 42. The reference
-allocation is one host with four 80 GB GPUs.
+From the XPolicyLab root, set `RESTART_CHECKPOINT` to the downloaded
+`UniWAM-base/` directory. Set `POLICY_ENV` and `ROBOTWIN_ENV` to the
+prepared policy and simulator environments. The review kit sets the checkpoint
+and context paths in `replay.env.sh`.
 
-```sh
+```bash
 EVAL_ENV_TYPE=debug bash policy/ReStart/eval.sh \
-  RoboTwin lift_pot "$CHECKPOINT" aloha_agilex joint 42 \
+  RoboTwin lift_pot "$RESTART_CHECKPOINT" aloha_agilex joint 42 \
   0,1,2,3 0 "$POLICY_ENV" "$ROBOTWIN_ENV"
 
 EVAL_ENV_TYPE=debug DEBUG_OBS_ENCODED=1 bash policy/ReStart/eval.sh \
-  RoboTwin lift_pot "$CHECKPOINT" aloha_agilex joint 42 \
+  RoboTwin lift_pot "$RESTART_CHECKPOINT" aloha_agilex joint 42 \
   0,1,2,3 0 "$POLICY_ENV" "$ROBOTWIN_ENV"
 
-EVAL_ENV_TYPE=sim UNIWAM_ROBOTWIN_TASK_CONFIG=demo_clean bash policy/ReStart/eval.sh \
-  RoboTwin lift_pot "$CHECKPOINT" aloha_agilex joint 42 \
+EVAL_ENV_TYPE=sim UNIWAM_ROBOTWIN_TASK_CONFIG=demo_clean \
+  bash policy/ReStart/eval.sh \
+  RoboTwin lift_pot "$RESTART_CHECKPOINT" aloha_agilex joint 42 \
   0,1,2,3 0 "$POLICY_ENV" "$ROBOTWIN_ENV"
 ```
 
-The simulator uses 100 episodes, unseen instructions and video recording. To evaluate
-randomized scenes use `demo_randomized`. The WebSocket ping interval and
-timeout use UniWAM's 20/120 second settings.
+Both debug runs end with `[MAIN] eval finished`. The simulator runs 100
+episodes with unseen instructions. The validated `lift_pot / demo_clean`
+run recorded **99/100** successes.
