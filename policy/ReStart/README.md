@@ -1,6 +1,6 @@
 # ReStart
 
-**Contributor:** 黄伟达 (ReStart) | **Paper:** — | **arXiv:** — | **Original code:** [ai-for-data/ReStart](https://github.com/ai-for-data/ReStart)
+**Contributor:** Inpiora | **Paper:** — | **arXiv:** — | **Original code:** [ai-for-data/ReStart](https://github.com/ai-for-data/ReStart)
 
 ReStart adapts frozen UniWAM-base at inference time using official clean demonstrations and TabICLv2. This adapter supports joint control on Aloha-AgileX in RoboTwin 2.0 and uses UniWAM's rollout interface.
 
