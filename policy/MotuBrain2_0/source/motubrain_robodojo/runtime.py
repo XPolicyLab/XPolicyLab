@@ -22,12 +22,14 @@ ACTION_DIMS = {"arm_dim": (6, 6), "ee_dim": (1, 1)}
 class NativePolicy:
     """One local inference instance and one episode's observation state."""
 
-    def __init__(self, inference, *, action_horizon=32, query_seed_base=42):
+    def __init__(self, inference, *, action_horizon=32, query_seed_base=42, action_type="joint"):
         if type(action_horizon) is not int or action_horizon < 1:
             raise ValueError("action_horizon must be a positive integer")
         if query_seed_base is not None and (type(query_seed_base) is not int or query_seed_base < 0):
             raise ValueError("query_seed_base must be a nonnegative integer or None")
         self.inference = inference
+        self.action_type = action_type
+        self.width = {"joint": 14, "ee": 16}[action_type]
         self.action_horizon = action_horizon
         self.query_seed_base = query_seed_base
         self._clear()
@@ -39,6 +41,7 @@ class NativePolicy:
         self._pending = {name: [] for name in VIEW_MAP.values()}
         self._images = None
         self._state = None
+        self._context = {}
         self._instruction = None
 
     def reset(self):
@@ -58,9 +61,13 @@ class NativePolicy:
             if image.dtype != np.uint8 or image.ndim != 3 or image.shape[-1] != 3:
                 raise ValueError(f"{source} must be an already decoded uint8 HWC RGB array")
             images[target] = image.copy()
-        state = pack_robot_state(obs, "joint", ACTION_DIMS).astype(np.float32, copy=False)
-        if state.shape != (14,) or not np.isfinite(state).all():
-            raise ValueError("Invalid state fields: expected one finite joint14 state")
+        state = pack_robot_state(obs, self.action_type, ACTION_DIMS).astype(np.float32, copy=False)
+        if state.shape != (self.width,) or not np.isfinite(state).all():
+            raise ValueError(f"Expected one finite {self.width}-value robot state")
+        if self.action_type == "ee":
+            from .robotwin import camera_pose, convert_tool_poses
+            state = convert_tool_poses(state, to_model=True)
+            self._context = {"camera_extrinsic": camera_pose(obs)}
         instruction = obs.get("instruction", obs.get("instructions"))
         if not isinstance(instruction, str) or not instruction.strip():
             raise ValueError("A nonempty instruction is required")
@@ -86,13 +93,17 @@ class NativePolicy:
             self._instruction,
             seed=None if self.query_seed_base is None else self.query_seed_base + self._query_index,
             state=self._state,
+            **self._context,
             video_views=[np.stack(self._pending[name]) for name in VIEW_MAP.values()],
         )
         actions = result["action"]
-        if (not isinstance(actions, np.ndarray) or actions.shape != (self.action_horizon, 14)
+        if (not isinstance(actions, np.ndarray) or actions.shape != (self.action_horizon, self.width)
                 or actions.dtype.kind != "f" or not np.isfinite(actions).all()):
-            raise ValueError(f"Inference must return {self.action_horizon} finite absolute joint14 actions")
-        output = unpack_robot_state(actions.copy(), "joint", ACTION_DIMS)
+            raise ValueError(f"Inference must return {self.action_horizon} finite {self.width}-value actions")
+        if self.action_type == "ee":
+            from .robotwin import convert_tool_poses
+            actions = convert_tool_poses(actions, to_model=False)
+        output = unpack_robot_state(actions.copy(), self.action_type, ACTION_DIMS)
         for frames in self._pending.values():
             frames.clear()
         self._last_query_step = self._step
@@ -106,11 +117,12 @@ class NativePolicy:
 def load_policy(bundle, *, device="cuda", policy_config=None,
                 checkpoint_file="step-5000.safetensors",
                 model_config_file="config.yaml",
-                action_stats_file="action_stats.json", query_seed_base=42):
+                action_stats_file="action_stats.json", query_seed_base=42, action_type="joint"):
     """Load downloaded policy weights and separately supplied frozen encoders."""
     from soma.inference import build_policy
     from soma.inference.config import EmbodiedConfig
     from dataclasses import replace
+    from morph import NormalizationConfig
 
     bundle = Path(bundle).expanduser().resolve()
     checkpoint = bundle / Path(checkpoint_file).expanduser()
@@ -121,14 +133,23 @@ def load_policy(bundle, *, device="cuda", policy_config=None,
             raise FileNotFoundError(path)
     config_path = Path(policy_config).expanduser() if policy_config else Path(__file__).with_name("config.py")
     cfg = EmbodiedConfig.load(str(config_path), checkpoint=str(checkpoint))
+    if action_type == "ee" and policy_config is None:
+        from .robotwin_config import configure
+        configure(cfg, action_stats, model_config)
+    else:
+        profile = cfg.policy.action.profile
+        if profile is None:
+            raise ValueError("An action profile is required")
+        normalization = profile.normalization
+        if normalization is None:
+            normalization = NormalizationConfig(
+                method="quantile", stats=str(action_stats), quantiles=(0.01, 0.99), eps=1.0e-6,
+            )
+        else:
+            normalization = replace(normalization, stats=str(action_stats))
+        cfg.policy.action.profile = replace(profile, normalization=normalization)
     cfg.load_model_config(str(model_config))
-    profile = cfg.policy.action.profile
-    if profile is None or profile.normalization is None:
-        raise ValueError("RoboDojo requires an action profile with normalization")
-    cfg.policy.action.profile = replace(profile, normalization=replace(
-        profile.normalization, stats=str(action_stats),
-    ))
     horizon = (cfg.policy.observation.num_frames - 1) * cfg.policy.action.video_action_freq
-    policy = NativePolicy(None, action_horizon=horizon, query_seed_base=query_seed_base)
+    policy = NativePolicy(None, action_horizon=horizon, query_seed_base=query_seed_base, action_type=action_type)
     policy.inference = build_policy(cfg, device=device)
     return policy

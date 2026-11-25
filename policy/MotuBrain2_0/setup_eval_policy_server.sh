@@ -18,7 +18,10 @@ BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
 UTILS_DIR="${XPL_ROOT}/utils"
 
 policy_name="$(basename "${SCRIPT_DIR}")"
-yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
+yaml_file="${SCRIPT_DIR}/deploy.yml"
+if [[ "${bench_name}" == RoboTwin ]]; then
+    yaml_file="${SCRIPT_DIR}/deploy_robotwin.yml"
+fi
 
 echo "[SERVER] policy=${policy_name}, task=${task_name}, policy_server_port=${policy_server_port}"
 

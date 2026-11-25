@@ -1,8 +1,8 @@
-# MotuBrain2.0-Robodojo
+# MotuBrain2.0
 
 **Contributor:** Motubrain Team
 
-Evaluation-only adapter for `RoboDojo / arx_x5 / joint`. It loads the downloaded
+Evaluation-only adapter for `RoboDojo / arx_x5 / joint` and `RoboTwin / aloha_agilex / ee`. It loads the downloaded
 checkpoint on the evaluator's GPU. The package includes the required `ss-falcon`,
 `ss-soma`, `ss-morph` and `ss-modelzoo` inference source under `source/`.
 There is no hosted remote-model dependency.
@@ -23,10 +23,10 @@ git -C "$source_root/third_party/Depth-Anything-3" checkout --detach 3d835ec1a58
 export PYTHONPATH="$source_root/third_party/Depth-Anything-3/src${PYTHONPATH:+:$PYTHONPATH}"
 ```
 
-Follow the source README to download the VAE, T5Gemma and DA3 weights. Export
+Follow the [frozen encoder download instructions](source/README.md#download-weights) for the VAE, T5Gemma and DA3 weights. Export
 `SOMA_VAE_PATH`, `SOMA_TEXT_ENCODER_PATH`, `DA3_CONFIG_PATH` and
 `DA3_CHECKPOINT_PATH` as shown there. Use a separate environment for the
-RoboDojo simulator. The policy environment uses Python 3.11.
+selected benchmark's simulator. The policy environment uses Python 3.11.
 
 ## Data Processing
 
@@ -38,7 +38,7 @@ This is an eval-only contribution. Dataset conversion is not included, so
 Training and optimizer states are not included, so `train.sh` is intentionally
 absent. Training release ETA: not announced.
 
-## Evaluation
+## RoboDojo evaluation
 
 ```bash
 bash eval.sh RoboDojo <task_name> <checkpoint_bundle> \
@@ -56,27 +56,55 @@ directories. Keep `EVAL_ENV_TYPE=sim` or unset for simulator evaluation.
 
 `deploy.py` reuses the demo episode loop, which already captures every native
 observation during the action chunk; our wrapper only adds `observation_step`.
-Soma then samples the episode anchor and eight past frames at 16-step intervals.
+For RoboDojo, Soma samples the episode anchor and eight past frames at 16-step intervals.
 `model.py` receives RGB arrays directly from the server; it never decodes or swaps
 channels. Robot dimensions, state packing and action unpacking use shared helpers.
 Run one environment per model process with `eval_batch=false`.
 
+## RoboTwin 2.0
+
+The [RoboTwin model card](https://huggingface.co/GensPI/Motubrain2.0-robotwin2.0) documents the EEF student. Its [DMD-1000 bundle](https://huggingface.co/GensPI/Motubrain2.0-robotwin2.0/tree/main/weights/dmd-step1000) contains three files:
+
+- [Policy weights](https://huggingface.co/GensPI/Motubrain2.0-robotwin2.0/resolve/main/weights/dmd-step1000/ckpts/step-1000.safetensors)
+- [Model configuration](https://huggingface.co/GensPI/Motubrain2.0-robotwin2.0/blob/main/weights/dmd-step1000/config.yaml)
+- [Action normalization statistics](https://huggingface.co/GensPI/Motubrain2.0-robotwin2.0/blob/main/weights/dmd-step1000/rw_n2_q1.json)
+
+Download all three files and pass the directory containing `config.yaml` and `rw_n2_q1.json` to the evaluator:
+
+```bash
+hf download GensPI/Motubrain2.0-robotwin2.0 \
+    weights/dmd-step1000/ckpts/step-1000.safetensors weights/dmd-step1000/config.yaml \
+    weights/dmd-step1000/rw_n2_q1.json \
+    --local-dir /path/to/checkpoints/robotwin
+bash eval.sh RoboTwin adjust_bottle /path/to/checkpoints/robotwin/weights/dmd-step1000 \
+    aloha_agilex ee 0 0 1 motubrain-robodojo <robotwin-simulator-env>
+```
+
+The RoboTwin launcher selects [deploy_robotwin.yml](deploy_robotwin.yml). Each query produces 24 actions. The policy receives absolute
+end-effector poses and the head camera's OpenCV extrinsics. It converts tool
+axes and quaternion order on input and output. The selected statistics and
+current poses define the camera-relative action conversion. Diffusion noise is
+unseeded by default.
+
 ## Switching compatible checkpoints
 
-Download another compatible checkpoint with `hf download`, then update
-`checkpoint_file`, `model_config_file` and `action_stats_file` in `deploy.yml`.
-These paths are relative to the bundle selected by `ckpt_name`, or absolute.
-`policy_config` optionally selects a Python policy config for inference steps,
-solver, compile settings and preprocessing; relative paths use this adapter's
-directory. The horizon comes from the model configuration and normalization
-uses the selected statistics. `query_seed_base: null` disables fixed inference
-seeds; the default `42` preserves the published query sequence.
+Pass the new bundle directory as `ckpt_name`. If its filenames differ, update
+`checkpoint_file`, `model_config_file` and `action_stats_file` in
+[deploy.yml](deploy.yml) for RoboDojo or [deploy_robotwin.yml](deploy_robotwin.yml)
+for RoboTwin. Relative asset paths start at `ckpt_name`.
 
-This supports RoboDojo / `arx_x5` / joint14 with `causal_9_to_3`. See the source
-README for the full procedure. Different robot protocols or history encodings
-require a separate port.
+Leave `policy_config: null` for the published checkpoints. This selects the
+built-in inference settings for the chosen benchmark. The downloaded
+`config.yaml` goes in `model_config_file`.
 
-## Model Assets
+To supply custom inference settings, set `policy_config` to a Python file
+defining `policy` and `inference`. Use an absolute path or a path relative to
+`policy/MotuBrain2_0/`. A custom file replaces the benchmark defaults. For
+RoboTwin it must provide the camera-relative EEF action profile, normalization
+settings and incremental VAE encoding. The loader still reads the selected
+checkpoint's model YAML and action statistics.
+
+## RoboDojo Model Assets
 
 The published checkpoint uses normal BF16 weights with four CM denoising steps. The download script pins
 public Hugging Face revision `26c53046384721b21ef2b6d39b47b339cbc4bba8`.

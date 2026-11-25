@@ -12,14 +12,14 @@ from motubrain_robodojo import load_policy
 class Model(ModelTemplate):
     def __init__(self, model_cfg):
         super().__init__()
-        if (model_cfg.get("bench_name"), model_cfg.get("env_cfg_type"),
-                model_cfg.get("action_type")) != ("RoboDojo", "arx_x5", "joint"):
-            raise ValueError("Supported configuration: RoboDojo / arx_x5 / joint")
+        setting = (model_cfg.get("bench_name"), model_cfg.get("env_cfg_type"), model_cfg.get("action_type"))
+        if setting not in {("RoboDojo", "arx_x5", "joint"), ("RoboTwin", "aloha_agilex", "ee")}:
+            raise ValueError(f"Unsupported benchmark, robot and action type: {setting}")
         if model_cfg.get("eval_batch"):
             raise ValueError("This direct inference release supports one environment per process")
         dims = get_robot_action_dim_info(model_cfg["env_cfg_type"])
         if tuple(dims["arm_dim"]) != (6, 6) or tuple(dims["ee_dim"]) != (1, 1):
-            raise ValueError("The released checkpoint requires two 6-DOF arms and scalar grippers")
+            raise ValueError("Expected two 6-DOF arms with scalar grippers")
         policy_dir = Path(__file__).resolve().parent
         root = resolve_checkpoint_root(model_cfg, policy_dir / "checkpoints", policy_dir=policy_dir)
         options = {name: model_cfg[name] for name in (
@@ -27,7 +27,7 @@ class Model(ModelTemplate):
         ) if name in model_cfg}
         if model_cfg.get("policy_config"):
             options["policy_config"] = str((policy_dir / Path(model_cfg["policy_config"]).expanduser()).resolve())
-        self.policy = load_policy(root, device="cuda", **options)
+        self.policy = load_policy(root, device="cuda", action_type=setting[2], **options)
         self.batch_size = 1
 
     def update_obs(self, obs):

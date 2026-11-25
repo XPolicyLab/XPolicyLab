@@ -11,7 +11,7 @@ for source in ("ss-soma", "ss-falcon", "ss-morph", "ss-modelzoo"):
 setup(
     packages=list(package_dir),
     package_dir=package_dir,
-    package_data={"motubrain_robodojo": ["assets/*.yaml", "assets/*.json"]},
+    package_data={"motubrain_robodojo": ["assets/*.yaml"]},
     install_requires=[
         line.split("#", 1)[0].strip()
         for line in (root / "requirements-policy.txt").read_text().splitlines()

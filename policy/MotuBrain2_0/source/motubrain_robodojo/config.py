@@ -1,14 +1,12 @@
 """Direct inference with the released RoboDojo sampling and action contract."""
 
 import os
-from importlib.resources import files
 
 from morph import ActionProfile
 from morph import Chassis
 from morph import EEF
 from morph import EmbodiedPromptBuilder
 from morph import Gripper
-from morph import NormalizationConfig
 from morph import Padding
 from morph import Qpos
 from morph.convs.image import ResizeConfig
@@ -26,8 +24,6 @@ from soma.inference.config import VaeConfig
 
 _TEXT_ENCODER_PATH = os.environ["SOMA_TEXT_ENCODER_PATH"]
 _VAE_PATH = os.environ["SOMA_VAE_PATH"]
-# Initial profile defaults; the loader binds the selected bundle's statistics.
-_ACTION_NORM_PATH = str(files("motubrain_robodojo") / "assets" / "action_stats.json")
 _VIEW_NAMES = (
     "cam_high",
     "cam_left_wrist",
@@ -92,12 +88,6 @@ policy = PolicyConfig(
         output_field_order=_ROBODOJO_QPOS14_ORDER,
         profile=ActionProfile(
             name="robodojo-canonical55-absolute",
-            normalization=NormalizationConfig(
-                method="quantile",
-                stats=_ACTION_NORM_PATH,
-                quantiles=(0.01, 0.99),
-                eps=1.0e-6,
-            ),
             fields=(
                 Qpos(name="left_qpos", dim=6),
                 Padding(name="left_qpos_pad"),
