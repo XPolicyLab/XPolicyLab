@@ -80,7 +80,7 @@ bash eval.sh RoboTwin adjust_bottle /path/to/checkpoints/robotwin/weights/dmd-st
     aloha_agilex ee 0 0 1 motubrain-robodojo <robotwin-simulator-env>
 ```
 
-The RoboTwin launcher selects [deploy_robotwin.yml](deploy_robotwin.yml). Each query produces 24 actions. The policy receives absolute
+The RoboTwin launcher selects [deploy_robotwin.yml](deploy_robotwin.yml). Each query encodes the latest RGB frame from each camera with the FP32 video VAE, passes the task instruction directly to the text encoder, and produces 24 actions. The policy receives absolute
 end-effector poses and the head camera's OpenCV extrinsics. It converts tool
 axes and quaternion order on input and output. The selected statistics and
 current poses define the camera-relative action conversion. Diffusion noise is
@@ -101,7 +101,7 @@ To supply custom inference settings, set `policy_config` to a Python file
 defining `policy` and `inference`. Use an absolute path or a path relative to
 `policy/MotuBrain2_0/`. A custom file replaces the benchmark defaults. For
 RoboTwin it must provide the camera-relative EEF action profile, normalization
-settings and incremental VAE encoding. The loader still reads the selected
+settings and single-frame video encoding. The loader still reads the selected
 checkpoint's model YAML and action statistics.
 
 ## RoboDojo Model Assets

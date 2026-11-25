@@ -1,10 +1,11 @@
 """Native observation clock and joint-action boundary for local inference.
 
 Soma owns history selection, image preprocessing, sampling and normalization.
-This boundary collects every native observation between action queries.
+This boundary buffers native observations according to the configured video length.
 It does not decode or recolor images.
 """
 
+from collections import deque
 from pathlib import Path
 
 import numpy as np
@@ -22,11 +23,14 @@ ACTION_DIMS = {"arm_dim": (6, 6), "ee_dim": (1, 1)}
 class NativePolicy:
     """One local inference instance and one episode's observation state."""
 
-    def __init__(self, inference, *, action_horizon=32, query_seed_base=42, action_type="joint"):
+    def __init__(self, inference, *, action_horizon=32, query_seed_base=42, action_type="joint", video_length=-1):
         if type(action_horizon) is not int or action_horizon < 1:
             raise ValueError("action_horizon must be a positive integer")
         if query_seed_base is not None and (type(query_seed_base) is not int or query_seed_base < 0):
             raise ValueError("query_seed_base must be a nonnegative integer or None")
+        if type(video_length) is not int or (video_length != -1 and video_length < 1):
+            raise ValueError("video_length must be -1 or a positive integer")
+        self.video_length = video_length
         self.inference = inference
         self.action_type = action_type
         self.width = {"joint": 14, "ee": 16}[action_type]
@@ -38,7 +42,8 @@ class NativePolicy:
         self._step = None
         self._last_query_step = None
         self._query_index = 0
-        self._pending = {name: [] for name in VIEW_MAP.values()}
+        max_frames = None if self.video_length == -1 else self.video_length
+        self._pending = {name: deque(maxlen=max_frames) for name in VIEW_MAP.values()}
         self._images = None
         self._state = None
         self._context = {}
@@ -150,6 +155,7 @@ def load_policy(bundle, *, device="cuda", policy_config=None,
         cfg.policy.action.profile = replace(profile, normalization=normalization)
     cfg.load_model_config(str(model_config))
     horizon = (cfg.policy.observation.num_frames - 1) * cfg.policy.action.video_action_freq
-    policy = NativePolicy(None, action_horizon=horizon, query_seed_base=query_seed_base, action_type=action_type)
+    policy = NativePolicy(None, action_horizon=horizon, query_seed_base=query_seed_base,
+                          action_type=action_type, video_length=cfg.policy.observation.video_length)
     policy.inference = build_policy(cfg, device=device)
     return policy
