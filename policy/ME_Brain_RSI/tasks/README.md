@@ -49,7 +49,7 @@
 | `imitate_sorting_sequence` | `generator` | `ee` | `false` |
 | `swap_blocks` | `step` | `joint` | `false` |
 | `align_blocks` | `model` | `ee` | `false` |
-| `solve_equation` | `equation` | `joint` | `true` |
+| `solve_equation`（Open，外部资源尚未提供） | `equation` | `joint` | `true` |
 | `stack_blocks_by_language` | `step` | `joint` | `false` |
 | `general_pickup` | `model` | `ee` | `false` |
 | `classify_objects_by_language` | `generator` | `ee` | `false` |

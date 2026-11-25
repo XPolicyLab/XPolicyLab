@@ -46,7 +46,6 @@
   },
   "pythonpath": [
     "{assets}/implementations/rdj_v1_fasten_screws/770a6c1b7de4b67b",
-    "{assets}/dependencies/curobo/9077c9afff1c3fda/curobo",
     "{assets}",
     "{xpolicylab_parent}",
     "{xpolicylab}"

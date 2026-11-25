@@ -17,13 +17,11 @@
   "tasks": {
     "deposit_coin": {
       "config": {
-        "coin_assets_root": "model_assets/coin/code-skills",
         "strategy_evidence_dir": "../../../eval_runs/deposit_coin"
       }
     },
     "fasten_screws": {
       "config": {
-        "screws_assets_root": "model_assets/screws/code-skills",
         "strategy_evidence_dir": "../../../eval_runs/fasten_screws"
       }
     },

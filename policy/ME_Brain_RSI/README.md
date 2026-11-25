@@ -32,7 +32,9 @@ bash install.sh inference
 
 标准叠方块复用随机叠方块的 SAM3 感知和脚本控制策略，两项任务均使用 `joint` 动作，每个进程运行一个环境。评测仍加载各自的任务场景和指令；资源通过 `robot_static_path` 与 `stack_assets_root` 配置。
 
-插管、投币和拧螺丝任务需要相应的 CuRobo 环境；堆叠和方程任务需要 SAM3、DINO、Pinocchio 及其资源。投币任务使用 CUDA 专用环境及 `websockets==14.2`，详见 [投币任务说明](tasks/deposit_coin/README.md)。拧螺丝使用相同的专用环境版本要求，见 [拧螺丝任务说明](tasks/fasten_screws/README.md)。
+插管、投币和拧螺丝共用独立的 CUDA 策略环境。详见 [CuRobo 安装与验证](tasks/insert_tubes/README.md)、[投币任务说明](tasks/deposit_coin/README.md) 和 [拧螺丝任务说明](tasks/fasten_screws/README.md)。
+
+`solve_equation` 属于 Open 维度，本轮 agent track 不评测该任务。仓库尚未提供外部方程资源包的下载或构建流程。运行该任务仍需通过 `equation_assets_root` 或 `ME_BRAIN_EQUATION_ASSETS` 提供与 [任务注册表](tasks/registry.json) 匹配的目录，其中包括方程资源包及 SAM3 权重。
 
 通过 `ME_BRAIN_POLICY_PYTHON` 指定策略解释器，通过 `ME_BRAIN_RUNTIME_CONFIG` 配置外部资源。权重、虚拟环境和机器配置不包含在源码中。
 
@@ -97,8 +99,6 @@ VLA 检查点通过 XPolicyLab 公共解析器定位。可以指定 `model_path`
 | `robot_static_path`                                    | 机器人静态配置                            |
 | `stack_assets_root`                                  | 堆叠任务资源                              |
 | `equation_assets_root`                                 | 方程任务资源                              |
-| `coin_assets_root`                                     | 投币任务的外部 CuRobo`code-skills` 根目录 |
-| `screws_assets_root` | 拧螺丝任务的外部 CuRobo `code-skills` 根目录 |
 | `perception_assets_root`                               | 图像匹配任务的感知权重                    |
 | `HANG_SAM3_PATH`（环境变量） | 挂杯任务的外部固定 SAM3 资源目录 |
 | `LAPTOP_SAM3_PATH`（环境变量） | 笔记本与耳机收纳任务的外部固定 SAM3 资源目录 |

@@ -29,11 +29,19 @@ def create(config, route, scope, run):
     if route['canonical_task'] == 'fasten_screws':
         from .screws import create as create_screws
         return create_screws(config, route, scope, run)
-    driver = route['driver']
-    if driver == 'native':
-        os.environ.update(RDJ_OUTPUT_DIR=str(run), RDJ_V1_OUTPUT=str(run / 'runtime'), RDJ_CONFIG=route['canonical_task'], RDJ_SEED=str(route.get('defaults', {}).get('seed', 0)), IK_RESULT=str(run))
+    if route['driver'] == 'native':
+        if route['canonical_task'] == 'insert_tubes':
+            from ..core.curobo_runtime import require_curobo
+            require_curobo()
+        model_config = dict(route.get('defaults', {}))
+        seed = config.get('seed', model_config.get('seed', 0))
+        model_config['seed'] = seed
+        os.environ.update(
+            RDJ_OUTPUT_DIR=str(run), RDJ_V1_OUTPUT=str(run / 'runtime'),
+            RDJ_CONFIG=route['canonical_task'], RDJ_SEED=str(seed), IK_RESULT=str(run),
+        )
         factory = scope.resolve(route['model'])
-        return factory() if route.get('constructor') == 'empty' else factory(dict(route.get('defaults', {})))
+        return factory() if route.get('constructor') == 'empty' else factory(model_config)
     config = dict(config, equation_assets_root=config.get('equation_assets_root') or os.environ.get('ME_BRAIN_EQUATION_ASSETS'))
     _external_dependencies(config, route)
     return EquationModel(config, route, scope, run)
