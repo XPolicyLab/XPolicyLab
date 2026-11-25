@@ -233,12 +233,12 @@ def top_grasp(arm, xy, zg, gline, tag=''):
         return g, pitch
     return None, None
 
-PAN_HALF = [(0.085, -0.14, 0.006), (0.092, -0.10, 0.025), (0.092, -0.05, 0.037), (0.088, -0.03, 0.041),
-            (0.075, -0.01, 0.044), (0.062, 0.005, 0.045), (0.05, 0.02, 0.047), (0.03, 0.03, 0.048)]
+PAN_HALF = [(0.083453, -0.134298, 0.005487), (0.090325, -0.095927, 0.022864), (0.090325, -0.047964, 0.033839), (0.086398, -0.028778, 0.037497),
+            (0.073635, -0.009593, 0.040241), (0.060871, 0.004796, 0.041155), (0.049090, 0.019185, 0.042984), (0.029454, 0.028778, 0.043899)]
 PAN_TOP = PAN_HALF + [(-x, y, z) for (x, y, z) in reversed(PAN_HALF)]
 PAN_PTS = np.array(PAN_TOP + [(x, y, 0.0) for (x, y, z) in PAN_TOP], float)
-HANDLE_TOP = [(0.02, 0.03, 0.048), (0.02, 0.14, 0.048), (-0.02, 0.14, 0.048), (-0.02, 0.03, 0.048)]
-HANDLE_PTS = np.array(HANDLE_TOP + [(x, y, 0.036) for (x, y, z) in HANDLE_TOP], float)
+HANDLE_TOP = [(0.019636, 0.028778, 0.043899), (0.019636, 0.134298, 0.043899), (-0.019636, 0.134298, 0.043899), (-0.019636, 0.028778, 0.043899)]
+HANDLE_PTS = np.array(HANDLE_TOP + [(x, y, 0.032924) for (x, y, z) in HANDLE_TOP], float)
 def pan_axes(alpha):
     a = math.radians(alpha)
     m = np.array([math.cos(a), math.sin(a)])
@@ -359,7 +359,7 @@ def xmin(y):
 def compact(objs, maxext):
     return [o for o in objs if o['ext'] <= maxext]
 
-LIP = 0.14
+LIP = 0.134298
 HANDLE_G = 0.075
 PAN_HW = 0.08
 RBASE = np.array([0.30, -0.45])
@@ -526,7 +526,7 @@ def main():
 
     def in_pan_fp(q, m, c=None, a=None):
         lx, ly = pan_local(pc if c is None else c, alpha if a is None else a, q)
-        return (abs(lx) < 0.092 + m and -LIP - m < ly < 0.03 + m) or (abs(lx) < 0.02 + m and 0.0 < ly < LIP + m)
+        return (abs(lx) < 0.090325 + m and -LIP - m < ly < 0.028778 + m) or (abs(lx) < 0.019636 + m and 0.0 < ly < LIP + m)
 
     ROI = (-0.12, 0.46, -0.27, 0.16)
 

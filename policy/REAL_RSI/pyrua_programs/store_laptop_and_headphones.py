@@ -15,17 +15,17 @@ def camK(cam):
     return K, T, np.linalg.inv(K)
 
 KH, TH, KHi = camK('cam_head')
-RISER_TOP = 0.8433
+RISER_TOP = 0.839543
 HINGE_DY = 0.1235
 HINGE_DZ = 0.0037
 LID_R = 0.126
-RACK_TOP = 0.8143
+RACK_TOP = 0.811902
 SLOT_BOTTOM = 0.7695
 GRL = [0.075]
 TABLE = 0.765
 TABLE_X, TABLE_Y = (-0.55, 0.55), (-0.40, 0.30)
-SB_X, SB_Y, SB_TOP = 0.089, 0.052, TABLE + 0.0275
-SADDLE_TOP = TABLE + 0.275
+SB_X, SB_Y, SB_TOP = 0.088584, 0.052, TABLE + 0.0275
+SADDLE_TOP = TABLE + 0.274428
 
 def at_z(rows, cols, z, T=TH, Ki=KHi):
     rows = np.atleast_1d(np.asarray(rows, float))
@@ -388,7 +388,7 @@ def lid_point(front, yaw, th, r, o, z0=None):
     xy = hinge + (r * u_e + o * n_e) * ey
     return np.array([xy[0], xy[1], zh + r * u_z + o * n_z])
 
-RACK_L, RACK_WB, RACK_WT = 0.137, 0.053, 0.0234
+RACK_L, RACK_WB, RACK_WT = 0.136458, 0.053895, 0.0234
 RACK_ZB = 0.765
 
 def project(P, K=KH, T=TH):

@@ -741,7 +741,7 @@ def attempt(xk, yk, kk, oc, n_try):
     go_home(arm)
     return False
 
-CUP_R = 0.035
+CUP_R = 0.033791
 CUPFIT = [False]
 
 def white_px(a):
@@ -845,7 +845,7 @@ def coarse(xk, yk, kk):
     return best
 
 VG = None
-BASE_R = 0.066
+BASE_R = 0.065727
 BASE_Z = 0.771
 TORSO_OFF = (-0.017, 0.020)
 G_Z = 0.907

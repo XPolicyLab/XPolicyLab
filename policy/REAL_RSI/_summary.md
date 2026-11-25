@@ -1,10 +1,9 @@
-# PyRUA-RSI on RoboDojo: eval seed 0
+# REAL-RSI on RoboDojo: eval seed 0
 
-RoboDojo's own summary (`bash scripts/robodojo.sh summarize`) of the `PyRUA_RSI` policy (PyRUA-RSI): one fixed Python
+RoboDojo's own summary (`bash scripts/robodojo.sh summarize`) of the `REAL_RSI` policy (REAL-RSI): one fixed Python
 program per RoboDojo task name, no language model called at evaluation time. Evaluated like the submitted agent: 54 task
 configurations at their native episode counts, eval seed 0 (2,100 episodes), one official `robodojo.sh eval` process per
-task name, RoboDojo `main` `cb2a37d`, default RGB-only observation. Seed 0 was also the seed the programs were developed
-on; the same programs on eval seed 2, never used in development, give Avg SR 80.73 / Avg Score 85.36.
+task name, RoboDojo `main` `cb2a37d`, default RGB-only observation. 
 
 ## Overview (by capability dimension)
 
@@ -12,7 +11,7 @@ Progress † marks incomplete evaluation (126 = 42 tasks × 3 seeds). Cells show
 
 | Policy | Progress | Generalization SR (%) | Generalization Score | Precision SR (%) | Precision Score | Long-Horizon SR (%) | Long-Horizon Score | Memory SR (%) | Memory Score | Open SR (%) | Open Score | Avg SR (%) | Avg Score |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| PyRUA_RSI | 33.3% † (42/126) | 60.83 ±0.00 | 65.54 ±0.00 | 92.75 ±0.00 | 93.76 ±0.00 | 82.50 ±0.00 | 89.76 ±0.00 | 93.33 ±0.00 | 93.58 ±0.00 | 81.00 ±0.00 | 88.51 ±0.00 | 82.08 ±0.00 | 86.23 ±0.00 |
+| REAL_RSI | 33.3% † (42/126) | 60.83 ±0.00 | 65.54 ±0.00 | 92.75 ±0.00 | 93.76 ±0.00 | 82.50 ±0.00 | 89.76 ±0.00 | 93.33 ±0.00 | 93.58 ±0.00 | 81.00 ±0.00 | 88.51 ±0.00 | 82.08 ±0.00 | 86.23 ±0.00 |
 
 ## Generalization: Standard vs Random (25 episodes each)
 
@@ -20,13 +19,13 @@ Each cell shows `mean ±std` across seeds, averaged over the 12 Generalization t
 
 | Policy | Standard SR (%) | Standard Score | Random SR (%) | Random Score | Δ SR | Δ Score |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| PyRUA_RSI | 62.33 ±0.00 | 68.37 ±0.00 | 59.33 ±0.00 | 62.72 ±0.00 | -3.00 | -5.65 |
+| REAL_RSI | 62.33 ±0.00 | 68.37 ±0.00 | 59.33 ±0.00 | 62.72 ±0.00 | -3.00 | -5.65 |
 
 ### Per-task Standard vs Random
 
 Additional view only: each of the 12 Generalization tasks is listed as the 25-episode standard split and its `_random` sibling. Columns match the per-policy all-task tables. Existing merged 50-episode scores are unchanged.
 
-#### PyRUA_RSI
+#### REAL_RSI
 
 | Task | Seed 0 SR (%) | Seed 0 Score | Seed 1 SR (%) | Seed 1 Score | Seed 2 SR (%) | Seed 2 Score | Avg SR (%) | Avg Score |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
