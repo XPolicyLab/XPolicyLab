@@ -1,0 +1,59 @@
+Vendored from RoboDojo (https://github.com/RoboDojo-Benchmark/RoboDojo), MIT License,
+Copyright (c) 2025 Yue Chen. Source commit 726e9aabfaa642203722eb126f5eaf0f37f3e1ad.
+
+  curobo_planner.py   env/planner_manager/curobo_planner.py  (two import lines redirected)
+  compat.py           not from RoboDojo: subclass that overrides _trans_from_world_to_base to
+                      reproduce NumPy 1 float promotion under NumPy 2 (same results under NumPy 1)
+  global_configs.py   env/global_configs.py                  (BATCH_NUM only)
+  transformer.py      utils/transformer.py                   (pose_to_matrix, matrix_to_pose,
+                                                              calculate_target_pose only)
+  Assets/Robots/x5/   Assets/Robots/x5/{curobo.yml, X5A.urdf, robot_config.yml}
+                      (RoboDojo Assets release; meshes/ and USD files are not needed by the
+                      planner: CuroboPlanner drops load_meshes/mesh_link_names and plans with
+                      the collision spheres in curobo.yml)
+  env_cfg/robot/dual_x5.yml  env_cfg/robot/dual_x5.yml        (arm base poses)
+
+The directory mirrors RoboDojo's layout, so it can serve as the root for paths such as
+Assets/Robots/x5/X5A.urdf.
+
+curobo.yml is kept byte-identical; it carries RoboDojo's absolute asset path
+(/workspace/RoboDojo/Assets/Robots/x5), which auriga_xpl/planner.py rewrites in a
+temporary copy at load time to <root>/Assets/Robots/x5 (root: this directory by default).
+
+Requires cuRobo v2 at commit d17b54ce32cba095c0b000c4c58777075d11de0e (RoboDojo's
+third_party/curobo pin, https://github.com/yuechen0614/curobo), installed by
+policy/Auriga/install_planner.sh.
+
+ARX X5 meshes (Assets/Robots/x5/meshes/, not committed)
+  download_robot_meshes.sh (run by download_assets.sh) fetches them into Assets/Robots/x5/meshes/ and
+  checks them against Assets/Robots/x5/meshes.sha256. They are used by the Auriga adapter for the
+  robot_model manifest, gripper collision bounds and robot-mesh overlays; the URDF, robot_config.yml
+  and curobo.yml above are shared by the planner, the calibration FK and the adapter. Nothing here is a
+  task asset.
+
+| File | Source path | SHA-256 |
+| --- | --- | --- |
+| `X5A.urdf` | `Assets/Robots/x5/X5A.urdf` | `7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423` |
+| `robot_config.yml` | `Assets/Robots/x5/robot_config.yml` | `9de4f63b84c0f730623c09af7a2d530d84973981397280b6e4b626b50ba6f1c9` |
+| `meshes/base_link.STL` | `Assets/Robots/x5/meshes/base_link.STL` | `898dbe3af3a98857358ac5a3d74e085ec9c69946737e767dad139776761cbd92` |
+| `meshes/link1.STL` | `Assets/Robots/x5/meshes/link1.STL` | `04a52b86a5b28c847377a9167e7effab0478fa591052e83b0b32cf8709bb3885` |
+| `meshes/link2.STL` | `Assets/Robots/x5/meshes/link2.STL` | `2865da6a962c814abaf9251497bcf5f5e3b67610e3b657ddcaa9de8b3d45e83e` |
+| `meshes/link3.STL` | `Assets/Robots/x5/meshes/link3.STL` | `3ac2411b0cbffcf4808cae4c215cfeab607f240cd124eeba209ac7986ac047c0` |
+| `meshes/link4.STL` | `Assets/Robots/x5/meshes/link4.STL` | `3447ddef920c22e4607b887e1cc588037dfb51c37825c4cac86a5391425469c4` |
+| `meshes/link5.STL` | `Assets/Robots/x5/meshes/link5.STL` | `934b3e70ce2987f8de999de29d8ef72c8370dced8e9fdf6f9ddd3e7e24c1e464` |
+| `meshes/link6.STL` | `Assets/Robots/x5/meshes/link6.STL` | `32dca4ededcf3215163207b9aea1046114ae59921555d1e068ee46fa6e53915e` |
+| `meshes/link7.STL` | `Assets/Robots/x5/meshes/link7.STL` | `ec3d40b39cccde0075ca3d16603f14f180fce41a46b446473d384def7a1b0be0` |
+| `meshes/link8.STL` | `Assets/Robots/x5/meshes/link8.STL` | `29f7a8379cad81797e82e4ba099455cc275ac6ac5bb9e264ce46719fd7d2bb60` |
+| `meshes/camera_base.glb` | `Assets/Robots/x5/meshes/camera_base.glb` | `d771a24ab886166536ffe4a0719af1163e44fac4067e07110cf72a7a01d260b0` |
+| `meshes/camera.glb` | `Assets/Robots/x5/meshes/camera.glb` | `9833e436988bcd83f3113ab1071428427c80d6a1392d9e0b7cf35d2b6e949d7c` |
+
+
+- Downloaded from the Hugging Face dataset `RoboDojo-Benchmark/RoboDojo`, revision
+  `63fcc045f2e974902eb7800d29de48004cf86016` (the hashes equal the dataset's LFS object ids; the
+  x5 files were last changed there on 2026-07-06). This is the `Assets/` tree that RoboDojo's
+  `scripts/init_assets.sh` installs. The dataset card declares `license: apache-2.0`.
+- The same files are installed in the evaluation image used to dump the calibration
+  (`/workspace/RoboDojo/Assets/Robots/x5`, identical SHA-256).
+- RoboDojo itself (https://github.com/RoboDojo-Benchmark/RoboDojo) is MIT-licensed; its
+  `LICENSE` is reproduced in `LICENSE.RoboDojo` (upstream main, commit cb2a37d of 2026-10-08,
+  "Copyright (c) 2026 RoboDojo Contributors").

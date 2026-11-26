@@ -1,0 +1,3 @@
+# Vendored RoboDojo files are kept byte-identical (the URDF digest is part of the robot model manifest).
+vendor/robodojo_planner/Assets/Robots/x5/X5A.urdf -text -whitespace
+vendor/robodojo_planner/Assets/Robots/x5/robot_config.yml -whitespace

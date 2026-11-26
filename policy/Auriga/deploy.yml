@@ -1,0 +1,47 @@
+# XPolicyLab standard keys first (CONTRIBUTING.md, deploy.yml), then Auriga's own keys.
+# Per-run fields (port, host, bench_name, task_name, ckpt_name, env_cfg_type, seed, action_type)
+# are overridden by setup_eval_policy_server.sh; keep the keys present.
+policy_name: Auriga
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: arx_x5
+seed: null
+action_type: joint
+gpu_id: null
+eval_batch: false
+
+# -- Auriga harness (policy server side) -------------------------------------------------------
+# Checkout of https://github.com/StellarEdge-AI/Auriga used by the policy server. install.sh clones it
+# here at auriga_commit (branch robodojo-leaderboard: the frozen leaderboard configuration of
+# 1d219c7, injectable environment support and the robot cut on perception point masks); AURIGA_SRC
+# overrides the path.
+auriga_src: ./third_party/Auriga
+auriga_commit: ced03351cdbe54368fdce5fb3fdeb3ac89c9e035   # StellarEdge-AI/Auriga robodojo-leaderboard
+# Deployment-only overrides layered over configs/auriga.json of that commit (no model-visible change):
+# no observer video, no PTY viewer, no scene-truth log, pi0.5 and pose_skill off, sandbox off (as in
+# the self-test). The per-episode grasp memory directory is created empty by the runtime.
+auriga_config: ./auriga_eval.json
+# Model endpoint: provided privately by the Auriga team; injected through config.env or the
+# environment (AURIGA_API_BASE_URL / AURIGA_API_KEY). No key is stored in this repository.
+# The endpoint must speak the OpenAI Responses API (see README, Configuration).
+model: gpt-6-astra
+reasoning_effort: high
+# Per-episode run directories written by the harness (relative to this directory).
+result_dir: results
+
+# -- WAIT protocol (deploy.py <-> model.py) ----------------------------------------------------------
+# get_action waits at most poll_s seconds for the next joint row and answers WAIT otherwise; the
+# client asks again without stepping the simulator. Must stay well below the RoboDojo client's fixed
+# 120 s request timeout (src/eval_client/eval_env.py does not forward request_timeout_s).
+poll_s: 20.0
+# on_trial_end waits at most this long for the harness to seal its run record.
+wrap_up_s: 60.0
+# After the actor stops, wait at most this long for the client's final check (trial_end verdict).
+verdict_wait_s: 120.0
+# Optional wall-clock cap per episode in seconds. Empty: none, like Auriga's own benchmark runs
+# (native step limit, 170 model requests and the 1800 s inactivity guard still apply).
+episode_budget_s:

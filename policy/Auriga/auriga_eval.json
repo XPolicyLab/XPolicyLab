@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "features": {
+    "sandbox_enabled": false,
+    "pi05": false,
+    "pose_skill": false,
+    "record_video": false,
+    "export_video": false,
+    "terminal": false
+  },
+  "analysis": {
+    "scene_truth_log": false
+  }
+}
