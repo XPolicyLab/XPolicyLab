@@ -1,0 +1,15 @@
+{
+  "request": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "event/emit",
+    "params": {
+      "kind": "obs/person",
+      "payload": { "nearest_person_m": 0.9, "count": 1 },
+      "salience": 180,
+      "collapse_key": "person:nearest",
+      "trace_id": "t-0001"
+    }
+  },
+  "response": { "jsonrpc": "2.0", "id": 1, "result": { "seq": 1235 } }
+}

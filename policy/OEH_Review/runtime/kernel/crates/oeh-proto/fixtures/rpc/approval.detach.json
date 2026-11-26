@@ -1,0 +1,4 @@
+{
+  "request": { "jsonrpc": "2.0", "id": 1, "method": "approval/detach", "params": {} },
+  "response": { "jsonrpc": "2.0", "id": 1, "result": {} }
+}

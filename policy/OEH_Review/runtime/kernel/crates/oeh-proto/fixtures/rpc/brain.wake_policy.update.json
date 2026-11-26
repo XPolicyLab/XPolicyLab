@@ -1,0 +1,12 @@
+{
+  "request": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "brain/wake_policy/update",
+    "params": {
+      "brain_id": "fast",
+      "wake_policy": { "default": "steer", "rules": { "obs/person": "wake", "safety/estop": "interrupt" }, "budget": { "max_consecutive_wakes": 5, "min_interval_ms": 250 } }
+    }
+  },
+  "response": { "jsonrpc": "2.0", "id": 1, "result": {} }
+}

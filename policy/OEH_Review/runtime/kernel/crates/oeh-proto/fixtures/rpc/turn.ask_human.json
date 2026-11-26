@@ -1,0 +1,13 @@
+{
+  "request": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "turn/ask_human",
+    "params": { "brain_id": "fast", "turn": 3, "question": "Should I pick up the red cup?" }
+  },
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": { "proposal_id": "t-7-3-120-p3", "outcome": { "outcome": "refused", "reason": "no approval channel attached" } }
+  }
+}

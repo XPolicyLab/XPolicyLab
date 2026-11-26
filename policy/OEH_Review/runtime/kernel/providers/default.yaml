@@ -1,0 +1,26 @@
+# 厂商声明（规格 §7.2）。`brain-native` 的 `providers:` 默认就是这个文件（相对进程 cwd）。
+#
+# 每一行说四件事：说哪种 wire（`api_mode`）、端点、API key 从哪个环境变量读、要不要打
+# prompt 缓存点。加一家厂商是加一行，不是改代码——turn 循环与传输都不认识具体的名字。
+#
+# 两种计费方式：前四行按 API key 计费；最后两行（`codex`、`claude-code`）用你自己的账号订阅
+# （ChatGPT / Claude Pro、Max），每个决策起一次官方 CLI，不读任何 API key。登录步骤见 README
+# 「用账号订阅跑脑」。
+#
+# **这四个端点都是 `https://` / `wss://`，而 `oeh-brain` 的 `tls` feature 默认是关的**
+# （开发机上没有 C 编译器，rustls 编不过）：默认构建下用这份声明会拿到一条明确的
+# `tls feature not enabled: <url>`，而不是在运行时才发现握不上手。生产构建在有 `cc` 的
+# 机器上加 `--features oeh-brain/tls`。本地 mock 与自建网关写 `http://` / `ws://`，不受
+# 影响。
+providers:
+  openai: { api_mode: responses, base_url: https://api.openai.com/v1, env: OPENAI_API_KEY }
+  anthropic: { api_mode: anthropic_messages, base_url: https://api.anthropic.com, env: ANTHROPIC_API_KEY, cache: system_and_3 }
+  deepseek: { api_mode: chat_completions, base_url: https://api.deepseek.com, env: DEEPSEEK_API_KEY }
+  # base_url 省略 = OpenAI 的 realtime 端点（wss://api.openai.com/v1/realtime）。
+  openai-realtime: { api_mode: realtime, env: OPENAI_API_KEY }
+  # 不是 HTTP：每个决策起一次 `codex exec`（Codex 0.155.1，ChatGPT 登录）。`env` 指向的变量
+  # 存 `CODEX_HOME` 登录目录，像 key 一样只交给子进程。推理强度冻结在这里。
+  codex: { api_mode: codex_exec, env: OEH_CODEX_HOME, program: codex, reasoning_effort: high }
+  # 同上，Claude 订阅（Pro / Max）：每个决策起一次 `claude -p`（Claude Code 2.1.288 上核过）。`env`
+  # 指向的变量存 `claude setup-token` 给的长期 token，像 key 一样只交给子进程。推理强度冻结在这里。
+  claude-code: { api_mode: claude_code_exec, env: CLAUDE_CODE_OAUTH_TOKEN, program: claude, reasoning_effort: high }

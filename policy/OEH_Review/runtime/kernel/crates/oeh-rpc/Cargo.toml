@@ -1,0 +1,40 @@
+[package]
+name = "oeh-rpc"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[features]
+# 测试钩子（`RouterConfig::stream_setup_delay_ms`）。**只给这个 crate 自己的集成测试
+# 用**：下面的 dev-dependency 自依赖是 cargo 里"给自己的测试目标打开一个 feature"的
+# 标准写法。产品构建拿不到这个 feature，于是那个配置项**不存在**，profile 里写它会被
+# `deny_unknown_fields` 当场拒成一个启动错误。
+test-hooks = []
+
+[dependencies]
+oeh-proto = { path = "../oeh-proto" }
+oeh-kernel = { path = "../oeh-kernel" }
+oeh-admission = { path = "../oeh-admission" }
+serde.workspace = true
+serde_json.workspace = true
+tokio.workspace = true
+parking_lot.workspace = true
+thiserror.workspace = true
+inventory.workspace = true
+tracing.workspace = true
+bytes.workspace = true
+futures-util.workspace = true
+tokio-tungstenite.workspace = true
+iceoryx2.workspace = true
+# `current_uid()` 的 `geteuid(2)`，见 `transport.rs`。
+libc.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
+oeh-distill = { path = "../oeh-distill" }
+# Adds `test-util` on top of the workspace's tokio features (rt-multi-thread/macros/
+# time/sync/...) for tests only: `tokio::time::{pause,advance}` back the SEND_TIMEOUT
+# and Client::call-timeout tests (Fix round 1).
+tokio = { workspace = true, features = ["test-util"] }
+# 见上面的 `[features]`：集成测试要的是带测试钩子的那一份 `oeh-rpc`。
+oeh-rpc = { path = ".", features = ["test-hooks"] }
