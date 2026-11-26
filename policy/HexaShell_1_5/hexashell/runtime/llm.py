@@ -12,7 +12,10 @@ The client never reads proxy settings from the environment.  Failures are sorted
 * anything else (other 4xx): our request is wrong and retrying will not help.
 
 Every attempt is reported through ``log`` so the episode record shows where the time went, and
-``Gateway.lost_s`` adds up the time spent on failed attempts and the pauses after them.
+``Gateway.lost_s`` adds up the time spent on failed attempts and the pauses after them.  An attempt's
+record carries its start in UTC (``at``) and its duration (``seconds``); an answered one also carries
+the tokens the endpoint reports (``usage``: ``prompt``, ``completion`` - the output tokens, reasoning
+included - ``cached`` and ``reasoning``).
 
 Replies are streamed by default (``stream=True``; the gateway allows each user only a few
 non-streaming requests a minute).  The pieces are put back together into the answer a
@@ -140,10 +143,11 @@ class Gateway:
                 raise GatewayError("out of time before the model answered", "time")
             attempts += 1
             t0 = time.monotonic()
+            at = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
             status, data, problem = self._post(payload, min(self.request_timeout_s, left))
             took = time.monotonic() - t0
-            event = {"kind": "request", "attempt": attempts, "status": status, "seconds": round(took, 2),
-                     "bytes": len(payload)}
+            event = {"kind": "request", "attempt": attempts, "status": status, "at": at,
+                     "seconds": round(took, 2), "bytes": len(payload)}
             if status == 200 and isinstance(data, dict) and data.get("choices"):
                 message = data["choices"][0].get("message") or {}
                 usage = read_usage(data.get("usage"))
