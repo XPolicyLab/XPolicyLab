@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "knowin-agent"
+version = "1.0.0"
+description = "KnowinAgent: task and local agents over a shared bimanual robot runtime"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24", "Pillow>=9"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[project.scripts]
+knowin-agent = "knowin_agent.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["knowin_agent*"]
+
+[tool.setuptools.package-data]
+"knowin_agent" = ["agents/prompts/*.md", "assets/**/*", "library/**/*", "program/docs/*.md", "experiments/profiles/*.json", "experiments/splits.json", "backends/robodojo/rig_constants.json"]
+
+[tool.setuptools.exclude-package-data]
+"*" = ["**/__pycache__/*", "**/*.pyc", "**/*.pyo"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = [".", "xpolicylab/KnowinAgent"]

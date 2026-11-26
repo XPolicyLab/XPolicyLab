@@ -1,0 +1,32 @@
+{
+  "profile": "full",
+  "phase": "test",
+  "switches": {
+    "agent.model": "gpt-6-astra",
+    "agent.effort": "xhigh",
+    "perception.calibration": "constant",
+    "evolution.shared_library": "off"
+  },
+  "backend": {
+    "kind": "robodojo",
+    "task": null,
+    "depth": "none",
+    "calibration": "constant"
+  },
+  "perception": {
+    "depth": "service"
+  },
+  "brief": "robodojo",
+  "limits": {
+    "max_task_decisions": 150,
+    "max_local_rounds": 16,
+    "max_total_decisions": 300,
+    "wall_seconds": 5400.0,
+    "max_executions": 100
+  },
+  "agent": {
+    "binary": "codex",
+    "tool_timeout_sec": 7200
+  },
+  "video_stride": 0
+}

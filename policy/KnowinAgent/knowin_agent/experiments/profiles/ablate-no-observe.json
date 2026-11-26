@@ -1,0 +1,10 @@
+{
+  "name": "ablate-no-observe",
+  "description": "Perception without observe / look_down re-measurement.",
+  "experiments": [
+    "E6"
+  ],
+  "switches": {
+    "perception.observe": false
+  }
+}
