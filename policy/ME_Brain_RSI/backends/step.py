@@ -21,14 +21,10 @@ class StepModel:
         self.feedback_mode = 'stop'
         if self.task == 'swap_T':
             self.feedback_mode = config.get('swap_t_feedback_mode') or os.environ.get(
-                'ME_BRAIN_SWAP_T_FEEDBACK_MODE', 'stop')
+                'ME_BRAIN_SWAP_T_FEEDBACK_MODE', 'hold_until_budget')
             if self.feedback_mode not in ('stop', 'hold_until_budget'):
                 raise ValueError('Unknown swap_T feedback mode: ' + str(self.feedback_mode))
-            if self.feedback_mode == 'hold_until_budget':
-                # The frozen policy already holds its current joints after a
-                # failed visual gate. Keep that action until the evaluator's
-                # normal episode limit; never retry the gate or invent a score.
-                options['stop_on_upstream_failure'] = False
+            options['stop_on_upstream_failure'] = self.feedback_mode == 'stop'
         static_file = config.get('robot_static_path') or os.environ.get('ME_BRAIN_ROBOT_STATIC')
         if not static_file:
             raise ValueError('Set robot_static_path or ME_BRAIN_ROBOT_STATIC to robot-only static JSON')
@@ -72,6 +68,7 @@ class StepModel:
     def record_feedback_hold(self, response):
         if self.feedback_reported:
             return
+        self.feedback_reported = True
         evidence = Path(os.environ['B88R42WQ_EVIDENCE_DIR'])
         directory = evidence / ('feedback_' + str(time.time_ns()))
         directory.mkdir()
@@ -83,8 +80,7 @@ class StepModel:
         from XPolicyLab.utils.process_data import encode_image_bit
         for name, rgb in self.observation['images'].items():
             (directory / (name + '.jpg')).write_bytes(encode_image_bit(rgb))
-        self.feedback_reported = True
-        print('[ME_Brain_RSI] swap_T visual gate failed; holding frozen-policy '
+        print('[ME_Brain_RSI] swap_T gate failed; holding '
               'joints until normal episode limit. Evidence: ' + str(directory), flush=True)
 
     def update_obs(self, obs):
@@ -125,7 +121,10 @@ class StepModel:
             raise RuntimeError('Policy stopped for feedback: ' + str(response['stop_for_feedback']))
         if (getattr(self, 'feedback_mode', 'stop') == 'hold_until_budget' and
                 response.get('diagnostics', {}).get('upstream_failed') is True):
-            self.record_feedback_hold(response)
+            try:
+                self.record_feedback_hold(response)
+            except OSError as error:
+                print('[ME_Brain_RSI] Could not record swap_T feedback: ' + str(error), flush=True)
         action = response['action']
         expected = {f'{side}_{kind}' for side in ('left', 'right')
                     for kind in ('arm_joint_state', 'ee_joint_state')}

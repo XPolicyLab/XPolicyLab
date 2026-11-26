@@ -3,13 +3,13 @@
     "file": "capabilities/control/adapter_for_swap_t.py",
     "resource": "resources/swap_T/coap/adapter.py",
     "package": false,
-    "sha256": "f6914bd28b419f35ed2c094a64ae5d344223c7f2933f6602e86b0ac6478c53b8"
+    "sha256": "33986ebe089377b9cbf71f95a5870a51c9d1cf3e9097605f96a8c04dab34704e"
   },
   "policy.lxm6wuec_swap_t.grasp_rgb": {
     "file": "capabilities/perception/grasp_rgb.py",
     "resource": "resources/swap_T/coap/grasp_rgb.py",
     "package": false,
-    "sha256": "a67063227b603af876089110ab84142aaa4194abff08997383a5f02a421ee40d"
+    "sha256": "69d9ae198ee74227393a187a425b603ed95596f917a9d8e9a21c5fbe7b340b0f"
   },
   "policy.lxm6wuec_swap_t.calibration": {
     "file": "capabilities/control/calibration_for_swap_t.py",
@@ -33,7 +33,7 @@
     "file": "capabilities/control/model_for_swap_t.py",
     "resource": "resources/swap_T/coap/model.py",
     "package": false,
-    "sha256": "059eb32f6e2453661299dc66bbf567169f4d871c6ee1d1b697fa470ccb40da61"
+    "sha256": "ccb4f6a3b652136d74f7aec7b5520eacba4d0f0ee60a9d1e2cde4c7b6e401ad4"
   },
   "policy.lxm6wuec_swap_t.collision_gate": {
     "file": "capabilities/motion/collision_gate_for_swap_t.py",

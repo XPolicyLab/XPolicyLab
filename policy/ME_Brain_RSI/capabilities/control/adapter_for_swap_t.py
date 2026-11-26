@@ -93,8 +93,7 @@ class Policy:
             episode.update_obs({'vision':images,'state':robot})
             actions=episode.get_action()
             self._trace(images,episode)
-            # Both wrist images enter real perception. The original action gates
-            # use the active wrist; ownership alternates left/right/left.
+            # Both wrist images enter perception. The action gates use the active wrist.
             support={}
             for side in ('left','right'):
                 support[side]={}

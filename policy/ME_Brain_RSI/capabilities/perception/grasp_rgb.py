@@ -10,6 +10,7 @@ HULLS={k:np.asarray(v) for k,v in json.loads(Path(__file__).with_name('gripper_g
 # Public T CAD (Assets/Object/RoboDojo/Rigid/t/*/metadata.json): 80x60x15 mm, outline in the asset frame.
 POLY=np.array([[-.04,-.03],[-.02,-.03],[-.02,-.012],[.04,-.012],[.04,.012],[-.02,.012],[-.02,.03],[-.04,.03]])
 T_HEIGHT=.015                                         # CAD aligned_bbox extent z
+LOCAL_FIT_XY_BOUND = .012  # Maximum horizontal adjustment of the wrist fit, in meters.
 T_RADIUS=float(np.max(np.linalg.norm(POLY,axis=1)))   # CAD outline bounding radius about the asset origin
 T_SPAN=float(np.ptp(POLY[:,1]))                       # CAD crossbar span closed by the fingers
 # Gripper: finger joint = command*.054-.010 (robot-intrinsic map used by the IK path gate).
@@ -54,11 +55,16 @@ def envelope(ee):
     low=world[np.argmin(world[:,2])]
     return dict(tangent_z=float(ee[2]+TABLE-low[2]),lowest_world=low.tolist(),lowest_head_pixel=head_project([low])[0].tolist(),lowest_wrist_pixel=project([low],ee)[0].tolist())
 
-def color_mask(image,hue):
-    hsv=cv2.cvtColor(image,cv2.COLOR_RGB2HSV);delta=np.abs(hsv[:,:,0].astype(float)-hue);mask=(np.minimum(delta,180-delta)<8)&(hsv[:,:,1]>90)&(hsv[:,:,2]>70)
-    n,l,st,_=cv2.connectedComponentsWithStats(mask.astype('uint8'))
-    if n<2:return np.zeros(mask.shape,bool),hsv
-    idx=1+np.argmax(st[1:,4]);return l==idx,hsv
+def color_mask(image, hue, region=None):
+    hsv = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
+    delta = np.abs(hsv[:, :, 0].astype(float) - hue)
+    mask = (np.minimum(delta, 180 - delta) < 8) & (hsv[:, :, 1] > 90) & (hsv[:, :, 2] > 70)
+    count, labels, stats, _ = cv2.connectedComponentsWithStats(mask.astype(np.uint8))
+    if count < 2:
+        return np.zeros(mask.shape, bool), hsv
+    support = stats[:, cv2.CC_STAT_AREA] if region is None else np.bincount(labels[region], minlength=count)
+    index = 1 + int(np.argmax(support[1:]))
+    return (labels == index if support[index] else np.zeros(mask.shape, bool)), hsv
 
 def polygon_world(p):
     x,y,angle,t=p;r=R.from_euler('z',angle)
@@ -102,22 +108,29 @@ def thickness(image,ee,source,hue,head,head_gripper_ee=None):
             delta=np.zeros(6);delta[axis]=step
             columns.append((residual(p+delta)-residual(p-delta))/(2*step))
         return np.column_stack(columns)
-    fit=least_squares(residual,initial,jac=jacobian,bounds=(initial+[-.012,-.012,-.12,-.010,-.08,-.08],initial+[.012,.012,.12,.010,.08,.08]),diff_step=.001,max_nfev=85)
+    fit_bounds = np.array([LOCAL_FIT_XY_BOUND, LOCAL_FIT_XY_BOUND, .12, .010, .08, .08])
+    fit=least_squares(residual,initial,jac=jacobian,bounds=(initial-fit_bounds,initial+fit_bounds),diff_step=.001,max_nfev=85)
     p=fit.x;errors={v[0]:float(np.sqrt(np.mean(residual_view(p,v)**2))) for v in views};c=corners(p);bottom=c.copy();bottom[:,2]=TABLE
     vertical=float(np.median(np.linalg.norm(project(c,ee)-project(bottom,ee),axis=1)))
     wrist=views[0];side,lo,hi=wrist[3:];heights=c[:,2]-TABLE
     # Visible head color is a subset of the solid projection; gripper-hidden
     # model edges are not observed boundaries.
-    hm,_=color_mask(head,hue)
-    raw_head_pixels=int(hm.sum())
-    if head_gripper_ee is not None:hm &= ~gripper_head_mask(head_gripper_ee,hm.shape)
-    silhouette=np.zeros(hm.shape,np.uint8)
+    silhouette=np.zeros(head.shape[:2],np.uint8)
     hp=head_project(c);bp=head_project(bottom)
     cv2.fillPoly(silhouette,[np.round(hp).astype(np.int32)],1)
     for i in range(8):
         j=(i+1)%8
         cv2.fillConvexPoly(silhouette,np.round([hp[i],hp[j],bp[j],bp[i]]).astype(np.int32),1)
     hd=cv2.distanceTransform(1-silhouette,cv2.DIST_L2,5)
+    # Associate a head component with the wrist fit within its projected XY uncertainty.
+    # Check the entire associated component so outlying pixels still count against the fit.
+    center = c.mean(axis=0)
+    offsets = LOCAL_FIT_XY_BOUND * np.array([[0, 0, 0], [-1, -1, 0], [-1, 1, 0], [1, -1, 0], [1, 1, 0]])
+    projected = head_project(center + offsets)
+    search_radius = np.ceil(np.linalg.norm(projected[1:] - projected[0], axis=1).max())
+    hm, _ = color_mask(head, hue, hd <= search_radius)
+    raw_head_pixels = int(hm.sum())
+    if head_gripper_ee is not None:hm &= ~gripper_head_mask(head_gripper_ee,hm.shape)
     head_pixels=int(hm.sum())
     fragment_error=float(np.sqrt(np.mean(hd[hm]**2))) if head_pixels>=8 else None
     head_error=fragment_error if head_pixels>=60 else 100.

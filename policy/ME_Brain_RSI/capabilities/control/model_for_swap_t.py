@@ -5,8 +5,9 @@ import cv2,numpy as np
 cv2.setNumThreads(1)
 from scipy.spatial.transform import Rotation
 from .core import EpisodeCore,rot,quat
+from .calibration import active_cameras
 from .grasp_rgb import envelope,head_project,configure_support,table_z,t_top_z,finger_reach,vertices,T_RADIUS,T_HEIGHT,CARRY_CLEARANCES,POLY,PREOPEN_FINGER
-from .skill_choice_targets import queue
+from .skill_choice_targets import queue,targets
 from .skill_choices import IK
 from .collision_gate import ContinuousGate
 
@@ -142,16 +143,43 @@ class QualifiedEpisode(EpisodeCore):
             action['_qualified_joints'][self.arm+'_arm_joint_state']=previous.tolist()
             phases.setdefault(int(phase),[]).append(action)
         return phases
+    def carry_endpoint_reachable(self, arm):
+        # Before the wrist measures thickness, check the nominal carry endpoint only.
+        # The selected arm must still qualify its full path using the measured thickness.
+        state = self.obs['state']
+        gate = ContinuousGate(state, arm, self.cfg["robot_static"])
+        previous = state[arm+'_arm_joint_state']
+        for height in self.carry_heights():
+            for flip in (False, True):
+                poses = targets(self.source, self.dest, arm, self.origin, T_HEIGHT, flip, height)
+                solution = self.ik.solve(arm, poses[5], previous, gate.bases[arm])
+                if solution['passed'] and gate.pose_clearance(solution['q'], 0.)['passed']:
+                    return True
+        return False
+
+    def approach_arms(self):
+        # The last transfer starts in the shared staging area and can use either arm.
+        if self.moves == 2 and self.arm == 'left':
+            if not self.carry_endpoint_reachable('left') and self.carry_endpoint_reachable('right'):
+                return ('right', 'left')
+        return (self.arm,)
+
     def setup_stage(self):
         self.stage_packet=None
         if self.stage==0:
-            # Before the wrist observes thickness, qualify only the unchanged approach.
+            # Qualify the approach before the wrist observes thickness.
             self.plan=None
-            for flip in (False,True):
-                actions=queue(self.source,self.dest,self.arm,self.obs['state'],self.origin,None,flip)
-                self.plan=self.qualify(actions)
+            for arm in self.approach_arms():
+                self.arm = arm
+                active_cameras().arm = arm
+                for flip in (False, True):
+                    actions = queue(self.source, self.dest, arm, self.obs['state'], self.origin, None, flip)
+                    self.plan = self.qualify(actions)
+                    if self.plan is not None:
+                        self.log('approach_orientation_selected', arm=arm, symmetric_half_turn=flip)
+                        break
                 if self.plan is not None:
-                    self.log('approach_orientation_selected',symmetric_half_turn=flip);break
+                    break
             if self.plan is None:self.fail('approach_path_not_qualified');return
         elif self.stage==1:
             self.plan=None
@@ -195,6 +223,17 @@ class QualifiedEpisode(EpisodeCore):
         if p is None:return True
         pose=p[1];ee=self.obs['state'][self.arm+'_ee_pose']
         return np.linalg.norm(np.asarray(pose[:3])-ee[:3])>=.001 or (rot(pose[3:]).inv()*rot(ee[3:])).magnitude()>=np.deg2rad(.5)
+    def qualify_return_settling(self,joint_error):
+        if self.stage!=9:return False
+        # The object has been released. Recheck the joint segment from the observed
+        # state before repeating the same qualified return target beyond the usual tolerance.
+        state=self.obs['state']
+        target=self.last_action[self.arm+'_arm_joint_state']
+        action=dict(self.phase_actions[-1],_home_joints=target,_home_alpha=1.)
+        gate=ContinuousGate(state,self.arm,self.cfg['robot_static'])
+        result=self.ik.path(self.arm,[(self.stage,action)],state,gate)
+        self.log('endpoint_settling_qualification',joint_error_rad=joint_error,**result)
+        return result['passed']
     def get_action(self):
         self.calls+=1
         if self.origin is None:
@@ -212,7 +251,8 @@ class QualifiedEpisode(EpisodeCore):
                 self.log('observation_hold',spent=self.observation_holds,reserve=10)
                 return [{a+'_arm_joint_state':list(self.obs['state'][a+'_arm_joint_state']) for a in ('left','right')}|{a+'_ee_joint_state':list(self.obs['state'][a+'_ee_joint_state']) for a in ('left','right')}]
             joint_error=float(np.max(np.abs(np.asarray(self.obs['state'][self.arm+'_arm_joint_state'])-self.last_action[self.arm+'_arm_joint_state'])))
-            if .05<joint_error<=.30 and self.settling_holds<6 and self.observation_holds+self.skill_choice_extra_actions<10:
+            if (.05<joint_error and self.settling_holds<6 and self.observation_holds+self.skill_choice_extra_actions<10
+                    and (joint_error<=.30 or self.qualify_return_settling(joint_error))):
                 self.settling_holds+=1;self.observation_holds+=1
                 self.log('endpoint_settling',joint_error_rad=joint_error,spent=self.settling_holds,shared_reserve_spent=self.observation_holds)
                 return [self.last_action]
