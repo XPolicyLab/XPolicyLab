@@ -217,15 +217,35 @@ def read_calibrated_eef20(
             )
 
     selection = slice(start, end)
-    left_pose = np.asarray(episode[_POSE_KEYS[0]][selection])
-    right_pose = np.asarray(episode[_POSE_KEYS[1]][selection])
-    left_gripper = _sanitize_gripper(
+    return calibrated_eef20(
+        episode[_POSE_KEYS[0]][selection],
         episode[_GRIPPER_KEYS[0]][selection],
+        episode[_POSE_KEYS[1]][selection],
+        episode[_GRIPPER_KEYS[1]][selection],
+        calibration,
+        variant=variant,
+    )
+
+
+def calibrated_eef20(
+    left_pose: Any,
+    left_gripper: Any,
+    right_pose: Any,
+    right_gripper: Any,
+    calibration: Mapping[str, Any] | None,
+    *,
+    variant: str = ROBODOJO_SIM_VARIANT,
+) -> np.ndarray:
+    """Pack recorded ``state/*_ee_poses`` and ``state/*_ee_joint_states`` rows into calibrated EEF20."""
+    left_pose = np.asarray(left_pose)
+    right_pose = np.asarray(right_pose)
+    left_gripper = _sanitize_gripper(
+        left_gripper,
         source=_GRIPPER_KEYS[0],
         variant=variant,
     )
     right_gripper = _sanitize_gripper(
-        episode[_GRIPPER_KEYS[1]][selection],
+        right_gripper,
         source=_GRIPPER_KEYS[1],
         variant=variant,
     )
@@ -764,59 +784,9 @@ class RoboDojoDataset(BaseDataset):
             self.source_frame = ROBODOJO_SIM_SOURCE_FRAME
             self.contract_id = ROBODOJO_CONTRACT_ID
 
-        supplied_root = Path(data_root)
-        if supplied_root.name == "data":
-            if dataset_root is None or not task_name:
-                raise ValueError(
-                    "formal RoboDojo provenance requires explicit dataset_root "
-                    "and task_name when data_root points to a task data directory"
-                )
-            formal_dataset_root = Path(dataset_root)
-            self.task_name = str(task_name)
-            expected_data_root = formal_dataset_root / self.task_name / embodiment / "data"
-            if supplied_root.resolve() != expected_data_root.resolve():
-                raise ValueError(
-                    "formal RoboDojo provenance mismatch: data_root must equal "
-                    "dataset_root/task_name/embodiment/data; "
-                    f"got data_root={supplied_root}, "
-                    f"dataset_root={formal_dataset_root}, "
-                    f"task_name={self.task_name!r}"
-                )
-            episode_paths = discover_episodes(
-                formal_dataset_root,
-                self.task_name,
-                embodiment=embodiment,
-                variant=variant,
-            )
-            self.data_root = str(supplied_root)
-        else:
-            if not task_name:
-                raise ValueError("task_name is required when data_root is the RoboDojo dataset root")
-            formal_dataset_root = supplied_root
-            if dataset_root is not None and Path(dataset_root).resolve() != formal_dataset_root.resolve():
-                raise ValueError(
-                    "formal RoboDojo provenance mismatch: dataset_root must "
-                    "equal data_root when data_root is the dataset root"
-                )
-            self.task_name = str(task_name)
-            episode_paths = discover_episodes(
-                formal_dataset_root,
-                self.task_name,
-                embodiment=embodiment,
-                variant=variant,
-            )
-            self.data_root = str(episode_paths[0].parent)
-        self.dataset_root = str(formal_dataset_root)
-
-        # Validate the complete discovered corpus before split/index selection.
-        all_metadata = [validate_robodojo_episode(path, variant=variant) for path in episode_paths]
-        selected_indices = list(range(len(episode_paths)))
-        if not selected_indices:
+        self._index_episodes(data_root, dataset_root=dataset_root, task_name=task_name)
+        if not self._episode_files:
             raise ValueError(f"no RoboDojo episodes selected for split={split!r}")
-
-        self._episode_files = [str(episode_paths[index]) for index in selected_indices]
-        self._episode_lengths = [int(all_metadata[index]["length"]) for index in selected_indices]
-        self._instructions = [str(all_metadata[index]["instruction"]) for index in selected_indices]
 
         self._window_index: list[tuple[int, int]] = []
         for episode_index, episode_length in enumerate(self._episode_lengths):
@@ -888,6 +858,65 @@ class RoboDojoDataset(BaseDataset):
             )
             self.normalization_stats_path = str(stats_path)
 
+    def _index_episodes(
+        self,
+        data_root: str | Path,
+        *,
+        dataset_root: str | Path | None,
+        task_name: str | None,
+    ) -> None:
+        """Set task_name, data_root, dataset_root and the per-episode files, lengths and instructions."""
+        embodiment, variant = self.embodiment, self.variant
+        supplied_root = Path(data_root)
+        if supplied_root.name == "data":
+            if dataset_root is None or not task_name:
+                raise ValueError(
+                    "formal RoboDojo provenance requires explicit dataset_root "
+                    "and task_name when data_root points to a task data directory"
+                )
+            formal_dataset_root = Path(dataset_root)
+            self.task_name = str(task_name)
+            expected_data_root = formal_dataset_root / self.task_name / embodiment / "data"
+            if supplied_root.resolve() != expected_data_root.resolve():
+                raise ValueError(
+                    "formal RoboDojo provenance mismatch: data_root must equal "
+                    "dataset_root/task_name/embodiment/data; "
+                    f"got data_root={supplied_root}, "
+                    f"dataset_root={formal_dataset_root}, "
+                    f"task_name={self.task_name!r}"
+                )
+            episode_paths = discover_episodes(
+                formal_dataset_root,
+                self.task_name,
+                embodiment=embodiment,
+                variant=variant,
+            )
+            self.data_root = str(supplied_root)
+        else:
+            if not task_name:
+                raise ValueError("task_name is required when data_root is the RoboDojo dataset root")
+            formal_dataset_root = supplied_root
+            if dataset_root is not None and Path(dataset_root).resolve() != formal_dataset_root.resolve():
+                raise ValueError(
+                    "formal RoboDojo provenance mismatch: dataset_root must "
+                    "equal data_root when data_root is the dataset root"
+                )
+            self.task_name = str(task_name)
+            episode_paths = discover_episodes(
+                formal_dataset_root,
+                self.task_name,
+                embodiment=embodiment,
+                variant=variant,
+            )
+            self.data_root = str(episode_paths[0].parent)
+        self.dataset_root = str(formal_dataset_root)
+
+        # Validate the complete discovered corpus before split/index selection.
+        all_metadata = [validate_robodojo_episode(path, variant=variant) for path in episode_paths]
+        self._episode_files = [str(path) for path in episode_paths]
+        self._episode_lengths = [int(metadata["length"]) for metadata in all_metadata]
+        self._instructions = [str(metadata["instruction"]) for metadata in all_metadata]
+
     @property
     def action_dim(self) -> int:
         return self._action_dim_value
@@ -927,19 +956,44 @@ class RoboDojoDataset(BaseDataset):
         handle: h5py.File,
         frame_index: int,
     ) -> Image.Image:
+        return self._render({camera: self._frame(handle, camera, frame_index) for camera in self._view_cameras()})
+
+    def _view_cameras(self) -> tuple[str, ...]:
+        return self.camera_layout if self.multiview else (self.target_camera,)
+
+    def _render(self, frames: Mapping[str, Image.Image]) -> Image.Image:
+        """One model view from the decoded frames of ``_view_cameras()``."""
         if self.multiview:
-            frames = {camera: self._frame(handle, camera, frame_index) for camera in self.camera_layout}
             return assemble_multiview_layout(
-                frames,
+                dict(frames),
                 list(self.camera_layout),
                 self.height,
                 self.width,
             )
         return crop_and_resize(
-            self._frame(handle, self.target_camera, frame_index),
+            frames[self.target_camera],
             self.height,
             self.width,
         )
+
+    def _read_window(
+        self,
+        episode_index: int,
+        start: int,
+        length: int,
+        frame_indices: Sequence[int],
+    ) -> tuple[np.ndarray, list[Image.Image]]:
+        """Raw EEF20 of rows ``start:start + length`` and the rendered views at ``frame_indices``."""
+        with h5py.File(self._episode_files[episode_index], "r") as handle:
+            states = read_calibrated_eef20(
+                handle,
+                self.calibration,
+                start,
+                start + length,
+                variant=self.variant,
+                embodiment=self.embodiment,
+            )
+            return states, [self._video_at(handle, index) for index in frame_indices]
 
     def _build_sample(self, episode_index: int, start: int) -> dict[str, Any]:
         path = self._episode_files[episode_index]
@@ -950,19 +1004,11 @@ class RoboDojoDataset(BaseDataset):
                 f"RoboDojo window start={start} has no real next-state target for episode length {episode_length}"
             )
 
-        with h5py.File(path, "r") as handle:
-            states = read_calibrated_eef20(
-                handle,
-                self.calibration,
-                start,
-                start + actual_length,
-                variant=self.variant,
-                embodiment=self.embodiment,
-            )
-            sampled_video = []
-            for relative_index in self._video_sample_indices:
-                source_index = start + relative_index if relative_index < actual_length else episode_length - 1
-                sampled_video.append(self._video_at(handle, source_index))
+        frame_indices = [
+            start + relative_index if relative_index < actual_length else episode_length - 1
+            for relative_index in self._video_sample_indices
+        ]
+        states, sampled_video = self._read_window(episode_index, start, actual_length, frame_indices)
 
         if actual_length < self.num_frames:
             states = np.concatenate(
