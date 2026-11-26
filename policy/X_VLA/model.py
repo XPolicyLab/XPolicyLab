@@ -19,6 +19,7 @@ for _path in (str(_REPO_ROOT), str(_CUR_DIR), str(_XVLA_ROOT)):
         sys.path.insert(0, _path)
 
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.utils.batch_indices import observation_rows, validate_observed_ids
 from XPolicyLab.utils.checkpoint_resolver import resolve_checkpoint_root
 from XPolicyLab.utils.process_data import get_robot_action_dim_info
 
@@ -412,11 +413,13 @@ class Model(ModelTemplate):
         self.update_obs_batch([obs])
 
     def update_obs_batch(self, obs_list):
-        self._latest_env_idx_list = [
+        env_ids = [
             obs.get("env_idx", index) if isinstance(obs, dict) else index
             for index, obs in enumerate(obs_list)
         ]
+        validate_observed_ids(env_ids)
         self.observation_window = [encode_obs(obs, self.default_prompt) for obs in obs_list]
+        self._latest_env_idx_list = env_ids
 
     def infer(self, observation: dict[str, Any], steps: int | None = None):
         pil_images = [Image.fromarray(image) for image in observation["images"]]
@@ -452,9 +455,9 @@ class Model(ModelTemplate):
         if self.observation_window is None:
             raise AssertionError("update_obs or update_obs_batch first!")
 
-        env_idx_list = env_idx_list or self._latest_env_idx_list
+        rows = observation_rows(self._latest_env_idx_list, env_idx_list)
         action_list = []
-        for batch_index, _ in enumerate(env_idx_list):
+        for batch_index in rows:
             encoded_obs = self.observation_window[batch_index]
             action_chunk = self.infer(encoded_obs)
             action_list.append(action_chunk_to_ee_dict_list(action_chunk))

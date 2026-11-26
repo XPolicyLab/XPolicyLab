@@ -8,6 +8,7 @@ from typing import Any
 import numpy as np
 
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.utils.batch_indices import observation_rows, validate_observed_ids
 
 
 CURRENT_DIR = Path(__file__).resolve().parent
@@ -527,14 +528,28 @@ class Model(ModelTemplate):
         return self.model.norm_stats[unnorm_key].get("state")
 
     def update_obs(self, obs):
-        self._last_example = self.encode_obs(obs)
-        self._last_examples = [self._last_example]
+        self.update_obs_batch([obs])
 
     def update_obs_batch(self, obs_list):
-        self._last_examples = [self.encode_obs(obs) for obs in obs_list]
+        env_ids = [obs.get("env_idx", obs.get("env_id", i)) for i, obs in enumerate(obs_list)]
+        validate_observed_ids(env_ids)
+        image_history = {key: frames.copy() for key, frames in self._image_history.items()}
+        state_history = {key: states.copy() for key, states in self._state_history.items()}
+        self._last_examples = [
+            self.encode_obs(obs if "env_idx" in obs else dict(obs, env_idx=env_id),
+                            image_history, state_history)
+            for obs, env_id in zip(obs_list, env_ids)
+        ]
+        self._image_history = image_history
+        self._state_history = state_history
         self._last_example = self._last_examples[0] if self._last_examples else None
+        self._latest_env_idx_list = env_ids
 
-    def encode_obs(self, observation):
+    def encode_obs(self, observation, image_history=None, state_history=None):
+        if image_history is None:
+            image_history = self._image_history
+        if state_history is None:
+            state_history = self._state_history
         env_idx = int(observation.get("env_idx", 0))
         # Build the flat (V*T) image list in the order `predict_action` expects:
         # `rearrange(curr_imgs, "b (v t) c h w -> b v t c h w", v=num_views)` consumes
@@ -542,7 +557,7 @@ class Model(ModelTemplate):
         # [v0_t0, v0_t1, ..., v0_t(T-1), v1_t0, ..., v(V-1)_t(T-1)]. T==obs_horizon.
         flat_images: list[np.ndarray] = []
         for cam_name in self.active_camera_names:
-            buf = self._image_history.setdefault((env_idx, cam_name), [])
+            buf = image_history.setdefault((env_idx, cam_name), [])
             buf.append(_extract_camera(observation, cam_name))
             # Bound the rolling buffer; older frames beyond what obs_indices needs are dropped.
             if len(buf) > self._obs_history_keep:
@@ -571,7 +586,7 @@ class Model(ModelTemplate):
                 source_type="obs",
             ).astype(np.float32)
 
-            state_buf = self._state_history.setdefault(env_idx, [])
+            state_buf = state_history.setdefault(env_idx, [])
             state_buf.append(raw_state)
             if len(state_buf) > self._obs_history_keep:
                 del state_buf[: len(state_buf) - self._obs_history_keep]
@@ -639,11 +654,14 @@ class Model(ModelTemplate):
             source_type="obs",
         )
 
-    def get_action_batch(self, env_idx_list):
+    def get_action_batch(self, env_idx_list=None):
         if self._last_examples is None:
             raise RuntimeError("No batch observation has been provided. Call update_obs_batch() first.")
 
-        actions = self._predict(self._last_examples)
+        rows = observation_rows(self._latest_env_idx_list, env_idx_list)
+        if not rows:
+            return []
+        actions = self._predict([self._last_examples[row] for row in rows])
         _, _, unpack_robot_state = _process_data_helpers()
         return [
             unpack_robot_state(env_actions, self.action_type, self.robot_action_dim_info, source_type="obs")

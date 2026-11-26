@@ -8,6 +8,7 @@ from openpi.shared import normalize as _normalize
 from openpi.training import config as _config
 
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.utils.batch_indices import observation_env_ids, observation_rows
 from XPolicyLab.utils.checkpoint_resolver import candidate_checkpoint_roots
 from XPolicyLab.utils.process_data import get_robot_action_dim_info, pack_robot_state, unpack_robot_state
 
@@ -98,27 +99,23 @@ class Model(ModelTemplate):
         self.update_obs_batch([obs])
 
     def update_obs_batch(self, obs_list):
-        self._latest_env_idx_list = [obs.get("env_idx", index) for index, obs in enumerate(obs_list)]
-        self.observation_window = stack_obs(
-            [encode_obs(obs, self.action_type, self.robot_action_dim_info) for obs in obs_list]
-        )
+        env_ids = observation_env_ids(obs_list)
+        observations = [encode_obs(obs, self.action_type, self.robot_action_dim_info) for obs in obs_list]
+        self.observation_window = stack_obs(observations) if observations else {}
+        self._latest_env_idx_list = env_ids
 
     def get_action(self):
+        if not self.observation_window or not self._latest_env_idx_list:
+            raise RuntimeError("Call update_obs before requesting an action.")
         return self.get_action_batch(env_idx_list=[self._latest_env_idx_list[0]])[0]
 
     def get_action_batch(self, env_idx_list=None):
         if self.observation_window is None:
             raise RuntimeError("Call update_obs or update_obs_batch before requesting an action.")
 
-        requested_env_indices = self._latest_env_idx_list if env_idx_list is None else list(env_idx_list)
-        if len(requested_env_indices) != self.observation_window["state"].shape[0]:
-            raise ValueError(
-                "The requested environment count does not match the latest observation batch: "
-                f"{len(requested_env_indices)} != {self.observation_window['state'].shape[0]}."
-            )
-
+        rows = observation_rows(self._latest_env_idx_list, env_idx_list)
         action_batch = []
-        for batch_index in range(len(requested_env_indices)):
+        for batch_index in rows:
             observation = slice_stacked_obs(self.observation_window, batch_index)
             actions = self.policy.infer(observation)["actions"][: self.action_chunk_size]
             action_batch.append(

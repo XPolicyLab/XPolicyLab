@@ -14,6 +14,7 @@ from openpi.shared import normalize as _normalize
 from openpi.training import config as _config
 
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.utils.batch_indices import observation_env_ids, observation_rows
 from XPolicyLab.utils.checkpoint_resolver import candidate_checkpoint_roots
 from XPolicyLab.utils.process_data import get_robot_action_dim_info, pack_robot_state, unpack_robot_state
 
@@ -123,11 +124,12 @@ class Model(ModelTemplate):
         self.update_obs_batch([obs])
 
     def update_obs_batch(self, obs_list):
-        self._latest_env_idx_list = [obs.get("env_idx", index) for index, obs in enumerate(obs_list)]
+        env_ids = observation_env_ids(obs_list)
         encoded_obs_list = [
             encode_obs(obs, self.action_type, self.robot_action_dim_info) for obs in obs_list
         ]
-        self.observation_window = stack_obs(encoded_obs_list)
+        self.observation_window = stack_obs(encoded_obs_list) if encoded_obs_list else {}
+        self._latest_env_idx_list = env_ids
 
     def get_action(self, **kwargs):
         action_list = self.get_action_batch(env_idx_list=[self._latest_env_idx_list[0]], **kwargs)
@@ -137,11 +139,11 @@ class Model(ModelTemplate):
         if self.observation_window is None:
             raise AssertionError("update_obs or update_obs_batch first!")
 
-        env_idx_list = env_idx_list or self._latest_env_idx_list
+        rows = observation_rows(self._latest_env_idx_list, env_idx_list)
         # actions = self.policy.infer(self.observation_window, **kwargs)["actions"]
         action_list = []
 
-        for batch_index, _ in enumerate(env_idx_list):
+        for batch_index in rows:
             single_observation = slice_stacked_obs(self.observation_window, batch_index)
             actions = self.policy.infer(single_observation, **kwargs)["actions"]
             if self.robot_action_dim_info is None:

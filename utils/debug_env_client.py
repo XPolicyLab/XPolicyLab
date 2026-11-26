@@ -13,12 +13,11 @@ if str(_XPOLICYLAB_ROOT) not in sys.path:
 import numpy as np
 
 from client_server.tcp.model_client import ModelClient
+from XPolicyLab.utils.action_chunks import validate_robot_state_dict
 from XPolicyLab.utils.process_data import (
-    encode_image_bit, get_robot_action_dim_info, get_robot_state_schema,
-    normalize_robot_state_keys,
+    encode_image_bit, get_batch_size, get_robot_action_dim_info,
 )
 
-Batch_Size = 10
 
 class TestEnv:
     def __init__(self, deploy_cfg):
@@ -29,6 +28,9 @@ class TestEnv:
         self.episode_step_limit = 20
         self.obs_encoded = deploy_cfg.get('obs_encoded', False)
         env_cfg_type = deploy_cfg['env_cfg_type']
+        self.batch_size = get_batch_size(env_cfg_type) if deploy_cfg.get("eval_batch") else 1
+        if type(self.batch_size) is not int or self.batch_size < 1:
+            raise ValueError(f"Expected scene.num_envs to be a positive integer, got {self.batch_size!r}")
         self.robot_action_dim_info = get_robot_action_dim_info(env_cfg_type)
 
         if deploy_cfg.get("protocol", "ws") == "ws":
@@ -199,7 +201,6 @@ class TestEnv:
         eval_module.eval_one_episode_batch(TASK_ENV=self, model_client=self.model_client)
 
     def reset(self):
-        self.model_client.call(func_name="reset")
         self.episode_step = 0
 
     def take_action(self, action):
@@ -226,61 +227,8 @@ class TestEnv:
         print("[TestEnv] Episode finished")
 
     def get_running_env_idx_list(self):
-        # For demonstration, we assume all envs are running. Replace with actual logic if needed.
-        return list(range(Batch_Size))
+        return list(range(self.batch_size))
 
-
-def validate_robot_state_dict(state_dict: dict, robot_action_dim_info: dict, action_type: str = "joint") -> None:
-    """
-    Validate complete action fields, dimensions and finite numeric values.
-
-    Args:
-        state_dict: Action dictionary for one environment.
-        robot_action_dim_info: {
-            "arm_dim": [...],
-            "ee_dim": [...],
-        }
-        action_type: 'joint' or 'ee'.
-
-    Raises:
-        KeyError: if required keys are missing
-        ValueError: if unexpected keys, wrong dimensions or non-finite values are found
-        TypeError: if values are not real numeric arrays or sequences
-    """
-    expected = get_robot_state_schema(action_type, robot_action_dim_info)
-    state_dict = normalize_robot_state_keys(state_dict, robot_action_dim_info)
-    missing_keys = [key for key in expected if key not in state_dict]
-    if missing_keys:
-        raise KeyError(f"Missing action keys for {action_type}: {missing_keys}")
-    unexpected_keys = [k for k in state_dict if k not in expected]
-
-    if unexpected_keys:
-        raise ValueError(f"Unexpected state keys: {unexpected_keys}")
-
-    for key, expected_dim in expected.items():
-        value = state_dict[key]
-    
-        if not isinstance(value, (np.ndarray, list, tuple)):
-            raise TypeError(
-                f"state_dict['{key}'] must be array-like, got {type(value)}"
-            )
-
-        arr = np.asarray(value)
-        if arr.dtype.kind not in "iuf":
-            raise TypeError(f"state_dict['{key}'] must contain real numbers, got {arr.dtype}")
-        if not np.isfinite(arr).all():
-            raise ValueError(f"state_dict['{key}'] contains NaN or infinity")
-
-        if arr.ndim != 1:
-            raise ValueError(
-                f"state_dict['{key}'] must be 1D, got shape {arr.shape}"
-            )
-
-        if arr.shape[0] != expected_dim:
-            raise ValueError(
-                f"state_dict['{key}'] dim mismatch: expected {expected_dim}, "
-                f"got shape {arr.shape}"
-            )
 
 def str2bool(v):
     if isinstance(v, bool):
@@ -320,7 +268,7 @@ if __name__ == "__main__":
         # Load XPolicyLab
         for idx in range(deploy_cfg["eval_episode_num"]):
             print(f"\033[94m🚀 Running Episode {idx}\033[0m")
-            test_env.reset() # reset model, robot, and environment
+            test_env.reset()
             if not eval_batch:
                 test_env.eval_one_episode()
             else:

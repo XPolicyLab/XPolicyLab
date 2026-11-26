@@ -22,6 +22,7 @@ for _path in (str(_REPO_ROOT), str(_CUR_DIR), str(_RDT_ROOT), str(_RDT_ROOT / "m
         sys.path.insert(0, _path)
 
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.utils.batch_indices import observation_env_ids, selected_env_ids
 from XPolicyLab.utils.checkpoint_resolver import resolve_checkpoint_root
 from XPolicyLab.utils.process_data import (
     decode_image_bit,
@@ -138,8 +139,7 @@ class Model(ModelTemplate):
         self.tokenizer, self.text_encoder = self._load_text_embedder()
         self.observation_window = None
         self._observation_windows: dict[int, deque] = {}
-        self._latest_encoded_obs_list = []
-        self.lang_embeddings = None
+        self._embeddings_by_prompt = {}
         self._latest_env_idx_list: list[int] = [0]
         self.model = self.policy
 
@@ -328,7 +328,7 @@ class Model(ModelTemplate):
         text_encoder.eval()
         return tokenizer, text_encoder
 
-    def _set_language_instruction(self, instruction: str):
+    def _encode_instruction(self, instruction: str):
         device = next(self.text_encoder.parameters()).device
         with torch.no_grad():
             tokens = self.tokenizer(
@@ -339,8 +339,9 @@ class Model(ModelTemplate):
             )["input_ids"].to(device)
             tokens = tokens.view(1, -1)
             output = self.text_encoder(tokens)
-            self.lang_embeddings = output.last_hidden_state.detach().cpu()
+            embeddings = output.last_hidden_state.detach().cpu()
         torch.cuda.empty_cache()
+        return embeddings
 
     def _jpeg_mapping(self, img):
         """Replay the lossy JPEG round-trip the training data went through.
@@ -359,12 +360,11 @@ class Model(ModelTemplate):
         self.update_obs_batch([obs])
 
     def update_obs_batch(self, obs_list):
-        self._latest_env_idx_list = [obs.get("env_idx", index) for index, obs in enumerate(obs_list)]
-        self._latest_encoded_obs_list = [encode_obs(obs, self.default_prompt) for obs in obs_list]
-        if self.lang_embeddings is None:
-            self._set_language_instruction(self._latest_encoded_obs_list[0]["prompt"])
+        env_ids = observation_env_ids(obs_list)
 
-        for env_idx, encoded_obs in zip(self._latest_env_idx_list, self._latest_encoded_obs_list):
+        windows = {}
+        for env_idx, obs in zip(env_ids, obs_list):
+            encoded_obs = encode_obs(obs, self.default_prompt)
             window = self._observation_windows.get(env_idx)
             if window is None:
                 window = deque(maxlen=2)
@@ -378,15 +378,20 @@ class Model(ModelTemplate):
                         },
                     }
                 )
-                self._observation_windows[env_idx] = window
+            else:
+                window = window.copy()
 
             img_front = self._jpeg_mapping(self._resize_img(encoded_obs["images"]["cam_high"]))
             img_right = self._jpeg_mapping(self._resize_img(encoded_obs["images"]["cam_right_wrist"]))
             img_left = self._jpeg_mapping(self._resize_img(encoded_obs["images"]["cam_left_wrist"]))
             qpos = torch.from_numpy(np.asarray(encoded_obs["state"], dtype=np.float32)).float().to(self.device)
 
+            prompt = encoded_obs["prompt"]
+            if prompt not in self._embeddings_by_prompt:
+                self._embeddings_by_prompt[prompt] = self._encode_instruction(prompt)
             window.append(
                 {
+                    "text_embeds": self._embeddings_by_prompt[prompt],
                     "qpos": qpos,
                     "images": {
                         self.config["camera_names"][0]: img_front,
@@ -395,12 +400,15 @@ class Model(ModelTemplate):
                     },
                 }
             )
-        self.observation_window = self._observation_windows[self._latest_env_idx_list[0]]
+            windows[env_idx] = window
+        self._observation_windows.update(windows)
+        self._latest_env_idx_list = env_ids
+        self.observation_window = self._observation_windows[env_ids[0]] if env_ids else None
 
     @torch.inference_mode()
     def infer(self, observation_window=None):
         observation_window = observation_window or self.observation_window
-        if observation_window is None or self.lang_embeddings is None:
+        if observation_window is None:
             raise AssertionError("update_obs must be called before get_action.")
 
         image_arrs = [
@@ -413,7 +421,7 @@ class Model(ModelTemplate):
         ]
         images = [PImage.fromarray(arr) if arr is not None else None for arr in image_arrs]
         proprio = observation_window[-1]["qpos"].unsqueeze(0)
-        actions = self.policy.step(proprio=proprio, images=images, text_embeds=self.lang_embeddings)
+        actions = self.policy.step(proprio=proprio, images=images, text_embeds=observation_window[-1]["text_embeds"])
         return actions.squeeze(0).float().cpu().numpy()
 
     def get_action(self, **kwargs):
@@ -421,7 +429,7 @@ class Model(ModelTemplate):
         return action_list[0]
 
     def get_action_batch(self, env_idx_list=None, **kwargs):
-        env_idx_list = env_idx_list or self._latest_env_idx_list
+        env_idx_list = selected_env_ids(self._latest_env_idx_list, env_idx_list)
         action_list = []
         for env_idx in env_idx_list:
             raw_actions = self.infer(self._observation_windows[env_idx])
@@ -429,8 +437,7 @@ class Model(ModelTemplate):
         return action_list
 
     def reset(self):
-        self.lang_embeddings = None
+        self._embeddings_by_prompt = {}
         self.observation_window = None
         self._observation_windows = {}
-        self._latest_encoded_obs_list = []
         self._latest_env_idx_list = [0]

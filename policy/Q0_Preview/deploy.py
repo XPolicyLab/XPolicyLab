@@ -1,11 +1,15 @@
 """Official environment bridge: observations/actions only; scoring stays in the client."""
 
+from XPolicyLab.utils.action_chunks import validate_action_chunk
+
+
 def eval_one_episode(TASK_ENV, model_client):
     model_client.call(func_name="reset")
     try:
         while not TASK_ENV.is_episode_end():
             model_client.call(func_name="update_obs", obs=TASK_ENV.get_obs())
             actions = model_client.call(func_name="get_action")
+            validate_action_chunk(actions, TASK_ENV)
             for action in actions:
                 TASK_ENV.take_action(action)
                 if TASK_ENV.is_episode_end():

@@ -25,6 +25,7 @@ for _path in (str(_XPL_ROOT), str(_CUR_DIR), str(_INNER_ROOT), str(_SRC_ROOT)):
         sys.path.insert(0, _path)
 
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.utils.batch_indices import selected_env_ids, validate_observed_ids
 from XPolicyLab.utils.checkpoint_resolver import (
     build_run_dir_name,
     candidate_checkpoint_roots,
@@ -170,7 +171,6 @@ class Model(ModelTemplate):
         }
 
         self._latest_env_idx_list = [0]
-        self._latest_observation: dict[str, Any] | None = None
         self._latest_observations: dict[int, dict[str, Any]] = {}
         self.policy = self._load_policy() if self.load_model else None
 
@@ -377,16 +377,13 @@ class Model(ModelTemplate):
     def update_obs_batch(self, obs_list):
         if isinstance(obs_list, dict):
             obs_list = [obs_list]
-        if not obs_list:
-            self._latest_env_idx_list = []
-            self._latest_observations = {}
-            self._latest_observation = None
-            return
-        self._latest_env_idx_list = [int(obs.get("env_idx", index)) for index, obs in enumerate(obs_list)]
+        env_ids = [int(obs.get("env_idx", index)) for index, obs in enumerate(obs_list)]
+        validate_observed_ids(env_ids)
         self._latest_observations = {
-            env_idx: self._encode_observation(obs) for env_idx, obs in zip(self._latest_env_idx_list, obs_list)
+            env_idx: self._encode_observation(obs) for env_idx, obs in zip(env_ids, obs_list)
         }
-        self._latest_observation = self._latest_observations[self._latest_env_idx_list[0]]
+        self._latest_env_idx_list = env_ids
+
     def get_action(self, env_idx_list=None):
         return self.get_action_batch([self._latest_env_idx_list[0]])[0]
 
@@ -399,17 +396,12 @@ class Model(ModelTemplate):
             env_idx_list = [int(env_idx_list)]
         else:
             env_idx_list = list(env_idx_list)
-        actions = []
-        for env_idx in env_idx_list:
-            obs = self._latest_observations.get(int(env_idx), self._latest_observation)
-            if obs is None:
-                raise AssertionError("update_obs or update_obs_batch must be called before get_action.")
-            actions.append(self._predict_action_sequence(obs))
-        return actions
+        ids = selected_env_ids(self._latest_env_idx_list, [int(i) for i in env_idx_list])
+        observations = [self._latest_observations[i] for i in ids]
+        return [self._predict_action_sequence(obs) for obs in observations]
 
     def reset(self):
         self._latest_env_idx_list = [0]
-        self._latest_observation = None
         self._latest_observations = {}
 
     def _predict_action_sequence(self, encoded_obs: dict[str, Any]) -> list[dict[str, np.ndarray]]:

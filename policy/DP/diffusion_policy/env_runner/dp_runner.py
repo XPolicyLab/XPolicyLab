@@ -27,7 +27,7 @@ class DPRunner:
         self.max_steps = max_steps
         self.tqdm_interval_sec = tqdm_interval_sec
 
-        self.obs_list = [deque(maxlen=n_obs_steps + 1) for _ in range(100)] # TODO
+        self.obs_list = {}
 
     def stack_last_n_obs(self, all_obs, n_steps):
         assert len(all_obs) > 0
@@ -51,16 +51,19 @@ class DPRunner:
         return result
 
     def reset_obs(self):
-        for q in self.obs_list:
-            q.clear()
+        self.obs_list.clear()
 
     def update_obs(self, current_obs_list, env_idx_list):
         for env_idx, current_obs in zip(env_idx_list, current_obs_list):
+            if env_idx not in self.obs_list:
+                self.obs_list[env_idx] = deque(maxlen=self.n_obs_steps + 1)
             self.obs_list[env_idx].append(current_obs)
 
     def get_n_steps_obs(self, env_idx_list):
         result_list = []
         for env_idx in env_idx_list:
+            if env_idx not in self.obs_list:
+                raise ValueError(f"No observation for environment {env_idx}")
             result = dict()
             for key in self.obs_list[env_idx][0].keys():
                 result[key] = self.stack_last_n_obs([obs[key] for obs in self.obs_list[env_idx]], self.n_obs_steps)

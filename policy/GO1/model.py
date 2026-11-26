@@ -13,6 +13,7 @@ if _AGIBOT_DIR not in sys.path:
 from evaluate.deploy import GO1Infer
 
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.utils.batch_indices import observation_env_ids, selected_env_ids
 from XPolicyLab.utils.checkpoint_resolver import ckpt_name_is_path
 from XPolicyLab.utils.process_data import (
     get_robot_action_dim_info,
@@ -186,7 +187,7 @@ class Model(ModelTemplate):
 
         self._obs_buffer = None
         self._obs_buffer_batch = {}
-        self._latest_env_idx_list = [0]
+        self._latest_env_idx_list = []
 
         print(
             f"[GO1 Model] Initialized | action_type={self.action_type} | "
@@ -206,21 +207,24 @@ class Model(ModelTemplate):
         self.update_obs_batch([obs])
 
     def update_obs_batch(self, obs_list):
-        self._latest_env_idx_list = [obs.get("env_idx", i) for i, obs in enumerate(obs_list)]
-        for obs in obs_list:
-            env_idx = obs.get("env_idx", 0)
-            encoded = _encode_obs(
+        env_ids = observation_env_ids(obs_list)
+        encoded = {
+            env_idx: _encode_obs(
                 obs, self.action_type, self.robot_action_dim_info, self.default_prompt, self.ctrl_freq
             )
-            self._obs_buffer_batch[env_idx] = encoded
+            for env_idx, obs in zip(env_ids, obs_list)
+        }
+        self._obs_buffer_batch = encoded
+        self._latest_env_idx_list = env_ids
 
     def get_action(self):
+        if not self._latest_env_idx_list:
+            raise RuntimeError("Call update_obs before requesting an action.")
         action_list = self.get_action_batch(env_idx_list=[self._latest_env_idx_list[0]])
         return action_list[0]
 
     def get_action_batch(self, env_idx_list=None):
-        if env_idx_list is None:
-            env_idx_list = self._latest_env_idx_list
+        env_idx_list = selected_env_ids(self._latest_env_idx_list, env_idx_list)
 
         action_batch = []
         for env_idx in env_idx_list:
@@ -248,7 +252,7 @@ class Model(ModelTemplate):
     def reset(self):
         self._obs_buffer = None
         self._obs_buffer_batch = {}
-        self._latest_env_idx_list = [0]
+        self._latest_env_idx_list = []
         print("[GO1 Model] Reset")
 
 

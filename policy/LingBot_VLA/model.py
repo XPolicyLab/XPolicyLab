@@ -37,6 +37,7 @@ from .lingbot_vla.lingbotvla.data.vla_data.transform import Normalizer, prepare_
 from .lingbot_vla.lingbotvla.models import build_processor
 
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.utils.batch_indices import observation_env_ids, observation_rows
 from XPolicyLab.utils.process_data import get_robot_action_dim_info, pack_robot_state, unpack_robot_state
 
 def set_seed_everywhere(seed: int):
@@ -424,6 +425,9 @@ class Model(ModelTemplate):
     def infer(self, observation, center_crop=True):
         """Generates an action with the VLA policy."""
 
+        # Preprocessing replaces image/state entries; keep the cached raw observation reusable.
+        observation = dict(observation)
+
         # (If trained with image augmentations) Center crop image and then resize back up to original size.
         # IMPORTANT: Let's say crop scale == 0.9. To get the new height and width (post-crop), multiply
         #            the original height and width by sqrt(0.9) -- not 0.9!
@@ -482,11 +486,12 @@ class Model(ModelTemplate):
         self.update_obs_batch([obs])
 
     def update_obs_batch(self, obs_list):
-        self._latest_env_idx_list = [obs.get("env_idx", index) for index, obs in enumerate(obs_list)]
+        env_ids = observation_env_ids(obs_list)
         encoded_obs_list = [
             encode_obs(obs, self.action_type, self.robot_action_dim_info, self.default_prompt) for obs in obs_list
         ]
         self.observation_window = encoded_obs_list
+        self._latest_env_idx_list = env_ids
     
     def get_action(self, **kwargs):
         action_list = self.get_action_batch(env_idx_list=[self._latest_env_idx_list[0]], **kwargs)
@@ -499,11 +504,11 @@ class Model(ModelTemplate):
 
         if env_idx_list is None and "obs" in kwargs:
             env_idx_list = kwargs["obs"]
-        env_idx_list = env_idx_list or self._latest_env_idx_list
+        rows = observation_rows(self._latest_env_idx_list, env_idx_list)
 
         action_list = []
 
-        for batch_index, _ in enumerate(env_idx_list):
+        for batch_index in rows:
             action_chunk = self.infer(self.observation_window[batch_index])["action"]
             
             if self.robot_action_dim_info is None:
@@ -522,6 +527,9 @@ class Model(ModelTemplate):
 
 
     def reset(self, checkpoint_path = None) -> None:
+
+        self.observation_window = None
+        self._latest_env_idx_list = [0]
 
         if checkpoint_path is not None:
             self.vla = self.get_model(checkpoint_path)

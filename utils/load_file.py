@@ -1,4 +1,5 @@
 import h5py
+import numpy as np
 import yaml
 
 def load_hdf5(path: str) -> dict:
@@ -8,12 +9,13 @@ def load_hdf5(path: str) -> dict:
         if isinstance(obj, h5py.Dataset):
             v = obj[()]
             if isinstance(v, (bytes, bytearray)):
-                return v.decode("utf-8", errors="replace")
-            # numpy scalar -> python scalar
-            try:
-                return v.item()
-            except Exception:
-                return v
+                if obj.name.rsplit("/", 1)[-1] in {"color", "colors", "rgb", "image"}:
+                    return bytes(v)
+                try:
+                    return v.decode("utf-8")
+                except UnicodeDecodeError:
+                    return bytes(v)
+            return v.item() if isinstance(v, np.generic) else v
 
         # Group -> dict
         out = {}

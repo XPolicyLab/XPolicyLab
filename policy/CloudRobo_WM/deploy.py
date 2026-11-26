@@ -1,5 +1,7 @@
 """Standard single-environment observation/action loop."""
 
+from XPolicyLab.utils.action_chunks import validate_action_chunk
+
 
 def eval_one_episode(TASK_ENV, model_client):
     model_client.call(func_name="reset")
@@ -7,6 +9,7 @@ def eval_one_episode(TASK_ENV, model_client):
         observation = TASK_ENV.get_obs()
         model_client.call(func_name="update_obs", obs=observation)
         actions = model_client.call(func_name="get_action")
+        validate_action_chunk(actions, TASK_ENV)
         for action_index, action in enumerate(actions):
             TASK_ENV.take_action(action)
             if TASK_ENV.is_episode_end() or action_index + 1 == len(actions):

@@ -19,7 +19,7 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 from uuid import uuid4
 
 import numpy as np
@@ -34,6 +34,13 @@ from XPolicyLab.utils import debug_env_client, process_data
 
 
 class DebugClosedLoopTests(unittest.IsolatedAsyncioTestCase):
+    def test_invalid_batch_size_fails_before_connecting(self):
+        cfg = {"env_cfg_type": "debug", "eval_batch": True}
+        for size in (0, -1, True, 1.5, "2"):
+            with self.subTest(size=size), patch.object(debug_env_client, "get_batch_size", return_value=size):
+                with self.assertRaisesRegex(ValueError, "scene.num_envs"):
+                    debug_env_client.TestEnv(cfg)
+
     async def test_single_dual_joint_ee_plain_encoded_single_batch(self):
         with tempfile.TemporaryDirectory(prefix="xpl-debug-") as tmp:
             workspace = Path(tmp)
@@ -54,8 +61,7 @@ class DebugClosedLoopTests(unittest.IsolatedAsyncioTestCase):
             # workspace; never create or alter the user's sibling env_cfg tree.
             fixture_module = workspace / "XPolicyLab" / "utils" / "process_data.py"
             fixture_module.parent.mkdir(parents=True)
-            with patch.object(process_data, "__file__", str(fixture_module)), \
-                 patch.object(debug_env_client, "Batch_Size", 2):
+            with patch.object(process_data, "__file__", str(fixture_module)):
                 for robot, action_type, encoded, batch in itertools.product(
                     robots, ("joint", "ee"), (False, True), (False, True)
                 ):
@@ -69,13 +75,14 @@ class DebugClosedLoopTests(unittest.IsolatedAsyncioTestCase):
             "action_type": action_type, "protocol": "ws",
             "evaluation_id": f"test-{uuid4().hex}", "trial_id": "debug-trial",
             "action_case_id": None, "repeat_index": None,
-            "obs_encoded": encoded, "max_connect_attempts": 1,
+            "eval_batch": batch, "obs_encoded": encoded, "max_connect_attempts": 1,
             "connect_timeout_s": 3, "handshake_timeout_s": 3,
             "request_timeout_s": 5, "close_timeout_s": 2,
         }
         output = io.StringIO()
         with redirect_stdout(output):
             model = Model(cfg)
+            model.reset = Mock(wraps=model.reset)
             observations_seen = []
             original_update = model.update_obs
             original_batch_update = model.update_obs_batch
@@ -151,6 +158,7 @@ class DebugClosedLoopTests(unittest.IsolatedAsyncioTestCase):
                 await asyncio.wait_for(asyncio.to_thread(run_environment), timeout=30)
             finally:
                 await server.stop()
+            model.reset.assert_called_once_with()
             self.assertEqual(len(observations_seen), 40 if batch else 20)
             self.assertEqual(set(observations_seen), {0, 1} if batch else {0})
             self.assertIn("[TestEnv] Episode finished", output.getvalue())

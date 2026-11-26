@@ -1464,9 +1464,9 @@ class Trainer:
                     # fail loudly.
                     batch_size, seq_len = batch["input_ids"].shape
                     assert seq_len <= self.cfg.model.max_sequence_length
-                    assert (
-                        batch_size == (self.cfg.global_train_batch_size // get_world_size()),
-                        f"batch size is {batch_size}, but bs={self.cfg.global_train_batch_size} among {get_local_world_size()} world size"
+                    assert batch_size == self.cfg.global_train_batch_size // get_world_size(), (
+                        f"Unexpected per-rank batch size {batch_size} for global batch size "
+                        f"{self.cfg.global_train_batch_size} across {get_world_size()} ranks"
                     )
                     global_batch_size = batch_size * get_world_size()  # assumes batch size equal across ranks
                     self.global_step += 1
@@ -2374,9 +2374,9 @@ class VLATrainer(Trainer):
                     # fail loudly.
                     batch_size, seq_len = batch["input_ids"].shape
                     assert seq_len <= self.cfg.model.max_sequence_length
-                    assert (
-                        batch_size == (self.cfg.global_train_batch_size // get_world_size()),
-                        f"batch size is {batch_size}, but bs={self.cfg.global_train_batch_size} among {get_local_world_size()} world size"
+                    assert batch_size == self.cfg.global_train_batch_size // get_world_size(), (
+                        f"Unexpected per-rank batch size {batch_size} for global batch size "
+                        f"{self.cfg.global_train_batch_size} across {get_world_size()} ranks"
                     )
                     global_batch_size = batch_size * get_world_size()  # assumes batch size equal across ranks
                     self.global_step += 1

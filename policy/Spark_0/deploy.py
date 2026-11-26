@@ -14,6 +14,9 @@ from pathlib import Path
 
 import yaml
 
+from XPolicyLab.utils.action_chunks import validate_action_batch, validate_action_chunk
+
+
 # Explicit deploy-time switch (not a deploy.yml key, not a function arg).
 # False — original loop: one update_obs per control step.
 # True  — send a full observation every fixed period and keep the
@@ -213,6 +216,7 @@ def eval_one_episode(TASK_ENV, model_client):
         obs = TASK_ENV.get_obs()
         _update_obs(model_client, schedule, obs)
         actions = model_client.call(func_name="get_action")
+        validate_action_chunk(actions, TASK_ENV)
         if schedule is not None:
             schedule.advance(_env_idx(obs))
 
@@ -232,13 +236,15 @@ def eval_one_episode_batch(TASK_ENV, model_client):
 
     while not TASK_ENV.is_episode_end():
         env_idx_list = TASK_ENV.get_running_env_idx_list()
+        if len(env_idx_list) == 0:
+            break
         obs_list = TASK_ENV.get_obs_batch(env_idx_list)
         _update_obs_batch(model_client, schedule, env_idx_list, obs_list)
         actions = model_client.call(func_name="get_action_batch", obs=env_idx_list)
+        chunk_size = validate_action_batch(actions, len(env_idx_list), TASK_ENV)
         if schedule is not None:
             for env_idx in env_idx_list:
                 schedule.advance(env_idx)
-        chunk_size = len(actions[0])
         for action_idx in range(chunk_size):
             current_action_list = [env_actions[action_idx] for env_actions in actions]
             TASK_ENV.take_action_batch(current_action_list, env_idx_list)
@@ -251,6 +257,8 @@ def eval_one_episode_batch(TASK_ENV, model_client):
 
             actions = [actions[i] for i in active_batch_idx]
             env_idx_list = [env_idx_list[i] for i in active_batch_idx]
+            if not env_idx_list:
+                break
             _update_obs_batch(
                 model_client, schedule, env_idx_list, TASK_ENV.get_obs_batch(env_idx_list)
             )

@@ -27,6 +27,8 @@ def eval_one_episode_batch(TASK_ENV, model_client):
             break
         model_client.call(func_name="update_obs_batch", obs=TASK_ENV.get_obs_batch(env_idx_list))
         actions = model_client.call(func_name="get_action_batch", obs=env_idx_list)
+        if len(actions) != len(env_idx_list):
+            raise RuntimeError("Expected one cached action chunk per active environment")
         if any(len(env_actions) != 1 for env_actions in actions):
             sizes = [len(env_actions) for env_actions in actions]
             raise RuntimeError(f"CogWAM server must return one cached action per env, got chunk sizes {sizes}.")

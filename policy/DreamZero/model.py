@@ -12,6 +12,7 @@ import torch.distributed as dist
 from tianshou.data import Batch
 
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.utils.batch_indices import observation_env_ids, selected_env_ids
 from XPolicyLab.utils.checkpoint_resolver import candidate_checkpoint_roots
 from XPolicyLab.utils.process_data import (
     get_robot_action_dim_info,
@@ -240,24 +241,35 @@ class Model(ModelTemplate):
 
         self._obs_batch: dict[int, dict[str, Any]] = {}
         self._frame_buffers: dict[int, dict[str, list[np.ndarray]]] = {}
-        self._latest_env_idx_list = [0]
+        self._latest_env_idx_list = []
         print(f"[DreamZero Model] Initialized | action_type={self.action_type}")
 
     def update_obs(self, obs):
         self.update_obs_batch([obs])
 
     def update_obs_batch(self, obs_list):
-        self._latest_env_idx_list = [obs.get("env_idx", i) for i, obs in enumerate(obs_list)]
-        for obs in obs_list:
-            env_idx = obs.get("env_idx", 0)
-            self._obs_batch[env_idx] = self._encode_obs(obs, env_idx)
+        env_ids = observation_env_ids(obs_list)
+        # Stage the history lists too: a later camera/state encoding failure
+        # must not advance any environment's history before a retry.
+        frame_buffers = {
+            env_idx: {key: list(frames) for key, frames in buffers.items()}
+            for env_idx, buffers in self._frame_buffers.items()
+        }
+        encoded = {
+            env_idx: self._encode_obs(obs, env_idx, frame_buffers=frame_buffers)
+            for env_idx, obs in zip(env_ids, obs_list)
+        }
+        self._obs_batch = encoded
+        self._frame_buffers = frame_buffers
+        self._latest_env_idx_list = env_ids
 
     def get_action(self):
+        if not self._latest_env_idx_list:
+            raise RuntimeError("Call update_obs before requesting an action.")
         return self.get_action_batch([self._latest_env_idx_list[0]])[0]
 
     def get_action_batch(self, env_idx_list=None):
-        if env_idx_list is None:
-            env_idx_list = self._latest_env_idx_list
+        env_idx_list = selected_env_ids(self._latest_env_idx_list, env_idx_list)
 
         batch_actions = []
         for env_idx in env_idx_list:
@@ -277,11 +289,13 @@ class Model(ModelTemplate):
     def reset(self):
         self._obs_batch = {}
         self._frame_buffers = {}
-        self._latest_env_idx_list = [0]
+        self._latest_env_idx_list = []
         print("[DreamZero Model] Reset")
 
-    def _encode_obs(self, observation: dict[str, Any], env_idx: int) -> dict[str, Any]:
-        buffers = self._frame_buffers.setdefault(
+    def _encode_obs(self, observation: dict[str, Any], env_idx: int, *, frame_buffers=None) -> dict[str, Any]:
+        if frame_buffers is None:
+            frame_buffers = self._frame_buffers
+        buffers = frame_buffers.setdefault(
             env_idx,
             {"video.top_head": [], "video.hand_left": [], "video.hand_right": []},
         )

@@ -14,6 +14,7 @@ import yaml
 from PIL import Image
 
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.utils.batch_indices import selected_env_ids, validate_observed_ids
 from XPolicyLab.utils.process_data import (
     get_robot_action_dim_info,
     pack_robot_state,
@@ -364,12 +365,13 @@ class Model(ModelTemplate):
         self.update_obs_batch([obs])
 
     def update_obs_batch(self, obs_list):
-        self._latest_env_idx_list = []
-        for fallback_idx, obs in enumerate(obs_list):
-            env_idx = int(obs.get("env_idx", fallback_idx))
-            self._latest_env_idx_list.append(env_idx)
+        env_ids = [int(obs.get("env_idx", i)) for i, obs in enumerate(obs_list)]
+        validate_observed_ids(env_ids)
+        encoded = [self._convert_obs(obs) for obs in obs_list]
+        for env_idx, encoded_obs in zip(env_ids, encoded):
             window = self._obs_windows.setdefault(env_idx, deque(maxlen=self.img_history_size))
-            window.append(self._convert_obs(obs))
+            window.append(encoded_obs)
+        self._latest_env_idx_list = env_ids
 
     def _preprocess_image(self, image: np.ndarray) -> torch.Tensor:
         pil_image = Image.fromarray(image, mode="RGB")
@@ -443,7 +445,7 @@ class Model(ModelTemplate):
         return self.get_action_batch(env_idx_list=[self._latest_env_idx_list[0]])[0]
 
     def get_action_batch(self, env_idx_list=None):
-        env_idx_list = env_idx_list or self._latest_env_idx_list
+        env_idx_list = selected_env_ids(self._latest_env_idx_list, env_idx_list)
         return [
             unpack_robot_state(
                 self._infer_chunk(int(env_idx)),

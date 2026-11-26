@@ -24,6 +24,7 @@ os.environ.setdefault("COSMOS_PATH", str((_CHECKPOINTS_DIR / "shared" / "Cosmos-
 os.environ.setdefault("QWEN3_2B_PATH", str((_CHECKPOINTS_DIR / "shared" / "Qwen3-VL-2B-Instruct").resolve()))
 
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.utils.batch_indices import observation_env_ids, selected_env_ids
 from XPolicyLab.utils.checkpoint_resolver import resolve_checkpoint_root
 from XPolicyLab.utils.process_data import (
     get_robot_action_dim_info,
@@ -326,15 +327,20 @@ class Model(ModelTemplate):
         self.update_obs_batch([obs])
 
     def update_obs_batch(self, obs_list):
-        self._latest_env_idx_list = [obs.get("env_idx", index) for index, obs in enumerate(obs_list)]
+        env_ids = observation_env_ids(obs_list)
         encoded_obs_list = [
             encode_obs(obs, self.action_type, self.robot_action_dim_info, self.default_prompt) for obs in obs_list
         ]
-        self._latest_obs = encoded_obs_list[0]
-        for env_idx, encoded_obs in zip(self._latest_env_idx_list, encoded_obs_list):
-            histories = self._histories_by_env.setdefault(env_idx, ([], [], []))
-            self._latest_obs_by_env[env_idx] = encoded_obs
+        histories_by_env = {}
+        for env_idx, encoded_obs in zip(env_ids, encoded_obs_list):
+            previous = self._histories_by_env.get(env_idx, ([], [], []))
+            histories = tuple(list(frames) for frames in previous)
             self._append_history(encoded_obs, histories)
+            histories_by_env[env_idx] = histories
+        self._histories_by_env.update(histories_by_env)
+        self._latest_obs_by_env = dict(zip(env_ids, encoded_obs_list))
+        self._latest_obs = encoded_obs_list[0] if encoded_obs_list else None
+        self._latest_env_idx_list = env_ids
 
     @torch.inference_mode()
     def infer(self, env_idx=None):
@@ -397,7 +403,7 @@ class Model(ModelTemplate):
         return action_list[0]
 
     def get_action_batch(self, env_idx_list=None, **kwargs):
-        env_idx_list = env_idx_list or self._latest_env_idx_list
+        env_idx_list = selected_env_ids(self._latest_env_idx_list, env_idx_list)
         action_list = []
         for env_idx in env_idx_list:
             raw_actions = self.infer(env_idx)

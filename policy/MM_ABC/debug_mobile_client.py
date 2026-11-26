@@ -11,6 +11,7 @@ from pathlib import Path
 import numpy as np
 
 from client_server.ws import WsModelClient
+from XPolicyLab.utils.action_chunks import validate_action_batch
 from XPolicyLab.utils.process_data import decode_image_bit, encode_image_bit
 
 _MMABC = Path(os.environ.get("MMABC_ROOT", Path(__file__).resolve().parent / "MM_ABC"))
@@ -138,11 +139,10 @@ def main() -> None:
                     client.call(func_name="update_obs", obs=src.obs(t, 0, send))
                     chunks = [client.call(func_name="get_action")]
                 latencies.append(time.time() - t0)
+                k = validate_action_batch(chunks, n_env)
                 for chunk in chunks:
-                    assert isinstance(chunk, list) and chunk, "get_action must return a non-empty list"
                     for action in chunk:
                         validate_action(action, args.action_key_style)
-                k = len(chunks[0])
                 if isinstance(src, ReplaySource):
                     for step, action in enumerate(chunks[0][: end - t]):
                         for key, rec in src.action.items():
