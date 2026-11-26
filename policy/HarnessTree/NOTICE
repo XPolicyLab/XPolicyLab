@@ -1,15 +1,15 @@
 Apache License attribution for vendored colour host modules
 ==========================================================
 
-This policy vendors RoboDojo colour-only host tooling adapted from:
+HarnessTree is packaged separately and does not import pyrualean at runtime.
+It includes RoboDojo colour host modules adapted under Apache-2.0 from:
 
   PyRUA-Lean (pyrualean) 0.2.0 — RoboDojo native / tools / sight / kinematics
   Copyright 2026 PyRUA-Lean Contributors
   Licensed under the Apache License, Version 2.0
   https://www.apache.org/licenses/LICENSE-2.0
 
-Local modules (package renamed and wired into HarnessTree;
-upstream copyright notices retained; no runtime import of pyrualean):
+Local modules retaining the upstream copyright notices:
 
   colour_toolkit.py
   colour_tools.py

@@ -1,7 +1,4 @@
-"""Step 2c: Independent XPolicyLab <-> episode thread bridge for HarnessTree.
-
-Replaces pyrualean.hosts.xpolicylab_bridge and xpolicylab_robodojo.BridgeEnv.
-"""
+"""Bridge between XPolicyLab and HarnessTree's episode thread."""
 
 from __future__ import annotations
 

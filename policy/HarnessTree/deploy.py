@@ -128,14 +128,14 @@ def eval_one_episode(TASK_ENV: Any, model_client: Any) -> None:
         try:
             model_client.call(func_name="trial_end", obs=verdict)
         except Exception as exc:  # noqa: BLE001 - the trial stands whether or not it was heard
-            print(f"[PyRUA_Lean] the verdict did not reach the policy server: {exc}", flush=True)
+            print(f"[HarnessTree] the verdict did not reach the policy server: {exc}", flush=True)
 
 
 def eval_one_episode_batch(TASK_ENV: Any, model_client: Any) -> None:
     num_envs = int(getattr(TASK_ENV, "num_envs", 1) or 1)
     if num_envs > 1:
         raise RuntimeError(
-            f"RoboDojo started {num_envs} environments; PyRUA_Lean drives one conversation per "
+            f"RoboDojo started {num_envs} environments; HarnessTree drives one conversation per "
             "environment.  Keep eval_batch: false in deploy.yml."
         )
     eval_one_episode(TASK_ENV, model_client)

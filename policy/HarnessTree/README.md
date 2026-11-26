@@ -1,6 +1,6 @@
 # HarnessTree
 
-**Contributor:** HarnessPolicy contributors | **Paper:** TBD | **arXiv:** TBD | **Original code:** HarnessPolicy / PyRUA lineage (see [Attribution](ATTRIBUTION.md))
+**Contributor:** HarnessPolicy contributors | **Paper:** TBD | **arXiv:** TBD | **Adapter:** HarnessTree (see [design inspiration](ATTRIBUTION.md))
 
 HarnessTree is an eval-only RoboDojo agent for dual-arm ARX-X5 joint control, with one environment per policy process. The evaluator's Detail Description selects a prewritten Python skill program that uses RGB observations, robot state, and an external SAM 3 HTTP service. See [ATTRIBUTION.md](ATTRIBUTION.md) for code provenance and [Notes](#notes) for Agent Track limitations.
 
@@ -73,7 +73,7 @@ Extra `deploy.yml` keys (beyond the standard set):
 | `sam3_url` | default SAM3 base URL (overridden by `HARNESS_SAM3_URL`) |
 | `poll_s` | max wait while a program plans before the next bound action |
 | `wrap_up_s` | max wait for the episode result record at trial end |
-| `result_dir` | policy-side trace directory (default `./results`; legacy `PYRUALEAN_RESULT_DIR`) |
+| `result_dir` | policy-side trace directory (default `./results`; override with `HARNESS_RESULT_DIR`) |
 
 Environment variables:
 
@@ -112,4 +112,4 @@ The operator forced SR and score to 0 for `store_laptop_and_headphones` after th
 
 ### License / attribution
 
-Vendored colour tooling: `NOTICE`, `LICENSE-PyRUA-Lean`, `ATTRIBUTION.md`. Keep `results/`, `checkpoints/`, caches and credentials out of git (see `.gitignore`).
+The vendored colour helpers are licensed under Apache-2.0; see [NOTICE](NOTICE) and the [Apache license](LICENSE-Apache-2.0-colour-host.txt). See [Attribution](ATTRIBUTION.md) for design inspiration. Keep `results/`, `checkpoints/`, caches and credentials out of git (see `.gitignore`).

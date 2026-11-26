@@ -40,7 +40,7 @@ class Model(ModelTemplate):
         self.bridge = EpisodeBridge(poll_s=self.poll_s)
         # fixed now: an episode makes its workspace the working directory
         self.result_dir = Path(
-            os.environ.get("PYRUALEAN_RESULT_DIR") or self.cfg.get("result_dir") or "results"
+            os.environ.get("HARNESS_RESULT_DIR") or self.cfg.get("result_dir") or "results"
         ).resolve()
         self._episode: threading.Thread | None = None
         self.results: list[dict[str, Any]] = []
@@ -101,7 +101,7 @@ class Model(ModelTemplate):
             self._episode = threading.Thread(
                 target=self._play,
                 args=(self.bridge,),
-                name="pyrualean-episode",
+                name="harnesstree-episode",
                 daemon=True,
             )
             self._episode.start()
