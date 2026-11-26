@@ -1,0 +1,55 @@
+{
+  "repository": "ccccsc/preview_model",
+  "revision": "24e3a2553f274b8700f52a3065d7088e80f8da10",
+  "source": "https://huggingface.co/api/models/ccccsc/preview_model/revision/24e3a2553f274b8700f52a3065d7088e80f8da10?blobs=true",
+  "files": [
+    {
+      "path": "checkpoints/action_model/config.json",
+      "size_bytes": 868,
+      "sha256": "6f4382e3a71db8c2463334b4b873dbe3b3a84e9632d090d327a968cd523e1fa1",
+      "verification": "SHA-256 of downloaded file bytes"
+    },
+    {
+      "path": "checkpoints/action_model/diffusion_pytorch_model.bin",
+      "size_bytes": 1127619545,
+      "sha256": "c18390b9f2344d5aae832b614361373715841290c74a94bd52018407599f9d5d",
+      "verification": "Hugging Face Git LFS SHA-256 metadata; full weight file not downloaded"
+    },
+    {
+      "path": "checkpoints/config.json",
+      "size_bytes": 1157,
+      "sha256": "48e0d33550538b58bb4fa25a4d98a97b80e726a164a38ab1b64c2739e97a346b",
+      "verification": "SHA-256 of downloaded file bytes"
+    },
+    {
+      "path": "checkpoints/diffusion_pytorch_model.bin",
+      "size_bytes": 9446789131,
+      "sha256": "120016afec1b0cb14de3ad79f3353f4b1620d08f668ef224fd24b6fd41a8d540",
+      "verification": "Hugging Face Git LFS SHA-256 metadata; full weight file not downloaded"
+    },
+    {
+      "path": "stats.json",
+      "size_bytes": 1598,
+      "sha256": "59c8021f250b98bbfd2acc27516df3b3a5379b1f7edb98948bb7010d1d29e9ae",
+      "verification": "SHA-256 of downloaded file bytes"
+    },
+    {
+      "path": "vae/config.json",
+      "size_bytes": 1571,
+      "sha256": "e642c7463fb6bff51f53c84bb17844c26248e667e0c5c21f08aab9ce857bd0bd",
+      "verification": "SHA-256 of downloaded file bytes"
+    },
+    {
+      "path": "vae/diffusion_pytorch_model.safetensors",
+      "size_bytes": 543278016,
+      "sha256": "3eb0d40d82a05348d90423d30752bfd29c2530547263a1f0d866aaea95c44acb",
+      "verification": "Hugging Face Git LFS SHA-256 metadata; full weight file not downloaded"
+    },
+    {
+      "path": "vae/latent_stats.pth",
+      "size_bytes": 204804880,
+      "sha256": "9b4d8d50eb1145bf1661092f6e522bf2cf7615e24fa3683a125fa6deaafa507f",
+      "verification": "Hugging Face Git LFS SHA-256 metadata; full weight file not downloaded"
+    }
+  ]
+}

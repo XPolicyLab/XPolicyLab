@@ -1,0 +1,132 @@
+{
+ "constants": {
+  "COL_CLEAR": 0.004,
+  "DU_MAX": 0.075,
+  "FINGER_W": 0.0305,
+  "INNER": 0.0449,
+  "MAX_POINTS": 3000,
+  "MIN_BAND": 0.015,
+  "MIN_GRIP": 0.006,
+  "MIN_TCP": 0.03,
+  "OUTER": 0.0819,
+  "PALM": 0.046,
+  "PALM_CLEAR": 0.006,
+  "PALM_U": 0.087,
+  "PALM_W": 0.03,
+  "POS_ERR": 0.015,
+  "ROTATE_DEG": 34.87,
+  "TCP_MAX": 0.14,
+  "TIP": 0.0276,
+  "Z_STEP": 0.005
+ },
+ "table": {
+  "bag": {
+   "up": {
+    "head": {
+     "du": -0.01500,
+     "tcp": 0.09008,
+     "yaw": 1.8312
+    },
+    "height": 0.2385
+   }
+  },
+  "bottle": {
+   "side": {
+    "head": {
+     "du": -0.02517,
+     "tcp": 0.04002,
+     "yaw": 0.2606
+    },
+    "height": 0.0564
+   },
+   "up": {
+    "head": {
+     "du": 0.0,
+     "tcp": 0.10998,
+     "yaw": 1.5737
+    },
+    "height": 0.147
+   }
+  },
+  "camera": {
+   "up": {
+    "head": {
+     "du": 0.04988,
+     "tcp": 0.11501,
+     "yaw": 1.5680
+    },
+    "height": 0.0994
+   }
+  },
+  "game_machine": {
+   "up": {
+    "head": {
+     "du": 0.0,
+     "tcp": 0.03009,
+     "yaw": 0.7856
+    },
+    "height": 0.0246
+   }
+  },
+  "garage": {
+   "up": {
+    "head": {
+     "du": 0.0,
+     "tcp": 0.03004,
+     "yaw": 1.5754
+    },
+    "height": 0.231
+   }
+  },
+  "headset": {
+   "side": {
+    "head": {
+     "du": 0.07494,
+     "tcp": 0.03501,
+     "yaw": 2.3575
+    },
+    "height": 0.0784
+   }
+  },
+  "ice_cream": {
+   "up": {
+    "head": {
+     "du": 0.0,
+     "tcp": 0.06508,
+     "yaw": 0.0
+    },
+    "height": 0.1024
+   }
+  },
+  "phone": {
+   "up": {
+    "head": {
+     "du": -0.01011,
+     "tcp": 0.03008,
+     "yaw": 0.2702
+    },
+    "height": 0.0252
+   }
+  },
+  "plate": {
+   "up": {
+    "head": {
+     "du": 0.05991,
+     "tcp": 0.04753,
+     "yaw": 0.0
+    },
+    "height": 0.0401
+   }
+  },
+  "puppet": {
+   "up": {
+    "head": {
+     "du": 0.02998,
+     "tcp": 0.07503,
+     "yaw": 1.8367
+    },
+    "height": 0.06
+   }
+  }
+ }
+}
