@@ -1,0 +1,18 @@
+{
+  "ordinary": {
+    "episodes": 10,
+    "actions": 200,
+    "finished": true,
+    "tracebacks": 0,
+    "history_warnings": 0
+  },
+  "encoded": {
+    "episodes": 10,
+    "actions": 200,
+    "finished": true,
+    "tracebacks": 0,
+    "history_warnings": 0
+  },
+  "all_own_gpu_servers_exited": true,
+  "not_simulator_task_success_evaluation": true
+}
