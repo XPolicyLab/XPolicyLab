@@ -1,0 +1,15 @@
+{
+  "id": "interaction-feedback",
+  "version": "0.6.0-general-control-20261023",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "artifact_type": "skill",
+  "stages": [
+    "think",
+    "feedback"
+  ],
+  "dependencies": [],
+  "description": "离散交互与因果反馈",
+  "implementation": "text",
+  "load_mode": "always"
+}

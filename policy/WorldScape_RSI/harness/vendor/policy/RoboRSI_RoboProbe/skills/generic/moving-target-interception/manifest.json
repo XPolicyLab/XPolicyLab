@@ -1,0 +1,15 @@
+{
+  "id": "moving-target-interception",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "think",
+    "feedback"
+  ],
+  "dependencies": [],
+  "artifact_type": "skill",
+  "implementation": "text",
+  "load_mode": "always",
+  "version": "0.6.0-general-control-20261023",
+  "description": "运动目标截获"
+}

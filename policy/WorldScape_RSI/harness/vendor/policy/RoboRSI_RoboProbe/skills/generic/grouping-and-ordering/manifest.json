@@ -1,0 +1,15 @@
+{
+  "id": "grouping-and-ordering",
+  "version": "0.6.0-general-control-20261023",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "artifact_type": "skill",
+  "stages": [
+    "think",
+    "feedback"
+  ],
+  "dependencies": [],
+  "description": "关系、排序与朝向约束",
+  "implementation": "text",
+  "load_mode": "always"
+}

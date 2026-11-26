@@ -1,0 +1,24 @@
+# Shared canonical Wan2.2 TI2V-5B graph used by both training stages and posttrain.
+model:
+  _target_: worldscape_policy.native_builder.build_wan22_policy_from_checkpoint
+  checkpoint_dir: ${oc.decode:${oc.env:PRETRAINED_MODEL_PATH,null}}
+  initialization: ${oc.env:WSP_INITIALIZATION,auto}
+  validate_checkpoint_artifacts: ${oc.decode:${oc.env:WSP_VALIDATE_CHECKPOINT_ARTIFACTS,true}}
+  visual_input_range: uint8
+  training: true
+  device: cuda
+  model_config:
+    schema_version: "1"
+    model:
+      # The selected mode profile overrides this default.
+      mode: interactive
+      shape:
+        num_frames: 33
+        frame_block_size: 2
+        actions_per_block: ${oc.decode:${oc.env:ACTION_HORIZON,24}}
+        states_per_block: 1
+        action_horizon: ${oc.decode:${oc.env:ACTION_HORIZON,24}}
+        action_dim: 32
+        max_state_dim: 64
+        vlm_token_dim: ${oc.decode:${oc.env:VLM_TOKEN_DIM,2560}}
+        condition_dim: ${oc.decode:${oc.env:VLM_CONTEXT_DIM,4096}}

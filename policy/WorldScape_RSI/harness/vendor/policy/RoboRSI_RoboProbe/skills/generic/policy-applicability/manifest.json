@@ -1,0 +1,15 @@
+{
+  "id": "policy-applicability",
+  "version": "0.6.0-general-control-20261023",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "artifact_type": "skill",
+  "stages": [
+    "think",
+    "feedback"
+  ],
+  "dependencies": [],
+  "description": "Policy能力先验与受证据约束的委托",
+  "implementation": "text",
+  "load_mode": "always"
+}

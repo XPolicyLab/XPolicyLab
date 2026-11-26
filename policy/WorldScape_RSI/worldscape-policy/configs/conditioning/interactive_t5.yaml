@@ -1,0 +1,28 @@
+# Interactive T5 posttrain mode profile and shared T5 checkpoint paths.
+model:
+  tokenizer_path: ${oc.decode:${oc.env:TOKENIZER_DIR,null}}
+  text_encoder_pretrained_path: ${oc.decode:${oc.env:T5_CKPT_PATH,null}}
+  model_config:
+    model:
+      condition_router:
+        interactive:
+          t5:
+            target: worldscape_policy.conditioning.text.t5.T5InstructionEncoder
+            parameters:
+              tokenizer_path: ${oc.decode:${oc.env:TOKENIZER_DIR,null}}
+              text_encoder_pretrained_path: null
+
+profiles:
+  mode:
+    interactive:
+      model:
+        expected_mode: interactive
+      data_loader:
+        mode: interactive
+      freeze:
+        config:
+          qformer: null
+      objective:
+        semantic_forcing_weight: 0.0
+      prompt_schedule:
+        enabled: false

@@ -1,0 +1,16 @@
+{
+  "id": "worldscape-wam-nomemory",
+  "version": "3.1.0-calibrated-selection-20261023",
+  "interface": "roborsi.public.v1",
+  "kind": "code",
+  "artifact_type": "tool",
+  "stages": [
+    "predict"
+  ],
+  "dependencies": [
+    "policy-applicability"
+  ],
+  "description": "WSP flash 当前观测动作技能",
+  "implementation": "reviewed_in_process_dispatch",
+  "load_mode": "on_demand"
+}

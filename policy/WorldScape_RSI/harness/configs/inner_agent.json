@@ -1,0 +1,9 @@
+{
+  "kind": "agent",
+  "model": "gpt-6-astra",
+  "effort": "high",
+  "memory": "full_episode",
+  "wam_command_profile": "actuator_velocity_budget",
+  "api_base_env": "R2SI_API_BASE",
+  "api_key_env": "R2SI_API_KEY"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "hooking-and-threading",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "think",
+    "feedback"
+  ],
+  "dependencies": [],
+  "artifact_type": "skill",
+  "implementation": "text",
+  "load_mode": "always",
+  "version": "0.6.0-general-control-20261023",
+  "description": "绕越、穿越与受约束结构"
+}
