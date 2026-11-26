@@ -1,0 +1,24 @@
+policy_name: ResWAM
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+action_type: joint
+gpu_id: null
+eval_batch: true
+
+# ResWAM inference protocol (paper / leaderboard runs): predict 32 steps, execute the first 10.
+execute_horizon: 10
+# Base of the per-chunk flow-matching noise seeds (official ResWAM RoboDojo protocol).
+base_seed: 2609
+# Optional explicit checkpoint (a model.pt file or its directory). When null, the checkpoint
+# resolves from ckpt_name, e.g. ckpt_name=ResWAM-RoboDojo -> checkpoints/ResWAM-RoboDojo/model.pt.
+checkpoint_path: null
+# Optional: skips hashing the 9.3 GB checkpoint at server start-up. The hash is part of the noise seed.
+checkpoint_sha256: null
+# Optional: normalization statistics; defaults to codec_statistics.json next to model.pt.
+codec_statistics_path: null
