@@ -58,7 +58,8 @@ def command(args):
                      action_horizon=36, history_stride=25, video_seed_offset=1000003)
     if args.device_map:
         overrides['inference_device_map'] = args.device_map
-    cmd = [sys.executable, '-u', str(xpl / 'setup_policy_server.py'), '--config_path',
+    server = ROOT / 'packed_server.py' if os.getenv('LOGIC_PREVIEW_PACKED_SERVER') == '1' else xpl / 'setup_policy_server.py'
+    cmd = [sys.executable, '-u', str(server), '--config_path',
            str(ROOT / 'deploy.yml'), '--overrides'] + [f'{k}={v}' for k, v in overrides.items()]
     env = dict(os.environ, CUDA_VISIBLE_DEVICES=args.gpu, LOGIC_PREVIEW_TORCH_LOAD_MMAP='1',
                PYTHONPATH=os.pathsep.join([str(SOURCE / 'src'), str(xpl.parent), str(xpl), os.environ.get('PYTHONPATH', '')]))

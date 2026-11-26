@@ -23,6 +23,7 @@ import runpy
 
 import yaml
 
+from packed_client import client_checkout
 from packed_watchdog import update_job_monitor
 
 
@@ -95,7 +96,7 @@ async def wait_client(process, directory, manifest, args):
     return process.returncode
 
 
-async def run_client(args, task, gpu, directory, assigned, lease, pipeline):
+async def run_client(args, task, gpu, directory, assigned, lease, pipeline, client_root):
     run_id = directory.name
     directory.mkdir()
     task.parent.mkdir(parents=True, exist_ok=True)
@@ -123,7 +124,7 @@ async def run_client(args, task, gpu, directory, assigned, lease, pipeline):
         write_json(manifest, state)
         with (directory / "client.log").open("w") as log:
             process = await asyncio.create_subprocess_exec(
-                *command, env=env, pass_fds=(lease.fileno(),),
+                *command, cwd=client_root, env=env, pass_fds=(lease.fileno(),),
                 stdout=log, stderr=subprocess.STDOUT, start_new_session=True,
             )
             try:
@@ -141,7 +142,10 @@ async def run_client(args, task, gpu, directory, assigned, lease, pipeline):
         reserved.unlink(missing_ok=True)
 
 
-def read_result(directory, assigned, payload=None, incomplete=None):
+CAMERAS = ("cam_head", "cam_left_wrist", "cam_right_wrist")
+
+
+def read_result(directory, assigned, payload=None):
     path = directory / "_result.json"
     if payload is None:
         if not path.exists():
@@ -162,16 +166,13 @@ def read_result(directory, assigned, payload=None, incomplete=None):
             raise ValueError(f"Malformed outcome for layout {layout} in {path}")
         prefix = f"episode_{int(index):07d}_"
         tag = "success" if success else "fail"
-        videos = {p.name[len(prefix):]: p for p in directory.glob(prefix + "*.mp4")}
-        for camera in ("cam_head", "cam_left_wrist", "cam_right_wrist"):
-            video = videos.get(f"{camera}_{tag}.mp4")
-            if video is None or not video.stat().st_size:
-                if incomplete is None:
-                    raise ValueError(f"Missing {camera} video for layout {layout} in {path}")
-                incomplete.add(layout)
-                break
-        else:
-            rows[layout] = record, videos
+        videos = {}
+        for camera in CAMERAS:
+            suffix = f"{camera}_{tag}.mp4"
+            video = directory / (prefix + suffix)
+            if video.is_file() and video.stat().st_size:
+                videos[suffix] = video
+        rows[layout] = record, videos
     metadata = {k: v for k, v in payload.items() if k not in ("details", "score", "success_rate", "eval_time")}
     return rows, metadata
 
@@ -183,16 +184,24 @@ def publish(task, rows, metadata, work, run_id):
     # complete tasks. Preserve native row fields and the camera filenames.
     staging = Path(tempfile.mkdtemp(dir=work, prefix=f"{task.name}-publish-"))
     details = {}
+    missing_videos = {}
     total_score = 0.0
     for index, (layout, (record, videos)) in enumerate(sorted(rows.items())[:task.target]):
         details[str(index)] = record
         total_score += record["score"]
+        tag = "success" if record["success"] else "fail"
+        missing = [camera for camera in CAMERAS if f"{camera}_{tag}.mp4" not in videos]
+        if missing:
+            missing_videos[str(layout)] = missing
         for suffix, src in videos.items():
             os.link(src, staging / f"episode_{index:07d}_{suffix}")
     payload = dict(metadata, eval_time=len(details), details=details,
                    success_rate=sum(r["success"] for r in details.values()) / len(details),
                    score=total_score / len(details) * 100)
     (staging / "_result.json").write_text(json.dumps(payload, indent=2) + "\n")
+    if missing_videos:
+        write_json(staging / "_missing_videos.json", missing_videos)
+        print(f"{task.name}: missing camera evidence for {len(missing_videos)} scored layouts", flush=True)
     target = task.parent / run_id
     if target.exists():
         # The previous coordinator may have published just before losing its lock.
@@ -218,19 +227,16 @@ def locked(path):
 
 def attempt_result(directory, assigned, task, pipeline):
     """Recover verified scores and positively identified non-scoring layouts."""
-    incomplete = set()
-    intact = True
     manifest = directory / "native-resume.json"
     if not manifest.exists():
         manifest = task.parent / f"_resume_{directory.name}.json"
     native = json.loads(manifest.read_text()) if manifest.exists() else {}
     try:
-        rows, extra = read_result(directory, assigned, incomplete=incomplete)
+        rows, extra = read_result(directory, assigned)
     except json.JSONDecodeError:
         # A killed native JSON writer may leave a partial result file. The
         # client's atomic resume manifest is the last committed snapshot.
         rows, extra = {}, {}
-        intact = False
     if pipeline is not None:
         if rows and extra.get("eval_pipeline") != pipeline:
             raise ValueError(f"Missing or mismatched pipeline in {directory}/_result.json")
@@ -238,7 +244,7 @@ def attempt_result(directory, assigned, task, pipeline):
             raise ValueError(f"Missing or mismatched pipeline in {manifest}")
     saved = native.get("details") or {}
     if saved:
-        recovered, _ = read_result(directory, assigned, {"details": saved, "eval_time": len(saved)}, incomplete)
+        recovered, _ = read_result(directory, assigned, {"details": saved, "eval_time": len(saved)})
         for layout, item in recovered.items():
             if layout in rows and item[0] != rows[layout][0]:
                 raise ValueError(f"Conflicting native checkpoint for layout {layout}")
@@ -246,31 +252,7 @@ def attempt_result(directory, assigned, task, pipeline):
     if pipeline is not None:
         extra["eval_pipeline"] = pipeline
     abandoned = set(native.get("abandoned_layout_ids", ())).intersection(assigned)
-    log = directory / "client.log"
-    # Some RoboDojo versions remove the final manifest. In non-vectorized
-    # runs they report an instability count and explicit broken layout IDs.
-    # Never infer rejection from a short result or a successful exit alone.
-    status_file = directory / "exit.json"
-    status = json.loads(status_file.read_text()) if status_file.exists() else None
-    if log.exists():
-        unstable = 0
-        exhausted = fault = False
-        with log.open(errors="replace") as stream:
-            for line in stream:
-                if "[PhysX] broken envs=" in line:
-                    match = re.search(r"abandon seeds=\[([\d, ]*)\]", line)
-                    if match:
-                        abandoned.update(int(i) for i in re.findall(r"\d+", match[1]) if int(i) in assigned)
-                if "Unstable nums:" in line:
-                    match = re.search(r"Unstable nums: (\d+)", line)
-                    if match:
-                        unstable = int(match[1])
-                exhausted |= "No more seeds to run, exiting." in line
-                fault |= "[Eval] unhandled exception" in line
-        missing = set(assigned) - rows.keys() - abandoned
-        if intact and not incomplete and status == 0 and exhausted and not fault and unstable == len(missing):
-            abandoned.update(missing)
-    if abandoned & (rows.keys() | incomplete):
+    if abandoned & rows.keys():
         raise ValueError(f"Layout marked both scored and abandoned in {directory}")
     return rows, extra, abandoned
 
@@ -381,16 +363,18 @@ class Queue:
                 try:
                     rows, _, abandoned = collect(job, task, self.work, self.pipelines.get(task.name))
                     missing = sorted(set(range(job["start"], job["stop"])) - rows.keys() - abandoned)
-                    if not missing:
-                        job["done"] = True
-                        self.settle_task(plan, task)
-                        write_json(self.path, plan)
-                        lease.close()
-                        return False
                     attempts = job["attempts"]
                     if attempts:
                         exit_file = self.work / attempts[-1]["name"] / "exit.json"
                         code = json.loads(exit_file.read_text()) if exit_file.exists() else None
+                        # 746 accepts a fully scored shard on any exit. A shard
+                        # with native abandonments needs a clean client exit.
+                        if not missing and (not abandoned or code == 0):
+                            job["done"] = True
+                            self.settle_task(plan, task)
+                            write_json(self.path, plan)
+                            lease.close()
+                            return False
                         used = len(attempts) - job.get("attempt_base", 0)
                         if used and (code in (2, 78) or used >= self.args.max_attempts):
                             reason = f"layouts {missing} unresolved after {len(attempts)} attempts (exit {code}); see {exit_file.parent}"
@@ -412,7 +396,7 @@ class Queue:
 
 
 async def evaluate(args, queue):
-    async def worker(gpu):
+    async def worker(gpu, client_root):
         while True:
             claim = queue.claim(gpu)
             if claim is True:
@@ -425,15 +409,16 @@ async def evaluate(args, queue):
                 continue
             task, layouts, directory, lease = claim
             with lease:
-                await run_client(args, task, gpu, directory, layouts, lease, queue.pipelines.get(task.name))
+                await run_client(args, task, gpu, directory, layouts, lease, queue.pipelines.get(task.name), client_root)
 
-    workers = [asyncio.create_task(worker(gpu)) for gpu in args.gpus.split(",")]
-    try:
-        await asyncio.gather(*workers)
-    finally:
-        for worker_task in workers:
-            worker_task.cancel()
-        await asyncio.gather(*workers, return_exceptions=True)
+    with client_checkout(Path.cwd()) as client_root:
+        workers = [asyncio.create_task(worker(gpu, client_root)) for gpu in args.gpus.split(",")]
+        try:
+            await asyncio.gather(*workers)
+        finally:
+            for worker_task in workers:
+                worker_task.cancel()
+            await asyncio.gather(*workers, return_exceptions=True)
 
 
 def run_identity(args, tasks):
@@ -447,7 +432,7 @@ def run_identity(args, tasks):
                                            bool(cfg.get("Fluid")), cfg.get("fluid_usd_sync", False))
     fingerprint = hashlib.sha256()
     policy = Path(__file__).resolve().parent
-    sources = [policy / f for f in ("packed_eval.py", "packed_watchdog.py", "model.py", "launch_policy.py", "deploy.py",
+    sources = [policy / f for f in ("packed_eval.py", "packed_client.py", "packed_server.py", "packed_watchdog.py", "model.py", "launch_policy.py", "deploy.py",
                                     "deploy.yml", "setup_eval_policy_server.sh", "SHA256SUMS")]
     sources += sorted((policy / "model_code/src").rglob("*.py"))
     sources += sorted(Path("src/eval_client").glob("*.py"))

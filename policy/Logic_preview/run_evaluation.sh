@@ -171,6 +171,7 @@ if [[ "$mode" == smoke ]]; then
   layout_seeds=(1)
   client+=(--task stack_bowls --eval-num 1)
 else
+  export LOGIC_PREVIEW_PACKED_SERVER=1
   export EVAL_ENV_TYPE=sim
   unset EVAL_NUM
   client+=(--gpu-ids "$env_gpu" --eval-num native)

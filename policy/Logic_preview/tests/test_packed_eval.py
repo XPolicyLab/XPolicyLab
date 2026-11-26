@@ -54,22 +54,27 @@ class PackedResultTests(unittest.TestCase):
         args = SimpleNamespace(chunk=chunk, max_attempts=attempts, policy_host="host", port=1000)
         return Queue(args, tasks or [self.task], self.root, {"pipelines": {}})
 
-    def test_retry_keeps_complete_failures_and_recovers_only_missing_video(self):
+    def test_missing_video_keeps_native_score_and_only_retries_unknown_id(self):
         queue = self.queue()
         task, ids, folder, lease = queue.claim("0")
         with lease:
             self.assertIsNone(queue.claim("1"))
-            self.shard(folder.name, ids)
-            next(folder.glob("episode_0000001*right_wrist*")).unlink()
+            self.shard(folder.name, [0, 1])
+            next(folder.glob("episode_0000000*right_wrist*")).unlink()
             write_json(folder / "exit.json", 99)
         queue = self.queue()
         task, ids, folder, lease = queue.claim("1")
         with lease:
-            self.assertEqual(ids, [1])
+            self.assertEqual(ids, [2])
             self.shard(folder.name, ids)
+            write_json(folder / "exit.json", 99)
         self.assertFalse(queue.claim("2"))
         self.assertTrue(queue.claim("1"))
-        self.assertTrue(self.queue().claim("2"))
+        result, = task.parent.glob("*/_result.json")
+        self.assertEqual(json.loads(result.read_text())["details"]["0"],
+                         dict(layout_id=0, score=0.2, success=False))
+        self.assertEqual(json.loads(result.with_name("_missing_videos.json").read_text()),
+                         {"0": ["cam_right_wrist"]})
 
     def test_unstable_topup_selects_lowest_stable_ids(self):
         queue = self.queue()
@@ -88,18 +93,36 @@ class PackedResultTests(unittest.TestCase):
         rows = json.loads(result.read_text())["details"]
         self.assertEqual([r["layout_id"] for r in rows.values()], [0, 2, 3])
 
-    def test_only_clean_exhaustion_can_classify_omitted_layouts(self):
+    def test_only_manifest_can_abandon_a_layout(self):
         folder = self.shard("frag", [0])
-        for code, fault, missing in ((99, "", set()), (0, "[Eval] unhandled exception", set()), (0, "", {1})):
-            (folder / "client.log").write_text("Unstable nums: 1\nNo more seeds to run, exiting.\n" + fault)
+        (folder / "client.log").write_text("[PhysX] broken envs=[0] -> abandon seeds=[1]\n"
+                                          "Unstable nums: 1\nNo more seeds to run, exiting.\n")
+        for code in (0, 99):
             write_json(folder / "exit.json", code)
             _, _, rejected = attempt_result(folder, [0, 1], self.task, None)
-            self.assertEqual(rejected, missing)
+            self.assertEqual(rejected, set())
         (folder / "_result.json").write_text("{")
         write_json(folder / "native-resume.json", {"details": {"0": dict(layout_id=0, success=False, score=0.2)}})
         rows, _, rejected = attempt_result(folder, [0, 1], self.task, None)
         self.assertEqual(set(rows), {0})
         self.assertFalse(rejected)
+
+    def test_abandoned_layout_requires_clean_exit_before_topup(self):
+        queue = self.queue()
+        task, ids, folder, lease = queue.claim("0")
+        with lease:
+            self.shard(folder.name, [0, 2])
+            write_json(folder / "native-resume.json", {"abandoned_layout_ids": [1]})
+            write_json(folder / "exit.json", 99)
+        task, ids, folder, lease = queue.claim("0")
+        with lease:
+            self.assertEqual(ids, [])
+            folder.mkdir()
+            write_json(folder / "exit.json", 0)
+        self.assertFalse(queue.claim("0"))
+        task, ids, folder, lease = queue.claim("0")
+        with lease:
+            self.assertEqual(ids, [3, 4])
 
     def test_failed_shard_allows_other_tasks_and_explicit_retry(self):
         tasks = [self.task, Task("other", 1, 1, self.task.parent)]
@@ -124,13 +147,10 @@ class PackedResultTests(unittest.TestCase):
                 self.assertEqual(ids, [1])
                 self.assertIsNone(self.queue(tasks).claim("2"))
 
-    def test_invalid_scores_layouts_and_missing_camera(self):
+    def test_invalid_layouts_and_target(self):
         folder = self.shard("fragment", [0, 1])
         with self.assertRaisesRegex(ValueError, "Unexpected or duplicate"):
             read_result(folder, [0])
-        next(folder.glob("*right_wrist*")).unlink()
-        with self.assertRaisesRegex(ValueError, "Missing cam_right_wrist"):
-            read_result(folder, [0, 1])
         with self.assertRaisesRegex(ValueError, "stable layouts"):
             publish(self.task, {}, {}, self.root, "run")
         self.assertFalse(list(self.task.parent.iterdir()))
