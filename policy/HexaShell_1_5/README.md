@@ -2,13 +2,13 @@
 
 **Contributor:** HexaFuture | **Paper:** TBD | **arXiv:** TBD | **Original code:** See vendored `hexashell/`.
 
-Evaluation-only agent policy. A language model (`gpt-6-astra`, through an OpenAI-compatible chat API) works the two ARX X5 arms by writing Python cells against a `robot` object: it looks (the three RGB cameras, SAM3 segmentation, 3D measurement from several views) and moves (joint paths planned in this directory and streamed through the standard action contract), until the task is done or the step budget is spent. The harness (`hexashell/`) and its system prompt (`prompts/robodojo/`, the same for every task) are vendored here; SAM3 runs as a local service (`services/sam3_server.py`). The policy follows RoboDojo's Agent Track rules of 2026-11-14: the only task-specific text the model gets is the task's instruction and RoboDojo's official Description and Scoring (`obs["extra_info"]["detailed_instruction"]`), and no code is selected by task.
+Evaluation-only agent policy. A language model (`gpt-6.2-astra`, through an OpenAI-compatible chat API) works the two ARX X5 arms by writing Python cells against a `robot` object: it looks (the three RGB cameras, SAM3 segmentation, 3D measurement from several views) and moves (joint paths planned in this directory and streamed through the standard action contract), until the task is done or the step budget is spent. The harness (`hexashell/`) and its system prompt (`prompts/robodojo/`, the same for every task) are vendored here; SAM3 runs as a local service (`services/sam3_server.py`). The policy follows RoboDojo's Agent Track rules of 2026-11-14: the only task-specific text the model gets is the task's instruction and RoboDojo's official Description and Scoring (`obs["extra_info"]["detailed_instruction"]`), and no code is selected by task.
 
 Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md). Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
 
 ## Installation
 
-Requirements on the policy machine: conda (or `python3.11` for a venv); a CUDA GPU for SAM3 (about 3 GB; the policy server itself uses no GPU); access to [facebook/sam3](https://huggingface.co/facebook/sam3) on Hugging Face (gated: accept its license, then `hf auth login` or set `HF_TOKEN`); an OpenAI-compatible chat completions endpoint that serves `gpt-6-astra`, and its key (for the official evaluation, the contributors send both to the evaluators). The simulator side is the stock RoboDojo setup (Isaac Sim 5.1); the official task text needs RoboDojo `fbfbbcb` or later.
+Requirements on the policy machine: conda (or `python3.11` for a venv); a CUDA GPU for SAM3 (about 3 GB; the policy server itself uses no GPU); access to [facebook/sam3](https://huggingface.co/facebook/sam3) on Hugging Face (gated: accept its license, then `hf auth login` or set `HF_TOKEN`); an OpenAI-compatible chat completions endpoint that serves `gpt-6.2-astra`, and its key (for the official evaluation, the contributors send both to the evaluators). The simulator side is the stock RoboDojo setup (Isaac Sim 5.1); the official task text needs RoboDojo `fbfbbcb` or later.
 
 ```bash
 cd XPolicyLab/policy/HexaShell_1_5
@@ -36,10 +36,10 @@ bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <
   <policy_gpu_id> <env_gpu_id> <policy_env> <eval_env>
 
 # Example: stack_bowls, seed 0, simulator, policy server and SAM3 on GPU 0
-bash eval.sh RoboDojo stack_bowls gpt-6-astra arx_x5 joint 0 0 0 hexashell <eval_env>
+bash eval.sh RoboDojo stack_bowls gpt-6.2-astra arx_x5 joint 0 0 0 hexashell <eval_env>
 ```
 
-- `env_cfg_type` is the stock `arx_x5` (three 640x480 RGB cameras; depth is not used). `action_type` must stay `joint`. `ckpt_name` is a label only; `gpt-6-astra` is the convention.
+- `env_cfg_type` is the stock `arx_x5` (three 640x480 RGB cameras; depth is not used). `action_type` must stay `joint`. `ckpt_name` is a label only; `gpt-6.2-astra` is the convention.
 - `<policy_env>` is the conda environment from `install.sh`, or the path of a venv.
 - `setup_eval_policy_server.sh` starts the SAM3 service on the policy GPU (`SAM3_GPU` in `config.env` chooses another) when nothing answers on `SAM3_PORT`. The service stays up for later runs and is shared by them; `bash scripts/sam3_service.sh stop 18300` stops it.
 - One environment at a time (`eval_batch: false`).
@@ -50,7 +50,7 @@ Offline wiring check (no simulator, no endpoint, no SAM3 needed): with `EVAL_ENV
 
 ```bash
 export EVAL_ENV_TYPE=debug
-bash eval.sh RoboDojo stack_bowls gpt-6-astra arx_x5 joint 0 0 0 hexashell <eval_env>
+bash eval.sh RoboDojo stack_bowls gpt-6.2-astra arx_x5 joint 0 0 0 hexashell <eval_env>
 ```
 
 ## Configuration
@@ -60,7 +60,7 @@ bash eval.sh RoboDojo stack_bowls gpt-6-astra arx_x5 joint 0 0 0 hexashell <eval
 | Variable | Role |
 | --- | --- |
 | `HEXASHELL_API_BASE` | OpenAI-compatible endpoint (`<base>/chat/completions`, streamed) |
-| `HEXASHELL_MODEL`, `HEXASHELL_REASONING_EFFORT` | `gpt-6-astra`, `xhigh` (the setting for the leaderboard evaluation; `max_tokens` 32000 in `deploy.yml`) |
+| `HEXASHELL_MODEL`, `HEXASHELL_REASONING_EFFORT` | `gpt-6.2-astra`, `xhigh` (the setting for the leaderboard evaluation; `max_tokens` 32000 in `deploy.yml`) |
 | `HEXASHELL_API_KEY_FILE` | file holding the API key (else `OPENAI_API_KEY`); read by the policy server only |
 | `SAM3_PYTHON`, `SAM3_CHECKPOINT_PATH` | Python of the SAM3 service (default: the policy environment's) and `sam3.pt` |
 | `SAM3_PORT`, `SAM3_GPU` | port of the service (18300) and its GPU (default: the policy GPU) |

@@ -70,11 +70,11 @@ class Settings:
     api_key_file: str = "~/.config/hexashell/api-key"
     #: a private CA for the gateway's certificate (empty: the usual ones)
     ca_file: str = ""
-    model: str = "gpt-6-astra"
-    reasoning_effort: str = "high"
+    model: str = "gpt-6.2-astra"
+    reasoning_effort: str = "xhigh"
     #: Anthropic only: what the thinking blocks show ("summarized" or "omitted")
     thinking_display: str = "summarized"
-    max_tokens: int = 8192
+    max_tokens: int = 32000
     max_turns: int = 100
     budget_s: float = 5400.0
     nudges: int = 3
@@ -94,7 +94,7 @@ class Settings:
     #: only for a self-hosted Qwen on vLLM (api openai): send each reply's reasoning back with it in the
     #: history (a "reasoning" key, which vLLM hands to the chat template as reasoning_content), as a model
     #: trained on whole conversations with their thinking expects.  Off by default; keep it off for
-    #: gpt-6-astra and other hosted models (only short reasoning titles, unused; a gateway may refuse the key).
+    #: gpt-6.2-astra and other hosted models (only short reasoning titles, unused; a gateway may refuse the key).
     history_reasoning: bool = False
     #: motion speed profile (motion/ik.py SPEEDS): "v1" every action at the end limits, as in R0
     motion: str = "v1"
