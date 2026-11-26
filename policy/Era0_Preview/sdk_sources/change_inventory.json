@@ -1,0 +1,14 @@
+{
+  "sdk_revision": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
+  "scope": "SDK-native results, videos, summary and concurrency; optional policy-bundled IK guard only.",
+  "paths": [
+    {
+      "path": "src/eval_client/eval_env.py",
+      "disposition": "local profile adds IK rejection/hold and diagnostics only"
+    },
+    {
+      "path": "src/eval_client/ik_guard.py",
+      "disposition": "local profile guard implementation"
+    }
+  ]
+}
