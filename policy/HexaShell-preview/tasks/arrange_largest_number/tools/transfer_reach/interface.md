@@ -1,0 +1,6 @@
+`robo transfer_reach --x X --y Y --z Z --to_x X --to_y Y --to_z Z [--arm both|left|right] [--approach both|down|down45] [--open x|y] [--clearance M] [--yaw DEG]`: free read-only IK route query; no motion or action steps.
+Endpoints are absolute world TCP coordinates in metres. Defaults: arm=both, approach=both, open=x, clearance=0.045 (0.025–0.15).
+Checks orientation, elevated approach, descent, lift, carry, lowering and retraction from current joints for each requested arm/preset; down45 includes elevated empty departure when needed. Active gripper must be open.
+Returns `candidates` with `estimate_ok`, failed stage/reason or nominal `transfer_action_steps`, `stage_costs`, remaining steps and scene reference; `cheapest_reachable` selects the lowest estimated cost among reachable candidates.
+Returns `plan_ok=false` if no route passes or arguments/calculation fail. Reachability is IK only: no collision, grasp, retention or placement certificate.
+Literal endpoints only: no seating or landing adjustment. Optional yaw defaults to 0 (±180° about world +z); nonzero yaw excludes down45 and adds elevated destination rotation plus rotated lowering/retraction. Cost includes close/open but excludes parking, visual probes, recovery and home. Any physical command, failure or reset invalidates the estimate.

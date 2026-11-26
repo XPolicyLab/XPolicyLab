@@ -1,0 +1,6 @@
+# Active measured-geometry and complete-cycle commands.
+settled_cycle
+planar_ring
+table_plane
+upright_geometry
+boundary_candidates
