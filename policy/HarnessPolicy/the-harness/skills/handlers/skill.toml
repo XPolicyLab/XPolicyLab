@@ -1,6 +1,0 @@
-name = "handlers"
-summary = "Handlers that resolve events inside the program."
-layer = "handlers"
-mixin = "skills.handlers:Handlers"
-exports = ["on"]
-order = 120

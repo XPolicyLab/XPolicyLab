@@ -1,7 +1,0 @@
-name = "segmentation"
-summary = "Instance masks from a text prompt or a pixel (SAM 3)."
-layer = "base"
-mixin = "skills.segmentation:Segmentation"
-exports = ["segment_text", "segment_point"]
-needs = ["segmenter"]
-order = 50
