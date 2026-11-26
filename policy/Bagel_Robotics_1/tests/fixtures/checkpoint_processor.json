@@ -1,0 +1,59 @@
+{
+  "format": "vpp2_wan21_action_v1",
+  "processor": {
+    "_target_": "vpp2.datasets.lerobot.processors.vpp2_processor.VPP2Processor",
+    "shape_meta": {
+      "images": [
+        {
+          "key": "image",
+          "raw_shape": [
+            3,
+            480,
+            880
+          ],
+          "shape": [
+            3,
+            480,
+            880
+          ]
+        }
+      ],
+      "action": [
+        {
+          "key": "default",
+          "raw_shape": 16,
+          "shape": 16
+        }
+      ],
+      "state": [
+        {
+          "key": "default",
+          "raw_shape": 16,
+          "shape": 16
+        }
+      ]
+    },
+    "num_obs_steps": 65,
+    "num_output_cameras": 1,
+    "action_output_dim": 16,
+    "proprio_output_dim": 16,
+    "action_state_transforms": null,
+    "use_stepwise_action_norm": false,
+    "norm_default_mode": "z-score",
+    "norm_exception_mode": null,
+    "action_state_merger": {
+      "_target_": "vpp2.datasets.lerobot.transforms.action_state_merger.ConcatLeftAlign"
+    },
+    "train_transforms": [
+      {
+        "_target_": "vpp2.datasets.lerobot.transforms.image.ToTensor"
+      }
+    ],
+    "val_transforms": [
+      {
+        "_target_": "vpp2.datasets.lerobot.transforms.image.ToTensor"
+      }
+    ],
+    "num_image_obs_steps": 17
+  }
+}

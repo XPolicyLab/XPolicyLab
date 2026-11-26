@@ -1,0 +1,569 @@
+{
+  "checkpoint": 1000,
+  "seed": 1,
+  "official_leaderboard_result": false,
+  "suites": {
+    "precision": {
+      "source_file": "progress-001000.json",
+      "source_sha256": "099fa38f19d9f5ff428695ca9999fa5c291081f1519c8320f2101a86c03ff6ef",
+      "original": {
+        "complete": true,
+        "expected": 400,
+        "mean_partial_score": 0.40425000000000033,
+        "protocol": "266df4b5d9b8eac16145600a8c4f9223d15e03285d61473c3bbd8c43b694f211",
+        "scored": 400,
+        "success_rate": 0.315,
+        "successes": 126,
+        "tasks": {
+          "build_tower": {
+            "complete": true,
+            "expected": 50,
+            "mean_partial_score": 0.7360000000000002,
+            "scored": 50,
+            "success_rate": 0.64,
+            "successes": 32
+          },
+          "deposit_coin": {
+            "complete": true,
+            "expected": 50,
+            "mean_partial_score": 0.2679999999999999,
+            "scored": 50,
+            "success_rate": 0.22,
+            "successes": 11
+          },
+          "fasten_screws": {
+            "complete": true,
+            "expected": 50,
+            "mean_partial_score": 0.6679999999999999,
+            "scored": 50,
+            "success_rate": 0.36,
+            "successes": 18
+          },
+          "insert_key": {
+            "complete": true,
+            "expected": 50,
+            "mean_partial_score": 0.15000000000000013,
+            "scored": 50,
+            "success_rate": 0.0,
+            "successes": 0
+          },
+          "insert_tubes": {
+            "complete": true,
+            "expected": 50,
+            "mean_partial_score": 0.7519999999999999,
+            "scored": 50,
+            "success_rate": 0.64,
+            "successes": 32
+          },
+          "play_Xylophone": {
+            "complete": true,
+            "expected": 50,
+            "mean_partial_score": 0.0,
+            "scored": 50,
+            "success_rate": 0.0,
+            "successes": 0
+          },
+          "plug_in_charger": {
+            "complete": true,
+            "expected": 50,
+            "mean_partial_score": 0.04,
+            "scored": 50,
+            "success_rate": 0.04,
+            "successes": 2
+          },
+          "pour_balls_into_vase": {
+            "complete": true,
+            "expected": 50,
+            "mean_partial_score": 0.62,
+            "scored": 50,
+            "success_rate": 0.62,
+            "successes": 31
+          }
+        },
+        "update": 1000
+      },
+      "reported_with_labeled_replacements": {
+        "scored": 400,
+        "successes": 126,
+        "success_rate": 0.315,
+        "mean_partial_score": 0.40425000000000033,
+        "replacement_count": 0,
+        "tasks": {
+          "build_tower": {
+            "mean_partial_score": 0.7360000000000002,
+            "scored": 50,
+            "success_rate": 0.64,
+            "successes": 32
+          },
+          "deposit_coin": {
+            "mean_partial_score": 0.2679999999999999,
+            "scored": 50,
+            "success_rate": 0.22,
+            "successes": 11
+          },
+          "fasten_screws": {
+            "mean_partial_score": 0.6679999999999999,
+            "scored": 50,
+            "success_rate": 0.36,
+            "successes": 18
+          },
+          "insert_key": {
+            "mean_partial_score": 0.15000000000000013,
+            "scored": 50,
+            "success_rate": 0.0,
+            "successes": 0
+          },
+          "insert_tubes": {
+            "mean_partial_score": 0.7519999999999999,
+            "scored": 50,
+            "success_rate": 0.64,
+            "successes": 32
+          },
+          "play_Xylophone": {
+            "mean_partial_score": 0.0,
+            "scored": 50,
+            "success_rate": 0.0,
+            "successes": 0
+          },
+          "plug_in_charger": {
+            "mean_partial_score": 0.04,
+            "scored": 50,
+            "success_rate": 0.04,
+            "successes": 2
+          },
+          "pour_balls_into_vase": {
+            "mean_partial_score": 0.62,
+            "scored": 50,
+            "success_rate": 0.62,
+            "successes": 31
+          }
+        }
+      }
+    },
+    "open": {
+      "source_file": "progress.json",
+      "source_sha256": "32e307e43f14291eb654f11d457be3bd29c28d0e7e6d3bc132de8d26eec8f3c3",
+      "original": {
+        "accounted": 399,
+        "expected": 400,
+        "mean_partial_score": 0.04486215538847117,
+        "native_complete": false,
+        "reporting_complete": false,
+        "scored": 399,
+        "success_rate": 0.040100250626566414,
+        "successes": 16,
+        "suite": "open",
+        "tasks": {
+          "align_blocks": {
+            "accounted": 50,
+            "expected": 50,
+            "mean_partial_score": 0.0,
+            "native_complete": true,
+            "reporting_complete": true,
+            "scored": 50,
+            "success_rate": 0.0,
+            "successes": 0,
+            "unscored": 0,
+            "valid_failures": 50
+          },
+          "classify_objects_by_language": {
+            "accounted": 50,
+            "expected": 50,
+            "mean_partial_score": 0.026000000000000002,
+            "native_complete": true,
+            "reporting_complete": true,
+            "scored": 50,
+            "success_rate": 0.0,
+            "successes": 0,
+            "unscored": 0,
+            "valid_failures": 50
+          },
+          "general_pickup": {
+            "accounted": 49,
+            "expected": 50,
+            "mean_partial_score": 0.24489795918367346,
+            "native_complete": false,
+            "reporting_complete": false,
+            "scored": 49,
+            "success_rate": 0.24489795918367346,
+            "successes": 12,
+            "unscored": 0,
+            "valid_failures": 37
+          },
+          "pick_from_conveyor_by_image": {
+            "accounted": 50,
+            "expected": 50,
+            "mean_partial_score": 0.0,
+            "native_complete": true,
+            "reporting_complete": true,
+            "scored": 50,
+            "success_rate": 0.0,
+            "successes": 0,
+            "unscored": 0,
+            "valid_failures": 50
+          },
+          "pour_by_language": {
+            "accounted": 50,
+            "expected": 50,
+            "mean_partial_score": 0.0,
+            "native_complete": true,
+            "reporting_complete": true,
+            "scored": 50,
+            "success_rate": 0.0,
+            "successes": 0,
+            "unscored": 0,
+            "valid_failures": 50
+          },
+          "solve_equation": {
+            "accounted": 50,
+            "expected": 50,
+            "mean_partial_score": 0.0,
+            "native_complete": true,
+            "reporting_complete": true,
+            "scored": 50,
+            "success_rate": 0.0,
+            "successes": 0,
+            "unscored": 0,
+            "valid_failures": 50
+          },
+          "stack_blocks_by_language": {
+            "accounted": 50,
+            "expected": 50,
+            "mean_partial_score": 0.092,
+            "native_complete": true,
+            "reporting_complete": true,
+            "scored": 50,
+            "success_rate": 0.08,
+            "successes": 4,
+            "unscored": 0,
+            "valid_failures": 46
+          },
+          "store_tools_in_toolbox": {
+            "accounted": 50,
+            "expected": 50,
+            "mean_partial_score": 0.0,
+            "native_complete": true,
+            "reporting_complete": true,
+            "scored": 50,
+            "success_rate": 0.0,
+            "successes": 0,
+            "unscored": 0,
+            "valid_failures": 50
+          }
+        },
+        "unscored": 0,
+        "update": 1000,
+        "valid_failures": 383,
+        "variants": {
+          "standard": {
+            "accounted": 399,
+            "expected": 400,
+            "mean_partial_score": 0.04486215538847117,
+            "native_complete": false,
+            "reporting_complete": false,
+            "scored": 399,
+            "success_rate": 0.040100250626566414,
+            "successes": 16,
+            "unscored": 0,
+            "valid_failures": 383
+          }
+        }
+      },
+      "reported_with_labeled_replacements": {
+        "scored": 400,
+        "successes": 16,
+        "success_rate": 0.04,
+        "mean_partial_score": 0.04475,
+        "replacement_count": 1,
+        "tasks": {
+          "align_blocks": {
+            "mean_partial_score": 0.0,
+            "scored": 50,
+            "success_rate": 0.0,
+            "successes": 0
+          },
+          "classify_objects_by_language": {
+            "mean_partial_score": 0.026000000000000002,
+            "scored": 50,
+            "success_rate": 0.0,
+            "successes": 0
+          },
+          "general_pickup": {
+            "mean_partial_score": 0.24,
+            "scored": 50,
+            "success_rate": 0.24,
+            "successes": 12
+          },
+          "pick_from_conveyor_by_image": {
+            "mean_partial_score": 0.0,
+            "scored": 50,
+            "success_rate": 0.0,
+            "successes": 0
+          },
+          "pour_by_language": {
+            "mean_partial_score": 0.0,
+            "scored": 50,
+            "success_rate": 0.0,
+            "successes": 0
+          },
+          "solve_equation": {
+            "mean_partial_score": 0.0,
+            "scored": 50,
+            "success_rate": 0.0,
+            "successes": 0
+          },
+          "stack_blocks_by_language": {
+            "mean_partial_score": 0.092,
+            "scored": 50,
+            "success_rate": 0.08,
+            "successes": 4
+          },
+          "store_tools_in_toolbox": {
+            "mean_partial_score": 0.0,
+            "scored": 50,
+            "success_rate": 0.0,
+            "successes": 0
+          }
+        }
+      }
+    },
+    "long_horizon": {
+      "source_file": "progress.json",
+      "source_sha256": "9bc9c571ee6099957f954be58e5cf7654a1439975389277b8c29d036b3ad1e48",
+      "original": {
+        "accounted": 398,
+        "expected": 400,
+        "mean_partial_score": 0.532035175879397,
+        "native_complete": false,
+        "reporting_complete": false,
+        "scored": 398,
+        "success_rate": 0.3442211055276382,
+        "successes": 137,
+        "suite": "long_horizon",
+        "tasks": {
+          "classify_objects": {
+            "accounted": 50,
+            "expected": 50,
+            "mean_partial_score": 0.445,
+            "native_complete": true,
+            "reporting_complete": true,
+            "scored": 50,
+            "success_rate": 0.32,
+            "successes": 16,
+            "unscored": 0,
+            "valid_failures": 34
+          },
+          "fill_egg_holder": {
+            "accounted": 48,
+            "expected": 50,
+            "mean_partial_score": 0.13854166666666667,
+            "native_complete": false,
+            "reporting_complete": false,
+            "scored": 48,
+            "success_rate": 0.041666666666666664,
+            "successes": 2,
+            "unscored": 0,
+            "valid_failures": 46
+          },
+          "fill_pen_holder": {
+            "accounted": 50,
+            "expected": 50,
+            "mean_partial_score": 0.439,
+            "native_complete": true,
+            "reporting_complete": true,
+            "scored": 50,
+            "success_rate": 0.22,
+            "successes": 11,
+            "unscored": 0,
+            "valid_failures": 39
+          },
+          "make_kong": {
+            "accounted": 50,
+            "expected": 50,
+            "mean_partial_score": 0.86,
+            "native_complete": true,
+            "reporting_complete": true,
+            "scored": 50,
+            "success_rate": 0.86,
+            "successes": 43,
+            "unscored": 0,
+            "valid_failures": 7
+          },
+          "organize_table": {
+            "accounted": 50,
+            "expected": 50,
+            "mean_partial_score": 0.645,
+            "native_complete": true,
+            "reporting_complete": true,
+            "scored": 50,
+            "success_rate": 0.18,
+            "successes": 9,
+            "unscored": 0,
+            "valid_failures": 41
+          },
+          "play_stacking_toy": {
+            "accounted": 50,
+            "expected": 50,
+            "mean_partial_score": 0.32,
+            "native_complete": true,
+            "reporting_complete": true,
+            "scored": 50,
+            "success_rate": 0.12,
+            "successes": 6,
+            "unscored": 0,
+            "valid_failures": 44
+          },
+          "play_tic_tac_toe": {
+            "accounted": 50,
+            "expected": 50,
+            "mean_partial_score": 0.405,
+            "native_complete": true,
+            "reporting_complete": true,
+            "scored": 50,
+            "success_rate": 0.02,
+            "successes": 1,
+            "unscored": 0,
+            "valid_failures": 49
+          },
+          "put_bottles_into_dustbin": {
+            "accounted": 50,
+            "expected": 50,
+            "mean_partial_score": 0.988,
+            "native_complete": true,
+            "reporting_complete": true,
+            "scored": 50,
+            "success_rate": 0.98,
+            "successes": 49,
+            "unscored": 0,
+            "valid_failures": 1
+          }
+        },
+        "unscored": 0,
+        "update": 1000,
+        "valid_failures": 261,
+        "variants": {
+          "standard": {
+            "accounted": 398,
+            "expected": 400,
+            "mean_partial_score": 0.532035175879397,
+            "native_complete": false,
+            "reporting_complete": false,
+            "scored": 398,
+            "success_rate": 0.3442211055276382,
+            "successes": 137,
+            "unscored": 0,
+            "valid_failures": 261
+          }
+        }
+      },
+      "reported_with_labeled_replacements": {
+        "scored": 400,
+        "successes": 137,
+        "success_rate": 0.3425,
+        "mean_partial_score": 0.53,
+        "replacement_count": 2,
+        "tasks": {
+          "classify_objects": {
+            "mean_partial_score": 0.445,
+            "scored": 50,
+            "success_rate": 0.32,
+            "successes": 16
+          },
+          "fill_egg_holder": {
+            "mean_partial_score": 0.138,
+            "scored": 50,
+            "success_rate": 0.04,
+            "successes": 2
+          },
+          "fill_pen_holder": {
+            "mean_partial_score": 0.439,
+            "scored": 50,
+            "success_rate": 0.22,
+            "successes": 11
+          },
+          "make_kong": {
+            "mean_partial_score": 0.86,
+            "scored": 50,
+            "success_rate": 0.86,
+            "successes": 43
+          },
+          "organize_table": {
+            "mean_partial_score": 0.645,
+            "scored": 50,
+            "success_rate": 0.18,
+            "successes": 9
+          },
+          "play_stacking_toy": {
+            "mean_partial_score": 0.32,
+            "scored": 50,
+            "success_rate": 0.12,
+            "successes": 6
+          },
+          "play_tic_tac_toe": {
+            "mean_partial_score": 0.405,
+            "scored": 50,
+            "success_rate": 0.02,
+            "successes": 1
+          },
+          "put_bottles_into_dustbin": {
+            "mean_partial_score": 0.988,
+            "scored": 50,
+            "success_rate": 0.98,
+            "successes": 49
+          }
+        }
+      }
+    }
+  },
+  "replacements": [
+    {
+      "suite": "open",
+      "episode": "general_pickup--0050",
+      "outcome": {
+        "executed_steps": 200,
+        "layout_id": 50,
+        "score": 0.0,
+        "step_budget": 200,
+        "success": false,
+        "termination_reason": "step_budget"
+      },
+      "receipt_sha256": "4f2a6cebf43dc12ea30ee63981e720e7afcec93b03ad3f6a4ba460c59f2d9cf4",
+      "protocol": "e32aa0e95d1bdfe638c65520e8512c1e0da1cab16744ac560ba2c8ad59dcbc5d",
+      "source_sha256": "a9c67e0796355fb49b13de78212bb5ef0983d3e2d18bb0480d0c38f2bcbe1eae",
+      "source_file": "replacement-result.json"
+    },
+    {
+      "suite": "long_horizon",
+      "episode": "fill_egg_holder--0050",
+      "outcome": {
+        "executed_steps": 700,
+        "layout_id": 50,
+        "score": 0.0,
+        "step_budget": 700,
+        "success": false,
+        "termination_reason": "step_budget"
+      },
+      "receipt_sha256": "e997fd981a5855be673538943400865788b20f4850d0da684d9752ff4778bafa",
+      "protocol": "a876503909848ac16a62806bed0177445f8ee0681970f82f1d49150a1ab5b5b6",
+      "source_sha256": "af24963ead6a0db6175e26b51df2a551e3a3b7c4854659c8b7995ff24a4fb927",
+      "source_file": "fill_egg_holder--0050-result.json"
+    },
+    {
+      "suite": "long_horizon",
+      "episode": "fill_egg_holder--0051",
+      "outcome": {
+        "executed_steps": 700,
+        "layout_id": 51,
+        "score": 0.25,
+        "step_budget": 700,
+        "success": false,
+        "termination_reason": "step_budget"
+      },
+      "receipt_sha256": "8a9be90e270a00edd75615061418570fe83af25e28eb742ce2548d10b792713f",
+      "protocol": "a876503909848ac16a62806bed0177445f8ee0681970f82f1d49150a1ab5b5b6",
+      "source_sha256": "48566afa4d9dd6f1c53c601974cc583fc4c519a57c96c94515e361ba1daf03b0",
+      "source_file": "fill_egg_holder--0051-result.json"
+    }
+  ],
+  "note": "Local standard-layout results. Open/Long Horizon include labeled startup-invalid replacements. No five-suite benchmark aggregate or packaged-adapter rollout claim."
+}
