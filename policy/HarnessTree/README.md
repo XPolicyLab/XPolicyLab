@@ -94,9 +94,11 @@ Environment variables:
 
 ### Limitations / Agent Track residuals
 
-- Instruction-selected **complete** task programs (§§2/4): not test-time orchestration of reusable tools; retained rather than stubbed. Committee disposition required for official Agent Track claims.
-- Private deploy may clear evaluator `success` to trigger the native final check on early stop (§6); not an official evaluator-owned stop API.
-- Kong layout-as-identity, retained calibrations (tubes/mugs), and related priors: see packaging notes / residuals; not cleared for verified listing.
+**Design ceiling (intentional).** HarnessTree is an instruction→complete skill-program agent. Clearing the residuals below would mean replacing that architecture (general test-time tool orchestration, evaluator-owned stop API, visual identity instead of layout priors). We are not planning those redesigns for this submission; an Agent Track `*` / separate display under the [protocol](https://robodojo-benchmark.com/leaderboard/protocol) is acceptable.
+
+- Instruction-selected **complete** task programs (§§2/4): not test-time orchestration of reusable tools; retained rather than stubbed.
+- Private deploy may clear evaluator `success` to trigger the native final check on early stop (§6); not an official evaluator-owned stop API (same early-stop pattern as other merged agent adapters; left as-is).
+- Kong layout-as-identity, retained calibrations (tubes/mugs), and related priors: not cleared for verified listing.
 
 ### Local seed-0 native evidence
 
