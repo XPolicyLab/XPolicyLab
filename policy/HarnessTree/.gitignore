@@ -1,0 +1,10 @@
+results/
+checkpoints/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+*.mp4
+*.pt
+*.ckpt
+*.onnx
