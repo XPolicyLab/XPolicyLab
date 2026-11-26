@@ -1,0 +1,7 @@
+name = "kinematics"
+summary = "Forward and inverse kinematics and motion planning (the robot's planner)."
+layer = "base"
+mixin = "skills.kinematics:Kinematics"
+exports = ["fk", "ik", "plan_path"]
+required = true
+order = 20

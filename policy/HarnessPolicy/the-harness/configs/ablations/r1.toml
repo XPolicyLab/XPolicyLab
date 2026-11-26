@@ -1,0 +1,29 @@
+# R1 fixed skills (interface ladder, Tab. 3): one action per model call from a fixed
+# vocabulary that adds perception-grounded skills (locate, pick, place) and the
+# learned policy to R0's actions (Zhang et al., 2026a; Galanti et al., 2026).
+description = "R1: fixed skills, one action per call"
+include = ["../default.toml"]
+mode = "direct"
+prompt = ["../../prompts/robodojo_direct.md", "../../prompts/robodojo_direct_skills.md",
+          "../../prompts/robodojo_direct_policy.md"]
+# No verifier (a direct-control rung has no programs to check); pointing by the vlm role,
+# as in the agent.
+roles = ["main", "vlm"]
+
+[skills]
+layers = { learned = true, reactive = false, handlers = false }
+# R1's fixed skills pick and place are the manipulation skill's (by name).
+enable = ["manipulation"]
+disable = ["eef"]
+
+[services]
+world_models = []
+
+[runtime]
+# Perception-grounded skills (locate, pick, place) in the action vocabulary.
+fixed_skills = true
+cell_timeout_seconds = 120
+default_max_seconds = 10.0
+verifier = false
+# Direct control has no start step: its action vocabulary hands the policy sub-tasks.
+strategy_first = false

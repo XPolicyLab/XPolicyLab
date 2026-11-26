@@ -1,0 +1,7 @@
+name = "verify"
+summary = "The success verifier, asked from a program (returns None when the system has none)."
+layer = "base"
+mixin = "skills.verify:Verify"
+exports = ["verify"]
+required = true
+order = 80

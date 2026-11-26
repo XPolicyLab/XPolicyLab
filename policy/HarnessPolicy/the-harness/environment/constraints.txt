@@ -1,0 +1,31 @@
+# Pinned core of the harness-policy environment. Every pip install in
+# environment/setup.sh runs under these constraints. Change a line here only
+# together with a RoboDojo smoke run and a refreshed environment/lock/.
+
+# PyTorch CUDA 12.8 stack used by Isaac Sim 5.1 and cuRobo.
+torch==2.7.0
+torchvision==0.22.0
+torchaudio==2.7.0
+isaacsim==5.1.0
+
+# Isaac Sim / Isaac Lab runtime pins, as in RoboDojo scripts/install.sh.
+numpy==1.26.0
+packaging==23.0
+typing_extensions==4.12.2
+filelock==3.13.1
+# isaacsim-kernel declares websockets==12.0 for Kit asset-search extensions that
+# headless simulation does not load. XPolicyLab policy servers need the
+# websockets>=13 asyncio API, so the environment uses 17.1 (see README).
+websockets==17.1
+scipy==1.15.3
+warp-lang==1.11.0
+click==8.1.7
+psutil==5.9.8
+wheel==0.45.1
+starlette==0.45.3
+onnx>=1.18,<1.22
+ipython<9
+virtualenv==20.30.0
+
+# Model code shared by learned skills and perception.
+transformers==4.57.6

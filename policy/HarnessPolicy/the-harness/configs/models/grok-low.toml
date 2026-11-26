@@ -1,0 +1,8 @@
+# grok-4.7 at low reasoning effort, for development. At medium effort xAI streams no
+# reasoning, and OpenRouter cuts a request after about 5 minutes with nothing received:
+# long replies are lost. Low effort answers in 13-60 s (about $0.11 per RoboDojo episode).
+description = "grok-4.7 (low) writes programs, answers questions about images and points; Molmo2 for a pointer role"
+include = ["grok-medium.toml"]
+
+[main]
+reasoning_effort = "low"

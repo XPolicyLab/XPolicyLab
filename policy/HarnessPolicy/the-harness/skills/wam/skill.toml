@@ -1,0 +1,7 @@
+name = "wam"
+summary = "World-action models: predicted camera views and motion for an instruction."
+layer = "learned"
+mixin = "skills.wam:WorldModels"
+exports = ["predict_future", "list_world_models"]
+needs = ["world_model"]
+order = 140

@@ -1,0 +1,9 @@
+name = "reflexes"
+summary = "Ready-made reactive behaviors over the reactive layer: intercept catches an object moving past with a visual-servo controller, without the model."
+layer = "reactive"
+mixin = "skills.reflexes:Reflexes"
+exports = ["intercept"]
+needs = ["segmenter"]
+requires = ["eef", "reactive"]
+optional = true
+order = 115

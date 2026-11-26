@@ -1,0 +1,23 @@
+# RoboTwin 2.0 development check on stack_blocks_two: the agent with the RoboTwin prompt
+# pack (AgileX ALOHA). No learned skill for this embodiment (no policy or world model
+# trained on RoboTwin is served), and RoboTwin has no task descriptions.
+description = "the agent on RoboTwin, development seeds"
+bench = "robotwin"
+tasks = ["stack_blocks_two"]
+seeds = [0]
+layouts = "procedural"
+endpoint = "http://127.0.0.1:8772"
+
+[budget]
+max_wall_seconds = 5400
+max_cost_usd = 4.0
+
+[overrides.agent]
+prompt = "../../prompts/robotwin"
+# The tools by object id (skills/eef) are tuned to RoboDojo's ARX X5 (table height,
+# parking spots, jaw width); RoboTwin's ALOHA uses the manipulation skill's.
+skills = { layers = { learned = false }, enable = ["manipulation"], disable = ["eef"] }
+services = { policies = [], world_models = [] }
+# RoboTwin has no XPolicyLab embodiment profile here: the worker shows programs its own
+# observations (the default agent's contract is RoboDojo's leaderboard protocol).
+runtime = { task_descriptions = false, contract = "native" }

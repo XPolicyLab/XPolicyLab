@@ -1,0 +1,8 @@
+# R3 programs and learned skills (interface ladder, Tab. 3): R2 plus the learned policy
+# (run_policy, the strategy step); no reactive layer. A world model (predict_future)
+# comes with --set 'agent.services.world_models=["openwam"]', as for the agent.
+description = "R3: R2 plus learned skills (the learned policy)"
+include = ["../default.toml"]
+
+[skills]
+layers = { learned = true, reactive = false, handlers = true }

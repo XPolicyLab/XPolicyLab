@@ -1,0 +1,23 @@
+# DeepSeek V4.1 Flash writes the programs: the development model. It runs at medium
+# reasoning effort for a few cents per RoboDojo episode (R4 on the 84 official pack-0
+# cases: 6.4 calls and $0.02 per episode). DeepSeek's API serves it as deepseek-flash
+# (https://api.deepseek.com). The key is DEEPSEEK_API_KEY, never written here.
+# The paper's main runs name their model in the experiment (opus-5.5).
+description = "DeepSeek V4.1 Flash writes programs, answers questions about images and points; Molmo2 for a pointer role"
+include = ["grok-medium.toml"]
+
+[main]
+backend = "openai_chat"
+base_url = "https://api.deepseek.com"
+model = "deepseek-flash"
+api_key_env = "DEEPSEEK_API_KEY"
+extra_body = { thinking = { type = "enabled" }, reasoning_effort = "medium" }
+
+# The same model answers questions about images inside programs (see grok-medium.toml).
+[vlm]
+backend = "openai_chat"
+base_url = "https://api.deepseek.com"
+model = "deepseek-flash"
+api_key_env = "DEEPSEEK_API_KEY"
+reasoning_effort = "medium"
+extra_body = { thinking = { type = "enabled" }, reasoning_effort = "medium" }

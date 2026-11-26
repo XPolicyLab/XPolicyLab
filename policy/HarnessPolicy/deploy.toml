@@ -1,0 +1,10 @@
+# Max (WALL-OSS + Codex + complementary). Evaluators may override service placement.
+weights = "checkpoints"
+
+[services.wall-oss]
+mode = "external"
+url = "ws://127.0.0.1:19012"
+
+[services.sam3]
+mode = "external"
+url = "http://127.0.0.1:8810"

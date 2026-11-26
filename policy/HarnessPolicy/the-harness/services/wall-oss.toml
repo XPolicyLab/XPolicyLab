@@ -1,0 +1,47 @@
+kind = "policy"
+summary = "WALL-OSS 1.0 lite, a Qwen3.5 VLA fine-tuned on RoboDojo, end-effector actions, through XPolicyLab's WallX adapter"
+protocol = "xpolicylab"
+port = 19011
+# The model card: one server, ten environments batched, about 19 GB.
+vram_gb = 19.0
+load_seconds = 300
+python = "/pfs/echo_folder/weiyang/conda-envs/wall-oss/bin/python"
+needs_files = ["{weights}/wall-oss/checkpoint/model.safetensors", "{weights}/wall-oss/checkpoint/config.yml",
+               "{xpolicylab}/policy/WallX/deploy.yml",
+               "/pfs/echo_folder/weiyang/conda-envs/wall-oss/bin/python"]
+notes = """Eval-only. The published numbers used wall-x commit 39fa65b (StarrickLiu/wall-x \
+starrick/robodojo-serving) and the WallX adapter from XPolicyLab PR 193. Joint actions are rejected: \
+the wall-oss ablation passes end-effector actions unchanged to RoboDojo's EE client path (no harness IK). The server returns 32 steps and the reference \
+evaluation replays 16 (deploy.yml replan_steps, client execute_steps). One process is about 19 GB, so \
+it stays resident beside SAM 3 on a large GPU; swapping it out would drop its keyframe memory."""
+
+[client]
+url = "{url}"
+# Memory travels in the request (kfmem), not in a server-side evaluation scope.
+# WallX has no reset_evaluation.
+scoped = false
+memory = "kfmem"
+execute_steps = 16
+# Full returned chunk validated by the native-EE client, before replaying 16.
+action_chunk_length = 32
+description = """A visuomotor policy with a keyframe memory of recent head-camera frames, trained on whole RoboDojo \
+tasks: each demonstration starts at the start pose and finishes the task, labelled with the task's own instruction. \
+It moves both arms by their end-effector poses. It does best in exactly that setting: from the untouched start \
+pose, with the task's own instruction, left to run. It cannot pick one object out of several by reading what \
+identifies it: a name, a number or label written on it, or a picture shown as the target. Its memory of recent \
+frames is what it has for an object seen, covered or swapped earlier in the episode. Signs it has stopped helping: \
+the arms stop moving while objects are not where the task needs them; the same reach is repeated; an object is \
+knocked over or off the table."""
+
+[xpolicylab]
+policy = "WallX"
+ckpt_name = "wall-oss-1.0-lite-robodojo"
+action_type = "ee"
+action_dim = 16
+
+[xpolicylab.overrides]
+checkpoint_path = "{weights}/wall-oss/checkpoint"
+
+[[weights]]
+dir = "wall-oss"
+hf_model = "x-square-robot/wall-oss-1.0-lite-robodojo"

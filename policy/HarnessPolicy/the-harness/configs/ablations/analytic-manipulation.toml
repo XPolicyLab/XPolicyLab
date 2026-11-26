@@ -1,0 +1,11 @@
+# The agent with the manipulation skill's pick, place and push (by name, over the
+# analytic skills: pointing, plan_grasp, a straight-line push) in place of the default
+# tools by object id (skills/eef: locate, pick, release, transfer, push). The two export
+# some of the same names, so one or the other. watch_scene, clear_view and press stay
+# (skills/scene).
+description = "with the manipulation skill's pick, place and push in place of the tools by object id"
+include = ["../default.toml"]
+
+[skills]
+enable = ["manipulation"]
+disable = ["eef"]

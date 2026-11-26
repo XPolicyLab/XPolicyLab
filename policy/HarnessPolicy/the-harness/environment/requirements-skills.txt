@@ -1,0 +1,55 @@
+# Inference dependencies for learned skills (XPolicyLab policies) and
+# perception, installed under constraints.txt. Training-only packages
+# (lightning, deepspeed, wandb, decord) are left out.
+
+# Xiaomi-Robotics-1 (XPolicyLab/policy/Xiaomi_Robotics_1). Upstream asks for
+# torch 2.8 / transformers 4.57.1 / numpy 2.1; inference runs on the pinned core.
+# flash-attn is not installed; the policy runs with SDPA attention.
+accelerate==1.11.0
+liger-kernel==0.6.5
+omegaconf
+hydra-core
+# mmengine's own requirement on opencv-python would add a second cv2 next to
+# opencv-python-headless; setup.sh installs mmengine with --no-deps.
+addict
+rich
+termcolor
+yapf
+
+# G0.5 / GalaxeaVLA (XPolicyLab/policy/G05), inference only, installed under constraints.txt.
+# Upstream pyproject pins torch 2.7.1 / transformers 4.57.1 / websockets 16 / python<3.11 plus
+# training and sim packages (deepspeed, wandb, sapien, robosuite, ...). Inference runs on the
+# pinned core. flash-attn / flash-attn-4 / causal-conv1d are not installed: the vision tower uses
+# SDPA and the conv1d uses the torch fallback. The G05 package itself is installed with
+#   pip install --no-deps --ignore-requires-python -e XPolicyLab/policy/G05/G05
+# (its requires-python is <3.11; the code runs on 3.11).
+GitPython==3.1.62               # g05.utils.data.normalizer does `from git import Repo` at import time
+gitdb==4.0.12                   # GitPython dependency
+smmap==5.0.3                    # gitdb dependency
+rootutils==1.0.7                # G05 scripts/serve_policy.py (setup, build_obs_dict) imports it at module level
+flash-linear-attention==0.5.2   # Triton Gated-DeltaNet kernels for the Qwen3.5 linear-attention layers (linear_attn_backend=fla); a slow torch fallback exists without it
+fla-core==0.5.2                 # flash-linear-attention dependency
+
+# SAM 3 (segment_text): runtime imports of the sam3 package, which setup.sh
+# installs with --no-deps from SAM3_ROOT. decord (video) is stubbed by
+# scripts/serve_sam3.py because only sam3's training loaders import it.
+timm==1.0.30
+ftfy==6.1.1
+iopath==0.1.10
+pycocotools==2.0.11             # imported by sam3's data module at import time
+
+# Local development models: scripts/serve_vlm.py --quantize 4bit (NF4) fits a
+# 32B vision-language model on one 24 GB GPU.
+bitsandbytes==0.50.2
+
+# OpenWAM (XPolicyLab/policy/OpenWAM/OpenWAM), inference only, for predict_future.
+# Upstream pyproject asks for transformers>=5.5 and websockets<17; inference uses only
+# AutoTokenizer / ContextManagers from transformers and runs on the pinned core. The
+# package itself is installed with `pip install --no-deps -e .../OpenWAM/OpenWAM`.
+diffusers==0.38.0
+modelscope==1.40.1            # imported by the Wan backbone loader at import time
+pandas==3.0.6                 # imported by openwam.dataloader at import time
+pyarrow==25.0.1               # ditto
+
+# Simate-beta (XPolicyLab/policy/Simate_beta, the simate service): its tokenizer.
+sentencepiece==0.2.2

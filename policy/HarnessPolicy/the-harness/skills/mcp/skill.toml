@@ -1,0 +1,8 @@
+name = "mcp"
+summary = "Tools of MCP servers (Model Context Protocol, streamable HTTP): list them and call them from programs."
+layer = "base"
+mixin = "skills.mcp:McpTools"
+exports = ["mcp_tools", "mcp_call"]
+needs = ["mcp"]
+optional = true
+order = 150
