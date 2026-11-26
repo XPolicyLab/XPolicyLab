@@ -1,0 +1,15 @@
+{
+  "task": "make_toast_random",
+  "budget": 1400,
+  "operations": [],
+  "travel_lift_m": 0.06,
+  "pickup_lift_m": 0.08,
+  "workflow": "two grounded bread jobs -> carry checkpoints -> combined placement repair -> measured lever -> home",
+  "normal_skill_requests_design": 4,
+  "request_limit_unchanged": 280,
+  "success_claim": false,
+  "lever_geometry_deferred": true,
+  "unchanged_image_missing_feature_requery": false,
+  "free_path_native_line_fallback": true,
+  "local_observation_alternatives_batched_before_gpt": true
+}

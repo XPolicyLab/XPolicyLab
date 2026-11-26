@@ -1,0 +1,47 @@
+[
+  {
+    "kind": "architecture",
+    "lesson": "GPT plans semantic phases, identities and recovery. Local measured composite tools execute fine operations. Never count commanded motion as native success."
+  },
+  {
+    "kind": "observed_local_baseline",
+    "outcomes": [
+      {
+        "seed": 0,
+        "score_native": 0.0,
+        "success": false,
+        "status": "completed"
+      },
+      {
+        "seed": 1,
+        "score_native": 0.0,
+        "success": false,
+        "status": "completed"
+      },
+      {
+        "seed": 2,
+        "score_native": 0.0,
+        "success": false,
+        "status": "completed"
+      }
+    ],
+    "lesson": "Reference releases left objects outside or with unverified facing; centering over the rim is not placing on the box bottom. Opposite arm/posture sometimes recovered motion.",
+    "scope": "Historical OLD tool-loop skill, not evidence about this new candidate."
+  },
+  {
+    "kind": "reference_informed_hypothesis",
+    "lesson": [
+      "Random layout: identify task targets by semantic shape/texture, exclude distractors, and use the SAME local operation baseline as the ordinary task. Never infer ordinary/random from visual absence of distractors.",
+      "Identify exactly four target objects and intended box positions. Identify each front/back semantically; do not infer front from a symmetric silhouette axis.",
+      "Pick one object using local current silhouette/explicit multiview geometry.",
+      "On fresh held-object RGB, place(mode=inside, front_left=true) with current front/back material features and destination support at the actual visible box bottom. Choose normalized slot within locally measured box axes; no copied world coordinates.",
+      "Inspect object containment, front direction, and whether box tipped or shifted. Remeasure a moved box instead of using its old rim as the support.",
+      "Repeat for four distinct targets, withdraw and home."
+    ],
+    "scope": "External ordinary/random aggregates include successes, but shared recipes alone are not executable controllers."
+  },
+  {
+    "kind": "known_limitations",
+    "lesson": "No measured finger-stop/force sensor or automatic object retention/containment certificate. Attachment transforms assume no slip. Three-feature docking and support placement are implemented but unvalidated in native tasks. No new arbitrary tabletop spacing, residual-error, protected-step or retry-count gates."
+  }
+]

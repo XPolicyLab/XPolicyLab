@@ -1,0 +1,41 @@
+[
+  {
+    "lesson": "Orange glyphs and a wooden table share hue. A broad color mask merged the tabletop into0 and inflated the inferred width. Bound the color component by the current selected stroke's brightness as well as hue; reject an unobserved grip or oversized footprint rather than expanding the jaw limit."
+  },
+  {
+    "lesson": "A one-stroke grasp of a hollow0 failed retention. For loop glyphs0/6/8/9 that fit the public jaw opening, center the parallel-jaw pinch across the full outer footprint's shorter direction so both fingers contact opposite material; an empty center does not forbid an outside pinch."
+  },
+  {
+    "lesson": "The thin operator disc stayed on the table after a10mm contact-height grasp;6mm was rejected by the padded swept-finger envelope. Use a7mm contact candidate with the public distal anchor and5mm surface-height projection hypothesis, retaining the2mm finger/table clearance gate. Numeric glyphs remain a separate thicker-object case."
+  },
+  {
+    "lesson": "One complete grasp/carry/place path was wrongly discarded only because its empty-hand withdrawal rose75mm at a far-back target. A checked35mm retreat cleared the placed glyph without demanding excessive reach; distinguish withdrawal infeasibility from a grasp failure."
+  },
+  {
+    "lesson": "A circular operator carrier can be grasped with orthogonal jaw directions; limiting it to the narrow painted glyph direction unnecessarily rejected reachable paths. Compare those orientations and a modest50mm lift, while preserving the glyph's final readable orientation and scene clearance."
+  },
+  {
+    "lesson": "After the obstructing hand was parked, coarse Cartesian samples still produced a0.357-rad IK jump. A rejected discontinuous plan may be rechecked with0.06-rad sampling, but never bypass continuity, robot collision or native action-budget checks."
+  },
+  {
+    "lesson": "A correct equation answer did not imply a feasible grasp. A cross-arm approach collided with the other empty hand at home. When the complete path is rejected for other-arm clearance, park that empty arm outward with checked robot motion, preserve original home, and reobserve before retrying."
+  },
+  {
+    "lesson": "Read the full current equation and distinguish existing tokens from loose alternatives. Check integer arithmetic locally; never assume a memorized missing digit. Division must be exact and subtraction nonnegative."
+  },
+  {
+    "lesson": "A glyph's bounding center can be an empty hole. Grip a visible solid stroke and preserve its offset from the glyph center when rotating toward the upright target orientation."
+  },
+  {
+    "lesson": "Thin pieces require a shallow distal-finger contact with tabletop clearance. Preview both jaw frames and the complete carry/release path. Check current RGB retention after lift; joint motion or gripper closure alone is not a task result."
+  },
+  {
+    "lesson": "A successful lift can slip during transport. Split carry into short checked segments, keep squeeze commanded, compare observed opening, and visually reconfirm the selected glyph at each checkpoint. If lost, stop the carry and remeasure its actual current position."
+  },
+  {
+    "lesson": "A complete action sequence and robot homing can still score zero when a digit falls at the front rim of the pad. Verify current glyph center and readable orientation after release and after homing; use observed misplacement for a new checked pickup rather than declaring completion."
+  },
+  {
+    "lesson": "The far source/target can reject a tall hover although a lower path is reachable. Try multiple modest clearances and both parallel-jaw frames, label the failing stage, and use the installed public robot IK while retaining the existing local collision and pose checks."
+  }
+]

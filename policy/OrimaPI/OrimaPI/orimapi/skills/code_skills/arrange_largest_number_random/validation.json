@@ -1,0 +1,516 @@
+{
+  "status": "evaluated",
+  "batch": "runs/arrange-largest-number-clutter8-20261028-c003-r1",
+  "bundle_sha256": "3345b5e2a688b818442d14544a20814308abf5b0af161ee6cf7027293946d103",
+  "mean_score_percent": 25.625,
+  "equal_seed_mean_score_percent": 26.11111111111111,
+  "successes": 0,
+  "episodes": 8,
+  "planned": 8,
+  "seed_results": [
+    {
+      "seed": 0,
+      "episodes": 3,
+      "planned": 3,
+      "successes": 0,
+      "mean_score_percent": 23.333333333333332
+    },
+    {
+      "seed": 1,
+      "episodes": 3,
+      "planned": 3,
+      "successes": 0,
+      "mean_score_percent": 25.0
+    },
+    {
+      "seed": 2,
+      "episodes": 2,
+      "planned": 2,
+      "successes": 0,
+      "mean_score_percent": 30.0
+    }
+  ],
+  "original_native_results_and_media_verified": true,
+  "frozen_inputs_verified": true,
+  "standard_qualified": false,
+  "scope": "Eight distinct original random-task layouts sampled3/3/2 over seeds0/1/2. Random variant only, not the paired normal/random official quota. Missing outcomes are not zero. Previous c002 uses the same eight selected layout files; development replays, not independent generalization.",
+  "review_evidence": "runs/arrange-largest-number-clutter8-20261028-c003-r1/analysis/review-evidence.json",
+  "review": "runs/arrange-largest-number-clutter8-20261028-c003-r1/analysis/review.md",
+  "comparison": "runs/arrange-largest-number-clutter8-20261028-c003-r1/analysis/comparison.json",
+  "runtime_request_timeout_s": 120,
+  "software_validation": "Current-task contract checks passed, including injected held API phase/grip/queue preservation and bounded retries; all frozen inputs and8 runtime bundles matched. No unrelated tests.",
+  "monitor_status": "completed",
+  "monitor_completed_jobs": 8,
+  "monitor_issues": [],
+  "previous_mean_score_percent": 18.125,
+  "mean_improvement_points": 7.5,
+  "improved_episodes": 4,
+  "unchanged_episodes": 4,
+  "regressed_episodes": 0,
+  "api_recovery_verified_in_native_runs": true,
+  "excluded_initial_batch": "runs/arrange-largest-number-clutter8-20261028-c003",
+  "known_limitations": [
+    "No complete native success in8 trials; highest score remains30.",
+    "Whole-task endpoint costs still omit some actual swept-path rejection, re-localization and staging/retry costs.",
+    "Low remaining budgets still trigger expensive candidate checks; maximum observed planning interval111.4s.",
+    "Timeout and controller changed together; same-layout development comparison is not an isolated ablation or official benchmark."
+  ],
+  "schema": "orimapi.arrange-largest-number-random-validation/v1",
+  "qualification": {
+    "published": true,
+    "mode": "user_authorized_partial_score_acceptance",
+    "standard_qualified": false,
+    "tested_seeds": [
+      0,
+      1,
+      2
+    ],
+    "successful_seeds": [],
+    "llm_model": "gpt-6-astra",
+    "validation_batch": "arrange-largest-number-clutter8-20261028-c003-r1",
+    "scored_episodes": 8,
+    "successful_episodes": 0,
+    "mean_score_percent": 25.625,
+    "equal_seed_mean_score_percent": 26.11111111111111,
+    "seed_results": [
+      {
+        "seed": 0,
+        "episodes": 3,
+        "planned": 3,
+        "successes": 0,
+        "mean_score_percent": 23.333333333333332
+      },
+      {
+        "seed": 1,
+        "episodes": 3,
+        "planned": 3,
+        "successes": 0,
+        "mean_score_percent": 25.0
+      },
+      {
+        "seed": 2,
+        "episodes": 2,
+        "planned": 2,
+        "successes": 0,
+        "mean_score_percent": 30.0
+      }
+    ],
+    "previous_mean_score_percent": 18.125,
+    "mean_improvement_points": 7.5,
+    "scope": "User-authorized publication of unchanged c003 runtime. Eight same-layout development replays, seeds0/1/2 allocation3/3/2;0 complete successes. Random variant only; not full25+25 quota, independent generalization or standard task qualification."
+  },
+  "tested_candidate_bundle_sha256": "3345b5e2a688b818442d14544a20814308abf5b0af161ee6cf7027293946d103",
+  "tested_candidate_file_hashes": {
+    "manifest": "6e3423e922247dfb250cc203c00992052cb509617847a960b6dcccc3d5186e4a",
+    "experience": "f409a2dd0d1c4911739229aa162bb92b102c5d2e5d57d9ac96314bfccd7d4220",
+    "source_controller": "33f5c5e7c5ac26c5de2691396e9c7f841f58ab2f2ec6f7548f2054332b3bbac1",
+    "source_vision": "1dfdfd550812c2cb9f08e75b990f73c494d000bd30e11836d6a4dd3351e6b21f",
+    "source_shared_make_kong_baseline_motion": "79abd687e22cb81a94ebb5fcc6b5419934c459125645227d664046f3950097cb",
+    "source_shared_make_kong_hand_clearance": "088592a790fde9051c007a635fcc6edec1c51a29c21f367163303e87c32784e9",
+    "source_shared_make_kong_hand_bounds": "6ecea3347942113699f1993b189fa4ad555912aa69906d43dd3a29beaed426ca",
+    "source_planning": "bb43b64d53be1e1f4b59a4c48a86c718d18b90ecdab9b7cb48de78363438916c",
+    "source_shared_native_adapter": "ee10e45379ad2c8020e9dc5c2ec8f8739bd96f79bcea3b69a8bd729b02fe5dc7",
+    "source_shared_native_worker": "92a27a877166ed808aeae0e6fff202fa9725c0bfc7dc333d6cffb2608574beba",
+    "source_shared_public_geometry": "9e204a79b46e863b93e7278e6200f44b432ba69f3bb62892ff17ef6510473d52",
+    "source_shared_checked_motion": "3ef712be1b81180ea6d7db9034d53bd6d38999f51ab38f8eee431a071e4de9e8",
+    "source_shared_robot_collision": "c34b0c51b0a3da35329b876812643bd1eae51fb498b3ffd7f3ce982c59fe625f",
+    "source_shared_motion_base": "7680d16d16496f4eeebc9fff9190c7b0422582c7f5251d198d38169a0295e8fc",
+    "source_scheduler": "7eb5b9c73a9eaadfcfc62ef89d521ab224a17874013885d84697e36961134c58"
+  },
+  "runtime_hashes": {
+    "experience": "f409a2dd0d1c4911739229aa162bb92b102c5d2e5d57d9ac96314bfccd7d4220",
+    "source_controller": "33f5c5e7c5ac26c5de2691396e9c7f841f58ab2f2ec6f7548f2054332b3bbac1",
+    "source_vision": "1dfdfd550812c2cb9f08e75b990f73c494d000bd30e11836d6a4dd3351e6b21f",
+    "source_shared_make_kong_baseline_motion": "79abd687e22cb81a94ebb5fcc6b5419934c459125645227d664046f3950097cb",
+    "source_shared_make_kong_hand_clearance": "088592a790fde9051c007a635fcc6edec1c51a29c21f367163303e87c32784e9",
+    "source_shared_make_kong_hand_bounds": "6ecea3347942113699f1993b189fa4ad555912aa69906d43dd3a29beaed426ca",
+    "source_planning": "bb43b64d53be1e1f4b59a4c48a86c718d18b90ecdab9b7cb48de78363438916c",
+    "source_shared_native_adapter": "ee10e45379ad2c8020e9dc5c2ec8f8739bd96f79bcea3b69a8bd729b02fe5dc7",
+    "source_shared_native_worker": "92a27a877166ed808aeae0e6fff202fa9725c0bfc7dc333d6cffb2608574beba",
+    "source_shared_public_geometry": "9e204a79b46e863b93e7278e6200f44b432ba69f3bb62892ff17ef6510473d52",
+    "source_shared_checked_motion": "3ef712be1b81180ea6d7db9034d53bd6d38999f51ab38f8eee431a071e4de9e8",
+    "source_shared_robot_collision": "c34b0c51b0a3da35329b876812643bd1eae51fb498b3ffd7f3ce982c59fe625f",
+    "source_shared_motion_base": "7680d16d16496f4eeebc9fff9190c7b0422582c7f5251d198d38169a0295e8fc",
+    "source_scheduler": "7eb5b9c73a9eaadfcfc62ef89d521ab224a17874013885d84697e36961134c58"
+  },
+  "tested_runtime_inputs_unchanged": true,
+  "formal_skill_unchanged_during_native_trials": true,
+  "model": "gpt-6-astra",
+  "require_model_match": true,
+  "outcomes": [
+    {
+      "gpu": 0,
+      "seed": 1,
+      "layout": 8,
+      "status": "completed",
+      "score_percent": 15.0,
+      "success": false,
+      "actions": 1050,
+      "program_model_calls": 22,
+      "model_call_attempts": 24,
+      "digits": 4,
+      "visually_verified_pad_legs": 3,
+      "home_phases": 4,
+      "staging_legs": 0,
+      "corridor_detections": 4,
+      "route_rejections": 0,
+      "recoveries": 0,
+      "api_failures": 2,
+      "api_retries": 2,
+      "api_retry_exhausted": 0,
+      "task_schedules": 4,
+      "source": "runs/arrange-largest-number-clutter8-20261028-c003-r1/jobs/gpu-0-seed-1/attempt-001/runs/20261027T194705-bd18c7c6270c/evaluator/native/RoboDojo/arrange_largest_number_random/orimapi_7804ed32279d467897fa6bf624df7636/arx_x5/1_ckpt_name=policy-library,action_type=joint/orimapi_7804ed32279d467897fa6bf624df7636/_result.json",
+      "error": null,
+      "artifact_root": "runs/20261027T194705-bd18c7c6270c/evaluator/native/RoboDojo/arrange_largest_number_random/orimapi_7804ed32279d467897fa6bf624df7636/arx_x5/1_ckpt_name=policy-library,action_type=joint/orimapi_7804ed32279d467897fa6bf624df7636",
+      "artifacts": [
+        {
+          "path": "_result.json",
+          "sha256": "05d15ef925d4027c82d22e3708e07df04ad88219cce0e5d10ab6b3782f052198"
+        },
+        {
+          "path": "episode_0000000_cam_head_fail.mp4",
+          "sha256": "d2b0da2754063efd839410f0477358ab49bb8d2e5c93e6b4914fd4bc2537c3f1",
+          "frames": 1051
+        },
+        {
+          "path": "episode_0000000_cam_left_wrist_fail.mp4",
+          "sha256": "d06632652ee3cc4660b06a11c0df52f612354b31da04feaf263edd7253f7c93c",
+          "frames": 1051
+        },
+        {
+          "path": "episode_0000000_cam_right_wrist_fail.mp4",
+          "sha256": "3bbdab1af760ca34d230c77e99c16dfb58142bbd5196c840a51818c3485aaa84",
+          "frames": 1051
+        }
+      ]
+    },
+    {
+      "gpu": 1,
+      "seed": 1,
+      "layout": 5,
+      "status": "completed",
+      "score_percent": 30.0,
+      "success": false,
+      "actions": 1050,
+      "program_model_calls": 27,
+      "model_call_attempts": 27,
+      "digits": 4,
+      "visually_verified_pad_legs": 2,
+      "home_phases": 4,
+      "staging_legs": 2,
+      "corridor_detections": 5,
+      "route_rejections": 0,
+      "recoveries": 0,
+      "api_failures": 0,
+      "api_retries": 0,
+      "api_retry_exhausted": 0,
+      "task_schedules": 3,
+      "source": "runs/arrange-largest-number-clutter8-20261028-c003-r1/jobs/gpu-1-seed-1/attempt-002/runs/20261027T194705-d6f94ad08fd9/evaluator/native/RoboDojo/arrange_largest_number_random/orimapi_7240b8f09091423ebcf241d9424fab76/arx_x5/1_ckpt_name=policy-library,action_type=joint/orimapi_7240b8f09091423ebcf241d9424fab76/_result.json",
+      "error": null,
+      "artifact_root": "runs/20261027T194705-d6f94ad08fd9/evaluator/native/RoboDojo/arrange_largest_number_random/orimapi_7240b8f09091423ebcf241d9424fab76/arx_x5/1_ckpt_name=policy-library,action_type=joint/orimapi_7240b8f09091423ebcf241d9424fab76",
+      "artifacts": [
+        {
+          "path": "_result.json",
+          "sha256": "4d180cd7f6457e1b8ae5614960ee717c0824fae439c12c6e1368971c57fa63c1"
+        },
+        {
+          "path": "episode_0000000_cam_head_fail.mp4",
+          "sha256": "1f46b41d93f6a0a81e6e72ac9a1e597d036b2502da0752bf89de507265acf0e5",
+          "frames": 1051
+        },
+        {
+          "path": "episode_0000000_cam_left_wrist_fail.mp4",
+          "sha256": "8c74177e3ae8db9254142891d941553863f440c3d21983e757da873166687772",
+          "frames": 1051
+        },
+        {
+          "path": "episode_0000000_cam_right_wrist_fail.mp4",
+          "sha256": "f0ebb46ec860e7225cac18a10938fd54b7fe1f3538ec845ed563420838f9845a",
+          "frames": 1051
+        }
+      ]
+    },
+    {
+      "gpu": 2,
+      "seed": 0,
+      "layout": 1,
+      "status": "completed",
+      "score_percent": 25.0,
+      "success": false,
+      "actions": 1050,
+      "program_model_calls": 32,
+      "model_call_attempts": 32,
+      "digits": 5,
+      "visually_verified_pad_legs": 3,
+      "home_phases": 5,
+      "staging_legs": 1,
+      "corridor_detections": 13,
+      "route_rejections": 8,
+      "recoveries": 0,
+      "api_failures": 0,
+      "api_retries": 0,
+      "api_retry_exhausted": 0,
+      "task_schedules": 4,
+      "source": "runs/arrange-largest-number-clutter8-20261028-c003-r1/jobs/gpu-2-seed-0/attempt-003/runs/20261027T194705-6c1790c5d5a7/evaluator/native/RoboDojo/arrange_largest_number_random/orimapi_6347ec15629047b499a1ed0d307531a0/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_6347ec15629047b499a1ed0d307531a0/_result.json",
+      "error": null,
+      "artifact_root": "runs/20261027T194705-6c1790c5d5a7/evaluator/native/RoboDojo/arrange_largest_number_random/orimapi_6347ec15629047b499a1ed0d307531a0/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_6347ec15629047b499a1ed0d307531a0",
+      "artifacts": [
+        {
+          "path": "_result.json",
+          "sha256": "d535842086faba8858f53890a6cc9b1ee8c93412f755c3ba1de857c30af339d5"
+        },
+        {
+          "path": "episode_0000000_cam_head_fail.mp4",
+          "sha256": "9df4a99aaf0640d53e0ab6cc452f1dc214e1a8f15a301483f114995246cac851",
+          "frames": 1051
+        },
+        {
+          "path": "episode_0000000_cam_left_wrist_fail.mp4",
+          "sha256": "857866dc35b2b4ef67af496f923aa2ab1afea3eaf3a95264a8a8d81160439923",
+          "frames": 1051
+        },
+        {
+          "path": "episode_0000000_cam_right_wrist_fail.mp4",
+          "sha256": "4f61fe3c9cb90dde4e1cc60cd0b1607fb0cffd3c8e37f5cd8f9076e2e86108bd",
+          "frames": 1051
+        }
+      ]
+    },
+    {
+      "gpu": 3,
+      "seed": 0,
+      "layout": 24,
+      "status": "completed",
+      "score_percent": 30.0,
+      "success": false,
+      "actions": 1050,
+      "program_model_calls": 27,
+      "model_call_attempts": 27,
+      "digits": 4,
+      "visually_verified_pad_legs": 2,
+      "home_phases": 3,
+      "staging_legs": 2,
+      "corridor_detections": 9,
+      "route_rejections": 5,
+      "recoveries": 0,
+      "api_failures": 0,
+      "api_retries": 0,
+      "api_retry_exhausted": 0,
+      "task_schedules": 3,
+      "source": "runs/arrange-largest-number-clutter8-20261028-c003-r1/jobs/gpu-3-seed-0/attempt-004/runs/20261027T194705-84c367bf32fc/evaluator/native/RoboDojo/arrange_largest_number_random/orimapi_e75777a6c89a4eaa9563f8f5e20c82da/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_e75777a6c89a4eaa9563f8f5e20c82da/_result.json",
+      "error": null,
+      "artifact_root": "runs/20261027T194705-84c367bf32fc/evaluator/native/RoboDojo/arrange_largest_number_random/orimapi_e75777a6c89a4eaa9563f8f5e20c82da/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_e75777a6c89a4eaa9563f8f5e20c82da",
+      "artifacts": [
+        {
+          "path": "_result.json",
+          "sha256": "744579a4a28d700a27b998747eac44db38f1e265ede8a7d8557f3b56baadd98e"
+        },
+        {
+          "path": "episode_0000000_cam_head_fail.mp4",
+          "sha256": "ea3971954e04d6a6caa44dbe36891cadcedbf3a1602bf0b2539f141fcf86c853",
+          "frames": 1051
+        },
+        {
+          "path": "episode_0000000_cam_left_wrist_fail.mp4",
+          "sha256": "052a4e01a98e5446c0ef427727eab261eb16cdec4d81e7bb4b1d0e236dcb2651",
+          "frames": 1051
+        },
+        {
+          "path": "episode_0000000_cam_right_wrist_fail.mp4",
+          "sha256": "9e441def67f46d5401f58e72eb4b648802424cbf9b569de7a53b53266dd7fc70",
+          "frames": 1051
+        }
+      ]
+    },
+    {
+      "gpu": 4,
+      "seed": 2,
+      "layout": 23,
+      "status": "completed",
+      "score_percent": 30.0,
+      "success": false,
+      "actions": 1050,
+      "program_model_calls": 32,
+      "model_call_attempts": 32,
+      "digits": 4,
+      "visually_verified_pad_legs": 3,
+      "home_phases": 3,
+      "staging_legs": 2,
+      "corridor_detections": 8,
+      "route_rejections": 2,
+      "recoveries": 1,
+      "api_failures": 0,
+      "api_retries": 0,
+      "api_retry_exhausted": 0,
+      "task_schedules": 4,
+      "source": "runs/arrange-largest-number-clutter8-20261028-c003-r1/jobs/gpu-4-seed-2/attempt-005/runs/20261027T194705-902f71f6190b/evaluator/native/RoboDojo/arrange_largest_number_random/orimapi_c77e0036b49344acb2aae435fd818cea/arx_x5/2_ckpt_name=policy-library,action_type=joint/orimapi_c77e0036b49344acb2aae435fd818cea/_result.json",
+      "error": null,
+      "artifact_root": "runs/20261027T194705-902f71f6190b/evaluator/native/RoboDojo/arrange_largest_number_random/orimapi_c77e0036b49344acb2aae435fd818cea/arx_x5/2_ckpt_name=policy-library,action_type=joint/orimapi_c77e0036b49344acb2aae435fd818cea",
+      "artifacts": [
+        {
+          "path": "_result.json",
+          "sha256": "ade2f5f48955c0b430286f8d52d2b32a0a462aad4a5510ee7a845ca88e891a53"
+        },
+        {
+          "path": "episode_0000000_cam_head_fail.mp4",
+          "sha256": "dc66bdeee4e96660b698959b54460589f30270347dcb677037f5c8d70339ce6d",
+          "frames": 1051
+        },
+        {
+          "path": "episode_0000000_cam_left_wrist_fail.mp4",
+          "sha256": "ad7be97c96d579556d0b0c3a0a6ec1b0e2813f23ec0c0098394c05c6d8c9b74e",
+          "frames": 1051
+        },
+        {
+          "path": "episode_0000000_cam_right_wrist_fail.mp4",
+          "sha256": "958ce6ec3768d2e74f3f29ec0189223ff9f85d187b66f76bbfab75a450b8202c",
+          "frames": 1051
+        }
+      ]
+    },
+    {
+      "gpu": 5,
+      "seed": 0,
+      "layout": 4,
+      "status": "completed",
+      "score_percent": 15.0,
+      "success": false,
+      "actions": 1050,
+      "program_model_calls": 29,
+      "model_call_attempts": 29,
+      "digits": 4,
+      "visually_verified_pad_legs": 2,
+      "home_phases": 4,
+      "staging_legs": 2,
+      "corridor_detections": 9,
+      "route_rejections": 3,
+      "recoveries": 0,
+      "api_failures": 0,
+      "api_retries": 0,
+      "api_retry_exhausted": 0,
+      "task_schedules": 3,
+      "source": "runs/arrange-largest-number-clutter8-20261028-c003-r1/jobs/gpu-5-seed-0/attempt-006/runs/20261027T194705-4bc916f31ff2/evaluator/native/RoboDojo/arrange_largest_number_random/orimapi_22a7d9c5c7c4405e8f2b0c37fe2e11aa/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_22a7d9c5c7c4405e8f2b0c37fe2e11aa/_result.json",
+      "error": null,
+      "artifact_root": "runs/20261027T194705-4bc916f31ff2/evaluator/native/RoboDojo/arrange_largest_number_random/orimapi_22a7d9c5c7c4405e8f2b0c37fe2e11aa/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_22a7d9c5c7c4405e8f2b0c37fe2e11aa",
+      "artifacts": [
+        {
+          "path": "_result.json",
+          "sha256": "9b1909dc1d8e418fa7e9cd6c95fd860246785eef98bd6af9c5d2fba3f4c9030d"
+        },
+        {
+          "path": "episode_0000000_cam_head_fail.mp4",
+          "sha256": "aaac9651525dfa24c41fec6d70b1c1c487fb09e1e6ed25a1b378ec668a5daeef",
+          "frames": 1051
+        },
+        {
+          "path": "episode_0000000_cam_left_wrist_fail.mp4",
+          "sha256": "01949d6e7462c2022efb7a5a5927d63ff85b938990e29c79e2818d333cd43426",
+          "frames": 1051
+        },
+        {
+          "path": "episode_0000000_cam_right_wrist_fail.mp4",
+          "sha256": "de5d1852db6f71d960f0744053ded9658158c8c5c3d19be999fda13373608e74",
+          "frames": 1051
+        }
+      ]
+    },
+    {
+      "gpu": 6,
+      "seed": 2,
+      "layout": 14,
+      "status": "completed",
+      "score_percent": 30.0,
+      "success": false,
+      "actions": 1050,
+      "program_model_calls": 21,
+      "model_call_attempts": 21,
+      "digits": 4,
+      "visually_verified_pad_legs": 2,
+      "home_phases": 3,
+      "staging_legs": 0,
+      "corridor_detections": 3,
+      "route_rejections": 0,
+      "recoveries": 0,
+      "api_failures": 0,
+      "api_retries": 0,
+      "api_retry_exhausted": 0,
+      "task_schedules": 3,
+      "source": "runs/arrange-largest-number-clutter8-20261028-c003-r1/jobs/gpu-6-seed-2/attempt-007/runs/20261027T194705-f05ec059cbcb/evaluator/native/RoboDojo/arrange_largest_number_random/orimapi_425aee631006464ba7ac5b900a238ef7/arx_x5/2_ckpt_name=policy-library,action_type=joint/orimapi_425aee631006464ba7ac5b900a238ef7/_result.json",
+      "error": null,
+      "artifact_root": "runs/20261027T194705-f05ec059cbcb/evaluator/native/RoboDojo/arrange_largest_number_random/orimapi_425aee631006464ba7ac5b900a238ef7/arx_x5/2_ckpt_name=policy-library,action_type=joint/orimapi_425aee631006464ba7ac5b900a238ef7",
+      "artifacts": [
+        {
+          "path": "_result.json",
+          "sha256": "7247d04e8185142615001e397b8effe037731fc2fd4bd1a65a8b56f47bb64755"
+        },
+        {
+          "path": "episode_0000000_cam_head_fail.mp4",
+          "sha256": "a9b09d0bf5d830f988c13dc202c75d64f444af1472c8d555435d077d508bbce8",
+          "frames": 1051
+        },
+        {
+          "path": "episode_0000000_cam_left_wrist_fail.mp4",
+          "sha256": "c43e0bda8eb752fbfa4b1901c71c876c58e126df1df54bc379431fe70271ee7a",
+          "frames": 1051
+        },
+        {
+          "path": "episode_0000000_cam_right_wrist_fail.mp4",
+          "sha256": "90fa52435ec82b9f01c5d5838f9afa6381fa32cc14148073f29088236117f09d",
+          "frames": 1051
+        }
+      ]
+    },
+    {
+      "gpu": 7,
+      "seed": 1,
+      "layout": 26,
+      "status": "completed",
+      "score_percent": 30.0,
+      "success": false,
+      "actions": 1050,
+      "program_model_calls": 25,
+      "model_call_attempts": 27,
+      "digits": 4,
+      "visually_verified_pad_legs": 3,
+      "home_phases": 3,
+      "staging_legs": 2,
+      "corridor_detections": 8,
+      "route_rejections": 3,
+      "recoveries": 0,
+      "api_failures": 2,
+      "api_retries": 2,
+      "api_retry_exhausted": 0,
+      "task_schedules": 4,
+      "source": "runs/arrange-largest-number-clutter8-20261028-c003-r1/jobs/gpu-7-seed-1/attempt-008/runs/20261027T194705-899a0df5929b/evaluator/native/RoboDojo/arrange_largest_number_random/orimapi_19fd7f3e49c34e42b2a8d82d402fbcec/arx_x5/1_ckpt_name=policy-library,action_type=joint/orimapi_19fd7f3e49c34e42b2a8d82d402fbcec/_result.json",
+      "error": null,
+      "artifact_root": "runs/20261027T194705-899a0df5929b/evaluator/native/RoboDojo/arrange_largest_number_random/orimapi_19fd7f3e49c34e42b2a8d82d402fbcec/arx_x5/1_ckpt_name=policy-library,action_type=joint/orimapi_19fd7f3e49c34e42b2a8d82d402fbcec",
+      "artifacts": [
+        {
+          "path": "_result.json",
+          "sha256": "9ac2eb09133541d95375d56aaa3ff248aad4dea8be97be4027144d95641aa296"
+        },
+        {
+          "path": "episode_0000000_cam_head_fail.mp4",
+          "sha256": "7aa782a16559bc06eed9434f80217bbb80af980ad1370553cded6191d4153605",
+          "frames": 1051
+        },
+        {
+          "path": "episode_0000000_cam_left_wrist_fail.mp4",
+          "sha256": "a377c1ab306f104748ebec435d6368068ea757ff05cc513fcb947ad2212f702d",
+          "frames": 1051
+        },
+        {
+          "path": "episode_0000000_cam_right_wrist_fail.mp4",
+          "sha256": "db0cf4c7d304217ae70ba9a6821a86acba337065462c75c405f26e1e75a9ae8c",
+          "frames": 1051
+        }
+      ]
+    }
+  ],
+  "code_parameters": {
+    "native_ik": {
+      "device": "cuda:0"
+    }
+  },
+  "publication": "publication.json"
+}

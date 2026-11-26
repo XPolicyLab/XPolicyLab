@@ -1,0 +1,63 @@
+{
+  "status": "published",
+  "published_at": "2026-10-25T17:46:53.124424+00:00",
+  "authorization": "User explicitly requested replacing the formal stack_blocks skill after seeds0/1 both succeeded.",
+  "qualification": {
+    "published": true,
+    "mode": "user_authorized_two_seed_acceptance",
+    "successful_seeds": [
+      0,
+      1
+    ],
+    "tested_seeds": [
+      0,
+      1
+    ],
+    "untested_seeds": [
+      2
+    ],
+    "standard_qualified": false,
+    "random_variant_tested": false,
+    "scope": "Same frozen candidate passed one ordinary stack_blocks episode on seeds0/1; seed2 and stack_blocks_random are untested."
+  },
+  "tested_candidate_bundle_sha256": "1ea393a0317b9c34441d1ffd57303e09d1bce6f5aadcbe6af011ee45c218ebb7",
+  "runtime_hashes": {
+    "tool_documentation.md": "a24e8512d7a21310098b7e22bc02cc36e8e47b4e899293b351849b5ca922742e",
+    "program_prompt.md": "f909086d0a2c10c92e8d216ef12f7a546027852bb24c5f4db1e8cc45d4fde107",
+    "adapter.py": "ee10e45379ad2c8020e9dc5c2ec8f8739bd96f79bcea3b69a8bd729b02fe5dc7",
+    "ik_worker.py": "92a27a877166ed808aeae0e6fff202fa9725c0bfc7dc333d6cffb2608574beba",
+    "failure_experience.json": "d5d34e10ea755b89ce605e0eeffa6cbe76912028f2fcdab5c62463122261796f",
+    "controller.py": "2a79e89d385b691d4b85c01c964d00e526dc9db7fdf04497f8485ea4672442a6",
+    "experience.json": "feee97f5aebba1c47da7c1a5bfd8fb0d2fcffd666678e2e7c5cd1b82bf1e77ac",
+    "primitives/plane_localize/tool.py": "a15264d1d0abf438b2dda542ce58b93a35e6ed7bc2fb4d4146c026073e034fea",
+    "primitives/plane_localize/interface.md": "a6c1c5ba6f5d3f0d0e20d1f6dfac49b3064d636f15c9042786017522806d139e",
+    "primitives/stereo_localize/tool.py": "fc9818549d363712ff6b5824b2948ba1cbf3cc9ebbf0a4e7d352767d380d7a3c",
+    "primitives/stereo_localize/interface.md": "1cff040e515e7a44ee8adf537f891c706180d789f046622c3d800a737192dbe3",
+    "primitives/prism_localize/tool.py": "32f112040f863934cd04e60f226d56c5d9015c5ceadbb88abc04c779291397ae",
+    "primitives/prism_localize/interface.md": "bb965dc2f4a37c6540bdfe4aee3342821b20e7c36e8d0a535d6853a649949520",
+    "primitives/top_place/tool.py": "c6f646af359a3cf9e07eb09596943d9f477d05c90dc08322469cd852c156a59d",
+    "primitives/top_place/interface.md": "65a4bd6d2f76a0d6320e0b0029b900aa35f622e2ae186eddb3beec4abc2f917d",
+    "primitives/top_pick/tool.py": "a0679307ba6ad5e65d2275fce9914343e189eb6e3b606af2c69685006be628c1",
+    "primitives/top_pick/interface.md": "06c88ca3479a88814ce80a24316d5a38fda5e5f0e32979027d935b8f581a96ec",
+    "primitives/support/geometry.py": "4dc75130689d8c6b57d17f4515247e14a6d6b4d8de29b26e30ff8a7609080482",
+    "primitives/support/__init__.py": "600728cfdc32ae06b3c2617a1d5dd9ee2c7552c4df1c3b4be01add3c3a15eb80",
+    "primitives/support/motion.py": "cebe3d0d2caa4b4e018cc601c4bedf05c70b9c668bac60cc21196c2383df1497",
+    "primitives/support/core.py": "0a8e6c03bd545f58de8e42b32383427e59b015d20fcf8409edfdda4eae9bb372",
+    "primitives/settled_pick/tool.py": "46e6b7f7e54af690a544ddf42411aba541b64812376d5507a327134d3cf2365e",
+    "primitives/settled_pick/interface.md": "41e23882a32ccc32e49599978ff97023c15282125f1b86bd55205d2f388085a2",
+    "primitives/table_plane/tool.py": "cd257aec7f4ba01e239f88892f4243f6ab182dc1857354fc152fb930583fcb12",
+    "primitives/table_plane/interface.md": "d7d9ca4b481d4272c8d1205b3274f3d1b911a95c9ce3a70e1b2ad023275bcba5"
+  },
+  "backup": "orimapi/skills/code_skill_rsi/stack_blocks/publication/previous-formal-directory",
+  "scope": "Tested code, prompts, tool interfaces and injected experience content unchanged. Publication metadata changes bundle identity. No further native simulation.",
+  "deployment_compatibility": {
+    "scope": "Physical GPU placement and relocated/symlinked runtime discovery only; task policy, planning and collision logic are unchanged. Current dependency fingerprints are refreshed; original candidate evidence remains historical.",
+    "previous_fingerprints": {
+      "runtime_hashes": {
+        "adapter.py": "0d38d346cfd93dccd7198d7b6546db00d6df6b1ef5167b98865f808845ac007f"
+      }
+    },
+    "native_task_retested_after_change": false,
+    "historical_candidate_hashes_and_outcomes_preserved": true
+  }
+}

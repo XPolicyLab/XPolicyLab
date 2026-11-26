@@ -1,0 +1,51 @@
+{
+  "authorization": "用户明确要求：ok 把这一版总结成正式的skill",
+  "published_at": "2026-10-27T12:07:15.615940+00:00",
+  "candidate": "orimapi/skills/code_skill_rsi/play_Xylophone/candidates/candidate-008-attachment-fusion",
+  "candidate_bundle_sha256": "8c70d398b32c6858e4cdc4041ffb731ec954f90d782d7fcb177ded74ffa89792",
+  "previous_formal_archive": "orimapi/skills/code_skill_rsi/play_Xylophone/studies/20261027-attachment-fusion-c008-seed12/publication/previous-formal-20261027T120715Z",
+  "previous_formal_hashes": {
+    "__init__.py": "901b9c09a3875f6263fd9631f5c5f0041f5ccd0b262132e7f69df224195db8bb",
+    "skill.json": "826e297aa52b05e375e07420b6a05931f92ef5ace801e614e0808b3865ff6c1f",
+    "failure_experience.json": "f486c9c467a270e96b0fc72ecacc43321390509767e72d153ad514fa2d2b2a40",
+    "controller.py": "3534657b53966e1a10ca762bb3ba5140ce561d936c1405aa407299c2d6b799ae",
+    "publication.json": "77fe664f872592cb9649f28d2e24ea43a5d46c8438121f9572974e0c927ce15a",
+    "experience.json": "03da60d8451fe14f6e32115d6ccb1d26667fda5b2cdd64d447493466bc196be8",
+    "resources.json": "f3f7e0e0d24e4e062e86eda399771bcf898386385db9f072bd5462a7c6e5e899",
+    "tool_recipes/recipe.json": "372b1e6e0d5b114459a7be9cdfc20a2bd8a5eb24c1b2c1284a80bb001e847c15"
+  },
+  "formal_before_inventory": "orimapi/skills/code_skill_rsi/play_Xylophone/studies/20261027-attachment-fusion-c008-seed12/publication/formal-before.json",
+  "qualification": {
+    "published": true,
+    "mode": "user_authorized_unqualified",
+    "tested_seeds": [
+      0,
+      1,
+      2
+    ],
+    "successful_seeds": [
+      0,
+      1
+    ],
+    "untested_seeds": [],
+    "episodes_per_seed": 1,
+    "three_seed_mean": 66.66666666666667,
+    "standard_qualified": false,
+    "scope": "Same frozen c008 native development evidence:100/100/0, one episode per seed. Publication is formal availability, not full benchmark or reliability qualification. Published experience summary changed; no new native retest."
+  },
+  "runtime_and_prompts_byte_identical": true,
+  "llm_experience_byte_identical": false,
+  "experience_change": "Summarize verified success/failure history, accurate current workflow and unresolvedseed2; executable runtime and phase prompts unchanged.",
+  "native_retest_after_publication": false,
+  "changes_at_publication": [
+    "Only play_Xylophone replaced; shared execution modules unchanged",
+    "Rebase dependency paths and add summaries/validation",
+    "Align native_ik in formal config and installed checked config",
+    "Retain now-unreferenced immutable legacy tools for archived manifests"
+  ],
+  "native_evidence": [
+    "orimapi/skills/code_skill_rsi/play_Xylophone/studies/20261027-attachment-fusion-c008/results.json",
+    "orimapi/skills/code_skill_rsi/play_Xylophone/studies/20261027-attachment-fusion-c008-seed12/results.json"
+  ],
+  "publication_checks": "orimapi/skills/code_skill_rsi/play_Xylophone/studies/20261027-attachment-fusion-c008-seed12/publication/checks.json"
+}

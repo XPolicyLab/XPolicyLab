@@ -1,0 +1,46 @@
+[
+  {
+    "task": "play_Xylophone",
+    "goal": "One-hand mallet pickup; eight left-to-right mallet-head strikes with >=25mm intervening lifts. Native500 actions, binary native score. No extra home success prerequisite.",
+    "previous_failures": "Formal legacy skill scored0 on all three smoke seeds. It never grasped or struck: GPT-selected detailed sphere contours failed edge/270degree/sensitivity checks; it requested unimplemented capabilities, homed and called finish at actions36/44/46, then held until500.",
+    "workflow": "GPT gives coarse object/key boxes and overall plan once. Local OpenCV extracts sphere/shaft/key contours; SciPy fits supported sphere and color-indexed multi-view keyboard plane. cuRobo completes pickup and head-aligned ordered strokes. Each high checkpoint locally refreshes keyboard and sphere with material/shaft/epipolar identity evidence, measured radius and uncertainty-aware attachment fusion. One GPT retention review; recovery/review only as needed, never GPT per key/waypoint.",
+    "recovery": "No fixed cleanup reserve, one-view/one-recovery rule, residual-based execution veto, trajectory-length+40 timeout, or finish-on-fit-failure. Change actual viewpoint/approach and retry with current RGB while preserving held state. Bad geometry is feedback, not fabricated valid geometry. Native verdict only; commanded strokes and closed fingers are not success evidence.",
+    "qualification": "Current c008 development evidence: seed0=100,seed1=100,seed2=0, one episode each. User-authorized publication, not full official benchmark or reliability qualification. Original tests used the prior experience file; this publication summarizes history and has not been re-simulated with the revised experience."
+  },
+  {
+    "development_evidence": "c001 seeds0/1 both grasped/lifted mallet and GPT retention said held; measured head-to-TCP lever about15cm. First key transit failed IK with fixed pickup yaw. Translation-only raise did not solve this orientation defect. Native completed score must be read separately.",
+    "local_improvement": "For each complete key stroke, use actual held head offset and public arm base to select a reachable shaft yaw. Locally preflight approach/down/up, execute selected head-aligned pose, then strike/lift. On actual failure preserve key index and grip, acquire useful empty-arm view/attachment update; do not loop only upward or impose failure-count termination."
+  },
+  {
+    "parent_native_evidence": "c002 scored0/0 on seeds0/1 despite both actual pickups. Seed0 executed8 ordered stroke motions; seed1 executed7 then last-key IK and observer cross-arm recovery failed. Skill GPT3/4. These are development failures, not successful strike controllers.",
+    "changes": "Each key: preserve reachable wrist orientation where possible, park empty observer, local current-RGB sphere/attachment correction at high checkpoint, descend, actual80mm lift, local measured-height feedback and corrective lift. No GPT per key. Better epipolar key identity consistency and robust multi-key height.",
+    "lift_semantics": "Native caches mallet pose at the first qualifying hit, potentially during descent; 50mm relative to final bottom is not necessarily25mm relative to the hit reference.80mm is a physical trajectory hypothesis, not a protected budget or a new stop rule. Do not query hidden reward phase or object pose.",
+    "remaining_uncertainty": "Current RGB fit and commanded movements do not certify native hits. Tiny spheres/occlusion/shape correspondence remain imperfect. Rechecks are advisory/corrective, not stop gates. Only original native result determines success."
+  },
+  {
+    "version": "c008-attachment-fusion",
+    "evidence_strength": "Two successful and one failed native development episodes, same frozen runtime. No independent generalization claim.",
+    "successful_path": {
+      "trigger": "Current scene has visible colored keys and a wooden-shaft spherical-head mallet.",
+      "method": "GPT coarse planning -> local sphere/shaft/key geometry -> complete pickup/lift -> one GPT holding review -> local keyboard/sphere feedback -> reachable wrist reuse or local yaw alternatives -> ordered down/80mm-up strokes. Native ends at final valid hit; do not require extra last lift/home.",
+      "local_tools": [
+        "vision.measure_keys",
+        "vision.track_head",
+        "vision.fuse_attachment",
+        "vision.refresh_keyboard",
+        "Operations.acquire",
+        "Operations.lift",
+        "Operations.orient_for_key",
+        "Operations.strikes",
+        "Motion.plan/move/grip/wait"
+      ],
+      "verification": "Read native evaluator result, not contact-attempt/completed-motion bookkeeping. Seed0/1 each passed at258 actions, skillGPT2+router1."
+    },
+    "failure_lesson": {
+      "trigger": "A weak wrist color patch or occlusion gives a large apparent sphere displacement.",
+      "method": "Use color material boundary, visible shaft connection and epipolar soft evidence; do not give every wrist patch a fixed minimum vote. Use measured-radius depth and sensor-only covariance; keep stable attachment separate from transient action correction. Promote persistent coherent changes, including large true slip, rather than overwriting geometry from one uncertain frame.",
+      "recovery": "On occlusion retain stable geometry and continue grounded recovery; existing retention/review can trigger reacquisition if empty. Do not invent a hard displacement veto, retry cap, tracking timeout, cleanup reserve or premature finish.",
+      "unresolved": "Seed2 not solved. Do not claim all motion-completed keys are native hits or assert which key was missed."
+    }
+  }
+]

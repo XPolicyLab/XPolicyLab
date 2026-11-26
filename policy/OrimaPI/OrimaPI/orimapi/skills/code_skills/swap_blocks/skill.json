@@ -1,0 +1,66 @@
+{
+  "schema": "orimapi.code-controller-skill/v1",
+  "skill_id": "swap_blocks",
+  "supported_tasks": [
+    "swap_blocks"
+  ],
+  "task_spec": {
+    "task": "swap_blocks",
+    "budget": 700,
+    "requirements": "Swap the two blocks using the initially empty mat. After EACH of three transfers press and release once. Finish with both arms home. Initial mat identities come from current RGB only. Native verdict is authoritative."
+  },
+  "tool_limits": {
+    "max_calls": 140,
+    "max_tools_per_turn": 16,
+    "history_size": 24,
+    "require_cartesian_completion": true
+  },
+  "experience": "experience.json",
+  "sources": {
+    "file_001": "NOTICE.md",
+    "file_002": "RESEARCH_SUMMARY.md",
+    "file_003": "__init__.py",
+    "file_004": "adapter.py",
+    "controller": "controller.py",
+    "file_007": "failure_experience.json",
+    "file_008": "ik_worker.py",
+    "file_011": "primitives/cartesian_actions/interface.md",
+    "file_012": "primitives/cartesian_actions/tool.py",
+    "file_014": "primitives/press_surface/interface.md",
+    "file_015": "primitives/press_surface/tool.py",
+    "file_017": "primitives/rgb_point/auto_surface.py",
+    "file_018": "primitives/rgb_point/interface.md",
+    "file_019": "primitives/rgb_point/silhouette.py",
+    "file_020": "primitives/rgb_point/tool.py",
+    "file_022": "primitives/support/__init__.py",
+    "file_023": "primitives/support/core.py",
+    "file_024": "primitives/support/geometry.py",
+    "file_025": "primitives/support/motion.py",
+    "file_027": "primitives/surface_patch/interface.md",
+    "file_028": "primitives/surface_patch/tool.py",
+    "file_030": "primitives/table_plane/interface.md",
+    "file_031": "primitives/table_plane/tool.py",
+    "file_032": "program_prompt.md",
+    "file_033": "publication.json",
+    "file_034": "resources.json",
+    "file_036": "source_provenance.json",
+    "file_037": "tool_documentation.md",
+    "file_038": "validation.json"
+  },
+  "qualification": {
+    "published": true,
+    "standard_qualified": false,
+    "successful_seeds": [
+      0
+    ],
+    "tested_seeds": [
+      0
+    ],
+    "untested_seeds": [
+      1,
+      2
+    ],
+    "mode": "user_authorized_single_episode_acceptance",
+    "scope": "This packaged version passed seed0/one episode. Predecessor had seeds0/1 success and seed2 interrupted. Do not merge versions into three-seed qualification."
+  }
+}

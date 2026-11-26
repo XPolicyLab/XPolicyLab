@@ -1,0 +1,133 @@
+{
+  "runtime_hashes": {
+    "frozen_knowledge.json": "d6a7f30bd343a40bcfcfecba23854cbe22312e351cf99adb1ccc0669ad88d2dc",
+    "task_vision.py": "c99176a29f62c6a3760246ab2529d2584095bdb903967c96edebf49158b25ccd",
+    "tool_documentation.md": "e32836abe5f71341363e6944e57e5347136e8ba6c660751ca5f5c9d5308c5767",
+    "program_worker.py": "b2bc7f51ef96a54d31bc9415662819184abb4c98bc8857a8560a993afec55e59",
+    "program_prompt.md": "9512b1d0c41e4e9b808e8f040486da48b271bfad07c3a86363e379a88b157fd5",
+    "arrival_motion.py": "00d106935b8249f2e26d7a09febf95f35ebced69cdc150c4431a20d720ad95ce",
+    "hand_clearance.py": "088592a790fde9051c007a635fcc6edec1c51a29c21f367163303e87c32784e9",
+    "hand_bounds.json": "6ecea3347942113699f1993b189fa4ad555912aa69906d43dd3a29beaed426ca",
+    "visual.py": "f2fe3cec03bddfc406ea6f893fb83b4cee5444b3b7a1f05160b06093192362f0",
+    "vision_geometry.py": "af94786f477d2dcfc821cf560812d5d9697035ffa020da8328ba9aeaa5789856",
+    "controller.py": "9209fcaa43a57485d64b00052a770f70e10c3bea3347228d9fd832ff86433137",
+    "public_hand.py": "db8b6ad8993b08460b09ad520304b36ec62b6b5481a6c5f731a5717f4336a715",
+    "absolute_pose.py": "7eac1b614e3624e7b500edae20614f9364b0e2fba3486f894da6b4dfbc94afd7",
+    "vision_resources.json": "6e04971e8bc09afc337e0613669ae352cbb25923e9f221760496e416dc39e2e8",
+    "experience.json": "566b67280a0876397b2921dbc244b0f6a85d17e871d5cf3794f8ae8244138f3e",
+    "generator.py": "1e71ab6802ab18e3a9a453ede5e3d177a42323414eb9ee174c4b6e3295891535",
+    "task_geometry.py": "f7f7bebebb43be3fe4a21095d21d8935675c8707dbeeb1d7f72036eaef900c55",
+    "view_geometry.py": "6e50b9a223068b8eea27da3f8667135aa55909b75bf10d62667cea6eedad9cf4",
+    "program_session.py": "29e167885abbdeab1ee46171890578f88f5efe49b5d968aa05aed7460e494944"
+  },
+  "native_runner_sha256": "3d110e5c8e377054339a2758beeab6fc794ce4b44fe8532d10ce9eee8d00d4aa",
+  "outcomes": [
+    {
+      "requested_seed": 0,
+      "run": "/root/code/OrimaPI/runs/20261023T093351-tool-episode-d88d14f2d675",
+      "success": false,
+      "error": null,
+      "controller_failures": [
+        {
+          "task": "insert_key",
+          "seed": 0,
+          "event": "code_skill_tool_terminal_failure",
+          "sequence": 809,
+          "time": "2026-10-23T09:41:35.553328+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "insert_key",
+          "episode_id": "d279a771e4ad40b2b652c240b83caa52",
+          "step": 184,
+          "kind": "policy",
+          "error": "RuntimeError: Too many non-motion program iterations"
+        }
+      ],
+      "official_result": {
+        "episodes": [
+          {
+            "layout_id": 0,
+            "success": false,
+            "score": 0.15,
+            "artifact": "native/RoboDojo/insert_key/orimapi_e179a9babd6d4c9c85c4af71a961627c/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_e179a9babd6d4c9c85c4af71a961627c/_result.json"
+          }
+        ],
+        "episode_count": 1,
+        "success_rate": 0.0,
+        "mean_score": 0.15,
+        "artifacts": [
+          {
+            "path": "native/RoboDojo/insert_key/orimapi_e179a9babd6d4c9c85c4af71a961627c/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_e179a9babd6d4c9c85c4af71a961627c/_result.json",
+            "sha256": "0852a31ea06a56729ca21329ae7909dc8357d7aa8b8134ed01d9ce1868e2f332"
+          }
+        ]
+      }
+    },
+    {
+      "requested_seed": 1,
+      "run": "/root/code/OrimaPI/runs/20261023T094154-tool-episode-69065734f314",
+      "success": false,
+      "error": null,
+      "controller_failures": [],
+      "official_result": {
+        "episodes": [
+          {
+            "layout_id": 0,
+            "success": false,
+            "score": 0.15,
+            "artifact": "native/RoboDojo/insert_key/orimapi_fb8ea125ebf54ec1b271c39930226247/arx_x5/1_ckpt_name=policy-library,action_type=joint/orimapi_fb8ea125ebf54ec1b271c39930226247/_result.json"
+          }
+        ],
+        "episode_count": 1,
+        "success_rate": 0.0,
+        "mean_score": 0.15,
+        "artifacts": [
+          {
+            "path": "native/RoboDojo/insert_key/orimapi_fb8ea125ebf54ec1b271c39930226247/arx_x5/1_ckpt_name=policy-library,action_type=joint/orimapi_fb8ea125ebf54ec1b271c39930226247/_result.json",
+            "sha256": "0852a31ea06a56729ca21329ae7909dc8357d7aa8b8134ed01d9ce1868e2f332"
+          }
+        ]
+      }
+    },
+    {
+      "requested_seed": 2,
+      "run": "/root/code/OrimaPI/runs/20261023T094657-tool-episode-3376b6fc6bcf",
+      "success": false,
+      "error": null,
+      "controller_failures": [
+        {
+          "task": "insert_key",
+          "seed": 2,
+          "event": "code_skill_tool_terminal_failure",
+          "sequence": 751,
+          "time": "2026-10-23T09:52:52.375837+00:00",
+          "policy_id": "code-policy",
+          "skill_id": "insert_key",
+          "episode_id": "d042f48cc411453fa940587e6d20633f",
+          "step": 177,
+          "kind": "policy",
+          "error": "RuntimeError: Too many non-motion program iterations"
+        }
+      ],
+      "official_result": {
+        "episodes": [
+          {
+            "layout_id": 0,
+            "success": false,
+            "score": 0.15,
+            "artifact": "native/RoboDojo/insert_key/orimapi_4234dc0bcc6342d4892beaab3e7acdf2/arx_x5/2_ckpt_name=policy-library,action_type=joint/orimapi_4234dc0bcc6342d4892beaab3e7acdf2/_result.json"
+          }
+        ],
+        "episode_count": 1,
+        "success_rate": 0.0,
+        "mean_score": 0.15,
+        "artifacts": [
+          {
+            "path": "native/RoboDojo/insert_key/orimapi_4234dc0bcc6342d4892beaab3e7acdf2/arx_x5/2_ckpt_name=policy-library,action_type=joint/orimapi_4234dc0bcc6342d4892beaab3e7acdf2/_result.json",
+            "sha256": "0852a31ea06a56729ca21329ae7909dc8357d7aa8b8134ed01d9ce1868e2f332"
+          }
+        ]
+      }
+    }
+  ],
+  "scope": "Retained native evidence and source identity; not runtime scene inputs or successful full-task examples"
+}

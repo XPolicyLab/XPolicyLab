@@ -1,0 +1,11 @@
+[
+  {
+    "lesson": "The current instruction determines the bottom-to-top order; never use the development colors or layout."
+  },
+  {
+    "lesson": "A completed robot move does not establish a retained cube. Verify current RGB after lifting and reobserve the stack before the next placement."
+  },
+  {
+    "lesson": "Reserve time for open-finger vertical withdrawal and final home. Current RGB geometry, not hidden object coordinates, determines contacts."
+  }
+]

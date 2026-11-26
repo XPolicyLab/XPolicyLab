@@ -1,0 +1,65 @@
+{
+  "schema": "orimapi.code-tool-skill/v1",
+  "skill_id": "put_bottles_into_dustbin",
+  "supported_tasks": [
+    "put_bottles_into_dustbin"
+  ],
+  "task_spec": {
+    "task": "put_bottles_into_dustbin",
+    "budget": 700,
+    "requirements": "Use incremental Python code to put all four bottles into the dustbin and return both arms home with open grippers. Native700 actions. Work on one next stage, inspect current RGB, save reusable parameterized functions and causal lessons as evidence emerges. Persistent variables/functions must not confuse stale visual estimates with current truth. No resetting or hidden states. Detection, SAM body masks, upright-cylinder hypotheses, calibrated geometry, depth and public collision checks are available for GPT to choose; no requirement to call every tool. Current robot ee_pose is the wrist, current tool TCP is already the grasp center. Use the observed body axis, not the label surface, and keep jaws across the narrow width. Low side/angled pickup followed by a short lift is enough when the path is clear. Avoid large empty-hand setup rotations and deep descent into the bin. RELEASE ABOVE the observed inner opening once bottle bottom clears its rim; then verify landing and withdraw directly to the next bottle. Do not keep lowering toward the bin floor. Reserve50 actual actions for final home and target under140 per delivered bottle. Three later deliveries cannot fit if the first consumes250. For far-right bottles, plan a right-to-left midair handover if direct delivery is unreachable: donor upper body/neck, receiver exposed lower body at a visibly separated angle, receiver closes and is inspected BEFORE donor releases. No home while holding. Keep a four-bottle ledger and recover from partial motions at CURRENT state. Source snippets may define and reuse functions and call tool(name,args) synchronously; geometric/IK tool failures should trigger a local alternative orientation or waypoint, not restarting simulation or blindly replaying prior motions. Native result is the only task verdict. Tools and code may be improved during research but never alter original physics, scoring or budgets. All reusable skills must derive coordinates from actual current RGB and robot state, never earlier layouts."
+  },
+  "tool_limits": {
+    "max_calls": 180,
+    "max_tools_per_turn": 16,
+    "history_size": 24
+  },
+  "experience": "experience.json",
+  "sources": {
+    "runtime_controller": "controller.py",
+    "runtime_hand_clearance": "hand_clearance.py",
+    "runtime_vision_geometry": "vision_geometry.py",
+    "runtime_hand_bounds": "hand_bounds.json",
+    "controller": "program_controller.py",
+    "runtime_program_session": "program_session.py",
+    "runtime_program_worker": "program_worker.py",
+    "runtime_program_prompt": "program_prompt.md",
+    "runtime_arrival_motion": "arrival_motion.py",
+    "frozen_knowledge": "frozen_knowledge.json",
+    "vision_resources": "vision_resources.json"
+  },
+  "tool_recipes": {
+    "staged_motion": "tool_recipes/staged_motion.json"
+  },
+  "qualification": {
+    "successful_seed_sets": [
+      0,
+      1
+    ],
+    "native_scores": [
+      1.0,
+      1.0,
+      0.4
+    ],
+    "scope": "One development and two independent held-out seed-set episodes; frozen functions/lessons with scene-local Python adaptation, not full benchmark reliability",
+    "llm_model": "gpt-6-astra",
+    "reasoning_effort": null,
+    "runtime_limits": {
+      "code_submissions": 100,
+      "calls_per_segment": 16,
+      "native_actions": 700
+    },
+    "additional_formal_retest": {
+      "seed": 0,
+      "success": false,
+      "score": 0.4,
+      "run": "20261021T070551-suite-2667f779fdfd",
+      "limitation": "The final bottle was returned to the table after handover/recovery exhausted the remaining budget; home required29 actions with18 remaining. The normal entrypoint completed and produced native results, but policy reliability is not established."
+    },
+    "run_ids": [
+      "20261021T061834-tool-episode-546a8c9eaa05",
+      "20261021T063105-tool-episode-5ea2d72ef8a4",
+      "20261021T064357-tool-episode-f3e0feea990b"
+    ]
+  }
+}

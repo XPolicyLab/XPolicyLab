@@ -1,0 +1,38 @@
+{
+  "title": "工具箱：四工具语义匹配—握取—端向对齐—完整入槽",
+  "target_count": 4,
+  "operations": [
+    "pick",
+    "dock",
+    "place",
+    "transfer",
+    "inspect",
+    "measure_feature",
+    "view",
+    "home",
+    "wait"
+  ],
+  "phases": [
+    "Identify hammer, tape measure, wrench and pliers and corresponding recesses; choose order keeping narrow slots and remaining grasps accessible.",
+    "Pick each tool at an observed handle/body location, avoiding fragile head-only grasps.",
+    "With fresh post-pick RGB, dock held tool using three directed material features and corresponding recess frame; destination seat denotes the visible final support.",
+    "Open only at the intended support; inspect full-tool containment and endpoint orientation.",
+    "Recover a missed placement using changed grip/arm/recess frame; finish all four and home. Do not invent a lid-closing requirement."
+  ],
+  "failure_lesson": "Old local trials did not place any tool. Public references report partial progress, not a locally reproduced four-tool success. Closure/center alignment alone misses asymmetric recesses.",
+  "required_features": {
+    "dock": [
+      "source.mate_a/b/c",
+      "destination.mate_a/b/c",
+      "destination.seat"
+    ]
+  },
+  "reference_success_scope": "No full native success established by the reviewed aggregate/reference contract.",
+  "task": "store_tools_in_toolbox",
+  "family": "store_tools_in_toolbox",
+  "budget": 900,
+  "random": false,
+  "pickup_lift_m": 0.06,
+  "travel_lift_m": 0.06,
+  "final_home": true
+}

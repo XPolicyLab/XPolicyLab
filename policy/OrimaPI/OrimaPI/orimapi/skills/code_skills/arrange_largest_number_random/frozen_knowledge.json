@@ -1,0 +1,11 @@
+{
+  "skills": {},
+  "lessons": [
+    "Separate API termination from geometric and physical failures; the 400 and 503 need their actual failing requests before attribution.",
+    "Source-camera reprojection of a plane-derived point is a consistency check, not independent height evidence.",
+    "A public thickness prior and a mesh-derived finger anchor are hypotheses about contact, not measured contact.",
+    "Record acquisition, retention, release and readable pad placement separately; TCP verification cannot advance those object-state ledger entries.",
+    "Budget using expanded trajectories and tracking allowance, not requested steps. Seed 0 finished well before the action ceiling; action exhaustion is not supported as its cause.",
+    "Use terminal RGB only for its identified case. Empty pads in seed 2 do not establish the outcomes of individual attempts in seeds 0 or 1."
+  ]
+}

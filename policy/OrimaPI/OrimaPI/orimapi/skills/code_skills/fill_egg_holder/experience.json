@@ -1,0 +1,72 @@
+[
+  {
+    "lesson": "Budget submissions separately from native actions. Bundle acquisition and test lift into one bounded segment, retaining the RGB review before transport and reserves for closure and home.",
+    "source_study": "20261023-rsi2",
+    "scope": "Post-three-seed development reflection; not an observed future result"
+  },
+  {
+    "lesson": "Keep execution status, TCP verification, visual possession, settled occupancy and official outcome as separate ledger fields.",
+    "source_study": "20261023-rsi3",
+    "scope": "Post-three-seed development reflection; not an observed future result"
+  },
+  {
+    "lesson": "A low stereo reprojection residual can coexist with a wrong surface-to-grasp-center conversion; validate the actual opposing pad contact regions.",
+    "source_study": "20261023-rsi3",
+    "scope": "Post-three-seed development reflection; not an observed future result"
+  },
+  {
+    "lesson": "A failed TCP verification must block gripper closure pending fresh inspection, even when the motion status says completed.",
+    "source_study": "20261023-rsi3",
+    "scope": "Post-three-seed development reflection; not an observed future result"
+  },
+  {
+    "lesson": "A bounded motion failure must trigger recovery even when the endpoint TCP tolerance passes; do not weaken existing tracking checks.",
+    "source_study": "20261023-rsi3",
+    "scope": "Post-three-seed development reflection; not an observed future result"
+  },
+  {
+    "lesson": "Hypothesis: contact-region or approach-clearance errors now limit progress more than carry speed. The current evidence does not prove this or establish that slower transport fixed prior grasp loss.",
+    "source_study": "20261023-rsi3",
+    "scope": "Post-three-seed development reflection; not an observed future result"
+  },
+  {
+    "lesson": "Finish occurred at actions 471, 500 and 518. Native action exhaustion alone therefore does not explain incompletion; submission availability is not shown in these excerpts.",
+    "source_study": "20261023-rsi3",
+    "scope": "Post-three-seed development reflection; not an observed future result"
+  },
+  {
+    "lesson": "The terminal open lid independently rules out full completion; a partial score must not be translated into a specific egg count without evaluator semantics.",
+    "source_study": "20261023-rsi3",
+    "scope": "Post-three-seed development reflection; not an observed future result"
+  },
+  {
+    "lesson": "Keep execution status, TCP verification, visual possession, recess occupancy and native outcome separate; completed can coexist with failed verification.",
+    "source_study": "20261023-rsi5",
+    "scope": "Post-three-seed development reflection; not an observed future result"
+  },
+  {
+    "lesson": "A disappearing target requires fresh visual reacquisition and cause revision, not merely converting the same estimate into an explicit position to escape freshness checks.",
+    "source_study": "20261023-rsi5",
+    "scope": "Post-three-seed development reflection; not an observed future result"
+  },
+  {
+    "lesson": "Stereo-band overlays constrain possible correspondence locations; they do not resolve smooth-shell identity, depth or surface-to-grasp-center conversion.",
+    "source_study": "20261023-rsi5",
+    "scope": "Post-three-seed development reflection; not an observed future result"
+  },
+  {
+    "lesson": "Seed 2 withdrew with the gripper open after failed descent verification; that is recovery, not evidence of grasp loss.",
+    "source_study": "20261023-rsi5",
+    "scope": "Post-three-seed development reflection; not an observed future result"
+  },
+  {
+    "lesson": "Finish occurred at actions 558, 552 and 583. Native action exhaustion alone does not explain incompletion; remaining submission availability is not shown.",
+    "source_study": "20261023-rsi5",
+    "scope": "Post-three-seed development reflection; not an observed future result"
+  },
+  {
+    "lesson": "Hypothesis: unresolved acquisition geometry remains a stronger bottleneck than carry speed. These results do not establish whether settled closure and slower carry improve retention.",
+    "source_study": "20261023-rsi5",
+    "scope": "Post-three-seed development reflection; not an observed future result"
+  }
+]

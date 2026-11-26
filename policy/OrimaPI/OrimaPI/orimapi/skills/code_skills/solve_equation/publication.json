@@ -1,0 +1,105 @@
+{
+  "schema": "orimapi.code-skill-publication/v1",
+  "status": "published",
+  "published_at": "2026-10-27T17:32:16.313677+00:00",
+  "authorization": "User explicitly requested: 先把这一版合入到正式skill",
+  "qualification": {
+    "published": true,
+    "mode": "user_authorized_eight_trial_acceptance",
+    "standard_qualified": false,
+    "tested_seeds": [
+      0,
+      1,
+      2
+    ],
+    "successful_seeds": [
+      0,
+      1,
+      2
+    ],
+    "historical_qualification": {
+      "successful_seed_sets": [
+        0,
+        1
+      ],
+      "tested_seed_sets": [
+        0,
+        1
+      ],
+      "scope": "One first native layout per seed set; engineering admission, not full benchmark reliability",
+      "results": [
+        {
+          "seed": 0,
+          "success": true,
+          "score": 1.0,
+          "layout_sha256": "df2d8ee1b5e6b3d984174bd03555a2f512addb671a4bf830e9eecbd9e7f7d48b",
+          "run_id": "20261021T190136-tool-episode-c177f4cc51f4"
+        },
+        {
+          "seed": 1,
+          "success": true,
+          "score": 1.0,
+          "layout_sha256": "cd73dc2812af15ea032e8f107da362859a76cd71d29dbbefcd0b688347cb0388",
+          "run_id": "20261021T185858-tool-episode-fecdf659261b"
+        }
+      ],
+      "llm_model": "gpt-6-astra",
+      "reasoning_effort": null
+    },
+    "scope": "User-authorized formal publication of the unchanged c003 controller. Eight independent first-layout episodes on seeds0/1/2 repeated3/3/2; six successes and two failures. Each seed has at least one success; seeds0/2 also failed. Small-sample acceptance, not official50-episode or unseen-layout qualification.",
+    "llm_model": "gpt-6-astra",
+    "seed_results": [
+      {
+        "seed": 0,
+        "scored": 3,
+        "planned": 3,
+        "successes": 2,
+        "score_percent": 66.66666666666667
+      },
+      {
+        "seed": 1,
+        "scored": 3,
+        "planned": 3,
+        "successes": 3,
+        "score_percent": 100.0
+      },
+      {
+        "seed": 2,
+        "scored": 2,
+        "planned": 2,
+        "successes": 1,
+        "score_percent": 50.0
+      }
+    ],
+    "validation_batch": "solve-equation-recovery-8gpu-20261028-c003",
+    "scored_episodes": 8,
+    "successful_episodes": 6,
+    "mean_score_percent": 75.0,
+    "equal_seed_mean_score_percent": 72.22222222222223
+  },
+  "tested_candidate_bundle_sha256": "22bbbdce80db44b7c2e13e322fa29f2b3b6d804053a10f80ec52d9c83b444cbe",
+  "runtime_hashes": {
+    "experience": "d076620acafa702376dba0eb18ac6c54b7bccc7f644a9111c4142bd7c4c1636c",
+    "source_controller": "e6f55eaf36df0225c83fe3e90c71eb8cb06f6991deb7f4c72ebe3d15996db3f0",
+    "source_vision": "a69163059cc1b668d37a092024ba0305c6a59d4c6dcc9461e131da5cdcab5fac",
+    "source_shared_make_kong_baseline_motion": "79abd687e22cb81a94ebb5fcc6b5419934c459125645227d664046f3950097cb",
+    "source_shared_make_kong_hand_clearance": "088592a790fde9051c007a635fcc6edec1c51a29c21f367163303e87c32784e9",
+    "source_shared_make_kong_hand_bounds": "6ecea3347942113699f1993b189fa4ad555912aa69906d43dd3a29beaed426ca",
+    "source_planning": "91afaceae2785b96fe1cc50340b2a54d76307823d2bc0988353cb1039f2a1877",
+    "source_shared_native_adapter": "ee10e45379ad2c8020e9dc5c2ec8f8739bd96f79bcea3b69a8bd729b02fe5dc7",
+    "source_shared_native_worker": "92a27a877166ed808aeae0e6fff202fa9725c0bfc7dc333d6cffb2608574beba",
+    "source_shared_public_geometry": "9e204a79b46e863b93e7278e6200f44b432ba69f3bb62892ff17ef6510473d52",
+    "source_shared_checked_motion": "3ef712be1b81180ea6d7db9034d53bd6d38999f51ab38f8eee431a071e4de9e8",
+    "source_shared_robot_collision": "c34b0c51b0a3da35329b876812643bd1eae51fb498b3ffd7f3ce982c59fe625f",
+    "source_shared_motion_base": "7680d16d16496f4eeebc9fff9190c7b0422582c7f5251d198d38169a0295e8fc"
+  },
+  "tested_runtime_inputs_unchanged": true,
+  "scope": "Only manifest qualification, formal catalog description and publication/validation records changed. Controller, vision, planning, injected experience and declared runtime dependencies match the tested candidate byte-for-byte. Metadata changes bundle identity. No new simulation launched.",
+  "publication_metadata_only_changes": [
+    "skill.json qualification and publication source declarations",
+    "configs/robodojo.yaml solve_equation description",
+    "validation.json",
+    "publication.json"
+  ],
+  "review": "runs/analysis/solve-equation-optimization-20261028/review.md"
+}

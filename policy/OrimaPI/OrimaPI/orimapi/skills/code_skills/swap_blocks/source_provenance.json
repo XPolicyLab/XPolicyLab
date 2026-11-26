@@ -1,0 +1,21 @@
+{
+  "changes": "Helper import namespace relocation only; numeric algorithms retained.",
+  "files": {
+    "primitives/press_surface/tool.py": "6fdbc43d72bd4d4f2ffb96af6e1d2bbb4466194e5b5b69e08c927babf519665d",
+    "primitives/press_surface/interface.md": "a5c71552e9edb46d0c70ecb68a98d31bbf62d5914d2b0fb75c137f1ccab84ab3",
+    "primitives/surface_patch/tool.py": "918f4d6e72ec8815f2a059c93ed290280e5647da43ed8c4e5396e3df876f06dc",
+    "primitives/surface_patch/interface.md": "e245a87b20512002014e8ad11e52ca43dd2ff499ab217e21ce5a2ce5848bdb2e",
+    "primitives/support/geometry.py": "4dc75130689d8c6b57d17f4515247e14a6d6b4d8de29b26e30ff8a7609080482",
+    "primitives/support/__init__.py": "600728cfdc32ae06b3c2617a1d5dd9ee2c7552c4df1c3b4be01add3c3a15eb80",
+    "primitives/support/motion.py": "f2c6c6f37916164d594199c43dec1536f26fa7a9c67a23f751267bdd1c90d233",
+    "primitives/support/core.py": "0a8e6c03bd545f58de8e42b32383427e59b015d20fcf8409edfdda4eae9bb372",
+    "primitives/table_plane/tool.py": "cd257aec7f4ba01e239f88892f4243f6ab182dc1857354fc152fb930583fcb12",
+    "primitives/table_plane/interface.md": "d7d9ca4b481d4272c8d1205b3274f3d1b911a95c9ce3a70e1b2ad023275bcba5",
+    "primitives/cartesian_actions/tool.py": "32f0204121b7fa506f5c04f7ffd342e860657224a9559751adcc1146b9698e51",
+    "primitives/cartesian_actions/interface.md": "4a4921c41daccaf51c5287d1249a3a372ca0f0dba19a204d6823a77910253876",
+    "primitives/rgb_point/tool.py": "2fa64777392346a215886e8f2144fa7598384ca0f09a9abd064f25aa359e1466",
+    "primitives/rgb_point/silhouette.py": "b645ef2958fc6d0377ec8ea1a8a65ac5907118f3c9072440b43f6423bc935545",
+    "primitives/rgb_point/auto_surface.py": "374a4e93a5aa3c02524c6b5073bc4f9edf93bde8fb847b8df0cbe84967151e50",
+    "primitives/rgb_point/interface.md": "9faf09cb80a227d59416e54f499b59408c1b789e75e38bfd8a58d3d63e1744c8"
+  }
+}

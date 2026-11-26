@@ -1,0 +1,398 @@
+{
+  "schema": "orimapi.solve-equation-validation/v1",
+  "tested_candidate_bundle_sha256": "22bbbdce80db44b7c2e13e322fa29f2b3b6d804053a10f80ec52d9c83b444cbe",
+  "tested_candidate_file_hashes": {
+    "manifest": "c163fdd466ef2e29760f357df79f16b13b73ff6b720f638c8a7c7df4060f17d2",
+    "experience": "d076620acafa702376dba0eb18ac6c54b7bccc7f644a9111c4142bd7c4c1636c",
+    "source_controller": "e6f55eaf36df0225c83fe3e90c71eb8cb06f6991deb7f4c72ebe3d15996db3f0",
+    "source_vision": "a69163059cc1b668d37a092024ba0305c6a59d4c6dcc9461e131da5cdcab5fac",
+    "source_shared_make_kong_baseline_motion": "79abd687e22cb81a94ebb5fcc6b5419934c459125645227d664046f3950097cb",
+    "source_shared_make_kong_hand_clearance": "088592a790fde9051c007a635fcc6edec1c51a29c21f367163303e87c32784e9",
+    "source_shared_make_kong_hand_bounds": "6ecea3347942113699f1993b189fa4ad555912aa69906d43dd3a29beaed426ca",
+    "source_planning": "91afaceae2785b96fe1cc50340b2a54d76307823d2bc0988353cb1039f2a1877",
+    "source_shared_native_adapter": "ee10e45379ad2c8020e9dc5c2ec8f8739bd96f79bcea3b69a8bd729b02fe5dc7",
+    "source_shared_native_worker": "92a27a877166ed808aeae0e6fff202fa9725c0bfc7dc333d6cffb2608574beba",
+    "source_shared_public_geometry": "9e204a79b46e863b93e7278e6200f44b432ba69f3bb62892ff17ef6510473d52",
+    "source_shared_checked_motion": "3ef712be1b81180ea6d7db9034d53bd6d38999f51ab38f8eee431a071e4de9e8",
+    "source_shared_robot_collision": "c34b0c51b0a3da35329b876812643bd1eae51fb498b3ffd7f3ce982c59fe625f",
+    "source_shared_motion_base": "7680d16d16496f4eeebc9fff9190c7b0422582c7f5251d198d38169a0295e8fc"
+  },
+  "runtime_hashes": {
+    "experience": "d076620acafa702376dba0eb18ac6c54b7bccc7f644a9111c4142bd7c4c1636c",
+    "source_controller": "e6f55eaf36df0225c83fe3e90c71eb8cb06f6991deb7f4c72ebe3d15996db3f0",
+    "source_vision": "a69163059cc1b668d37a092024ba0305c6a59d4c6dcc9461e131da5cdcab5fac",
+    "source_shared_make_kong_baseline_motion": "79abd687e22cb81a94ebb5fcc6b5419934c459125645227d664046f3950097cb",
+    "source_shared_make_kong_hand_clearance": "088592a790fde9051c007a635fcc6edec1c51a29c21f367163303e87c32784e9",
+    "source_shared_make_kong_hand_bounds": "6ecea3347942113699f1993b189fa4ad555912aa69906d43dd3a29beaed426ca",
+    "source_planning": "91afaceae2785b96fe1cc50340b2a54d76307823d2bc0988353cb1039f2a1877",
+    "source_shared_native_adapter": "ee10e45379ad2c8020e9dc5c2ec8f8739bd96f79bcea3b69a8bd729b02fe5dc7",
+    "source_shared_native_worker": "92a27a877166ed808aeae0e6fff202fa9725c0bfc7dc333d6cffb2608574beba",
+    "source_shared_public_geometry": "9e204a79b46e863b93e7278e6200f44b432ba69f3bb62892ff17ef6510473d52",
+    "source_shared_checked_motion": "3ef712be1b81180ea6d7db9034d53bd6d38999f51ab38f8eee431a071e4de9e8",
+    "source_shared_robot_collision": "c34b0c51b0a3da35329b876812643bd1eae51fb498b3ffd7f3ce982c59fe625f",
+    "source_shared_motion_base": "7680d16d16496f4eeebc9fff9190c7b0422582c7f5251d198d38169a0295e8fc"
+  },
+  "code_parameters": {
+    "native_ik": {
+      "device": "cuda:0"
+    }
+  },
+  "qualification": {
+    "published": true,
+    "mode": "user_authorized_eight_trial_acceptance",
+    "standard_qualified": false,
+    "tested_seeds": [
+      0,
+      1,
+      2
+    ],
+    "successful_seeds": [
+      0,
+      1,
+      2
+    ],
+    "historical_qualification": {
+      "successful_seed_sets": [
+        0,
+        1
+      ],
+      "tested_seed_sets": [
+        0,
+        1
+      ],
+      "scope": "One first native layout per seed set; engineering admission, not full benchmark reliability",
+      "results": [
+        {
+          "seed": 0,
+          "success": true,
+          "score": 1.0,
+          "layout_sha256": "df2d8ee1b5e6b3d984174bd03555a2f512addb671a4bf830e9eecbd9e7f7d48b",
+          "run_id": "20261021T190136-tool-episode-c177f4cc51f4"
+        },
+        {
+          "seed": 1,
+          "success": true,
+          "score": 1.0,
+          "layout_sha256": "cd73dc2812af15ea032e8f107da362859a76cd71d29dbbefcd0b688347cb0388",
+          "run_id": "20261021T185858-tool-episode-fecdf659261b"
+        }
+      ],
+      "llm_model": "gpt-6-astra",
+      "reasoning_effort": null
+    },
+    "scope": "User-authorized formal publication of the unchanged c003 controller. Eight independent first-layout episodes on seeds0/1/2 repeated3/3/2; six successes and two failures. Each seed has at least one success; seeds0/2 also failed. Small-sample acceptance, not official50-episode or unseen-layout qualification.",
+    "llm_model": "gpt-6-astra",
+    "seed_results": [
+      {
+        "seed": 0,
+        "scored": 3,
+        "planned": 3,
+        "successes": 2,
+        "score_percent": 66.66666666666667
+      },
+      {
+        "seed": 1,
+        "scored": 3,
+        "planned": 3,
+        "successes": 3,
+        "score_percent": 100.0
+      },
+      {
+        "seed": 2,
+        "scored": 2,
+        "planned": 2,
+        "successes": 1,
+        "score_percent": 50.0
+      }
+    ],
+    "validation_batch": "solve-equation-recovery-8gpu-20261028-c003",
+    "scored_episodes": 8,
+    "successful_episodes": 6,
+    "mean_score_percent": 75.0,
+    "equal_seed_mean_score_percent": 72.22222222222223
+  },
+  "model": "gpt-6-astra",
+  "require_model_match": true,
+  "outcomes": [
+    {
+      "gpu": 0,
+      "seed": 0,
+      "status": "completed",
+      "score_percent": 100.0,
+      "success": true,
+      "layout_id": 0,
+      "actions": 277,
+      "model_tool_calls": 7,
+      "error": null,
+      "source": "runs/solve-equation-recovery-8gpu-20261028-c003/jobs/gpu-0-seed-0/attempt-001/runs/20261027T172249-79a905a2bd8c/evaluator/native/RoboDojo/solve_equation/orimapi_4c0053a5bd1843799c7d56ff6f197d7e/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_4c0053a5bd1843799c7d56ff6f197d7e/_result.json",
+      "artifact_root": "runs/solve-equation-recovery-8gpu-20261028-c003/jobs/gpu-0-seed-0/attempt-001/runs/20261027T172249-79a905a2bd8c/evaluator/native/RoboDojo/solve_equation/orimapi_4c0053a5bd1843799c7d56ff6f197d7e/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_4c0053a5bd1843799c7d56ff6f197d7e",
+      "artifacts": [
+        {
+          "path": "_result.json",
+          "sha256": "117b7aac5c033705b64fc53e97b00912e1fec4f50cff9869aee75b750b3529a6"
+        },
+        {
+          "path": "episode_0000000_cam_head_success.mp4",
+          "sha256": "b588c7b8f199133a870c1b181d79ef3d0611682f3e32fe34a0be39d975908097",
+          "frames": 278
+        },
+        {
+          "path": "episode_0000000_cam_left_wrist_success.mp4",
+          "sha256": "064c9ac5c83aaadf6370a10a8b6030990a898075f08f3c787583f0408a1ce574",
+          "frames": 278
+        },
+        {
+          "path": "episode_0000000_cam_right_wrist_success.mp4",
+          "sha256": "b66060982a00318c1b536d10ee51a3de8ad3c9dadcce3db17a587a327f871745",
+          "frames": 278
+        }
+      ]
+    },
+    {
+      "gpu": 1,
+      "seed": 1,
+      "status": "completed",
+      "score_percent": 100.0,
+      "success": true,
+      "layout_id": 0,
+      "actions": 186,
+      "model_tool_calls": 6,
+      "error": null,
+      "source": "runs/solve-equation-recovery-8gpu-20261028-c003/jobs/gpu-1-seed-1/attempt-001/runs/20261027T172249-3c001cc75cc7/evaluator/native/RoboDojo/solve_equation/orimapi_63390dfd1cdb45a7b24d6cf684159a3b/arx_x5/1_ckpt_name=policy-library,action_type=joint/orimapi_63390dfd1cdb45a7b24d6cf684159a3b/_result.json",
+      "artifact_root": "runs/solve-equation-recovery-8gpu-20261028-c003/jobs/gpu-1-seed-1/attempt-001/runs/20261027T172249-3c001cc75cc7/evaluator/native/RoboDojo/solve_equation/orimapi_63390dfd1cdb45a7b24d6cf684159a3b/arx_x5/1_ckpt_name=policy-library,action_type=joint/orimapi_63390dfd1cdb45a7b24d6cf684159a3b",
+      "artifacts": [
+        {
+          "path": "_result.json",
+          "sha256": "117b7aac5c033705b64fc53e97b00912e1fec4f50cff9869aee75b750b3529a6"
+        },
+        {
+          "path": "episode_0000000_cam_head_success.mp4",
+          "sha256": "d475b4c50b6154ed49f3aac25ad8ea2ebafa75c962fb19b00a25cd1af2900c8a",
+          "frames": 187
+        },
+        {
+          "path": "episode_0000000_cam_left_wrist_success.mp4",
+          "sha256": "cb2f3ea534b8594c3241e5dce3465c45ca9eace163b86dd21a4d0bda12c0ee44",
+          "frames": 187
+        },
+        {
+          "path": "episode_0000000_cam_right_wrist_success.mp4",
+          "sha256": "891fc9627e27057b0067dafbfc2b0726f2313459a196c1723bb63e70e697212f",
+          "frames": 187
+        }
+      ]
+    },
+    {
+      "gpu": 2,
+      "seed": 2,
+      "status": "completed",
+      "score_percent": 0.0,
+      "success": false,
+      "layout_id": 0,
+      "actions": 300,
+      "model_tool_calls": 5,
+      "error": null,
+      "source": "runs/solve-equation-recovery-8gpu-20261028-c003/jobs/gpu-2-seed-2/attempt-001/runs/20261027T172249-8866e8dc4493/evaluator/native/RoboDojo/solve_equation/orimapi_ee26599751274b9c8373233f446f6f5a/arx_x5/2_ckpt_name=policy-library,action_type=joint/orimapi_ee26599751274b9c8373233f446f6f5a/_result.json",
+      "artifact_root": "runs/solve-equation-recovery-8gpu-20261028-c003/jobs/gpu-2-seed-2/attempt-001/runs/20261027T172249-8866e8dc4493/evaluator/native/RoboDojo/solve_equation/orimapi_ee26599751274b9c8373233f446f6f5a/arx_x5/2_ckpt_name=policy-library,action_type=joint/orimapi_ee26599751274b9c8373233f446f6f5a",
+      "artifacts": [
+        {
+          "path": "_result.json",
+          "sha256": "99b780f4e1842dfa81b413ccd2e5302e5827cc349fea4edf978e1bd847986ed3"
+        },
+        {
+          "path": "episode_0000000_cam_head_fail.mp4",
+          "sha256": "567e69225cb7ffd24a69cf716192a519aa372dca9142db507ff59a0ebf6e0679",
+          "frames": 301
+        },
+        {
+          "path": "episode_0000000_cam_left_wrist_fail.mp4",
+          "sha256": "6fc54a08442b8b3a30dfc631ae26974bc444850c6f1fbd910f2b31a055698d93",
+          "frames": 301
+        },
+        {
+          "path": "episode_0000000_cam_right_wrist_fail.mp4",
+          "sha256": "4d0068111738c5cbfe747fd3f05dc2dffa91b276f0534e473515af2d0df6b061",
+          "frames": 301
+        }
+      ]
+    },
+    {
+      "gpu": 3,
+      "seed": 0,
+      "status": "completed",
+      "score_percent": 100.0,
+      "success": true,
+      "layout_id": 0,
+      "actions": 276,
+      "model_tool_calls": 7,
+      "error": null,
+      "source": "runs/solve-equation-recovery-8gpu-20261028-c003/jobs/gpu-3-seed-0/attempt-001/runs/20261027T172249-ea1170e4d6bd/evaluator/native/RoboDojo/solve_equation/orimapi_e41c0b09389b4edeacfa3f3c8e93a5ff/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_e41c0b09389b4edeacfa3f3c8e93a5ff/_result.json",
+      "artifact_root": "runs/solve-equation-recovery-8gpu-20261028-c003/jobs/gpu-3-seed-0/attempt-001/runs/20261027T172249-ea1170e4d6bd/evaluator/native/RoboDojo/solve_equation/orimapi_e41c0b09389b4edeacfa3f3c8e93a5ff/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_e41c0b09389b4edeacfa3f3c8e93a5ff",
+      "artifacts": [
+        {
+          "path": "_result.json",
+          "sha256": "117b7aac5c033705b64fc53e97b00912e1fec4f50cff9869aee75b750b3529a6"
+        },
+        {
+          "path": "episode_0000000_cam_head_success.mp4",
+          "sha256": "dbbf8acb9038876efe73ac739dbf71714c55e6f12fb7ed56c9c08e8db5f52b59",
+          "frames": 277
+        },
+        {
+          "path": "episode_0000000_cam_left_wrist_success.mp4",
+          "sha256": "cbdb7bc3f9fe5bce945431c748dbe23dd11e26d45f2a8a93c07568af112f86c0",
+          "frames": 277
+        },
+        {
+          "path": "episode_0000000_cam_right_wrist_success.mp4",
+          "sha256": "83537ae1d8221a3974d4bdb315b605d6804b8162758e4125d7a1fe85b8bb0349",
+          "frames": 277
+        }
+      ]
+    },
+    {
+      "gpu": 4,
+      "seed": 1,
+      "status": "completed",
+      "score_percent": 100.0,
+      "success": true,
+      "layout_id": 0,
+      "actions": 186,
+      "model_tool_calls": 6,
+      "error": null,
+      "source": "runs/solve-equation-recovery-8gpu-20261028-c003/jobs/gpu-4-seed-1/attempt-001/runs/20261027T172249-c2fdb46f2ed0/evaluator/native/RoboDojo/solve_equation/orimapi_0f7aad1eef104d829c542dc15668fb56/arx_x5/1_ckpt_name=policy-library,action_type=joint/orimapi_0f7aad1eef104d829c542dc15668fb56/_result.json",
+      "artifact_root": "runs/solve-equation-recovery-8gpu-20261028-c003/jobs/gpu-4-seed-1/attempt-001/runs/20261027T172249-c2fdb46f2ed0/evaluator/native/RoboDojo/solve_equation/orimapi_0f7aad1eef104d829c542dc15668fb56/arx_x5/1_ckpt_name=policy-library,action_type=joint/orimapi_0f7aad1eef104d829c542dc15668fb56",
+      "artifacts": [
+        {
+          "path": "_result.json",
+          "sha256": "117b7aac5c033705b64fc53e97b00912e1fec4f50cff9869aee75b750b3529a6"
+        },
+        {
+          "path": "episode_0000000_cam_head_success.mp4",
+          "sha256": "dc5d46c5e80f37887f85cbd8b221732047475d4a2e2d88b835d77c3f57280f00",
+          "frames": 187
+        },
+        {
+          "path": "episode_0000000_cam_left_wrist_success.mp4",
+          "sha256": "c297ac0179f0b6eba64c8b6e22a608cc5f3eaa7568aa3504508983072cfa1045",
+          "frames": 187
+        },
+        {
+          "path": "episode_0000000_cam_right_wrist_success.mp4",
+          "sha256": "29b6dc832d0d913b71fdfbada4973e036324d7538f6e6fa9c1e51746f5bc2443",
+          "frames": 187
+        }
+      ]
+    },
+    {
+      "gpu": 5,
+      "seed": 2,
+      "status": "completed",
+      "score_percent": 100.0,
+      "success": true,
+      "layout_id": 0,
+      "actions": 236,
+      "model_tool_calls": 6,
+      "error": null,
+      "source": "runs/solve-equation-recovery-8gpu-20261028-c003/jobs/gpu-5-seed-2/attempt-001/runs/20261027T172249-6283ecf531a0/evaluator/native/RoboDojo/solve_equation/orimapi_13b9206cfa0845fba0b0d13c66f5f159/arx_x5/2_ckpt_name=policy-library,action_type=joint/orimapi_13b9206cfa0845fba0b0d13c66f5f159/_result.json",
+      "artifact_root": "runs/solve-equation-recovery-8gpu-20261028-c003/jobs/gpu-5-seed-2/attempt-001/runs/20261027T172249-6283ecf531a0/evaluator/native/RoboDojo/solve_equation/orimapi_13b9206cfa0845fba0b0d13c66f5f159/arx_x5/2_ckpt_name=policy-library,action_type=joint/orimapi_13b9206cfa0845fba0b0d13c66f5f159",
+      "artifacts": [
+        {
+          "path": "_result.json",
+          "sha256": "117b7aac5c033705b64fc53e97b00912e1fec4f50cff9869aee75b750b3529a6"
+        },
+        {
+          "path": "episode_0000000_cam_head_success.mp4",
+          "sha256": "ffd7d561e630319dcb11fd443f61bcebbfc59f1fd380b9df0bb43bcf660c44a2",
+          "frames": 237
+        },
+        {
+          "path": "episode_0000000_cam_left_wrist_success.mp4",
+          "sha256": "e31e7d9fdd53b9b2d272d128c62c2b9797532322d01953a7f8fe4c4323787939",
+          "frames": 237
+        },
+        {
+          "path": "episode_0000000_cam_right_wrist_success.mp4",
+          "sha256": "9aa8fb3afb3f1d54a200816e834ede2a397e9b81c0494cff1e25d67b66124d9c",
+          "frames": 237
+        }
+      ]
+    },
+    {
+      "gpu": 6,
+      "seed": 0,
+      "status": "completed",
+      "score_percent": 0.0,
+      "success": false,
+      "layout_id": 0,
+      "actions": 300,
+      "model_tool_calls": 5,
+      "error": null,
+      "source": "runs/solve-equation-recovery-8gpu-20261028-c003/jobs/gpu-6-seed-0/attempt-001/runs/20261027T172249-8dbfa3c3937f/evaluator/native/RoboDojo/solve_equation/orimapi_fc70af63aeac4223970b990b77e6e97b/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_fc70af63aeac4223970b990b77e6e97b/_result.json",
+      "artifact_root": "runs/solve-equation-recovery-8gpu-20261028-c003/jobs/gpu-6-seed-0/attempt-001/runs/20261027T172249-8dbfa3c3937f/evaluator/native/RoboDojo/solve_equation/orimapi_fc70af63aeac4223970b990b77e6e97b/arx_x5/0_ckpt_name=policy-library,action_type=joint/orimapi_fc70af63aeac4223970b990b77e6e97b",
+      "artifacts": [
+        {
+          "path": "_result.json",
+          "sha256": "99b780f4e1842dfa81b413ccd2e5302e5827cc349fea4edf978e1bd847986ed3"
+        },
+        {
+          "path": "episode_0000000_cam_head_fail.mp4",
+          "sha256": "658a31e354b53d66f2c5e316f8f712fecff62cc2aad42c518dab098f4b893043",
+          "frames": 301
+        },
+        {
+          "path": "episode_0000000_cam_left_wrist_fail.mp4",
+          "sha256": "220b7b0ca65d02264f9ae812c6b701dbf2a6aa88ec479b8ba823cb867e71439b",
+          "frames": 301
+        },
+        {
+          "path": "episode_0000000_cam_right_wrist_fail.mp4",
+          "sha256": "45019ff62c8e628133dfd8431a87caa3e9df681f3dad75cac24ea51cfdd3f29b",
+          "frames": 301
+        }
+      ]
+    },
+    {
+      "gpu": 7,
+      "seed": 1,
+      "status": "completed",
+      "score_percent": 100.0,
+      "success": true,
+      "layout_id": 0,
+      "actions": 186,
+      "model_tool_calls": 6,
+      "error": null,
+      "source": "runs/solve-equation-recovery-8gpu-20261028-c003/jobs/gpu-7-seed-1/attempt-001/runs/20261027T172249-e399cf08a085/evaluator/native/RoboDojo/solve_equation/orimapi_eca349d680e34e6ebca22f8d72363940/arx_x5/1_ckpt_name=policy-library,action_type=joint/orimapi_eca349d680e34e6ebca22f8d72363940/_result.json",
+      "artifact_root": "runs/solve-equation-recovery-8gpu-20261028-c003/jobs/gpu-7-seed-1/attempt-001/runs/20261027T172249-e399cf08a085/evaluator/native/RoboDojo/solve_equation/orimapi_eca349d680e34e6ebca22f8d72363940/arx_x5/1_ckpt_name=policy-library,action_type=joint/orimapi_eca349d680e34e6ebca22f8d72363940",
+      "artifacts": [
+        {
+          "path": "_result.json",
+          "sha256": "117b7aac5c033705b64fc53e97b00912e1fec4f50cff9869aee75b750b3529a6"
+        },
+        {
+          "path": "episode_0000000_cam_head_success.mp4",
+          "sha256": "3aecf56b7dad5ac01718fa76d4bfefbe43573bc7161f0f366d27530976946bba",
+          "frames": 187
+        },
+        {
+          "path": "episode_0000000_cam_left_wrist_success.mp4",
+          "sha256": "0f202a881250826b8a51eb0dddc5422dac82c5ff510854fd68389edb117294d4",
+          "frames": 187
+        },
+        {
+          "path": "episode_0000000_cam_right_wrist_success.mp4",
+          "sha256": "230477d5fa2b4fb32c372b7bea4bfb45071c02c3431bcd4c6e34318dbda6dedf",
+          "frames": 187
+        }
+      ]
+    }
+  ],
+  "raw_and_archived_artifacts_verified": true,
+  "software_validation": "86 relevant unit/integrity tests passed before c003; publication checks rerun separately.",
+  "scope": "Seeds0/1/2 repeated3/3/2, one first-layout episode per isolated GPU process. Not eight distinct layouts or full benchmark evaluation. Failed native episodes included; unscored errors not zero.",
+  "known_limitations": [
+    "Both native failures followed a negative visual retention judgment, gripper release, and recovery routes exceeding the remaining300-action budget.",
+    "Video suggests a possible retention false negative; shallow grasp or slip has not been ruled out."
+  ],
+  "review": "runs/analysis/solve-equation-optimization-20261028/review.md"
+}

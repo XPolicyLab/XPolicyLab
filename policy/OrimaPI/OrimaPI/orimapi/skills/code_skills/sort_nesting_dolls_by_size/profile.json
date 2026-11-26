@@ -1,0 +1,37 @@
+{
+  "title": "套娃：本地测尺寸排序—动态规划空行—逐个直立放置",
+  "target_count": 5,
+  "operations": [
+    "sort_row",
+    "pick",
+    "place",
+    "transfer",
+    "inspect",
+    "measure_feature",
+    "view",
+    "home",
+    "wait"
+  ],
+  "phases": [
+    "Identify all five dolls (not distractors); choose a visibly empty reachable row with table-plane row_start/row_end in world left-to-right direction.",
+    "Call sort_row with all five current coarse boxes. Local RGB tools measure heights and footprints, rank size, and allocate measured nonoverlapping row slots.",
+    "Move one doll per complete local operation; use a stable body grasp and upright placement. Refresh all relevant identities after motion, preserving stable semantic names.",
+    "Inspect tipping and spacing; if a doll fell, pick/reseat instead of counting commanded transfers.",
+    "Confirm the five dolls form an upright small-to-large row and home."
+  ],
+  "failure_lesson": "Successful reference runs also used explicit pixel geometry when silhouettes failed. Tipped dolls distinguished many failures despite completed transfer routes.",
+  "required_features": {
+    "sort_row": [
+      "destination.row_start(plane=table)",
+      "destination.row_end(plane=table)"
+    ]
+  },
+  "reference_success_scope": "External reports and cached notes include complete successes; new local pipeline not yet tested natively.",
+  "task": "sort_nesting_dolls_by_size",
+  "family": "sort_nesting_dolls_by_size",
+  "budget": 1050,
+  "random": false,
+  "pickup_lift_m": 0.06,
+  "travel_lift_m": 0.06,
+  "final_home": true
+}

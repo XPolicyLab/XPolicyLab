@@ -1,0 +1,43 @@
+{
+  "schema": "orimapi.code-skill/v1",
+  "skill_id": "build_tower",
+  "supported_tasks": [
+    "build_tower"
+  ],
+  "task_spec": {
+    "task": "build_tower",
+    "min_grasp_height": 0.016,
+    "budget": 1050,
+    "pillar_frame_guidance": "Vision yaw is a non-digit object's LONG-edge direction. In that frame the pillar footprint is [0.062,0.038], not [0.038,0.062]. To keep the narrow footprint across a 0.065 m-wide board, set its final long-edge yaw to the board long-edge yaw (0 or pi for world-X boards), not pi/2. The previous frame mismatch pushed the lower board out during upper-pillar placement. Keep the successful off-center lower-board grasp and compensate it. For rectangular cap alignment, choose the nearer equivalent final yaw 0 or pi and preserve the correct grasp offset. The timing estimate already charges 24 steps for every close; remaining overhead comes from IK-path changes and tracking.",
+    "grasp_clearance_guidance": "A rear construction site avoided the earlier front-hardware transport stall, but a base pillar then obstructed the lower-board pickup at the same X as that pillar. Avoid aligning the chosen lower-board grasp with a newly placed base pillar: the open jaws and wrist camera extend beyond the board footprint. Measure a board grasp about 0.11 m toward the placing arm, and choose support separation/positions from geometry so the grasp is at least about 0.055 m laterally clear of either support during pickup. Upright supports may use approximately +/-0.055 m offsets about the tower center if both boards remain supported. These are relative contact-clearance hypotheses, not fixed scene poses; verify against current RGB. Do not simply move the whole tower farther back beyond reach.",
+    "planning_guidance": "Choose a clear shared work area using the current RGB, avoiding the visible front robot/camera hardware. Do not restrict the site search to the front of both boards as in older failed candidates. Consider the region behind the long lower board too. Clearance checks depend on assembly order: base pillars must avoid boards still on the table, but a board's own initial footprint is not an obstacle to its later placement after pickup. Upright pillars may rotate about world Z; choose their narrow footprint direction to fit clear gaps. For a long board, prefer a visible off-center grasp toward the executing arm (within 0.12 m of its center) to keep its far end away from the forearm, and compensate that measured offset in the final target. Small off-center grasps can also make the high cap/roof reachable without changing the intended tower center. Preserve actual reachability and the full 1050-action limit; repeated stalls at the same position require changing geometry rather than only increasing timing.",
+    "requirements": "Construct the tower using eight visible wooden components: two upright small pillars support the long lower board; another two pillars stand on it and support the upper board; place the remaining cap and roof on top, centered and upright. Use one initially-left and one initially-right pillar on each level. Boards/cap/roof must be mutually aligned. Use visible shapes, not preassigned hidden labels. Choose a clear reachable construction site from the current scene; do not place supports through a board still lying there. Finish with both arms home. Public size priors in metres: pillars 0.038 x 0.062 x 0.038; lower board 0.375 x 0.065 x 0.020; upper board 0.244 x 0.065 x 0.020; cap 0.097 x 0.050 x 0.014; roof footprint 0.061 x 0.046 with height 0.038. The triangular roof normally starts upright, not on its side, so do not arbitrarily flip it. These are asset priors, not measured current poses.",
+    "roles": [
+      "pillar",
+      "lower_board",
+      "upper_board",
+      "cap",
+      "roof"
+    ],
+    "candidate_guidance": "Use current RGB only. Measure a right-half lower-board grasp about 0.10-0.11 m from center and a left-half upper-board grasp about 0.07-0.08 m from center. Keep the cap vision grasp centered; the candidate adds a bounded 15 mm offset toward the placing arm and compensates it under rotation. Cap and roof arm selection follows their observed side, never a remembered layout. Public top heights: boards 20 mm, pillars 38 mm, cap 14 mm. Roof triangle-base axis is 60.6 mm; its 46 mm ridge is perpendicular. The trusted current-RGB roof fit normalizes the equivalent half-turn orientation to the shorter axis angle. Preserve that normalized yaw instead of turning the symmetric roof through pi. Carry the roof via a SIDE waypoint at full transport height before translating horizontally above the cap, not on a low rising diagonal across the assembled pieces. Retain the 12 mm higher release, opening to 0.8 before withdrawing, and original home. The visibility prelude counts toward 1050 native actions."
+  },
+  "program": "program.py",
+  "experience": "experience.json",
+  "prompts": {
+    "plan": "prompts/plan.md",
+    "generate": "prompts/generate.md"
+  },
+  "sources": {
+    "controller": "controller.py",
+    "engine": "engine.py",
+    "motion": "motion.py",
+    "perception": "perception.py",
+    "sandbox": "sandbox.py",
+    "handoff": "handoff.py",
+    "inspection_prompt": "prompts/inspect.md",
+    "common_geometry": "../common/geometry.py",
+    "generator": "../align_blocks/generator.py",
+    "pure_admission": "../align_blocks/sandbox.py",
+    "pure_worker": "../align_blocks/sandbox_worker.py"
+  }
+}

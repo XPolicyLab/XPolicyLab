@@ -1,0 +1,62 @@
+{
+  "schema": "orimapi.code-controller-skill/v1",
+  "skill_id": "pour_liquid_into_cup",
+  "supported_tasks": [
+    "pour_liquid_into_cup"
+  ],
+  "task_spec": {
+    "task": "pour_liquid_into_cup",
+    "budget": 400,
+    "requirements": "Pour the liquid from the bottle into the cup. The native evaluation checks the pour when the bottle is returned upright within 30 degrees, after tilting. Aim to transfer almost all liquid into the cup with little remaining in the bottle and minimal spill. Do not merely tilt and finish: restore the bottle upright while maintaining a secure grasp. Only native results establish success.\nResearch hypothesis: Localize the bottle mouth, grasp band, and cup opening from CURRENT RGB; prefer upright-axis geometry or consistent multiple views over repeatedly recalibrating unreliable monocular depth. Try a SIDE approach to the upper neck: TCP+X horizontal toward the bottle, jaw closing TCP+Y horizontal across it. Do not descend vertically onto the mouth and later assume wrist tilt tilts the bottle. Keep both fingers clear during approach, fully close and allow settling; then test a small lift and reversible rotation with object-feature evidence. A rotation ABOUT the jaw-closing axis can let a round neck pivot between the contacts. Prefer a pouring rotation axis approximately orthogonal to both the jaw-closing direction and upright bottle axis. Infer these directions from current TCP, not fixed historical coordinates. Carry the mouth above the visible cup opening, estimate its TCP-local offset, and rotate around that mouth anchor while keeping discharge over the opening. Use progressive tilts beyond horizontal if visual flow requires it, a low collision-free mouth position, and adequate dwell. Reserve native steps to restore the actual bottle upright with the grasp maintained. Home releases both grippers and is not an upright-restoration tool. These are unvalidated hypotheses; inspect actual bottle tilt and visible flow, request missing tools, and use only native results as success evidence."
+  },
+  "tool_limits": {
+    "max_calls": 24,
+    "max_tools_per_turn": 16,
+    "history_size": 12
+  },
+  "experience": "experience.json",
+  "sources": {
+    "frozen_knowledge": "frozen_knowledge.json",
+    "tool_documentation": "tool_documentation.md",
+    "program_worker": "program_worker.py",
+    "program_prompt": "program_prompt.md",
+    "arrival_motion": "arrival_motion.py",
+    "hand_clearance": "hand_clearance.py",
+    "hand_bounds": "hand_bounds.json",
+    "visual": "visual.py",
+    "validation": "validation.json",
+    "failure_experience": "failure_experience.json",
+    "vision_geometry": "vision_geometry.py",
+    "RESEARCH_SUMMARY": "RESEARCH_SUMMARY.md",
+    "controller": "controller.py",
+    "public_hand": "public_hand.py",
+    "vision_resources": "vision_resources.json",
+    "experience": "experience.json",
+    "generator": "generator.py",
+    "task_geometry": "task_geometry.py",
+    "successful_code_examples": "successful_code_examples.json",
+    "view_geometry": "view_geometry.py",
+    "program_session": "program_session.py"
+  },
+  "qualification": {
+    "task": "pour_liquid_into_cup",
+    "mode": "user_authorized_research_fallback",
+    "summary": {
+      "recorded_seeds": [
+        0,
+        1,
+        2
+      ],
+      "successful_seeds": [],
+      "all_three_official_results": true,
+      "scores": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_official_score": 0.0,
+      "standard_qualified": false
+    },
+    "scope": "Unchanged highest-mean audited research implementation with explicit failure limits; not a successful task policy or full benchmark qualification."
+  }
+}

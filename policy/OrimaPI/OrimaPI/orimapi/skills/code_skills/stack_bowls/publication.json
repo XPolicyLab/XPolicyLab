@@ -1,0 +1,343 @@
+{
+  "schema": "orimapi.code-skill-publication/v1",
+  "status": "published",
+  "published_at": "2026-10-29T20:23:10.121545+08:00",
+  "authorization": "User explicitly requested promoting c018 to the formal skill",
+  "candidate": "orimapi/skills/code_skill_rsi/stack_bowls/c018-evidence-only-repair-20261029",
+  "tested_candidate_bundle_sha256": "7f20e814e8f94b3834ce2bd5a96c588d43790ca1d982fd1318e749947fe6c9fc",
+  "tested_snapshot_index": "/data/OrimaPI/runs/stack-bowls-random8-20261029-c018/jobs/gpu-0-seed-1/attempt-001/runs/20261029T120549-c7518a415a79/code_bundles/7f20e814e8f94b3834ce2bd5a96c588d43790ca1d982fd1318e749947fe6c9fc/index.json",
+  "archived_tested_inputs": "/data/OrimaPI/runs/publications/stack-bowls-c018-20261029T202310121562/tested-inputs/code_bundles/7f20e814e8f94b3834ce2bd5a96c588d43790ca1d982fd1318e749947fe6c9fc",
+  "previous_formal_backup": "/data/OrimaPI/runs/publications/stack-bowls-c018-20261029T202310121562",
+  "qualification": {
+    "published": true,
+    "formal_promotion": true,
+    "mode": "user_authorized_c018_eight_layout_publication",
+    "standard_qualified": false,
+    "tested_seeds": [
+      0,
+      1,
+      2
+    ],
+    "scored_episodes": 8,
+    "successful_episodes": 6,
+    "mean_score_percent": 78.75,
+    "model_requests": 110,
+    "llm_model": "gpt-6-astra",
+    "require_model_match": true,
+    "validation_batch": "stack-bowls-random8-20261029-c018",
+    "scope": "Eight ordinary-task development layouts; not full official qualification."
+  },
+  "source_mapping": [
+    {
+      "name": "controller",
+      "source": "/data/OrimaPI/orimapi/skills/code_skill_rsi/stack_bowls/c018-evidence-only-repair-20261029/controller.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/controller.py",
+      "tested_sha256": "37ac45068462b6c30a58e8c8620d8ffc2505670f1afb9299a6fc6e5029974a44",
+      "published_sha256": "ae073cffd4443debcf7016c4293f235af9e063bc87948eceb57ac2fa8b468b80",
+      "transformation": "Import immutable c010 parent instead of the replaceable formal entry",
+      "definitions_unchanged": true
+    },
+    {
+      "name": "vision",
+      "source": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c002-20261028/vision.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c002-20261028/vision.py",
+      "tested_sha256": "aa1f2835472526cd8d99c88c5f139a3d03c1316c7ab422ba8511f41aec618fa5",
+      "published_sha256": "aa1f2835472526cd8d99c88c5f139a3d03c1316c7ab422ba8511f41aec618fa5",
+      "transformation": null,
+      "definitions_unchanged": true
+    },
+    {
+      "name": "shared_baseline_motion",
+      "source": "/data/OrimaPI/orimapi/skills/code_skills/make_kong/baseline_motion.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/make_kong/baseline_motion.py",
+      "tested_sha256": "79abd687e22cb81a94ebb5fcc6b5419934c459125645227d664046f3950097cb",
+      "published_sha256": "79abd687e22cb81a94ebb5fcc6b5419934c459125645227d664046f3950097cb",
+      "transformation": null,
+      "definitions_unchanged": true
+    },
+    {
+      "name": "shared_hand_clearance",
+      "source": "/data/OrimaPI/orimapi/skills/code_skills/make_kong/hand_clearance.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/make_kong/hand_clearance.py",
+      "tested_sha256": "088592a790fde9051c007a635fcc6edec1c51a29c21f367163303e87c32784e9",
+      "published_sha256": "088592a790fde9051c007a635fcc6edec1c51a29c21f367163303e87c32784e9",
+      "transformation": null,
+      "definitions_unchanged": true
+    },
+    {
+      "name": "shared_hand_bounds",
+      "source": "/data/OrimaPI/orimapi/skills/code_skills/make_kong/hand_bounds.json",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/make_kong/hand_bounds.json",
+      "tested_sha256": "6ecea3347942113699f1993b189fa4ad555912aa69906d43dd3a29beaed426ca",
+      "published_sha256": "6ecea3347942113699f1993b189fa4ad555912aa69906d43dd3a29beaed426ca",
+      "transformation": null,
+      "definitions_unchanged": true
+    },
+    {
+      "name": "native",
+      "source": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c002-20261028/native.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c002-20261028/native.py",
+      "tested_sha256": "a9b025e1968ba6a938094f9a4295d2e83814852baf463930a9d8b4482be73e3c",
+      "published_sha256": "a9b025e1968ba6a938094f9a4295d2e83814852baf463930a9d8b4482be73e3c",
+      "transformation": null,
+      "definitions_unchanged": true
+    },
+    {
+      "name": "legacy_controller",
+      "source": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/baseline_controller.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/baseline_controller.py",
+      "tested_sha256": "3563d08170f4ff187fccb6f3adc4cc2839f8206b323438eec59399a8589804bc",
+      "published_sha256": "3563d08170f4ff187fccb6f3adc4cc2839f8206b323438eec59399a8589804bc",
+      "transformation": null,
+      "definitions_unchanged": true
+    },
+    {
+      "name": "native_client",
+      "source": "/data/OrimaPI/orimapi/skills/code_skills/classify_objects_by_language/adapter.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/classify_objects_by_language/adapter.py",
+      "tested_sha256": "7a6e2517339c4ad09bbeba72e3d6cb356faa7b51a269eb9daced31c7be95fcc2",
+      "published_sha256": "7a6e2517339c4ad09bbeba72e3d6cb356faa7b51a269eb9daced31c7be95fcc2",
+      "transformation": null,
+      "definitions_unchanged": true
+    },
+    {
+      "name": "native_worker",
+      "source": "/data/OrimaPI/orimapi/skills/code_skills/classify_objects_by_language/ik_worker.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/classify_objects_by_language/ik_worker.py",
+      "tested_sha256": "92a27a877166ed808aeae0e6fff202fa9725c0bfc7dc333d6cffb2608574beba",
+      "published_sha256": "92a27a877166ed808aeae0e6fff202fa9725c0bfc7dc333d6cffb2608574beba",
+      "transformation": null,
+      "definitions_unchanged": true
+    },
+    {
+      "name": "parent_controller",
+      "source": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c007-20261028/controller.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c007-20261028/controller.py",
+      "tested_sha256": "ed308b638d8102ffb86166a48ddb1b2e0f1ed68b85727e1e536e60eaf9eae4e7",
+      "published_sha256": "ed308b638d8102ffb86166a48ddb1b2e0f1ed68b85727e1e536e60eaf9eae4e7",
+      "transformation": null,
+      "definitions_unchanged": true
+    },
+    {
+      "name": "grandparent_controller",
+      "source": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c004-20261028/controller.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c004-20261028/controller.py",
+      "tested_sha256": "d17d795b605ee8f8c90779011236b5a12e2608e73d986c6b4aeaea9f492587d5",
+      "published_sha256": "d17d795b605ee8f8c90779011236b5a12e2608e73d986c6b4aeaea9f492587d5",
+      "transformation": null,
+      "definitions_unchanged": true
+    },
+    {
+      "name": "c002_controller",
+      "source": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c002-20261028/controller.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c002-20261028/controller.py",
+      "tested_sha256": "7096304f2e85bc6d16ca5de2876f848f26564c522adc6b44789b6ff4979a7124",
+      "published_sha256": "7096304f2e85bc6d16ca5de2876f848f26564c522adc6b44789b6ff4979a7124",
+      "transformation": null,
+      "definitions_unchanged": true
+    },
+    {
+      "name": "c003_controller",
+      "source": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c003-20261028/controller.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c003-20261028/controller.py",
+      "tested_sha256": "e13980335a101c3b7be7015f6e5afe16920138edbe3a735bf5a4798ff6a71203",
+      "published_sha256": "e13980335a101c3b7be7015f6e5afe16920138edbe3a735bf5a4798ff6a71203",
+      "transformation": null,
+      "definitions_unchanged": true
+    },
+    {
+      "name": "c005_controller",
+      "source": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c005-20261028/controller.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c005-20261028/controller.py",
+      "tested_sha256": "5728cc8f366863c933b02522a8ab9e31bf847a6187fe2d420cf4920c2dc772ba",
+      "published_sha256": "5728cc8f366863c933b02522a8ab9e31bf847a6187fe2d420cf4920c2dc772ba",
+      "transformation": null,
+      "definitions_unchanged": true
+    },
+    {
+      "name": "c006_controller",
+      "source": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c006-20261028/controller.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c006-20261028/controller.py",
+      "tested_sha256": "ebb4e78fff15a107c750e4f9c1885976d9c890f95ce32b2bf4e5c8c5ebe2360e",
+      "published_sha256": "ebb4e78fff15a107c750e4f9c1885976d9c890f95ce32b2bf4e5c8c5ebe2360e",
+      "transformation": null,
+      "definitions_unchanged": true
+    },
+    {
+      "name": "c008_controller",
+      "source": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c008-20261028/controller.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c008-20261028/controller.py",
+      "tested_sha256": "b78a0eddc5645ea872c6f26b65d4fbf1e55c5c3079d6102aaf1c2f3e3838109a",
+      "published_sha256": "b78a0eddc5645ea872c6f26b65d4fbf1e55c5c3079d6102aaf1c2f3e3838109a",
+      "transformation": null,
+      "definitions_unchanged": true
+    },
+    {
+      "name": "c009_controller",
+      "source": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c009-20261029/controller.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c009-20261029/controller.py",
+      "tested_sha256": "c10355854452bf8e05ff782bb58b1bfd28b63a22b7845b3b349b0b851f124b1a",
+      "published_sha256": "c10355854452bf8e05ff782bb58b1bfd28b63a22b7845b3b349b0b851f124b1a",
+      "transformation": null,
+      "definitions_unchanged": true
+    },
+    {
+      "name": "baseline_vision",
+      "source": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/vision.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/vision.py",
+      "tested_sha256": "44924c9e62db67c918eccaedda4d259787f86560f53d7a6643fdbcdf1cb13277",
+      "published_sha256": "44924c9e62db67c918eccaedda4d259787f86560f53d7a6643fdbcdf1cb13277",
+      "transformation": null,
+      "definitions_unchanged": true
+    },
+    {
+      "name": "published_publication",
+      "source": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/publication.json",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c010-20261029/publication.json",
+      "tested_sha256": "ad5839a697fed2723d0deb1f5c2407a75d7032d42c132283088a0b174b66b33b",
+      "published_sha256": "ad5839a697fed2723d0deb1f5c2407a75d7032d42c132283088a0b174b66b33b",
+      "transformation": null,
+      "definitions_unchanged": true
+    },
+    {
+      "name": "published_validation",
+      "source": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/validation.json",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/runtime/c010-20261029/validation.json",
+      "tested_sha256": "fefb7f988ecc64bce6f523d0119f94a647077a4a42f49f62d2754750cfa8428c",
+      "published_sha256": "fefb7f988ecc64bce6f523d0119f94a647077a4a42f49f62d2754750cfa8428c",
+      "transformation": null,
+      "definitions_unchanged": true
+    },
+    {
+      "name": "ordinary_controller",
+      "source": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/controller.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/c010_controller.py",
+      "tested_sha256": "46ac8688feffd80563e2a9fe6d071f03f442dcff3bd2be384e00110b4693f5e7",
+      "published_sha256": "46ac8688feffd80563e2a9fe6d071f03f442dcff3bd2be384e00110b4693f5e7",
+      "transformation": null,
+      "definitions_unchanged": true
+    },
+    {
+      "name": "trajectory_client",
+      "source": "/data/OrimaPI/orimapi/skills/code_skill_rsi/stack_bowls/c018-evidence-only-repair-20261029/planner.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/planner.py",
+      "tested_sha256": "7ab3a606e925c004c42b8405185d80d30895714bbdaf3789d8c0acac1b04dd4e",
+      "published_sha256": "7ab3a606e925c004c42b8405185d80d30895714bbdaf3789d8c0acac1b04dd4e",
+      "transformation": null,
+      "definitions_unchanged": true
+    },
+    {
+      "name": "trajectory_motion",
+      "source": "/data/OrimaPI/orimapi/skills/code_skill_rsi/stack_bowls/c018-evidence-only-repair-20261029/motion.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/motion.py",
+      "tested_sha256": "914f7e19b161ad81168c3128320d9af8f75a4531ec5aed43b12c05308720c056",
+      "published_sha256": "914f7e19b161ad81168c3128320d9af8f75a4531ec5aed43b12c05308720c056",
+      "transformation": null,
+      "definitions_unchanged": true
+    },
+    {
+      "name": "trajectory_worker",
+      "source": "/data/OrimaPI/orimapi/skills/code_skill_rsi/stack_bowls/c018-evidence-only-repair-20261029/worker.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/worker.py",
+      "tested_sha256": "aaf2bdc1fe1131126f0a0aad75ed1634e81bd00e34646c2521b2e210d96567cb",
+      "published_sha256": "aaf2bdc1fe1131126f0a0aad75ed1634e81bd00e34646c2521b2e210d96567cb",
+      "transformation": null,
+      "definitions_unchanged": true
+    },
+    {
+      "name": "upright_tools",
+      "source": "/data/OrimaPI/orimapi/skills/code_skill_rsi/stack_bowls/c018-evidence-only-repair-20261029/upright.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/upright.py",
+      "tested_sha256": "6434ae8f2ab6856286ec80e9518c0f1956fa2c8a3b7795b7fd1fdc5ea88306af",
+      "published_sha256": "6434ae8f2ab6856286ec80e9518c0f1956fa2c8a3b7795b7fd1fdc5ea88306af",
+      "transformation": null,
+      "definitions_unchanged": true
+    },
+    {
+      "name": "adaptive_clearance",
+      "source": "/data/OrimaPI/orimapi/skills/code_skill_rsi/stack_bowls/c018-evidence-only-repair-20261029/clearance.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/clearance.py",
+      "tested_sha256": "685d52dbf28194ba6ee95b3b3b2a92080ea8ed8ff69fe4e49ae855313cd3e196",
+      "published_sha256": "685d52dbf28194ba6ee95b3b3b2a92080ea8ed8ff69fe4e49ae855313cd3e196",
+      "transformation": null,
+      "definitions_unchanged": true
+    },
+    {
+      "name": "common_geometry",
+      "source": "/data/OrimaPI/orimapi/skills/code_skills/common/geometry.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/common/geometry.py",
+      "tested_sha256": "9e204a79b46e863b93e7278e6200f44b432ba69f3bb62892ff17ef6510473d52",
+      "published_sha256": "9e204a79b46e863b93e7278e6200f44b432ba69f3bb62892ff17ef6510473d52",
+      "transformation": null,
+      "definitions_unchanged": true
+    },
+    {
+      "name": "tool_controller",
+      "source": "/data/OrimaPI/orimapi/skills/code_tools/controller.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_tools/controller.py",
+      "tested_sha256": "055e8a684f3f62e9289231fd0326a95760081bc1c036efabca764c5abf476aba",
+      "published_sha256": "055e8a684f3f62e9289231fd0326a95760081bc1c036efabca764c5abf476aba",
+      "transformation": null,
+      "definitions_unchanged": true
+    },
+    {
+      "name": "shared_motion",
+      "source": "/data/OrimaPI/orimapi/skills/code_tools/motion.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_tools/motion.py",
+      "tested_sha256": "3ef712be1b81180ea6d7db9034d53bd6d38999f51ab38f8eee431a071e4de9e8",
+      "published_sha256": "3ef712be1b81180ea6d7db9034d53bd6d38999f51ab38f8eee431a071e4de9e8",
+      "transformation": null,
+      "definitions_unchanged": true
+    },
+    {
+      "name": "base_motion",
+      "source": "/data/OrimaPI/orimapi/skills/code_skills/play_tic_tac_toe/motion.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/play_tic_tac_toe/motion.py",
+      "tested_sha256": "7680d16d16496f4eeebc9fff9190c7b0422582c7f5251d198d38169a0295e8fc",
+      "published_sha256": "7680d16d16496f4eeebc9fff9190c7b0422582c7f5251d198d38169a0295e8fc",
+      "transformation": null,
+      "definitions_unchanged": true
+    },
+    {
+      "name": "generator",
+      "source": "/data/OrimaPI/orimapi/skills/code_skills/align_blocks/generator.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/align_blocks/generator.py",
+      "tested_sha256": "1e71ab6802ab18e3a9a453ede5e3d177a42323414eb9ee174c4b6e3295891535",
+      "published_sha256": "1e71ab6802ab18e3a9a453ede5e3d177a42323414eb9ee174c4b6e3295891535",
+      "transformation": null,
+      "definitions_unchanged": true
+    },
+    {
+      "name": "regions",
+      "source": "/data/OrimaPI/orimapi/skills/code_tools/regions.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_tools/regions.py",
+      "tested_sha256": "cb36d9fe1798f8501c3cd601ca3f7608592c8c9e7ebdcc67d17d63eaf18da30f",
+      "published_sha256": "cb36d9fe1798f8501c3cd601ca3f7608592c8c9e7ebdcc67d17d63eaf18da30f",
+      "transformation": null,
+      "definitions_unchanged": true
+    },
+    {
+      "name": "feedback",
+      "source": "/data/OrimaPI/orimapi/skills/code_skill_rsi/stack_bowls/c018-evidence-only-repair-20261029/feedback.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/feedback.py",
+      "tested_sha256": "491cf8d33f24c5debc1689c8011f324cf9e918f5637e7ef76b94906e891d1a59",
+      "published_sha256": "66c6321fc5d80b0dff117a558dc03c4bf5070918cf1c032c8ba4e1bea11f2a8e",
+      "transformation": "Import immutable c010 parent instead of the replaceable formal entry",
+      "definitions_unchanged": true
+    },
+    {
+      "name": "empty_arm_yield",
+      "source": "/data/OrimaPI/orimapi/skills/code_skill_rsi/stack_bowls/c018-evidence-only-repair-20261029/yielding.py",
+      "destination": "/data/OrimaPI/orimapi/skills/code_skills/stack_bowls/yielding.py",
+      "tested_sha256": "81dd366e0958e3fafeae4e018e879736d9186c5fca6c91c59009f00e9c15ffca",
+      "published_sha256": "81dd366e0958e3fafeae4e018e879736d9186c5fca6c91c59009f00e9c15ffca",
+      "transformation": null,
+      "definitions_unchanged": true
+    }
+  ],
+  "import_path_changes": 2,
+  "execution_definitions_unchanged": true,
+  "independent_of_rsi_runtime": true,
+  "publication_checks": "/data/OrimaPI/orimapi/skills/code_skill_rsi/stack_bowls/c018-evidence-only-repair-20261029/publication/promotion.json",
+  "new_simulation_started": false
+}

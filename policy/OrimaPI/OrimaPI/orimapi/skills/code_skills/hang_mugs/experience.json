@@ -1,0 +1,47 @@
+[
+  {
+    "kind": "architecture",
+    "lesson": "GPT plans semantic phases, identities and recovery. Local measured composite tools execute fine operations. Never count commanded motion as native success."
+  },
+  {
+    "kind": "observed_local_baseline",
+    "outcomes": [
+      {
+        "seed": 0,
+        "score_native": 0.0,
+        "success": false,
+        "status": "completed"
+      },
+      {
+        "seed": 1,
+        "score_native": 0.0,
+        "success": false,
+        "status": "completed"
+      },
+      {
+        "seed": 2,
+        "score_native": 0.0,
+        "success": false,
+        "status": "completed"
+      }
+    ],
+    "lesson": "Accepted peg approach or insertion did not prove engagement; several external manual releases slipped. Repeated contour-stereo calls all failed in reviewed traces.",
+    "scope": "Historical OLD tool-loop skill, not evidence about this new candidate."
+  },
+  {
+    "kind": "reference_informed_hypothesis",
+    "lesson": [
+      "Identify three mugs, each handle aperture and unoccupied rack pegs; preserve mug/peg assignment.",
+      "Pick the mug body/rim leaving its handle aperture free. Inspect current carried mug.",
+      "Use three fresh multiview handle/peg frame features for dock. Destination mate frame describes entry alignment; seat is at the actual hanging support, not the peg tip.",
+      "Local dock aligns, enters axially, advances to measured seat, releases and withdraws.",
+      "Inspect that handle remains supported and mug clears table; fallen mug is recovery, not completion.",
+      "Repeat all three; place/recover any held failures on visible support before final home."
+    ],
+    "scope": "External aggregate includes rare success, but cached detailed notes did not establish a successful release recovery."
+  },
+  {
+    "kind": "known_limitations",
+    "lesson": "No measured finger-stop/force sensor or automatic object retention/containment certificate. Attachment transforms assume no slip. Three-feature docking and support placement are implemented but unvalidated in native tasks. No new arbitrary tabletop spacing, residual-error, protected-step or retry-count gates."
+  }
+]

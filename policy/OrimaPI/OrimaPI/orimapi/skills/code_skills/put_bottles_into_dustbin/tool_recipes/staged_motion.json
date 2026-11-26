@@ -1,0 +1,194 @@
+{
+  "schema": "orimapi.tool-recipe/v1",
+  "name": "staged_motion",
+  "interface": "Move one arm from its CURRENT measured TCP to goal=[world x,y,z] using short bounded straight translations, preserving the current gripper orientation and closure. Goal must come from the CURRENT observed geometry, never a remembered scene coordinate. This is a robot-motion composition, not a detector, grasp planner, or collision-free guarantee. Arguments: arm, goal, reserve_actions; optional gripper_value performs one open/close at the END and returns for visual review (0 closes with12 minimum steps,1 opens with6). Plan the correct orientation separately before calling. Use separate calls for approach-and-close, lift, transport, and lower-and-release; inspect current wrist RGB after every grasp/release and important transfer. Choose a clear route ABOVE obstacles and the bin rim before horizontal transport. A surface label is not the center of a round body. Confirm bottle retention after a small lift. Do not release a bottle merely because its projection overlaps the bin: verify that the actual bottle is inside the observed opening. Right-side bottles that cannot reach the bin require a reachable supported handover, not repeated midair reach attempts. A failure stops remaining stages. Each stage is freshly checked against current robot state; native actions and the recovery reserve still apply. Contract-tested only, no task-success assertion.",
+  "arguments_example": {
+    "arm": "left",
+    "goal": [
+      0,
+      -0.2,
+      0.95
+    ],
+    "reserve_actions": 50
+  },
+  "source": "def build_plan(scene):\n    a = scene['arguments']\n    p = scene['state']['public_robot_geometry']['tcp_world'][a['arm']]\n    d = [a['goal'][i] - p[i][3] for i in range(3)]\n    distance = sqrt(sum(x*x for x in d))\n    n = max(1, min(7, int(distance/0.12)+1))\n    stages = []\n    for i in range(n):\n        stages = stages + [{'tool': 'plan_relative_pose', 'arguments': {'arm': a['arm'], 'translation': [x/n for x in d], 'rotation_vector': [0,0,0], 'pivot_local': [0,0,0], 'steps': 4}}]\n    if 'gripper_value' in a:\n        steps = 12 if a['gripper_value'] < 0.8 else 6\n        stages = stages + [{'tool': 'gripper', 'arguments': {'arm': a['arm'], 'value': a['gripper_value'], 'steps': steps}}]\n    return {'stages': stages, 'reserve_actions': a['reserve_actions']}\n",
+  "tests": [
+    {
+      "name": "two_short_translations",
+      "scene": {
+        "arguments": {
+          "arm": "left",
+          "goal": [
+            0.2,
+            -0.2,
+            0.9
+          ],
+          "reserve_actions": 50
+        },
+        "state": {
+          "public_robot_geometry": {
+            "tcp_world": {
+              "left": [
+                [
+                  1,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0,
+                  -0.2
+                ],
+                [
+                  0,
+                  0,
+                  1,
+                  0.9
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              ]
+            }
+          }
+        }
+      },
+      "expected": {
+        "stages": [
+          {
+            "tool": "plan_relative_pose",
+            "arguments": {
+              "arm": "left",
+              "translation": [
+                0.1,
+                0,
+                0
+              ],
+              "rotation_vector": [
+                0,
+                0,
+                0
+              ],
+              "pivot_local": [
+                0,
+                0,
+                0
+              ],
+              "steps": 4
+            }
+          },
+          {
+            "tool": "plan_relative_pose",
+            "arguments": {
+              "arm": "left",
+              "translation": [
+                0.1,
+                0,
+                0
+              ],
+              "rotation_vector": [
+                0,
+                0,
+                0
+              ],
+              "pivot_local": [
+                0,
+                0,
+                0
+              ],
+              "steps": 4
+            }
+          }
+        ],
+        "reserve_actions": 50
+      }
+    },
+    {
+      "name": "release_returns_for_review",
+      "scene": {
+        "arguments": {
+          "arm": "right",
+          "goal": [
+            0,
+            0,
+            0.9
+          ],
+          "reserve_actions": 30,
+          "gripper_value": 1
+        },
+        "state": {
+          "public_robot_geometry": {
+            "tcp_world": {
+              "right": [
+                [
+                  1,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  1,
+                  0.9
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              ]
+            }
+          }
+        }
+      },
+      "expected": {
+        "stages": [
+          {
+            "tool": "plan_relative_pose",
+            "arguments": {
+              "arm": "right",
+              "translation": [
+                0,
+                0,
+                0
+              ],
+              "rotation_vector": [
+                0,
+                0,
+                0
+              ],
+              "pivot_local": [
+                0,
+                0,
+                0
+              ],
+              "steps": 4
+            }
+          },
+          {
+            "tool": "gripper",
+            "arguments": {
+              "arm": "right",
+              "value": 1,
+              "steps": 6
+            }
+          }
+        ],
+        "reserve_actions": 30
+      }
+    }
+  ]
+}

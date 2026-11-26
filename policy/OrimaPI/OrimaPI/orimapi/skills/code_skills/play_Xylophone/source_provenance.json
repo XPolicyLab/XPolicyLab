@@ -1,0 +1,24 @@
+{
+  "implementation": "Independent current-RGB local vision and complete-operation task executor, research only",
+  "motion_bridge": "Task-local copy of our own formal pour_balls_into_vase motion.py/native_worker.py; generic public robot state and installed official cuRobo only. No formal source changed.",
+  "sensing": "Current RGB, public robot/camera calibration and observed joints/poses. No object/layout/reward state access.",
+  "assumptions": [
+    "Initial spherical mallet head rests on observed public table support; after lifting use measured radius/current contours",
+    "Colored keys share a level top plane; height uses current color-indexed contour/white-region plane registration. Original fastener stereo is fallback. Neither is ground truth."
+  ],
+  "native_score_untested": false,
+  "parent_candidate": "candidate-007-local-key-alignment",
+  "change": "Only held-sphere tracking/update: color-material boundary and shaft-line identity evidence; relative confidence and epipolar soft weights without minimum wrist vote; known-radius silhouette depth; sensor-only covariance; separate per-action correction and temporally promoted stable attachment. Pickup/keyboard/strokes/motion/prompts unchanged; no displacement veto, timeout or retry cap.",
+  "local_reference": "Independent task-local implementation building on our own c007/c003. No external executor.",
+  "formal_publication": {
+    "candidate_bundle_sha256": "8c70d398b32c6858e4cdc4041ffb731ec954f90d782d7fcb177ded74ffa89792",
+    "native_scores": [
+      100,
+      100,
+      0
+    ],
+    "runtime_and_prompts_byte_identical": true,
+    "experience_summary_updated": true,
+    "native_retest_after_publication": false
+  }
+}

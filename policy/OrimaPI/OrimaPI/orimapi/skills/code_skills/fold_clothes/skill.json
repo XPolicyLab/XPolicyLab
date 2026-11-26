@@ -1,0 +1,54 @@
+{
+  "schema": "orimapi.code-controller-skill/v1",
+  "skill_id": "fold_clothes",
+  "supported_tasks": [
+    "fold_clothes"
+  ],
+  "task_spec": {
+    "task": "fold_clothes",
+    "budget": 500,
+    "requirements": "Fold the visible garment neatly: bring each sleeve inward toward the opposite chest, then fold the lower hem toward the corresponding shoulders, keeping the hem and shoulder edges approximately parallel. Release both grippers and return both arms home only after the folds are formed. Locate garment landmarks from current RGB and distinguish anatomical left/right from screen left/right. Cloth is deformable, so use small lifts and controlled draping rather than treating the whole garment as a rigid block. The same skill handles an uncluttered or distracted scene; avoid visible obstacles and never use hidden garment node positions."
+  },
+  "tool_limits": {
+    "max_calls": 24,
+    "max_tools_per_turn": 8,
+    "history_size": 8
+  },
+  "experience": "experience.json",
+  "sources": {
+    "controller": "controller.py",
+    "vision": "vision.py",
+    "shared_make_kong_baseline_motion": "../make_kong/baseline_motion.py",
+    "shared_make_kong_hand_clearance": "../make_kong/hand_clearance.py",
+    "shared_make_kong_hand_bounds": "../make_kong/hand_bounds.json"
+  },
+  "qualification": {
+    "successful_seed_sets": [
+      0,
+      2
+    ],
+    "tested_seed_sets": [
+      0,
+      2
+    ],
+    "scope": "One first native layout per seed set; engineering admission, not full benchmark reliability",
+    "results": [
+      {
+        "seed": 0,
+        "success": true,
+        "score": 1.0,
+        "layout_sha256": "53de16e28978c71cfaa0620712633a0e07ed9d4bb79cdb63c5a953fa26f1b5ba",
+        "run_id": "20261022T085022-tool-episode-11182261ad9b"
+      },
+      {
+        "seed": 2,
+        "success": true,
+        "score": 1.0,
+        "layout_sha256": "2e498c27a98b072994154ae8e1547ba0addefda264d37b0204240f0cbedb95fc",
+        "run_id": "20261022T085022-tool-episode-be5d79d10c25"
+      }
+    ],
+    "llm_model": "gpt-6-astra",
+    "reasoning_effort": null
+  }
+}

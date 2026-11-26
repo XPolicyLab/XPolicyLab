@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "orimapi"
+version = "0.1.0"
+description = "A lightweight closed-loop RoboDojo agent driven by a language model and a frozen action model."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["PyYAML>=6.0"]
+
+[project.optional-dependencies]
+dev = ["black", "pytest>=8.0"]
+skills = ["numpy>=1.26", "Pillow>=10.0"]
+code-skills = ["ikpy==3.4.2", "scipy>=1.11", "opencv-python-headless>=4.8", "numpy>=1.26", "Pillow>=10.0", "trimesh==5.1.1", "transforms3d==0.4.2"]
+code-depth = ["torch>=2.2", "transformers>=4.45,<5", "safetensors>=0.4", "huggingface-hub>=0.24"]
+xpolicylab = ["websockets>=14.0", "msgpack>=1.0.8", "msgpack-numpy>=0.4.8", "pydantic>=2.5", "opencv-python-headless>=4.8", "h5py>=3.8"]
+
+[tool.setuptools.packages.find]
+include = ["orimapi*"]
+exclude = ["orimapi.skills.code_skill_rsi*", "orimapi.skills.code_skills.*.studies*"]
+
+[tool.black]
+line-length = 88
+target-version = ["py311"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.setuptools.package-data]
+"orimapi.skills" = ["NOTICE.md"]
+"orimapi.skills.code_skills.deposit_coin" = ["postcarry_prompt.md", "postlift_prompt.md"]
+"orimapi.skills.code_skills.stack_bowls_random" = ["README.md", "EXPERIENCE_SUMMARY.md"]
+"orimapi.skills.code_skills.stack_blocks_random" = ["NOTICE.md", "primitives/*/interface.md"]
+"orimapi.skills.code_skills.imitate_sorting_sequence" = ["*.json", "*.md"]
+"orimapi.skills.code_skills.swap_blocks" = ["NOTICE.md", "source_provenance.json", "primitives/*/interface.md"]
+"orimapi.skills.code_skills.match_and_pick_from_conveyor" = ["NOTICE.md", "source_provenance.json", "primitives/*/interface.md"]
+"orimapi.skills.code_skills.press_by_number" = ["NOTICE.md", "source_provenance.json", "primitives/*/interface.md"]
+"orimapi.skills.code_skills.stack_blocks" = ["NOTICE.md", "source_provenance.json", "primitives/*/interface.md"]
+"orimapi.skills.code_skills.classify_objects_by_language" = ["NOTICE.md", "source_provenance.json", "vendor/**/*.py", "vendor/**/*.md", "vendor/**/*.txt", "ACTIVE_RELEASE.json", "runtime/c006/*.py", "runtime/c006/*.json", "runtime/c006/*.md"]
+"orimapi.skills.code_skills.common.planned_local_v1" = ["prompts.json", "NOTICE.md"]
+# Migrated fallback bundles also pin their tool documentation and admission
+# evidence. Keep explicit filenames rather than including arbitrary study data.
+"orimapi.skills.code_skills" = ["*/skill.json", "*/experience.json", "*/resources.json", "*/failure_experience.json", "*/publication.json", "*/profile.json", "*/prompts.json", "*/source_provenance.json", "*/prompts/plan.md", "*/prompts/generate.md", "*/prompts/inspect.md", "*/tool_recipes/*.json", "*/program_prompt.md", "*/frozen_knowledge.json", "*/vision_resources.json", "*/hand_bounds.json", "*/tool_documentation.md", "*/successful_code_examples.json", "*/validation.json", "*/RESEARCH_SUMMARY.md"]

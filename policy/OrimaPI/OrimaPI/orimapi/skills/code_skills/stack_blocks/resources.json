@@ -1,0 +1,20 @@
+{
+  "schema": "orimapi.stack-blocks-resources/v1",
+  "native_ik": {
+    "device": "cuda:0",
+    "runtime": "Installed RoboDojo cuRobo in simulator Python",
+    "configuration": "Optional native_ik.python/simulator_root/device; defaults derive from configured public robot assets."
+  },
+  "requirements": [
+    "numpy",
+    "opencv-python-headless",
+    "scipy",
+    "ikpy",
+    "transforms3d==0.4.2",
+    "RoboDojo Python runtime with cuRobo"
+  ],
+  "no_runtime_download": true,
+  "image_max_bytes": 300000,
+  "request_max_bytes": 2000000,
+  "depth_required": false
+}

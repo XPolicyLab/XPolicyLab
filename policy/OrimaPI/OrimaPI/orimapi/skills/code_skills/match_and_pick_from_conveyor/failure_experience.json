@@ -1,0 +1,8 @@
+[
+  {
+    "kind": "observed_local_failure",
+    "candidate": "candidate-001",
+    "score": 0,
+    "lesson": "Reference/departure/match and .099m/s tracking worked. Several low nominal-TCP descents failed finger/table preflight; a later off-center interception and recovery lift did not retain the object. Prefer a current body-center surface anchor and map desired pad contact through public finger geometry; do not relax guards."
+  }
+]

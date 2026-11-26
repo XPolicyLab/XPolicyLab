@@ -1,0 +1,48 @@
+{
+  "title": "清扫：拿扫帚—交接—定位簸箕入口—接触扫入—放回归位",
+  "operations": [
+    "pick",
+    "place",
+    "handover",
+    "stroke",
+    "transfer",
+    "inspect",
+    "measure_feature",
+    "view",
+    "home",
+    "wait"
+  ],
+  "phases": [
+    "Random layout: identify task targets by semantic shape/texture, exclude distractors, and use the SAME local operation baseline as the ordinary task. Never infer ordinary/random from visual absence of distractors.",
+    "Identify broom, dustpan and all blocks; choose handle grasps from current RGB.",
+    "Pick broom with left arm; handover to right using current receiver_grasp feature. If direct handover is infeasible, explicitly place broom on support, withdraw/home empty left, then reidentify and pick with right (reference observed table-mediated recovery).",
+    "Pick dustpan with left; hold its entry at block/table level, not above the blocks.",
+    "For each live block group choose stroke: source=broom with actual brush contact feature; destination=path with start behind the group and end inside the dustpan. Local tools triangulate these coarse semantic features and execute the stroke.",
+    "Inspect remaining blocks and dustpan contents. Replan a different stroke for residual blocks.",
+    "Place dustpan level on table left of broom, release tool(s), withdraw and home empty arms."
+  ],
+  "failure_lesson": "Broom handoffs slipped and apparent sweeps did not imply containment. A supported table-mediated regrasp recovered one external transfer, not the full task.",
+  "required_features": {
+    "handover": [
+      "source.receiver_grasp"
+    ],
+    "stroke": [
+      "source.contact",
+      "destination.start",
+      "destination.end"
+    ]
+  },
+  "reference_success_scope": "External aggregate has rare successes; cached detailed notes do not show a complete reliable sweep.",
+  "task": "sweep_blocks",
+  "family": "sweep_blocks",
+  "budget": 1000,
+  "random": false,
+  "pickup_lift_m": 0.06,
+  "travel_lift_m": 0.06,
+  "final_home": true,
+  "supported_tasks": [
+    "sweep_blocks",
+    "sweep_blocks_random"
+  ],
+  "variant_policy": "Shared sweep workflow for ordinary/random; exclude distractors when present. Runtime variant is not inferred as a task id."
+}

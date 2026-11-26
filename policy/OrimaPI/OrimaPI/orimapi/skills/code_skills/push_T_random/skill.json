@@ -1,0 +1,70 @@
+{
+  "schema": "orimapi.code-controller-skill/v1",
+  "skill_id": "push_T_random",
+  "supported_tasks": [
+    "push_T_random"
+  ],
+  "task_spec": {
+    "task": "push_T_random",
+    "budget": 600,
+    "requirements": "Use current RGB to slide and rotate the movable magenta T onto its gray T-shaped target among distractors. Keep the T supported on the table; no lifted transport. Release and return both arms home. Use public robot state, calibration and geometry; do not read hidden object poses or layouts."
+  },
+  "tool_limits": {
+    "max_calls": 24,
+    "max_tools_per_turn": 8,
+    "history_size": 8
+  },
+  "experience": "experience.json",
+  "sources": {
+    "controller": "controller.py",
+    "vision": "vision.py",
+    "shared_make_kong_baseline_motion": "../make_kong/baseline_motion.py",
+    "shared_make_kong_hand_clearance": "../make_kong/hand_clearance.py",
+    "shared_make_kong_hand_bounds": "../make_kong/hand_bounds.json"
+  },
+  "qualification": {
+    "successful_seed_sets": [
+      1,
+      2
+    ],
+    "admission": {
+      "required_successes": 2,
+      "mode": "two_distinct_seeds",
+      "authorization_sha256": "bb1717624a6ee3ad1e38bcdedf39a3856d8736fd8f1ae6ab1951e3a0b9a1e30e",
+      "elapsed_research_seconds": 2492.748708,
+      "idle_time_excluded": true,
+      "limitations": ""
+    },
+    "tested_seed_sets": [
+      0,
+      1,
+      2
+    ],
+    "scope": "One first native layout per seed set; engineering admission, not full benchmark reliability",
+    "results": [
+      {
+        "seed": 0,
+        "success": false,
+        "score": 0.0,
+        "layout_sha256": "11dcb2c9c947dd81aec783ae4235d748da3ebfc01e2091d0dcbf1e439038a709",
+        "run_id": "20261022T130110-tool-episode-2ce68c48aee8"
+      },
+      {
+        "seed": 1,
+        "success": true,
+        "score": 1.0,
+        "layout_sha256": "6956fccbba1e5db2c7f2c8a1c930b43f267da1a2713394fec8254ab6cbe921ab",
+        "run_id": "20261022T131549-tool-episode-0d865ffb119f"
+      },
+      {
+        "seed": 2,
+        "success": true,
+        "score": 1.0,
+        "layout_sha256": "e4b1cbc5d1c76a0a8c5ba36f533031588cecd574db62a7794873e900725d2ea9",
+        "run_id": "20261022T172129-tool-episode-ed5dfeed47c8"
+      }
+    ],
+    "llm_model": "gpt-6-astra",
+    "reasoning_effort": null
+  }
+}

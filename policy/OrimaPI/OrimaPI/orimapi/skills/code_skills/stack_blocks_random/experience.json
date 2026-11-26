@@ -1,0 +1,30 @@
+[
+  {
+    "type": "observed_failure",
+    "lesson": "Both runs scored0 and stopped without grasping after10 tool calls. The required material-feature/support localization remained unavailable after one wrist-view recovery; neither run established a stack."
+  },
+  {
+    "type": "method_change",
+    "lesson": "This candidate replaces the old three-material-feature/attachment prerequisite with actual RGB prism/stereo/plane geometry plus current post-pick and post-release image review. This is a task-level evidence change, not permission to disable robot joint/table/collision checks."
+  },
+  {
+    "type": "external_method_not_local_success",
+    "lesson": "Choose an existing stable base; use two complete top_pick/top_place operations. Preserve measured source height/inset, inspect retention, remeasure the new support, avoid unnecessary first-placement homing, and finish both arms home."
+  },
+  {
+    "type": "failure_boundary",
+    "lesson": "A top_pick error after descent may require current inspection before closure/lift; no automatic contact retry. Released=true does not prove stack stability. Do not mistake episode_over alone for success or failure."
+  },
+  {
+    "type": "observed_local_ordinary_success",
+    "lesson": "The SAME ordinary executor scored100 on each of seeds0/1 using20/46 skill requests and220/533 native actions. This random candidate copies its top/prism/stereo geometry, complete pickup/place tools and current-RGB reviews. These ordinary episodes are NOT random success evidence. Do not copy their scene coordinates or texture assignments."
+  },
+  {
+    "type": "observed_old_random_failure",
+    "lesson": "Old random implementation scored0/0/15 on seeds0/1/2. The later generic planned-local formal replacement has no native retest. Neither source establishes the success or failure of this new specialized random candidate."
+  },
+  {
+    "type": "random_scene_execution_plan",
+    "lesson": "Identify exactly three differently textured targets from current instruction/images. Choose base/order/arm from present access and final stack height; leave the base supported. Preserve the successful ordinary two-transfer tools rather than the generic body-centre transfer model. Use current top-surface corners or matched material points, measured current support height, pickup inset and actual grasp tilt. Prefer downward pickup when reachable; preserve held pose to placement and inspect real retention. No arbitrary100-action reserve veto; native550-action budget remains. Keep first withdrawal compact; final release/open both arms and home. Do not claim success from released=true or home motion alone."
+  }
+]

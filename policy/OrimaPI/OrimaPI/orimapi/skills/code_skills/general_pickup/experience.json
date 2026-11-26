@@ -1,0 +1,14 @@
+[
+  {
+    "lesson": "Bind the instructed object in current RGB, not a familiar distractor. A bounding-box center can be empty space on a handle, frame or ring; select a solid accessible grasp section. For sealed cups, bowls or boxes with a closed lid or solid top, never place one jaw on top of the closed lid to pinch a single rim edge; instead place jaws across opposite outer sides of a narrow solid body, waist, handle or corner."
+  },
+  {
+    "lesson": "Multi-view pixels must identify the same physical surface point on the top of the chosen grasp section in both head and wrist views. Set clear=true whenever a top pinch is accessible; the motion planner checks 3D robot and table clearance."
+  },
+  {
+    "lesson": "For dolls, plush toys, figurines or bell peppers, prefer pinching across the solid head, neck or narrow torso rather than a thin soft limb, ear tip or tiny stem that can slip."
+  },
+  {
+    "lesson": "A close command is not proof of retention. Lift vertically, keep the retaining hand closed, and let the native evaluator decide the 10 cm target-lift success. Do not add a home/release phase."
+  }
+]

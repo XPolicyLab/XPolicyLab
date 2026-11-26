@@ -1,0 +1,300 @@
+[
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "deposit_coin",
+        "seed": 1,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 587,
+        "time": "2026-10-23T08:58:09.827270+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "deposit_coin",
+        "episode_id": "d451002a058f44eab13298ca5be59d97",
+        "step": 142,
+        "kind": "supervisor",
+        "error": "SupervisorEpisodeError: Code program API failed: Supervisor API returned HTTP 400"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.2,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.2,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.2,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "deposit_coin",
+        "seed": 2,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 620,
+        "time": "2026-10-23T05:29:20.701305+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "deposit_coin",
+        "episode_id": "ea663f63ccc445c4ba860bdf51e0e769",
+        "step": 112,
+        "kind": "policy",
+        "error": "RuntimeError: Code-submission budget exhausted"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.2,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "deposit_coin",
+        "seed": 1,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 1046,
+        "time": "2026-10-23T05:21:56.799813+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "deposit_coin",
+        "episode_id": "cd69904ab7434c4aab5221e5991dd53a",
+        "step": 239,
+        "kind": "policy",
+        "error": "RuntimeError: Code-submission budget exhausted"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.2,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "deposit_coin",
+        "seed": 0,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 764,
+        "time": "2026-10-22T05:01:48.092948+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "deposit_coin",
+        "episode_id": "524d5bd128024958847536ee6c0bf14a",
+        "step": 236,
+        "kind": "policy",
+        "error": "ValueError: No consistent current coin circle in two views"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.2,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "deposit_coin",
+        "seed": 0,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 764,
+        "time": "2026-10-22T04:39:04.547319+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "deposit_coin",
+        "episode_id": "8d665b98c739433ca46389772e7630f0",
+        "step": 236,
+        "kind": "policy",
+        "error": "ValueError: No consistent current coin circle in two views"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "deposit_coin",
+        "seed": 1,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 225,
+        "time": "2026-10-22T04:29:41.716240+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "deposit_coin",
+        "episode_id": "e8e02471b80644fc8e8de20d18010252",
+        "step": 65,
+        "kind": "policy",
+        "error": "ValueError: No consistent current coin circle in two views"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.2,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "deposit_coin",
+        "seed": 0,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 752,
+        "time": "2026-10-22T04:26:57.931973+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "deposit_coin",
+        "episode_id": "e40f4cf954cc4e22b27e40680a66de86",
+        "step": 232,
+        "kind": "policy",
+        "error": "ValueError: Held coin is not confirmed in current RGB"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.2,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "deposit_coin",
+        "seed": 0,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 465,
+        "time": "2026-10-22T04:11:16.245581+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "deposit_coin",
+        "episode_id": "07720564fdf74d5c8e6343c661f80d12",
+        "step": 142,
+        "kind": "policy",
+        "error": "ValueError: Giving hand did not retain coin at handoff"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.2,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "deposit_coin",
+        "seed": 0,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 769,
+        "time": "2026-10-22T04:01:09.413146+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "deposit_coin",
+        "episode_id": "e3d5446988704fc3a8de6b92eca873d3",
+        "step": 238,
+        "kind": "policy",
+        "error": "ValueError: Held coin is not confirmed in current RGB"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.2,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "deposit_coin",
+        "seed": 0,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 889,
+        "time": "2026-10-22T03:50:19.654696+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "deposit_coin",
+        "episode_id": "9db1ce12a4aa4f05b831437ed19876c5",
+        "step": 277,
+        "kind": "policy",
+        "error": "ValueError: No consistent current coin circle in two views"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "type": "curated_failure_lesson",
+    "lesson": "All selected RSI4 episodes returned native false with score 0.2. The repeated partial score did not establish slot insertion or completed deposit, despite the absence of top-level controller exceptions.",
+    "scope": "observed_failure",
+    "curated_source_sha256": "6cbcbb6bcd800a28455e29ce711d4c38504ba610b5fc95dc8753d594393bed10"
+  },
+  {
+    "type": "curated_failure_lesson",
+    "lesson": "The retained review reports unresolved held-coin geometry: a requested tilted-coin capability was not integrated, and two-view fits conflicted with independently observed RGB. Low fit residual and one reconstructed rim point do not establish a full disk pose or usable pad contact.",
+    "scope": "observed_failure",
+    "curated_source_sha256": "6cbcbb6bcd800a28455e29ce711d4c38504ba610b5fc95dc8753d594393bed10"
+  },
+  {
+    "type": "curated_failure_lesson",
+    "lesson": "An arbitrary-orientation held-coin estimator checked in an unused camera may help. Verify receiver support before donor release and retention afterward; home opens both grippers. Neither this estimator nor the later clearance-path experiments demonstrate a successful transfer or deposit for the published RSI4 code.",
+    "scope": "hypothesis_unverified",
+    "curated_source_sha256": "6cbcbb6bcd800a28455e29ce711d4c38504ba610b5fc95dc8753d594393bed10"
+  }
+]

@@ -1,0 +1,78 @@
+{
+  "schema": "orimapi.code-controller-skill/v1",
+  "skill_id": "arrange_largest_number_random",
+  "supported_tasks": [
+    "arrange_largest_number_random"
+  ],
+  "task_spec": {
+    "task": "arrange_largest_number_random",
+    "budget": 1050,
+    "requirements": "Identify the four or five actual physical digits among clutter from current RGB, bind descending values to observed pads left to right, place upright/readable, release and home both arms. Original native1050 actions. Current RGB/public robot input only; avoid disturbing clutter."
+  },
+  "tool_limits": {
+    "max_calls": 32,
+    "max_tools_per_turn": 8,
+    "history_size": 8
+  },
+  "experience": "experience.json",
+  "sources": {
+    "controller": "controller.py",
+    "vision": "vision.py",
+    "shared_make_kong_baseline_motion": "../make_kong/baseline_motion.py",
+    "shared_make_kong_hand_clearance": "../make_kong/hand_clearance.py",
+    "shared_make_kong_hand_bounds": "../make_kong/hand_bounds.json",
+    "planning": "planning.py",
+    "shared_native_adapter": "../stack_blocks/adapter.py",
+    "shared_native_worker": "../stack_blocks/ik_worker.py",
+    "shared_public_geometry": "../common/geometry.py",
+    "shared_checked_motion": "../../code_tools/motion.py",
+    "shared_robot_collision": "../../code_tools/collision.py",
+    "shared_motion_base": "../play_tic_tac_toe/motion.py",
+    "scheduler": "scheduler.py",
+    "published_validation": "validation.json",
+    "published_publication": "publication.json"
+  },
+  "qualification": {
+    "published": true,
+    "mode": "user_authorized_partial_score_acceptance",
+    "standard_qualified": false,
+    "tested_seeds": [
+      0,
+      1,
+      2
+    ],
+    "successful_seeds": [],
+    "llm_model": "gpt-6-astra",
+    "validation_batch": "arrange-largest-number-clutter8-20261028-c003-r1",
+    "scored_episodes": 8,
+    "successful_episodes": 0,
+    "mean_score_percent": 25.625,
+    "equal_seed_mean_score_percent": 26.11111111111111,
+    "seed_results": [
+      {
+        "seed": 0,
+        "episodes": 3,
+        "planned": 3,
+        "successes": 0,
+        "mean_score_percent": 23.333333333333332
+      },
+      {
+        "seed": 1,
+        "episodes": 3,
+        "planned": 3,
+        "successes": 0,
+        "mean_score_percent": 25.0
+      },
+      {
+        "seed": 2,
+        "episodes": 2,
+        "planned": 2,
+        "successes": 0,
+        "mean_score_percent": 30.0
+      }
+    ],
+    "previous_mean_score_percent": 18.125,
+    "mean_improvement_points": 7.5,
+    "scope": "User-authorized publication of unchanged c003 runtime. Eight same-layout development replays, seeds0/1/2 allocation3/3/2;0 complete successes. Random variant only; not full25+25 quota, independent generalization or standard task qualification."
+  }
+}

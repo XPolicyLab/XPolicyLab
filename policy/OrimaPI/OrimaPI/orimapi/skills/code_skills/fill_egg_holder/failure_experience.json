@@ -1,0 +1,132 @@
+[
+  {
+    "official_result_available": false,
+    "score": null,
+    "runtime_error": "RuntimeError: RoboDojo evaluation timed out after 578.8112569546975 seconds",
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.1,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.1,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.25,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.1,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.1,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.1,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.1,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [
+      {
+        "task": "fill_egg_holder",
+        "seed": 0,
+        "event": "code_skill_tool_terminal_failure",
+        "sequence": 1776,
+        "time": "2026-10-23T05:39:02.108772+00:00",
+        "policy_id": "code-policy",
+        "skill_id": "fill_egg_holder",
+        "episode_id": "3f8babae47764ca7b98f2003d2f51a18",
+        "step": 453,
+        "kind": "policy",
+        "error": "RuntimeError: Code-submission budget exhausted"
+      }
+    ],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "official_result_available": true,
+    "score": 0.0,
+    "runtime_error": null,
+    "controller_failures": [],
+    "scope": "Retained failure evidence, not a successful implementation or a future scene input"
+  },
+  {
+    "type": "curated_failure_lesson",
+    "lesson": "Selected RSI6 scores were 0.25, 0.1 and 0.1, with no complete successes. Home and finish did not prove four intact, settled placements and lid closure. Do not convert the partial score into an inferred egg count.",
+    "scope": "observed_failure",
+    "curated_source_sha256": "0912422bbb344dbce813fd70d234c0d45c74e52e39f519cee1f344702fa99b24"
+  },
+  {
+    "type": "curated_failure_lesson",
+    "lesson": "The retained review reports a descent stage-budget failure in seed 1 and failed TCP verification after a reported completed descent in seed 2. Motion status and pose verification must both pass. These observations do not establish hidden collision or a confirmed possession-to-loss transition.",
+    "scope": "observed_failure",
+    "curated_source_sha256": "0912422bbb344dbce813fd70d234c0d45c74e52e39f519cee1f344702fa99b24"
+  },
+  {
+    "type": "curated_failure_lesson",
+    "lesson": "Cross-view shell and basket-clearance intervals, assisted by segmentation and metric-depth estimates, may reject unreliable grasp heights before descent. This remains a hypothesis; the formal RSI6 runtime is unchanged. Preserve separate retention, four-placement, hinge-arc closure and final-home checks.",
+    "scope": "hypothesis_unverified",
+    "curated_source_sha256": "0912422bbb344dbce813fd70d234c0d45c74e52e39f519cee1f344702fa99b24"
+  }
+]

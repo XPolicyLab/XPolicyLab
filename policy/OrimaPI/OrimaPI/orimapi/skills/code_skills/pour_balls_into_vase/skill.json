@@ -1,0 +1,37 @@
+{
+  "schema": "orimapi.code-controller-skill/v1",
+  "skill_id": "pour_balls_into_vase",
+  "supported_tasks": [
+    "pour_balls_into_vase"
+  ],
+  "task_spec": {
+    "task": "pour_balls_into_vase",
+    "budget": 600,
+    "requirements": "Pour all seven balls from cup into vase, restore cup upright and both arms home. Current RGB/public robot state only; native scoring authoritative. Continue grounded recovery after real failures; do not insert arbitrary stage-step, tracking-timeout, fixed reserve or failure-count termination."
+  },
+  "tool_limits": {
+    "max_calls": 120,
+    "max_tools_per_turn": 16,
+    "history_size": 24
+  },
+  "experience": "experience.json",
+  "sources": {
+    "vision.py": "vision.py",
+    "prompts.json": "prompts.json",
+    "trajectory.py": "trajectory.py",
+    "motion.py": "motion.py",
+    "controller.py": "controller.py",
+    "source_provenance.json": "source_provenance.json",
+    "native_worker.py": "native_worker.py",
+    "project_geometry": "../common/geometry.py",
+    "project_collision": "../../code_tools/collision.py",
+    "project_generator": "../align_blocks/generator.py",
+    "package_initializer": "__init__.py"
+  },
+  "qualification": {
+    "published": false,
+    "mode": "research_only",
+    "candidate": "c008-fast8-20261108",
+    "native_result": "not_run"
+  }
+}

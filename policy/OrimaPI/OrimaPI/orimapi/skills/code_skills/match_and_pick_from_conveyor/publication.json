@@ -1,0 +1,89 @@
+{
+  "status": "published",
+  "published_at": "2026-10-25T15:50:24.562678+00:00",
+  "authorization": "User explicitly requested replacing the formal skill after one seed succeeds.",
+  "qualification": {
+    "published": true,
+    "standard_qualified": false,
+    "successful_seeds": [
+      0
+    ],
+    "tested_seeds": [
+      0
+    ],
+    "untested_seeds": [
+      1,
+      2
+    ],
+    "mode": "user_authorized_single_episode_acceptance",
+    "scope": "candidate002 seed0/one episode native success. No additional seeds or simulations after success."
+  },
+  "runtime_hashes": {
+    "tool_documentation.md": "1caf2459b60252cb53721dbdd7c3be82667e99835b3d415e7d381a6463a9b89f",
+    "program_prompt.md": "af4d91960ce0a0540576939533e4cf92f67711f982323f849281284cd931b3a1",
+    "adapter.py": "bbbecb2fe01bca023a622ecc68bf8d1f03170c91ee9f2ae17f643309037d334e",
+    "ik_worker.py": "92a27a877166ed808aeae0e6fff202fa9725c0bfc7dc333d6cffb2608574beba",
+    "failure_experience.json": "9d8e48116fa566d7fbf9bc385ce03e218ab9a43ee456d9eba8859dfe3f379167",
+    "controller.py": "37594ac81f05ab32a1471a0d75ec555ebf9bccd30b7108327cf1922b130844a2",
+    "public_hand.py": "db8b6ad8993b08460b09ad520304b36ec62b6b5481a6c5f731a5717f4336a715",
+    "experience.json": "80e40022a8e4900cba30ba49ff2b11262cde069f420140a71aadf1bb35195082",
+    "primitives/planar_ring/tool.py": "bf4900ee606c7d7a656a662af9a98892a32b8eeeb223690a10fa51da0e38603c",
+    "primitives/planar_ring/interface.md": "59a3df510ef94191acb61a006c25020d0b2e6a7381fe8d3c37bb2ed6550cfb31",
+    "primitives/lift_hold/tool.py": "14f86cc5a7141667bfdb1f8667357b89976ca0095ff4210171ce5feb0d58bd0a",
+    "primitives/lift_hold/interface.md": "823cc4c4170c4c43e3a399927c149339236ac30c4d1e6bf7f7e24c4598cca8e8",
+    "primitives/timed_pick/tool.py": "b3a8b22103e6d10baad8daf1dc694d9500ee6d34520a2912f60c666a4938cd37",
+    "primitives/timed_pick/interface.md": "6e045b2e9fc4d269d3e286e9bb0a4b495a89fb2c71444feeff075b4120a3abe9",
+    "primitives/support/geometry.py": "4dc75130689d8c6b57d17f4515247e14a6d6b4d8de29b26e30ff8a7609080482",
+    "primitives/support/__init__.py": "600728cfdc32ae06b3c2617a1d5dd9ee2c7552c4df1c3b4be01add3c3a15eb80",
+    "primitives/support/motion.py": "cebe3d0d2caa4b4e018cc601c4bedf05c70b9c668bac60cc21196c2383df1497",
+    "primitives/support/core.py": "0a8e6c03bd545f58de8e42b32383427e59b015d20fcf8409edfdda4eae9bb372",
+    "primitives/table_plane/tool.py": "cd257aec7f4ba01e239f88892f4243f6ab182dc1857354fc152fb930583fcb12",
+    "primitives/table_plane/interface.md": "d7d9ca4b481d4272c8d1205b3274f3d1b911a95c9ce3a70e1b2ad023275bcba5",
+    "primitives/rgb_geometry/tool.py": "85068c1c2886e69ed5b19e1755c038b0527dd0c63575c9f125c5d647dce850fb",
+    "primitives/rgb_geometry/interface.md": "58b938bec3a92192e53dd53956be8ea396b7bda9dd1263353f0bedd186f47c40"
+  },
+  "backup": "orimapi/skills/code_skill_rsi/match_and_pick_from_conveyor/publication/previous-formal-directory",
+  "source_candidate": "orimapi/skills/code_skill_rsi/match_and_pick_from_conveyor/candidates/candidate-002",
+  "runtime_change_policy": "All tested Python, acting prompts, tool interfaces and injected experience bytes retained. Only package initializer and publication metadata added.",
+  "tested_candidate_file_hashes": {
+    "tool_documentation.md": "1caf2459b60252cb53721dbdd7c3be82667e99835b3d415e7d381a6463a9b89f",
+    "program_prompt.md": "af4d91960ce0a0540576939533e4cf92f67711f982323f849281284cd931b3a1",
+    "NOTICE.md": "5ac32b00eab0c3873dc4b69911b589c4310d02e6872cc6d0e80da537a1f721bf",
+    "adapter.py": "bbbecb2fe01bca023a622ecc68bf8d1f03170c91ee9f2ae17f643309037d334e",
+    "ik_worker.py": "92a27a877166ed808aeae0e6fff202fa9725c0bfc7dc333d6cffb2608574beba",
+    "failure_experience.json": "9d8e48116fa566d7fbf9bc385ce03e218ab9a43ee456d9eba8859dfe3f379167",
+    "controller.py": "37594ac81f05ab32a1471a0d75ec555ebf9bccd30b7108327cf1922b130844a2",
+    "public_hand.py": "db8b6ad8993b08460b09ad520304b36ec62b6b5481a6c5f731a5717f4336a715",
+    "experience.json": "80e40022a8e4900cba30ba49ff2b11262cde069f420140a71aadf1bb35195082",
+    "primitives/planar_ring/tool.py": "bf4900ee606c7d7a656a662af9a98892a32b8eeeb223690a10fa51da0e38603c",
+    "primitives/planar_ring/interface.md": "59a3df510ef94191acb61a006c25020d0b2e6a7381fe8d3c37bb2ed6550cfb31",
+    "primitives/lift_hold/tool.py": "14f86cc5a7141667bfdb1f8667357b89976ca0095ff4210171ce5feb0d58bd0a",
+    "primitives/lift_hold/interface.md": "823cc4c4170c4c43e3a399927c149339236ac30c4d1e6bf7f7e24c4598cca8e8",
+    "primitives/timed_pick/tool.py": "b3a8b22103e6d10baad8daf1dc694d9500ee6d34520a2912f60c666a4938cd37",
+    "primitives/timed_pick/interface.md": "6e045b2e9fc4d269d3e286e9bb0a4b495a89fb2c71444feeff075b4120a3abe9",
+    "primitives/support/geometry.py": "4dc75130689d8c6b57d17f4515247e14a6d6b4d8de29b26e30ff8a7609080482",
+    "primitives/support/__init__.py": "600728cfdc32ae06b3c2617a1d5dd9ee2c7552c4df1c3b4be01add3c3a15eb80",
+    "primitives/support/motion.py": "cebe3d0d2caa4b4e018cc601c4bedf05c70b9c668bac60cc21196c2383df1497",
+    "primitives/support/core.py": "0a8e6c03bd545f58de8e42b32383427e59b015d20fcf8409edfdda4eae9bb372",
+    "primitives/table_plane/tool.py": "cd257aec7f4ba01e239f88892f4243f6ab182dc1857354fc152fb930583fcb12",
+    "primitives/table_plane/interface.md": "d7d9ca4b481d4272c8d1205b3274f3d1b911a95c9ce3a70e1b2ad023275bcba5",
+    "primitives/rgb_geometry/tool.py": "85068c1c2886e69ed5b19e1755c038b0527dd0c63575c9f125c5d647dce850fb",
+    "primitives/rgb_geometry/interface.md": "58b938bec3a92192e53dd53956be8ea396b7bda9dd1263353f0bedd186f47c40"
+  },
+  "publication_metadata_changes": [
+    "skill manifest qualification and extra declared publication files",
+    "package initializer",
+    "NOTICE validation-status sentence",
+    "validation/resources/publication/provenance/human research summary"
+  ],
+  "deployment_compatibility": {
+    "scope": "Physical GPU placement and relocated/symlinked runtime discovery only; task policy, planning and collision logic are unchanged. Current dependency fingerprints are refreshed; original candidate evidence remains historical.",
+    "previous_fingerprints": {
+      "runtime_hashes": {
+        "adapter.py": "58fe48ab4194a2a765d94d408a886e429108e3112a72e73ecf6ef761bdbd9eea"
+      }
+    },
+    "native_task_retested_after_change": false,
+    "historical_candidate_hashes_and_outcomes_preserved": true
+  }
+}

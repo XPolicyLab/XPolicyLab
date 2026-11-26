@@ -1,0 +1,18 @@
+{
+  "code_parameters": {
+    "depth_estimation": {
+      "model_path": "/root/code/OrimaPI/checkpoint/depth-anything-v2-metric-indoor-small",
+      "device": "cpu"
+    },
+    "geometry": {
+      "robot_collision_config": "/root/code/OrimaPI/third_party/RoboDojo/Assets/Robots/x5/curobo.yml",
+      "robot_urdf": "/root/code/OrimaPI/third_party/RoboDojo/Assets/Robots/x5/X5A.urdf",
+      "robot_config": "/root/code/OrimaPI/third_party/RoboDojo/Assets/Robots/x5/robot_config.yml",
+      "arm_config": "/root/code/OrimaPI/third_party/RoboDojo/env_cfg/robot/dual_x5.yml",
+      "camera_config": "/root/code/OrimaPI/third_party/RoboDojo/env_cfg/camera/camera_config.yml",
+      "camera_template": "/root/code/OrimaPI/third_party/RoboDojo/env_cfg/camera/template.py",
+      "table_config": "/root/code/OrimaPI/third_party/RoboDojo/env_cfg/scene/default.yml"
+    }
+  },
+  "runtime_fingerprint": "d8f021f1627f5d1d842acbbf9f5c0ef6671713d1ca94bf1b06e31f56ff1ef166"
+}

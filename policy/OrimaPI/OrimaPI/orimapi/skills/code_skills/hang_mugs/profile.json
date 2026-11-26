@@ -1,0 +1,39 @@
+{
+  "title": "挂杯：抓杯体—测把手孔/挂钩—局部坐标对齐—穿入承重释放",
+  "target_count": 3,
+  "operations": [
+    "pick",
+    "dock",
+    "place",
+    "transfer",
+    "inspect",
+    "measure_feature",
+    "view",
+    "home",
+    "wait"
+  ],
+  "phases": [
+    "Identify three mugs, each handle aperture and unoccupied rack pegs; preserve mug/peg assignment.",
+    "Pick the mug body/rim leaving its handle aperture free. Inspect current carried mug.",
+    "Use three fresh multiview handle/peg frame features for dock. Destination mate frame describes entry alignment; seat is at the actual hanging support, not the peg tip.",
+    "Local dock aligns, enters axially, advances to measured seat, releases and withdraws.",
+    "Inspect that handle remains supported and mug clears table; fallen mug is recovery, not completion.",
+    "Repeat all three; place/recover any held failures on visible support before final home."
+  ],
+  "failure_lesson": "Accepted peg approach or insertion did not prove engagement; several external manual releases slipped. Repeated contour-stereo calls all failed in reviewed traces.",
+  "required_features": {
+    "dock": [
+      "source.mate_a/b/c (handle frame)",
+      "destination.mate_a/b/c (peg frame)",
+      "destination.seat"
+    ]
+  },
+  "reference_success_scope": "External aggregate includes rare success, but cached detailed notes did not establish a successful release recovery.",
+  "task": "hang_mugs",
+  "family": "hang_mugs",
+  "budget": 800,
+  "random": false,
+  "pickup_lift_m": 0.06,
+  "travel_lift_m": 0.06,
+  "final_home": true
+}

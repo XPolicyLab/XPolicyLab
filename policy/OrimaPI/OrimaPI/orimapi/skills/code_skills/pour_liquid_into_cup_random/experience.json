@@ -1,0 +1,141 @@
+[
+  {
+    "strategy": "UNVALIDATED hypothesis: perform an observation-gated, single-arm grasp–transport–pour–restore–release cycle using only advertised native tools. Initial RGB, camera/frame identities and public calibration arrive automatically. Identify the actual bottle and receiving cup among distractors before measuring anything; derive every coordinate from this episode.\n\nUse two current calibrated views to measure the receiving opening, bottle outlet and graspable body region. Prefer observed outlines for circular rims and explicit physical-feature correspondences for triangulation. estimate_body_envelope supplies only a conditional visual hull, not a grasp, axis or outlet. A visible outer lip is not automatically the inner outlet. Require geometry and uncertainty adequate for the proposed hand/body clearance and opening margin. Use calibrated RGB-derived depth only as a secondary plausibility check, never to override rejected outlet geometry.\n\nLimit measurement work to at most 12 non-motion tool/model calls at one observation, leaving four calls for planning/diagnostics within the strict 16-call bound. Allow at most two purposeful checked viewpoint changes in the whole attempt. Reacquire pixels after motion; do not renew the call allowance through meaningless waits. The recorded failures favor better viewing and actual edge evidence over repeated hand-drawn ellipse fits, inconsistent upright assumptions or epipolar guesses. A triangulated label corner alone does not locate the outlet.\n\nChoose an arm and grasp orientation that leave room for upright transport and bottle rotation while the other arm remains clear. Use the public grasp-center TCP convention without adding a wrist offset again. Stage clear of obstacles, then use approach_close only for an observed clear straight approach. Inspect closure before lifting; capture attachment from measured bottle features, make a small checked lift and verify consistent bottle-to-gripper motion before transport.\n\nKeep the bottle upright while moving through a measured clear corridor. Position the outlet above the cup with enough margin for uncertainty, bottle sweep and hand clearance. Incrementally rotate about the measured attached outlet using plan_relative_pose and execute_plan; adjust translation from fresh observations if needed. Rotation increments of approximately 10–15 degrees are starting proposals, not mandatory safe values. Advance toward a drainage posture only while checked motion, attachment and visible containment remain credible. Use short native-step holds to observe flow; continue drainage toward essentially complete transfer if gates and budget permit. Do not impose an unmeasured ballistic model or equate disappearance of visible flow with known empty volume.\n\nReverse tilt through checked motions to genuinely upright, inspect the cup, bottle and table, and allow the native transfer check. Then set the bottle upright on a measured clear support area, release, verify stable separation, withdraw and home. Plan only from current state: local planners do not certify the entire future cycle. Before each irreversible progression, reassess the remaining route, recovery options and action cost. Keep all IK, collision, clearance, tracking and joint-continuity checks enabled.\n\nUse at most 400 native actions, counting expanded trajectories and holds. Initially protect 80 actions for upright restoration, set-down, release, withdrawal and home; increase this reserve when public timing diagnostics or route length require it. No new pouring or recovery segment may consume the protected ending allowance. Permit at most one regrasp after safe set-down and one materially changed motion alternative after a planning refusal, only with adequate budget. Native complete success is the sole success criterion.",
+    "stages": [
+      {
+        "name": "Identify targets and choose economical views",
+        "tools": [
+          "inspect_region",
+          "public_motion_failure_diagnostics",
+          "plan_relative_pose",
+          "execute_plan"
+        ],
+        "observation_gate": "Use automatically supplied current RGB and public calibration to identify bottle, intended cup, distractors, support and free corridors. Read current TCP conventions and remaining actions. Move a wrist only if it improves a specific unresolved feature and its path is checked.",
+        "stop_or_recover": "At most two purposeful viewpoint changes across the attempt. Stop if identity remains ambiguous or no checked useful view exists. Count all non-motion tool/model calls toward the 16-call per-observation limit."
+      },
+      {
+        "name": "Measure outlet, receiving opening and body",
+        "tools": [
+          "outline_candidates",
+          "fit_circle",
+          "fit_rim",
+          "estimate_body_envelope",
+          "stereo_guides",
+          "mark_points",
+          "locate_points",
+          "inspect_region"
+        ],
+        "observation_gate": "Select a small relevant subset of tools, not the whole list. Use current original-image coordinates and the same physical rim across views. Require accepted geometry for the cup opening and bottle outlet, a visually graspable cross-section, and conservative hand/body clearance. Explicitly inspect proposed feature correspondences before triangulation.",
+        "stop_or_recover": "Do not repeat rejected rims, guessed ellipse centers, silhouette correspondences or upright-axis constructions at unchanged views. Use one remaining purposeful view change when justified. Stop if uncertainty, opening identity or outlet-to-grasp geometry remains inadequate; a capability request would not resolve it during this trial."
+      },
+      {
+        "name": "Stage and close on the bottle",
+        "tools": [
+          "plan_pose",
+          "execute_plan",
+          "run_recipe",
+          "inspect_region"
+        ],
+        "observation_gate": "Select a checked approach from a clear staging pose with room for subsequent lift and rotation. Invoke only the advertised approach_close recipe with current localized target, TCP directions and ending reserve. Inspect fresh RGB immediately after closure, before any lift.",
+        "stop_or_recover": "If contact displaced the bottle, the fingers missed, or the target became occluded, do not lift blindly. Reobserve and allow one safe revised grasp only if geometry and budget support it. Planning rejection permits one materially different checked alternative, not repeated identical IK requests."
+      },
+      {
+        "name": "Verify retention with a small lift",
+        "tools": [
+          "capture_attachment",
+          "plan_relative_pose",
+          "execute_plan",
+          "verify_attachment",
+          "inspect_region"
+        ],
+        "observation_gate": "Capture measured body and mouth features after closure. Make a checked approximately 2 cm lift when clearance permits. Fresh RGB must show the bottle leaving support and moving consistently with the gripper; attachment verification must remain consistent. These are visual retention evidence, not tactile proof.",
+        "stop_or_recover": "No transport on slip, failed attachment verification or ambiguous separation. Lower onto the measured support through a checked path and release if safe. Successful retention must continue to transport and pouring within budget, not end the experiment."
+      },
+      {
+        "name": "Transport upright and align the outlet",
+        "tools": [
+          "plan_pose",
+          "plan_relative_pose",
+          "execute_plan",
+          "verify_attachment",
+          "mark_points",
+          "locate_points"
+        ],
+        "observation_gate": "Use checked lift, transit and alignment segments, keeping the bottle upright and both hand and body envelopes clear. Refresh cup/outlet measurements after motion. Require a credible opening margin and reversible tilt corridor before initiating flow. Check action costs against the restoration and ending reserve.",
+        "stop_or_recover": "On obstacle changes, slip or tracking failure, stop forward progression and inspect actual state. Use diagnostics and at most one changed route if safe. Otherwise restore or set down through checked motions; do not assume a failed plan left the robot at its starting pose."
+      },
+      {
+        "name": "Tilt and drain into the cup",
+        "tools": [
+          "plan_relative_pose",
+          "execute_plan",
+          "wait",
+          "verify_attachment",
+          "inspect_region",
+          "public_motion_failure_diagnostics"
+        ],
+        "observation_gate": "Rotate incrementally about the observed attached outlet, preflighting each actual motion and assessing the intervening body/hand sweep. Observe after each segment. Continue to a supported drainage posture and use short holds, initially 10 native actions each, while flow enters the cup and clearance, retention and ending reserve remain adequate.",
+        "stop_or_recover": "Interrupt on visible spill, cup motion, slip, lost containment evidence, refused motion or threatened reserve. Reobserve before a correction. Do not infer empty volume from a completed hold. Drain toward essentially all liquid when safe; never skip the upright return to prolong pouring."
+      },
+      {
+        "name": "Restore fully upright and assess transfer",
+        "tools": [
+          "plan_relative_pose",
+          "execute_plan",
+          "verify_attachment",
+          "inspect_region",
+          "wait"
+        ],
+        "observation_gate": "Reverse rotation in checked segments using current attachment geometry, ending genuinely upright rather than at an intermediate return angle. Inspect bottle, cup and table and allow a short settling interval within budget. Read native success feedback when exposed.",
+        "stop_or_recover": "A completed motion or apparent cup fill is not success. If residual liquid is clearly visible and a further pour fits all gates and reserve, continue drainage and restore upright again. Otherwise proceed to safe set-down and report success only if natively confirmed."
+      },
+      {
+        "name": "Set down, release, withdraw and home",
+        "tools": [
+          "plan_pose",
+          "plan_relative_pose",
+          "execute_plan",
+          "gripper",
+          "inspect_region",
+          "home",
+          "finish"
+        ],
+        "observation_gate": "Place the bottle upright on an observed clear support area. Inspect support before opening, then verify that the bottle remains upright and no longer follows the gripper. Make a checked upward withdrawal if the wrist is low before homing. Inspect the final state and native outcome.",
+        "stop_or_recover": "Never open an unsupported bottle or home through nearby vessels. Preserve action capacity for safe withdrawal and required homing, accounting for expanded trajectories. finish terminates the attempt but does not establish success; missing native confirmation and partial transfer remain unsuccessful or unverified."
+      }
+    ],
+    "capability_gaps": [
+      "No local whole-cycle grasp–transport–tilt–restore–release reachability and collision preflight; plan_pose and plan_relative_pose check requested motions from current state only.",
+      "No force/tactile contact or liquid-volume sensor. Visual attachment and flow observations cannot certify retention force or essentially complete delivered volume.",
+      "No integrated uncertainty-qualified reconstruction for arbitrary noncircular, tilted or visually ambiguous bottle outlets; fit_rim supports only its stated geometry, and body envelopes do not replace outlet measurements.",
+      "No local measured emission-speed/direction model or certified liquid landing-footprint controller.",
+      "No integrated complete grasp controller with native qualification; approach_close is contract-tested and requires clear staging plus subsequent visual review."
+    ],
+    "first_experiment": "Run one complete native attempt on the delivered random instance, with the full 400-action limit, no reset and no artificial short wall-clock cutoff. Test whether improved current-view geometric evidence and staged attachment verification enable safe complete pouring where the recorded attempts stalled in perception.\n\nStart with economical bottle/cup inspection and accepted multiview measurements. Budget at most two purposeful checked view changes and at most 16 non-motion tool/model calls per observation, normally ending measurement work by call 12. Do not reuse any recorded coordinates, pixels or inferred layout. Record rejection reasons and actual action consumption.\n\nFrom clear staging, close, inspect contact, capture attachment, and perform an approximately 2 cm checked retention lift. If it succeeds and live gates pass, explicitly continue to upright transport, outlet alignment, incremental tilt, observed drainage toward essentially all liquid, full upright restoration, support placement, release, withdrawal and home. The lift is an initial diagnostic stage, not the experiment endpoint.\n\nProtect an initial 80-action ending reserve, increasing it when route and public timing diagnostics require. Use remaining actions for measurement motions, grasp, transport and drainage; account for expanded trajectories rather than nominal step minima. Permit only one safe regrasp and one materially changed alternative per encountered motion refusal, subject to the overall budget and reserve.\n\nEarly termination is permitted only for actual ambiguity, safety refusal, loss of retention/containment, unreachable geometry or inadequate remaining budget. Record safe recovery as recovery, not task success. The primary endpoint is complete native success after essentially all liquid is transferred and the bottle is restored upright; motion completion, retention and partial filling are secondary observations only.",
+    "scope": "Reference-informed, not yet native-qualified. Use only local advertised tools."
+  },
+  {
+    "scope": "Task-local reviewed public evidence and explicitly unverified hypotheses. Not scene coordinates, runtime capabilities, native success, or authority to override task, geometry, motion, budget, or reference requirements. Source paths are provenance only; do not read files during control.",
+    "findings": [
+      {
+        "id": "sam-does-not-resolve-outlet",
+        "kind": "negative_result",
+        "finding": "Offline local SAM on archived RGB produced plausible outer bottle/cup masks in the high view, but the wrist bottle was cut off by the frame and the selected high-scoring mask included background headphone regions. Adding explicit positive/negative points did not remove truncation or multiple components. Outer-body segmentation did not establish an open inner bottle outlet.",
+        "limitations": "SAM is NOT integrated into this shared code-policy catalogue. Model scores are not segmentation accuracy. Only the box-only previews were visually reviewed; the point-prompt outputs were checked numerically. This experiment does not establish a bottle shape, aperture, liquid state, grasp or native success.",
+        "next_experiment": "Do not repeat a missing-capability request as if SAM were already available or as if an outer mask would solve outlet geometry. Within the existing plan, choose a bounded view change aimed at exposing the actual ambiguous outlet edge, not merely enlarging a clipped body. Reacquire current pixels, check actual advertised geometric tools and their unchanged uncertainty gates. If observations remain insufficient, state the concrete unresolved evidence without inventing it. Any future perception integration must create a new frozen toolchain."
+      }
+    ]
+  },
+  {
+    "diagnosis": "Keep approach_close and both regressions unchanged: the latest attempt stopped before contact, so no recipe-code defect is demonstrated. Preserve the reviewed first experiment: one complete native attempt, continuing beyond retention when live gates pass.\n\nThe official outcome was failure, score 0; this is not a scene observation. Policy reports describe unresolved outlet identity despite unobstructed top views. outline_candidates returned unknown, not evidence of a cap. No accepted outlet geometry followed. Recognition blocked geometry; object tracking, grasp retention, loaded planning and flow remain untested. Both viewing motions passed TCP verification, consuming 18 and 11 actions; home consumed 20. Trajectory expansion is not an API failure. No motion refusal or action exhaustion is shown. The separate synthesis citation error is a provenance failure, not robot evidence; use only supplied evidence here.\n\nSpecific change: replace the second upward, more-downward-looking inspection with a contrastive viewing hypothesis. From current RGB and calibration, identify the ambiguous boundary and choose a checked lateral/shallower viewing ray intended to reveal separation between lip and interior surface, while preserving boundary coverage and finger clearance. Do not merely enlarge the same top-down appearance. Use an existing alternate camera first if informative; any visibility-only motion counts toward the two-move limit. This refines, rather than abandons, the reviewed purposeful-view strategy.\n\nReviewed offline SAM findings support rejecting outer masks as outlet evidence: truncation and background components persisted. SAM is not integrated; model scores are not accuracy, and only box previews were visually reviewed. No archived geometry enters control.\n\nRiskiest assumption: an attainable contrasting ray exposes sufficient outlet evidence within two moves. Certified visibility prediction, arbitrary-outlet reconstruction, whole-cycle preflight, tactile retention and liquid-volume sensing remain unavailable. External commands and capability requests do not install them.",
+    "lesson": "When unobstructed top views still cannot distinguish an opening from a solid surface, stop repeating elevation or magnification. Hypothesized cause: the views preserve the same ambiguous appearance. Unverified recovery: name the unresolved boundary, inspect available current cameras, then use a remaining viewing allowance for a checked contrasting lateral/shallower ray with lip coverage and finger clearance. Inspect the actual result. An outer mask, colored interior or empty edge extraction cannot certify an outlet; SAM is unavailable locally.\n\nRun one complete 400-action native attempt without reset or artificial cutoff. Allow two purposeful viewing moves total; aim for 12 measurement calls within 16 per observation. No waits to renew calls. Require identified bottle/cup, accepted same-boundary multiview geometry and hand/body clearance. Use fit_rim only with genuinely observed, broadly distributed samples satisfying its input contract; never fabricate hidden edges or relax uncertainty gates. Reacquire current pixels and IDs after motion.\n\nProtect initially 80 ending actions, increasing for expanded paths. Establish grasp orientation in clear space before short approach translation. Use approach_close only from clear staging with current geometry and reserve; TCP zero is grasp center. Inspect contact, capture 3..8 localized non-collinear bottle features, then make a checked approximately 2 cm lift. Require visible support separation and consistent attachment before transport; closure and TCP convergence are not retention.\n\nAfter passing gates, continue upright transport, fresh outlet/cup alignment, small checked outlet-pivot tilts and short observed drainage holds toward essentially all liquid. Recheck attachment, sweep and containment through rotation. Absent flow does not prove empty. Restore fully upright for the native transfer check, then set down supported, release, inspect separation, withdraw upward if low and home.\n\nOn ambiguity, slip, spill, lost tracks or refusal, inspect actual state and diagnostics. Permit one safe regrasp and one materially changed alternative per refusal within reserve; no retry chain. Keep fingertip, collision, clearance, IK and continuity checks enabled. Only complete native success qualifies; this recovery remains unvalidated.",
+    "verified_recovery": false,
+    "scope": "Hypothesis from public evidence; validate with native trials."
+  },
+  {
+    "diagnosis": "Keep approach_close and both regressions unchanged: the latest attempt never reached contact, so it provides no evidence of a recipe-code defect. Retain the reviewed first experiment: a complete native attempt, not a pickup-only probe.\n\nThe official failure and score 0 are outcomes, not scene observations. Policy feedback records a rim-coverage rejection followed by a near-upward-model rejection after a lateral, shallower view. Neither error proves the bottle is tilted, noncircular or capped. Outlet recognition remained unresolved; outline_candidates returned unknown. The second fit reused exactly the earlier high-camera samples with a new frame ID; the excerpt does not establish independent remeasurement. This is a provenance risk, not proof the pixels were wrong.\n\nThe second viewing motion passed TCP verification and consumed 12 actions despite a nominal six-step request. Home consumed 20; termination was at step 53. No action exhaustion, motion refusal or API malfunction is demonstrated. Object tracking, grasp retention, loaded planning and liquid flow remain untested. The capability request correctly returned requires_integration.\n\nSpecific change: replace another automatic lateral/shallower retry with a two-camera evidence audit before fitting or spending the remaining view. Independently reacquire both boundaries, identify inner versus outer edges, and assess native-resolution coverage in the weaker camera. Choose a checked view only for a named deficiency while preserving useful coverage in the other view. Do not interpret a fitted-normal rejection as observed physical tilt or switch models merely to evade rejection.\n\nOffline SAM findings reinforce that outer masks cannot establish an outlet. SAM is not integrated; only box previews were visually reviewed and model scores are not accuracy. No archived measurements enter control. Riskiest assumption: a supported, identifiable outlet can be measured within two viewing moves. Arbitrary-outlet reconstruction, whole-cycle preflight, tactile retention and volume sensing remain unavailable.",
+    "lesson": "When a contrasting view still yields coverage or rim-normal rejection, suspect boundary mismatch, weak-view evidence or model incompatibility; the error alone does not identify which. Unverified recovery: audit both current original-resolution images before one changed-evidence retry. Re-select the same physical boundary independently in each frame, distinguishing inner opening from outer lip. New frame IDs do not refresh old selections. Use only genuinely observed samples meeting spacing and coverage contracts; never fabricate hidden arcs. Do not relax uncertainty gates, force an upright normal or change calibration. A remaining checked view must address a named deficiency, not merely repeat a lateral move. If evidence stays inadequate, recover safely and state what is unresolved.\n\nRun the reviewed complete 400-action attempt, without reset or artificial cutoff. Allow two purposeful viewing moves total, normally 12 measurement calls within 16 calls per observation; no waits to renew calls. Protect initially 80 ending actions, increasing for expanded trajectories. Require identified bottle/cup, accepted opening/outlet geometry and conservative hand/body clearance.\n\nEstablish grasp orientation in clear space, then use approach_close with current geometry and reserve. TCP zero is grasp center. Inspect contact, capture 3..8 localized non-collinear bottle features, and perform a checked approximately 2 cm lift. Require visible support separation and consistent attachment before transport; closure and TCP convergence are not retention.\n\nIf gates pass, continue upright transport, fresh outlet alignment, checked incremental outlet-pivot tilts and short observed drainage holds toward essentially all liquid. Recheck retention through rotation, sweep clearance and containment. Absent flow does not prove empty. Restore fully upright for the native transfer check, set down supported, release, inspect separation, withdraw upward if low, then home.\n\nOn slip, spill, lost tracks or refusal, inspect actual state. Permit at most one safe regrasp and one materially changed alternative per refusal within reserve. Keep fingertip, collision, clearance, IK and joint-continuity checks enabled. Only complete native success qualifies; these recoveries remain unvalidated.",
+    "verified_recovery": false,
+    "scope": "Hypothesis from public evidence; validate with native trials."
+  }
+]

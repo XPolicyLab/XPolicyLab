@@ -1,0 +1,26 @@
+{
+  "authorization": "用户明确要求：先将这版合入正式的skill",
+  "published_at": "2026-10-26T18:00:11.982212+00:00",
+  "candidate": "orimapi/skills/code_skill_rsi/fill_pen_holder/candidates/candidate-008",
+  "candidate_bundle_sha256": "f3effaa0d51ff5597f5b8bd817f3efe77e9ebc2c0e6bd3657237007a691073e2",
+  "previous_formal_archive": "orimapi/skills/code_skill_rsi/fill_pen_holder/publication/previous-formal-before-c008-20261026T180011Z",
+  "qualification": {
+    "published": true,
+    "mode": "user_authorized_unqualified",
+    "tested_seeds": [
+      0,
+      1
+    ],
+    "successful_seeds": [],
+    "untested_seeds": [
+      2
+    ],
+    "standard_qualified": false
+  },
+  "runtime_and_llm_experience_byte_identical": true,
+  "changes_at_publication": [
+    "Rebase shared manifest paths and declare existing Generator dependency",
+    "Add publication metadata and summary; replace default formal configuration parameters"
+  ],
+  "evidence": "Frozen c008 native trials; no new native simulation for byte-identical publication."
+}

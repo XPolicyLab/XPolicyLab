@@ -1,0 +1,23 @@
+[
+  {
+    "lesson": "Identify only the three task bowls, keep IDs stable among distractors. Only current RGB and public robot calibration can guide actions."
+  },
+  {
+    "lesson": "Holding supported, positively empty and uncertain require different decisions. Do not conflate occlusion with loss; do not ignore positive loss evidence."
+  },
+  {
+    "lesson": "Relocation must be visually reviewed and currently localized before it becomes the stack base. Staging, destination and object dimensions are independent."
+  },
+  {
+    "lesson": "Inspect actual nesting after each release. Reacquire and regrasp the same bowl after a clear miss; uncertain alone is not a failure verdict."
+  },
+  {
+    "lesson": "A new empty relocation site is optional. Prefer nesting onto a currently supported task bowl with visually exposed rim and clear overhead access; a failed free-space proposal must not block all direct transfers."
+  },
+  {
+    "lesson": "Failed remeasurement does not block an existing placement plan: retain the previous held offset and confirmed destination. Fresh geometry improves an estimate when available; absence of a new fit is not a new prohibition."
+  },
+  {
+    "lesson": "Use bowl-centered local planning with its opening generally upward; no fixed gripper heading. Intermediate poses are soft targets, final nesting aligns the bowl center. Try Cartesian motion first, graph/trajectory search second. A numerical motion failure changes the local action without re-asking whether the unchanged held bowl is still held. Native budget is advisory until native termination."
+  }
+]
