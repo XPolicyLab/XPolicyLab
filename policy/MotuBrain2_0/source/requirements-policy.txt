@@ -1,0 +1,24 @@
+# Policy environment dependencies; install separately from the RoboDojo simulator.
+torch==2.9.1
+numpy==1.26.4
+einops==0.8.1
+safetensors==0.5.3
+omegaconf==2.3.0
+PyYAML==6.0.2
+transformers==4.57.3
+diffusers==0.35.2
+tokenizers==0.22.1
+huggingface-hub==0.36.0
+opencv-python-headless==4.11.0.86
+av==16.1.0
+imageio==2.37.2
+megfile==5.0.2
+orjson==3.11.7
+scipy==1.14.1
+addict==2.4.0
+# XPolicyLab transport; simulator-side packages follow RoboDojo's own setup.
+h5py==3.12.1
+websockets==15.0.1
+msgpack==1.1.0
+msgpack-numpy==0.4.8
+pydantic==2.10.6

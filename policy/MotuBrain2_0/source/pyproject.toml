@@ -1,0 +1,10 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "motubrain-robodojo"
+version = "0.1.0"
+description = "Standalone MotuBrain2.0 RoboDojo evaluation policy"
+requires-python = ">=3.11,<3.13"
+dynamic = ["dependencies"]

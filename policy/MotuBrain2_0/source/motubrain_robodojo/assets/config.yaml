@@ -1,0 +1,47 @@
+# Inference architecture and sampling settings.
+model:
+  type: falcon.models.motubrain.MotubrainModel
+  patch_size: 1
+  v_in_channels: 48
+  hidden_size: 4096
+  ffn_hidden_size: 10880
+  text_dim: 3584
+  caption_length: 4096
+  num_layers: 24
+  num_attention_heads: 32
+  hidden_size_per_attention_head: 128
+  p_uncond: 0.0
+  action_dim: 55
+  action_mask_concat: true
+  action_loss_weight: 1.0
+  rope_interpolate_factor: 16.0
+  bridge_layer_range: [6, 24]
+  v2a: true
+  multiview_rope_mode: per_view
+  action_conditions:
+    geometry:
+      layers: [10, 12, 14, 16, 18, 20, 22, 24]
+      feature_dim: 1024
+  view_embed_mode: additive
+  view_embed_names: [cam_high, cam_left_wrist, cam_right_wrist]
+noise_scheduler:
+  rf_sigma: 1.0
+  timeshift: 6.0
+  action_rf_mu: 0.0
+  rf_mu: 1.791759469228055
+
+# Only sampling metadata required by the released inference loader.
+data:
+  dataloader:
+    sources:
+      robodojo:
+        dataset:
+          config:
+            sampling:
+              index_sampler:
+                num_frames: 9
+                video_downsample_rate: 4
+                video_action_freq: 4
+              sparse_history:
+                encoding: causal_9_to_3
+                frame_stride: 16
