@@ -1,0 +1,391 @@
+# Copyright 2026 The HEART Authors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+"""Shared protocol for high-level reasoning backends."""
+
+from __future__ import annotations
+
+import os
+import queue
+import threading
+from pathlib import Path
+from typing import TYPE_CHECKING, Protocol
+
+from roborsi.dashboard.events import DashboardEventSink
+from roborsi.dashboard.interaction import DashboardInteractionPort
+from roborsi.tools.toolkit import Toolkit
+from roborsi.utils.config import (
+    get_memory_dir,
+    get_repo_root,
+)
+
+if TYPE_CHECKING:
+    from pydantic_ai import BinaryContent
+    from pydantic_ai.models import Model
+
+    from roborsi.llm import LLMConfig
+    from roborsi.planner.codex_cli_config import CodexCliConfig
+    from roborsi.planner.provider_capture import ProviderCaptureConfig
+    from roborsi.runtime import RuntimeConfig
+
+#: MCP namespace prefix for RoboRSI tools (``mcp__<server>__<tool>``).
+#: Toolkits expose plain tool names; planners add/strip this prefix.
+MCP_TOOL_PREFIX = "mcp__roborsi__"
+REASONING_EFFORTS = ("none", "low", "medium", "high", "xhigh")
+
+
+def add_mcp_prefix(name: str) -> str:
+    """Return the namespaced MCP tool name for a bare tool name."""
+    if name.startswith(MCP_TOOL_PREFIX):
+        return name
+    return f"{MCP_TOOL_PREFIX}{name}"
+
+
+def strip_mcp_prefix(name: str) -> str:
+    """Return the bare tool name, dropping the MCP namespace if present."""
+    return name.removeprefix(MCP_TOOL_PREFIX)
+
+
+class PlannerFailure(Exception):
+    """Stop an episode with an explicit, machine-readable failure category.
+
+    Tools should return recoverable model mistakes as feedback. Raise this for
+    failures that must leave the tool loop, such as a lost benchmark connection.
+    """
+
+    def __init__(self, message: str, *, kind: str, reason: str) -> None:
+        super().__init__(message)
+        self.kind = kind
+        self.reason = reason
+
+
+class PlannerResult:
+    """Result returned by a planner invocation."""
+
+    __slots__ = (
+        "finish_result",
+        "messages",
+        "stats",
+        "error",
+        "error_kind",
+        "stop_reason",
+    )
+
+    def __init__(
+        self,
+        *,
+        finish_result: dict | None = None,
+        messages: list[dict] | None = None,
+        stats: dict | None = None,
+        error: str | None = None,
+        error_kind: str | None = None,
+        stop_reason: str | None = None,
+    ):
+        """Initialize a serializable planner result."""
+        self.finish_result = (
+            finish_result  # {"status": "success"/"failure"/"stuck", "summary": "..."}
+        )
+        self.messages = messages or []  # serialisable conversation transcript
+        self.stats = (
+            stats or {}
+        )  # {"total_input_tokens", "total_output_tokens", "turns_used", "tool_calls"}
+        self.error = error  # str | None  — set when the planner raises
+        self.error_kind = error_kind
+        self.stop_reason = stop_reason
+
+
+class Planner(Protocol):
+    """A planner selects or supplies the actions used to solve a task.
+
+    It is given one system prompt, one initial user message, and a set of
+    tool definitions.  It returns a ``PlannerResult`` after the task is
+    finished or the turn budget is exhausted.
+    """
+
+    def solve(
+        self,
+        *,
+        system_prompt: str,
+        user_message: str | list[str | BinaryContent],
+        toolkit: Toolkit | None,
+        max_turns: int | None,
+        input_queue: queue.Queue[str | None] | None = None,
+        dashboard_interaction: DashboardInteractionPort | None = None,
+        cancel_event: threading.Event | None = None,
+    ) -> PlannerResult:
+        """Run the multi-turn agent loop until completion or budget.
+
+        Args:
+            system_prompt: System-level instructions (role, rules, workflow).
+            user_message: Initial user message (task description, first steps).
+            toolkit: The full :class:`~roborsi.tools.toolkit.Toolkit`
+                (common + robot tools). Backends derive ``tools_spec`` via
+                ``toolkit.get_tools_spec()`` and dispatch calls via
+                ``toolkit.execute_tool()``. CLI external-tool Agents may pass None.
+            max_turns: Maximum model turns (API/Claude) or completed assistant
+                and tool items (Codex SDK) before giving up. Codex CLI accepts
+                only None because its internal model turns cannot be capped.
+            input_queue: Optional queue of user-typed lines for interactive steering.
+            dashboard_interaction: Optional Dashboard interaction channel.
+            cancel_event: Optional episode cancellation signal. Pending deferred
+                tools must be released before waiting for transport cleanup.
+
+        Returns:
+            ``PlannerResult`` with finish status, conversation transcript,
+            token-usage stats, and optional error string.
+        """
+        ...
+
+
+# ---------------------------------------------------------------------------
+# Planner construction
+# ---------------------------------------------------------------------------
+
+
+def build_api_model(model: str | None, base_url: str | None = None) -> "Model":
+    """Resolve the pydantic-ai model used by the ``api`` planner.
+
+    This is the single provider-resolution path: both :func:`build_planner`
+    and the connectivity check in :mod:`roborsi.planner.check` call it, so a
+    passing check constructs the same model a real run will.
+
+    The API key is always read from the provider's own env vars (e.g.
+    ``ANTHROPIC_API_KEY``, ``OPENAI_API_KEY``). When ``base_url`` is given it
+    overrides the provider's base URL env var (e.g. ``ANTHROPIC_BASE_URL`` /
+    ``OPENAI_BASE_URL``).
+
+    Args:
+        model: Provider-prefixed model id, e.g. ``anthropic:claude-opus-4-8``.
+        base_url: Base URL overriding the provider's own env var.
+
+    Returns:
+        The resolved pydantic-ai ``Model``.
+
+    Raises:
+        ValueError: If ``model`` is empty.
+    """
+    if not model:
+        raise ValueError(
+            "the 'api' planner requires a model id; pass --model with a "
+            "provider prefix (e.g. 'anthropic:claude-opus-4-8', "
+            "'openai:gpt-5.5', 'openai-chat:glm-5.2')."
+        )
+
+    import inspect
+
+    from pydantic_ai.models import infer_model
+    from pydantic_ai.providers import infer_provider, infer_provider_class
+
+    def _provider_factory(provider_name: str):
+        """Build the provider for ``provider_name``."""
+        if not base_url:
+            return infer_provider(provider_name)
+        provider_cls = infer_provider_class(provider_name)
+        params = inspect.signature(provider_cls.__init__).parameters
+        kwargs = {}
+        if "base_url" in params:
+            kwargs["base_url"] = base_url
+        return provider_cls(**kwargs)
+
+    return infer_model(model, provider_factory=_provider_factory)
+
+
+def build_planner(
+    planner_type: str,
+    *,
+    output_dir: str | Path,
+    recipe_tag: str,
+    robot_name: str,
+    base_url: str | None = None,
+    model: str | None = None,
+    llm_config: LLMConfig | None = None,
+    max_tokens: int | None = 8192,
+    planner_timeout_s: int | None = None,
+    reasoning_effort: str = "none",
+    claude_code_max_budget_usd: float | None = None,
+    dashboard_events: DashboardEventSink,
+    no_images: bool = False,
+    runtime: RuntimeConfig | None = None,
+    include_image_reader: bool = True,
+    require_tool_call: bool = False,
+    working_dir: str | Path | None = None,
+    codex_cli: CodexCliConfig | None = None,
+    provider_capture: ProviderCaptureConfig | None = None,
+):
+    """Build a planner for the given backend, resolving credentials from env vars."""
+    # Imports are deferred to avoid a circular import: api_loop / claude_code /
+    # codex all import from this module (PlannerResult).
+
+    if codex_cli is not None and planner_type != "codex_cli":
+        raise ValueError("codex_cli settings require the codex_cli planner")
+    if provider_capture is not None:
+        from roborsi.planner.codex_cli_config import validate_capture_provider
+        from roborsi.planner.provider_capture import ProviderCaptureConfig
+
+        if planner_type not in {"codex", "codex_cli"}:
+            raise ValueError("provider_capture requires codex or codex_cli")
+        if not isinstance(provider_capture, ProviderCaptureConfig):
+            raise ValueError("provider_capture must be a ProviderCaptureConfig")
+        validate_capture_provider(provider_capture)
+
+    if runtime is not None and planner_type != "api":
+        raise ValueError("runtime is supported only by the api planner")
+    if runtime is not None and runtime.llm is not None:
+        if llm_config is not None or model is not None or base_url is not None:
+            raise ValueError("pass runtime.llm or llm_config/model/base_url, not both")
+        llm_config = runtime.llm
+    if llm_config is not None and planner_type != "api":
+        raise ValueError("llm_config is supported only by the api planner")
+    if llm_config is not None and (model is not None or base_url is not None):
+        raise ValueError("pass either llm_config or model/base_url")
+    if (
+        llm_config is not None
+        and (
+            llm_config.image_history_groups is not None
+            or llm_config.preserve_initial_image_count
+        )
+        and runtime is not None
+        and (
+            runtime.context_engine is not None
+            or runtime.context_engine_factory is not None
+        )
+    ):
+        raise ValueError(
+            "image history settings must be handled by the custom context_engine"
+        )
+
+    if planner_type == "api":
+        from roborsi.llm.retry import RetryLoggingModel, RetryPolicy
+        from roborsi.planner.api_loop import ApiAgentLoop
+
+        raw_model = (
+            llm_config.build_model() if llm_config else build_api_model(model, base_url)
+        )
+        api_model = RetryLoggingModel(
+            raw_model,
+            policy=llm_config.retry if llm_config else RetryPolicy(),
+            log_path=Path(output_dir) / "llm_errors.jsonl",
+        )
+        api_timeout_s = planner_timeout_s
+        if api_timeout_s is None:
+            api_timeout_s = int(os.environ.get("CELL_TIMEOUT_S", "1200"))
+        if api_timeout_s < 0:
+            raise ValueError("API planner timeout must be nonnegative")
+        return ApiAgentLoop(
+            model=api_model,
+            max_tokens=max_tokens,
+            reasoning_effort=reasoning_effort,
+            dashboard_events=dashboard_events,
+            no_images=no_images,
+            timeout_s=api_timeout_s or None,
+            image_history_groups=(
+                llm_config.image_history_groups if llm_config is not None else None
+            ),
+            runtime=runtime,
+            preserve_initial_image_count=(
+                llm_config.preserve_initial_image_count if llm_config is not None else 0
+            ),
+            include_image_reader=include_image_reader,
+            require_tool_call=require_tool_call,
+        )
+    if planner_type == "claude_code":
+        from roborsi.planner.claude_code import ClaudeCodePlanner
+
+        cc_timeout_s = planner_timeout_s
+        if cc_timeout_s is None:
+            cc_timeout_s = int(os.environ.get("CELL_TIMEOUT_S", "1200"))
+        cc_budget = claude_code_max_budget_usd
+        if cc_budget is None:
+            cc_budget = float(os.environ.get("MAX_BUDGET_USD", "10"))
+        return ClaudeCodePlanner(
+            output_dir=output_dir,
+            repo_root=working_dir or get_repo_root(),
+            model=model or "sonnet",
+            timeout_s=cc_timeout_s,
+            max_budget_usd=cc_budget,
+            extra_dirs=[str(get_memory_dir(robot_name))],
+            output_path=Path(output_dir) / f"claude_{recipe_tag}.txt",
+            dashboard_events=dashboard_events,
+            reasoning_effort=reasoning_effort,
+        )
+    if planner_type == "codex_cli":
+        from dataclasses import replace
+
+        from roborsi.planner.codex_cli import CodexCliPlanner
+        from roborsi.planner.codex_cli_config import CodexCliConfig
+
+        if not isinstance(codex_cli, CodexCliConfig):
+            raise ValueError("codex_cli planner requires a CodexCliConfig")
+        if provider_capture is not None:
+            if codex_cli.provider_capture is not None:
+                raise ValueError(
+                    "provider_capture cannot be set in both planner and codex_cli"
+                )
+            codex_cli = replace(codex_cli, provider_capture=provider_capture)
+        if max_tokens is not None:
+            raise ValueError("codex_cli requires max_tokens=None")
+        if reasoning_effort not in (*REASONING_EFFORTS, "max"):
+            raise ValueError("unsupported codex_cli reasoning_effort")
+        cli_timeout_s = planner_timeout_s
+        if cli_timeout_s is None:
+            cli_timeout_s = int(
+                os.environ.get(
+                    "CODEX_TIMEOUT_S", os.environ.get("CELL_TIMEOUT_S", "1200")
+                )
+            )
+        if type(cli_timeout_s) is not int or cli_timeout_s < 0:
+            raise ValueError("codex_cli planner_timeout_s must be nonnegative")
+        if base_url is not None:
+            raise ValueError(
+                "codex_cli base_url belongs in its native provider configuration"
+            )
+        return CodexCliPlanner(
+            output_dir=output_dir,
+            repo_root=working_dir or get_repo_root(),
+            model=model,
+            timeout_s=cli_timeout_s,
+            dashboard_events=dashboard_events,
+            reasoning_effort=reasoning_effort,
+            config=codex_cli,
+        )
+    if planner_type == "codex":
+        from roborsi.planner.codex import CodexPlanner
+
+        cx_timeout_s = planner_timeout_s
+        if cx_timeout_s is None:
+            cx_timeout_s = int(
+                os.environ.get(
+                    "CODEX_TIMEOUT_S",
+                    os.environ.get("CELL_TIMEOUT_S", "1200"),
+                )
+            )
+        return CodexPlanner(
+            output_dir=output_dir,
+            repo_root=working_dir or get_repo_root(),
+            model=model,
+            timeout_s=cx_timeout_s,
+            extra_dirs=[str(get_memory_dir(robot_name))],
+            output_path=Path(output_dir) / f"codex_{recipe_tag}.txt",
+            dashboard_events=dashboard_events,
+            reasoning_effort=reasoning_effort,
+            **({"provider_capture": provider_capture} if provider_capture else {}),
+        )
+    if planner_type == "flash":
+        from roborsi.planner.flash import FlashPlanner
+
+        return FlashPlanner(
+            recipe_tag=recipe_tag,
+            robot_name=robot_name,
+        )
+    raise ValueError(f"unknown planner_type: {planner_type}")
