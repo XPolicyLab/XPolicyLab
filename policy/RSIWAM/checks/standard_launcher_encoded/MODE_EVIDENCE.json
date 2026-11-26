@@ -1,0 +1,25 @@
+{
+  "derived": true,
+  "configured_modes": [
+    "encoded"
+  ],
+  "recorded_run_mode": "encoded",
+  "actual_observation_file": "originals/mode_env_observation/20261102T050811.770044Z.json",
+  "observed_role": "server",
+  "observed_during_literal_run": true,
+  "pid_and_starttime_match_release_server": true,
+  "actual_selected_environment": {
+    "DEBUG_OBS_ENCODED": "1",
+    "EVAL_ENV_TYPE": "debug",
+    "CUDA_VISIBLE_DEVICES": "GPU-269d371f-3c0e-f4b5-7661-63bab0e9a682",
+    "CONDA_PREFIX": "/run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean",
+    "PYTHONNOUSERSITE": "1",
+    "PYTHONUNBUFFERED": "1"
+  },
+  "actual_executable": "/run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/bin/python3.10",
+  "client_environment_independently_captured": false,
+  "encoded_wire_payload_independently_captured": false,
+  "scope": "Direct observation establishes the live server inherited DEBUG_OBS_ENCODED=1 in the selected r5 environment. It is not an independent client-environment or encoded-wire-payload capture. Mode configuration and the unchanged standard launcher provide the execution-chain context.",
+  "later_postcompletion_query": "originals/mode_env_observation/POST_COMPLETION_QUERY_SCOPE.json",
+  "later_zero_byte_query_is_not_an_evaluation_result": true
+}

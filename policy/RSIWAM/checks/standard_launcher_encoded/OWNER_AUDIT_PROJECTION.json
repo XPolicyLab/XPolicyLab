@@ -1,0 +1,28 @@
+{
+  "derived": true,
+  "source_collector": "owner remotely",
+  "source_path": "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/raw/encoded_gpu1_final_readonly_r1/fresh_audit.json",
+  "source_sha256": "f003bac409ef8d454c692b08fa8e34040f530d7171dcd4e93fd192c96549eda4",
+  "source_bytes": 82388,
+  "process_inventory_omitted": true,
+  "checked_at_epoch": 1793596239.395594,
+  "errors": [],
+  "recorded_owned_identity_count": 338,
+  "actual_identity_present_count": 0,
+  "exact_live_owned_count": 0,
+  "private_fd_holders": [],
+  "exclusive_private_lock_available": true,
+  "reservation_selected_fields": {
+    "owner_id": "RSIWAM:literal-776c9f3:primary:encoded-gpu1-r4:encoded",
+    "gpu_index": 1,
+    "gpu_uuid": "GPU-269d371f-3c0e-f4b5-7661-63bab0e9a682",
+    "released_at": 1793596203.926253
+  },
+  "database_mode": "read_only",
+  "database_changes": false,
+  "signals_sent": [],
+  "gpu_operations": 0,
+  "source_preflight_after_completion": "CPU_PREFLIGHT_PASS",
+  "independent_local_verification_file": "source_review/OWNER_CAPTURE_LOCAL_VERIFICATION.json",
+  "scope": "Exact owned-process and private kernel-lock cleanup evidence. Not a claim that every unrelated host process was readable."
+}

@@ -1,0 +1,3 @@
+Wrote 1 policy tables (6 filled cells, 1 in overview, 0 complete) to /run/ti/RSIWAM-official6300-queue-20261101-r3/report_snapshots/official_summary_20261102T055554.189936Z/eval_result/RoboDojo/_summary.md
+Result/video check: 7 latest timestamp folders, 0 mismatches
+All records have head, left_wrist, and right_wrist videos.

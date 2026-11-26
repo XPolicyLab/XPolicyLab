@@ -1,0 +1,17 @@
+{
+  "status": "FOCUSED_SELECTION_REVIEW_NO_CREDENTIAL_OR_CONTACT_MATCHES",
+  "scope": "public_payload only",
+  "matched_credential_or_contact_patterns": [],
+  "full_config_excluded": true,
+  "full_environment_excluded": true,
+  "whole_machine_process_inventory_excluded": true,
+  "raw_fresh_audit_unrelated_process_details_excluded": true,
+  "originals_unmodified": true,
+  "structural_review": "Guardian/release known_owned contains only identities recorded in this run's process group/session, not a host-wide process list. Environment evidence contains a small named variable selection for the matching server.",
+  "retained_bookkeeping_identifiers": "Historical initializer/reservation tokens, own process identities, GPU UUID and runtime paths are retained in byte-preserved release/initialization evidence. They are task bookkeeping identities, not account access credentials.",
+  "limitations": "Focused pattern and structural review, not exhaustive secret detection.",
+  "retained_owner_audit_scope": "Raw owner fresh-audit process inventory is excluded; only aggregate own-cleanup fields and source SHA are published. Guardian/release originals retain their already scoped own-process lineage.",
+  "root_scoped_raw_process_inventory_excluded": true,
+  "root_scoped_projection_preserves_exact_source_sha_and_scope": true,
+  "final_focused_scan_matches": []
+}

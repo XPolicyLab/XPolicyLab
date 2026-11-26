@@ -1,0 +1,160 @@
+Looking in indexes: https://mirror.nju.edu.cn/pypi/web/simple
+Requirement already satisfied: torch>=2.5 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from -r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 3)) (2.5.1+cu118)
+Requirement already satisfied: torchvision>=0.20 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from -r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 4)) (0.20.1+cu118)
+Requirement already satisfied: accelerate>=1.0 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from -r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 5)) (1.15.0)
+Requirement already satisfied: hydra-core==1.3.2 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from -r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 6)) (1.3.2)
+Requirement already satisfied: omegaconf==2.3.0 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from -r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 7)) (2.3.0)
+Requirement already satisfied: transformers<5,>=4.49 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from -r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 8)) (4.57.6)
+Requirement already satisfied: safetensors>=0.5 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from -r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 9)) (0.8.0)
+Collecting numpy<2,>=1.26 (from -r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 10))
+  Using cached numpy-1.26.4-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (61 kB)
+Requirement already satisfied: pandas<3,>=2.2 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from -r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 11)) (2.3.3)
+Requirement already satisfied: pyarrow>=17 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from -r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 12)) (25.0.1)
+Requirement already satisfied: av>=14 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from -r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 13)) (17.1.0)
+Requirement already satisfied: einops>=0.8 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from -r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 14)) (0.8.2)
+Requirement already satisfied: Pillow>=10 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from -r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 15)) (12.3.0)
+Requirement already satisfied: h5py>=3.11 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from -r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 16)) (3.16.0)
+Requirement already satisfied: rich>=13 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from -r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 17)) (15.0.0)
+Requirement already satisfied: tqdm>=4.66 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from -r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 18)) (4.70.1)
+Requirement already satisfied: imageio>=2.36 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from -r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 19)) (2.38.0)
+Requirement already satisfied: imageio-ffmpeg>=0.5 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from -r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 20)) (0.7.0)
+Requirement already satisfied: ftfy>=6.3 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from -r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 21)) (6.3.1)
+Requirement already satisfied: regex>=2024.11 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from -r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 22)) (2026.9.29)
+Requirement already satisfied: opencv-python>=4.10 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from -r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 23)) (4.11.0.86)
+Requirement already satisfied: msgpack>=1.0 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from -r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 24)) (1.2.4)
+Requirement already satisfied: websockets>=12 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from -r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 25)) (16.1.1)
+Requirement already satisfied: datasets==3.6.0 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from -r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 26)) (3.6.0)
+Requirement already satisfied: jsonlines==4.0.0 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from -r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 27)) (4.0.0)
+Requirement already satisfied: PyYAML>=6 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from -r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 28)) (6.0.3)
+Requirement already satisfied: filelock>=3 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from -r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 29)) (4.1.0)
+Requirement already satisfied: antlr4-python3-runtime==4.9.* in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from hydra-core==1.3.2->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 6)) (4.9.3)
+Requirement already satisfied: packaging in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from hydra-core==1.3.2->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 6)) (26.3)
+Requirement already satisfied: dill<0.3.9,>=0.3.0 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from datasets==3.6.0->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 26)) (0.3.8)
+Requirement already satisfied: requests>=2.32.2 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from datasets==3.6.0->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 26)) (2.34.2)
+Requirement already satisfied: xxhash in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from datasets==3.6.0->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 26)) (4.0.2)
+Requirement already satisfied: multiprocess<0.70.17 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from datasets==3.6.0->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 26)) (0.70.16)
+Requirement already satisfied: fsspec<=2025.3.0,>=2023.1.0 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from fsspec[http]<=2025.3.0,>=2023.1.0->datasets==3.6.0->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 26)) (2025.3.0)
+Requirement already satisfied: huggingface-hub>=0.24.0 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from datasets==3.6.0->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 26)) (0.36.2)
+Requirement already satisfied: attrs>=19.2.0 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from jsonlines==4.0.0->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 27)) (26.1.0)
+Requirement already satisfied: tokenizers<=0.23.0,>=0.22.0 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from transformers<5,>=4.49->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 8)) (0.22.2)
+Requirement already satisfied: python-dateutil>=2.8.2 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from pandas<3,>=2.2->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 11)) (3.0.0)
+Requirement already satisfied: pytz>=2020.1 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from pandas<3,>=2.2->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 11)) (2026.6)
+Requirement already satisfied: tzdata>=2022.7 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from pandas<3,>=2.2->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 11)) (2026.6)
+Requirement already satisfied: aiohttp!=4.0.0a0,!=4.0.0a1 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from fsspec[http]<=2025.3.0,>=2023.1.0->datasets==3.6.0->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 26)) (3.14.5)
+Requirement already satisfied: hf-xet<2.0.0,>=1.1.3 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from huggingface-hub>=0.24.0->datasets==3.6.0->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 26)) (1.8.0)
+Requirement already satisfied: typing-extensions>=3.7.4.3 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from huggingface-hub>=0.24.0->datasets==3.6.0->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 26)) (4.16.0)
+Requirement already satisfied: networkx in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from torch>=2.5->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 3)) (3.4.2)
+Requirement already satisfied: jinja2 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from torch>=2.5->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 3)) (3.1.6)
+Requirement already satisfied: nvidia-cuda-nvrtc-cu11==11.8.89 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from torch>=2.5->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 3)) (11.8.89)
+Requirement already satisfied: nvidia-cuda-runtime-cu11==11.8.89 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from torch>=2.5->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 3)) (11.8.89)
+Requirement already satisfied: nvidia-cuda-cupti-cu11==11.8.87 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from torch>=2.5->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 3)) (11.8.87)
+Requirement already satisfied: nvidia-cudnn-cu11==9.1.0.70 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from torch>=2.5->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 3)) (9.1.0.70)
+Requirement already satisfied: nvidia-cublas-cu11==11.11.3.6 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from torch>=2.5->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 3)) (11.11.3.6)
+Requirement already satisfied: nvidia-cufft-cu11==10.9.0.58 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from torch>=2.5->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 3)) (10.9.0.58)
+Requirement already satisfied: nvidia-curand-cu11==10.3.0.86 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from torch>=2.5->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 3)) (10.3.0.86)
+Requirement already satisfied: nvidia-cusolver-cu11==11.4.1.48 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from torch>=2.5->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 3)) (11.4.1.48)
+Requirement already satisfied: nvidia-cusparse-cu11==11.7.5.86 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from torch>=2.5->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 3)) (11.7.5.86)
+Requirement already satisfied: nvidia-nccl-cu11==2.21.5 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from torch>=2.5->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 3)) (2.21.5)
+Requirement already satisfied: nvidia-nvtx-cu11==11.8.86 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from torch>=2.5->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 3)) (11.8.86)
+Requirement already satisfied: triton==3.1.0 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from torch>=2.5->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 3)) (3.1.0)
+Requirement already satisfied: sympy==1.13.1 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from torch>=2.5->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 3)) (1.13.1)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from sympy==1.13.1->torch>=2.5->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 3)) (1.3.0)
+Requirement already satisfied: psutil in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from accelerate>=1.0->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 5)) (7.2.2)
+Requirement already satisfied: markdown-it-py>=2.2.0 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from rich>=13->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 17)) (4.2.0)
+Requirement already satisfied: pygments<3.0.0,>=2.13.0 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from rich>=13->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 17)) (2.21.0)
+Requirement already satisfied: wcwidth in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from ftfy>=6.3->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 21)) (0.9.4)
+Requirement already satisfied: aiohappyeyeballs>=2.5.0 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets==3.6.0->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 26)) (2.7.1)
+Requirement already satisfied: aiosignal>=1.4.0 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets==3.6.0->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 26)) (1.4.0)
+Requirement already satisfied: async-timeout<6.0,>=4.0 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets==3.6.0->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 26)) (5.0.1)
+Requirement already satisfied: frozenlist>=1.1.1 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets==3.6.0->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 26)) (1.8.0)
+Requirement already satisfied: multidict<8.0,>=4.5 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets==3.6.0->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 26)) (7.1.0)
+Requirement already satisfied: propcache>=0.2.0 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets==3.6.0->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 26)) (0.5.4)
+Requirement already satisfied: yarl<2.0,>=1.25.1 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets==3.6.0->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 26)) (1.25.1)
+Requirement already satisfied: idna>=2.0 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from yarl<2.0,>=1.25.1->aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets==3.6.0->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 26)) (3.20)
+Requirement already satisfied: mdurl~=0.1 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from markdown-it-py>=2.2.0->rich>=13->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 17)) (0.1.2)
+Requirement already satisfied: six>=1.6 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from python-dateutil>=2.8.2->pandas<3,>=2.2->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 11)) (1.17.0)
+Requirement already satisfied: charset_normalizer<4,>=2 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from requests>=2.32.2->datasets==3.6.0->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 26)) (3.5.2)
+Requirement already satisfied: urllib3<3,>=1.26 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from requests>=2.32.2->datasets==3.6.0->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 26)) (2.8.0)
+Requirement already satisfied: certifi>=2023.5.7 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from requests>=2.32.2->datasets==3.6.0->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 26)) (2026.10.23)
+Requirement already satisfied: MarkupSafe>=2.0 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from jinja2->torch>=2.5->-r /run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/requirements.txt (line 3)) (3.0.4)
+Using cached numpy-1.26.4-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (18.2 MB)
+Installing collected packages: numpy
+  Attempting uninstall: numpy
+    Found existing installation: numpy 2.2.6
+    Uninstalling numpy-2.2.6:
+      Successfully uninstalled numpy-2.2.6
+Successfully installed numpy-1.26.4
+Looking in indexes: https://mirror.nju.edu.cn/pypi/web/simple
+Obtaining file:///run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: rsiwam-frozen-runtime
+  Building editable for rsiwam-frozen-runtime (pyproject.toml): started
+  Building editable for rsiwam-frozen-runtime (pyproject.toml): finished with status 'done'
+  Created wheel for rsiwam-frozen-runtime: filename=rsiwam_frozen_runtime-0.1.0-0.editable-py3-none-any.whl size=1450 sha256=c8363f36990643184076cbb2dad46bfc18492cf0fadc02d9aa52fbcd908333d3
+  Stored in directory: /run/ti/RSIWAM-standard-launcher-20261101-r1/scratch/tmp_r5/pip-ephem-wheel-cache-bb_ostr1/wheels/84/7f/17/e9ae0b0540a28c4c8f9aecce5b495b82d64e9b35efa1996fd4
+Successfully built rsiwam-frozen-runtime
+Installing collected packages: rsiwam-frozen-runtime
+  Attempting uninstall: rsiwam-frozen-runtime
+    Found existing installation: rsiwam-frozen-runtime 0.1.0
+    Uninstalling rsiwam-frozen-runtime-0.1.0:
+      Successfully uninstalled rsiwam-frozen-runtime-0.1.0
+Successfully installed rsiwam-frozen-runtime-0.1.0
+Looking in indexes: https://mirror.nju.edu.cn/pypi/web/simple
+Obtaining file:///run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: numpy>=1.23 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from xpolicylab==0.0.1) (1.26.4)
+Requirement already satisfied: pyyaml>=6 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from xpolicylab==0.0.1) (6.0.3)
+Requirement already satisfied: opencv-python-headless>=4.8 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from xpolicylab==0.0.1) (5.0.0.93)
+Requirement already satisfied: h5py>=3.8 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from xpolicylab==0.0.1) (3.16.0)
+Requirement already satisfied: websockets>=14.0 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from xpolicylab==0.0.1) (16.1.1)
+Requirement already satisfied: msgpack>=1.0.8 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from xpolicylab==0.0.1) (1.2.4)
+Requirement already satisfied: msgpack-numpy>=0.4.8 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from xpolicylab==0.0.1) (0.4.8)
+Requirement already satisfied: pydantic>=2.5 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from xpolicylab==0.0.1) (2.14.2)
+INFO: pip is looking at multiple versions of opencv-python-headless to determine which version is compatible with other requirements. This could take a while.
+Collecting opencv-python-headless>=4.8 (from xpolicylab==0.0.1)
+  Downloading opencv_python_headless-4.14.0.94-cp37-abi3-manylinux_2_28_x86_64.whl (62.0 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 62.0/62.0 MB 78.9 MB/s  0:00:00
+  Downloading opencv_python_headless-4.13.0.92-cp37-abi3-manylinux_2_28_x86_64.whl (60.4 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 60.4/60.4 MB 147.7 MB/s  0:00:00
+  Downloading opencv_python_headless-4.13.0.90-cp37-abi3-manylinux_2_28_x86_64.whl (62.5 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 62.5/62.5 MB 165.8 MB/s  0:00:00
+  Downloading opencv_python_headless-4.12.0.88-cp37-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (54.0 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 54.0/54.0 MB 35.4 MB/s  0:00:01
+  Downloading opencv_python_headless-4.11.0.86-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (50.0 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 50.0/50.0 MB 95.4 MB/s  0:00:00
+Requirement already satisfied: annotated-types>=0.6.0 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from pydantic>=2.5->xpolicylab==0.0.1) (0.8.0)
+Requirement already satisfied: pydantic-core==2.50.2 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from pydantic>=2.5->xpolicylab==0.0.1) (2.50.2)
+Requirement already satisfied: typing-extensions>=4.16.0 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from pydantic>=2.5->xpolicylab==0.0.1) (4.16.0)
+Requirement already satisfied: typing-inspection>=0.4.4 in /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages (from pydantic>=2.5->xpolicylab==0.0.1) (0.4.4)
+Building wheels for collected packages: xpolicylab
+  Building editable for xpolicylab (pyproject.toml): started
+  Building editable for xpolicylab (pyproject.toml): finished with status 'done'
+  Created wheel for xpolicylab: filename=xpolicylab-0.0.1-0.editable-py3-none-any.whl size=7091 sha256=f995066ea9c9f493637473b6f343e5258d19d01ecc50bb194dc34dba9cbad1db
+  Stored in directory: /run/ti/RSIWAM-standard-launcher-20261101-r1/scratch/tmp_r5/pip-ephem-wheel-cache-7w9b0h4i/wheels/ad/c5/2d/0dd6e9103cc9ed7ff8022a4d8056986d50d013543009430d87
+Successfully built xpolicylab
+Installing collected packages: opencv-python-headless, xpolicylab
+  Attempting uninstall: opencv-python-headless
+    Found existing installation: opencv-python-headless 5.0.0.93
+    Uninstalling opencv-python-headless-5.0.0.93:
+      Successfully uninstalled opencv-python-headless-5.0.0.93
+  Attempting uninstall: xpolicylab
+    Found existing installation: xpolicylab 0.0.1
+    Uninstalling xpolicylab-0.0.1:
+      Successfully uninstalled xpolicylab-0.0.1
+
+Successfully installed opencv-python-headless-4.11.0.86 xpolicylab-0.0.1
+RSIWAM installed in the active policy environment; the preinstalled torch/torchvision versions were constrained throughout installation.

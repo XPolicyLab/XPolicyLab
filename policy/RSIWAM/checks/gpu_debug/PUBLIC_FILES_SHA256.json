@@ -1,0 +1,61 @@
+{
+  "schema": "rsiwam-public-gpu-evidence-files-v1",
+  "files": {
+    "ORIGINAL_DEBUG_FILES_SHA256.json": {
+      "bytes": 1627,
+      "sha256": "b56366b7d7d7bd3f14aaaa86b4c8a8ded426be7575d22ea9adad95375a9ba793"
+    },
+    "PUBLIC_SELECTION_REVIEW.json": {
+      "bytes": 3990,
+      "sha256": "aa61931d5d43e6a1935c0f18ae0ffe37f4ee499ac99015a82e67b4c1075be60d"
+    },
+    "README.txt": {
+      "bytes": 4856,
+      "sha256": "d2064b63c5ba0cd0b9241e2c72608c3768d32e4463b8a2e8506c4287a26a55f5"
+    },
+    "SUMMARY.json": {
+      "bytes": 4589,
+      "sha256": "927961a3436f0ecd841078e0cc32b16c60b020d3c1e26204801b1f97faa2f839"
+    },
+    "action_events.jsonl": {
+      "bytes": 1222,
+      "sha256": "ea5c2a2fe902cf39a75e9c590e8182d1de502d823a6fc7b1f70f68249d67e929"
+    },
+    "actions_001.npy": {
+      "bytes": 1664,
+      "sha256": "e343e29b07077542c46ebbec2e6d646626a287e460a1d9696cf972a0babc571a"
+    },
+    "actions_002.npy": {
+      "bytes": 1664,
+      "sha256": "e343e29b07077542c46ebbec2e6d646626a287e460a1d9696cf972a0babc571a"
+    },
+    "encoded.stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "encoded.stdout.log": {
+      "bytes": 1878,
+      "sha256": "0ecef98518abb2aa5339d2938ce13c79689a5430dc12b3632971ea12bd727dcc"
+    },
+    "load_identity.json": {
+      "bytes": 10034,
+      "sha256": "a745d832e493da6806ca23a4d5b4ce7cc1f54c9843763f27804992a48c728d49"
+    },
+    "plain.stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "plain.stdout.log": {
+      "bytes": 1878,
+      "sha256": "0ecef98518abb2aa5339d2938ce13c79689a5430dc12b3632971ea12bd727dcc"
+    },
+    "server.stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "server.stdout.log": {
+      "bytes": 1351,
+      "sha256": "74e18a61190cf4b3c3c1831ad06bea0c495570ff8f4849440ca8900a5ed858a6"
+    }
+  }
+}

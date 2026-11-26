@@ -1,0 +1,3 @@
+# This single hash-bound upstream file already has one extra newline at EOF.
+# Preserve its audited bytes; retain all other whitespace checks everywhere.
+bundle/src/recoverwam/recovery/policy.py whitespace=-blank-at-eof

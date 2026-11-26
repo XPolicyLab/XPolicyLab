@@ -1,0 +1,179 @@
+{
+  "seed": 0,
+  "per_task": 1,
+  "excluded_dimension": "additional",
+  "train_episodes": 3466,
+  "val_episodes": 34,
+  "held_out": [
+    {
+      "task_name": "arrange_largest_number",
+      "episode_index": 85,
+      "num_frames": 747
+    },
+    {
+      "task_name": "build_tower",
+      "episode_index": 163,
+      "num_frames": 729
+    },
+    {
+      "task_name": "classify_objects",
+      "episode_index": 251,
+      "num_frames": 652
+    },
+    {
+      "task_name": "cover_blocks",
+      "episode_index": 326,
+      "num_frames": 550
+    },
+    {
+      "task_name": "deposit_coin",
+      "episode_index": 430,
+      "num_frames": 114
+    },
+    {
+      "task_name": "fasten_screws",
+      "episode_index": 604,
+      "num_frames": 1439
+    },
+    {
+      "task_name": "fill_egg_holder",
+      "episode_index": 707,
+      "num_frames": 407
+    },
+    {
+      "task_name": "fill_pen_holder",
+      "episode_index": 801,
+      "num_frames": 1050
+    },
+    {
+      "task_name": "fold_clothes",
+      "episode_index": 917,
+      "num_frames": 298
+    },
+    {
+      "task_name": "hang_mugs",
+      "episode_index": 1081,
+      "num_frames": 519
+    },
+    {
+      "task_name": "imitate_sorting_sequence",
+      "episode_index": 1164,
+      "num_frames": 1079
+    },
+    {
+      "task_name": "insert_key",
+      "episode_index": 1291,
+      "num_frames": 176
+    },
+    {
+      "task_name": "insert_tubes",
+      "episode_index": 1350,
+      "num_frames": 320
+    },
+    {
+      "task_name": "make_kong",
+      "episode_index": 1460,
+      "num_frames": 367
+    },
+    {
+      "task_name": "make_toast",
+      "episode_index": 1597,
+      "num_frames": 586
+    },
+    {
+      "task_name": "match_and_pick_from_conveyor",
+      "episode_index": 1672,
+      "num_frames": 510
+    },
+    {
+      "task_name": "organize_table",
+      "episode_index": 1763,
+      "num_frames": 527
+    },
+    {
+      "task_name": "pack_objects_into_box",
+      "episode_index": 1854,
+      "num_frames": 744
+    },
+    {
+      "task_name": "play_Xylophone",
+      "episode_index": 1955,
+      "num_frames": 310
+    },
+    {
+      "task_name": "play_stacking_toy",
+      "episode_index": 2093,
+      "num_frames": 905
+    },
+    {
+      "task_name": "play_tic_tac_toe",
+      "episode_index": 2127,
+      "num_frames": 881
+    },
+    {
+      "task_name": "plug_in_charger",
+      "episode_index": 2281,
+      "num_frames": 196
+    },
+    {
+      "task_name": "pour_balls_into_vase",
+      "episode_index": 2367,
+      "num_frames": 430
+    },
+    {
+      "task_name": "pour_liquid_into_cup",
+      "episode_index": 2400,
+      "num_frames": 176
+    },
+    {
+      "task_name": "press_by_number",
+      "episode_index": 2539,
+      "num_frames": 347
+    },
+    {
+      "task_name": "push_T",
+      "episode_index": 2685,
+      "num_frames": 370
+    },
+    {
+      "task_name": "put_bottles_into_dustbin",
+      "episode_index": 2755,
+      "num_frames": 313
+    },
+    {
+      "task_name": "sort_nesting_dolls_by_size",
+      "episode_index": 2803,
+      "num_frames": 560
+    },
+    {
+      "task_name": "stack_blocks",
+      "episode_index": 2976,
+      "num_frames": 247
+    },
+    {
+      "task_name": "stack_bowls",
+      "episode_index": 3072,
+      "num_frames": 432
+    },
+    {
+      "task_name": "store_laptop_and_headphones",
+      "episode_index": 3184,
+      "num_frames": 629
+    },
+    {
+      "task_name": "swap_T",
+      "episode_index": 3217,
+      "num_frames": 276
+    },
+    {
+      "task_name": "swap_blocks",
+      "episode_index": 3308,
+      "num_frames": 438
+    },
+    {
+      "task_name": "sweep_blocks",
+      "episode_index": 3486,
+      "num_frames": 376
+    }
+  ]
+}

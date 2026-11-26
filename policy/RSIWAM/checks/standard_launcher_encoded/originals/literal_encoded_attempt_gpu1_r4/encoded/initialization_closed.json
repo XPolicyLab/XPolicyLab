@@ -1,0 +1,58 @@
+{
+  "guardian": {
+    "pid": 76737,
+    "starttime": "1554793940",
+    "state": "R",
+    "ppid": 76710,
+    "pgrp": 76737,
+    "session": 76737
+  },
+  "initialization_token": "4a21c236fdb6426ea7890b60d739782f",
+  "server": {
+    "identity": {
+      "pid": 76746,
+      "starttime": "1554793947",
+      "state": "S",
+      "ppid": 76738,
+      "pgrp": 76737,
+      "session": 76737
+    },
+    "argv": [
+      "python",
+      "-u",
+      "/run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/setup_policy_server.py",
+      "--config_path",
+      "/run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/deploy.yml",
+      "--overrides",
+      "port=59679",
+      "host=localhost",
+      "bench_name=RoboDojo",
+      "task_name=stack_bowls",
+      "ckpt_name=rsiwam-original32-lora33-step400",
+      "env_cfg_type=arx_x5",
+      "seed=7",
+      "policy_name=RSIWAM",
+      "action_type=ee",
+      ""
+    ],
+    "port": 59679,
+    "executable": "/run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/bin/python3.10",
+    "environment": {
+      "CUDA_VISIBLE_DEVICES": "GPU-269d371f-3c0e-f4b5-7661-63bab0e9a682",
+      "CUBLAS_WORKSPACE_CONFIG": ":4096:8",
+      "CONDA_PREFIX": "/run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean",
+      "PYTHONPATH": null,
+      "PYTHONNOUSERSITE": "1"
+    }
+  },
+  "first_action_counts": {
+    "episode_indices": [
+      0
+    ],
+    "episodes_finished": 0,
+    "action_steps": 4,
+    "eval_finished": false,
+    "traceback": false
+  },
+  "closed_at": 1793596179.4851556
+}

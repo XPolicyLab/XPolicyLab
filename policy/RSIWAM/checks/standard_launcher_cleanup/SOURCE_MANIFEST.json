@@ -1,0 +1,94 @@
+{
+  "schema": "SELECTED_ORIGINALS_WITH_SOURCE_PROVENANCE_V1",
+  "source_directory": "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_closure_20261102",
+  "source_index_sha256": "84a8efb186ecce445e5c2ecaf7dd818869e63ac9ea7b3029382bbc53e61e75bf",
+  "source_verification_sha256": "12c3b1e0eaf839d6c3672f300b346b0fb952dd3e7991f2dd170828f74285c9d7",
+  "all_10_original_source_files_verified_against_source_index": true,
+  "selected_originals": [
+    {
+      "public_path": "originals/literal_plain_orphan_reconciliation_r1/receipt.json",
+      "source_path": "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_closure_20261102/raw/literal_plain_orphan_reconciliation_r1/receipt.json",
+      "source_relative_path": "raw/literal_plain_orphan_reconciliation_r1/receipt.json",
+      "bytes": 3543,
+      "sha256": "b3076e5d7686577089a82bc70f7e05cd2b6c258ac478075edef2071a51324e5e",
+      "copied_byte_for_byte": true,
+      "purpose": "Administrative closure receipt: original target row before/after and scope."
+    },
+    {
+      "public_path": "originals/literal_plain_orphan_reconciliation_r1/readonly.json",
+      "source_path": "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_closure_20261102/raw/literal_plain_orphan_reconciliation_r1/readonly.json",
+      "source_relative_path": "raw/literal_plain_orphan_reconciliation_r1/readonly.json",
+      "bytes": 3454,
+      "sha256": "4658248f6c7e90ca40d4e6414cb999ffc8c26fe473b416caef315c49e8cedb6d",
+      "copied_byte_for_byte": true,
+      "purpose": "Pre-change read-only target lease check."
+    },
+    {
+      "public_path": "originals/literal_attempt_r2/status.json",
+      "source_path": "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_closure_20261102/raw/literal_attempt_r2/status.json",
+      "source_relative_path": "raw/literal_attempt_r2/status.json",
+      "bytes": 403,
+      "sha256": "fb88c67c84d2bce121fabaf4cf7e9e588ea24feb78e949d03c6384a5e90cf934",
+      "copied_byte_for_byte": true,
+      "purpose": "Original overall FAILED is preserved byte-for-byte."
+    },
+    {
+      "public_path": "originals/literal_encoded_cpu_receipt_r3.json",
+      "source_path": "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_closure_20261102/raw/literal_encoded_cpu_receipt_r3.json",
+      "source_relative_path": "raw/literal_encoded_cpu_receipt_r3.json",
+      "bytes": 2345,
+      "sha256": "1dfb6aedd38e0614b3690e6f390052ad67f671f119b0e97ba8c769ca73bfb682",
+      "copied_byte_for_byte": true,
+      "purpose": "Records prior plain counts and preserved cleanup error; encoded CPU preflight explicitly did not execute literal/GPU."
+    },
+    {
+      "public_path": "source_review/VERIFICATION.json",
+      "source_path": "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_closure_20261102/VERIFICATION.json",
+      "source_relative_path": "VERIFICATION.json",
+      "bytes": 4971,
+      "sha256": "12c3b1e0eaf839d6c3672f300b346b0fb952dd3e7991f2dd170828f74285c9d7",
+      "copied_byte_for_byte": true,
+      "purpose": "Independent collected verification including actual-row equality conclusion and encoded WAITING_RESOURCE observation."
+    }
+  ],
+  "omitted_originals": [
+    {
+      "source_relative_path": "raw/encoded_continuation_20261102_r2/diagnostic_actual.json",
+      "sha256": "7584b2a5b4b9b647ee01d542d360e7999265e2ff86723a938beb49771e3788b8",
+      "bytes": 41072,
+      "reason": "Broad diagnostic and historical process metadata excluded; relevant scoped verification conclusions are retained."
+    },
+    {
+      "source_relative_path": "raw/encoded_continuation_20261102_r2/manifest_resume.json",
+      "sha256": "01f16bbd91d34d20cb771a6cb809cc1029ae903d91193aba77ff44b78ac00a3d",
+      "bytes": 1458,
+      "reason": "Continuation preparation detail is outside this historical cleanup closure claim."
+    },
+    {
+      "source_relative_path": "raw/encoded_continuation_20261102_r2/revision_provenance.json",
+      "sha256": "a93cafeb77c1f61c79c843afbaf927df7c95228dcdb779fe391b91fac050a096",
+      "bytes": 688,
+      "reason": "Continuation preparation detail is outside this historical cleanup closure claim."
+    },
+    {
+      "source_relative_path": "raw/literal_attempt_r2/plain/bind.json",
+      "sha256": "e94e09bee27e8194e207c060e8b786500060813c61f0e7768134d0bd66aaa6cd",
+      "bytes": 2232,
+      "reason": "Original identity binding hash is retained in receipt and independent review; full broker/initializer metadata is unnecessary."
+    },
+    {
+      "source_relative_path": "raw/literal_attempt_r2/plain/guardian_result.json",
+      "sha256": "d9502d4e398c0ea372377b83ce2d187f1e611b3087ba6d9a30bef0c6428495bb",
+      "bytes": 52017,
+      "reason": "Prior plain evidence remains unchanged and separately preserved; avoid duplicating large historical process records."
+    },
+    {
+      "source_relative_path": "raw/literal_attempt_r2/plain/release_receipt.json",
+      "sha256": "4712a4b03a9db3b09eee7af8562880fb1199c871b619fbd2d88db367f49d6ce9",
+      "bytes": 54284,
+      "reason": "Prior plain evidence remains unchanged and separately preserved; avoid duplicating large historical process records."
+    }
+  ],
+  "standalone_actual_database_query_row_original_available": false,
+  "copy_rule": "All selected originals are byte-for-byte; no redaction or rewriting. Derived documents are separately named."
+}

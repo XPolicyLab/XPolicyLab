@@ -1,0 +1,24 @@
+{
+  "schema": "rsiwam-asset-tools-cpu-check-v1",
+  "recorded_at_utc": "2026-11-01T13:22:24.832318+00:00",
+  "test_command": "python3 -m unittest -v test_download_checkpoints",
+  "tests_run": 12,
+  "failures": 0,
+  "errors": 0,
+  "elapsed_seconds_reported": 0.014,
+  "test_scope": "Tiny temporary fixtures and mocked HTTP; no GPU or large download.",
+  "real_bundle_dry_run": {
+    "exit_code": 0,
+    "both_adapter_hashes_match": true,
+    "destination_created": false,
+    "network_requested": false
+  },
+  "files": {
+    "download_checkpoints.py": "76d9ab9c4430b8b6ce91e254dd85122adb89c8696e27d22f46e3c4d7aa0d9bdc",
+    "test_download_checkpoints.py": "eb01d02792a2b0d90aea662e6178ebe24a58ddd47eb85f84a2b6001d4fbd410d",
+    "audit_urls.py": "e2216c12fb754c87ab51ca56590da118df4d633d9623b368eda3a34578698f24",
+    "URL_AUDIT.json": "d4d5ed74fe1a122831f1c6ea573854f1eaeac1fd173751d5af33a11031e4d10a",
+    "README.md": "00f35f57b4d42276b44ffe0f19a2a61d461cd80ca8b55b53c15add1e010350fd"
+  },
+  "manifest_tamper_rejected": true
+}

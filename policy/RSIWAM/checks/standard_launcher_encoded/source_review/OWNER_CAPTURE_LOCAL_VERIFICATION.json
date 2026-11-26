@@ -1,0 +1,64 @@
+{
+  "status": "PASS_INDEPENDENT_LOCAL_LITERAL_ENCODED_AND_PRESERVED_PLAIN",
+  "scope": "STANDARD_DEBUG_ENTRY_ACCEPTANCE_NOT_NATIVE_SR",
+  "commit": "776c9f3b177427c1078ee31daaa4db93f922008b",
+  "counts": {
+    "episode_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "episodes_finished": 10,
+    "action_steps": 200,
+    "eval_finished": true,
+    "traceback": false
+  },
+  "per_episode_actions": [
+    20,
+    20,
+    20,
+    20,
+    20,
+    20,
+    20,
+    20,
+    20,
+    20
+  ],
+  "encoded_lease_token": "e758b2ae21924e969231b3abc81232a9",
+  "fresh_process_identities_checked": 338,
+  "plain_original_overall": "FAILED",
+  "plain_original_cleanup_failure": [
+    "reservation: Busy('Inherited lifetime FD still held; reservation retained')"
+  ],
+  "plain_independent_closure_sha256": "b3076e5d7686577089a82bc70f7e05cd2b6c258ac478075edef2071a51324e5e",
+  "encoded_guardian_cleanup_signals": [],
+  "encoded_fallback_cleanup_signals": [],
+  "evidence_sha256": {
+    "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/raw/literal_encoded_config_gpu1_r4.json": "03579fd25751041fac0632aed11cfa57045fb659c1830fe2d61017d261f16368",
+    "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/raw/literal_encoded_cpu_receipt_gpu1_r4.json": "a1bc0cb1df236743dedb45ed282bac276cdd3e45175ee9e597d2096b2777dc63",
+    "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/raw/literal_encoded_attempt_gpu1_r4/status.json": "a6ba7002ed8358e107427515575d5f4e1e0f3723ed3db20cfe46344246d9ae6c",
+    "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/raw/literal_encoded_attempt_gpu1_r4/encoded/guardian_result.json": "d706231f5c199c228870fc1b15856fb670009ec8ce6c8f68a6838e799865de46",
+    "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/raw/literal_encoded_attempt_gpu1_r4/encoded/release_receipt.json": "1dc72284467a275077e9ff67b1d8ea6c4d61b9fdb24d5a3bc80a48b199ef281e",
+    "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/raw/literal_encoded_attempt_gpu1_r4/encoded/initialization_closed.json": "02c2344cdb885b86f09050b8e02e4411cfcf6d6fc767259489ee9ec6165bf196",
+    "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/raw/literal_encoded_attempt_gpu1_r4/combined_result.json": "796f7334cec4530fc58a8f2a41576651ce8ff1fb199c3546ec31a39ea5c3084e",
+    "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/raw/literal_encoded_attempt_gpu1_r4/encoded/bind.json": "8cd9c480ad177c399ecc210c189db60b65d3ac5eec7cc3240cc8298f7a98903e",
+    "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/raw/literal_encoded_attempt_gpu1_r4/encoded/stdout.log": "52e2af2ac37b9d4057d76a29a38fa40d29cbc9e47f445b1da73699042292ce4f",
+    "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/raw/literal_encoded_attempt_gpu1_r4/encoded/stderr.log": "2fce9b0407c968db6fec11f19e6294bffbb4e4c77ce6cc286cb5fe30d5c81a6d",
+    "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/raw/literal_attempt_r2/status.json": "fb88c67c84d2bce121fabaf4cf7e9e588ea24feb78e949d03c6384a5e90cf934",
+    "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/raw/literal_attempt_r2/plain/guardian_result.json": "d9502d4e398c0ea372377b83ce2d187f1e611b3087ba6d9a30bef0c6428495bb",
+    "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/raw/literal_attempt_r2/plain/release_receipt.json": "4712a4b03a9db3b09eee7af8562880fb1199c871b619fbd2d88db367f49d6ce9",
+    "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/raw/literal_config_r2.json": "57c70f73d079319156214d700f5e8e8eae50a497ce48e8f6e76eab556b924fa7",
+    "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/raw/literal_plain_orphan_reconciliation_r1/receipt.json": "b3076e5d7686577089a82bc70f7e05cd2b6c258ac478075edef2071a51324e5e",
+    "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/raw/encoded_gpu1_final_readonly_r1/fresh_audit.json": "f003bac409ef8d454c692b08fa8e34040f530d7171dcd4e93fd192c96549eda4"
+  },
+  "remote_operations": false,
+  "files_modified": false
+}

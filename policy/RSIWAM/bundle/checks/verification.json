@@ -1,0 +1,78 @@
+{
+  "schema": "rsiwam-local-verification-v1",
+  "verified_at_utc": "2026-11-01T13:02:40.473605+00:00",
+  "checks": [
+    {
+      "script": "checks/check_structure.py",
+      "exit_code": 0,
+      "result": {
+        "status": "CPU_STRUCTURE_AND_IDENTITY_PASSED",
+        "python_files": 112,
+        "shell_files": 4,
+        "standard_adapter_files": [
+          "model.py",
+          "deploy.py",
+          "deploy.yml",
+          "__init__.py",
+          "install.sh",
+          "eval.sh",
+          "setup_eval_policy_server.sh",
+          "setup_eval_env_client.sh"
+        ],
+        "candidate_id": "recoverwam_success133_original_parent20261032_lora20261033",
+        "optimizer_step": 400,
+        "gpu_used": false,
+        "clean_environment_validated": false,
+        "simulator_evaluation_run": false
+      }
+    },
+    {
+      "script": "checks/check_launch_contract.py",
+      "exit_code": 0,
+      "result": {
+        "status": "CPU_LAUNCH_CONTRACT_PASSED",
+        "cublas_workspace_config": ":4096:8",
+        "complete_package_symlink_required": true,
+        "environment_seeds_accepted": [
+          1,
+          7,
+          42
+        ],
+        "model_seed_override_forwarded": false,
+        "fake_conda_used": true,
+        "fake_xpolicylab_used": true,
+        "gpu_used": false,
+        "server_started": false,
+        "clean_environment_validated": false
+      }
+    },
+    {
+      "script": "checks/check_adapter_cpu.py",
+      "exit_code": 0,
+      "result": {
+        "status": "REAL_WEIGHTS_CPU_STRUCTURAL_COMPOSITION_PASSED",
+        "torch": "2.7.1+cpu",
+        "adapter_tensors": 160,
+        "lora_parameters": 3932160,
+        "parent_parameters": 1597697,
+        "lora_modules": 80,
+        "lora_rank": 8,
+        "lora_alpha": 8,
+        "gate_threshold": 0.9,
+        "all_parameters_frozen": true,
+        "base_storage_preserved": true,
+        "adapter_loaded_exact": true,
+        "gpu_used": false,
+        "base_forward_evaluated": false,
+        "clean_environment_validated": false
+      }
+    }
+  ],
+  "existing_cpu_environment_used": true,
+  "clean_environment_install_tested": false,
+  "full_base_loaded": false,
+  "cuda_inference_tested": false,
+  "official_debug_evaluation_tested": false,
+  "closed_loop_evaluation_tested": false,
+  "remote_actions": "Read-only SHA/stat/source-hash checks and retrieval of exact small adapter/base metadata only; no process or GPU operations."
+}

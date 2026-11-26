@@ -1,0 +1,49 @@
+{
+  "schema": "FOCUSED_PUBLIC_CLOSURE_REVIEW_V1",
+  "status": "PASS_FOR_SCOPED_HISTORICAL_PUBLICATION",
+  "checked_at_utc": "2026-11-02T04:48:00.486616+00:00",
+  "selected_originals_byte_identical": 5,
+  "selected_original_bytes": 14716,
+  "scan_categories": [
+    "private_key",
+    "github_token",
+    "common_api_key",
+    "url_userinfo",
+    "bearer_authorization",
+    "email_address",
+    "contact_uri",
+    "unrelated_task_marker"
+  ],
+  "scan_findings": [],
+  "manual_review": {
+    "only_task_scoped_receipts_and_review_record_included": true,
+    "full_diagnostic_process_inventory_excluded": true,
+    "full_environment_excluded": true,
+    "broker_configuration_excluded": true,
+    "unrelated_runtime_activity_excluded": true,
+    "contact_information_found": false,
+    "account_or_api_credentials_found": false,
+    "old_plain_failed_preserved": true,
+    "encoded_no_gpu_pass_claim": true,
+    "two_mode_overall_no_pass_claim": true,
+    "standalone_database_query_original_absence_explicit": true
+  },
+  "retained_operational_identifiers": [
+    "closed reservation ID",
+    "task owner ID",
+    "target owner/worker/admin PID and starttime",
+    "task GPU UUID/index",
+    "hostname and boot identity",
+    "target lock/database inode identities",
+    "local runtime paths",
+    "source hashes"
+  ],
+  "reservation_token_interpretation": "The token retained in exact copied receipt rows names the single old plain reservation with a non-null released_at; it is not presented as an account/API authentication credential.",
+  "source_evidence_limitations": [
+    "No separately frozen actual database-query row original exists; verification records its in-memory comparison only.",
+    "Independent review checked historical process/holder evidence, without repeating the scan.",
+    "Encoded observation is dated 2026-11-02T04:41:31.278148Z and is not a current runtime check."
+  ],
+  "scope_limit": "Focused pattern scans and manual review of selected small documents; not an exhaustive security audit or anonymization claim.",
+  "publication_decision": "Suitable as the specifically labeled historical cleanup closure, with documented source limitations. Prepared only; publication remains with the root owner."
+}

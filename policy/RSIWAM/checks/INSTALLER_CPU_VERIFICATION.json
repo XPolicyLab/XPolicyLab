@@ -1,0 +1,36 @@
+{
+  "status": "INSTALLER_CPU_CONTRACT_CHECKS_PASSED",
+  "checks": [
+    "missing_torch_fails_before_pip",
+    "missing_torchvision_fails_before_pip",
+    "a800_versions_pinned_for_all_three_pip_commands",
+    "h800_versions_pinned_for_all_three_pip_commands",
+    "policy_dependency_bounds_propagated_to_xpl_install",
+    "optional_constraints_propagated_without_replacing_pins",
+    "missing_optional_constraints_fails_before_pip",
+    "simulated_constraint_conflict_stops_and_cleans_up",
+    "later_pip_failure_stops_and_cleans_up"
+  ],
+  "all_cases_removed_temporary_constraints": true,
+  "real_metadata_script_executed": true,
+  "package_versions": "MOCKED",
+  "pip": "RECORDED_NOT_EXECUTED",
+  "clean_installation_tested": false,
+  "gpu_used": false,
+  "checked_at_utc": "2026-11-01T15:36:17.460794+00:00",
+  "sha256": {
+    "install.sh": "cf230300d9e7f6554ffb9953df26ba8844d0344df458b5058f80c78ccd82000a",
+    "checks/check_installer_contract.py": "6ae01784e509788e8bd2c2d8b12e958f8d439a82a4487f7f9be8e594b8b9f483"
+  },
+  "schema": "rsiwam-installer-cpu-contract-checks-v1",
+  "command": "python3 policy/RSIWAM/checks/check_installer_contract.py",
+  "base_commit": "3c7a2aa8f252b1ac88aa4002b53fa730a70040f9",
+  "shell_syntax": "PASS",
+  "git_diff_check": "PASS",
+  "original_cpu_verification_unchanged": true,
+  "bundled_source_model_weights_and_eval_launchers_unchanged": true,
+  "real_dependency_resolution_tested": false,
+  "package_binary_identity_or_cuda_compatibility_tested": false,
+  "independent_read_only_review": "Completed for commit 776c9f3b177427c1078ee31daaa4db93f922008b: no blocking issue found in bundled-constraint propagation or declared requirement intersections. This review did not execute pip or a GPU test.",
+  "fix": "Constrain XPolicyLab installation with bundled policy requirements as well as the preinstalled torch/torchvision pair."
+}
