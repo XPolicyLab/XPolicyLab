@@ -1,0 +1,160 @@
+{
+  "schema": "phoenix-joint96-release-v2",
+  "checkpoints": {
+    "arx_x5": {
+      "path": "phoenix-mwa-arx-x5-h5-trim-cached-resize256-nocrop-joint14-init256013-q01q99-clip5-step_030000-run20261101_02.pt",
+      "filename": "phoenix-mwa-arx-x5-h5-trim-cached-resize256-nocrop-joint14-init256013-q01q99-clip5-step_030000-run20261101_02.pt",
+      "repo_id": "ssuuuuu/phoenix-mwa",
+      "revision": "master",
+      "sha256": "1a0de8eb856a9ad37922fd2e2eb21f55d6e6d2bdbe4ccfaba1fa77987ca62e21",
+      "size": 12045488470,
+      "step": 30000,
+      "pretrain_step": 256013,
+      "runtime_mode": "joint96_real_phoenix",
+      "normalization": "q01/q99",
+      "forward_clip": [
+        -5,
+        5
+      ],
+      "loss_weights": {
+        "vae": 0.5,
+        "stvae": 0.5,
+        "action": 1.0
+      },
+      "source_slot": "slot_6.pt",
+      "training_run": "robodojo_real_arx_x5_h5_trim_bicubic_cached_joint14_init256k_b8_w32_lr5e5_s30k_zero1_offline_20261101_02",
+      "learning_rate": 5e-05
+    },
+    "piper": {
+      "path": "phoenix-mwa-piper-h5-trim-cached-resize256-nocrop-joint14-init256013-q01q99-clip5-step_030000-run20261101_02.pt",
+      "filename": "phoenix-mwa-piper-h5-trim-cached-resize256-nocrop-joint14-init256013-q01q99-clip5-step_030000-run20261101_02.pt",
+      "repo_id": "ssuuuuu/phoenix-mwa",
+      "revision": "master",
+      "sha256": "44ad3555e99af5adf3af408e61a73e63e8a435b34e0fcc60dbb91f3ae62ae4b1",
+      "size": 12045488470,
+      "step": 30000,
+      "pretrain_step": 256013,
+      "runtime_mode": "joint96_real_phoenix",
+      "normalization": "q01/q99",
+      "forward_clip": [
+        -5,
+        5
+      ],
+      "loss_weights": {
+        "vae": 0.5,
+        "stvae": 0.5,
+        "action": 1.0
+      },
+      "source_slot": "slot_6.pt",
+      "training_run": "robodojo_real_piper_h5_trim_bicubic_cached_joint14_init256k_b8_w32_lr5e5_s30k_zero1_offline_20261101_02",
+      "learning_rate": 5e-05
+    },
+    "piper_x": {
+      "path": "phoenix-mwa-piper-x-h5-trim-cached-resize256-nocrop-joint14-init256013-q01q99-clip5-step_030000-run20261101_02.pt",
+      "filename": "phoenix-mwa-piper-x-h5-trim-cached-resize256-nocrop-joint14-init256013-q01q99-clip5-step_030000-run20261101_02.pt",
+      "repo_id": "ssuuuuu/phoenix-mwa",
+      "revision": "master",
+      "sha256": "22e07ef82a8139fe4360682ca625aa0644501727760ea3ad607cb90b8a74fc67",
+      "size": 12045488534,
+      "step": 30000,
+      "pretrain_step": 256013,
+      "runtime_mode": "joint96_real_phoenix",
+      "normalization": "q01/q99",
+      "forward_clip": [
+        -5,
+        5
+      ],
+      "loss_weights": {
+        "vae": 0.5,
+        "stvae": 0.5,
+        "action": 1.0
+      },
+      "source_slot": "slot_6.pt",
+      "training_run": "robodojo_real_piper_x_h5_trim_bicubic_cached_joint14_init256k_b8_w32_lr5e5_s30k_zero1_offline_20261101_02",
+      "learning_rate": 5e-05
+    }
+  },
+  "weights": {
+    "dino_checkpoint": {
+      "repo_id": "ssuuuuu/phoenix-mwa",
+      "revision": "master",
+      "filename": "phoenix-mwa-dino-step_110000.pt",
+      "path": "phoenix-mwa-dino-step_110000.pt",
+      "sha256": "ec83a00d2e65fab98a7f5c15a56700386dbf672dcde275ed7d99f16940650c0c",
+      "size": 10145964243
+    },
+    "stvae_checkpoint": {
+      "repo_id": "ssuuuuu/phoenix-mwa",
+      "revision": "master",
+      "filename": "phoenix-mwa-stvae-step_150000.pt",
+      "path": "phoenix-mwa-stvae-step_150000.pt",
+      "sha256": "28d9b8efc16c2b7005e46dd9051d0c25429d64022d47492cd2e03b1470cf28f2",
+      "size": 289377555
+    },
+    "wan_vae": {
+      "repo_id": "ssuuuuu/phoenix-mwa",
+      "revision": "master",
+      "filename": "Wan2.2_VAE.safetensors",
+      "path": "base_models/DiffSynth-Studio/Wan-Series-Converted-Safetensors/Wan2.2_VAE.safetensors",
+      "sha256": "0e913a2ca571c75fcb63385a8edadcca73454af5842596cb1ad11e4142590996",
+      "size": 1409401152
+    },
+    "t5_encoder": {
+      "repo_id": "ssuuuuu/phoenix-mwa",
+      "revision": "master",
+      "filename": "models_t5_umt5-xxl-enc-bf16.safetensors",
+      "path": "base_models/DiffSynth-Studio/Wan-Series-Converted-Safetensors/models_t5_umt5-xxl-enc-bf16.safetensors",
+      "sha256": "d92de679881d38af9c89eff7bb1b6d6c9d96cb2b69831e4027e9ecabdd38eb23",
+      "size": 11361845432
+    }
+  },
+  "runtime_mode": "joint96_real_phoenix",
+  "training_route": "openwam_h5_joint14_static_trim_bicubic_paired_cache_v1",
+  "distribution": "public_modelscope_weights",
+  "description": "No spatial crop: direct bicubic resize, reviewed temporal trim and paired cache; init 256013, step 30000, lr 5e-5, run 20261101_02",
+  "resize_training_source_sha256": {
+    "src/wam/datasets/robodojo_h5_resize256.py": "039ef7f3be952a20872b46baae40c4413d450ec779f90bd04cdcd26e4002c12c",
+    "src/wam/datasets/robodojo_openwam_joint14.py": "f218f03ccffb4840a521c6770a371270c5c41e9c5474b81c6125689629b08915",
+    "src/wam/training/robodojo_h5_resize256_runtime.py": "52cb11ee8b10e4a03888f048279dc74919236ddc5b490b2544ba837e74e509d1",
+    "src/wam/training/robodojo_openwam_runtime.py": "84be8236b4d3bfb307e56b6dddf8e44c2a5aa8201c1ca69ca22cbb84008e71e9",
+    "src/wam/training/robodojo_openwam_optimizer.py": "942f71b3cb6406febfefec9de14198b4228b01ad0dda24a9e8ee974b635b35de",
+    "src/wam/model/modules/codecs/joint_visual_encoder.py": "b31494029195ca8996729d89560da3b47f733d17107e5bb7e8879fd1eb716f39",
+    "scripts/train_robodojo_h5_resize256.py": "8a7bc114ef297d6a6647eed31ab763bcd0be4d1ee0a85fcc13bce9055b834439"
+  },
+  "trim_training_source_sha256": {
+    "src/wam/datasets/robodojo_h5_static_trim.py": "2d3f611875a6e19bd1edfc82cf69b8795eb8c0c833b96c863cf2ba5f6dfec84f",
+    "src/wam/training/robodojo_h5_static_trim_runtime.py": "43b9917870eef776c58e05e21c054fde55e07d9b7f99dff8527875ea72d332f5",
+    "scripts/train_robodojo_h5_static_trim.py": "9378fdf53c45ef612ff059d4d9eb57729009c23b0935ae82ef0025cf150af2a8",
+    "configs/task/robodojo_h5_static_trim.yaml": "9dd5a7245a29b4cf61cac17a5861f9f05292581e206864a2b84d57d73997965f",
+    "configs/data/robodojo_h5_static_trim.yaml": "73a7398f63f508e5d85c68168db4ec7761d187d02ac6e463fce01c0f57a6f97c"
+  },
+  "trim_cache_contract_sha256": "ddb9db7700ee7a8eb1f82a0f59967b6d137f3b937d15eefaa4a321e31fedd32b",
+  "release_id": "robodojo-trim-cache-step30000-run20261101_02",
+  "published_adapter": "Phoenix_WAM",
+  "training_settings": {
+    "arx_x5": {
+      "learning_rate": 5e-05,
+      "max_steps": 30000,
+      "batch_size": 8,
+      "gradient_accumulation_steps": 1,
+      "num_workers": 8,
+      "seed": 42
+    },
+    "piper": {
+      "learning_rate": 5e-05,
+      "max_steps": 30000,
+      "batch_size": 8,
+      "gradient_accumulation_steps": 1,
+      "num_workers": 8,
+      "seed": 42
+    },
+    "piper_x": {
+      "learning_rate": 5e-05,
+      "max_steps": 30000,
+      "batch_size": 8,
+      "gradient_accumulation_steps": 1,
+      "num_workers": 8,
+      "seed": 42
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "prompt_template": "A video recorded from a robot's point of view executing the following instruction: {task}",
+  "package_sha256": {
+    "text.pt": "75ba4136a7e44bd5a99c46df5a79b1570f06f1cb37a24f8dce963eb337430130",
+    "stats_slot2.json": "25955346b26578e188f97946a0274c4184798a03c707b2d48f4610f05d3b6826",
+    "stats_slot4.json": "3854a1b178c0cd1d31b92ca0bca641ed2e0464166fa89f64794c64e2d4cc05e6",
+    "stats_slot15.json": "b524237488b564641399aea7bb2f7051c114f8434d81777cd56ce27cef9b4f19"
+  },
+  "joint14_preprocessing": {
+    "arx_x5": {
+      "mode": "openwam_real_clip01_v1",
+      "applied": false,
+      "native_dims": [],
+      "raw_clip": null,
+      "sensor_tolerance": null,
+      "stage": "before_action_and_state_normalization"
+    },
+    "piper": {
+      "mode": "openwam_real_clip01_v1",
+      "applied": true,
+      "native_dims": [
+        6,
+        13
+      ],
+      "raw_clip": [
+        0.0,
+        1.0
+      ],
+      "sensor_tolerance": 0.05,
+      "stage": "before_action_and_state_normalization"
+    },
+    "piper_x": {
+      "mode": "openwam_real_clip01_v1",
+      "applied": true,
+      "native_dims": [
+        6,
+        13
+      ],
+      "raw_clip": [
+        0.0,
+        1.0
+      ],
+      "sensor_tolerance": 0.05,
+      "stage": "before_action_and_state_normalization"
+    }
+  },
+  "schema": "phoenix-inference-index-v1",
+  "source_index_sha256": "531c44a74db269e1d63cd59b678b0116e6ff32b7bc441b3e8c3d118afc164cc4"
+}
