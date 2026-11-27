@@ -1,0 +1,104 @@
+{
+  "date": "2026-10-21",
+  "release": "run20261021_edge25_01",
+  "posttrain_step": 40000,
+  "pretrain_step": 256013,
+  "cpu_tests": {
+    "run": 58,
+    "passed": 43,
+    "skipped_historical": 15
+  },
+  "gpu": {
+    "arx_x5": {
+      "family": "arx_x5",
+      "step": 40000,
+      "finite": true,
+      "shape": [
+        32,
+        14
+      ],
+      "acknowledgments_and_reset": true,
+      "checkpoint_sha256": "5142ea68f97e8f28a5ce3c77bc846f4f8445cc6df3aa838a47474bbb1de13d73",
+      "strict_exact_tensor_counts": {
+        "mot": 1650,
+        "proprio_encoder": 3
+      },
+      "replan_steps": 32,
+      "num_inference_steps": 10,
+      "input_geometry": "direct_bicubic_resize_256_per_view_horizontal_concat",
+      "inference_image_augmentation": false
+    },
+    "piper": {
+      "family": "piper",
+      "step": 40000,
+      "finite": true,
+      "shape": [
+        32,
+        14
+      ],
+      "acknowledgments_and_reset": true,
+      "checkpoint_sha256": "d3d891ce9d1c29d47cfaa6b3a51f73ce84b28c017e8c30bb323d6f7d01d2721b",
+      "strict_exact_tensor_counts": {
+        "mot": 1650,
+        "proprio_encoder": 3
+      },
+      "replan_steps": 32,
+      "num_inference_steps": 10,
+      "input_geometry": "direct_bicubic_resize_256_per_view_horizontal_concat",
+      "inference_image_augmentation": false
+    },
+    "piper_x": {
+      "family": "piper_x",
+      "step": 40000,
+      "finite": true,
+      "shape": [
+        32,
+        14
+      ],
+      "acknowledgments_and_reset": true,
+      "checkpoint_sha256": "66c54cdeebf562bffad5c7c960fbc7b25709e69fbd323a979b91b69c1a397ca7",
+      "strict_exact_tensor_counts": {
+        "mot": 1650,
+        "proprio_encoder": 3
+      },
+      "replan_steps": 32,
+      "num_inference_steps": 10,
+      "input_geometry": "direct_bicubic_resize_256_per_view_horizontal_concat",
+      "inference_image_augmentation": false
+    }
+  },
+  "full_download_repeated": false,
+  "physical_robot_evaluation": false,
+  "training_inference_numerical_equivalence_claimed": false,
+  "debug": {
+    "plain_rgb": {
+      "episodes": 10,
+      "exit_code": 0,
+      "eval_finished": true,
+      "traceback": false,
+      "family": "arx_x5",
+      "posttrain_step": 40000,
+      "text_mode": "online_t5",
+      "checkpoint_sha256": "5142ea68f97e8f28a5ce3c77bc846f4f8445cc6df3aa838a47474bbb1de13d73",
+      "log_sha256": "11db24e51d9748bf5be897a1ad075e562e7ca3a7c22a0e9fe70d635f9c43d334"
+    },
+    "encoded": {
+      "episodes": 10,
+      "exit_code": 0,
+      "eval_finished": true,
+      "traceback": false,
+      "family": "arx_x5",
+      "posttrain_step": 40000,
+      "text_mode": "online_t5",
+      "checkpoint_sha256": "5142ea68f97e8f28a5ce3c77bc846f4f8445cc6df3aa838a47474bbb1de13d73",
+      "log_sha256": "da24702eb64a1509e3b5ef40dfcc16a78bd1bb9ac092dd82e048b1abd30301cd"
+    }
+  },
+  "environment": {
+    "gpu": "NVIDIA RTX PRO 5000 72GB Blackwell",
+    "driver": "580.126.09",
+    "environment": "fastwam-pretrain",
+    "new_installation_tested": false
+  },
+  "remote_files_verified": 7
+}
