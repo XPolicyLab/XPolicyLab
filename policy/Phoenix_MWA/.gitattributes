@@ -1,0 +1,4 @@
+# Preserve and collapse vendored source; its original bytes are fingerprinted.
+joint96_source/** linguist-vendored -whitespace
+# Vocabulary data is not reviewable source code; retain it as an opaque Git asset.
+joint96_source/tokenizer/** -diff linguist-generated=true
