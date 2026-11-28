@@ -18,7 +18,7 @@ Confirm with the user, or state the assumption explicitly in your first reply:
 
 ## Workflow
 
-1. Read `policy/demo_policy/` (`model.py`, `deploy.py`, `deploy.yml`, `eval.sh`, `README.md`), then the upstream model's inference API, dependencies, and checkpoint layout.
+1. Read `policy/demo_policy/` (`model.py`, `rl.py`, `deploy.py`, `deploy.yml`, `eval.sh`, `README.md`), then the upstream model's inference API, dependencies, and checkpoint layout.
 2. Scaffold: `bash scripts/create_policy.sh <POLICY>` (copies `demo_policy`).
 3. Implement `model.py` first (contract below). The policy server imports `XPolicyLab.policy.<POLICY>.model`, so keep the directory importable (`__init__.py`). Put environment setup in `install.sh`; add `process_data.sh` / `train.sh` only if the model supports them. If the policy trains on LeRobot data, default to the official converters — `scripts/transform_lerobot_v21_format.py` / `scripts/transform_lerobot_v30_format.py`, or a prepared export produced by them — and let `process_data.sh` only link and normalize the dataset; write a custom converter only when the model needs a layout the official keys cannot express, and document that deviation.
 4. Keep `deploy.py` aligned with `policy/demo_policy/deploy.py` unless the environment loop truly differs. Put runtime defaults in `deploy.yml`, keeping the whole key set from `policy/demo_policy/deploy.yml` — `policy_name` (equal to the directory name), `protocol: ws`, `host`, `port`, plus the per-run fields the setup scripts override. Keep a key even where the scripts already default it.
@@ -32,7 +32,7 @@ Confirm with the user, or state the assumption explicitly in your first reply:
    `<policy_env>` (arg 9) follows the adapter's own convention — a conda env name, `uv`, or an environment path; `policy/Pi_05`, for example, requires `uv` (see its README). The trailing `base` is the eval-env conda env (arg 10).
 
    Fix import, server-startup, action-key, and shape errors until the loop completes. Run once more with `DEBUG_OBS_ENCODED=1` so the debug client sends encoded camera colors and the server-side decode path is exercised.
-6. Static checks from the repo root: `bash -n policy/<POLICY>/*.sh` and `python -m py_compile policy/<POLICY>/model.py policy/<POLICY>/deploy.py`.
+6. Static checks from the repo root: `bash -n policy/<POLICY>/*.sh` and `python -m py_compile policy/<POLICY>/model.py policy/<POLICY>/rl.py policy/<POLICY>/deploy.py`.
 7. Write `policy/<POLICY>/README.md`: install, data, train, and eval commands, supported `action_type` / `env_cfg_type`, checkpoint layout, known limitations. An adapter that trains on LeRobot data must also declare, under `Data Processing`, the dataset version and whether its keys match the official converters (README, [Official LeRobot conversion](../../../README.md#official-lerobot-conversion)) — naming the converter or prepared export when they do, and the deviation when they do not.
 
 ## Model contract (`model.py`)
@@ -46,6 +46,10 @@ Define `class Model(ModelTemplate)`, importing `ModelTemplate` from `XPolicyLab.
 | `get_action()` | Return one action chunk: `list[dict]` of numpy arrays. |
 | `get_action_batch(env_idx_list=None)` | Batched chunks aligned with active env indices; fall back to the config batch size when `None`. |
 | `reset()` | Clear model state between episodes. |
+| `predict_action_batch_rl(obs_list, mode="train", compute_values=True)` | Optional RLinf rollout. Return `[B, H, D]` actions in `pack_robot_state` order, plus `prev_logprobs`, `prev_values` (`[B, 1]`), and `forward_inputs`. |
+| `compute_logprob_value(forward_inputs, compute_values=False)` | Optional. Recompute that sample with gradients: `logprobs` (same shape as `prev_logprobs`), `values` (`[B]`), `entropy` (`[B, 1]`). |
+
+RLinf PPO / GRPO: `policy/demo_policy/rl.py` is the fill-in. Implement `_sample_policy` and `_log_prob_value`, and leave `sample_actions_rl` / `get_log_prob_value` in place. Put the trainable `nn.Module` on `self.model` or `self.policy`. Add `"ppo"` or `"grpo"` to `RL_MODES` once the log-probs come from the policy sample. With `RL_MODES = ("eval",)`, RLinf eval keeps `get_action_batch`.
 
 Action dict keys: dual-arm uses `left_arm_joint_state` / `right_arm_joint_state` plus `left_ee_joint_state` / `right_ee_joint_state`; single-arm drops the `left_` / `right_` prefix; `action_type=ee` replaces `*_arm_joint_state` with `*_ee_pose` as `[x, y, z, qw, qx, qy, qz]`.
 

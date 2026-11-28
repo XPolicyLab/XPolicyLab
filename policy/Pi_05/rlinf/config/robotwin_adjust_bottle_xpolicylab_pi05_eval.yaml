@@ -1,0 +1,89 @@
+defaults:
+  - env/robotwin_adjust_bottle@env.eval
+  - model/xpolicylab_pi05@rollout.model
+  - override hydra/job_logging: stdout
+
+hydra:
+  run:
+    dir: .
+  output_subdir: null
+  searchpath:
+    - file://${oc.env:RLINF_PATH}/examples/embodiment/config
+
+cluster:
+  num_nodes: 1
+  component_placement:
+    env, rollout: all
+
+runner:
+  task_type: embodied_eval
+  logger:
+    log_path: ${oc.env:RLINF_PATH}/../results
+    project_name: rlinf
+    experiment_name: "robotwin_xpolicylab_pi05_eval"
+    logger_backends: ["tensorboard"] # wandb, swanlab
+
+  max_epochs: 1000
+  max_steps: -1
+
+  only_eval: True
+  val_check_interval: -1
+  save_interval: -1
+
+  resume_dir: null
+  ckpt_path: null  # Optional: .pt checkpoint loaded after the model is built (e.g. an RL actor checkpoint).
+
+env:
+  group_name: "EnvGroup"
+  enable_offload: True
+  eval:
+    rollout_epoch: 1
+    total_num_envs: 128
+    auto_reset: True
+    ignore_terminations: True
+    reward_coef: 1.0
+    group_size: 1
+    use_fixed_reset_state_ids: False
+    is_eval: True
+    assets_path: ${oc.env:ROBOTWIN_ASSETS_PATH}
+    seeds_path: ${oc.env:RLINF_PATH}/rlinf/envs/sim/robotwin/seeds/eval_seeds.json
+    video_cfg:
+      save_video: True
+      video_base_dir: ${runner.logger.log_path}/video/eval
+    center_crop: False
+    task_config:
+      embodiment: [aloha-agilex]
+      camera:
+        collect_wrist_camera: true
+      domain_randomization:
+        random_background: false
+        cluttered_table: false
+        clean_background_rate: 1
+        random_head_camera_dis: 0
+        random_table_height: 0
+        random_light: false
+        crazy_random_light_rate: 0
+
+rollout:
+  group_name: "RolloutGroup"
+  rollout_backend: "huggingface"
+  recompute_logprobs: False
+  enable_offload: True
+  pipeline_stage_num: 1
+  model:
+    model_path: ${oc.env:POLICY_MODEL_PATH}
+    num_action_chunks: 50
+    action_dim: 14
+    xpolicylab:
+      policy_name: Pi_05
+      rl_backend: rlinf_v0_4
+      required_mode: eval
+      # Load the RL policy so eval uses the same deterministic sampler as RL training eval.
+      rl:
+        modes: [eval, grpo]
+      train_config_name: pi05_base_aloha_full_sim_arx-x5_seed_0
+      repo_id: RoboTwin_lerobot_v30
+      env_cfg_type: aloha_agilex
+      action_type: joint
+      rl_head:
+        num_steps: 5

@@ -1,0 +1,29 @@
+# CPU contract tests only, Python 3.11. Not the Isaac Sim or GPU policy runtime.
+# On Linux install torch/torchvision from the PyTorch CPU index first.
+torch==2.11.0
+torchvision==0.26.0
+numpy==1.26.4
+pytest==9.2.0
+hydra-core==1.3.8
+omegaconf==2.3.1
+ray==2.59.0
+transformers==4.57.1
+safetensors==0.8.0
+einops==0.8.2
+opencv-python-headless==4.11.0.86
+h5py==3.16.0
+PyYAML==6.0.3
+psutil==7.2.2
+sortedcontainers==2.4.0
+cloudpickle==3.1.2
+gymnasium==1.4.0
+scipy==1.17.1
+pillow==13.0.0
+rich==15.0.0
+accelerate==1.15.0
+regex==2026.9.29
+tensorboard==2.21.0
+av==18.1.0
+imageio==2.38.1
+imageio-ffmpeg==0.7.0
+torchdata==0.11.0
