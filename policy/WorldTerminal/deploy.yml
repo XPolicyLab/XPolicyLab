@@ -1,0 +1,26 @@
+policy_name: WorldTerminal
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+action_type: joint
+gpu_id: null
+eval_batch: false
+
+# Where the hosted policy server is.  Not a secret and not stored here: the submitting team
+# gives the evaluator `WORLDTERMINAL_API_URL` (ws:// or wss://host:port) and, if the server asks for
+# one, `WORLDTERMINAL_API_TOKEN`.  The URL may also be configured below; keep the token in the environment.
+api_url: null
+
+# Seconds one forwarded request may take.  The hosted server answers get_action within its
+# own poll window (20 s) whether or not the program has stepped; this stays far above it.
+api_request_timeout_s: 120.0
+# Connection/handshake timeout. Failed action requests are not automatically replayed.
+api_connect_seconds: 120.0
+
+# Optional SDK validation profile, e.g. arx_x5/joint-v1.
+embodiment: null
