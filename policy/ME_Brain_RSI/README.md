@@ -24,7 +24,7 @@ bash install.sh inference
 
 工具箱和盖方块任务仅使用脚本环境与随附静态几何，见 [工具箱任务说明](tasks/store_tools_in_toolbox/README.md) 与 [盖方块任务说明](tasks/cover_blocks/README.md)。模仿排序使用 DINOv2；语言分类使用 CUDA 上的 DINOv2、CLIP 和 Grounding DINO。这两个任务的模型依赖位于环境客户端，分别见 [模仿排序任务说明](tasks/imitate_sorting_sequence/README.md) 与 [语言分类任务说明](tasks/classify_objects_by_language/README.md)。
 
-整理桌面使用独立 RGB 几何策略及外部 Grounding DINO、SAM ViT-B，见 [整理桌面任务说明](tasks/organize_table/README.md)。
+标准物体分类与语言分类共用示例中的三组本地权重路径。标准和随机的装箱、烤吐司以及整理桌面都通过 `COAP_PUBLIC_RGB_MODELS` 读取 Grounding DINO 和 SAM ViT-B，目录须包含指定版本的 `public-models.json`。见 [模型目录结构和校验说明](tasks/organize_table/README.md)。
 
 笔记本和耳机收纳的标准、随机任务使用各自独立的 SAM3 感知和固定控制策略，见 [标准任务说明](tasks/store_laptop_and_headphones/README.md) 与 [随机任务说明](tasks/store_laptop_and_headphones_random/README.md)。
 
@@ -71,7 +71,11 @@ export PYTHONDONTWRITEBYTECODE=1
 EVAL_ENV_TYPE=sim bash eval.sh RoboDojo press_by_number none arx_x5 auto 0 0 0 uv base
 ```
 
-从 `runtime_config.example.json` 准备机器配置，绑定实际资源后运行。跨机器评测使用 `setup_eval_policy_server.sh` 与 `setup_eval_env_client.sh`。
+将权重放在示例指定的 `model_assets/` 相对路径后，可以直接设置 `ME_BRAIN_RUNTIME_CONFIG=./runtime_config.example.json`。机器人静态配置和 URDF 随仓库提供。策略端和仿真客户端各自读取配置，跨机器运行时两端都要能解析各自使用的资源。搭塔、两项套娃和两项倒液体还需要先用同一配置启动 [SAM3 文件服务](tasks/build_tower/README.md#dependencies)，并等待本次服务写出 `ready.json`。
+
+RoboDojo 的正式客户端从静态 `deploy.yml` 选择回调。默认使用单环境，部署入口按任务注册信息选择单局或批量策略方法。需要多环境 VLA 推理时，可用 `routing.py --task <task> --write-config <path>` 生成该任务的部署配置，作为该次独立部署的 `deploy.yml`。
+
+长规划的三个堆块任务和随机叠碗默认允许每次策略请求耗时 600 秒，投币和拧螺丝为 1800 秒。可用 `ROBODOJO_WS_REQUEST_TIMEOUT_S` 显式指定时限。跨机器评测使用 `setup_eval_policy_server.sh` 与 `setup_eval_env_client.sh`。
 
 VLA 检查点通过 XPolicyLab 公共解析器定位。可以指定 `model_path`、`checkpoint_path` 或路径形式的 `ckpt_name`，目标目录需包含 `model.safetensors`。脚本任务不加载 VLA 权重。
 
@@ -105,6 +109,8 @@ VLA 检查点通过 XPolicyLab 公共解析器定位。可以指定 `model_path`
 | `focus_vlwa_source`、`policy_uv_env_path`              | VLA 源码与环境                            |
 | `model_path`、`tokenizer_path`、`asset_id`             | VLA 检查点、tokenizer 与机器人标识        |
 | `history_mode`、`max_token_len`、`num_inference_steps` | VLA 推理参数                              |
+
+`pick_from_conveyor_by_image` 会核对 15 张公开参考照片的 SHA-256。策略端安装了 RoboDojo 资产时，默认读取 `Assets/Object/RoboDojo/Geometry/photo/`。独立部署策略服务时，将同一目录内容放入 `<perception_assets_root>/reference_photos/`，保留各照片的 `<编号>/resource/img/photo.png` 结构。
 
 资源配置和环境变量中的相对路径以本策略目录为基准。配置支持顶层 `includes` 列表，其中的相对配置文件路径以包含它的文件所在目录为基准。机器配置不能覆盖任务或协议路由。
 

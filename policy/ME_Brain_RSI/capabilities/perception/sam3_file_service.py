@@ -79,6 +79,12 @@ def process_request(request, processor, model, torch):
 
 
 def main():
+    if os.environ.get('ME_BRAIN_RUNTIME_CONFIG'):
+        # Keep the documented standalone script usable from any working directory.
+        import sys
+        sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+        from core.runtime import apply
+        apply({})
     root = configured_path('SND_SAM_ROOT')
     weights = configured_path('SND_SAM_WEIGHTS')
     if not weights.is_dir():

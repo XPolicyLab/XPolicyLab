@@ -204,7 +204,8 @@
       "driver": "step",
       "model": "policy.stack_bowls_rgb_v7.adapter:create_policy",
       "deploy": null,
-      "modules": "tasks/stack_bowls_random/modules.json"
+      "modules": "tasks/stack_bowls_random/modules.json",
+      "request_timeout_s": 600
     },
     "push_T_random": {
       "action_type": "ee",
@@ -369,7 +370,8 @@
       "driver": "step",
       "model": "policy.stack_blocks_rgb_v6.adapter:create_policy",
       "deploy": null,
-      "modules": "tasks/stack_blocks_random/modules.json"
+      "modules": "tasks/stack_blocks_random/modules.json",
+      "request_timeout_s": 600
     },
     "classify_objects": {
       "action_type": "ee",
@@ -420,7 +422,8 @@
       "driver": "step",
       "model": "policy.stack_blocks_lang_v5.adapter:create_policy",
       "deploy": null,
-      "modules": "tasks/stack_blocks_by_language/modules.json"
+      "modules": "tasks/stack_blocks_by_language/modules.json",
+      "request_timeout_s": 600
     },
     "general_pickup": {
       "action_type": "ee",

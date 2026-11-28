@@ -1,4 +1,6 @@
 """Use fixed pretrained RGB cosine matching inside the retained sorting program."""
+import os
+import os
 from pathlib import Path
 from types import FunctionType, SimpleNamespace
 import time
@@ -14,11 +16,12 @@ _PROCESSOR = None
 
 
 def _load_encoder():
-    """Read only the packaged public snapshot, without network or external cache use."""
+    """Load the configured local DINOv2 snapshot, falling back to the packaged assets."""
     global _MODEL, _PROCESSOR
     if _MODEL is None:
         from transformers import Dinov2Model, AutoImageProcessor
-        folder = Path(__file__).resolve().parents[1] / 'assets' / 'sorting_dinov2_small'
+        packaged = Path(__file__).resolve().parents[1] / 'assets' / 'sorting_dinov2_small'
+        folder = Path(os.environ.get('SORTING_DINO_PATH') or packaged)
         _PROCESSOR = AutoImageProcessor.from_pretrained(str(folder), local_files_only=True,
                                                       trust_remote_code=False)
         _MODEL = Dinov2Model.from_pretrained(str(folder), local_files_only=True,

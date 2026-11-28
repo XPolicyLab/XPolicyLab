@@ -4,14 +4,17 @@
     "config": {
       "model_path": "model_assets/focus-vlwa-checkpoint",
       "tokenizer_path": "model_assets/tokenizer.model",
-      "robot_static_path": "model_assets/robot_static.json",
+      "robot_static_path": "resources/sweep_blocks_random/assets/robot_static.json",
       "stack_assets_root": "model_assets/stack",
       "equation_assets_root": "model_assets/equation",
       "perception_assets_root": "model_assets/perception"
     },
     "environment": {
+      "ME_BRAIN_EVIDENCE_DIR": "../../../runs/ME_Brain_RSI",
       "HF_HUB_OFFLINE": "1",
-      "TRANSFORMERS_OFFLINE": "1"
+      "TRANSFORMERS_OFFLINE": "1",
+      "SND_SAM_ROOT": "../../../runs/ME_Brain_RSI/sam3_requests",
+      "SND_SAM_WEIGHTS": "model_assets/sam3-transformers"
     }
   },
   "tasks": {
@@ -30,6 +33,13 @@
         "SORTING_DINO_PATH": "model_assets/dinov2-small"
       }
     },
+    "classify_objects": {
+      "environment": {
+        "SORTING_DINO_PATH": "model_assets/dinov2-small",
+        "CLASSIFY_CLIP_PATH": "model_assets/clip-vit-base-patch32",
+        "CLASSIFY_DINO_PATH": "model_assets/grounding-dino-tiny"
+      }
+    },
     "classify_objects_by_language": {
       "environment": {
         "SORTING_DINO_PATH": "model_assets/dinov2-small",
@@ -46,6 +56,26 @@
       "environment": {
         "HANG_SAM3_PATH": "model_assets/hang/sam3",
         "CLASSIFY_DINO_PATH": "model_assets/grounding-dino-tiny"
+      }
+    },
+    "pack_objects_into_box": {
+      "environment": {
+        "COAP_PUBLIC_RGB_MODELS": "model_assets/organize/models"
+      }
+    },
+    "pack_objects_into_box_random": {
+      "environment": {
+        "COAP_PUBLIC_RGB_MODELS": "model_assets/organize/models"
+      }
+    },
+    "make_toast": {
+      "environment": {
+        "COAP_PUBLIC_RGB_MODELS": "model_assets/organize/models"
+      }
+    },
+    "make_toast_random": {
+      "environment": {
+        "COAP_PUBLIC_RGB_MODELS": "model_assets/organize/models"
       }
     },
     "organize_table": {
@@ -72,31 +102,6 @@
         "HF_HUB_OFFLINE": "1",
         "TRANSFORMERS_OFFLINE": "1",
         "TOKENIZERS_PARALLELISM": "false"
-      }
-    },
-    "build_tower": {
-      "environment": {
-        "SND_SAM_ROOT": "../../../runs/ME_Brain_RSI/sam3_requests"
-      }
-    },
-    "sort_nesting_dolls_by_size": {
-      "environment": {
-        "SND_SAM_ROOT": "../../../runs/ME_Brain_RSI/sam3_requests"
-      }
-    },
-    "sort_nesting_dolls_by_size_random": {
-      "environment": {
-        "SND_SAM_ROOT": "../../../runs/ME_Brain_RSI/sam3_requests"
-      }
-    },
-    "pour_liquid_into_cup": {
-      "environment": {
-        "SND_SAM_ROOT": "../../../runs/ME_Brain_RSI/sam3_requests"
-      }
-    },
-    "pour_liquid_into_cup_random": {
-      "environment": {
-        "SND_SAM_ROOT": "../../../runs/ME_Brain_RSI/sam3_requests"
       }
     }
   }

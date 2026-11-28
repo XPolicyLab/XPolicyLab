@@ -338,6 +338,18 @@ def foreground_texture_scores(paper,references):
     return np.asarray(scores)
 
 
+def reference_photo_path(item):
+    """Locate a fixed public catalog texture in a policy or benchmark installation."""
+    relative = Path(item['photo'])
+    configured = ASSETS / 'reference_photos' / relative
+    benchmark = Path(__policy_root__).parents[2] / 'Assets/Object/RoboDojo/Geometry/photo' / relative
+    legacy = Path(item['legacy_photo'])
+    for path in (configured, benchmark, Path(__policy_root__) / legacy, legacy):
+        if path.is_file():
+            return path
+    raise FileNotFoundError(f'Missing public catalog photo {relative}. Expected {configured} or {benchmark}')
+
+
 class VisionEngine:
     def __init__(self):
         cv2.setNumThreads(1)
@@ -356,7 +368,7 @@ class VisionEngine:
         self.reference_features=[]
         import hashlib
         for item in self.catalog['objects']:
-            path=Path(item['photo'])
+            path=reference_photo_path(item)
             if hashlib.sha256(path.read_bytes()).hexdigest()!=item['photo_sha256']:raise ValueError('Public photo changed')
             rgb=np.asarray(Image.open(path).convert('RGB'))
             self.references.append(rgb)

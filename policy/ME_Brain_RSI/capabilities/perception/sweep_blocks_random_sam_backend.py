@@ -10,7 +10,13 @@ class SamBackend:
         from sam3.model.sam3_image_processor import Sam3Processor
         from sam3.model_builder import build_sam3_image_model
         self.torch, self.device = torch, device
-        checkpoint = Path(checkpoint).resolve(strict=True)
+        checkpoint = Path(checkpoint)
+        # The detector is a sibling of the configured SAM3 file, including for linked weights.
+        detector = Path(grounding_checkpoint) if grounding_checkpoint else checkpoint.with_name('grounding-dino-tiny')
+        if not detector.is_dir():
+            raise NotADirectoryError(f'Grounding DINO model directory not found: {detector}')
+        self.grounding_checkpoint = detector.resolve(strict=True)
+        checkpoint = checkpoint.resolve(strict=True)
         bpe_path = Path(bpe_path).resolve(strict=True)
         if device.startswith('cuda') and not torch.cuda.is_available():
             raise RuntimeError('GPU unavailable; cannot claim semantic backend is ready')
@@ -18,8 +24,6 @@ class SamBackend:
             bpe_path=str(bpe_path), device=device, load_from_HF=False, compile=False)
         self.net.eval()
         self.processor = Sam3Processor(self.net, confidence_threshold=.4)
-        default_grounding=checkpoint.parent/'grounding-dino-tiny'
-        self.grounding_checkpoint=Path(grounding_checkpoint) if grounding_checkpoint else default_grounding
         self.grounding=None
 
     def segment_many(self, rgb, specs):
@@ -66,13 +70,13 @@ class SamBackend:
     def propose_masks(self,rgb,prompts,threshold=.16,max_area_fraction=.035,category='target'):
         """Small-object detector fallback; lazily loaded, offline, RGB only."""
         from PIL import Image
-        if not self.grounding_checkpoint.is_dir():return []
         if self.grounding is None:
             from transformers import AutoProcessor,AutoModelForZeroShotObjectDetection
             proc=AutoProcessor.from_pretrained(self.grounding_checkpoint,local_files_only=True)
             net=AutoModelForZeroShotObjectDetection.from_pretrained(self.grounding_checkpoint,
                 local_files_only=True).to(self.device).eval()
             self.grounding=(proc,net)
+            print(f'[sweep_blocks_random] Loaded Grounding DINO from {self.grounding_checkpoint}', flush=True)
         proc,net=self.grounding;h,w=rgb.shape[:2]
         inputs=proc(images=[Image.fromarray(rgb)],text=['. '.join(prompts)+'.'],return_tensors='pt').to(self.device)
         with self.torch.inference_mode():prediction=net(**inputs)

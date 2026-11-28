@@ -30,8 +30,13 @@ if [[ "${backend}" == "auto" && ( "${task_name}" == "imitate_sorting_sequence" |
 fi
 
 # The official simulator reads its request timeout from this environment key.
-if [[ "${backend}" == "auto" && ( "${task_name}" == "deposit_coin" || "${task_name}" == "fasten_screws" ) ]]; then
-    export ROBODOJO_WS_REQUEST_TIMEOUT_S="${ROBODOJO_WS_REQUEST_TIMEOUT_S:-1800}"
+if [[ "${backend}" == "auto" ]]; then
+    case "${task_name}" in
+        deposit_coin|fasten_screws)
+            export ROBODOJO_WS_REQUEST_TIMEOUT_S="${ROBODOJO_WS_REQUEST_TIMEOUT_S:-1800}" ;;
+        stack_blocks|stack_blocks_random|stack_blocks_by_language|stack_bowls_random)
+            export ROBODOJO_WS_REQUEST_TIMEOUT_S="${ROBODOJO_WS_REQUEST_TIMEOUT_S:-600}" ;;
+    esac
 fi
 
 policy_name="$(basename "${SCRIPT_DIR}")"

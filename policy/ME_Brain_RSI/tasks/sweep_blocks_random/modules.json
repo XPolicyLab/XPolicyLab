@@ -45,7 +45,7 @@
     "file": "capabilities/perception/sweep_blocks_random_sam_backend.py",
     "resource": "resources/sweep_blocks_random/random3_rgb/sam_backend.py",
     "package": false,
-    "sha256": "99d926c56e2bf0da3db1bdb7d6de9eb6b40c32eefd8d64d054453930f310b3ca",
+    "sha256": "d68751efa8fc5614e464a67b8760aa678e2806d33e5aca36e02555aabf41ad84",
     "resource_identity": true
   },
   "random3_rgb.geometry": {

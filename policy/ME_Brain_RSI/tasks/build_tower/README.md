@@ -9,8 +9,7 @@
 在 `ME_Brain_RSI` 目录使用服务环境的 Python 启动：
 
 ```bash
-export SND_SAM_ROOT=../../../runs/ME_Brain_RSI/sam3_requests
-export SND_SAM_WEIGHTS=model_assets/sam3-transformers
+export ME_BRAIN_RUNTIME_CONFIG=./runtime_config.example.json
 CUDA_VISIBLE_DEVICES="${SAM3_GPU:?Set the assigned GPU index}" \
   python -u capabilities/perception/sam3_file_service.py
 ```
@@ -32,4 +31,4 @@ EVAL_ENV_TYPE=sim ROBODOJO_NUM_ENVS=1 \
   bash eval.sh RoboDojo build_tower none arx_x5 auto 0 0 0 uv base
 ```
 
-`runtime_config.example.json` 提供 `SND_SAM_ROOT` 的任务配置示例。相机标定位于 `resources/build_tower/configs/calibration.json`。策略输入为三路 RGB、任务指令和机器人自身状态。SAM3 服务通过文件请求接收 RGB 和文本提示，返回实例掩码与置信分数。
+`runtime_config.example.json` 的 `common.environment` 同时指定队列目录 `SND_SAM_ROOT` 和权重目录 `SND_SAM_WEIGHTS`。启动策略和服务时应选择同一份配置。相机标定位于 `resources/build_tower/configs/calibration.json`。策略输入为三路 RGB、任务指令和机器人自身状态。SAM3 服务通过文件请求接收 RGB 和文本提示，返回实例掩码与置信分数。

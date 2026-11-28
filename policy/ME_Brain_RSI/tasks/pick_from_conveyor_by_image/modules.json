@@ -33,7 +33,7 @@
     "file": "capabilities/perception/vision.py",
     "resource": "resources/pick_from_conveyor_by_image/coap/vision.py",
     "package": false,
-    "sha256": "ee7bdc3c73596269eb3d8c26fbd0b5977401cbf7e3d1f7236b78d4bd013bf592"
+    "sha256": "5acf6ced50250342010a96a1c5f9daddeb7debd5f3ac2da02233ee2bf4caf1a8"
   },
   "coap.geometry": {
     "file": "capabilities/geometry/geometry_for_push_t.py",

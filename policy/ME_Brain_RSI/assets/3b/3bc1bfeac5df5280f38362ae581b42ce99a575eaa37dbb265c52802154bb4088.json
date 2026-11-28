@@ -10,7 +10,8 @@
         0.057944455806786865,
         0.05065755973111363
       ],
-      "photo": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_030.png",
+      "photo": "00001/resource/img/photo.png",
+      "legacy_photo": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_030.png",
       "photo_sha256": "a5ae6b63930599a7871a18ec0b078d7c52ee9f74ae756e7870ae32b18afe1a0d",
       "metadata_sha256": "5259953c55ce2b350f8a8ea3e6e91ff88eac6e4e08530ad3f7fb56f5dfe67fa1"
     },
@@ -23,7 +24,8 @@
         0.07001895606428539,
         0.039728206471979034
       ],
-      "photo": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_031.png",
+      "photo": "00002/resource/img/photo.png",
+      "legacy_photo": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_031.png",
       "photo_sha256": "00b58e76268c758c6daa4d3db623e02d89970eca4ae59468a494e42af415fb18",
       "metadata_sha256": "7df40653ac1094c6a7af2d1fafc2b041d232659a3b97307f69ae91fd72b42a0b"
     },
@@ -36,7 +38,8 @@
         0.04229628681954762,
         0.026087036447788696
       ],
-      "photo": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_032.png",
+      "photo": "00003/resource/img/photo.png",
+      "legacy_photo": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_032.png",
       "photo_sha256": "a31afe68129e2de17c91543cb6695b2bba110aafb1f74a141d13c15d8e26ad9a",
       "metadata_sha256": "359a2d455dd88b27a7834c94b8e970b11e95878dbf700706b33b2458f9a9e3a9"
     },
@@ -49,7 +52,8 @@
         0.06069273769633492,
         0.02431210830177061
       ],
-      "photo": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_033.png",
+      "photo": "00004/resource/img/photo.png",
+      "legacy_photo": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_033.png",
       "photo_sha256": "c7f922b480f2d3bdb165a46cc6afb95b507fbc4a38e09482893c2ae02bb8f81c",
       "metadata_sha256": "0d36080079c8c7c063ba9454e3d02876dfae8acd920ffb4ea6a8a5f255e05bd0"
     },
@@ -62,7 +66,8 @@
         0.07490499319911563,
         0.0722074899126715
       ],
-      "photo": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_034.png",
+      "photo": "00005/resource/img/photo.png",
+      "legacy_photo": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_034.png",
       "photo_sha256": "cbf76f5d35b3bcc145cdba8ea714e2bdd17621ad355b7f50d7efb6153d375bb9",
       "metadata_sha256": "d74f8b7f7c1c6d5704c93aec53d4612baefa33e985105457e0c74f4f710f6243"
     },
@@ -75,7 +80,8 @@
         0.09753936443851374,
         0.046798619009927614
       ],
-      "photo": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_035.png",
+      "photo": "00006/resource/img/photo.png",
+      "legacy_photo": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_035.png",
       "photo_sha256": "7bd0892e1b984e10bd43cb0ec3d0257f5e31ee8310ca3e0a84892b604355dbc2",
       "metadata_sha256": "ef1c9340113490b134e959933aa667fd805811ff15caae8d050a0bb37a94ac44"
     },
@@ -88,7 +94,8 @@
         0.06034169117957177,
         0.12070558065312895
       ],
-      "photo": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_036.png",
+      "photo": "00007/resource/img/photo.png",
+      "legacy_photo": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_036.png",
       "photo_sha256": "6e64c6e2f09fcd2773ffeed84d1cbc03dda85794d5d0f126cb06ed73303045f5",
       "metadata_sha256": "df1d6e38e1dcf35317c38c8ee1ae3817ab0921aae6bca5ff8d48b552d13d3743"
     },
@@ -101,7 +108,8 @@
         0.03670654597534121,
         0.12006592197087129
       ],
-      "photo": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_037.png",
+      "photo": "00008/resource/img/photo.png",
+      "legacy_photo": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_037.png",
       "photo_sha256": "101a442b60017b33c4f64c987ef98646705f66b8f2771e6a5de7c6a32559eea0",
       "metadata_sha256": "a896586a444a36e210a1fbe9caa95135955615135db30b2e87905dfd521aef08"
     },
@@ -114,7 +122,8 @@
         0.09493926340877795,
         0.10175457248802681
       ],
-      "photo": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_038.png",
+      "photo": "00009/resource/img/photo.png",
+      "legacy_photo": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_038.png",
       "photo_sha256": "ff6d6794ecb4186d3d1c95dce6d8116fc4f64f449b62b2468583cbd344eb146b",
       "metadata_sha256": "2621609fae05aa3fb83e1e6c9488098a64f0bb5c445126d20633ab0929fd9e5f"
     },
@@ -127,7 +136,8 @@
         0.06088579700725165,
         0.018689662261991813
       ],
-      "photo": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_039.png",
+      "photo": "00010/resource/img/photo.png",
+      "legacy_photo": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_039.png",
       "photo_sha256": "abf1c9a5c88bb33b2aa7aa6dbbfeb6a93731f2e5c78717fcd252229d10900ca3",
       "metadata_sha256": "7605f810cc3a015920a5ea3a73b7b65b531dff93292c0fd388077b3ddba275fe"
     },
@@ -140,7 +150,8 @@
         0.16001127053211728,
         0.024358704242249746
       ],
-      "photo": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_040.png",
+      "photo": "00012/resource/img/photo.png",
+      "legacy_photo": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_040.png",
       "photo_sha256": "46291c66e8c116d8c81cbcf0809ebea3ae03320badc9166a2130bd0322077347",
       "metadata_sha256": "c650bbe1f3040165fceed637602c853ef2039165578094d52c7e10aa02ddfeed"
     },
@@ -153,7 +164,8 @@
         0.14473249201897298,
         0.01950651248406282
       ],
-      "photo": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_041.png",
+      "photo": "00013/resource/img/photo.png",
+      "legacy_photo": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_041.png",
       "photo_sha256": "0cf6e2ea0de592980dccafa645b3496144982aacd8863c21f46b7a12f79a4c1c",
       "metadata_sha256": "2382df5bdd705ade4dee33c9f1899b68cc98ed19d5813c79f16bd95a9cb788fb"
     },
@@ -166,7 +178,8 @@
         0.0960197066620318,
         0.07128099376565517
       ],
-      "photo": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_042.png",
+      "photo": "00014/resource/img/photo.png",
+      "legacy_photo": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_042.png",
       "photo_sha256": "7013bb0744e13bc51e8e0714131faa70187f3c2f3a25c9214acd6c471f21eda3",
       "metadata_sha256": "a7b475f27df906d1d4128c026232f4970abdc1cc264a0ea53417bde8c051ec95"
     },
@@ -179,7 +192,8 @@
         0.0925389870753617,
         0.1118801318813865
       ],
-      "photo": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_043.png",
+      "photo": "00015/resource/img/photo.png",
+      "legacy_photo": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_043.png",
       "photo_sha256": "67033461b59fda05ebc82bd0d604f33f8950974eb08c650a7cecf13c80d856c4",
       "metadata_sha256": "687445580d719bdf1511685ae9333b6f56dae378e7b0e80a999943667d07c13e"
     },
@@ -192,7 +206,8 @@
         0.07926407697410819,
         0.06559969916400867
       ],
-      "photo": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_044.png",
+      "photo": "00016/resource/img/photo.png",
+      "legacy_photo": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_044.png",
       "photo_sha256": "cc3ec25f516b51e7079a07fcd2473617e205c5073489e7dadd8c401de4c0ebf2",
       "metadata_sha256": "7081580b21d2ebef8ac9920032280b41ca6da15e176ed5235aaff8df648c28d0"
     }

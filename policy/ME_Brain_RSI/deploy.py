@@ -1,4 +1,7 @@
 """Central deployment dispatch; task-specific control loops keep their timing."""
+import os
+from dataclasses import replace
+
 from .core.observation import restrict_public_observation
 from .routing import configure
 
@@ -50,16 +53,25 @@ def _run(env, client, batch):
     if route['driver'] == 'vla':
         from . import vla_deploy
         return (vla_deploy.eval_one_episode_batch if batch else vla_deploy.eval_one_episode)(env, client)
-    if batch != route['eval_batch']:
-        raise ValueError('Wrong eval_batch for the selected task')
+    # RoboDojo selects the outer callback from the static deploy.yml.
+    # The registered task selects its own protocol inside a single environment.
     if getattr(env, 'num_envs', 1) != 1:
         raise ValueError('This strategy requires one environment per process')
+    if 'request_timeout_s' in route:
+        # RoboDojo 09bd5f5e constructs WsModelClient before loading this adapter.
+        # Update its existing protocol configuration before the first slow call.
+        transport = getattr(client, '_client', None)
+        settings = getattr(transport, 'config', None)
+        if settings is not None and hasattr(settings, 'request_timeout_s'):
+            minimum = max(settings.request_timeout_s, route['request_timeout_s'])
+            timeout = float(os.environ.get('ROBODOJO_WS_REQUEST_TIMEOUT_S', minimum))
+            transport.config = replace(settings, request_timeout_s=timeout)
     config, run = prepare(config, route)
     if route['deploy']:
         from .core.modules import TaskModules
         module = TaskModules(route['canonical_task']).import_module(route['deploy'])
         environment = DecodedEnvironment(env, public_only=route['driver'] == 'generator')
-        return (module.eval_one_episode_batch if batch else module.eval_one_episode)(environment, client)
+        return (module.eval_one_episode_batch if route['eval_batch'] else module.eval_one_episode)(environment, client)
     if route['driver'] == 'equation':
         return _batch_loop(env, client)
     client.call(func_name='reset')

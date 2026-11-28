@@ -81,7 +81,7 @@
     "file": "capabilities/control/sorting_dino.py",
     "resource": "resources/classify_objects/coap/tasks/sorting_r03_dino.py",
     "package": false,
-    "sha256": "d553a27b4dc24746e4556d22dd016564e0dc3b79a9daaaae265d469025f07441"
+    "sha256": "64b1ee031d55e5f6f02d7aed3c2bbb9d50eecd550b3dfbd8debd9e43dbe6084e"
   },
   "coap.tasks.sorting_r01_d": {
     "file": "capabilities/control/sorting_d.py",
