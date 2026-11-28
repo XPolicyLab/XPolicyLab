@@ -1,0 +1,86 @@
+{
+  "coap.tasks.pack_random": {
+    "file": "capabilities/control/pack_random.py",
+    "resource": "resources/pack_objects_into_box/coap/tasks/car_facing_templates.json",
+    "package": false,
+    "sha256": "32b2965c360a4aa887b0b76f56fcf8cecb4c08f65207fad7d27ffa4f4b6fdad1"
+  },
+  "coap.tasks": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/pack_objects_into_box/coap/tasks/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "coap": {
+    "file": "capabilities/control/robot.py",
+    "resource": "resources/pack_objects_into_box/coap/__init__.py",
+    "package": true,
+    "sha256": "0d5ab17fdb679b7515310cbf23a56079be09c65016ddcc46a3e1a7c44a05926e"
+  },
+  "coap.executor": {
+    "file": "capabilities/control/executor_for_pack_objects_into_box.py",
+    "resource": "resources/pack_objects_into_box/coap/executor.py",
+    "package": false,
+    "sha256": "a660ebccd6b2a779370681122ef66da82ef9ee8f26732ca9da32ecba9717877c"
+  },
+  "coap.dual": {
+    "file": "capabilities/control/dual.py",
+    "resource": "resources/pack_objects_into_box/coap/dual.py",
+    "package": false,
+    "sha256": "f776f786654efba26ded2e378e86bc30aa39e022c8055297c81f0f02c498e480"
+  },
+  "coap.kinematics": {
+    "file": "capabilities/motion/kinematics_for_pack_objects_into_box.py",
+    "resource": "resources/pack_objects_into_box/coap/kinematics.py",
+    "package": false,
+    "sha256": "3b22a8f022cdad5a92e302f4054917bee6b450a0baeb03e7673b874a349ba002"
+  },
+  "coap.motion": {
+    "file": "capabilities/motion/motion_for_pack_objects_into_box.py",
+    "resource": "resources/pack_objects_into_box/coap/motion.py",
+    "package": false,
+    "sha256": "67a279ee5f05f10a39e4e4a7a2db6885437e5b45c74c0b210f01c71e8ef3a2d9"
+  },
+  "coap.robot_collision": {
+    "file": "capabilities/motion/robot_collision.py",
+    "resource": "resources/pack_objects_into_box/coap/robot_collision.py",
+    "package": false,
+    "sha256": "179d4a220b38a8bfb0d360d0d724bd7da1a5882af0e996a0d834e27ebb05257a"
+  },
+  "coap.tasks.containers_vision": {
+    "file": "capabilities/perception/containers_vision_for_pack_objects_into_box.py",
+    "resource": "resources/pack_objects_into_box/coap/tasks/containers_vision.py",
+    "package": false,
+    "sha256": "e04949d14ae4f5a2338fa1d911e47229df964f8234320d755b4572c2ce32db7c"
+  },
+  "coap.policy": {
+    "file": "capabilities/control/policy_for_pack_objects_into_box.py",
+    "resource": "resources/pack_objects_into_box/coap/policy.py",
+    "package": false,
+    "sha256": "7f5915719b37da1445149a28c224348c6ec3acb2da71a5c04b226f73ddee014c"
+  },
+  "model": {
+    "file": "capabilities/control/model_for_pack_objects_into_box.py",
+    "resource": "resources/pack_objects_into_box/model.py",
+    "package": false,
+    "sha256": "72c5ed1e176d6034b0ada3e7cf3184b4b893f9c0d68a31d8516dae84f138e476"
+  },
+  "coap.evidence": {
+    "file": "capabilities/observation/evidence.py",
+    "resource": "resources/pack_objects_into_box/coap/evidence.py",
+    "package": false,
+    "sha256": "c7ffd03aeec0986c62469e5823493a4fb2ed12ff759ee718f1914469c2039da7"
+  },
+  "coap.context": {
+    "file": "capabilities/control/context_for_pack_objects_into_box.py",
+    "resource": "resources/pack_objects_into_box/coap/context.py",
+    "package": false,
+    "sha256": "ff095e227e3f78dec6daed8724fa6f3ae85b2f45a1c2bb413186d905d595840f"
+  },
+  "coap.perception": {
+    "file": "capabilities/perception/perception_for_pack_objects_into_box.py",
+    "resource": "resources/pack_objects_into_box/coap/perception.py",
+    "package": false,
+    "sha256": "1f67abb7a89cc94b94a2d7f53e7dd8560ce40f3b954228660c4e7a3255137f93"
+  }
+}

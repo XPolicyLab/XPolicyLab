@@ -1,0 +1,77 @@
+{
+  "10": {
+    "body_center_local": [
+      -0.0177,
+      0.0001,
+      -0.0381
+    ],
+    "body_radius": 0.0339,
+    "rim_radius": 0.030354017280302195,
+    "rim_z": 0.037863919511437416,
+    "floor_local_z": -0.038100000470876694,
+    "mesh_member_sha256": "c2fe3f475163bbe8a4b2d5853986d94a022a15ec0fa9e6b846e88fd0970f4394",
+    "metadata_sha256": "0c9ae22ff08ff82ed2eeabb73654c709254929766d0cec6dbc996ce8ecab60a1",
+    "native_handle_hole_available": true,
+    "surface_voxel_m": 0.0007
+  },
+  "11": {
+    "body_center_local": [
+      -0.016,
+      0.0001,
+      -0.0401
+    ],
+    "body_radius": 0.0454,
+    "rim_radius": 0.02585873657050382,
+    "rim_z": 0.03960495628416538,
+    "floor_local_z": -0.04006723314523697,
+    "mesh_member_sha256": "ec22bb8cc7ca32a4a5518513a77bedc86489606b88d36a2eef00ad384a2ccdec",
+    "metadata_sha256": "1e3709c1325acf7e83cbdf9d8b17050e3cc830617f4967dd3acb1352102a3ba2",
+    "native_handle_hole_available": true,
+    "surface_voxel_m": 0.0007
+  },
+  "12": {
+    "body_center_local": [
+      -0.0126,
+      -0.0,
+      -0.041
+    ],
+    "body_radius": 0.0415,
+    "rim_radius": 0.0346895732634214,
+    "rim_z": 0.03999288007616997,
+    "floor_local_z": -0.04103148356080055,
+    "mesh_member_sha256": "c50dc36a4f8df27c5197ceb95c4f6df3114eaccb831c443a997e45ed3f167912",
+    "metadata_sha256": "b3b333f0a2a023802d1ddb31b10869f2c93a09c1ca5d6c5377963b533c986862",
+    "native_handle_hole_available": true,
+    "surface_voxel_m": 0.0007
+  },
+  "13": {
+    "body_center_local": [
+      -0.0126,
+      -0.0,
+      -0.041
+    ],
+    "body_radius": 0.0415,
+    "rim_radius": 0.0346895732634214,
+    "rim_z": 0.03999288007616997,
+    "floor_local_z": -0.04103148356080055,
+    "mesh_member_sha256": "dca2cd39928768a6b28092a98000f2dc89cec9c030004dba21c95d967bdeeaf2",
+    "metadata_sha256": "84e1c9c4263bf8d9f165a138378d2018df32fb3c146d2cb24838c59d7c28564c",
+    "native_handle_hole_available": true,
+    "surface_voxel_m": 0.0007
+  },
+  "14": {
+    "body_center_local": [
+      -0.0158,
+      0.0001,
+      -0.0346
+    ],
+    "body_radius": 0.0383,
+    "rim_radius": 0.03536965184770717,
+    "rim_z": 0.03399341739714146,
+    "floor_local_z": -0.034572288393974304,
+    "mesh_member_sha256": "4385d27c761cdab99c13ff7cfcffb0ecc6beaf5992d95a3dd56345c40cba510a",
+    "metadata_sha256": "e5bb551060959afbd6fbeaa453961a4b68f52af88d966d7ee8fa975fb4712d54",
+    "native_handle_hole_available": true,
+    "surface_voxel_m": 0.0007
+  }
+}

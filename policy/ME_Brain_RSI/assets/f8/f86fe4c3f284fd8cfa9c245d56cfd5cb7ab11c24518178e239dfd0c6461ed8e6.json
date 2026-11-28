@@ -1,0 +1,319 @@
+{
+  "schema": "lxm6wuec.structured-module/v1",
+  "classes": {
+    "Model": {
+      "schema": "lxm6wuec.skill-program-memory/v1",
+      "revision": "1bd7ea9fcaaae01504f3789ead69a816e3b5f55a66f31eeb3f43d526fd9a1f91",
+      "programs": {
+        "prepare_case": {
+          "steps": [
+            {
+              "operation": "Model.prepare_case.episode.reset",
+              "revision": "1bd7ea9fcaaae01504f3789ead69a816e3b5f55a66f31eeb3f43d526fd9a1f91"
+            }
+          ]
+        },
+        "on_trial_end": {
+          "steps": [
+            {
+              "operation": "Model.on_trial_end.episode.reset",
+              "revision": "1bd7ea9fcaaae01504f3789ead69a816e3b5f55a66f31eeb3f43d526fd9a1f91"
+            }
+          ]
+        },
+        "update_obs_batch": {
+          "steps": [
+            {
+              "operation": "Model.update_obs_batch.observation.ingest",
+              "revision": "1bd7ea9fcaaae01504f3789ead69a816e3b5f55a66f31eeb3f43d526fd9a1f91"
+            }
+          ]
+        },
+        "update_obs": {
+          "steps": [
+            {
+              "operation": "Model.update_obs.observation.ingest",
+              "revision": "1bd7ea9fcaaae01504f3789ead69a816e3b5f55a66f31eeb3f43d526fd9a1f91"
+            }
+          ]
+        },
+        "get_action": {
+          "steps": [
+            {
+              "operation": "Model.get_action.execution.advance",
+              "revision": "1bd7ea9fcaaae01504f3789ead69a816e3b5f55a66f31eeb3f43d526fd9a1f91"
+            }
+          ]
+        },
+        "get_action_batch": {
+          "steps": [
+            {
+              "operation": "Model.get_action_batch.execution.advance",
+              "revision": "1bd7ea9fcaaae01504f3789ead69a816e3b5f55a66f31eeb3f43d526fd9a1f91"
+            }
+          ]
+        },
+        "act": {
+          "steps": [
+            {
+              "operation": "Model.act.observation.capture",
+              "revision": "1bd7ea9fcaaae01504f3789ead69a816e3b5f55a66f31eeb3f43d526fd9a1f91"
+            },
+            {
+              "operation": "Model.act.vision.initialize_key_estimate",
+              "revision": "1bd7ea9fcaaae01504f3789ead69a816e3b5f55a66f31eeb3f43d526fd9a1f91"
+            },
+            {
+              "operation": "Model.act.state.restore_phase",
+              "revision": "1bd7ea9fcaaae01504f3789ead69a816e3b5f55a66f31eeb3f43d526fd9a1f91"
+            },
+            {
+              "operation": "Model.act.evidence.capture_image",
+              "revision": "1bd7ea9fcaaae01504f3789ead69a816e3b5f55a66f31eeb3f43d526fd9a1f91"
+            },
+            {
+              "operation": "Model.act.planning.transition_constraints",
+              "revision": "1bd7ea9fcaaae01504f3789ead69a816e3b5f55a66f31eeb3f43d526fd9a1f91"
+            },
+            {
+              "operation": "Model.act.motion.emit_action",
+              "revision": "1bd7ea9fcaaae01504f3789ead69a816e3b5f55a66f31eeb3f43d526fd9a1f91"
+            },
+            {
+              "operation": "Model.act.evidence.record_and_advance",
+              "revision": "1bd7ea9fcaaae01504f3789ead69a816e3b5f55a66f31eeb3f43d526fd9a1f91"
+            }
+          ]
+        }
+      },
+      "bindings": {
+        "prepare_case": [
+          {
+            "operation": "Model.prepare_case.episode.reset",
+            "input": "Model.prepare_case.frame.0",
+            "output": "Model.prepare_case.frame.1"
+          }
+        ],
+        "on_trial_end": [
+          {
+            "operation": "Model.on_trial_end.episode.reset",
+            "input": "Model.on_trial_end.frame.0",
+            "output": "Model.on_trial_end.frame.1"
+          }
+        ],
+        "update_obs_batch": [
+          {
+            "operation": "Model.update_obs_batch.observation.ingest",
+            "input": "Model.update_obs_batch.frame.0",
+            "output": "Model.update_obs_batch.frame.1"
+          }
+        ],
+        "update_obs": [
+          {
+            "operation": "Model.update_obs.observation.ingest",
+            "input": "Model.update_obs.frame.0",
+            "output": "Model.update_obs.frame.1"
+          }
+        ],
+        "get_action": [
+          {
+            "operation": "Model.get_action.execution.advance",
+            "input": "Model.get_action.frame.0",
+            "output": "Model.get_action.frame.1"
+          }
+        ],
+        "get_action_batch": [
+          {
+            "operation": "Model.get_action_batch.execution.advance",
+            "input": "Model.get_action_batch.frame.0",
+            "output": "Model.get_action_batch.frame.1"
+          }
+        ],
+        "act": [
+          {
+            "operation": "Model.act.observation.capture",
+            "input": "Model.act.frame.0",
+            "output": "Model.act.frame.1"
+          },
+          {
+            "operation": "Model.act.vision.initialize_key_estimate",
+            "input": "Model.act.frame.1",
+            "output": "Model.act.frame.2"
+          },
+          {
+            "operation": "Model.act.state.restore_phase",
+            "input": "Model.act.frame.2",
+            "output": "Model.act.frame.3"
+          },
+          {
+            "operation": "Model.act.evidence.capture_image",
+            "input": "Model.act.frame.3",
+            "output": "Model.act.frame.4"
+          },
+          {
+            "operation": "Model.act.planning.transition_constraints",
+            "input": "Model.act.frame.4",
+            "output": "Model.act.frame.5"
+          },
+          {
+            "operation": "Model.act.motion.emit_action",
+            "input": "Model.act.frame.5",
+            "output": "Model.act.frame.6"
+          },
+          {
+            "operation": "Model.act.evidence.record_and_advance",
+            "input": "Model.act.frame.6",
+            "output": "Model.act.frame.7"
+          }
+        ]
+      }
+    }
+  },
+  "operations": {
+    "Model": [
+      {
+        "operation": "Model.prepare_case.episode.reset",
+        "revision": "1bd7ea9fcaaae01504f3789ead69a816e3b5f55a66f31eeb3f43d526fd9a1f91",
+        "method": "_memory_Model_prepare_case_0",
+        "input": "Model.prepare_case.frame.0",
+        "output": "Model.prepare_case.frame.1",
+        "original_lines": [
+          102,
+          102
+        ]
+      },
+      {
+        "operation": "Model.on_trial_end.episode.reset",
+        "revision": "1bd7ea9fcaaae01504f3789ead69a816e3b5f55a66f31eeb3f43d526fd9a1f91",
+        "method": "_memory_Model_on_trial_end_0",
+        "input": "Model.on_trial_end.frame.0",
+        "output": "Model.on_trial_end.frame.1",
+        "original_lines": [
+          103,
+          103
+        ]
+      },
+      {
+        "operation": "Model.update_obs_batch.observation.ingest",
+        "revision": "1bd7ea9fcaaae01504f3789ead69a816e3b5f55a66f31eeb3f43d526fd9a1f91",
+        "method": "_memory_Model_update_obs_batch_0",
+        "input": "Model.update_obs_batch.frame.0",
+        "output": "Model.update_obs_batch.frame.1",
+        "original_lines": [
+          105,
+          105
+        ]
+      },
+      {
+        "operation": "Model.update_obs.observation.ingest",
+        "revision": "1bd7ea9fcaaae01504f3789ead69a816e3b5f55a66f31eeb3f43d526fd9a1f91",
+        "method": "_memory_Model_update_obs_0",
+        "input": "Model.update_obs.frame.0",
+        "output": "Model.update_obs.frame.1",
+        "original_lines": [
+          106,
+          106
+        ]
+      },
+      {
+        "operation": "Model.get_action.execution.advance",
+        "revision": "1bd7ea9fcaaae01504f3789ead69a816e3b5f55a66f31eeb3f43d526fd9a1f91",
+        "method": "_memory_Model_get_action_0",
+        "input": "Model.get_action.frame.0",
+        "output": "Model.get_action.frame.1",
+        "original_lines": [
+          107,
+          107
+        ]
+      },
+      {
+        "operation": "Model.get_action_batch.execution.advance",
+        "revision": "1bd7ea9fcaaae01504f3789ead69a816e3b5f55a66f31eeb3f43d526fd9a1f91",
+        "method": "_memory_Model_get_action_batch_0",
+        "input": "Model.get_action_batch.frame.0",
+        "output": "Model.get_action_batch.frame.1",
+        "original_lines": [
+          108,
+          108
+        ]
+      },
+      {
+        "operation": "Model.act.observation.capture",
+        "revision": "1bd7ea9fcaaae01504f3789ead69a816e3b5f55a66f31eeb3f43d526fd9a1f91",
+        "method": "_memory_Model_act_0",
+        "input": "Model.act.frame.0",
+        "output": "Model.act.frame.1",
+        "original_lines": [
+          110,
+          110
+        ]
+      },
+      {
+        "operation": "Model.act.vision.initialize_key_estimate",
+        "revision": "1bd7ea9fcaaae01504f3789ead69a816e3b5f55a66f31eeb3f43d526fd9a1f91",
+        "method": "_memory_Model_act_1",
+        "input": "Model.act.frame.1",
+        "output": "Model.act.frame.2",
+        "original_lines": [
+          111,
+          123
+        ]
+      },
+      {
+        "operation": "Model.act.state.restore_phase",
+        "revision": "1bd7ea9fcaaae01504f3789ead69a816e3b5f55a66f31eeb3f43d526fd9a1f91",
+        "method": "_memory_Model_act_2",
+        "input": "Model.act.frame.2",
+        "output": "Model.act.frame.3",
+        "original_lines": [
+          124,
+          124
+        ]
+      },
+      {
+        "operation": "Model.act.evidence.capture_image",
+        "revision": "1bd7ea9fcaaae01504f3789ead69a816e3b5f55a66f31eeb3f43d526fd9a1f91",
+        "method": "_memory_Model_act_3",
+        "input": "Model.act.frame.3",
+        "output": "Model.act.frame.4",
+        "original_lines": [
+          125,
+          128
+        ]
+      },
+      {
+        "operation": "Model.act.planning.transition_constraints",
+        "revision": "1bd7ea9fcaaae01504f3789ead69a816e3b5f55a66f31eeb3f43d526fd9a1f91",
+        "method": "_memory_Model_act_4",
+        "input": "Model.act.frame.4",
+        "output": "Model.act.frame.5",
+        "original_lines": [
+          129,
+          220
+        ]
+      },
+      {
+        "operation": "Model.act.motion.emit_action",
+        "revision": "1bd7ea9fcaaae01504f3789ead69a816e3b5f55a66f31eeb3f43d526fd9a1f91",
+        "method": "_memory_Model_act_5",
+        "input": "Model.act.frame.5",
+        "output": "Model.act.frame.6",
+        "original_lines": [
+          221,
+          235
+        ]
+      },
+      {
+        "operation": "Model.act.evidence.record_and_advance",
+        "revision": "1bd7ea9fcaaae01504f3789ead69a816e3b5f55a66f31eeb3f43d526fd9a1f91",
+        "method": "_memory_Model_act_6",
+        "input": "Model.act.frame.6",
+        "output": "Model.act.frame.7",
+        "original_lines": [
+          236,
+          240
+        ]
+      }
+    ]
+  }
+}

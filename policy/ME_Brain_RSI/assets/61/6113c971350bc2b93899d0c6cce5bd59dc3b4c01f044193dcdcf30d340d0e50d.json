@@ -1,0 +1,15 @@
+{
+  "schema": "b88r42wq.public-scene-calibration/v1",
+  "source": "Public RoboDojo conveyor CAD visual Belt mesh and fixed scene generator; no episode state",
+  "belt_raw_mesh_top": 0.712212,
+  "ground_sampling_height": 0.05,
+  "world_belt_contact_height": 0.762212,
+  "explanation": "LayoutManager.select_ground defines ground sampling height=thickness/2. Dynamic conveyor root has public contact-circle z=0; the fixed Ground sampler adds .05. Belt mesh reaches .712212 locally. Physical Ground surface itself is z=0; sampling and physical geometry differ.",
+  "source_files": {
+    "work/conveyor-public-assets/Dynamic/conveyor/00000/main.usdc": "77d53250167dc56f3360e4cf6feca6dba9892fbdfea4b92190529f0a9318161b",
+    "work/conveyor-public-assets/Dynamic/conveyor/00000/SubUSDs/ConveyorBelt_A09.usd": "8d72c45eeb94400d2271aea6cb67161d46170f28a2db65efb8f74941d0f942d0",
+    "work/conveyor-public-assets/Dynamic/conveyor/00000/metadata.json": "cd12712dd7f58cd0137913ada13803c804e0b40b9679931c941629cf012188be",
+    "work/RoboDojo/env/scene_manager/layout_manager.py": "7f244bec972e09236a94d8b4761b248ba19ec3f61c631d3c83c00b82912a14b8",
+    "work/RoboDojo/env_cfg/scene/conveyor.yml": "c1dfd27faf978f90dfc4825cd83bd203823547c46793f4f9201ce9f4b43beee7"
+  }
+}

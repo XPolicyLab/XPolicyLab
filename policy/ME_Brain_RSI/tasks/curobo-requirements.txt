@@ -1,0 +1,7 @@
+# Strategy server environment for insert_tubes, deposit_coin, and fasten_screws.
+# PyTorch 2.7.0+cu128 and the pinned RoboDojo CuRobo source are installed by install.sh.
+numpy==1.26.0
+opencv-python-headless==4.11.0.86
+scipy==1.15.3
+warp-lang==1.11.0
+websockets==14.2

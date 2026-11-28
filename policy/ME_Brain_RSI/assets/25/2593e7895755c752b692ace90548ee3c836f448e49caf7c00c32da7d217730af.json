@@ -1,0 +1,21 @@
+{
+  "release": "physicalrsi-skill-assets-v4",
+  "implementation": "sort_nesting_dolls/73180bfd0621b79e",
+  "tree_sha256": "c331662ae272c3f51679be78a533d06d2219c2c9ea0d20781988afa58e93604f",
+  "blob_index_sha256": "d46c83461e26d3415ea450b00e5bb4d2f175997e37535afe025aba7c3cd97414",
+  "full_archive_part_hashes_verified": false,
+  "selected_blob_sha256_verified": true,
+  "download_transport": "https://ghfast.top/",
+  "omitted_duplicate": "assets/grounding-dino-tiny/pytorch_model.bin",
+  "note": "Only the SAM3 checkpoint is required by stack_bowls_rgb_v1; the sam3 code is vendored inside the policy package.",
+  "files": [
+    {
+      "release_path": "implementations/sort_nesting_dolls/73180bfd0621b79e/sort_nesting_dolls/assets/sam3.pt",
+      "workspace_path": "runtime/nesting/physicalrsi_v4/assets/sam3.pt",
+      "sha256": "9999e2341ceef5e136daa386eecb55cb414446a00ac2b55eb2dfd2f7c3cf8c9e",
+      "bytes": 3450062241,
+      "archive_offset": 2069379584,
+      "verified": true
+    }
+  ]
+}

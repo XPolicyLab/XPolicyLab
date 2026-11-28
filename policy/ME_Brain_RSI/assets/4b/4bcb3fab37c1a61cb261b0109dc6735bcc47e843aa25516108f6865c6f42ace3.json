@@ -1,0 +1,10 @@
+{
+  "normal_observer_sha256": "c52be24f403ff5e4cb117a0dffe42b82eb50356a14ab618d40db559b4e950e1f",
+  "ordinary_replay_frames": 15,
+  "ordinary_observations_unchanged": true,
+  "measured_wrist_soft_ranking": true,
+  "sam_language_material_geometry": false,
+  "visible_watch_radial_closing_axis": false,
+  "runtime_safety_checks_added": false,
+  "replay_observations_in_frozen_source": false
+}

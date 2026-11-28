@@ -1,0 +1,391 @@
+{
+  "schema": "lxm6wuec.structured-module/v1",
+  "classes": {
+    "InsertPolicy": {
+      "schema": "lxm6wuec.skill-program-memory/v1",
+      "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90",
+      "programs": {
+        "reset": {
+          "steps": [
+            {
+              "operation": "InsertPolicy.reset.episode.reset_perception_executor",
+              "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90"
+            },
+            {
+              "operation": "InsertPolicy.reset.episode.clear_memory",
+              "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90"
+            }
+          ]
+        },
+        "prepare_case": {
+          "steps": [
+            {
+              "operation": "InsertPolicy.prepare_case.episode.reset",
+              "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90"
+            }
+          ]
+        },
+        "on_trial_end": {
+          "steps": [
+            {
+              "operation": "InsertPolicy.on_trial_end.episode.reset",
+              "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90"
+            }
+          ]
+        },
+        "_observe": {
+          "steps": [
+            {
+              "operation": "InsertPolicy._observe.observation.sanitize_and_store",
+              "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90"
+            },
+            {
+              "operation": "InsertPolicy._observe.vision.observe",
+              "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90"
+            }
+          ]
+        },
+        "update_obs": {
+          "steps": [
+            {
+              "operation": "InsertPolicy.update_obs.observation.ingest",
+              "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90"
+            }
+          ]
+        },
+        "update_obs_batch": {
+          "steps": [
+            {
+              "operation": "InsertPolicy.update_obs_batch.observation.ingest",
+              "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90"
+            }
+          ]
+        },
+        "_envelope": {
+          "steps": [
+            {
+              "operation": "InsertPolicy._envelope.observation.robot_state",
+              "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90"
+            },
+            {
+              "operation": "InsertPolicy._envelope.planning.initialize_insertion",
+              "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90"
+            },
+            {
+              "operation": "InsertPolicy._envelope.planning.refine_from_observation",
+              "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90"
+            },
+            {
+              "operation": "InsertPolicy._envelope.motion.build_envelope",
+              "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90"
+            }
+          ]
+        },
+        "get_action": {
+          "steps": [
+            {
+              "operation": "InsertPolicy.get_action.motion.bind",
+              "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90"
+            },
+            {
+              "operation": "InsertPolicy.get_action.execution.advance",
+              "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90"
+            }
+          ]
+        },
+        "get_action_batch": {
+          "steps": [
+            {
+              "operation": "InsertPolicy.get_action_batch.motion.bind_batch",
+              "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90"
+            },
+            {
+              "operation": "InsertPolicy.get_action_batch.execution.advance_batch",
+              "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90"
+            }
+          ]
+        }
+      },
+      "bindings": {
+        "reset": [
+          {
+            "operation": "InsertPolicy.reset.episode.reset_perception_executor",
+            "input": "InsertPolicy.reset.frame.0",
+            "output": "InsertPolicy.reset.frame.1"
+          },
+          {
+            "operation": "InsertPolicy.reset.episode.clear_memory",
+            "input": "InsertPolicy.reset.frame.1",
+            "output": "InsertPolicy.reset.frame.2"
+          }
+        ],
+        "prepare_case": [
+          {
+            "operation": "InsertPolicy.prepare_case.episode.reset",
+            "input": "InsertPolicy.prepare_case.frame.0",
+            "output": "InsertPolicy.prepare_case.frame.1"
+          }
+        ],
+        "on_trial_end": [
+          {
+            "operation": "InsertPolicy.on_trial_end.episode.reset",
+            "input": "InsertPolicy.on_trial_end.frame.0",
+            "output": "InsertPolicy.on_trial_end.frame.1"
+          }
+        ],
+        "_observe": [
+          {
+            "operation": "InsertPolicy._observe.observation.sanitize_and_store",
+            "input": "InsertPolicy._observe.frame.0",
+            "output": "InsertPolicy._observe.frame.1"
+          },
+          {
+            "operation": "InsertPolicy._observe.vision.observe",
+            "input": "InsertPolicy._observe.frame.1",
+            "output": "InsertPolicy._observe.frame.2"
+          }
+        ],
+        "update_obs": [
+          {
+            "operation": "InsertPolicy.update_obs.observation.ingest",
+            "input": "InsertPolicy.update_obs.frame.0",
+            "output": "InsertPolicy.update_obs.frame.1"
+          }
+        ],
+        "update_obs_batch": [
+          {
+            "operation": "InsertPolicy.update_obs_batch.observation.ingest",
+            "input": "InsertPolicy.update_obs_batch.frame.0",
+            "output": "InsertPolicy.update_obs_batch.frame.1"
+          }
+        ],
+        "_envelope": [
+          {
+            "operation": "InsertPolicy._envelope.observation.robot_state",
+            "input": "InsertPolicy._envelope.frame.0",
+            "output": "InsertPolicy._envelope.frame.1"
+          },
+          {
+            "operation": "InsertPolicy._envelope.planning.initialize_insertion",
+            "input": "InsertPolicy._envelope.frame.1",
+            "output": "InsertPolicy._envelope.frame.2"
+          },
+          {
+            "operation": "InsertPolicy._envelope.planning.refine_from_observation",
+            "input": "InsertPolicy._envelope.frame.2",
+            "output": "InsertPolicy._envelope.frame.3"
+          },
+          {
+            "operation": "InsertPolicy._envelope.motion.build_envelope",
+            "input": "InsertPolicy._envelope.frame.3",
+            "output": "InsertPolicy._envelope.frame.4"
+          }
+        ],
+        "get_action": [
+          {
+            "operation": "InsertPolicy.get_action.motion.bind",
+            "input": "InsertPolicy.get_action.frame.0",
+            "output": "InsertPolicy.get_action.frame.1"
+          },
+          {
+            "operation": "InsertPolicy.get_action.execution.advance",
+            "input": "InsertPolicy.get_action.frame.1",
+            "output": "InsertPolicy.get_action.frame.2"
+          }
+        ],
+        "get_action_batch": [
+          {
+            "operation": "InsertPolicy.get_action_batch.motion.bind_batch",
+            "input": "InsertPolicy.get_action_batch.frame.0",
+            "output": "InsertPolicy.get_action_batch.frame.1"
+          },
+          {
+            "operation": "InsertPolicy.get_action_batch.execution.advance_batch",
+            "input": "InsertPolicy.get_action_batch.frame.1",
+            "output": "InsertPolicy.get_action_batch.frame.2"
+          }
+        ]
+      }
+    }
+  },
+  "operations": {
+    "InsertPolicy": [
+      {
+        "operation": "InsertPolicy.reset.episode.reset_perception_executor",
+        "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90",
+        "method": "_memory_InsertPolicy_reset_0",
+        "input": "InsertPolicy.reset.frame.0",
+        "output": "InsertPolicy.reset.frame.1",
+        "original_lines": [
+          22,
+          23
+        ]
+      },
+      {
+        "operation": "InsertPolicy.reset.episode.clear_memory",
+        "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90",
+        "method": "_memory_InsertPolicy_reset_1",
+        "input": "InsertPolicy.reset.frame.1",
+        "output": "InsertPolicy.reset.frame.2",
+        "original_lines": [
+          24,
+          28
+        ]
+      },
+      {
+        "operation": "InsertPolicy.prepare_case.episode.reset",
+        "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90",
+        "method": "_memory_InsertPolicy_prepare_case_0",
+        "input": "InsertPolicy.prepare_case.frame.0",
+        "output": "InsertPolicy.prepare_case.frame.1",
+        "original_lines": [
+          31,
+          31
+        ]
+      },
+      {
+        "operation": "InsertPolicy.on_trial_end.episode.reset",
+        "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90",
+        "method": "_memory_InsertPolicy_on_trial_end_0",
+        "input": "InsertPolicy.on_trial_end.frame.0",
+        "output": "InsertPolicy.on_trial_end.frame.1",
+        "original_lines": [
+          34,
+          34
+        ]
+      },
+      {
+        "operation": "InsertPolicy._observe.observation.sanitize_and_store",
+        "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90",
+        "method": "_memory_InsertPolicy__observe_0",
+        "input": "InsertPolicy._observe.frame.0",
+        "output": "InsertPolicy._observe.frame.1",
+        "original_lines": [
+          37,
+          39
+        ]
+      },
+      {
+        "operation": "InsertPolicy._observe.vision.observe",
+        "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90",
+        "method": "_memory_InsertPolicy__observe_1",
+        "input": "InsertPolicy._observe.frame.1",
+        "output": "InsertPolicy._observe.frame.2",
+        "original_lines": [
+          40,
+          40
+        ]
+      },
+      {
+        "operation": "InsertPolicy.update_obs.observation.ingest",
+        "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90",
+        "method": "_memory_InsertPolicy_update_obs_0",
+        "input": "InsertPolicy.update_obs.frame.0",
+        "output": "InsertPolicy.update_obs.frame.1",
+        "original_lines": [
+          43,
+          44
+        ]
+      },
+      {
+        "operation": "InsertPolicy.update_obs_batch.observation.ingest",
+        "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90",
+        "method": "_memory_InsertPolicy_update_obs_batch_0",
+        "input": "InsertPolicy.update_obs_batch.frame.0",
+        "output": "InsertPolicy.update_obs_batch.frame.1",
+        "original_lines": [
+          47,
+          49
+        ]
+      },
+      {
+        "operation": "InsertPolicy._envelope.observation.robot_state",
+        "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90",
+        "method": "_memory_InsertPolicy__envelope_0",
+        "input": "InsertPolicy._envelope.frame.0",
+        "output": "InsertPolicy._envelope.frame.1",
+        "original_lines": [
+          52,
+          53
+        ]
+      },
+      {
+        "operation": "InsertPolicy._envelope.planning.initialize_insertion",
+        "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90",
+        "method": "_memory_InsertPolicy__envelope_1",
+        "input": "InsertPolicy._envelope.frame.1",
+        "output": "InsertPolicy._envelope.frame.2",
+        "original_lines": [
+          54,
+          60
+        ]
+      },
+      {
+        "operation": "InsertPolicy._envelope.planning.refine_from_observation",
+        "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90",
+        "method": "_memory_InsertPolicy__envelope_2",
+        "input": "InsertPolicy._envelope.frame.2",
+        "output": "InsertPolicy._envelope.frame.3",
+        "original_lines": [
+          61,
+          63
+        ]
+      },
+      {
+        "operation": "InsertPolicy._envelope.motion.build_envelope",
+        "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90",
+        "method": "_memory_InsertPolicy__envelope_3",
+        "input": "InsertPolicy._envelope.frame.3",
+        "output": "InsertPolicy._envelope.frame.4",
+        "original_lines": [
+          64,
+          64
+        ]
+      },
+      {
+        "operation": "InsertPolicy.get_action.motion.bind",
+        "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90",
+        "method": "_memory_InsertPolicy_get_action_0",
+        "input": "InsertPolicy.get_action.frame.0",
+        "output": "InsertPolicy.get_action.frame.1",
+        "original_lines": [
+          67,
+          67
+        ]
+      },
+      {
+        "operation": "InsertPolicy.get_action.execution.advance",
+        "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90",
+        "method": "_memory_InsertPolicy_get_action_1",
+        "input": "InsertPolicy.get_action.frame.1",
+        "output": "InsertPolicy.get_action.frame.2",
+        "original_lines": [
+          68,
+          70
+        ]
+      },
+      {
+        "operation": "InsertPolicy.get_action_batch.motion.bind_batch",
+        "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90",
+        "method": "_memory_InsertPolicy_get_action_batch_0",
+        "input": "InsertPolicy.get_action_batch.frame.0",
+        "output": "InsertPolicy.get_action_batch.frame.1",
+        "original_lines": [
+          73,
+          74
+        ]
+      },
+      {
+        "operation": "InsertPolicy.get_action_batch.execution.advance_batch",
+        "revision": "5769b2e0b0173d160d5683877381fc57a8545227ed399844fcdfcb0dc652df90",
+        "method": "_memory_InsertPolicy_get_action_batch_1",
+        "input": "InsertPolicy.get_action_batch.frame.1",
+        "output": "InsertPolicy.get_action_batch.frame.2",
+        "original_lines": [
+          75,
+          78
+        ]
+      }
+    ]
+  }
+}
