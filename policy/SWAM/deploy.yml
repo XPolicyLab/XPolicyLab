@@ -1,0 +1,23 @@
+policy_name: SWAM
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: arx_x5
+seed: null
+action_type: ee
+gpu_id: null
+eval_batch: false
+
+swam_root: null
+model_path: null
+wan_path: null
+tokenizer_path: null
+image_encoder_path: null
+action_dim: 16
+action_horizon: 48
+video_history: 8
+ws_ping_interval_s: 30.0
+ws_ping_timeout_s: 30.0
