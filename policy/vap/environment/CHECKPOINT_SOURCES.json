@@ -1,0 +1,9 @@
+{
+  "repository": "x-square-robot/wall-wm-2.0-robodojo",
+  "revision": "main",
+  "files": [
+    "model.safetensors",
+    "config.yml",
+    "normalizer_action.pth"
+  ]
+}

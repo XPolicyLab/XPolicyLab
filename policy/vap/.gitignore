@@ -1,0 +1,12 @@
+/.venv/
+/.cache/
+/checkpoints/
+/outputs/
+/results/
+/pretrained/
+/*.tar.gz
+/*.whl
+/bundles/
+__pycache__/
+*.pyc
+.pytest_cache/

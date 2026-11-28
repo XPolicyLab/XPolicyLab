@@ -1,0 +1,27 @@
+{
+  "source_release": "f3pt120000_history5_fp32_bicubic_20261112",
+  "source_provenance": "User-supplied local release; public upstream repository and author attribution were not supplied.",
+  "release_archive_sha256": "0bf72ccd1a1c96ef4fd5df6791c78e1be603a7588f9fcbf6d967fa048cff5480",
+  "backend_source": "release adapter/model.py -> backend.py",
+  "vendor_source": "release vap/ -> upstream/; unrelated integration tree omitted",
+  "vendor_scope": "Complete-checkpoint VAP/VAPv2 serving and its model, config and normalizer interfaces. RL, unrelated model implementations, training launchers and private fixtures are omitted from the public adapter.",
+  "model_checkpoint_sha256": "c42fc3965c54ecf42650ebf3e31092bc7cb7fcfa53f398b5c9e20373d6d767a8",
+  "upstream_model_numerics_modified": false,
+  "adapter_runtime_differences": [
+    "official WebSocket protocol",
+    "single thread model ownership",
+    "A800 supported PyTorch ops backend",
+    "optional separate online-Qwen GPU",
+    "official RGB history decoding",
+    "terminal observation/native-result export"
+  ],
+  "public_author_release_metadata": "pending author input",
+  "vendor_nonfunctional_edits": [
+    "Complete VAPv2 checkpoints construct the Wan-derived architecture and restore all persistent weights without reading Wan assets; existing tensor computation is unchanged.",
+    "Wan-initialized training and the legacy VGA calibration loader require explicit caller resources instead of private default paths.",
+    "Eval-only packaging omits private deployment records, general training launchers, RL, unrelated models and private fixtures.",
+    "Config and backend registration are limited to the shipped eval-only modules; dataset construction and RL configs fail explicitly.",
+    "Upstream serving documentation uses explicit local model inputs and no private deployment paths.",
+    "VAPv2 checkpoint filesystem fields resolve relative to their owning config.yml before runtime relocation; legacy absolute paths and model IDs retain their semantics."
+  ]
+}

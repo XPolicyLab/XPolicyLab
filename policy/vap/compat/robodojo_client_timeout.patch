@@ -1,0 +1,40 @@
+--- a/src/eval_client/main.py
++++ b/src/eval_client/main.py
+@@ -144,6 +144,16 @@
+     deploy_yml_path = os.path.join(ROOT_DIR, "XPolicyLab", "policy", policy_name, "deploy.yml")
+     deploy_yml = load_yaml(deploy_yml_path) if os.path.isfile(deploy_yml_path) else {}
+     return bool(deploy_yml.get("eval_batch", False))
++
++
++def _transport_from_deploy(policy_name):
++    """Keep configured websocket timeouts when building the simulator config."""
++    path = os.path.join(ROOT_DIR, "XPolicyLab", "policy", policy_name, "deploy.yml")
++    data = load_yaml(path) if os.path.isfile(path) else {}
++    return {key: data[key] for key in (
++        "request_timeout_s", "max_connect_seconds",
++        "ws_ping_interval_s", "ws_ping_timeout_s",
++    ) if key in data}
+
+
+ def _resume_manifest_path(eval_cfg, run_id):
+@@ -269,7 +279,7 @@
+     eval_cfg["seed"] = args_cli.seed
+     eval_cfg["physx_monitor_enabled"] = enable_monitor
+ 
+-    deploy_cfg = {}
++    deploy_cfg = _transport_from_deploy(args_cli.policy_name)
+     deploy_cfg["policy_name"] = args_cli.policy_name
+     deploy_cfg["port"] = args_cli.port
+     deploy_cfg["host"] = args_cli.host
+--- a/src/eval_client/eval_env.py
++++ b/src/eval_client/eval_env.py
+@@ -193,7 +193,9 @@
+                 repeat_index=self.deploy_cfg.get("repeat_index"),
+                 ws_ping_interval_s=self.deploy_cfg.get("ws_ping_interval_s", 20.0),
+                 ws_ping_timeout_s=self.deploy_cfg.get("ws_ping_timeout_s", 20.0),
++                request_timeout_s=self.deploy_cfg.get("request_timeout_s"),
++                max_connect_seconds=self.deploy_cfg.get("max_connect_seconds"),
+             )
+             self.robot_action_dim_info = get_robot_action_dim_info(env_cfg=self.eval_cfg)
+ 
+         def close(self):
